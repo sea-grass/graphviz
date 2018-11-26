@@ -78,11 +78,16 @@ static void gdk_set_mimedata_from_file (cairo_surface_t *image, const char *mime
     fclose(fp);
 
     if (data) {
-        cairo_surface_set_mime_data (image, mime_type, data, (unsigned long)len, free, data);
         unique_id_len = strlen(id_prefix) + strlen(file) + 1;
         unique_id = malloc (unique_id_len);
         snprintf (unique_id, unique_id_len, "%s%s", id_prefix, file);
+#if 0
         cairo_surface_set_mime_data (image, CAIRO_MIME_TYPE_UNIQUE_ID, (unsigned char *)unique_id, unique_id_len, free, unique_id);
+        cairo_surface_set_mime_data (image, mime_type, data, (unsigned long)len, free, data);
+#else
+        free(unique_id);
+        free(data);
+#endif
     }
 }
 
