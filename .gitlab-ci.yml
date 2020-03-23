@@ -21,6 +21,7 @@ portable-source:
     only:
         - master
         - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
 .build_template: &rpm_build_definition
     stage: build
@@ -48,6 +49,7 @@ portable-source:
             - Packages/*/*/*/*/*.rpm
     only:
         - master
+        - merge_requests
 
 .build_template: &deb_build_definition
     stage: build
@@ -130,6 +132,7 @@ ubuntu18-04-build:
     only:
         - master
         - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
 # FIXME: Ubuntu 18.10 is End of Life. Docker image cannot be created. Fix or remove
 ubuntu18-10-build:
@@ -138,6 +141,7 @@ ubuntu18-10-build:
         - graphviz,ubuntu18-10
     only:
         - master
+        - merge_requests
 
 ubuntu19-04-build:
     <<: *deb_build_definition
@@ -147,6 +151,7 @@ ubuntu19-04-build:
     only:
         - master
         - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
 ubuntu19-10-build:
     <<: *deb_build_definition
@@ -156,6 +161,7 @@ ubuntu19-10-build:
     only:
         - master
         - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
 deployment:
     stage: deploy
