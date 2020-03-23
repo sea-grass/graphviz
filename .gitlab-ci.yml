@@ -70,8 +70,6 @@ portable-source:
         paths:
             - Packages/*/*/*/*/*/*deb
             - Packages/*/*/*/*/*.gz
-    only:
-        - master
 
 centos6-build:
     <<: *rpm_build_definition
@@ -126,18 +124,37 @@ fedora33-build:
 ubuntu18-04-build:
     <<: *deb_build_definition
     tags:
-        - graphviz,ubuntu18-04
+        - linux
+    image: "graphviz/graphviz:ubuntu-18.04"
+    only:
+        - master
+        - build-for-ubuntu-on-gitlab-runners
 
+# FIXME: Ubuntu 18.10 is End of Life. Docker image cannot be created. Fix or remove
 ubuntu18-10-build:
     <<: *deb_build_definition
     tags:
         - graphviz,ubuntu18-10
+    only:
+        - master
 
 ubuntu19-04-build:
     <<: *deb_build_definition
     tags:
-        - graphviz,ubuntu19-04
+        - linux
+    image: "graphviz/graphviz:ubuntu-19.04"
+    only:
+        - master
+        - build-for-ubuntu-on-gitlab-runners
 
+ubuntu19-10-build:
+    <<: *deb_build_definition
+    tags:
+        - linux
+    image: "graphviz/graphviz:ubuntu-19.10"
+    only:
+        - master
+        - build-for-ubuntu-on-gitlab-runners
 
 deployment:
     stage: deploy
