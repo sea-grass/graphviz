@@ -6,7 +6,8 @@ stages:
 portable-source:
     stage: source
     tags:
-        - graphviz,centos7
+        - linux
+    image: "graphviz/graphviz:ubuntu-18.04"
     script:
         - ./autogen.sh
         - make dist
@@ -19,6 +20,7 @@ portable-source:
             - graphviz-*.tar.gz
     only:
         - master
+        - build-for-ubuntu-on-gitlab-runners
 
 .build_template: &rpm_build_definition
     stage: build
