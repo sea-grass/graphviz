@@ -6,7 +6,8 @@ stages:
 portable-source:
     stage: source
     tags:
-        - graphviz,centos7
+        - linux
+    image: "graphviz/graphviz:ubuntu-18.04"
     script:
         - ./autogen.sh
         - make dist
@@ -19,6 +20,8 @@ portable-source:
             - graphviz-*.tar.gz
     only:
         - master
+        - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
 .build_template: &rpm_build_definition
     stage: build
@@ -45,11 +48,13 @@ portable-source:
             - Packages/*/*/*/*/*/*.rpm
             - Packages/*/*/*/*/*.rpm
     only:
-         - master
+        - master
+        - merge_requests
 
 .build_template: &deb_build_definition
     stage: build
     script:
+        - cat /etc/os-release
         - GV_VERSION=$( cat VERSION )
         - COLLECTION=$( cat COLLECTION )
         - zcat graphviz-${GV_VERSION}.tar.gz | tar xf -
@@ -68,8 +73,6 @@ portable-source:
         paths:
             - Packages/*/*/*/*/*/*deb
             - Packages/*/*/*/*/*.gz
-    only:
-        - master
 
 centos6-build:
     <<: *rpm_build_definition
@@ -124,18 +127,41 @@ fedora33-build:
 ubuntu18-04-build:
     <<: *deb_build_definition
     tags:
-        - graphviz,ubuntu18-04
+        - linux
+    image: "graphviz/graphviz:ubuntu-18.04"
+    only:
+        - master
+        - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
+# FIXME: Ubuntu 18.10 is End of Life. Docker image cannot be created. Fix or remove
 ubuntu18-10-build:
     <<: *deb_build_definition
     tags:
         - graphviz,ubuntu18-10
+    only:
+        - master
+        - merge_requests
 
 ubuntu19-04-build:
     <<: *deb_build_definition
     tags:
-        - graphviz,ubuntu19-04
+        - linux
+    image: "graphviz/graphviz:ubuntu-19.04"
+    only:
+        - master
+        - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
+ubuntu19-10-build:
+    <<: *deb_build_definition
+    tags:
+        - linux
+    image: "graphviz/graphviz:ubuntu-19.10"
+    only:
+        - master
+        - build-for-ubuntu-on-gitlab-runners
+        - merge_requests
 
 deployment:
     stage: deploy
