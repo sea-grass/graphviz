@@ -47,7 +47,7 @@ portable-source:
             - Packages/*/*/*/*/*/*.rpm
             - Packages/*/*/*/*/*.rpm
     only:
-         - master
+        - master
 
 .build_template: &deb_build_definition
     stage: build
