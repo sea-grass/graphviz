@@ -30,11 +30,8 @@ if(NOT WIN32)
     )
 endif()
 
-# Install PDFs somewhere sensible
+# All platforms: Install PDFs somewhere sensible
 install(FILES
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmd/dot/dot.1.pdf
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmd/dot/osage.1.pdf
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmd/dot/patchwork.1.pdf
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/dotguide.pdf
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/dottyguide.pdf
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/leftyguide.pdf
@@ -42,7 +39,7 @@ install(FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/libguide/libguide.pdf
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/neatoguide.pdf
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/odt/graphviz_plugins.pdf
-    ${CMAKE_CURRENT_SOURCE_DIR}/doc/oldlibguide.pdf
+#    ${CMAKE_CURRENT_SOURCE_DIR}/doc/oldlibguide.pdf # Do we need this?
     ${CMAKE_CURRENT_SOURCE_DIR}/doc/smyrna/smyrna.pdf
     DESTINATION doc/pdf
 )
@@ -88,7 +85,7 @@ if(WIN32)
         ${CMAKE_CURRENT_SOURCE_DIR}/doc/mantopdf/tred.1.pdf
         ${CMAKE_CURRENT_SOURCE_DIR}/doc/mantopdf/unflatten.1.pdf
         ${CMAKE_CURRENT_SOURCE_DIR}/doc/mantopdf/vimdot.1.pdf
-        DESTINATION doc/manual_pdf
+        DESTINATION doc/pdf/applications
     )
 
     # Library manual pages
@@ -104,6 +101,6 @@ if(WIN32)
         ${CMAKE_CURRENT_SOURCE_DIR}/doc/mantopdf/pack.3.pdf
         ${CMAKE_CURRENT_SOURCE_DIR}/doc/mantopdf/pathplan.3.pdf
         ${CMAKE_CURRENT_SOURCE_DIR}/doc/mantopdf/xdot.3.pdf
-        DESTINATION doc/library_pdf
+        DESTINATION doc/pdf/library
     )
 endif()
