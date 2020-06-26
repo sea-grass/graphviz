@@ -25,8 +25,11 @@ install(
     DESTINATION ${HEADER_INSTALL_DIR}
 )
 
-# Specify man pages to be installed
-install(
-    FILES pack.3
-    DESTINATION ${MAN_INSTALL_DIR}
-)
+# Only install man pages on non-Windows systems
+if(NOT WIN32)
+    # Specify man pages to be installed
+    install(
+        FILES pack.3
+        DESTINATION ${MAN3_INSTALL_DIR}
+    )
+endif()

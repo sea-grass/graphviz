@@ -24,11 +24,15 @@ install(
     DESTINATION ${HEADER_INSTALL_DIR}
 )
 
-# Specify man pages to be installed
-install(
-    FILES xdot.3
-    DESTINATION ${MAN_INSTALL_DIR}
-)
+# Only install man pages on non-Windows systems
+if(NOT WIN32)
+    # Specify man pages to be installed
+    install(
+        FILES xdot.3
+        DESTINATION ${MAN3_INSTALL_DIR}
+    )
+endif()
+
 
 # Specify library version and soversion
 set_target_properties(xdot PROPERTIES

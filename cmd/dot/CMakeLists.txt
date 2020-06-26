@@ -34,8 +34,12 @@ install(
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
 )
 
-# Specify man pages to be installed
-install(
-    FILES dot.1 osage.1 patchwork.1
-    DESTINATION ${MAN_INSTALL_DIR}
-)
+# Only install man pages on non-Windows systems
+if (NOT WIN32)
+    # Specify man pages to be installed
+    install(
+        FILES dot.1 osage.1 patchwork.1
+    #    DESTINATION ${MAN_INSTALL_DIR}
+        DESTINATION ${MAN1_INSTALL_DIR}
+    )
+endif()

@@ -28,10 +28,13 @@ function(tool_defaults name)
         RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     )
 
-    install(
-        FILES ${name}.1
-        DESTINATION ${MAN_INSTALL_DIR}
-    )
+    # Install man pages on non-Windows systems
+    if(NOT WIN32)
+        install(
+            FILES ${name}.1
+            DESTINATION ${MAN1_INSTALL_DIR}
+        )
+    endif()
 endfunction(tool_defaults)
 
 # ================================ simple tools ================================
