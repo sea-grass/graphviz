@@ -216,6 +216,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvplugin_gdiplus", "plugin\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "version", "lib\version\version.vcxproj", "{320318AF-81FB-446A-9DB4-7D561F712761}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvedit", "cmd\gvedit\gvedit.vcxproj", "{33E97266-F213-3639-BCAB-2F3F95E15B16}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -612,6 +614,12 @@ Global
 		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Release|Win32.ActiveCfg = Release|Win32
 		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Release|Win32.Build.0 = Release|Win32
 		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Release|x64.ActiveCfg = Release|Win32
+		{33E97266-F213-3639-BCAB-2F3F95E15B16}.Debug|Win32.ActiveCfg = Debug|Win32
+		{33E97266-F213-3639-BCAB-2F3F95E15B16}.Debug|Win32.Build.0 = Debug|Win32
+		{33E97266-F213-3639-BCAB-2F3F95E15B16}.Debug|x64.ActiveCfg = Debug|Win32
+		{33E97266-F213-3639-BCAB-2F3F95E15B16}.Release|Win32.ActiveCfg = Release|Win32
+		{33E97266-F213-3639-BCAB-2F3F95E15B16}.Release|Win32.Build.0 = Release|Win32
+		{33E97266-F213-3639-BCAB-2F3F95E15B16}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
