@@ -299,8 +299,8 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		v = gvjobs_output_langname(gvc, val);
 		if (!v) {
 		    /* TODO: Detect empty results from gvplugin_list() and prompt to configure with '-c' */
-		    fprintf(stderr, "Format: \"%s\" not recognized.", val);
 		    char *fmts;
+		    fprintf(stderr, "Format: \"%s\" not recognized.", val);
 		    fmts = gvplugin_list(gvc, API_device, val);
 		    if (strlen(fmts) > 1) {
 			fprintf(stderr, " Use one of:%s\n", fmts);
