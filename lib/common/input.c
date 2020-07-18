@@ -423,8 +423,9 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 	    || streq(layout, "lt-dot")
 	    || streq(layout, "lt-dot_builtins")
 	    || streq(layout, "")   /* when run as a process from Gvedit on Windows */
-	)
+	) {
             layout = "dot";
+	}
 	i = gvlayout_select(gvc, layout);
 	if (i == NO_SUPPORT) {
 	    fprintf(stderr, "There is no layout engine support for \"%s\"\n", layout);
