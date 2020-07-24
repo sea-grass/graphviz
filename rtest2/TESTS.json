@@ -1,362 +1,559 @@
 {
-"shape none" : {
-"code" : "graph G {a [label=\"\" shape=none]}",
-"format" : [ "gv", "xdot", "png", "svg", "ps", "cmapx" ]
-},
-"shape plaintext" : {
-"code" : "graph G {a [label=\"\" shape=plaintext]}",
-"format" : [ "xdot" ]
-},
-"shape point" : {
-"code" : "graph G {a [label=\"\" shape=point]}",
-"format" : [ "xdot" ]
-},
-"shape box" : {
-"code" : "graph G {a [label=\"\" shape=box]}",
-"format" : [ "xdot" ]
-},
-"shape rect" : {
-"code" : "graph G {a [label=\"\" shape=rect]}",
-"format" : [ "xdot" ]
-},
-"shape rectangle" : {
-"code" : "graph G {a [label=\"\" shape=rectangle]}",
-"format" : [ "xdot" ]
-},
-"shape ellipse" : {
-"code" : "graph G {a [label=\"\" shape=ellipse]}",
-"format" : [ "xdot" ]
-},
-"shape circle" : {
-"code" : "graph G {a [label=\"\" shape=circle]}",
-"format" : [ "xdot" ]
-},
-"shape triangle" : {
-"code" : "graph G {a [label=\"\" shape=triangle]}",
-"format" : [ "xdot" ]
-},
-"shape invtriangle" : {
-"code" : "graph G {a [label=\"\" shape=invtriangle]}",
-"format" : [ "xdot" ]
-},
-"shape diamond" : {
-"code" : "graph G {a [label=\"\" shape=diamond]}",
-"format" : [ "xdot" ]
-},
-"shape trapezium" : {
-"code" : "graph G {a [label=\"\" shape=trapezium]}",
-"format" : [ "xdot" ]
-},
-"shape invtrapezium" : {
-"code" : "graph G {a [label=\"\" shape=invtrapezium]}",
-"format" : [ "xdot" ]
-},
-"shape parallelogram" : {
-"code" : "graph G {a [label=\"\" shape=parallelogram]}",
-"format" : [ "xdot" ]
-},
-"shape house" : {
-"code" : "graph G {a [label=\"\" shape=house]}",
-"format" : [ "xdot" ]
-},
-"shape invhouse" : {
-"code" : "graph G {a [label=\"\" shape=invhouse]}",
-"format" : [ "xdot" ]
-},
-"shape pentagon" : {
-"code" : "graph G {a [label=\"\" shape=pentagon]}",
-"format" : [ "xdot" ]
-},
-"shape hexagon" : {
-"code" : "graph G {a [label=\"\" shape=hexagon]}",
-"format" : [ "xdot" ]
-},
-"shape septagon" : {
-"code" : "graph G {a [label=\"\" shape=septagon]}",
-"format" : [ "xdot" ]
-},
-"shape octagon" : {
-"code" : "graph G {a [label=\"\" shape=octagon]}",
-"format" : [ "xdot" ]
-},
-"shape doubleoctagon" : {
-"code" : "graph G {a [label=\"\" shape=doubleoctagon]}",
-"format" : [ "xdot" ]
-},
-"shape doublecircle" : {
-"code" : "graph G {a [label=\"\" shape=doublecircle]}",
-"format" : [ "xdot" ]
-},
-"shape tripleoctagon" : {
-"code" : "graph G {a [label=\"\" shape=tripleoctagon]}",
-"format" : [ "xdot" ]
-},
-"shape Mdiamond" : {
-"code" : "graph G {a [label=\"\" shape=Mdiamond]}",
-"format" : [ "xdot" ]
-},
-"shape Msquare" : {
-"code" : "graph G {a [label=\"\" shape=Msquare]}",
-"format" : [ "xdot" ]
-},
-"shape Mcircle" : {
-"code" : "graph G {a [label=\"\" shape=Mcircle]}",
-"format" : [ "xdot" ]
-},
-"label \"\"" : {
-"code" : "graph G {a [label=\"\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"label b" : {
-"code" : "graph G {a [label=b shape=none]}",
-"format" : [ "xdot" ]
-},
-"label a (default)" : {
-"code" : "graph G {a [shape=none]}",
-"format" : [ "xdot" ]
-},
-"label a (\\N)" : {
-"code" : "graph G {a [label=\"\\N\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"label n_of_G (\\G)" : {
-"code" : "graph G {a [label=\"n_of_\\G\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"label \\E\\H\\T (\\E\\H\\T)" : {
-"code" : "graph G {a [label=\"\\E\\H\\T\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"label a->b (\\E)" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\E\"]}",
-"format" : [ "xdot" ]
-},
-"label a (\\T)" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\T\"]}",
-"format" : [ "xdot" ]
-},
-"label b (\\H)" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\H\"]}",
-"format" : [ "xdot" ]
-},
-"label e_of_G (e_of_\\G)" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [label=\"e_of_\\G\"]}",
-"format" : [ "xdot" ]
-},
-"label \\N (\\N)" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\N\"]}",
-"format" : [ "xdot" ]
-},
-"label center aligned" : {
-"code" : "graph G {a [label=\"center\\naligned\\ntext\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"label left aligned" : {
-"code" : "graph G {a [label=\"left\\laligned\\ltext\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"label right aligned" : {
-"code" : "graph G {a [label=\"right\\raligned\\rtext\" shape=none]}",
-"format" : [ "xdot" ]
-},
-"arrow none" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=none]}",
-"format" : [ "xdot" ]
-},
-"arrow default" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=\"\"]}",
-"format" : [ "xdot" ]
-},
-"arrow normal" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=normal]}",
-"format" : [ "xdot" ]
-},
-"arrow box" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=box]}",
-"format" : [ "xdot" ]
-},
-"arrow crow" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=crow]}",
-"format" : [ "xdot" ]
-},
-"arrow diamond" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=diamond]}",
-"format" : [ "xdot" ]
-},
-"arrow dot" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=dot]}",
-"format" : [ "xdot" ]
-},
-"arrow inv" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=inv]}",
-"format" : [ "xdot" ]
-},
-"arrow tee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=tee]}",
-"format" : [ "xdot" ]
-},
-"arrow vee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=vee]}",
-"format" : [ "xdot" ]
-},
-"arrow lnormal" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lnormal]}",
-"format" : [ "xdot" ]
-},
-"arrow lbox" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lbox]}",
-"format" : [ "xdot" ]
-},
-"arrow lcrow" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lcrow]}",
-"format" : [ "xdot" ]
-},
-"arrow ldiamond" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ldiamond]}",
-"format" : [ "xdot" ]
-},
-"arrow ldot" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ldot]}",
-"format" : [ "xdot" ]
-},
-"arrow linv" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=linv]}",
-"format" : [ "xdot" ]
-},
-"arrow ltee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ltee]}",
-"format" : [ "xdot" ]
-},
-"arrow lvee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lvee]}",
-"format" : [ "xdot" ]
-},
-"arrow rnormal" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rnormal]}",
-"format" : [ "xdot" ]
-},
-"arrow rbox" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rbox]}",
-"format" : [ "xdot" ]
-},
-"arrow rcrow" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rcrow]}",
-"format" : [ "xdot" ]
-},
-"arrow rdiamond" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rdiamond]}",
-"format" : [ "xdot" ]
-},
-"arrow rdot" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rdot]}",
-"format" : [ "xdot" ]
-},
-"arrow rinv" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rinv]}",
-"format" : [ "xdot" ]
-},
-"arrow rtee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rtee]}",
-"format" : [ "xdot" ]
-},
-"arrow rvee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rvee]}",
-"format" : [ "xdot" ]
-},
-"arrow onormal" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=onormal]}",
-"format" : [ "xdot" ]
-},
-"arrow obox" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=obox]}",
-"format" : [ "xdot" ]
-},
-"arrow ocrow" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ocrow]}",
-"format" : [ "xdot" ]
-},
-"arrow odiamond" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odiamond]}",
-"format" : [ "xdot" ]
-},
-"arrow odot" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odot]}",
-"format" : [ "xdot" ]
-},
-"arrow oinv" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oinv]}",
-"format" : [ "xdot" ]
-},
-"arrow otee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=otee]}",
-"format" : [ "xdot" ]
-},
-"arrow ovee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ovee]}",
-"format" : [ "xdot" ]
-},
-"arrow onormalnormal" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=onormalnormal]}",
-"format" : [ "xdot" ]
-},
-"arrow oboxbox" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oboxbox]}",
-"format" : [ "xdot" ]
-},
-"arrow ocrowcrow" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ocrowcrow]}",
-"format" : [ "xdot" ]
-},
-"arrow odiamonddiamond" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odiamonddiamond]}",
-"format" : [ "xdot" ]
-},
-"arrow odotdot" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odotdot]}",
-"format" : [ "xdot" ]
-},
-"arrow oinvinv" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oinvinv]}",
-"format" : [ "xdot" ]
-},
-"arrow oteetee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oteetee]}",
-"format" : [ "xdot" ]
-},
-"arrow oveevee" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oveevee]}",
-"format" : [ "xdot" ]
-},
-"color black" : {
-"code" : "graph G {a [label=\"\" shape=box style=filled color=black]}",
-"format" : [ "xdot", "png" ]
-},
-"color red" : {
-"code" : "graph G {a [label=\"\" shape=box style=filled color=red]}",
-"format" : [ "xdot", "png" ]
-},
-"color hotpink" : {
-"code" : "graph G {a [label=\"\" shape=box style=filled color=hotpink]}",
-"format" : [ "xdot", "png" ]
-},
-"color transparent" : {
-"code" : "graph G {a [label=\"\" shape=box style=filled color=transparent]}",
-"format" : [ "xdot", "png" ]
-},
-"anchor empty" : {
-"code" : "graph G {a [URL=\"\" label=\"\" shape=none]}",
-"format" : [ "cmapx", "ps", "svg" ]
-},
-"anchor \\G.html" : {
-"code" : "graph G {graph [URL=\"\\G.html\"]}",
-"format" : [ "cmapx", "ps", "svg" ]
-},
-"anchor \\N.html" : {
-"code" : "graph G {a [URL=\"\\N.html\" label=\"\" shape=none]}",
-"format" : [ "cmapx", "ps", "svg" ]
-},
-"anchor \\E.html" : {
-"code" : "digraph G {node [label=\"\" shape=none]; a->b [URL=\"\\E.html\"]}",
-"format" : [ "cmapx", "ps", "svg" ]
-}
+    "shape none": {
+        "code": "graph G {a [label=\"\" shape=none]}",
+        "format": [
+            "gv",
+            "xdot",
+            "png",
+            "svg",
+            "ps",
+            "cmapx"
+        ]
+    },
+    "shape plaintext": {
+        "code": "graph G {a [label=\"\" shape=plaintext]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape point": {
+        "code": "graph G {a [label=\"\" shape=point]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape box": {
+        "code": "graph G {a [label=\"\" shape=box]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape rect": {
+        "code": "graph G {a [label=\"\" shape=rect]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape rectangle": {
+        "code": "graph G {a [label=\"\" shape=rectangle]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape ellipse": {
+        "code": "graph G {a [label=\"\" shape=ellipse]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape circle": {
+        "code": "graph G {a [label=\"\" shape=circle]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape triangle": {
+        "code": "graph G {a [label=\"\" shape=triangle]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape invtriangle": {
+        "code": "graph G {a [label=\"\" shape=invtriangle]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape diamond": {
+        "code": "graph G {a [label=\"\" shape=diamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape trapezium": {
+        "code": "graph G {a [label=\"\" shape=trapezium]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape invtrapezium": {
+        "code": "graph G {a [label=\"\" shape=invtrapezium]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape parallelogram": {
+        "code": "graph G {a [label=\"\" shape=parallelogram]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape house": {
+        "code": "graph G {a [label=\"\" shape=house]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape invhouse": {
+        "code": "graph G {a [label=\"\" shape=invhouse]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape pentagon": {
+        "code": "graph G {a [label=\"\" shape=pentagon]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape hexagon": {
+        "code": "graph G {a [label=\"\" shape=hexagon]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape septagon": {
+        "code": "graph G {a [label=\"\" shape=septagon]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape octagon": {
+        "code": "graph G {a [label=\"\" shape=octagon]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape doubleoctagon": {
+        "code": "graph G {a [label=\"\" shape=doubleoctagon]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape doublecircle": {
+        "code": "graph G {a [label=\"\" shape=doublecircle]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape tripleoctagon": {
+        "code": "graph G {a [label=\"\" shape=tripleoctagon]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape Mdiamond": {
+        "code": "graph G {a [label=\"\" shape=Mdiamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape Msquare": {
+        "code": "graph G {a [label=\"\" shape=Msquare]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "shape Mcircle": {
+        "code": "graph G {a [label=\"\" shape=Mcircle]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label \"\"": {
+        "code": "graph G {a [label=\"\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label b": {
+        "code": "graph G {a [label=b shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label a (default)": {
+        "code": "graph G {a [shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label a (\\N)": {
+        "code": "graph G {a [label=\"\\N\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label n_of_G (\\G)": {
+        "code": "graph G {a [label=\"n_of_\\G\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label \\E\\H\\T (\\E\\H\\T)": {
+        "code": "graph G {a [label=\"\\E\\H\\T\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label a->b (\\E)": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\E\"]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label a (\\T)": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\T\"]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label b (\\H)": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\H\"]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label e_of_G (e_of_\\G)": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [label=\"e_of_\\G\"]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label \\N (\\N)": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [label=\"\\N\"]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label center aligned": {
+        "code": "graph G {a [label=\"center\\naligned\\ntext\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label left aligned": {
+        "code": "graph G {a [label=\"left\\laligned\\ltext\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "label right aligned": {
+        "code": "graph G {a [label=\"right\\raligned\\rtext\" shape=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow none": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=none]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow default": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=\"\"]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow normal": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=normal]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow box": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=box]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow crow": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=crow]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow diamond": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=diamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow dot": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=dot]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow inv": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=inv]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow tee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=tee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow vee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=vee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow lnormal": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lnormal]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow lbox": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lbox]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow lcrow": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lcrow]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow ldiamond": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ldiamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow ldot": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ldot]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow linv": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=linv]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow ltee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ltee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow lvee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=lvee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rnormal": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rnormal]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rbox": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rbox]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rcrow": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rcrow]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rdiamond": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rdiamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rdot": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rdot]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rinv": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rinv]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rtee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rtee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow rvee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=rvee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow onormal": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=onormal]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow obox": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=obox]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow ocrow": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ocrow]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow odiamond": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odiamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow odot": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odot]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow oinv": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oinv]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow otee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=otee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow ovee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ovee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow onormalnormal": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=onormalnormal]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow oboxbox": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oboxbox]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow ocrowcrow": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=ocrowcrow]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow odiamonddiamond": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odiamonddiamond]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow odotdot": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=odotdot]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow oinvinv": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oinvinv]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow oteetee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oteetee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "arrow oveevee": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [arrowhead=oveevee]}",
+        "format": [
+            "xdot"
+        ]
+    },
+    "color black": {
+        "code": "graph G {a [label=\"\" shape=box style=filled color=black]}",
+        "format": [
+            "xdot",
+            "png"
+        ]
+    },
+    "color red": {
+        "code": "graph G {a [label=\"\" shape=box style=filled color=red]}",
+        "format": [
+            "xdot",
+            "png"
+        ]
+    },
+    "color hotpink": {
+        "code": "graph G {a [label=\"\" shape=box style=filled color=hotpink]}",
+        "format": [
+            "xdot",
+            "png"
+        ]
+    },
+    "color transparent": {
+        "code": "graph G {a [label=\"\" shape=box style=filled color=transparent]}",
+        "format": [
+            "xdot",
+            "png"
+        ]
+    },
+    "anchor empty": {
+        "code": "graph G {a [URL=\"\" label=\"\" shape=none]}",
+        "format": [
+            "cmapx",
+            "ps",
+            "svg"
+        ]
+    },
+    "anchor \\G.html": {
+        "code": "graph G {graph [URL=\"\\G.html\"]}",
+        "format": [
+            "cmapx",
+            "ps",
+            "svg"
+        ]
+    },
+    "anchor \\N.html": {
+        "code": "graph G {a [URL=\"\\N.html\" label=\"\" shape=none]}",
+        "format": [
+            "cmapx",
+            "ps",
+            "svg"
+        ]
+    },
+    "anchor \\E.html": {
+        "code": "digraph G {node [label=\"\" shape=none]; a->b [URL=\"\\E.html\"]}",
+        "format": [
+            "cmapx",
+            "ps",
+            "svg"
+        ]
+    }
 }
