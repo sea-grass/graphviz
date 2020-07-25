@@ -96,8 +96,11 @@ def main(args):
     iok = 0
 
     # Fail if reference data directory cannot be found
-    if not exists(reference_dir):
-        print("ERROR: Reference directory {0:s} does not exist".format(reference_dir))
+    print("1..1")
+    if exists(reference_dir):
+        print("ok 1 - Test 0: Reference directory check # Found {0:s}".format(reference_dir))
+    else:
+        print("not ok 1 - Test 0: Reference directory check # Cannot find {0:s}".format(reference_dir))
         iok = 2
         return iok
 
@@ -108,61 +111,70 @@ def main(args):
 
     # Import test roster from JSON input
     with open(tfn, 'r') as ifh:
-        testgroup = json.load(ifh, object_pairs_hook=OrderedDict)
+        test_group = json.load(ifh, object_pairs_hook=OrderedDict)
 
     # Generate and run tests
-    ict = 0
-    for testlabel, testitem in testgroup.items():
-        ict += 1
+    test_id = 0
+    for test_label, test_item in test_group.items():
+        test_id += 1
+        nsubtests = len(test_item["format"])
+        # TAP output: Print range of subtests
+        print("1..{0:d}".format(nsubtests))
         if is_verbose:
-            print("Test {0:03d}:".format(ict))
-            print("  Label: {0:s}".format(testlabel))
-            print("  Code:  {0:s}".format(testitem["code"]))
-            if len(testitem["format"]) == 1:
+            print("Test {0:03d}:".format(test_id))
+            print("  Label: {0:s}".format(test_label))
+            print("  Code:  {0:s}".format(test_item["code"]))
+            if len(test_item["format"]) == 1:
                 print("  Subtest:")
             else:
                 print("  Subtests:")
 
-        # Common input file to all subtests of test ict
-        # Write headcmt followed by testitem["code"] to graph_fn
-        graph_fn = join(graph_dir, "{0:03d}.{1:s}".format(ict, "gv"))
+        # Common input file to all subtests of test test_id
+        # Write headcmt followed by test_item["code"] to graph_fn
+        graph_fn = join(graph_dir, "{0:03d}.{1:s}".format(test_id, "gv"))
         if use_common_input:
             # Wipe stale input
             if exists(graph_fn):
                 remove(graph_fn)
-            headcmt = "// {0:03d}: {1:s}\n".format(ict, testlabel)
+            headcmt = "// {0:03d}: {1:s}\n".format(test_id, test_label)
             with open(graph_fn, 'w') as ofh:
                 ofh.write(headcmt)
-                ofh.write(testitem["code"] + "\n")
+                ofh.write(test_item["code"] + "\n")
 
-        jct = 0
-        for tfmt in testitem["format"]:
-            jct += 1
-            tag = "{0:03d}.{1:03d}".format(ict, jct)
+        subtest_id = 0
+        for subtest_format in test_item["format"]:
+            # Initialize TAP subtest fields
+            subtest_id += 1
+            subtest_status = "ok"
+            subtest_label = "Test {0:d}: {1:s}, format = {2:s}" \
+                .format(test_id, test_label, subtest_format)
+            subtest_comment = ''
 
-            # Unique input file for subtest ict.jct
-            # Write head comments followed by testitem["code"] to subgraph_fn
-            # Unique input file for each subtest of test #ict (original behavior)
+            tag = "{0:03d}.{1:03d}".format(test_id, subtest_id)
+
+            # Unique input file for subtest test_id.subtest_id
+            # Write head comments followed by test_item["code"] to subgraph_fn
+            # Unique input file for each subtest of test #test_id (original behavior)
             if not use_common_input:
                 subgraph_fn = join(graph_dir, "{0:s}.{1:s}".format(tag, "gv"))
                 # Wipe stale input
                 if exists(subgraph_fn):
                     remove(subgraph_fn)
-                headcmt1 = "// {0:03d}.{1:03d}: {2:s}\n".format(ict, jct, testlabel)
-                headcmt2 = "// dot -T{0:s}\n".format(tfmt)
+                headcmt1 = "// {0:03d}.{1:03d}: {2:s}\n".format(test_id, subtest_id, test_label)
+                headcmt2 = "// dot -T{0:s}\n".format(subtest_format)
                 with open(subgraph_fn, 'w') as ofh:
                     ofh.write(headcmt1)
                     ofh.write(headcmt2)
-                    ofh.write(testitem["code"] + "\n")
+                    ofh.write(test_item["code"] + "\n")
 
             # Output file
-            results_fn = join(results_dir, "{0:s}.{1:s}".format(tag, tfmt))
+            results_fn = join(results_dir, "{0:s}.{1:s}".format(tag, subtest_format))
             # Wipe stale output
             if exists(results_fn):
                 remove(results_fn)
 
             # Reference file
-            reference_fn = join(reference_dir, "{0:s}.{1:s}".format(tag, tfmt))
+            reference_fn = join(reference_dir, "{0:s}.{1:s}".format(tag, subtest_format))
             # Note: If reference_fn doesn't exist, we could short-circuit this test
             # and fail on lack of reference data. Probably better to run the test
             # anyway to generate results, providing reference data for subsequent runs
@@ -170,7 +182,7 @@ def main(args):
             # Compose command and arguments as list
             cmd_args = [dot_exe]
             cmd_args.append("-K" + layout)
-            cmd_args.append("-T" + tfmt)
+            cmd_args.append("-T" + subtest_format)
             if use_common_input:
                 # Use common test input file
                 cmd_args.append(graph_fn)
@@ -209,56 +221,62 @@ def main(args):
                     print("Found reference file {0:s} corresponding to results file {1:s}"
                         .format(reference_fn, results_fn))
                 if cmp(reference_fn, results_fn):
-                    print("OK - {0:s}: Results are trivially similar"
-                        .format(tag))
+                    subtest_comment = " # Results are trivially similar"
+
                 else:
-                    if fmttest[tfmt] == "text":
+                    if fmttest[subtest_format] == "text":
                         iok = 1
-                        print("FAIL - {0:s}: Text results differ from reference"
-                            .format(tag))
+                        subtest_status = "not ok"
                         with open(reference_fn) as ff:
                             reference_data = ff.readlines()
                         with open(results_fn) as tf:
                             results_data = tf.readlines()
                         textdiff = unified_diff(reference_data, results_data, reference_fn, results_fn)
-                        tdiff_fn = join(results_dir, "{0:s}.{1:s}.diff".format(tag, tfmt))
+                        tdiff_fn = join(results_dir, "{0:s}.{1:s}.diff".format(tag, subtest_format))
                         with open(tdiff_fn, "w") as tdf:
                             tdf.writelines(textdiff)
-                        if is_verbose:
-                            sys.stdout.writelines(textdiff)
 
-                    elif fmttest[tfmt] == "image":
+                        subtest_comment = " # Text results differ from reference; see {0:s}".format(tdiff_fn)
+
+                    elif fmttest[subtest_format] == "image":
                         # Compare images
                         ref_img = Image.open(reference_fn)
                         results_img = Image.open(results_fn)
                         # TODO: Add simple histogram checks
                         if ref_img.size != results_img.size:
                             iok = 1
-                            print("FAIL - {0:s}: Image size ({1:d}, {2:d}) differs from reference size ({3:d}, {4:d})"
-                                  .format(tag, results_img.size[0], results_img.size[1], ref_img.size[0], ref_img.size[1], ))
+                            subtest_status = "not ok"
+                            subtest_comment = " # Image size ({0:d}, {1:d}) differs from reference size ({2:d}, {3:d})" \
+                                .format(results_img.size[0], results_img.size[1], ref_img.size[0], ref_img.size[1])
                         else:
                             img_diff = Image.new("RGBA", ref_img.size)
-                            idiff_fn = join(results_dir, "{0:s}.diff.{1:s}".format(tag, tfmt))
+                            idiff_fn = join(results_dir, "{0:s}.diff.{1:s}".format(tag, subtest_format))
                             mismatch = pixelmatch(ref_img, results_img, img_diff, includeAA=True)
                             img_diff.save(idiff_fn)
                             if mismatch > 0:
                                 iok = 1
-                                print("FAIL - {0:s}: Image results differ from reference by {1:d} pixels"
-                                    .format(tag, mismatch))
+                                subtest_status = "not ok"
+                                subtest_comment = " # Image results differ from reference by {0:d} pixels; see {1:s}" \
+                                        .format(mismatch, idiff_fn)
                             else:
                                 iok = 1
-                                print("FAIL - {0:s}: Image results differ from reference but pixels seem to match (alpha channel?)"
-                                    .format(tag))
+                                subtest_status = "not ok"
+                                subtest_comment = " # Image results differ from reference but pixels seem to match (alpha channel?); see {0:s}" \
+                                    .format(idiff_fn)
                     else:
                         iok = 1
-                        print("FAIL - {0:s}: Unknown format results from differ from reference (add {1:s} to fmttest)"
-                            .format(tag, tfmt))
+                        subtest_status = "not ok"
+                        subtest_comment = " # Unknown format results from differ from reference (add {0:s} to fmttest)" \
+                            .format(subtest_format)
 
             else:            
-                # TODO Report subtest skip or failure
                 iok = 1
-                print("FAIL - {0:s}: Subtest did not produce any results"
-                    .format(tag))
+                subtest_status = "not ok"
+                subtest_comment = " # Subtest did not produce any results"
+
+            # TAP output: Print subtest results
+            print("{0:s} {1:d} - {2:s}{3:s}"
+                .format(subtest_status, subtest_id, subtest_label, subtest_comment))
 
         if is_verbose:
             print()
