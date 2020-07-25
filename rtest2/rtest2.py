@@ -33,8 +33,11 @@ import sys
 #   parameters (verbosity, default layout)
 #
 # Interpreting results:
-# - Each subtest will display either "OK" or "FAIL" followed by the
-#   test.subtest ID and a descriptive message on stdout.
+# - Output is in TAP format; see https://testanything.org/
+#   - The range of subtests for a given test is displayed as "1..<number of subtests>"
+#   - Each subtest will display either "ok" or "not ok" followed by the
+#     subtest ID and a descriptive message on stdout.
+# - The test script exits with an integer status code:
 #   - If all tests succeed, the script exits with status code 0.
 #   - If any subtest fails, the script exits with status code 1
 #   - If no tests can run (usually due to missing reference data),
