@@ -183,7 +183,7 @@ def main(args):
     pretest_id += 1
     if exists(args.dot_exe):
         dot_exe = abspath(args.dot_exe)
-        print("ok {0:d} - Dot executable # Found at {1:s}".format(pretest_id, dot_exe))
+        print("ok {0:d} - Dot executable # Found {1:s}".format(pretest_id, dot_exe))
     else:
         print("not ok {0:d} - Dot executable # Cannot find {1:s}".format(pretest_id, args.dot_exe))
         iok = 2
@@ -191,7 +191,7 @@ def main(args):
     pretest_id += 1
     if exists(args.test_json):
         tfn = abspath(args.test_json)
-        print("ok {0:d} - Test definitions # Cannot find {1:s}".format(pretest_id, tfn))
+        print("ok {0:d} - Test definitions # Found {1:s}".format(pretest_id, tfn))
     else:
         print("not ok {0:d} - Test definitions # Cannot find {1:s}".format(pretest_id, args.test_json))
         iok = 2
@@ -200,6 +200,7 @@ def main(args):
     graph_dir = abspath(args.graph_dir)
     if not exists(graph_dir):
         mkdir(graph_dir)
+        _logger.info("Created input directory {0:s}".format(graph_dir))
     if exists(graph_dir):
         print("ok {0:d} - Input directory # Found {1:s}".format(pretest_id, graph_dir))
     else:
@@ -210,6 +211,7 @@ def main(args):
     results_dir = abspath(args.results_dir)
     if not exists(results_dir):
         mkdir(results_dir)
+        _logger.info("Created results directory {0:s}".format(results_dir))
     if exists(results_dir):
         print("ok {0:d} - Results directory # Found {1:s}".format(pretest_id, results_dir))
     else:
