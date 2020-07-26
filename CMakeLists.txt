@@ -45,6 +45,7 @@ find_package(BISON REQUIRED)
 find_package(FLEX REQUIRED)
 find_package(Git REQUIRED)
 find_package(Perl REQUIRED)
+find_package(PythonInterp)
 
 # ================== Convenient values for CMake configuration =================
 set(BINARY_INSTALL_DIR      bin)
@@ -167,6 +168,10 @@ add_subdirectory(cmd)
 
 enable_testing()
 add_subdirectory(tests)
+if (PYTHONINTERP_FOUND)
+    add_subdirectory(rtest2)
+endif()
+
 MATH(EXPR GRAPHVIZ_PLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}+1")
 set(GVPLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}")
 set(VERSION "${GRAPHVIZ_VERSION_STRING}")
