@@ -130,6 +130,13 @@ def parse_args(args):
         default="dot",
         action='store')
     parser.add_argument(
+        '-T',
+        '--tap',
+        dest="write_tapfiles",
+        help="write test output in TAP format (Test Anything Protocol)",
+        default=False,
+        action='store_true')
+    parser.add_argument(
         '-v',
         '--verbose',
         dest="loglevel",
@@ -157,6 +164,56 @@ def setup_logging(loglevel):
                         format=logformat, datefmt="%Y-%m-%d %H:%M:%S")
 
 
+def get_tap_filename(results_dir, test_id):
+    """Generate the full path to a TAP results file given a results directory
+    and a test ID number. If the results directory does not exist, 
+    the current working directory is used.
+
+    Args:
+        results_dir [str]: test results directory
+        test_id [int]: test ID number
+
+    Returns:
+        str: Full path of TAP results file
+    """
+    tap_dir = "."
+    if exists(results_dir):
+        tap_dir = results_dir
+
+    return abspath(join(tap_dir, "test_{0:d}.tap".format(test_id)))
+
+
+def add_tap_plan(tap_output):
+    """Infer the number tests run from a list of TAP-formated test results
+    and prepend 'plan' (test count formatted as "1..#" where # is the ID
+    number of the last test)
+
+    Args:
+        tap_output ([str]): list of test results in Test Anything Protocol
+                            format
+    """
+    ntests = len(tap_output)
+    if ntests > 0:
+        # Prepend plan to tap_output list
+        tap_output.insert(0, "1..{0:d}\n".format(ntests))
+
+
+def write_tap(results_dir, test_id, tap_output):
+    """Write TAP-formatted test results to file
+
+    Args:
+        results_dir [str]: test results directory
+        test_id [int]: test ID number
+        tap_output ([str]): list of test results in Test Anything Protocol
+                            format, including plan. List entries should be
+                            terminated with a newline
+    """
+    if len(tap_output) > 0:
+        tap_fn = get_tap_filename(results_dir, test_id)
+        with open(tap_fn, "w") as tapfh:
+            tapfh.writelines(tap_output)
+
+
 def main(args):
     """Main entry point allowing external calls
 
@@ -177,23 +234,23 @@ def main(args):
     _logger.info("Starting rtest2")
 
     # Note: dot_exe, tfn, and layout should be specifiable from the command line
-    print("1..6")
+    tap_output = []
     pretest_id = 0
 
     pretest_id += 1
     if exists(args.dot_exe):
         dot_exe = abspath(args.dot_exe)
-        print("ok {0:d} - Dot executable # Found {1:s}".format(pretest_id, dot_exe))
+        tap_output.append("ok {0:d} - Dot executable # Found {1:s}\n".format(pretest_id, dot_exe))
     else:
-        print("not ok {0:d} - Dot executable # Cannot find {1:s}".format(pretest_id, args.dot_exe))
+        tap_output.append("not ok {0:d} - Dot executable # Cannot find {1:s}\n".format(pretest_id, args.dot_exe))
         iok = 2
 
     pretest_id += 1
     if exists(args.test_json):
         tfn = abspath(args.test_json)
-        print("ok {0:d} - Test definitions # Found {1:s}".format(pretest_id, tfn))
+        tap_output.append("ok {0:d} - Test definitions # Found {1:s}\n".format(pretest_id, tfn))
     else:
-        print("not ok {0:d} - Test definitions # Cannot find {1:s}".format(pretest_id, args.test_json))
+        tap_output.append("not ok {0:d} - Test definitions # Cannot find {1:s}\n".format(pretest_id, args.test_json))
         iok = 2
 
     pretest_id += 1
@@ -202,9 +259,9 @@ def main(args):
         mkdir(graph_dir)
         _logger.info("Created input directory {0:s}".format(graph_dir))
     if exists(graph_dir):
-        print("ok {0:d} - Input directory # Found {1:s}".format(pretest_id, graph_dir))
+        tap_output.append("ok {0:d} - Input directory # Found {1:s}\n".format(pretest_id, graph_dir))
     else:
-        print("not ok {0:d} - Input directory # Cannot create {1:s}".format(pretest_id, args.graph_dir))
+        tap_output.append("not ok {0:d} - Input directory # Cannot create {1:s}\n".format(pretest_id, args.graph_dir))
         iok = 2
 
     pretest_id += 1
@@ -213,26 +270,36 @@ def main(args):
         mkdir(results_dir)
         _logger.info("Created results directory {0:s}".format(results_dir))
     if exists(results_dir):
-        print("ok {0:d} - Results directory # Found {1:s}".format(pretest_id, results_dir))
+        tap_output.append("ok {0:d} - Results directory # Found {1:s}\n".format(pretest_id, results_dir))
     else:
-        print("not ok {0:d} - Results directory # Cannot create {1:s}".format(pretest_id, args.results_dir))
+        tap_output.append("not ok {0:d} - Results directory # Cannot create {1:s}\n".format(pretest_id, args.results_dir))
         iok = 2
 
     pretest_id += 1
     if exists(args.reference_dir):
         reference_dir = abspath(args.reference_dir)
-        print("ok {0:d} - Reference directory # Found {1:s}".format(pretest_id, reference_dir))
+        tap_output.append("ok {0:d} - Reference directory # Found {1:s}\n".format(pretest_id, reference_dir))
     else:
-        print("not ok {0:d} - Reference directory # Cannot find {1:s}".format(pretest_id, args.reference_dir))
+        tap_output.append("not ok {0:d} - Reference directory # Cannot find {1:s}\n".format(pretest_id, args.reference_dir))
         iok = 2
 
     pretest_id += 1
     layout = args.layout.strip().lower()
     if len(layout) > 0:
-        print("ok {0:d} - Layout engine # Setting to {1:s}".format(pretest_id, layout))
+        tap_output.append("ok {0:d} - Layout engine # Setting to {1:s}\n".format(pretest_id, layout))
     else:
-        print("not ok {0:d} - Input directory # Cannot find {1:s}".format(pretest_id, args.layout))
+        tap_output.append("not ok {0:d} - Input directory # Cannot find {1:s}\n".format(pretest_id, args.layout))
         iok = 2
+
+    # Remove stale TAP file
+    tap_fn = get_tap_filename(results_dir, 0)
+    if exists(tap_fn):
+        remove(tap_fn)
+
+    add_tap_plan(tap_output)
+    sys.stdout.writelines(tap_output)
+    if args.write_tapfiles:
+        write_tap(results_dir, 0, tap_output)
 
     # Quit if pretests fail
     if iok != 0:
@@ -250,9 +317,17 @@ def main(args):
     test_id = 0
     for test_label, test_item in test_group.items():
         test_id += 1
-        nsubtests = len(test_item["format"])
+
+        # Wipe stale TAP output
+        tap_output = []
+
+        tap_fn = get_tap_filename(results_dir, test_id)
+        if exists(tap_fn):
+            remove(tap_fn)
+
         # TAP output: Print range of subtests
-        print("1..{0:d}".format(nsubtests))
+        # nsubtests = len(test_item["format"])
+        # tap_output = ["1..{0:d}".format(nsubtests)]
 
         _logger.info("Test {0:03d}:".format(test_id))
         _logger.info("  Label: {0:s}".format(test_label))
@@ -405,8 +480,13 @@ def main(args):
                 subtest_comment = " # Subtest did not produce any results"
 
             # TAP output: Print subtest results
-            print("{0:s} {1:d} - {2:s}{3:s}"
+            tap_output.append("{0:s} {1:d} - {2:s}{3:s}\n"
                 .format(subtest_status, subtest_id, subtest_label, subtest_comment))
+
+        add_tap_plan(tap_output)
+        sys.stdout.writelines(tap_output)
+        if args.write_tapfiles:
+            write_tap(results_dir, test_id, tap_output)
 
     _logger.info("Ending rtest2")
     return iok
