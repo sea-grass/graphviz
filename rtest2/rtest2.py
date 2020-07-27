@@ -137,6 +137,13 @@ def parse_args(args):
         default=False,
         action='store_true')
     parser.add_argument(
+        '-q',
+        '--quiet',
+        dest="write_stdout",
+        help="do not write test output to stdout",
+        default=True,
+        action='store_false')
+    parser.add_argument(
         '-v',
         '--verbose',
         dest="loglevel",
@@ -297,7 +304,8 @@ def main(args):
         remove(tap_fn)
 
     add_tap_plan(tap_output)
-    sys.stdout.writelines(tap_output)
+    if args.write_stdout:
+        sys.stdout.writelines(tap_output)
     if args.write_tapfiles:
         write_tap(results_dir, 0, tap_output)
 
@@ -484,7 +492,8 @@ def main(args):
                 .format(subtest_status, subtest_id, subtest_label, subtest_comment))
 
         add_tap_plan(tap_output)
-        sys.stdout.writelines(tap_output)
+        if args.write_stdout:
+            sys.stdout.writelines(tap_output)
         if args.write_tapfiles:
             write_tap(results_dir, test_id, tap_output)
 
