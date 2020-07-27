@@ -131,11 +131,11 @@ def parse_args(args):
         action='store')
     parser.add_argument(
         '-T',
-        '--tap',
+        '--no-tap',
         dest="write_tapfiles",
-        help="write test output in TAP format (Test Anything Protocol)",
-        default=False,
-        action='store_true')
+        help="do not write .tap test output files",
+        default=True,
+        action='store_false')
     parser.add_argument(
         '-q',
         '--quiet',
