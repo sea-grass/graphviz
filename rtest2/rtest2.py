@@ -44,7 +44,6 @@ from collections import defaultdict, OrderedDict
 from difflib import unified_diff
 from filecmp import cmp
 import json
-import logging
 from os import mkdir, remove
 from os.path import abspath, exists, join
 from PIL import Image
@@ -55,17 +54,6 @@ import sys
 
 # Avoid caching .pyc bytecode to disk
 sys.dont_write_bytecode = True
-
-# Set default logging handler to avoid "No handler found" warnings.
-try:  # Python 2.7+
-    from logging import NullHandler
-except ImportError:
-    class NullHandler(logging.Handler):
-        def emit(self, record):
-            pass
-
-_logger = logging.getLogger(__name__)
-_logger.addHandler(NullHandler())
 
 # Global results comparison selector
 # Ensure any format that appears in TESTS.json is categorized as
@@ -154,32 +142,8 @@ def parse_args(args):
         help="do not write test output to stdout",
         default=True,
         action='store_false')
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        dest="loglevel",
-        help="set loglevel to INFO",
-        action='store_const',
-        const=logging.INFO)
-    parser.add_argument(
-        '-vv',
-        '--very-verbose',
-        dest="loglevel",
-        help="set loglevel to DEBUG",
-        action='store_const',
-        const=logging.DEBUG)
+
     return parser.parse_args(args)
-
-
-def setup_logging(loglevel):
-    """Setup basic logging
-
-    Args:
-      loglevel (int): minimum loglevel for emitting messages
-    """
-    logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
-    logging.basicConfig(level=loglevel, stream=sys.stdout,
-                        format=logformat, datefmt="%Y-%m-%d %H:%M:%S")
 
 
 def get_tap_filename(results_dir, test_id):
@@ -241,8 +205,7 @@ def test_rtest2(
     arg_results_dir="./test_results",
     arg_write_stdout=True,
     arg_write_tapfiles=True,
-    arg_use_pytest=True,
-    arg_loglevel=logging.INFO):
+    arg_use_pytest=True):
     """Main entry point allowing external calls
 
     Args:
@@ -255,7 +218,6 @@ def test_rtest2(
         arg_write_stdout (bool): flag enabling writing results to stdout
         arg_write_tapfiles (bool): flag indicating TAP results should be written to file
         arg_use_pytest (bool): flag indicating pytest assert()s should be executed
-        arg_loglevel) (): enum representing log level
 
     Returns:
         int: Status code - 0 = success, non-zero = failure
@@ -264,9 +226,6 @@ def test_rtest2(
     # Overall test suite status: zero indicates success and non-zero indicates failure
     # Initiallize to 0, set to 1 if any test or subtest fails, set to 2 if no tests can be run
     iok = 0
-
-    setup_logging(arg_loglevel)
-    _logger.info("Starting rtest2")
 
     test_id = 0
     subtest_id = 0
@@ -333,7 +292,6 @@ def test_rtest2(
     graph_dir = abspath(arg_graph_dir)
     if not exists(graph_dir):
         mkdir(graph_dir)
-        _logger.info("Created input directory {0:s}".format(graph_dir))
     if exists(graph_dir):
         subtest_status = "ok"
         subtest_comment = " # Found {0:s}".format(tfn)
@@ -355,7 +313,6 @@ def test_rtest2(
     results_dir = abspath(arg_results_dir)
     if not exists(results_dir):
         mkdir(results_dir)
-        _logger.info("Created results directory {0:s}".format(results_dir))
     if exists(results_dir):
         subtest_status = "ok"
         subtest_comment = " # Found {0:s}".format(results_dir)
@@ -422,7 +379,6 @@ def test_rtest2(
 
     # Quit if pretests fail
     if iok != 0:
-        _logger.info("Prematurely ending rtest2")
         return iok
 
     # Generate and run tests
@@ -435,18 +391,6 @@ def test_rtest2(
         tap_fn = get_tap_filename(results_dir, test_id)
         if exists(tap_fn):
             remove(tap_fn)
-
-        # TAP output: Print range of subtests
-        # nsubtests = len(test_item["format"])
-        # tap_output = ["1..{0:d}".format(nsubtests)]
-
-        _logger.info("Test {0:03d}:".format(test_id))
-        _logger.info("  Label: {0:s}".format(test_label))
-        _logger.info("  Code:  {0:s}".format(test_item["code"]))
-        if len(test_item["format"]) == 1:
-            _logger.info("  Subtest:")
-        else:
-            _logger.info("  Subtests:")
 
         # Common input file to all subtests of test test_id
         # Write headcmt followed by test_item["code"] to graph_fn
@@ -487,30 +431,24 @@ def test_rtest2(
             format_opt = "-T{0:s}".format(subtest_format)
             cmd_args = [dot_exe, layout_opt, format_opt, graph_fn, "-o", results_fn]
 
-            # Display command
-            _logger.info("    {0:s}: {1:s}".format(tag, " ".join(cmd_args)))
-
             # Run the test
             pstatus = subprocess.run(cmd_args)
 
-            if (pstatus.returncode != 0):
-                _logger.info("Subtest {0:s} errored out with status code {1:d}:"
-                    .format(tag, pstatus.returncode))
-            else:
-                _logger.info("Subtest {0:s} completed successfully"
-                    .format(tag))
+            # if (pstatus.returncode != 0):
+            #     _logger.info("Subtest {0:s} errored out with status code {1:d}:"
+            #         .format(tag, pstatus.returncode))
+            # else:
+            #     _logger.info("Subtest {0:s} completed successfully"
+            #         .format(tag))
 
-            if (pstatus.stdout):
-                _logger.info("stdout: {0:s}".format(pstatus.stdout))
+            # if (pstatus.stdout):
+            #     _logger.info("stdout: {0:s}".format(pstatus.stdout))
 
-            if (pstatus.stderr):
-                _logger.info("stderr: {0:s}".format(pstatus.stderr))
+            # if (pstatus.stderr):
+            #     _logger.info("stderr: {0:s}".format(pstatus.stderr))
 
             # Analyze results
             if exists(results_fn) and exists(reference_fn):
-                _logger.info("Found reference file {0:s} corresponding to results file {1:s}"
-                    .format(reference_fn, results_fn))
-
                 if cmp(reference_fn, results_fn):
                     subtest_comment = " # Results are trivially similar"
 
@@ -578,7 +516,6 @@ def test_rtest2(
         if arg_write_tapfiles:
             write_tap(results_dir, test_id, tap_output)
 
-    _logger.info("Ending rtest2")
     return iok
 
 
@@ -598,8 +535,7 @@ def run():
         arg_results_dir=args.results_dir,
         arg_write_stdout=args.write_stdout,
         arg_write_tapfiles=args.write_tapfiles,
-        arg_use_pytest=args.use_pytest,
-        arg_loglevel=args.loglevel)
+        arg_use_pytest=args.use_pytest)
 
     return iok
 
