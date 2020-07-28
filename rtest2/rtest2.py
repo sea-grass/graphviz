@@ -232,11 +232,30 @@ def write_tap(results_dir, test_id, tap_output):
             tapfh.writelines(tap_output)
 
 
-def test_rtest2(args):
+def test_rtest2(
+    arg_dot_exe,
+    arg_reference_dir,
+    arg_test_json="TESTS.json",
+    arg_layout="dot",
+    arg_graph_dir="./test_graphs",
+    arg_results_dir="./test_results",
+    arg_write_stdout=True,
+    arg_write_tapfiles=True,
+    arg_use_pytest=True,
+    arg_loglevel=logging.INFO):
     """Main entry point allowing external calls
 
     Args:
-        args ([str]): command line parameter list
+        arg_dot_exe (str): location of dot executable
+        arg_reference_dir (str): path of reference directory
+        arg_test_json (str): location of test definition file
+        arg_layout (str): name of layout engine
+        arg_graph_dir (str): path of input graph directory
+        arg_results_dir (str): path of output results directory
+        arg_write_stdout (bool): flag enabling writing results to stdout
+        arg_write_tapfiles (bool): flag indicating TAP results should be written to file
+        arg_use_pytest (bool): flag indicating pytest assert()s should be executed
+        arg_loglevel) (): enum representing log level
 
     Returns:
         int: Status code - 0 = success, non-zero = failure
@@ -246,9 +265,7 @@ def test_rtest2(args):
     # Initiallize to 0, set to 1 if any test or subtest fails, set to 2 if no tests can be run
     iok = 0
 
-    args = parse_args(args)
-
-    setup_logging(args.loglevel)
+    setup_logging(arg_loglevel)
     _logger.info("Starting rtest2")
 
     test_id = 0
@@ -266,27 +283,27 @@ def test_rtest2(args):
     # Check for dot executable
     subtest_id += 1
     subtest_label = "Test {0:d}.{1:d}: Dot executable".format(test_id, subtest_id)
-    if exists(args.dot_exe):
-        dot_exe = abspath(args.dot_exe)
+    if exists(arg_dot_exe):
+        dot_exe = abspath(arg_dot_exe)
         subtest_status = "ok"
         subtest_comment = " # Found {0:s}".format(dot_exe)
     else:
         subtest_status = "not ok"
-        subtest_comment = " # Cannot find {0:s}".format(args.dot_exe)
+        subtest_comment = " # Cannot find {0:s}".format(arg_dot_exe)
 
     if subtest_status != "ok":
         iok = 2
     tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
         .format(subtest_status, subtest_id, subtest_label, subtest_comment)
     tap_output.append(tap_entry + "\n")
-    if args.use_pytest:
+    if arg_use_pytest:
         assert subtest_status == "ok", tap_entry
 
     # Check for test definitions
     subtest_id += 1
     subtest_label = "Test {0:d}.{1:d}: Test definitions".format(test_id, subtest_id)
-    if exists(args.test_json):
-        tfn = abspath(args.test_json)
+    if exists(arg_test_json):
+        tfn = abspath(arg_test_json)
         # Import test roster from JSON input
         with open(tfn, 'r') as ifh:
             test_group = json.load(ifh, object_pairs_hook=OrderedDict)
@@ -300,20 +317,20 @@ def test_rtest2(args):
             subtest_comment = " # No tests found in {0:s} (is it JSON?)".format(tfn)
     else:
         subtest_status = "not ok"
-        subtest_comment = " # Cannot find {0:s}".format(args.test_json)
+        subtest_comment = " # Cannot find {0:s}".format(arg_test_json)
 
     if subtest_status != "ok":
         iok = 2
     tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
         .format(subtest_status, subtest_id, subtest_label, subtest_comment)
     tap_output.append(tap_entry + "\n")
-    if args.use_pytest:
+    if arg_use_pytest:
         assert subtest_status == "ok", tap_entry
 
     # Check if input directory exists or can be created
     subtest_id += 1
     subtest_label = "Test {0:d}.{1:d}: Input directory".format(test_id, subtest_id)
-    graph_dir = abspath(args.graph_dir)
+    graph_dir = abspath(arg_graph_dir)
     if not exists(graph_dir):
         mkdir(graph_dir)
         _logger.info("Created input directory {0:s}".format(graph_dir))
@@ -322,20 +339,20 @@ def test_rtest2(args):
         subtest_comment = " # Found {0:s}".format(tfn)
     else:
         subtest_status = "not ok"
-        subtest_comment = " # Cannot create {0:s}".format(args.graph_dir)
+        subtest_comment = " # Cannot create {0:s}".format(arg_graph_dir)
 
     if subtest_status != "ok":
         iok = 2
     tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
         .format(subtest_status, subtest_id, subtest_label, subtest_comment)
     tap_output.append(tap_entry + "\n")
-    if args.use_pytest:
+    if arg_use_pytest:
         assert subtest_status == "ok", tap_entry
 
     # Check if results directory exists or can be created
     subtest_id += 1
     subtest_label = "Test {0:d}.{1:d}: Results directory".format(test_id, subtest_id)
-    results_dir = abspath(args.results_dir)
+    results_dir = abspath(arg_results_dir)
     if not exists(results_dir):
         mkdir(results_dir)
         _logger.info("Created results directory {0:s}".format(results_dir))
@@ -344,39 +361,39 @@ def test_rtest2(args):
         subtest_comment = " # Found {0:s}".format(results_dir)
     else:
         subtest_status = "not ok"
-        subtest_comment = " # Cannot create {0:s}".format(args.results_dir)
+        subtest_comment = " # Cannot create {0:s}".format(arg_results_dir)
 
     if subtest_status != "ok":
         iok = 2
     tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
         .format(subtest_status, subtest_id, subtest_label, subtest_comment)
     tap_output.append(tap_entry + "\n")
-    if args.use_pytest:
+    if arg_use_pytest:
         assert subtest_status == "ok", tap_entry
 
     # Check if reference directory exists
     subtest_id += 1
     subtest_label = "Test {0:d}.{1:d}: Reference directory".format(test_id, subtest_id)
-    if exists(args.reference_dir):
-        reference_dir = abspath(args.reference_dir)
+    if exists(arg_reference_dir):
+        reference_dir = abspath(arg_reference_dir)
         subtest_status = "ok"
         subtest_comment = " # Found {0:s}".format(reference_dir)
     else:
         subtest_status = "not ok"
-        subtest_comment = " # Cannot find {0:s}".format(args.reference_dir)
+        subtest_comment = " # Cannot find {0:s}".format(arg_reference_dir)
 
     if subtest_status != "ok":
         iok = 2
     tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
         .format(subtest_status, subtest_id, subtest_label, subtest_comment)
     tap_output.append(tap_entry + "\n")
-    if args.use_pytest:
+    if arg_use_pytest:
         assert subtest_status == "ok", tap_entry
 
     # Check if layout engine is defined
     subtest_id += 1
     subtest_label = "Test {0:d}.{1:d}: Layout engine".format(test_id, subtest_id)
-    layout = args.layout.strip().lower()
+    layout = arg_layout.strip().lower()
     if len(layout) > 0:
         subtest_status = "ok"
         subtest_comment = " # Setting to {0:s}".format(layout)
@@ -389,7 +406,7 @@ def test_rtest2(args):
     tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
         .format(subtest_status, subtest_id, subtest_label, subtest_comment)
     tap_output.append(tap_entry + "\n")
-    if args.use_pytest:
+    if arg_use_pytest:
         assert subtest_status == "ok", tap_entry
 
     # Remove stale TAP file
@@ -398,9 +415,9 @@ def test_rtest2(args):
         remove(tap_fn)
 
     add_tap_plan(tap_output)
-    if args.write_stdout:
+    if arg_write_stdout:
         sys.stdout.writelines(tap_output)
-    if args.write_tapfiles:
+    if arg_write_tapfiles:
         write_tap(results_dir, 0, tap_output)
 
     # Quit if pretests fail
@@ -466,12 +483,9 @@ def test_rtest2(args):
             # anyway to generate results, providing reference data for subsequent runs
 
             # Compose command and arguments as list
-            cmd_args = [dot_exe]
-            cmd_args.append("-K" + layout)
-            cmd_args.append("-T" + subtest_format)
-            cmd_args.append(graph_fn)
-            cmd_args.append("-o")
-            cmd_args.append(results_fn)
+            layout_opt = "-K{0:s}".format(layout)
+            format_opt = "-T{0:s}".format(subtest_format)
+            cmd_args = [dot_exe, layout_opt, format_opt, graph_fn, "-o", results_fn]
 
             # Display command
             _logger.info("    {0:s}: {1:s}".format(tag, " ".join(cmd_args)))
@@ -555,13 +569,13 @@ def test_rtest2(args):
             tap_entry = "{0:s} {1:d} - {2:s}{3:s}" \
                 .format(subtest_status, subtest_id, subtest_label, subtest_comment)
             tap_output.append(tap_entry + "\n")
-            if args.use_pytest:
+            if arg_use_pytest:
                 assert subtest_status == "ok", tap_entry
 
         add_tap_plan(tap_output)
-        if args.write_stdout:
+        if arg_write_stdout:
             sys.stdout.writelines(tap_output)
-        if args.write_tapfiles:
+        if arg_write_tapfiles:
             write_tap(results_dir, test_id, tap_output)
 
     _logger.info("Ending rtest2")
@@ -574,7 +588,19 @@ def run():
     Returns:
         int: Status code - 0 = success, non-zero = failure
     """
-    iok = test_rtest2(sys.argv[1:])
+    args = parse_args(sys.argv[1:])
+    iok = test_rtest2(
+        arg_dot_exe=args.dot_exe,
+        arg_reference_dir=args.reference_dir,
+        arg_test_json=args.test_json,
+        arg_layout=args.layout,
+        arg_graph_dir=args.graph_dir,
+        arg_results_dir=args.results_dir,
+        arg_write_stdout=args.write_stdout,
+        arg_write_tapfiles=args.write_tapfiles,
+        arg_use_pytest=args.use_pytest,
+        arg_loglevel=args.loglevel)
+
     return iok
 
 
