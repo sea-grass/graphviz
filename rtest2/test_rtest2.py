@@ -2,7 +2,7 @@
 """
 Test generator and runner for detecting differences in text and images produced by dot
 
-Directions for use:
+Directions for standalone use:
 - Create reference directory and populate it with reference data.
 - Create "test roster", a JSON-formatted file consisting of a
   dict of test definitions. Default name is "TESTS.json"
@@ -20,6 +20,38 @@ Directions for use:
   definition file, and the reference directory, and any optional
   parameters (input and output directories, default layout)
 
+Directions for use under pytest:
+- Create reference directory and populate it with reference data.
+- Create "test roster", a JSON-formatted file consisting of a
+  dict of test definitions. Default name is "TESTS.json"
+  - key is test label
+  - value is a dict
+    - required key "graph", value is a string, the backslash-escaped 
+      gv commands to run through dot
+    - required key "format", value is a list of strings which can
+      be accepted by dot's -T option. At least one format must be
+      listed; list cannot be empty
+    - any other keys are ignored
+  - Optionally, create input and output directories which are
+    writable by this script.
+- Run the script, specifying the path to the dot executable, the test
+  definition file, and the reference directory, and any optional
+  parameters (input and output directories, default layout).
+- A renamed subset of command-line options is available when running
+  test_rtest2.py under pytest:
+  - Short options are not supported under pytest
+  - Long options are prefixed with --rtest2-
+    - Use --rtest2-dot-executable instead of --dot-executable
+    - Use --rtest2-test-definitions instead of --test-definitions
+    - Use --rtest2-input-dir instead of --input-dir
+    - Use --rtest2-output-dir instead of --output-dir
+    - Use --rtest2-reference-dir instead of --reference-dir
+    - Use --rtest2-layout instead of --layout
+  - Binary flags are not supported when run under pytest:
+    - --pytest is set
+    - --quiet is set
+    - --no-tap is not set (TAP output files are written by default)
+    
 Interpreting results:
 - Output is in TAP format; see https://testanything.org/
   - The range of subtests for a given test is displayed as "1..<number of subtests>"
@@ -78,68 +110,68 @@ def parse_args(args):
     parser = argparse.ArgumentParser(
         description="rtest2 test runner")
     parser.add_argument(
-        "-t",
-        "--test-definitions",
-        dest="test_json",
-        help="set JSON test definition file",
-        default=join(abspath("."), "TESTS.json"),
-        metavar="TESTS_JSON",
-        action="store")
-    parser.add_argument(
         "-x",
         "--dot-executable",
         dest="dot_exe",
-        help="set dot executable",
+        help="set dot executable. Default: ./dot",
         default=join(abspath("."), "dot"),
         metavar="DOT_EXECUTABLE",
+        action="store")
+    parser.add_argument(
+        "-r",
+        "--reference-dir",
+        dest="reference_dir",
+        help="set directory containing reference results. Default: ./test_reference",
+        default=join(abspath("."), "test_reference"),
+        action="store")
+    parser.add_argument(
+        "-t",
+        "--test-definitions",
+        dest="test_json",
+        help="set JSON test definition file. Default: TESTS.json",
+        default=join(abspath("."), "TESTS.json"),
+        metavar="TESTS_JSON",
         action="store")
     parser.add_argument(
         "-i",
         "--input-dir",
         dest="graph_dir",
-        help="set directory to contain generated input files",
+        help="set directory to contain generated input files. Default: ./test_graphs",
         default=join(abspath("."), "test_graphs"),
         action="store")
     parser.add_argument(
         "-o",
         "--output-dir",
         dest="results_dir",
-        help="set directory to contain generated results",
+        help="set directory to contain generated results. Default: ./test_results",
         default=join(abspath("."), "test_results"),
-        action="store")
-    parser.add_argument(
-        "-r",
-        "--reference-dir",
-        dest="reference_dir",
-        help="set directory containing reference results",
-        default=join(abspath("."), "test_reference"),
         action="store")
     parser.add_argument(
         "-L",
         "--layout",
         dest="layout",
-        help="set layout engine",
+        help="set layout engine. Default: dot",
         default="dot",
         action="store")
     parser.add_argument(
         "-T",
         "--no-tap",
         dest="write_tapfiles",
-        help="do not write .tap test output files",
+        help="do not write .tap test output files. Default: True",
         default=True,
         action="store_false")
     parser.add_argument(
-        "-P",
-        "--no-pytest",
+        "-p",
+        "--pytest",
         dest="use_pytest",
-        help="do not run pytest assert()s",
-        default=True,
-        action="store_false")
+        help="enable pytest assert()s. Default: False but programmatically set to True when run via pytest",
+        default=False,
+        action="store_true")
     parser.add_argument(
         "-q",
         "--quiet",
         dest="write_stdout",
-        help="do not write test output to stdout",
+        help="do not write test output to stdout. Default: True",
         default=True,
         action="store_false")
 
