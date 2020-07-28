@@ -18,7 +18,7 @@ Directions for use:
     writable by this script.
 - Run the script, specifying the path to the dot executable, the test
   definition file, and the reference directory, and any optional
-  parameters (verbosity, input and output directories, default layout)
+  parameters (input and output directories, default layout)
 
 Interpreting results:
 - Output is in TAP format; see https://testanything.org/
@@ -78,70 +78,70 @@ def parse_args(args):
     parser = argparse.ArgumentParser(
         description="rtest2 test runner")
     parser.add_argument(
-        '-t',
-        '--test-definitions',
+        "-t",
+        "--test-definitions",
         dest="test_json",
         help="set JSON test definition file",
         default=join(abspath("."), "TESTS.json"),
         metavar="TESTS_JSON",
-        action='store')
+        action="store")
     parser.add_argument(
-        '-x',
-        '--dot-executable',
+        "-x",
+        "--dot-executable",
         dest="dot_exe",
         help="set dot executable",
         default=join(abspath("."), "dot"),
         metavar="DOT_EXECUTABLE",
-        action='store')
+        action="store")
     parser.add_argument(
-        '-i',
-        '--input-dir',
+        "-i",
+        "--input-dir",
         dest="graph_dir",
         help="set directory to contain generated input files",
         default=join(abspath("."), "test_graphs"),
-        action='store')
+        action="store")
     parser.add_argument(
-        '-o',
-        '--output-dir',
+        "-o",
+        "--output-dir",
         dest="results_dir",
         help="set directory to contain generated results",
         default=join(abspath("."), "test_results"),
-        action='store')
+        action="store")
     parser.add_argument(
-        '-r',
-        '--reference-dir',
+        "-r",
+        "--reference-dir",
         dest="reference_dir",
         help="set directory containing reference results",
         default=join(abspath("."), "test_reference"),
-        action='store')
+        action="store")
     parser.add_argument(
-        '-L',
-        '--layout',
+        "-L",
+        "--layout",
         dest="layout",
         help="set layout engine",
         default="dot",
-        action='store')
+        action="store")
     parser.add_argument(
-        '-T',
-        '--no-tap',
+        "-T",
+        "--no-tap",
         dest="write_tapfiles",
         help="do not write .tap test output files",
         default=True,
-        action='store_false')
+        action="store_false")
     parser.add_argument(
-        '-P',
-        '--no-pytest',
+        "-P",
+        "--no-pytest",
         dest="use_pytest",
         help="do not run pytest assert()s",
         default=True,
-        action='store_false')
+        action="store_false")
     parser.add_argument(
-        '-q',
-        '--quiet',
+        "-q",
+        "--quiet",
         dest="write_stdout",
         help="do not write test output to stdout",
         default=True,
-        action='store_false')
+        action="store_false")
 
     return parser.parse_args(args)
 
