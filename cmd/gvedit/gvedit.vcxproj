@@ -250,6 +250,9 @@
       <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\..\lib\ingraphs\ingraphs.vcxproj">
+      <Project>{d6fd0de5-5305-458e-8ca5-fca4b8e05b04}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
