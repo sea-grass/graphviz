@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was removed in Graphviz 2.40.0.
 - A number of further updates to the libcdt man page have been made to reflect
   other changes that happened in Graphviz 9.0.0.
+- gvedit is not built for Windows (fixed for MSBuild builds only) #1816
 
 ## [9.0.0] - 2023-09-11
 
