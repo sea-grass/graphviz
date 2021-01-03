@@ -1,7 +1,39 @@
 cmake_minimum_required (VERSION 3.1 FATAL_ERROR)
 project (Graphviz)
+cmake_policy(SET CMP0074 NEW)
 
 include(FeatureSummary)
+
+# On macOS, search Homebrew for keg-only versions of Bison and Flex. Xcode does
+# not provide new enough versions for us to use.
+if (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
+    execute_process(
+        COMMAND brew --prefix bison 
+        RESULT_VARIABLE BREW_BISON
+        OUTPUT_VARIABLE BREW_BISON_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if (BREW_BISON EQUAL 0 AND EXISTS "${BREW_BISON_PREFIX}")
+        message(STATUS "Found Bison keg installed by Homebrew at ${BREW_BISON_PREFIX}")
+        set(BISON_EXECUTABLE "${BREW_BISON_PREFIX}/bin/bison")
+    endif()
+
+    execute_process(
+        COMMAND brew --prefix flex 
+        RESULT_VARIABLE BREW_FLEX
+        OUTPUT_VARIABLE BREW_FLEX_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if (BREW_FLEX EQUAL 0 AND EXISTS "${BREW_FLEX_PREFIX}")
+        message(STATUS "Found Flex keg installed by Homebrew at ${BREW_FLEX_PREFIX}")
+        set(FLEX_EXECUTABLE "${BREW_FLEX_PREFIX}/bin/flex")
+    endif()
+endif()
+
+#set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED “NO”)
+#set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY  )
+set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
+
 
 # =============================== Build options ================================
 option(enable_ltdl     "Support on-demand plugin loading" ON)
@@ -86,9 +118,10 @@ find_package(EXPAT)
 find_package(GD)
 find_package(LTDL)
 find_package(PangoCairo)
-find_package(ZLIB)
 
-if (UNIX)
+
+if (UNIX AND NOT APPLE)
+	find_package(ZLIB)
     find_library(MATH_LIB m)
 endif ()
 

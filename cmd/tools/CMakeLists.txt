@@ -53,7 +53,7 @@ add_simple_tool(ccomps)
 add_simple_tool(gc)
 add_simple_tool(nop)
 add_simple_tool(tred)
-target_link_libraries(tred common) # e.g. for start_timer
+target_link_libraries(tred common_obj) # e.g. for start_timer
 add_simple_tool(unflatten)
 
 # ================================ complex tools ===============================
@@ -355,7 +355,7 @@ target_include_directories(mm2gv PRIVATE
 target_link_libraries(mm2gv
     sparse
     cgraph
-    common
+    common_obj
     gvc
     pathplan
 )

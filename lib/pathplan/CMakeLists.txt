@@ -30,12 +30,23 @@ target_include_directories(pathplan PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Specify library version and soversion
+set_target_properties(pathplan PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION A
+	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.pathplan
+	PUBLIC_HEADER "pathplan.h"
+    VERSION 4.0.0
+    SOVERSION 4
+)
+
 # Installation location of library files
 install(
     TARGETS pathplan
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed
@@ -50,11 +61,7 @@ install(
     DESTINATION ${MAN_INSTALL_DIR}
 )
 
-# Specify library version and soversion
-set_target_properties(pathplan PROPERTIES
-    VERSION 4.0.0
-    SOVERSION 4
-)
+
 target_link_libraries(
     pathplan
     ${MATH_LIB}

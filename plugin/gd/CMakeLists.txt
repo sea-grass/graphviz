@@ -28,12 +28,22 @@ target_link_libraries(gvplugin_gd
     ${GD_LIBRARIES}
 )
 
+# Specify library version and soversion
+set_target_properties(gvplugin_gd PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION A
+	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.plugin.gd
+    VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
+    SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
+)
+
 # Installation location of library files
 install(
     TARGETS gvplugin_gd
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Include DLLs with this library on Windows
@@ -45,10 +55,6 @@ if (WIN32)
     )
 endif()
 
-# Specify library version and soversion
-set_target_properties(gvplugin_gd PROPERTIES
-    VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
-    SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
-)
+
 
 endif (GD_FOUND)

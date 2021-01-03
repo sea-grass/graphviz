@@ -49,9 +49,10 @@ target_include_directories(gvc PRIVATE
     ${RxSpencer_INCLUDE_DIRS}
 )
 
-target_link_libraries(gvc PRIVATE
-    $<TARGET_OBJECTS:common_obj>
-    $<TARGET_OBJECTS:pack_obj>
+
+target_link_libraries(gvc PUBLIC
+    common_obj
+    pack_obj
 )
 
 target_link_libraries(gvc PUBLIC
@@ -66,6 +67,8 @@ target_link_libraries(gvc PUBLIC
     ${MATH_LIB}
 )
 
+
+
 if (NOT WIN32)
     target_link_libraries(gvc PUBLIC ${LTDL_LIBRARIES})
 endif()
@@ -74,12 +77,24 @@ if (${with_ortho})
     target_link_libraries(gvc PUBLIC ortho)
 endif()
 
+# Specify library version and soversion
+set_target_properties(gvc PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION A
+	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.gvc
+	PUBLIC_HEADER "gvc.h"
+    VERSION 6.0.0
+    SOVERSION 6
+)
+
+
 # Installation location of library files
 install(
     TARGETS gvc
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed
@@ -105,11 +120,7 @@ install(
     DESTINATION ${MAN_INSTALL_DIR}
 )
 
-# Specify library version and soversion
-set_target_properties(gvc PROPERTIES
-    VERSION 6.0.0
-    SOVERSION 6
-)
+
 
 # Include DLLs with this library on Windows
 if (WIN32)

@@ -97,6 +97,7 @@ windows/build/graphviz.wxs
 *.pdf
 !doc/**/*.pdf
 .libs
+_build
 /graphviz_version.h
 FEATURE/
 cmd/dot/dot_builtins

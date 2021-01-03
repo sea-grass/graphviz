@@ -24,6 +24,16 @@ add_library(cdt SHARED
     dtwalk.c
 )
 
+# Specify library version and soversion
+set_target_properties(cdt PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION A
+	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.cdt
+	PUBLIC_HEADER "cdt.h"
+	VERSION 5.0.0
+    SOVERSION 5
+)
+
 target_include_directories(cdt PRIVATE
     ${GRAPHVIZ_LIB_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR})
@@ -34,6 +44,7 @@ install(
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed
@@ -48,8 +59,4 @@ install(
     DESTINATION ${MAN_INSTALL_DIR}
 )
 
-# Specify library version and soversion
-set_target_properties(cdt PROPERTIES
-    VERSION 5.0.0
-    SOVERSION 5
-)
+

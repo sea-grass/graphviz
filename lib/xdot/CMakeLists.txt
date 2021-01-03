@@ -13,12 +13,23 @@ target_include_directories(xdot PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# Specify library version and soversion
+set_target_properties(xdot PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION A
+	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.xdot
+	PUBLIC_HEADER "xdot.h"
+    VERSION 4.0.0
+    SOVERSION 4
+)
+
 # Installation location of library files
 install(
     TARGETS xdot
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed
@@ -33,8 +44,4 @@ install(
     DESTINATION ${MAN_INSTALL_DIR}
 )
 
-# Specify library version and soversion
-set_target_properties(xdot PROPERTIES
-    VERSION 4.0.0
-    SOVERSION 4
-)
+

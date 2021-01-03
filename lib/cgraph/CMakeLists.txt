@@ -46,12 +46,23 @@ target_include_directories(cgraph PRIVATE
 
 target_link_libraries(cgraph cdt)
 
+# Specify library version and soversion
+set_target_properties(cgraph PROPERTIES
+	FRAMEWORK TRUE
+	FRAMEWORK_VERSION A
+	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.cgraph
+	PUBLIC_HEADER "cgraph.h"
+    VERSION 6.0.0
+    SOVERSION 6
+)
+
 # Installation location of library files
 install(
     TARGETS cgraph
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed
@@ -66,8 +77,4 @@ install(
     DESTINATION ${MAN_INSTALL_DIR}
 )
 
-# Specify library version and soversion
-set_target_properties(cgraph PROPERTIES
-    VERSION 6.0.0
-    SOVERSION 6
-)
+

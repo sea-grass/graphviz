@@ -43,6 +43,7 @@ target_link_libraries(gvplugin_core
     cdt
     cgraph
     gvc
+	common_obj
 )
 
 # Installation location of library files
