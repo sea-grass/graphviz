@@ -1,6 +1,6 @@
 add_definitions(-DEXPORT_CDT)
 
-add_library(cdt SHARED
+add_library(cdt 
     # Header files
     cdt.h
     dthdr.h
@@ -26,10 +26,6 @@ add_library(cdt SHARED
 
 # Specify library version and soversion
 set_target_properties(cdt PROPERTIES
-	FRAMEWORK TRUE
-	FRAMEWORK_VERSION A
-	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.cdt
-	PUBLIC_HEADER "cdt.h"
 	VERSION 5.0.0
     SOVERSION 5
 )
@@ -44,7 +40,6 @@ install(
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed

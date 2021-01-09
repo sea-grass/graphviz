@@ -1,6 +1,6 @@
 if(Cairo_FOUND AND PangoCairo_FOUND)
 
-add_library(gvplugin_pango SHARED
+add_library(gvplugin_pango 
     # Header files
     gvgetfontlist.h
     gvplugin_pango.h

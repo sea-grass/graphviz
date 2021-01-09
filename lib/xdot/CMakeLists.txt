@@ -1,6 +1,6 @@
 add_definitions(-DEXPORT_XDOT)
 
-add_library(xdot SHARED
+add_library(xdot
     # Header files
     xdot.h
 
@@ -15,10 +15,6 @@ target_include_directories(xdot PRIVATE
 
 # Specify library version and soversion
 set_target_properties(xdot PROPERTIES
-	FRAMEWORK TRUE
-	FRAMEWORK_VERSION A
-	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.xdot
-	PUBLIC_HEADER "xdot.h"
     VERSION 4.0.0
     SOVERSION 4
 )
@@ -29,7 +25,6 @@ install(
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed

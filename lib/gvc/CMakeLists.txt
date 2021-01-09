@@ -1,6 +1,6 @@
 add_definitions(-D_BLD_gvc=1 -DGVC_EXPORTS -DGVLIBDIR="${LIBRARY_INSTALL_DIR}/graphviz")
 
-add_library(gvc SHARED
+add_library(gvc 
     # Header files
     gvc.h
     gvcext.h
@@ -79,10 +79,6 @@ endif()
 
 # Specify library version and soversion
 set_target_properties(gvc PROPERTIES
-	FRAMEWORK TRUE
-	FRAMEWORK_VERSION A
-	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.gvc
-	PUBLIC_HEADER "gvc.h"
     VERSION 6.0.0
     SOVERSION 6
 )
@@ -94,7 +90,6 @@ install(
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed

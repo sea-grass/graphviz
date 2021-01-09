@@ -4,7 +4,7 @@ ADD_FLEX_BISON_DEPENDENCY(Scan Grammar)
 
 add_definitions(-DEXPORT_CGRAPH -DEXPORT_AGXBUF -DEXPORT_CGHDR -DYY_NO_UNISTD_H)
 
-add_library(cgraph SHARED
+add_library(cgraph
     # Header files
     agxbuf.h
     cghdr.h
@@ -48,10 +48,6 @@ target_link_libraries(cgraph cdt)
 
 # Specify library version and soversion
 set_target_properties(cgraph PROPERTIES
-	FRAMEWORK TRUE
-	FRAMEWORK_VERSION A
-	MACOSX_FRAMEWORK_IDENTIFIER com.graphviz.cgraph
-	PUBLIC_HEADER "cgraph.h"
     VERSION 6.0.0
     SOVERSION 6
 )
@@ -62,7 +58,6 @@ install(
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-    FRAMEWORK DESTINATION ${GV_FRAMEWORK_DIR}
 )
 
 # Specify headers to be installed

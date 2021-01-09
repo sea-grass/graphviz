@@ -30,10 +30,6 @@ if (CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
     endif()
 endif()
 
-#set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGNING_REQUIRED “NO”)
-#set(CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY  )
-set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
-
 
 # =============================== Build options ================================
 option(enable_ltdl     "Support on-demand plugin loading" ON)
@@ -42,6 +38,9 @@ option(with_ipsepcola  "IPSEPCOLA features in neato layout engine (disabled by d
 option(with_ortho      "ORTHO features in neato layout engine." ON )
 option(with_sfdp       "sfdp layout engine." ON )
 option(with_smyrna     "SMYRNA large graph viewer (disabled by default - experimental)" OFF)
+option(build_shared_libs "Build using shared libraries" ON)
+option(enable_macos_universal "Set architecture for building" OFF)
+option(CMAKE_OSX_DEPLOYMENT_TARGET "Minimal macOS deployment target" "10.10")
 
 if (enable_ltdl)
         add_definitions(-DENABLE_LTDL)
@@ -67,6 +66,10 @@ if (with_smyrna)
     # TODO include dependency checks
     add_definitions(-DSMYRNA)
 endif (with_smyrna)
+
+if (enable_macos_universal)
+	set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
+endif (enable_macos_universal)
 
 # ===================== Append local CMake module directory ====================
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
