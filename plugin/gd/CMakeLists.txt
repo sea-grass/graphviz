@@ -1,6 +1,6 @@
 if (GD_FOUND)
 
-add_library(gvplugin_gd SHARED
+add_library(gvplugin_gd
     # Source files
     gvdevice_gd.c
     gvloadimage_gd.c
@@ -28,6 +28,12 @@ target_link_libraries(gvplugin_gd
     ${GD_LIBRARIES}
 )
 
+# Specify library version and soversion
+set_target_properties(gvplugin_gd PROPERTIES
+    VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
+    SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
+)
+
 # Installation location of library files
 install(
     TARGETS gvplugin_gd
@@ -45,10 +51,6 @@ if (WIN32)
     )
 endif()
 
-# Specify library version and soversion
-set_target_properties(gvplugin_gd PROPERTIES
-    VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
-    SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}
-)
+
 
 endif (GD_FOUND)

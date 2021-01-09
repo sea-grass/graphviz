@@ -6,7 +6,7 @@ add_custom_command(
             ${CMAKE_CURRENT_SOURCE_DIR}/ps.txt > ${CMAKE_CURRENT_BINARY_DIR}/ps.h
 )
 
-add_library(gvplugin_core SHARED
+add_library(gvplugin_core
     # Header files
     ps.h
 
@@ -43,6 +43,7 @@ target_link_libraries(gvplugin_core
     cdt
     cgraph
     gvc
+	common_obj
 )
 
 # Installation location of library files

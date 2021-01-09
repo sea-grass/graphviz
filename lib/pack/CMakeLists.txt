@@ -1,6 +1,6 @@
 add_definitions(-DGVC_EXPORTS)
 
-add_library(pack_obj OBJECT
+add_library(pack_obj STATIC
     # Header files
     pack.h
 

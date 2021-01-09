@@ -49,7 +49,7 @@ add_custom_command(
                                >> ${CMAKE_CURRENT_BINARY_DIR}/ps_font_equiv.h
 )
 
-add_library(common_obj OBJECT
+add_library(common_obj STATIC
     # Header files
     arith.h
     color.h
@@ -126,9 +126,6 @@ if(APPLE)
     target_compile_options(common_obj PRIVATE "-fno-common")
 endif(APPLE)
 
-add_library(common STATIC
-    $<TARGET_OBJECTS:common_obj>
-)
 
 # Specify headers to be installed
 install(
