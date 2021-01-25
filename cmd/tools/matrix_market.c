@@ -139,7 +139,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		val = REALLOC(val, 2 * sizeof(real) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -175,7 +174,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		vali = REALLOC(vali, 2 * sizeof(int) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -235,7 +233,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		val = REALLOC(val, 4 * sizeof(real) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -250,7 +247,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		val = REALLOC(val, 4 * sizeof(real) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
