@@ -62,7 +62,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
     MM_typecode matcode;
     real *val = NULL, *v;
     int *vali = NULL, i, m, n, *I = NULL, *J = NULL, nz;
-    void *vp = NULL;
     SparseMatrix A = NULL;
     int nzold;
     int c;
@@ -139,7 +138,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		val = REALLOC(val, 2 * sizeof(real) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -150,7 +148,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    } else {
 		assert(!mm_is_hermitian(matcode));
 	    }
-	    vp = (void *) val;
 	    break;
 	case MATRIX_TYPE_INTEGER:
 	    vali = malloc(nz * sizeof(int));
@@ -175,7 +172,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		vali = REALLOC(vali, 2 * sizeof(int) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -186,7 +182,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 	    } else {
 		assert(!mm_is_hermitian(matcode));
 	    }
-	    vp = (void *) vali;
 	    break;
 	case MATRIX_TYPE_PATTERN:
 	    for (i = 0; i < nz; i++) {
@@ -235,7 +230,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		val = REALLOC(val, 4 * sizeof(real) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    assert(I[i] != J[i]);	/* skew symm has no diag */
@@ -250,7 +244,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		I = REALLOC(I, 2 * sizeof(int) * nz);
 		J = REALLOC(J, 2 * sizeof(int) * nz);
 		val = REALLOC(val, 4 * sizeof(real) * nz);
-		vp = (void *) val;
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
 		    if (I[i] != J[i]) {
@@ -262,18 +255,17 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f, int format)
 		    }
 		}
 	    }
-	    vp = (void *) val;
 	    break;
 	default:
 	    return 0;
 	}
 
 	if (format == FORMAT_CSR) {
-	    A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
+	    A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, val,
 						    type, sizeof(real));
 	} else {
 	    A = SparseMatrix_new(m, n, 1, type, FORMAT_COORD);
-	    A = SparseMatrix_coordinate_form_add_entries(A, nz, I, J, vp);
+	    A = SparseMatrix_coordinate_form_add_entries(A, nz, I, J, val);
 	}
 	break;
     default:
