@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - C++11 support is now required of the C++ compiler used to build Graphviz
 - C99 support is now required of the C compiler used to build Graphviz
 - Question about userout() function in agerror.c #1924
+- The edges in JSON output are ordered now !1728
 
 ### Fixed
 - memory leak in label construction
