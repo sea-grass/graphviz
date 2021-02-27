@@ -12,6 +12,7 @@
 
 #include "VisioText.h"
 
+#include <cgraph/strdup.h>
 #include <gvc/gvcjob.h>
 #include <gvc/gvio.h>
 #include <cstdlib>

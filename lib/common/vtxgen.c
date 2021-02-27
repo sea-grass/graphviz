@@ -26,6 +26,7 @@
 #include <time.h>
 #endif
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strdup.h>
 
 
 /* VTX font modifiers */

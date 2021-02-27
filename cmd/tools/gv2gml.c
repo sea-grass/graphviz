@@ -24,6 +24,7 @@
 #include <getopt.h>
 
 #include <cgraph/cgraph.h>
+#include <cgraph/strdup.h>
 #include <ctype.h>
 #include <ingraphs/ingraphs.h>
 
@@ -118,11 +119,7 @@ parseStyle (char* s)
     char* ip;
     char* sep = " \t,";
 
-#ifdef _WIN32 
-	s = _strdup(s);
-#else
 	s = strdup(s);
-#endif
     for (ip = strtok (s, sep); ip; ip = strtok (NULL, sep)) {
 	if (streq(ip,"invis")) flags |= INVIS;
 	else if (streq(ip,"filled")) flags |= FILL;

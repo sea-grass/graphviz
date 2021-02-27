@@ -32,7 +32,7 @@
 #include "hotkeymap.h"
 #include "topviewfuncs.h"
 #include <cgraph/strcasecmp.h>
-
+#include <cgraph/strdup.h>
 
   /* Forward declarations */
 #ifdef UNUSED

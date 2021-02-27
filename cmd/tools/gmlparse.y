@@ -24,6 +24,7 @@
 #include <gml2gv.h>
 #include <agxbuf.h>
 #include <assert.h>
+#include <cgraph/strdup.h>
 
 #define NEW(t)       (t*)malloc(sizeof(t))
 #define N_NEW(n,t)   (t*)calloc((n),sizeof(t))

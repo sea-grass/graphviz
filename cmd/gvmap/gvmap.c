@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <cgraph/strdup.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define STANDALONE
@@ -29,9 +30,6 @@
 #include <sparse/colorutil.h>
 #include <sparse/color_palette.h>
 
-#ifdef _WIN32
-#define strdup(x) _strdup(x)
-#endif
 enum {POINTS_ALL = 1, POINTS_LABEL, POINTS_RANDOM};
 enum {maxlen = 10000000};
 enum {MAX_GRPS = 10000};

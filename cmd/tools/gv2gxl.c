@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/strdup.h>
 #include "convert.h"
 #include <ctype.h>
 #include <stddef.h>

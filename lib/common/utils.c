@@ -16,6 +16,7 @@
 #include <math.h>
 #include <gvc/gvc.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strdup.h>
 
 #ifdef _WIN32
 #define R_OK 4
@@ -1355,7 +1356,7 @@ char* scanEntity (char* t, agxbuf* xb)
 
     agxbputc(xb, '&');
     if (!endp) return t;
-    if (((len = endp-t) > MAXENTLEN) || (len < 2)) return t;
+    if ((len = endp-t) > MAXENTLEN || len < 2) return t;
     strncpy (buf, t, len);
     buf[len] = '\0';
     key.name =  buf;

@@ -23,6 +23,7 @@
 #include <ast/sfstr.h>
 #include "gvprpipe.h"
 #include <cgraph/strcasecmp.h>
+#include <cgraph/strdup.h>
 
 static attr_t *binarySearch(attr_list * l, char *searchKey);
 static int sel_node;
@@ -60,7 +61,6 @@ void free_attr(attr_t * at)
     free(at);
 }
 
-
 attr_t *new_attr(void)
 {
     attr_t *attr = malloc(sizeof(attr_t));
@@ -75,7 +75,6 @@ attr_t *new_attr(void)
     attr->objType[2] = 0;
     return attr;
 }
-
 
 attr_t *new_attr_with_ref(Agsym_t * sym)
 {
@@ -122,8 +121,6 @@ static void reset_attr_list_widgets(attr_list * l)
     }
 }
 
-
-
 static void free_attr_list_widgets(attr_list * l)
 {
     int id;
@@ -131,7 +128,6 @@ static void free_attr_list_widgets(attr_list * l)
 	gtk_object_destroy((GtkObject *) l->fLabels[id]);
     }
 }
-
 
 void free_attr_list(attr_list * l)
 {
@@ -298,23 +294,15 @@ static attr_t *binarySearch(attr_list * l, char *searchKey)
     return NULL;
 }
 
-
-
-
-
-
 static attr_t *pBinarySearch(attr_list * l, char *searchKey)
 {
-    char buf[512];
     int middle, low, high, res;
     low = 0;
     high = l->attr_count - 1;
 
     while (low <= high) {
 	middle = (low + high) / 2;
-	strncpy(buf, l->attributes[middle]->name, strlen(searchKey));
-	buf[strlen(searchKey)] = '\0';
-	res = strcasecmp(searchKey, buf);
+	res = strncasecmp(searchKey, l->attributes[middle]->name, strlen(searchKey));
 	if (res == 0) {
 	    return l->attributes[middle];
 	}
@@ -329,15 +317,9 @@ static attr_t *pBinarySearch(attr_list * l, char *searchKey)
 
 }
 
-
-
-
-
-
 void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
 {
     int res;
-    char buf[512];
     attr_t *at;
     int objKind = get_object_type();
 
@@ -352,16 +334,12 @@ void create_filtered_list(char *prefix, attr_list * sl, attr_list * tl)
     /*go backward to get the first */
     while ((at->index > 0) && (res == 0)) {
 	at = sl->attributes[at->index - 1];
-	strncpy(buf, at->name, strlen(prefix));
-	buf[strlen(prefix)] = '\0';;
-	res = strcasecmp(prefix, buf);
+	res = strncasecmp(prefix, at->name, strlen(prefix));
     }
     res = 0;
     while ((at->index < sl->attr_count) && (res == 0)) {
 	at = sl->attributes[at->index + 1];
-	strncpy(buf, at->name, strlen(prefix));
-	buf[strlen(prefix)] = '\0';
-	res = strcasecmp(prefix, buf);
+	res = strncasecmp(prefix, at->name, strlen(prefix));
 	if ((res == 0) && (at->objType[objKind] == 1))
 	    attr_list_add(tl, new_attr_ref(at));
     }
@@ -480,7 +458,7 @@ static void set_refresh_filters(ViewInfo * v, int type, char *name)
 	v->refresh.pos = 1;
     if (strcasecmp(name, "color") == 0)
 	v->refresh.color = 1;
-    if ((strcasecmp(name, "size") == 0) && (type == AGNODE))
+    if (strcasecmp(name, "size") == 0 && type == AGNODE)
 	v->refresh.nodesize = 1;
     if (strcasecmp(name, "selected") == 0)
 	v->refresh.selection = 1;
@@ -737,7 +715,7 @@ attr_list *load_attr_list(Agraph_t * g)
     return l;
 }
 
- /**/ static void set_header_text(void)
+static void set_header_text(void)
 {
     int nodeCnt = 0;
     int edgeCnt = 0;
@@ -813,7 +791,6 @@ static void gvpr_select(char *attr, char *regex_str, int objType)
     set_header_text();
 }
 
-
 _BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
 {
 
@@ -826,4 +803,3 @@ _BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
     gvpr_select(attr, regex_str, get_object_type());
 
 }
-

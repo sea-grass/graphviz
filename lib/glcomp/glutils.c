@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/strdup.h>
 #include <glcomp/glutils.h>
 #include <stdlib.h>
 #include <string.h>

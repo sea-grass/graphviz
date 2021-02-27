@@ -29,6 +29,7 @@
 #else
 #include <ast/compat_unistd.h>
 #endif
+#include <cgraph/strdup.h>
 
 char **opt_info_argv;
 

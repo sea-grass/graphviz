@@ -11,6 +11,7 @@
 #include <glcomp/glcomptext.h>
 #include <glcomp/glpangofont.h>
 #include <glcomp/glutils.h>
+#include <cgraph/strdup.h>
 #include <common/memory.h>
 #include <GL/glut.h>
 

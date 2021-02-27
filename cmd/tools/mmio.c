@@ -15,7 +15,7 @@
 *
 */
 
-
+#include <cgraph/strdup.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

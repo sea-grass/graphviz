@@ -713,7 +713,7 @@ XsraSelFile (
     XtAddGrab (selFile, True, True);
 
     SFdirModTimerId = XtAppAddTimeOut (
-        SFapp, (unsigned long) 1000, SFdirModTimer, (XtPointer) NULL
+        SFapp, 1000ul, SFdirModTimer, (XtPointer) NULL
     );
 
     while (1) {

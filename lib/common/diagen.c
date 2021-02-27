@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/strdup.h>
 #include <common/render.h>
 
 #include <stdarg.h>
