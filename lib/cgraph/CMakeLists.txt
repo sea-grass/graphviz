@@ -36,6 +36,8 @@ add_library(cgraph SHARED
     utils.c
     write.c
 
+    ${cxx_api_files}
+
     # Generated files
     ${BISON_Grammar_OUTPUTS}
     ${FLEX_Scan_OUTPUTS}
@@ -75,3 +77,45 @@ set_target_properties(cgraph PROPERTIES
     VERSION 6.0.0
     SOVERSION 6
 )
+
+# C++ API
+
+if (with_cxx_api)
+    add_library(cgraph++ SHARED
+        AGraph.h
+        AGraph.cpp
+        )
+    set_property(TARGET cgraph++ PROPERTY CXX_STANDARD 20)
+    set_property(TARGET cgraph++ PROPERTY CXX_STANDARD_REQUIRED ON)
+    if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+        set_target_properties(cgraph++ PROPERTIES COMPILE_OPTIONS -Wextra)
+    endif()
+
+    target_include_directories(cgraph++ PRIVATE
+        ${GRAPHVIZ_LIB_DIR}
+        ${GRAPHVIZ_LIB_DIR}/cdt
+        ${CMAKE_CURRENT_SOURCE_DIR}
+    )
+
+    target_link_libraries(cgraph++ cgraph)
+
+    # Installation location of library files
+    install(
+        TARGETS cgraph++
+        RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+        LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+        ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+
+    # Specify headers to be installed
+    install(
+        FILES AGraph.h
+        DESTINATION ${HEADER_INSTALL_DIR}
+    )
+
+    # Specify library version and soversion
+    set_target_properties(cgraph++ PROPERTIES
+        VERSION 6.0.0
+        SOVERSION 6
+    )
+endif()
