@@ -25,6 +25,7 @@ namespace GVC {
 class GVCONTEXT_API GVContext {
 public:
   // named constructors
+  static std::unique_ptr<GVContext> create();
   static std::unique_ptr<GVContext>
   create_with_builtins(const lt_symlist_t *builtins, bool demand_loading);
 

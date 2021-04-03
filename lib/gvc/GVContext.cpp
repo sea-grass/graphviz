@@ -6,6 +6,10 @@ namespace GVC {
 
 GVContext::GVContext(GVC_t *gvc) : m_gvc(gvc) {}
 
+std::unique_ptr<GVContext> GVContext::create() {
+  return std::make_unique<GVContext>(gvContext());
+}
+
 std::unique_ptr<GVContext>
 GVContext::create_with_builtins(const lt_symlist_t *builtins,
                                 bool demand_loading) {
