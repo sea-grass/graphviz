@@ -119,6 +119,8 @@ if (with_cxx_api)
     add_library(gvc++ SHARED
         GVContext.h
         GVContext.cpp
+        GVLayout.h
+        GVLayout.cpp
     )
 
     set_target_properties(gvc++ PROPERTIES CXX_STANDARD 20)
@@ -152,6 +154,7 @@ if (with_cxx_api)
     install(
         FILES
         GVContext.h
+        GVLayout.h
         DESTINATION ${HEADER_INSTALL_DIR}
     )
 

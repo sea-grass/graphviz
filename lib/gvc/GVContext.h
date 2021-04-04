@@ -22,6 +22,8 @@
 
 namespace GVC {
 
+class GVLayout;
+
 class GVCONTEXT_API GVContext {
 public:
   // named constructors

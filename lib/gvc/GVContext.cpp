@@ -1,6 +1,7 @@
 #include <stdexcept>
 
 #include <gvc/GVContext.h>
+#include <gvc/GVLayout.h>
 
 namespace GVC {
 
