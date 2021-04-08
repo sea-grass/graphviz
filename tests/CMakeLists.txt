@@ -10,6 +10,11 @@ add_compile_options(-Wextra)
 # separate test can be as small as possible
 add_library(test_common STATIC
             catch2_main.cpp
+            svgpp_context_interface.h
+            svgpp_document_traverser.cpp
+            svgpp_document_traverser.h
+            svg_analyzer.cpp
+            svg_analyzer.h
             ../cmd/dot/dot_builtins.c
     )
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
