@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
 project (Graphviz)
 
 include(FeatureSummary)
@@ -105,11 +105,13 @@ endif()
 
 # ============================ Set Graphviz version ============================
 
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
+
 if (DEFINED VERSION)
     set(GRAPHVIZ_VERSION_STRING "${VERSION}")
 else()
     execute_process(
-        COMMAND           python3 gen_version.py
+        COMMAND           "${Python3_EXECUTABLE}" gen_version.py
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         RESULT_VARIABLE   gen_version_result
         OUTPUT_VARIABLE   GRAPHVIZ_VERSION_STRING
@@ -127,7 +129,7 @@ if (DEFINED DATE)
 else()
     # Set GRAPHVIZ_VERSION_BUILD to time of last commit, or to 0 if that fails.
     execute_process(
-        COMMAND           python3 gen_version.py --committer-date-graphviz
+        COMMAND           "${Python3_EXECUTABLE}" gen_version.py --committer-date-graphviz
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
         RESULT_VARIABLE   gen_date_result
         OUTPUT_VARIABLE   GRAPHVIZ_VERSION_BUILD
