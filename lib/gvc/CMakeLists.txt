@@ -57,6 +57,7 @@ target_link_libraries(gvc PUBLIC
     cdt
     cgraph
     label
+    ortho
     pack
     pathplan
     xdot
@@ -70,7 +71,9 @@ if (NOT WIN32)
 endif()
 
 if (${with_ortho})
-    target_link_libraries(gvc PUBLIC ortho)
+    target_link_libraries(gvc PRIVATE
+        $<TARGET_OBJECTS:ortho_obj>
+    )
 endif()
 
 # Installation location of library files

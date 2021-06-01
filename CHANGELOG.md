@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   GTK variables
 - HTML strings used as labels are distinguishable in GXL output by
   `kind="HTML-like string"`
+- include lib/ortho object files in the lib/gvc lib for CMake builds
 
 ## [2.47.3] - 2021-06-19
 
