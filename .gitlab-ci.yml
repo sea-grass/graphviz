@@ -259,7 +259,7 @@ portable-source:
         paths:
             - coverage/**
         reports:
-            junit: ./report.xml
+            junit: [./report.xml, build/tests/test_*.xml]
             cobertura: coverage.xml
     except:
         - tags
