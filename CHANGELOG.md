@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- a very basic C++ API for a subset of the functions in lib/cgraph and
+  lib/gvc allowing an SVG to be rendered from DOT source. This API is
+  experimental, meaning that it might have breaking changes also in
+  upcoming patch or minor releases (towards #2001)
+
 ### Changed
 
 - updated Graphviz bug report URL in the Autotools build system
