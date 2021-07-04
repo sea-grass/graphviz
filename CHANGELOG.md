@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   lib/gvc allowing an SVG to be rendered from DOT source. This API is
   experimental, meaning that it might have breaking changes also in
   upcoming patch or minor releases (towards #2001)
+- a new C++ test infrastructure based on ctest and Catch2, including
+  support for test coverage analysis with
+  [lcov](http://ltp.sourceforge.net/coverage/lcov.php) and
+  [test coverage visualization in GitLab MRs](https://docs.gitlab.com/ee/user/project/merge_requests/test_coverage_visualization.html)
+  (towards #2002)
 
 ### Changed
 
