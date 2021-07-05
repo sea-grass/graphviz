@@ -90,6 +90,7 @@ find_package(GD)
 find_package(LTDL)
 find_package(PangoCairo)
 find_package(ZLIB)
+find_package(Svgpp)
 
 if (UNIX)
     find_library(MATH_LIB m)
