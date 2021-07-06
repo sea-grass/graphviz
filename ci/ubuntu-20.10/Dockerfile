@@ -81,6 +81,7 @@ tcl-dev \
 # Test utilities
 python3-pip \
 python3-setuptools \
+gcovr \
 # install Python dependencies
 && python3 -m pip install --user --upgrade pip \
 && python3 -m pip install --user --requirement requirements.txt \

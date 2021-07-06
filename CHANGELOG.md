@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- a very basic C++ API for a subset of the functions in lib/cgraph and
+  lib/gvc allowing an SVG to be rendered from DOT source. This API is
+  experimental, meaning that it might have breaking changes also in
+  upcoming patch or minor releases (towards #2001)
+- a new C++ test infrastructure based on ctest and Catch2, including
+  support for test coverage analysis with
+  [lcov](http://ltp.sourceforge.net/coverage/lcov.php) and
+  [test coverage visualization in GitLab MRs](https://docs.gitlab.com/ee/user/project/merge_requests/test_coverage_visualization.html)
+  (towards #2002)
+
 ### Changed
 
 - updated Graphviz bug report URL in the Autotools build system
@@ -24,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   GTK variables
 - HTML strings used as labels are distinguishable in GXL output by
   `kind="HTML-like string"`
+- include lib/ortho object files in the lib/gvc lib for CMake builds
 
 ## [2.47.3] - 2021-06-19
 

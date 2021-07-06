@@ -57,6 +57,7 @@ target_link_libraries(gvc PUBLIC
     cdt
     cgraph
     label
+    ortho
     pack
     pathplan
     xdot
@@ -70,7 +71,9 @@ if (NOT WIN32)
 endif()
 
 if (${with_ortho})
-    target_link_libraries(gvc PUBLIC ortho)
+    target_link_libraries(gvc PRIVATE
+        $<TARGET_OBJECTS:ortho_obj>
+    )
 endif()
 
 # Installation location of library files
@@ -109,6 +112,56 @@ set_target_properties(gvc PROPERTIES
     VERSION 6.0.0
     SOVERSION 6
 )
+
+# C++ API
+
+if (with_cxx_api)
+    add_library(gvc++ SHARED
+        GVContext.h
+        GVContext.cpp
+        GVLayout.h
+        GVLayout.cpp
+        GVRenderData.h
+        GVRenderData.cpp
+    )
+
+    set_target_properties(gvc++ PROPERTIES CXX_STANDARD 20)
+    set_target_properties(gvc++ PROPERTIES CXX_STANDARD_REQUIRED ON)
+    if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+        set_target_properties(gvc++ PROPERTIES COMPILE_OPTIONS -Wextra)
+    endif()
+
+    target_include_directories(gvc++ PRIVATE
+        ${GRAPHVIZ_LIB_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${GRAPHVIZ_LIB_DIR}/cdt
+        ${GRAPHVIZ_LIB_DIR}/cgraph
+        ${GRAPHVIZ_LIB_DIR}/common
+        ${GRAPHVIZ_LIB_DIR}/pathplan
+    )
+
+    target_link_libraries(gvc++ PUBLIC
+        gvc
+    )
+
+    # Installation location of library files
+    install(
+        TARGETS gvc++
+        RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+        LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+        ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+
+    # Specify headers to be installed
+    install(
+        FILES
+        GVContext.h
+        GVLayout.h
+        GVRenderData.h
+        DESTINATION ${HEADER_INSTALL_DIR}
+    )
+
+endif()
 
 # Include DLLs with this library on Windows
 if (WIN32)

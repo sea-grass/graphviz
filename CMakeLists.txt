@@ -11,6 +11,9 @@ option(with_ortho      "ORTHO features in neato layout engine." ON )
 option(with_sfdp       "sfdp layout engine." ON )
 option(with_smyrna     "SMYRNA large graph viewer (disabled by default - experimental)" OFF)
 option(use_sanitizers  "enables using address and undefined behavior sanitizer" OFF)
+option(use_coverage    "enables using code coverage" OFF)
+option(with_cxx_api    "enables building the C++ API" OFF)
+option(with_cxx_tests  "enables building the C++ tests" OFF)
 
 if (enable_ltdl)
         add_definitions(-DENABLE_LTDL)
@@ -87,6 +90,7 @@ find_package(GD)
 find_package(LTDL)
 find_package(PangoCairo)
 find_package(ZLIB)
+find_package(Svgpp)
 
 if (UNIX)
     find_library(MATH_LIB m)
@@ -219,15 +223,30 @@ if (use_sanitizers)
     endif()
 endif()
 
+if (use_coverage)
+    add_compile_options("-coverage")
+    if (${CMAKE_VERSION} VERSION_LESS "3.16.0")
+        link_libraries("-coverage")
+    else()
+        add_link_options("-coverage")
+    endif()
+endif()
+
 # ============================ Packaging information ===========================
 include(InstallRequiredSystemLibraries)
 include(package_info)
 include(CPack)
 
+# ==================================== Test ====================================
+Include(CTest)
+
 # ======================= Specify subdirectories to build ======================
 add_subdirectory(lib)
 add_subdirectory(plugin)
 add_subdirectory(cmd)
+if (with_cxx_tests)
+    add_subdirectory(tests)
+endif()
 
 MATH(EXPR GRAPHVIZ_PLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}+1")
 set(GVPLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}")

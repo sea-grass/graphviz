@@ -230,8 +230,46 @@ portable-source:
     except:
         - tags
 
+.test_template_including_ctest: &test_definition_including_ctest
+    stage: test
+    script:
+        - ci/install-packages.sh
+        - export GV_VERSION=$( cat VERSION )
+        - export OS_ID=$( cat OS_ID )
+        - ci/test_coverage.py --init
+        - pushd build
+        # Use GVBINDIR to specfify where to generate and load config6
+        # since ctest sets LD_LIBRARY_PATH to point to all the
+        # locations where the libs reside before cpack copies them to
+        # the install directory. Without this Graphviz tries to use
+        # the directory lib/gvc/graphviz which does not exist.
+        - export GVBINDIR=$(pwd)/plugin/dot_layout
+        - cmd/dot/dot -v -c
+        - ctest --output-on-failure
+        - unset GVBINDIR
+        - popd
+        # Many of the tests run by pytest currently trigger ASan
+        # memory leak detections. Disable those for now.
+        - export ASAN_OPTIONS=detect_leaks=0
+        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests rtest
+        - ci/test_coverage.py --analyze
+    # enable test coverage vizualization in MR diff view
+    coverage: '/  lines\.{6}: \d+\.\d+%/'
+    artifacts:
+        paths:
+            - coverage/**
+        reports:
+            junit: [./report.xml, build/tests/test_*.xml]
+            cobertura: coverage.xml
+    except:
+        - tags
+
 .linux_test_template: &linux_test_definition
     <<: *test_definition
+    image: "$CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA"
+
+.linux_test_template_including_ctest: &linux_test_definition_including_ctest
+    <<: *test_definition_including_ctest
     image: "$CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA"
 
 centos7-build:
@@ -427,7 +465,7 @@ ubuntu20-10-cmake-ASan-build:
         # fail on any compiler warnings
         - export CFLAGS=-Werror
         - export CXXFLAGS=-Werror
-        - export CMAKE_OPTIONS="-Duse_sanitizers=ON"
+        - export CMAKE_OPTIONS="-Duse_sanitizers=ON -Duse_coverage=ON"
         - echo experimental > COLLECTION
     tags:
         - linux
@@ -446,13 +484,14 @@ ubuntu21-04-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS=-Werror
         - export CXXFLAGS=-Werror
+        - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - echo experimental > COLLECTION
     tags:
         - linux
     variables:
       IMAGE: ubuntu-21.04
 
-ubuntu21-04-cmake-ASan-build:
+ubuntu21-04-cmake-ASan-build-for-ctest:
     <<: *deb_build_definition
     needs:
         - job: docker_build_ubuntu-21.04
@@ -464,8 +503,32 @@ ubuntu21-04-cmake-ASan-build:
         # fail on any compiler warnings
         - export CFLAGS=-Werror
         - export CXXFLAGS=-Werror
-        - export CMAKE_OPTIONS="-Duse_sanitizers=ON"
+        - export CMAKE_OPTIONS="-Duse_sanitizers=ON -Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - echo experimental > COLLECTION
+    # override the deb_build_definition artifacts since we need more
+    # files from the build directory when running ctest in the test
+    # stage.
+    artifacts:
+        when: on_success
+        expire_in: 1 week
+        paths:
+            # archive all shared libraries produced directly by "cmake
+            # --build" (but not those in the install directory that
+            # cpack has copied). In the test stage, the test
+            # executables load them from those directory locations
+            # since LD_LIBRARY_PATH is automatically set up to contain
+            # them.
+            - build/lib/**/lib*.so.*
+            - build/plugin/**/lib*.so.*
+            # the coverage analysis needs the .gcno files
+            - build/**/*.gcno
+            # the dot program is needed to configure the plugins before running pre-install tests
+            - build/cmd/dot/dot
+            # the packages need to be installed for the post-install tests
+            - Packages/*/*/*/*/*/*deb
+            - Metadata/*/*/*/configure.log
+        reports:
+            metrics: metrics.txt
     tags:
         - linux
     variables:
@@ -778,21 +841,18 @@ ubuntu21-04-cmake-test:
     variables:
       IMAGE: ubuntu-21.04
 
-ubuntu21.04-cmake-ASan-test:
-    <<: *linux_test_definition
+ubuntu21.04-cmake-ASan-test-including-ctest:
+    <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
         - export CFLAGS=" -g -fsanitize=address,undefined"
         - export CXXFLAGS=" -g -fsanitize=address,undefined"
         - export LDFLAGS=" -g -fsanitize=address,undefined"
-        # FIXME: remove the following when Graphviz can pass the test suite
-        # leak-free
-        - export ASAN_OPTIONS=detect_leaks=0
         - echo experimental > COLLECTION
     needs:
         - job: portable-source
           artifacts: true
-        - job: "ubuntu21-04-cmake-ASan-build"
+        - job: "ubuntu21-04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - linux
