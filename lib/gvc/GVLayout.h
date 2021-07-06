@@ -19,6 +19,8 @@
  * @brief The GVlayout class represents a graph layout
  */
 
+class GVRenderData;
+
 namespace GVC {
 
 class GVLAYOUT_API GVLayout {
@@ -31,6 +33,7 @@ public:
   // do not use this constructor directly. Use the named constructor instead
   GVLayout(std::shared_ptr<GVContext> gvc, std::shared_ptr<CGraph::AGraph> g);
   ~GVLayout();
+  std::unique_ptr<GVRenderData> render(const std::string &format);
 
 private:
   std::shared_ptr<GVContext> m_gvc;
