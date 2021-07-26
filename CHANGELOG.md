@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- a new API function `agxset_html` that does the equivalent of `agxset`, but
+  assumes the value being set is an HTML-like string
+
 ### Changed
 
 - the CMake build system now enables `-Wextra` when building C++
@@ -21,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The attached dot file causes a segfault when processed #2095
 - fix typos and update URLs in `edgepaint` usage text and man page
 - Fix clang's undefined behavior warning in dotLayout
+- HTML-like and non-HTML-like strings with the same content cannot coexist #2089
 
 ## [2.48.0] - 2021-07-17
 

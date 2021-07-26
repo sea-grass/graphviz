@@ -10,6 +10,7 @@
 
 #include	<cgraph/cghdr.h>
 #include	<cgraph/unreachable.h>
+#include	<stdbool.h>
 #include	<stddef.h>
 
 /*
@@ -463,7 +464,7 @@ int agset(void *obj, char *name, char *value)
     return rv;
 }
 
-int agxset(void *obj, Agsym_t * sym, char *value)
+static int agxset_(void *obj, Agsym_t * sym, char *value, bool is_html)
 {
     Agraph_t *g;
     Agobj_t *hdr;
@@ -475,7 +476,7 @@ int agxset(void *obj, Agsym_t * sym, char *value)
     data = agattrrec(hdr);
     assert(sym->id >= 0 && sym->id < topdictsize(obj));
     agstrfree(g, data->str[sym->id]);
-    data->str[sym->id] = agstrdup(g, value);
+    data->str[sym->id] = is_html ? agstrdup_html(g, value) : agstrdup(g, value);
     if (hdr->tag.objtype == AGRAPH) {
 	/* also update dict default */
 	Dict_t *dict;
@@ -490,6 +491,14 @@ int agxset(void *obj, Agsym_t * sym, char *value)
     }
     agmethod_upd(g, obj, sym);
     return SUCCESS;
+}
+
+int agxset(void *obj, Agsym_t * sym, char *value) {
+  return agxset_(obj, sym, value, false);
+}
+
+int agxset_html(void *obj, Agsym_t * sym, char *value) {
+  return agxset_(obj, sym, value, true);
 }
 
 int agsafeset(void *obj, char *name, char *value, char *def)
@@ -536,7 +545,6 @@ int agcopyattr(void *oldobj, void *newobj)
     Agsym_t *sym;
     Agsym_t *newsym;
     char* val;
-    char* nval;
     int r = 1;
 
     g = agraphof(oldobj);
@@ -548,14 +556,10 @@ int agcopyattr(void *oldobj, void *newobj)
 	if (!newsym)
 	    return 1;
 	val = agxget(oldobj, sym);
-	r = agxset(newobj, newsym, val);
-	/* FIX(?): Each graph has its own string cache, so a whole new refstr is possibly
-	 * allocated. If the original was an html string, make sure the new one is as well.
-	 * If cgraph goes to single string table, this can be removed.
-	 */
-	if (aghtmlstr (val)) {
-	    nval = agxget (newobj, newsym);
-	    agmarkhtmlstr (nval);
+	if (aghtmlstr(val)) {
+	    r = agxset_html(newobj, newsym, val);
+	} else {
+	    r = agxset(newobj, newsym, val);
 	}
     }
     return r;
