@@ -878,6 +878,7 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --datadir=%{_datadir} \
         --mandir=%{_mandir} \
         --disable-static \
+        --disable-rpath \
         --disable-dependency-tracking \
         --enable-sharp \
         --enable-guile \
