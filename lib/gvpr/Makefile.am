@@ -28,7 +28,6 @@ pkginclude_HEADERS = gvpr.h
 noinst_HEADERS = actions.h compile.h gdefs.h gprdata.inc gprstate.h parse.h \
 	queue.h trieFA.h trie.c
 noinst_LTLIBRARIES = libgvpr_C.la
-lib_LTLIBRARIES = libgvpr.la
 pkgconfig_DATA = libgvpr.pc
 man_MANS = gvpr.3
 if ENABLE_MAN_PDFS
@@ -59,20 +58,6 @@ gvpr.3.pdf: gvpr.3.ps
 gvpr.3.ps: $(srcdir)/gvpr.3
 	@GROFF@ -Tps -man $< >$@
 endif
-endif
-
-libgvpr_la_LDFLAGS = -version-info $(GVPR_VERSION) -no-undefined
-libgvpr_la_SOURCES = $(libgvpr_C_la_SOURCES)
-libgvpr_la_LIBADD = $(libgvpr_C_la_LIBADD) \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
-	$(top_builddir)/lib/expr/libexpr_C.la \
-	$(top_builddir)/lib/cdt/libcdt.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(MATH_LIBS)
-libgvpr_la_DEPENDENCIES = $(libgvpr_C_la_DEPENDENCIES)
-
-if WITH_WIN32
-libgvpr_la_LDFLAGS += -export-symbols-regex gvpr
 endif
 
 EXTRA_DIST = $(man_MANS) $(pdf) trie.c gvprlib.vcxproj*

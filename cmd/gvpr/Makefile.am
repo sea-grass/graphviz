@@ -31,7 +31,7 @@ endif
 
 gvpr_SOURCES = gvprmain.c
 gvpr_CPPFLAGS = $(AM_CPPFLAGS)
-gvpr_LDADD = $(top_builddir)/lib/gvpr/libgvpr.la \
+gvpr_LDADD = $(top_builddir)/lib/gvpr/libgvpr_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la
 
