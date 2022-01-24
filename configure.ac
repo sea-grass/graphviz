@@ -2300,13 +2300,6 @@ if test "x$use_gd" = "x"; then
   if test "x$GDLIB_CFLAGS" = "x-I/usr/include"; then
      GDLIB_CFLAGS="";
   fi
-  # prevent explicit use of -L/usr/lib or -L/usr/lib64, unnecessary clutter
-  if test "x$GD_LDFLAGS" = "x-L/usr/lib"; then
-     GD_LDFLAGS="";
-  fi
-  if test "x$GD_LDFLAGS" = "x-L/usr/lib64"; then
-     GD_LDFLAGS="";
-  fi
 
   if test "x$use_gd" = "x"; then
     # see if we can use the external gd lib
