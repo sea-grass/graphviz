@@ -21,30 +21,6 @@ def is_cmake() -> bool:
   """
   return os.getenv("build_system") == "cmake"
 
-def _freedesktop_os_release() -> Dict[str, str]:
-  """
-  polyfill for `platform.freedesktop_os_release`
-  """
-  release = {}
-  os_release = Path("/etc/os-release")
-  if os_release.exists():
-    with open(os_release, "rt", encoding="utf-8") as f:
-      for line in f.readlines():
-        if line.startswith("#") or "=" not in line:
-          continue
-        key, _, value = (x.strip() for x in line.partition("="))
-        # remove quotes
-        if len(value) >= 2 and value[0] == '"' and value[-1] == '"':
-          value = value[1:-1]
-        release[key] = value
-  return release
-
-def is_centos() -> bool:
-  """
-  is the current CI environment CentOS-based?
-  """
-  return _freedesktop_os_release().get("ID") == "centos"
-
 @pytest.mark.parametrize("binary", [
   "acyclic",
   "bcomps",
@@ -174,7 +150,7 @@ def check_that_tool_does_not_exist(tool, os_id):
   assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
 
-@pytest.mark.xfail(is_cmake() and not is_centos(),
+@pytest.mark.xfail(is_cmake() and platform.system() != "Linux",
                    reason="png:gd unavailable when built with CMake",
                    strict=True) # FIXME
 def test_1786():
