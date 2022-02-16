@@ -13,7 +13,7 @@ from typing import Dict
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
-from gvtest import dot #pylint: disable=C0413
+from gvtest import dot, is_mingw #pylint: disable=C0413
 
 def is_cmake() -> bool:
   """
@@ -44,6 +44,13 @@ def is_centos() -> bool:
   is the current CI environment CentOS-based?
   """
   return _freedesktop_os_release().get("ID") == "centos"
+
+def is_win32() -> bool:
+  """
+  is the current CI environment targeting the 32-bit Windows API?
+  """
+  return platform.system() == "Windows" \
+     and os.environ.get("project_platform") == "x86"
 
 @pytest.mark.parametrize("binary", [
   "acyclic",
@@ -174,7 +181,8 @@ def check_that_tool_does_not_exist(tool, os_id):
   assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
 
-@pytest.mark.xfail(is_cmake() and not is_centos()
+@pytest.mark.xfail(is_cmake() and not is_centos() and not is_mingw()
+                   and not is_win32()
                    and not platform.system() == "Darwin",
                    reason="png:gd unavailable when built with CMake",
                    strict=True) # FIXME
