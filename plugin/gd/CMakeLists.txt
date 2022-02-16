@@ -27,6 +27,10 @@ if(GD_FOUND)
     ${GD_LIBRARIES}
   )
 
+  if(WIN32 OR CYGWIN)
+    target_link_libraries(gvplugin_gd pathplan)
+  endif()
+
   # Installation location of library files
   install(
     TARGETS gvplugin_gd
