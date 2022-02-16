@@ -69,4 +69,5 @@ if(GD_LIBRARY)
       message(WARNING "neither gdlib-config nor /etc/os-release found; \
         skipping feature checks")
     endif()
+  endif()
 endif()
