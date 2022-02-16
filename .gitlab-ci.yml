@@ -134,6 +134,7 @@ portable-source:
         - $env:Path = "C:\python\tools;" + $env:Path
         - python --version
         - python -m pip install --requirement requirements.txt
+        - vcpkg install libgd
         # Toolchain definitions
         - if($Env:project_platform -eq "x64") {
             $TARGET_ARCH = "x64";
