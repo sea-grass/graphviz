@@ -5,15 +5,22 @@ test cases that are only relevant to run in CI
 """
 
 import os
-from pathlib import Path
 import platform
 import shutil
 import sys
-from typing import Dict
 import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../rtest"))
 from gvtest import dot #pylint: disable=C0413
+
+def is_asan_instrumented() -> bool:
+  """
+  was the Graphviz under test built with Address Sanitizer?
+  """
+  return os.environ["CI_JOB_NAME"] in (
+    "ubuntu21.04-cmake-ASan-test-including-ctest",
+    "ubuntu21.10-cmake-ASan-test-including-ctest",
+  )
 
 def is_cmake() -> bool:
   """
@@ -150,7 +157,8 @@ def check_that_tool_does_not_exist(tool, os_id):
   assert shutil.which(tool) is None, f"{tool} has been resurrected in the " \
     f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
 
-@pytest.mark.xfail(is_cmake() and platform.system() != "Linux",
+@pytest.mark.xfail(is_cmake() and platform.system() != "Linux"
+                   and not is_asan_instrumented(),
                    reason="png:gd unavailable when built with CMake",
                    strict=True) # FIXME
 def test_1786():
