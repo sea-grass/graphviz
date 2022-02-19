@@ -36,7 +36,9 @@ def main(args: List[str]) -> int: #pylint: disable=C0116
       shutil.rmtree(build)
     os.makedirs(build)
     run(["cmake", "--log-level=VERBOSE", "-G", "Visual Studio 16 2019", "-A",
-         options.platform, "-D", "with_cxx_api=ON", ".."],
+         options.platform, "-D",
+         "CMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake", "-D",
+         "with_cxx_api=ON", ".."],
         build)
     run(["cmake", "--build", ".", "--config", options.configuration], build)
     run(["cpack", "-C", options.configuration], build)
