@@ -10,7 +10,6 @@ import pytest
 sys.path.append(os.path.dirname(__file__))
 from gvtest import run_c #pylint: disable=C0413
 
-@pytest.mark.skip("TODO")
 @pytest.mark.parametrize("case", (
   "dash_V_exit.c",
   "dash_V_output.c",
