@@ -98,6 +98,12 @@ def dot(T: str, source_file: Optional[Path] = None, source: Optional[str] = None
 
   return subprocess.check_output(args, **kwargs)
 
+def is_cmake() -> bool:
+  """
+  was the Graphviz under test built with CMake?
+  """
+  return os.getenv("build_system") == "cmake"
+
 def run_c(src: Path, args: List[str] = None, input: str = "",
           cflags: List[str] = None, link: List[str] = None
           ) -> Tuple[str, str]:
