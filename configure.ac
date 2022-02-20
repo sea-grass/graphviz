@@ -2744,9 +2744,6 @@ AC_CONFIG_FILES(Makefile
 	rtest/graphs/Makefile
 	rtest/linux.x86/Makefile
 	tests/Makefile
-	tests/unit_tests/Makefile
-	tests/unit_tests/lib/Makefile
-	tests/unit_tests/lib/common/Makefile
 	tests/regression_tests/Makefile
 	tests/regression_tests/installation/Makefile
 	tests/regression_tests/shapes/Makefile
