@@ -145,7 +145,7 @@ def test_existence(binary: str):
   # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1753 and
   # https://gitlab.com/graphviz/graphviz/-/issues/1836 is fixed
-  if os.getenv("build_system") == "cmake":
+  if is_cmake():
     if binary in tools_not_built_with_cmake:
       check_that_tool_does_not_exist(binary, os_id)
       pytest.skip(f"{binary} is not built with CMake (#1753 & #1836)")
