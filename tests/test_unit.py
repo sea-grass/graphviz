@@ -34,3 +34,7 @@ def test_unit(case: str):
   # compile and run the test case
   stdout, stderr = run_c(src, cflags=["-DDEMAND_LOADING=1"],
                          link=["cgraph", "gvc"])
+
+  # if this was a test of output content, compare the two streams
+  if stdout.startswith("expected: "):
+    assert stdout[len("expected: "):] == stderr, "expected output mismatch"
