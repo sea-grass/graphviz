@@ -60,10 +60,9 @@ int main(void) {
   int argc = 2;
   char *argv[] = {"dot", "-?V"};
 
-  gvParseArgs(Gvc, argc, argv);
-
-  fflush(stdout);
   printf("expected: %s", usage_info);
+
+  gvParseArgs(Gvc, argc, argv);
 
   return 0;
 }

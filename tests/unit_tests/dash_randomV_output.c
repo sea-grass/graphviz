@@ -60,9 +60,9 @@ int main(void) {
   int argc = 2;
   char *argv[] = {"dot", "-randomV"};
 
-  gvParseArgs(Gvc, argc, argv);
-
   printf("expected: Error: dot: option -r unrecognized\n\n", usage_info);
+
+  gvParseArgs(Gvc, argc, argv);
 
   return 0;
 }

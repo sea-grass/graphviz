@@ -18,11 +18,11 @@ int main(void) {
   int argc = 2;
   char *argv[] = {"dot", "-V?"};
 
-  gvParseArgs(Gvc, argc, argv);
-
   const char expected_stderr[] =
       "dot - graphviz version " PACKAGE_VERSION " (" GV_VERSION ")\n";
   printf("expected: %s", expected_stderr);
+
+  gvParseArgs(Gvc, argc, argv);
 
   return 0;
 }
