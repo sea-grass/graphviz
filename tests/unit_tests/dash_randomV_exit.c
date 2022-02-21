@@ -7,7 +7,7 @@
 #include <assert.h>
 #include <graphviz/gvc.h>
 
-static const lt_symlist_t lt_preloaded_symbols[] = {{0, 0}};
+lt_symlist_t lt_preloaded_symbols[] = {{0, 0}};
 extern int GvExitOnUsage;
 
 int main(void) {
