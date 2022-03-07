@@ -13,6 +13,12 @@ from typing import List, Optional, Tuple, Union
 ROOT = Path(__file__).resolve().parent.parent
 """absolute path to the root of the repository"""
 
+def is_mingw() -> bool:
+  """
+  are we running on MinGW?
+  """
+  return "mingw" in sysconfig.get_platform()
+
 def compile_c(src: Path, cflags: List[str] = None, link: List[str] = None,
             dst: Optional[Union[Path, str]] = None) -> Path:
   """compile a C program"""
