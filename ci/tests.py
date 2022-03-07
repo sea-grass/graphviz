@@ -138,7 +138,7 @@ def test_existence(binary: str):
 
   # FIXME: Remove skip when
   # https://gitlab.com/graphviz/graphviz/-/issues/1834 is fixed
-  if os_id == "centos" and binary == "smyrna":
+  if is_centos() and binary == "smyrna":
     check_that_tool_does_not_exist(binary, os_id)
     pytest.skip("smyrna is not built for Centos (#1834)")
 
