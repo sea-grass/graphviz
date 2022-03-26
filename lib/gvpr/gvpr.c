@@ -418,8 +418,7 @@ static options* scanArgs(int argc, char **argv, gvpropts* uopts)
     /* Handle additional semantics */
     if (opts->useFile == 0) {
 	if (nfiles == 0) {
-	    error(ERROR_ERROR,
-		  "No program supplied via argument or -f option");
+	    error(ERROR_ERROR, "No program supplied via argument or -f option");
 	    opts->state = -1;
 	} else {
 	    opts->program = input_filenames[0];
