@@ -17,11 +17,6 @@
 
 
 #include "config.h"
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#else
-#include <ast/compat_unistd.h>
-#endif
 #include "builddate.h"
 #include <gvpr/gprstate.h>
 #include <cgraph/agxbuf.h>
@@ -39,6 +34,7 @@
 #include <ctype.h>
 #include <setjmp.h>
 #include <getopt.h>
+#include <unistd.h>
 
 #ifndef DFLT_GVPRPATH
 #define DFLT_GVPRPATH    "."
