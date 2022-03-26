@@ -108,9 +108,9 @@ static char *gettok(char **sp)
     if ((c = *rs) == '\0')
 	return NULL;
     while ((c = *rs)) {
-	if (q && (q == c)) {	/* end quote */
+	if (q && q == c) {	/* end quote */
 	    q = '\0';
-	} else if (!q && ((c == '"') || (c == '\''))) {
+	} else if (!q && (c == '"' || c == '\'')) {
 	    q = c;
 	} else if (c == '\\') {
 	    rs++;
@@ -436,7 +436,7 @@ static options* scanArgs(int argc, char **argv, gvpropts* uopts)
     else
 	opts->inFiles = input_filenames;
 
-    if (!(opts->outFile))
+    if (!opts->outFile)
 	opts->outFile = sfstdout;
 
   opts_done:
@@ -459,7 +459,7 @@ static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge
     for (i = 0; i < xprog->n_estmts; i++) {
 	cs = xprog->edge_stmts + i;
 	if (cs->guard)
-	    okay = (exeval(prog, cs->guard, state)).integer;
+	    okay = exeval(prog, cs->guard, state).integer;
 	else
 	    okay = 1;
 	if (okay) {
@@ -482,7 +482,7 @@ static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode
     for (i = 0; i < xprog->n_nstmts; i++) {
 	cs = xprog->node_stmts + i;
 	if (cs->guard)
-	    okay = (exeval(prog, cs->guard, state)).integer;
+	    okay = exeval(prog, cs->guard, state).integer;
 	else
 	    okay = 1;
 	if (okay) {
@@ -492,7 +492,7 @@ static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode
 		agsubnode(state->target, n, TRUE);
 	}
     }
-    return (state->curobj);
+    return state->curobj;
 }
 
 typedef struct {
@@ -604,7 +604,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 	seed.out.node = n;
 	seed.in.node = 0;
 	curn = n;
-	entry = &(seed.out);
+	entry = &seed.out;
 	state->tvedge = cure = 0;
 	MARK(nd);
 	PUSH(nd,0);
@@ -648,7 +648,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 		POP(nd);
 		cure = entry;
 		entry = (Agedge_t *) pull(stk);
-		if (entry == &(seed.out))
+		if (entry == &seed.out)
 		    state->tvedge = 0;
 		else
 		    state->tvedge = entry;
@@ -833,7 +833,7 @@ addOutputGraph (Gpr_t* state, gvpropts* uopts)
 {
     Agraph_t* g = state->outgraph;
 
-    if ((agroot(g) == state->curgraph) && !uopts->ingraphs)
+    if (agroot(g) == state->curgraph && !uopts->ingraphs)
 	g = (Agraph_t*)clone (0, (Agobj_t *)g);
 
     uopts->n_outgraphs++;
@@ -966,7 +966,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	info.flags = uopts->flags; 
     else
 	info.flags = 0;
-    if ((uopts->flags & GV_USE_EXIT))
+    if (uopts->flags & GV_USE_EXIT)
 	info.exitf = 0;
     else
 	info.exitf = gvexitf;
@@ -985,7 +985,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 
     initGPRState(state, xprog->prog->vm);
     
-    if ((uopts->flags & GV_USE_OUTGRAPH)) {
+    if (uopts->flags & GV_USE_OUTGRAPH) {
 	uopts->outgraphs = 0;
 	uopts->n_outgraphs = 0;
     }
@@ -1028,7 +1028,7 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 
 		/* begin graph */
 		if (incoreGraphs && (opts->compflags & CLONE))
-		    state->curgraph = (Agraph_t*)clone (0, (Agobj_t*)(state->curgraph));
+		    state->curgraph = (Agraph_t*)clone (0, (Agobj_t*)state->curgraph);
 		state->curobj = (Agobj_t *) state->curgraph;
 		state->tvroot = 0;
 		if (bp->begg_stmt)
@@ -1047,8 +1047,8 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 	    if (opts->verbose) sfprintf (sfstderr, "Finish graph: %.2f secs.\n", gvelapsed_sec());
 
 	    /* if $O == $G and $T is empty, delete $T */
-	    if ((state->outgraph == state->curgraph) &&
-		(state->target) && !agnnodes(state->target))
+	    if (state->outgraph == state->curgraph &&
+		state->target && !agnnodes(state->target))
 		agdelete(state->curgraph, state->target);
 
 	    /* output graph, if necessary
