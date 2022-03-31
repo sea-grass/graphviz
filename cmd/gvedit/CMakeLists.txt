@@ -19,7 +19,7 @@ if(Qt5_FOUND)
     mdi.qrc
   )
 
-  target_compile_definitions(gvedit
+  target_compile_definitions(gvedit PRIVATE
     -DDEMAND_LOADING=1
     -DGVEDIT_DATADIR="${DATA_INSTALL_DIR}/graphviz/gvedit"
   )
