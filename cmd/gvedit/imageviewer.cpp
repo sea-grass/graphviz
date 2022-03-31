@@ -62,12 +62,12 @@ void ImageViewer::print()
     if (dialog.exec()) {
 	QPainter painter(&printer);
 	QRect rect = painter.viewport();
-	QSize size = imageLabel->pixmap()->size();
+	QSize size = imageLabel->pixmap(Qt::ReturnByValue).size();
 	size.scale(rect.size(), Qt::KeepAspectRatio);
 	painter.setViewport(rect.x(), rect.y(), size.width(),
 			    size.height());
-	painter.setWindow(imageLabel->pixmap()->rect());
-	painter.drawPixmap(0, 0, *imageLabel->pixmap());
+	painter.setWindow(imageLabel->pixmap(Qt::ReturnByValue).rect());
+	painter.drawPixmap(0, 0, imageLabel->pixmap(Qt::ReturnByValue));
     }
 #endif
 }
@@ -180,7 +180,8 @@ void ImageViewer::scaleImage(double factor)
 {
     Q_ASSERT(imageLabel->pixmap());
     scaleFactor *= factor;
-    imageLabel->resize(scaleFactor * imageLabel->pixmap()->size());
+    imageLabel->resize(scaleFactor *
+                       imageLabel->pixmap(Qt::ReturnByValue).size());
 
     adjustScrollBar(scrollArea->horizontalScrollBar(), factor);
     adjustScrollBar(scrollArea->verticalScrollBar(), factor);
