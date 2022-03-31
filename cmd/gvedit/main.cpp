@@ -64,7 +64,7 @@ static char **parseArgs(int argc, char *argv[])
 		usage(0);
 	    else {
 		errout << cmd << " : option -" << ((char) optopt) <<
-		    " unrecognized\n" << flush;
+		    " unrecognized\n" << Qt::flush;
 		usage(1);
 	    }
 	    break;

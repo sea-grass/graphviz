@@ -91,7 +91,7 @@ bool loadAttrs(const QString fileName, QComboBox * cbNameG,
 	file.close();
     } else {
 	errout << "Could not open attribute name file \"" << fileName <<
-	    "\" for reading\n" << flush;
+	    "\" for reading\n" << Qt::flush;
 	return true;
     }
 
