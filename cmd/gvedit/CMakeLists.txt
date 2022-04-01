@@ -1,7 +1,7 @@
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-find_package(Qt5 COMPONENTS Core Gui)
+find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 if(Qt5_FOUND)
 
@@ -38,6 +38,7 @@ if(Qt5_FOUND)
     gvc
     Qt5::Core
     Qt5::Gui
+    Qt5::Widgets
   )
 
   find_program(GZIP gzip)
