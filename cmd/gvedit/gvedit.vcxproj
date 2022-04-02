@@ -215,7 +215,6 @@
       <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe;mdichild.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_mdichild.cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="ui_settings.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="images\copy.png" />
