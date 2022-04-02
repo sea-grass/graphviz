@@ -10,7 +10,6 @@ if(Qt5_FOUND)
     imageviewer.h
     mainwindow.h
     mdichild.h
-    ui_settings.h
     csettings.cpp
     imageviewer.cpp
     main.cpp
