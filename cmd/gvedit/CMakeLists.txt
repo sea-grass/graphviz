@@ -5,12 +5,12 @@ find_package(Qt5 COMPONENTS Core Gui Widgets)
 
 if(Qt5_FOUND)
 
-  add_executable(gvedit
+  set(SOURCES
     csettings.h
     imageviewer.h
     mainwindow.h
     mdichild.h
-    ui_settings.h 
+    ui_settings.h
     csettings.cpp
     imageviewer.cpp
     main.cpp
@@ -18,6 +18,10 @@ if(Qt5_FOUND)
     mdichild.cpp
     mdi.qrc
   )
+
+  qt5_wrap_ui(SOURCES ui/main.ui ui/settings.ui)
+
+  add_executable(gvedit ${SOURCES})
 
   target_compile_definitions(gvedit PRIVATE
     -DDEMAND_LOADING=1
