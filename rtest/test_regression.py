@@ -1554,6 +1554,22 @@ def test_2215():
   subprocess.run(["dot", "-v"], input=input, check=True,
                  universal_newlines=True)
 
+@pytest.mark.xfail()
+def test_2222():
+  """
+  graphs that cause deep chains in the network simplex solver should not cause
+  stack exhaustion
+  https://gitlab.com/graphviz/graphviz/-/issues/2222
+  """
+
+  # find our collocated test case
+  input = Path(__file__).parent / "2222.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # running this through Graphviz should not cause stack exhaustion unless the
+  # network simplex solver is implemented recursively
+  dot("svg", input)
+
 def test_package_version():
   """
   The graphviz_version.h header should define a non-empty PACKAGE_VERSION
