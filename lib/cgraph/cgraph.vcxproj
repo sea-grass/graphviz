@@ -106,6 +106,7 @@ win_flex -oscan.c scan.l</Command>
     <ClInclude Include="itos.h" />
     <ClInclude Include="likely.h" />
     <ClInclude Include="prisize_t.h" />
+    <ClInclude Include="queue.h" />
     <ClInclude Include="sprint.h" />
     <ClInclude Include="stack.h" />
     <ClInclude Include="strcasecmp.h" />
