@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - output formats canon, dot, and xdot are not completely faithful to input #2184
 - gvpr index function produces wrong results #2211. This was a regression in
   Graphviz 2.47.0.
+- Dot.exe crash during building a graph #2222
 
 ## [3.0.0] – 2022-02-26
 

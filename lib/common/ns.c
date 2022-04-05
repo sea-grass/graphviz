@@ -13,6 +13,8 @@
  * Network Simplex Algorithm for Ranking Nodes of a DAG
  */
 
+#include <cgraph/queue.h>
+#include <cgraph/stack.h>
 #include <common/render.h>
 #include <stdbool.h>
 
@@ -262,34 +264,130 @@ typedef struct subtree_s {
         struct subtree_s *par;  /* union find */
 } subtree_t;
 
-/* find initial tight subtrees */
-static int tight_subtree_search(Agnode_t *v, subtree_t *st)
-{
-    Agedge_t *e;
-    int     i;
-    int     rv;
+static int push_subtree_level(gv_stack_t *todo) {
 
-    rv = 1;
-    ND_subtree_set(v,st);
-    for (i = 0; (e = ND_in(v).list[i]); i++) {
-        if (TREE_EDGE(e)) continue;
-        if (ND_subtree(agtail(e)) == 0 && SLACK(e) == 0) {
-               if (add_tree_edge(e) != 0) {
-                   return -1;
-               }
-               rv += tight_subtree_search(agtail(e),st);
-        }
+  queue_t *q = calloc(1, sizeof(*q));
+  if (UNLIKELY(q == NULL)) {
+    return ENOMEM;
+  }
+
+  return stack_push(todo, q);
+}
+
+static int push_subtree(gv_stack_t *todo, Agnode_t *node, subtree_t *subtree) {
+  queue_t *q = stack_top(todo);
+
+  // push both items
+  int r = queue_push(q, node);
+  if (UNLIKELY(r != 0)) {
+    return r;
+  }
+  return queue_push(q, subtree);
+}
+
+static void pop_subtree(gv_stack_t *todo, Agnode_t **node,
+                        subtree_t **subtree) {
+  while (true) {
+
+    assert(!stack_is_empty(todo) &&
+           "called pop_subtree with no remaining subtrees");
+
+    // does the top-most queue have any pending subtrees to explore?
+    queue_t *q = stack_top(todo);
+    if (queue_is_empty(q)) {
+      (void)stack_pop(todo);
+      queue_reset(q);
+      free(q);
+      continue;
     }
-    for (i = 0; (e = ND_out(v).list[i]); i++) {
-        if (TREE_EDGE(e)) continue;
-        if (ND_subtree(aghead(e)) == 0 && SLACK(e) == 0) {
-               if (add_tree_edge(e) != 0) {
-                   return -1;
-               }
-               rv += tight_subtree_search(aghead(e),st);
-        }
+
+    // answer was yes; pop both items
+    *node = queue_pop(q);
+    *subtree = queue_pop(q);
+    return;
+  }
+}
+
+static bool has_more_subtrees(gv_stack_t *todo) {
+
+  // discard vacated queues
+  while (!stack_is_empty(todo) && queue_is_empty(stack_top(todo))) {
+    queue_t *q = stack_pop(todo);
+    queue_reset(q);
+    free(q);
+  }
+
+  return !stack_is_empty(todo);
+}
+
+static void discard_subtrees(gv_stack_t *todo) {
+  while (!stack_is_empty(todo)) {
+    queue_t *q = stack_pop(todo);
+    queue_reset(q);
+    free(q);
+  }
+  stack_reset(todo);
+}
+
+/* find initial tight subtrees */
+static int tight_subtree_search(Agnode_t *v, subtree_t *st) {
+  Agedge_t *e;
+
+  // remaining subtrees we have to explore as a LIFO of FIFOs
+  gv_stack_t todo = {0};
+
+  // enqueue ourselves
+  if (UNLIKELY(push_subtree_level(&todo) != 0 ||
+               push_subtree(&todo, v, st) != 0)) {
+    discard_subtrees(&todo);
+    return -1;
+  }
+
+  int rv = 0;
+  while (has_more_subtrees(&todo)) {
+
+    pop_subtree(&todo, &v, &st);
+    if (UNLIKELY(push_subtree_level(&todo) != 0)) {
+      discard_subtrees(&todo);
+      return -1;
     }
-    return rv;
+    ++rv;
+    ND_subtree_set(v, st);
+
+    for (int i = 0; (e = ND_in(v).list[i]); i++) {
+      if (TREE_EDGE(e))
+        continue;
+      if (ND_subtree(agtail(e)) == 0 && SLACK(e) == 0) {
+        if (add_tree_edge(e) != 0) {
+          discard_subtrees(&todo);
+          return -1;
+        }
+        if (UNLIKELY(push_subtree(&todo, agtail(e), st) != 0)) {
+          discard_subtrees(&todo);
+          return -1;
+        }
+      }
+    }
+
+    for (int i = 0; (e = ND_out(v).list[i]); i++) {
+      if (TREE_EDGE(e))
+        continue;
+      if (ND_subtree(aghead(e)) == 0 && SLACK(e) == 0) {
+        if (add_tree_edge(e) != 0) {
+          discard_subtrees(&todo);
+          return -1;
+        }
+        if (UNLIKELY(push_subtree(&todo, aghead(e), st) != 0)) {
+          discard_subtrees(&todo);
+          return -1;
+        }
+      }
+    }
+  }
+
+  discard_subtrees(&todo);
+
+  return rv;
 }
 
 static subtree_t *find_tight_subtree(Agnode_t *v)

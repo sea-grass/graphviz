@@ -1554,7 +1554,6 @@ def test_2215():
   subprocess.run(["dot", "-v"], input=input, check=True,
                  universal_newlines=True)
 
-@pytest.mark.xfail()
 def test_2222():
   """
   graphs that cause deep chains in the network simplex solver should not cause

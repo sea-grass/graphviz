@@ -86,6 +86,14 @@ static inline void *stack_pop(gv_stack_t *stack) {
   return top;
 }
 
+static inline void *stack_top(gv_stack_t *stack) {
+
+  assert(stack != NULL);
+  assert(!stack_is_empty(stack));
+
+  return stack->base[stack->size - 1];
+}
+
 static inline void stack_reset(gv_stack_t *stack) {
 
   assert(stack != NULL);
