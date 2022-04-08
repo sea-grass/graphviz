@@ -1738,7 +1738,6 @@ def test_gvpr_usage():
   assert "-o <ofile> - write output to <ofile>; stdout by default" in stderr, \
     "truncated or malformed GVPR usage information"
 
-@pytest.mark.xfail() # FIXME
 def test_2225():
   """
   sfdp should not segfault with curved splines
