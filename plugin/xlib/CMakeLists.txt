@@ -7,7 +7,7 @@ endif()
 
 if(PANGOCAIRO_FOUND AND X11_FOUND AND XRENDER_FOUND)
 
-  add_library(gvplugin_xlib SHARED
+  add_library(gvplugin_xlib MODULE
     gvdevice_xlib.c
     gvplugin_xlib.c
   )

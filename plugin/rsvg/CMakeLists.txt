@@ -7,7 +7,7 @@ endif()
 
 if(PANGOCAIRO_FOUND AND RSVG_FOUND AND XRENDER_FOUND)
 
-  add_library(gvplugin_rsvg SHARED
+  add_library(gvplugin_rsvg MODULE
     gvloadimage_rsvg.c
     gvplugin_rsvg.c
   )

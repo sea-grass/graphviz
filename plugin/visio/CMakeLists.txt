@@ -1,4 +1,4 @@
-add_library(gvplugin_visio SHARED
+add_library(gvplugin_visio MODULE
   gvplugin_visio.c
   gvrender_visio_vdx.cpp
   VisioGraphic.cpp

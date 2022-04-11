@@ -5,7 +5,7 @@ endif()
 
 if(WEBP_FOUND)
 
-  add_library(gvplugin_webp SHARED
+  add_library(gvplugin_webp MODULE
     gvplugin_webp.c
     gvloadimage_webp.c
     gvdevice_webp.c

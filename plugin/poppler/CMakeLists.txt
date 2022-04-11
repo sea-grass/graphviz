@@ -6,7 +6,7 @@ endif()
 
 if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
 
-  add_library(gvplugin_poppler SHARED
+  add_library(gvplugin_poppler MODULE
     gvloadimage_poppler.c
     gvplugin_poppler.c
   )

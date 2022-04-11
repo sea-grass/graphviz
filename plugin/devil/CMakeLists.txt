@@ -3,7 +3,7 @@ find_package(DevIL)
 
 if(PANGOCAIRO_FOUND AND DevIL_FOUND)
 
-  add_library(gvplugin_devil SHARED
+  add_library(gvplugin_devil MODULE
     gvdevice_devil.c
     gvplugin_devil.c
   )

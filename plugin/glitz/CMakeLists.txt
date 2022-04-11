@@ -6,7 +6,7 @@ endif()
 
 if(GLITZ_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_glitz SHARED
+  add_library(gvplugin_glitz MODULE
     gvdevice_glitz.c
     gvplugin_glitz.c
   )

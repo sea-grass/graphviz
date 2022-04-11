@@ -1,4 +1,4 @@
-add_library(gvplugin_dot_layout SHARED
+add_library(gvplugin_dot_layout MODULE
   # Source files
   gvplugin_dot_layout.c
   gvlayout_dot_layout.c

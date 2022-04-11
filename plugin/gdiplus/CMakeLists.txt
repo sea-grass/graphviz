@@ -1,6 +1,6 @@
 if(WIN32)
 
-  add_library(gvplugin_gdiplus SHARED
+  add_library(gvplugin_gdiplus MODULE
     # Header files
     FileStream.h
     gvplugin_gdiplus.h

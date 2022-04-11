@@ -1,4 +1,4 @@
-add_library(gvplugin_neato_layout SHARED
+add_library(gvplugin_neato_layout MODULE
   # Source files
   gvplugin_neato_layout.c
   gvlayout_neato_layout.c

@@ -1,6 +1,6 @@
 if(IS_DIRECTORY "/System/Library/Frameworks/ApplicationServices.framework")
 
-  add_library(gvplugin_quartz SHARED
+  add_library(gvplugin_quartz MODULE
     gvplugin_quartz.h
     GVTextLayout.h
     gvdevice_quartz.c

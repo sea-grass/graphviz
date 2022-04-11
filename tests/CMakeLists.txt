@@ -19,6 +19,10 @@ add_library(test_common STATIC
             svg_analyzer.h
             svg_analyzer_interface.h
             ../cmd/dot/dot_builtins.c
+            $<TARGET_OBJECTS:gvplugin_core>
+            $<TARGET_OBJECTS:gvplugin_dot_layout>
+            $<TARGET_OBJECTS:gvplugin_gd>
+            $<TARGET_OBJECTS:gvplugin_neato_layout>
 )
 set_target_properties(test_common PROPERTIES CXX_STANDARD 20)
 set_target_properties(test_common PROPERTIES CXX_STANDARD_REQUIRED ON)
@@ -32,10 +36,6 @@ target_include_directories(test_common SYSTEM PRIVATE
 )
 target_link_libraries(test_common PUBLIC Catch2::Catch2)
 target_link_libraries(test_common PUBLIC
-  gvplugin_core
-  gvplugin_dot_layout
-  gvplugin_gd
-  gvplugin_neato_layout
   cgraph
   cgraph++
   gvc

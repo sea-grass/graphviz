@@ -2,7 +2,7 @@ find_package(GTK2)
 
 if(GTK2_FOUND)
 
-  add_library(gvplugin_gtk SHARED
+  add_library(gvplugin_gtk MODULE
     callbacks.c
     gvdevice_gtk.c
     gvplugin_gtk.c

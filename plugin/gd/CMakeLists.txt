@@ -1,6 +1,6 @@
 if(GD_FOUND)
 
-  add_library(gvplugin_gd SHARED
+  add_library(gvplugin_gd MODULE
     # Source files
     gdioctx_wrapper.h
     gvdevice_gd.c

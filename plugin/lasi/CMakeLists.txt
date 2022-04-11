@@ -7,7 +7,7 @@ endif()
 
 if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_lasi SHARED
+  add_library(gvplugin_lasi MODULE
     gvloadimage_lasi.c
     gvplugin_lasi.c
     gvrender_lasi.cpp

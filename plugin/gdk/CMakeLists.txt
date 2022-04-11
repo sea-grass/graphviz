@@ -7,7 +7,7 @@ endif()
 
 if(GDK_FOUND AND GDK_PIXBUF_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_gdk SHARED
+  add_library(gvplugin_gdk MODULE
     gvdevice_gdk.c
     gvloadimage_gdk.c
     gvplugin_gdk.c

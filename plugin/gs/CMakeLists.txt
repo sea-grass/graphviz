@@ -3,7 +3,7 @@ find_package(PANGOCAIRO)
 
 if(GS_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_gs SHARED
+  add_library(gvplugin_gs MODULE
     gvloadimage_gs.c
     gvplugin_gs.c
   )

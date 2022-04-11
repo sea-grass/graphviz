@@ -272,6 +272,7 @@ add_definitions(-DDEMAND_LOADING=0)
 add_executable(gvpack
   # Source files
   gvpack.c
+  $<TARGET_OBJECTS:gvplugin_neato_layout>
 )
 
 target_include_directories(gvpack PRIVATE
@@ -293,7 +294,6 @@ target_include_directories(gvpack SYSTEM PRIVATE
 target_link_libraries(gvpack
   cgraph
   gvc
-  gvplugin_neato_layout
   ingraphs
 )
 
