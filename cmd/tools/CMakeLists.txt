@@ -297,6 +297,12 @@ target_link_libraries(gvpack
   ingraphs
 )
 
+get_target_property(
+  gvplugin_neato_layout_libs gvplugin_neato_layout LINK_LIBRARIES)
+target_link_libraries(gvpack PRIVATE
+  ${gvplugin_neato_layout_libs}
+)
+
 tool_defaults(gvpack)
 
 # =================================== gxl2gv ===================================
