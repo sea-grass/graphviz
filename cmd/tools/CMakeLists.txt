@@ -299,7 +299,7 @@ target_link_libraries(gvpack
 
 get_target_property(
   gvplugin_neato_layout_libs gvplugin_neato_layout LINK_LIBRARIES)
-target_link_libraries(gvpack PRIVATE
+target_link_libraries(gvpack
   ${gvplugin_neato_layout_libs}
 )
 
