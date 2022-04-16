@@ -125,7 +125,8 @@ static node_t *pop(stk_t* sp)
  * iterative dfs for components.
  * We process the edges in reverse order of the recursive version to maintain
  * the processing order of the nodes.
- * Since are using a stack, we need to indicate nodes on the stack. Nodes unprocessed
+ * Since we are using a stack, we need to indicate nodes on the stack. Nodes
+ * unprocessed
  * in this call to decompose will have mark < Cmark; processed nodes will have mark=Cmark;
  * so we use mark = Cmark+1 to indicate nodes on the stack.
  */
