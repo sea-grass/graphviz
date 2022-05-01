@@ -65,7 +65,7 @@ static inline int stack_try_push(gv_stack_t *stack, void *item) {
   return 0;
 }
 
-static inline void stack_push_or_exit(gv_stack_t *stack, void *item) {
+static inline void stack_push(gv_stack_t *stack, void *item) {
 
   assert(stack != NULL);
 

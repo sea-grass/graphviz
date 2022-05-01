@@ -633,8 +633,8 @@ static void push(gv_stack_t *sp, int j, int d) {
   void *d_ptr = (void*)(intptr_t)d;
 
   // push them onto the stack
-  stack_push_or_exit(sp, j_ptr);
-  stack_push_or_exit(sp, d_ptr);
+  stack_push(sp, j_ptr);
+  stack_push(sp, d_ptr);
 }
 
 static pair pop(gv_stack_t *sp) {
