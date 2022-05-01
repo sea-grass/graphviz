@@ -15,6 +15,7 @@
 
 #include <math.h>
 #include <common/render.h>
+#include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 #include <stdbool.h>
 
@@ -32,20 +33,19 @@ static void showPoints(pointf ps[], int pn)
 {
     char buf[BUFSIZ];
     int newcnt = Show_cnt + pn + 3;
-    int bi, li;
+    int bi;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
-    li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%% self list");
-    Show_boxes[li++] = strdup ("dbgstart");
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
+    list_push_back(&Show_boxes, strdup("%% self list"));
+    list_push_back(&Show_boxes, strdup("dbgstart"));
     for (bi = 0; bi < pn; bi++) {
 	snprintf(buf, sizeof(buf), "%.5g %.5g point", ps[bi].x, ps[bi].y);
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
     }
-    Show_boxes[li++] = strdup ("grestore");
-
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    list_push_back(&Show_boxes, strdup("grestore"));
+    list_push_back(&Show_boxes, NULL);
 }
 #endif
 

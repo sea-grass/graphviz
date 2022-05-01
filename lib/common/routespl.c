@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/list.h>
 #include <common/render.h>
 #include <math.h>
 #include <pathplan/pathplan.h>
@@ -34,17 +34,17 @@ static void printboxes(int boxn, boxf* boxes)
     pointf ll, ur;
     int bi;
     char buf[BUFSIZ];
-    int newcnt = Show_cnt + boxn;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
 	snprintf(buf, sizeof(buf), "%d %d %d %d pathbox", (int)ll.x, (int)ll.y,
 	         (int)ur.x, (int)ur.y);
-	Show_boxes[bi+1+Show_cnt] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
     }
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    list_push_back(&Show_boxes, NULL);
 }
 
 #if DEBUG > 1
@@ -86,57 +86,55 @@ static void psprintpointf(pointf p)
 static void psprintspline(Ppolyline_t spl)
 {
     char buf[BUFSIZ];
-    int newcnt = Show_cnt + spl.pn + 4;
-    int li, i;
+    int i;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
-    li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%%!");
-    Show_boxes[li++] = strdup ("%% spline");
-    Show_boxes[li++] = strdup ("gsave 1 0 0 setrgbcolor newpath");
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
+    list_push_back(&Show_boxes, strdup("%%!"));
+    list_push_back(&Show_boxes, strdup("%% spline"));
+    list_push_back(&Show_boxes, strdup("gsave 1 0 0 setrgbcolor newpath"));
     for (i = 0; i < spl.pn; i++) {
 	snprintf(buf, sizeof(buf), "%f %f %s", spl.ps[i].x, spl.ps[i].y,
 	  i == 0 ?  "moveto" : (i % 3 == 0 ? "curveto" : ""));
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
     }
-    Show_boxes[li++] = strdup ("stroke grestore");
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    list_push_back(&Show_boxes, strdup("stroke grestore"));
+    list_push_back(&Show_boxes, NULL);
 }
 
 static void psprintline(Ppolyline_t pl)
 {
     char buf[BUFSIZ];
-    int newcnt = Show_cnt + pl.pn + 4;
-    int i, li;
+    int i;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
-    li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%%!");
-    Show_boxes[li++] = strdup ("%% line");
-    Show_boxes[li++] = strdup ("gsave 0 0 1 setrgbcolor newpath");
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
+    list_push_back(&Show_boxes, strdup("%%!"));
+    list_push_back(&Show_boxes, strdup("%% line"));
+    list_push_back(&Show_boxes, strdup("gsave 0 0 1 setrgbcolor newpath"));
     for (i = 0; i < pl.pn; i++) {
 	snprintf(buf, sizeof(buf), "%f %f %s", pl.ps[i].x, pl.ps[i].y,
 		i == 0 ? "moveto" : "lineto");
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
     }
-    Show_boxes[li++] = strdup ("stroke grestore");
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    list_push_back(&Show_boxes, strdup("stroke grestore"));
+    list_push_back(&Show_boxes, NULL);
 }
 
 static void psprintpoly(Ppoly_t p)
 {
     char buf[BUFSIZ];
-    int newcnt = Show_cnt + p.pn + 3;
     point tl, hd;
-    int bi, li;
+    int bi;
     char*  pfx;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
-    li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%% poly list");
-    Show_boxes[li++] = strdup ("gsave 0 1 0 setrgbcolor");
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
+    list_push_back(&Show_boxes, strdup("%% poly list"));
+    list_push_back(&Show_boxes, strdup("gsave 0 1 0 setrgbcolor"));
     for (bi = 0; bi < p.pn; bi++) {
 	tl.x = (int)p.ps[bi].x;
 	tl.y = (int)p.ps[bi].y;
@@ -146,54 +144,49 @@ static void psprintpoly(Ppoly_t p)
 	else pfx ="";
 	snprintf(buf, sizeof(buf), "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x,
 	         hd.y);
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
     }
-    Show_boxes[li++] = strdup ("grestore");
-
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    list_push_back(&Show_boxes, strdup("grestore"));
+    list_push_back(&Show_boxes, NULL);
 }
 
 static void psprintboxes(int boxn, boxf* boxes)
 {
     char buf[BUFSIZ];
-    int newcnt = Show_cnt + 5*boxn + 3;
     pointf ll, ur;
-    int bi, li;
+    int bi;
 
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
-    li = Show_cnt+1;
-    Show_boxes[li++] = strdup ("%% box list");
-    Show_boxes[li++] = strdup ("gsave 0 1 0 setrgbcolor");
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
+    list_push_back(&Show_boxes, strdup("%% box list"));
+    list_push_back(&Show_boxes, strdup("gsave 0 1 0 setrgbcolor"));
     for (bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
 	snprintf(buf, sizeof(buf), "newpath\n%d %d moveto", (int)ll.x, (int)ll.y);
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
 	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ll.x, (int)ur.y);
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
 	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ur.x, (int)ur.y);
-	Show_boxes[li++] = strdup (buf);
+	list_push_back(&Show_boxes, strdup(buf));
 	snprintf(buf, sizeof(buf), "%d %d lineto", (int)ur.x, (int)ll.y);
-	Show_boxes[li++] = strdup (buf);
-	Show_boxes[li++] = strdup ("closepath stroke");
+	list_push_back(&Show_boxes, strdup(buf));
+	list_push_back(&Show_boxes, strdup("closepath stroke"));
     }
-    Show_boxes[li++] = strdup ("grestore");
-
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+    list_push_back(&Show_boxes, strdup("grestore"));
+    list_push_back(&Show_boxes, NULL);
 }
 
 static void psprintinit (int begin)
 {
-    int newcnt = Show_cnt + 1;
-
-    Show_boxes = ALLOC(newcnt+2,Show_boxes,char*);
+    if (list_is_empty(&Show_boxes)) {
+	list_push_back(&Show_boxes, NULL);
+    }
     if (begin)
-	Show_boxes[1+Show_cnt] = strdup ("dbgstart");
+	list_push_back(&Show_boxes, strdup("dbgstart"));
     else
-	Show_boxes[1+Show_cnt] = strdup ("grestore");
-    Show_cnt = newcnt;
-    Show_boxes[Show_cnt+1] = NULL;
+	list_push_back(&Show_boxes, strdup("grestore"));
+    list_push_back(&Show_boxes, NULL);
 }
 
 static bool debugleveln(edge_t* realedge, int i)
@@ -265,13 +258,10 @@ routesplinesinit()
 {
     if (++routeinit > 1) return 0;
 #ifdef DEBUG
-    if (Show_boxes) {
-        for (int i = 0; Show_boxes[i]; i++)
-	    free (Show_boxes[i]);
-	free (Show_boxes);
-	Show_boxes = NULL;
-	Show_cnt = 0;
+    for (size_t i = 0; i < list_size(&Show_boxes); ++i) {
+        free(list_at(&Show_boxes, i));
     }
+    list_reset(&Show_boxes);
 #endif
     nedges = 0;
     nboxes = 0;

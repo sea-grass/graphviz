@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
+#include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <label/xlabels.h>
@@ -678,14 +680,15 @@ void gv_postprocess(Agraph_t * g, int allowTranslation)
     if (GD_label(g) && !GD_label(g)->set)
 	place_root_label(g, dimen);
 
-    if (Show_boxes) {
+    if (!list_is_empty(&Show_boxes)) {
 	char buf[BUFSIZ];
 	if (Flip)
 	    snprintf(buf, sizeof(buf), M2, Offset.x, Offset.y, Offset.x, Offset.y);
 	else
 	    snprintf(buf, sizeof(buf), M1, Offset.y, Offset.x, Offset.y, Offset.x,
 		    -Offset.x, -Offset.y);
-	Show_boxes[0] = strdup(buf);
+	assert(list_get(&Show_boxes, 0) == NULL && "memory leak");
+	list_set(&Show_boxes, 0, strdup(buf));
     }
 }
 

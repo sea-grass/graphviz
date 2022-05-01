@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <cgraph/list.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -45,7 +47,7 @@ extern "C" {
     GLOBALS_API EXTERN int Nop;
     GLOBALS_API EXTERN double PSinputscale;
     GLOBALS_API EXTERN int Show_cnt;
-    GLOBALS_API EXTERN char** Show_boxes;	/* emit code for correct box coordinates */
+    GLOBALS_API EXTERN list_t Show_boxes; // emit code for correct box coordinates
     GLOBALS_API EXTERN int CL_type;		/* NONE, LOCAL, GLOBAL */
     GLOBALS_API EXTERN unsigned char Concentrate;	/* if parallel edges should be merged */
     GLOBALS_API EXTERN double Epsilon;	/* defined in input_graph */

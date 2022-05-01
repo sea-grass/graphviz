@@ -14,6 +14,7 @@
 
 #include "config.h"
 
+#include <cgraph/list.h>
 #include <stdbool.h>
 #include <string.h>
 #include <ctype.h>
@@ -4090,7 +4091,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
     		/* Show_boxes is not defined, if at all, 
                  * until splines are generated in dot 
                  */
-	    job->common->show_boxes = Show_boxes;
+	    job->common->show_boxes = Show_boxes.base;
 #endif
 	    emit_graph(job, g);
 	}
