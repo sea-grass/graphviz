@@ -29,7 +29,7 @@ static void test_init_reset(void) {
 static void test_push_one(void) {
   gv_stack_t s = {0};
   void *arbitrary = (void *)0x42;
-  int r = stack_push(&s, arbitrary);
+  int r = stack_try_push(&s, arbitrary);
   assert(r == 0);
   assert(stack_size(&s) == 1);
   void *top = stack_pop(&s);
@@ -41,7 +41,7 @@ static void test_push_one(void) {
 static void push_then_pop(size_t count) {
   gv_stack_t s = {0};
   for (uintptr_t i = 0; i < (uintptr_t)count; ++i) {
-    int r = stack_push(&s, (void *)i);
+    int r = stack_try_push(&s, (void *)i);
     assert(r == 0);
     assert(stack_size(&s) == (size_t)i + 1);
   }
@@ -72,7 +72,7 @@ static void test_push_pop_interleaved(void) {
       assert((uintptr_t)p == i - 1);
       --size;
     } else {
-      int r = stack_push(&s, (void *)i);
+      int r = stack_try_push(&s, (void *)i);
       assert(r == 0);
       ++size;
     }

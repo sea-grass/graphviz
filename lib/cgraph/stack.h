@@ -29,7 +29,7 @@ static inline bool stack_is_empty(const gv_stack_t *stack) {
   return stack_size(stack) == 0;
 }
 
-static inline int stack_push(gv_stack_t *stack, void *item) {
+static inline int stack_try_push(gv_stack_t *stack, void *item) {
 
   assert(stack != NULL);
 
@@ -69,9 +69,9 @@ static inline void stack_push_or_exit(gv_stack_t *stack, void *item) {
 
   assert(stack != NULL);
 
-  int r = stack_push(stack, item);
+  int r = stack_try_push(stack, item);
   if (UNLIKELY(r != 0)) {
-    fprintf(stderr, "stack_push failed: %s\n", strerror(r));
+    fprintf(stderr, "stack_try_push failed: %s\n", strerror(r));
     graphviz_exit(EXIT_FAILURE);
   }
 }
