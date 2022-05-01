@@ -751,7 +751,7 @@ makeTreeGen (int N)
 
     tg->N = N;
     tg->T = genCnt(N);
-    tg->sp = (gv_stack_t){0};
+    tg->sp = (gv_stack_t){{0}};
     tg->tp = mkTree(N+1);
     srand((unsigned)time(0));
 

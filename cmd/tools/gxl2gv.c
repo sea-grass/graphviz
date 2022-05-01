@@ -153,7 +153,7 @@ static userdata_t *genUserdata(void)
     agxbinit(&(user->xml_attr_value), SMALLBUF, 0);
     agxbinit(&(user->composite_buffer), SMALLBUF, 0);
     user->listen = FALSE;
-    user->elements = (gv_stack_t){0};
+    user->elements = (gv_stack_t){{0}};
     user->closedElementType = TAG_NONE;
     user->globalAttrType = TAG_NONE;
     user->compositeReadState = FALSE;

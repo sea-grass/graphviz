@@ -234,7 +234,7 @@ static int process(Agraph_t * g, int gcnt)
 
     state.count = 0;
     state.nComp = 0;
-    state.stk = (gv_stack_t){0};
+    state.stk = (gv_stack_t){{0}};
     state.blks = 0;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {

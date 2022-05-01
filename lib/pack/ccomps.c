@@ -31,7 +31,7 @@ typedef struct {
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
      int (*markfn) (Agnode_t *, int))
 {
-    sp->data = (gv_stack_t){0};
+    sp->data = (gv_stack_t){{0}};
     sp->actionfn = actionfn;
     sp->markfn = markfn;
 }

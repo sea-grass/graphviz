@@ -111,7 +111,7 @@ void decompose(graph_t * g, int pass)
 {
     graph_t *subg;
     node_t *n, *v;
-    gv_stack_t stk = {0};
+    gv_stack_t stk = {{0}};
 
     if (++Cmark == 0)
 	Cmark = 1;

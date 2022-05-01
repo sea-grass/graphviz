@@ -583,7 +583,7 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * fns)
 {
     Agnode_t *n;
-    gv_stack_t stk = {0};
+    gv_stack_t stk = {{0}};
     Agnode_t *curn;
     Agedge_t *cure;
     Agedge_t *entry;

@@ -258,7 +258,7 @@ int main(int argc, char **argv)
 {
     Agraph_t *g;
     ingraph_state ig;
-    gv_stack_t estk = {0};
+    gv_stack_t estk = {{0}};
 
     init(argc, argv);
     newIngraph(&ig, Files, gread);

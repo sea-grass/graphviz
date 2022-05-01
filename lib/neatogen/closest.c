@@ -58,7 +58,7 @@ static bool pop(gv_stack_t *s, Pair *x) {
   return true;
 }
 
-#define sub(h,i) (*(Pair*)(h)->base[i])
+#define sub(h,i) (*(Pair*)(h)->data.base[i])
 
 /* An auxulliary data structure (a heap) for 
  * finding the closest pair in the layout
@@ -311,7 +311,7 @@ void
 closest_pairs2graph(double *place, int n, int num_pairs, vtx_data ** graph)
 {
     /* build a graph with with edges between the 'num_pairs' closest pairs in the 1-D space: 'place' */
-    gv_stack_t pairs_stack = {0};
+    gv_stack_t pairs_stack = {{0}};
     find_closest_pairs(place, n, num_pairs, &pairs_stack);
     construct_graph(n, &pairs_stack, graph);
     stack_reset(&pairs_stack);

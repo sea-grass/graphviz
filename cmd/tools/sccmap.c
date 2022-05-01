@@ -211,7 +211,7 @@ static void process(Agraph_t * G)
     int nc = 0;
     float nontree_frac = 0;
     int Maxdegree = 0;
-    gv_stack_t stack = {0};
+    gv_stack_t stack = {{0}};
     sccstate state;
 
     aginit(G, AGRAPH, "scc_graph", sizeof(Agraphinfo_t), TRUE);
