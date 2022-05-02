@@ -41,7 +41,7 @@ static inline int list_try_push_back(list_t *list, void *item) {
     // Capacity to allocate on the first push to a `list_t`. We pick something
     // that works out to an allocation of 4KB, a common page size on multiple
     // platforms, as a reasonably efficient default.
-    enum { FIRST_ALLOCATION = 4096 / sizeof(void *) };
+    static const size_t FIRST_ALLOCATION = 4096 / sizeof(void *);
 
     // will our resize calculation overflow?
     if (UNLIKELY(SIZE_MAX / 2 < list->capacity)) {
