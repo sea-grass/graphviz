@@ -49,7 +49,7 @@ static inline int list_try_push_back(list_t *list, void *item) {
     }
 
     size_t c = list->capacity == 0 ? FIRST_ALLOCATION : (2 * list->capacity);
-    void **b = realloc(list->base, sizeof(b[0]) * c);
+    void **b = (void **)realloc(list->base, sizeof(b[0]) * c);
     if (UNLIKELY(b == NULL)) {
       return ENOMEM;
     }
