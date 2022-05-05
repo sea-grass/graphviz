@@ -125,3 +125,38 @@ static inline void list_reset(list_t *list) {
   free(list->base);
   memset(list, 0, sizeof(*list));
 }
+
+static inline int list_try_copy(list_t *dst, const list_t *src) {
+  assert(dst != NULL);
+  assert(src != NULL);
+
+  // will our multiplication below overflow?
+  if (SIZE_MAX / sizeof(src->base[0]) < src->size) {
+    return EOVERFLOW;
+  }
+
+  // clear anything in the destination list
+  list_reset(dst);
+
+  // resize the destination to receive all elements from the source
+  dst->base = calloc(src->size, sizeof(dst->base[0]));
+  if (UNLIKELY(dst->base == NULL)) {
+    return ENOMEM;
+  }
+
+  // copy all elements
+  memcpy(dst->base, src->base, src->size * sizeof(src->base[0]));
+
+  return 0;
+}
+
+static inline void list_copy(list_t *dst, const list_t *src) {
+  assert(dst != NULL);
+  assert(src != NULL);
+
+  int r = list_try_copy(dst, src);
+  if (UNLIKELY(r != 0)) {
+    fprintf(stderr, "list_try_copy failed: %s\n", strerror(r));
+    graphviz_exit(EXIT_FAILURE);
+  }
+}
