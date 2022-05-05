@@ -108,7 +108,7 @@ static inline void *list_pop_back(list_t *list) {
   return back;
 }
 
-static inline bool list_contains(const list_t *haystack, void *needle) {
+static inline bool list_contains(const list_t *haystack, const void *needle) {
   assert(haystack != NULL);
   for (size_t i = 0; i < list_size(haystack); ++i) {
     if (list_get(haystack, i) == needle) {
