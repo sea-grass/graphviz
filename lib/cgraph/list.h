@@ -108,6 +108,16 @@ static inline void *list_pop_back(list_t *list) {
   return back;
 }
 
+static inline bool list_contains(const list_t *haystack, void *needle) {
+  assert(haystack != NULL);
+  for (size_t i = 0; i < list_size(haystack); ++i) {
+    if (list_get(haystack, i) == needle) {
+      return true;
+    }
+  }
+  return false;
+}
+
 static inline void list_reset(list_t *list) {
 
   assert(list != NULL);
