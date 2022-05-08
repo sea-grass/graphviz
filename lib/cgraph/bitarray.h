@@ -34,8 +34,8 @@
 /// a compressed array of boolean values
 ///
 /// Note that this complies with the zero-is-initialization idiom. That is, C99
-/// zero initializing one of these (`bitarray_t b = {0}`) or `memset`ing one of
-/// these to zero gives you a valid zero-length bit array.
+/// zero initializing one of these (`bitarray_t b = {{0}}`) or `memset`ing one
+/// of these to zero gives you a valid zero-length bit array.
 typedef struct {
   union {
     uint8_t block[sizeof(uint8_t *)]; ///< inline storage for small arrays
