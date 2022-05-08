@@ -117,6 +117,27 @@ static inline void bitarray_set(bitarray_t *self, size_t index, bool value) {
   }
 }
 
+/// clear all bits in a bit array
+static inline void bitarray_clear(bitarray_t *self) {
+
+  // determine if this array is stored inline or not
+  uint8_t *base;
+  if (self->size_bits <= sizeof(self->block) * 8) {
+    base = self->block;
+  } else {
+    base = self->base;
+  }
+
+  // calculate byte extent covering the array
+  size_t size = self->size_bits / 8;
+  if (se-f->size_bits % 8 != 0) {
+    ++size;
+  }
+
+  // zero all bits
+  memset(base, 0, size);
+}
+
 /// free underlying resources and leave a bit array empty
 static inline void bitarray_reset(bitarray_t *self) {
   assert(self != NULL);
