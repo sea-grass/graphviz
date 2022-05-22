@@ -21,9 +21,77 @@ target_link_libraries(dot
   gvc
 )
 
-# Installation location of executables
 install(
   TARGETS dot
+  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+)
+
+add_executable(dot_builtins
+  dot.c
+  dot_builtins.cpp
+)
+
+target_link_libraries(dot_builtins
+  cdt
+  cgraph
+  gvplugin_core_static
+  gvplugin_dot_layout
+  gvplugin_neato_layout
+  pathplan
+)
+
+if(with_expat)
+  find_package(EXPAT REQUIRED)
+  target_link_libraries(dot_builtins ${EXPAT_LIBRARIES})
+endif()
+
+find_package(GD)
+if(GD_FOUND)
+  target_link_libraries(dot_builtins gvplugin_gd)
+endif()
+
+find_package(PkgConfig)
+if(PkgConfig_FOUND)
+  pkg_check_modules(GTS gts)
+  if(GTS_FOUND)
+    target_link_libraries(dot_builtins ${GTS_LIBRARIES})
+  endif()
+endif()
+
+find_package(PkgConfig)
+if(PkgConfig_FOUND)
+  pkg_check_modules(LASI lasi)
+  if(LASI_FOUND)
+    target_link_libraries(dot_builtins gvplugin_lasi)
+  endif()
+endif()
+
+find_package(PANGOCAIRO)
+if(PANGOCAIRO_FOUND)
+  target_link_libraries(dot_builtins gvplugin_pango)
+  find_package(PkgConfig)
+  if(PkgConfig_FOUND)
+    pkg_check_modules(WEBP libwebp)
+    if(WEBP_FOUND)
+      target_link_libraries(dot_builtins gvplugin_webp)
+    endif()
+  endif()
+endif()
+
+find_library(SOCKET socket)
+if(SOCKET)
+  target_link_libraries(dot_builtins ${SOCKET})
+endif()
+
+find_package(ZLIB)
+if(ZLIB_FOUND)
+  target_link_libraries(dot_builtins ${ZLIB_LIBRARIES})
+endif()
+
+install(
+  TARGETS dot_builtins
   RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
   LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
   ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
