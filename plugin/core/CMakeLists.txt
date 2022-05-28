@@ -1,4 +1,4 @@
-add_library(gvplugin_core SHARED
+add_library(gvplugin_core_obj OBJECT
   # Header files
   ps.h
 
@@ -18,7 +18,7 @@ add_library(gvplugin_core SHARED
   gvrender_core_vml.c
 )
 
-target_include_directories(gvplugin_core PRIVATE
+target_include_directories(gvplugin_core_obj PRIVATE
   ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -31,11 +31,12 @@ target_include_directories(gvplugin_core PRIVATE
   ../../lib/xdot
 )
 
-target_link_libraries(gvplugin_core
-  cgraph
-  gvc
-  xdot
-)
+set_target_properties(gvplugin_core_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+add_library(gvplugin_core SHARED $<TARGET_OBJECTS:gvplugin_core_obj>)
+add_library(gvplugin_core_static STATIC $<TARGET_OBJECTS:gvplugin_core_obj>)
+target_link_libraries(gvplugin_core cgraph gvc xdot)
+target_link_libraries(gvplugin_core_static cgraph gvc xdot)
 
 # Installation location of library files
 install(
