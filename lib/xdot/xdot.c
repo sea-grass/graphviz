@@ -11,6 +11,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
+#include <math.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
@@ -478,6 +479,12 @@ static void printFloat(double f, pf print, void *info, int space) {
     print(buf, info);
 }
 
+static void printTruncated(double f, pf print, void *info) {
+  char buf[30];
+  snprintf(buf, sizeof(buf), "%.0f", trunc(f));
+  print(buf, info);
+}
+
 static void printAlign(xdot_align a, pf print, void *info)
 {
     switch (a) {
@@ -594,10 +601,10 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	break;
     case xd_text:
 	print("T", info);
-	printInt(op->u.text.x, print, info);
-	printInt(op->u.text.y, print, info);
+	printTruncated(op->u.text.x, print, info);
+	printTruncated(op->u.text.y, print, info);
 	printAlign(op->u.text.align, print, info);
-	printInt(op->u.text.width, print, info);
+	printTruncated(op->u.text.width, print, info);
 	printString(op->u.text.text, print, info);
 	break;
     case xd_font:
@@ -718,13 +725,13 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	break;
     case xd_text:
 	print("{\"T\" : [", info);
-	printInt(op->u.text.x, print, info);
+	printTruncated(op->u.text.x, print, info);
 	print(",", info);
-	printInt(op->u.text.y, print, info);
+	printTruncated(op->u.text.y, print, info);
 	print(",", info);
 	printAlign(op->u.text.align, print, info);
 	print(",", info);
-	printInt(op->u.text.width, print, info);
+	printTruncated(op->u.text.width, print, info);
 	print(",", info);
 	jsonString(op->u.text.text, print, info);
 	print("]", info);
