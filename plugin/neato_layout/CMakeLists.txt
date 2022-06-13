@@ -1,10 +1,10 @@
-add_library(gvplugin_neato_layout SHARED
+add_library(gvplugin_neato_layout_obj OBJECT
   # Source files
   gvplugin_neato_layout.c
   gvlayout_neato_layout.c
 )
 
-target_include_directories(gvplugin_neato_layout PRIVATE
+target_include_directories(gvplugin_neato_layout_obj PRIVATE
   ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ../../lib/cdt
@@ -14,7 +14,25 @@ target_include_directories(gvplugin_neato_layout PRIVATE
   ../../lib/pathplan
 )
 
+set_target_properties(gvplugin_neato_layout_obj
+  PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+add_library(gvplugin_neato_layout SHARED
+  $<TARGET_OBJECTS:gvplugin_neato_layout_obj>)
+add_library(gvplugin_neato_layout_static STATIC
+  $<TARGET_OBJECTS:gvplugin_neato_layout_obj>)
 target_link_libraries(gvplugin_neato_layout
+  circogen
+  fdpgen
+  gvc
+  neatogen
+  osage
+  patchwork
+  rbtree
+  sparse
+  twopigen
+)
+target_link_libraries(gvplugin_neato_layout_static
   circogen
   fdpgen
   gvc
@@ -28,10 +46,12 @@ target_link_libraries(gvplugin_neato_layout
 
 if(with_ipsepcola)
   target_link_libraries(gvplugin_neato_layout vpsc)
+  target_link_libraries(gvplugin_neato_layout_static vpsc)
 endif()
 
 if(with_sfdp)
   target_link_libraries(gvplugin_neato_layout sfdpgen)
+  target_link_libraries(gvplugin_neato_layout_static sfdpgen)
 endif()
 
 # Installation location of library files
