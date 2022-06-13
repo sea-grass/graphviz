@@ -7,13 +7,13 @@ endif()
 
 if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_lasi SHARED
+  add_library(gvplugin_lasi_obj OBJECT
     gvloadimage_lasi.c
     gvplugin_lasi.c
     gvrender_lasi.cpp
   )
 
-  target_include_directories(gvplugin_lasi PRIVATE
+  target_include_directories(gvplugin_lasi_obj PRIVATE
     ../../lib
     ../../lib/cdt
     ../../lib/cgraph
@@ -22,13 +22,23 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
     ../../lib/pathplan
   )
 
-  target_include_directories(gvplugin_lasi SYSTEM PRIVATE
+  target_include_directories(gvplugin_lasi_obj SYSTEM PRIVATE
     ${Freetype_INCLUDE_DIRS}
     ${LASI_INCLUDE_DIRS}
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
+  set_target_properties(gvplugin_lasi_obj
+    PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+  add_library(gvplugin_lasi SHARED $<TARGET_OBJECTS:gvplugin_lasi_obj>)
+  add_library(gvplugin_lasi_static STATIC $<TARGET_OBJECTS:gvplugin_lasi_obj>)
   target_link_libraries(gvplugin_lasi
+    ${Freetype_LIBRARIES}
+    ${LASI_LIBRARIES}
+    ${PANGOCAIRO_LIBRARIES}
+  )
+  target_link_libraries(gvplugin_lasi_static
     ${Freetype_LIBRARIES}
     ${LASI_LIBRARIES}
     ${PANGOCAIRO_LIBRARIES}
