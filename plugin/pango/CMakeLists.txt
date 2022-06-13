@@ -1,6 +1,6 @@
 if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_pango SHARED
+  add_library(gvplugin_pango_obj OBJECT
     # Header files
     gvgetfontlist.h
     gvplugin_pango.h
@@ -13,7 +13,7 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
     gvtextlayout_pango.c
   )
 
-  target_include_directories(gvplugin_pango PRIVATE
+  target_include_directories(gvplugin_pango_obj PRIVATE
     ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_BINARY_DIR}/lib/common
@@ -24,12 +24,23 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
     ../../lib/pathplan
   )
 
-  target_include_directories(gvplugin_pango SYSTEM PRIVATE
+  target_include_directories(gvplugin_pango_obj SYSTEM PRIVATE
     ${CAIRO_INCLUDE_DIRS}/cairo
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
+  set_target_properties(gvplugin_pango_obj
+    PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+  add_library(gvplugin_pango SHARED $<TARGET_OBJECTS:gvplugin_pango_obj>)
+  add_library(gvplugin_pango_static STATIC $<TARGET_OBJECTS:gvplugin_pango_obj>)
   target_link_libraries(gvplugin_pango
+    cgraph
+    gvc
+    ${CAIRO_LINK_LIBRARIES}
+    ${PANGOCAIRO_LINK_LIBRARIES}
+  )
+  target_link_libraries(gvplugin_pango_static
     cgraph
     gvc
     ${CAIRO_LINK_LIBRARIES}
