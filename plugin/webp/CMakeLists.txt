@@ -5,13 +5,13 @@ endif()
 
 if(WEBP_FOUND)
 
-  add_library(gvplugin_webp SHARED
+  add_library(gvplugin_webp_obj OBJECT
     gvplugin_webp.c
     gvloadimage_webp.c
     gvdevice_webp.c
   )
 
-  target_include_directories(gvplugin_webp PRIVATE
+  target_include_directories(gvplugin_webp_obj PRIVATE
     ../../lib
     ../../lib/cdt
     ../../lib/cgraph
@@ -20,11 +20,19 @@ if(WEBP_FOUND)
     ../../lib/pathplan
   )
 
-  target_include_directories(gvplugin_webp SYSTEM PRIVATE
+  target_include_directories(gvplugin_webp_obj SYSTEM PRIVATE
     ${WEBP_INCLUDE_DIRS}
   )
 
+  set_target_properties(gvplugin_webp_obj
+    PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+  add_library(gvplugin_webp SHARED $<TARGET_OBJECTS:gvplugin_webp_obj>)
+  add_library(gvplugin_webp_static STATIC $<TARGET_OBJECTS:gvplugin_webp_obj>)
   target_link_libraries(gvplugin_webp
+    ${WEBP_LINK_LIBRARIES}
+  )
+  target_link_libraries(gvplugin_webp_static
     ${WEBP_LINK_LIBRARIES}
   )
 
