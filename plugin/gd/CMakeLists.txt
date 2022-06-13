@@ -1,6 +1,6 @@
 if(GD_FOUND)
 
-  add_library(gvplugin_gd SHARED
+  add_library(gvplugin_gd_obj OBJECT
     # Source files
     gdioctx_wrapper.h
     gvdevice_gd.c
@@ -11,7 +11,7 @@ if(GD_FOUND)
     gvtextlayout_gd.c
   )
 
-  target_include_directories(gvplugin_gd PRIVATE
+  target_include_directories(gvplugin_gd_obj PRIVATE
     ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}
     ../../lib/cdt
@@ -21,11 +21,21 @@ if(GD_FOUND)
     ../../lib/pathplan
   )
 
-  target_include_directories(gvplugin_gd SYSTEM PRIVATE
+  target_include_directories(gvplugin_gd_obj SYSTEM PRIVATE
     ${GD_INCLUDE_DIRS}
   )
 
+  set_target_properties(gvplugin_gd_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+  add_library(gvplugin_gd SHARED $<TARGET_OBJECTS:gvplugin_gd_obj>)
+  add_library(gvplugin_gd_static STATIC $<TARGET_OBJECTS:gvplugin_gd_obj>)
   target_link_libraries(gvplugin_gd
+    cgraph
+    gvc
+    pathplan
+    ${GD_LIBRARIES}
+  )
+  target_link_libraries(gvplugin_gd_static
     cgraph
     gvc
     pathplan
