@@ -1,4 +1,4 @@
-add_library(gvplugin_dot_layout SHARED
+add_library(gvplugin_dot_layout_obj OBJECT
   # Source files
   gvplugin_dot_layout.c
   gvlayout_dot_layout.c
@@ -14,10 +14,15 @@ target_include_directories(gvplugin_dot_layout PRIVATE
   ../../lib/pathplan
 )
 
-target_link_libraries(gvplugin_dot_layout
-  dotgen
-  gvc
-)
+set_target_properties(gvplugin_dot_layout_obj
+  PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+add_library(gvplugin_dot_layout SHARED
+  $<TARGET_OBJECTS:gvplugin_dot_layout_obj>)
+add_library(gvplugin_dot_layout_static STATIC
+  $<TARGET_OBJECTS:gvplugin_cdot_layout_obj>)
+target_link_libraries(gvplugin_dot_layout dotgen gvc)
+target_link_libraries(gvplugin_dot_layout_static dotgen gvc)
 
 # Installation location of library files
 install(
