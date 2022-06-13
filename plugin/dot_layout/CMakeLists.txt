@@ -4,7 +4,7 @@ add_library(gvplugin_dot_layout_obj OBJECT
   gvlayout_dot_layout.c
 )
 
-target_include_directories(gvplugin_dot_layout PRIVATE
+target_include_directories(gvplugin_dot_layout_obj PRIVATE
   ../../lib
   ${CMAKE_CURRENT_SOURCE_DIR}
   ../../lib/cdt

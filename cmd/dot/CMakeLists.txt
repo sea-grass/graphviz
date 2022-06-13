@@ -37,7 +37,7 @@ target_link_libraries(dot_builtins
   cdt
   cgraph
   gvplugin_core_static
-  gvplugin_dot_layout
+  gvplugin_dot_layout_static
   gvplugin_neato_layout
   pathplan
 )
