@@ -20,7 +20,7 @@ set_target_properties(gvplugin_dot_layout_obj
 add_library(gvplugin_dot_layout SHARED
   $<TARGET_OBJECTS:gvplugin_dot_layout_obj>)
 add_library(gvplugin_dot_layout_static STATIC
-  $<TARGET_OBJECTS:gvplugin_cdot_layout_obj>)
+  $<TARGET_OBJECTS:gvplugin_dot_layout_obj>)
 target_link_libraries(gvplugin_dot_layout dotgen gvc)
 target_link_libraries(gvplugin_dot_layout_static dotgen gvc)
 
