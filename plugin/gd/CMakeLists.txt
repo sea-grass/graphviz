@@ -29,6 +29,11 @@ if(GD_FOUND)
 
   add_library(gvplugin_gd SHARED $<TARGET_OBJECTS:gvplugin_gd_obj>)
   add_library(gvplugin_gd_static STATIC $<TARGET_OBJECTS:gvplugin_gd_obj>)
+
+  if(WIN32)
+    target_compile_definitions(gvplugin_gd PUBLIC -DGVDLL)
+  endif()
+
   target_link_libraries(gvplugin_gd
     cgraph
     gvc

@@ -29,6 +29,11 @@ if(WEBP_FOUND)
 
   add_library(gvplugin_webp SHARED $<TARGET_OBJECTS:gvplugin_webp_obj>)
   add_library(gvplugin_webp_static STATIC $<TARGET_OBJECTS:gvplugin_webp_obj>)
+
+  if(WIN32)
+    target_compile_definitions(gvplugin_webp PUBLIC -DGVDLL)
+  endif()
+
   target_link_libraries(gvplugin_webp
     ${WEBP_LINK_LIBRARIES}
   )

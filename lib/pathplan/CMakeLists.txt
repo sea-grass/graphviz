@@ -22,6 +22,10 @@ add_library(pathplan SHARED
   visibility.c
 )
 
+if(WIN32)
+  target_compile_definitions(pathplan PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(pathplan PRIVATE
   ..
   ${CMAKE_CURRENT_SOURCE_DIR}

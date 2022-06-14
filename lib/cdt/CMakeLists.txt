@@ -24,6 +24,10 @@ add_library(cdt SHARED
   dtwalk.c
 )
 
+if(WIN32)
+  target_compile_definitions(cdt PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(cdt PRIVATE
   ..
   ${CMAKE_CURRENT_SOURCE_DIR})

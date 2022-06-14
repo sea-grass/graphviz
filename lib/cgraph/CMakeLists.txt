@@ -49,6 +49,10 @@ add_library(cgraph SHARED
   ${FLEX_Scan_OUTPUTS}
 )
 
+if(WIN32)
+  target_compile_definitions(cgraph PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(cgraph PRIVATE
   ..
   ../cdt

@@ -11,6 +11,10 @@ if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
     gvplugin_poppler.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_poppler PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_poppler PRIVATE
     ../../lib
     ../../lib/cdt

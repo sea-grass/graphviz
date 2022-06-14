@@ -8,6 +8,10 @@ add_library(xdot SHARED
   xdot.c
 )
 
+if(WIN32)
+  target_compile_definitions(xdot PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(xdot PRIVATE
   ..
   ${CMAKE_CURRENT_SOURCE_DIR}

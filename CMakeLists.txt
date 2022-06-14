@@ -19,12 +19,6 @@ option(with_cxx_tests  "enables building the C++ tests" OFF)
 option(use_win_pre_inst_libs "enables building using pre-installed Windows libraries" ON)
 
 if(WIN32)
-  # Build dynamic-link libraries on Windows, including MinGW. The
-  # CMake build system does not currently support building static
-  # libraries, so the GVDLL symbol can be unconditionally set until
-  # such support is introduced.
-  add_definitions(-DGVDLL)
-
   option(install_win_dependency_dlls "Install 3rd party dependencies" ON)
 endif()
 

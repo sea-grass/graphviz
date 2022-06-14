@@ -21,6 +21,11 @@ add_library(gvplugin_neato_layout SHARED
   $<TARGET_OBJECTS:gvplugin_neato_layout_obj>)
 add_library(gvplugin_neato_layout_static STATIC
   $<TARGET_OBJECTS:gvplugin_neato_layout_obj>)
+
+if(WIN32)
+  target_compile_definitions(gvplugin_neato_layout PUBLIC -DGVDLL)
+endif()
+
 target_link_libraries(gvplugin_neato_layout
   circogen
   fdpgen

@@ -33,6 +33,10 @@ add_library(gvc SHARED
   gvusershape.c
 )
 
+if(WIN32)
+  target_compile_definitions(gvc PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(gvc
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>

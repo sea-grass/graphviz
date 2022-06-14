@@ -8,6 +8,10 @@ if(GS_FOUND AND PANGOCAIRO_FOUND)
     gvplugin_gs.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_gs PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_gs PRIVATE
     ../../lib
     ../../lib/cdt

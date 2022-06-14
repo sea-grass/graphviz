@@ -11,6 +11,10 @@ if(IS_DIRECTORY "/System/Library/Frameworks/ApplicationServices.framework")
     GVTextLayout.m
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_quartz PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_quartz PRIVATE
     ../../lib
     ../../lib/cdt

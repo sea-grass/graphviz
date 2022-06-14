@@ -12,6 +12,10 @@ if(PANGOCAIRO_FOUND AND X11_FOUND AND XRENDER_FOUND)
     gvplugin_xlib.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_xlib PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_xlib PRIVATE
     ../../lib
     ../../lib/cdt

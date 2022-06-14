@@ -35,6 +35,10 @@ if(with_smyrna)
     glutils.c
   )
 
+  if(WIN32)
+    target_compile_definitions(glcomp PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(glcomp PRIVATE
     ..
     ../common

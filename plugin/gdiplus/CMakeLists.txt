@@ -14,6 +14,10 @@ if(WIN32)
     gvtextlayout_gdiplus.cpp
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_gdiplus PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_gdiplus PRIVATE
     ../../lib
     ${CMAKE_CURRENT_SOURCE_DIR}

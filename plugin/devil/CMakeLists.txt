@@ -8,6 +8,10 @@ if(PANGOCAIRO_FOUND AND DevIL_FOUND)
     gvplugin_devil.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_devil PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_devil PRIVATE
     ../../lib
     ../../lib/cdt

@@ -10,6 +10,10 @@ add_library(gvc++ SHARED
 set_target_properties(gvc++ PROPERTIES CXX_STANDARD 20)
 set_target_properties(gvc++ PROPERTIES CXX_STANDARD_REQUIRED ON)
 
+if(WIN32)
+  target_compile_definitions(gvc++ PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(gvc++ PRIVATE
   ..
   ${CMAKE_CURRENT_SOURCE_DIR}

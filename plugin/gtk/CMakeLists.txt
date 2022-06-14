@@ -10,6 +10,10 @@ if(GTK2_FOUND)
     support.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_gtk PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_gtk PRIVATE
     ../../lib
     ../../lib/cdt

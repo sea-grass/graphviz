@@ -9,6 +9,10 @@ add_library(gvplugin_visio SHARED
   VisioText.h
 )
 
+if(WIN32)
+  target_compile_definitions(gvplugin_visio PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(gvplugin_visio PRIVATE
   ../../lib
   ../../lib/cdt

@@ -13,6 +13,10 @@ if(GDK_FOUND AND GDK_PIXBUF_FOUND AND PANGOCAIRO_FOUND)
     gvplugin_gdk.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_gdk PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_gdk PRIVATE
     ../../lib
     ../../lib/cdt

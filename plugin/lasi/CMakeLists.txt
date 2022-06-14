@@ -33,6 +33,11 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
 
   add_library(gvplugin_lasi SHARED $<TARGET_OBJECTS:gvplugin_lasi_obj>)
   add_library(gvplugin_lasi_static STATIC $<TARGET_OBJECTS:gvplugin_lasi_obj>)
+
+  if(WIN32)
+    target_compile_definitions(gvplugin_lasi PUBLIC -DGVDLL)
+  endif()
+
   target_link_libraries(gvplugin_lasi
     ${Freetype_LIBRARIES}
     ${LASI_LIBRARIES}

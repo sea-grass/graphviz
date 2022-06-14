@@ -38,6 +38,10 @@ add_library(gvplugin_core_static STATIC $<TARGET_OBJECTS:gvplugin_core_obj>)
 target_link_libraries(gvplugin_core cgraph gvc xdot)
 target_link_libraries(gvplugin_core_static cgraph gvc xdot)
 
+if(WIN32)
+  target_compile_definitions(gvplugin_core PUBLIC -DGVDLL)
+endif()
+
 # Installation location of library files
 install(
   TARGETS gvplugin_core

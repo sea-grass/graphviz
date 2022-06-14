@@ -12,6 +12,10 @@ if(PANGOCAIRO_FOUND AND RSVG_FOUND AND XRENDER_FOUND)
     gvplugin_rsvg.c
   )
 
+  if(WIN32)
+    target_compile_definitions(gvplugin_rsvg PUBLIC -DGVDLL)
+  endif()
+
   target_include_directories(gvplugin_rsvg PRIVATE
     ../../lib
     ../../lib/cdt

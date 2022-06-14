@@ -5,6 +5,10 @@ add_library(cgraph++ SHARED
 set_property(TARGET cgraph++ PROPERTY CXX_STANDARD 20)
 set_property(TARGET cgraph++ PROPERTY CXX_STANDARD_REQUIRED ON)
 
+if(WIN32)
+  target_compile_definitions(cgraph++ PUBLIC -DGVDLL)
+endif()
+
 target_include_directories(cgraph++ PRIVATE
   ..
   ../cdt
