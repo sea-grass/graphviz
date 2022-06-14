@@ -31,6 +31,8 @@ add_library(gvc SHARED
   gvtextlayout.c
   gvtool_tred.c
   gvusershape.c
+  $<TARGET_OBJECTS:common_obj>
+  $<TARGET_OBJECTS:pack_obj>
 )
 
 if(WIN32)
@@ -55,11 +57,6 @@ if(WIN32 AND NOT MINGW)
     ../../windows/include/unistd
   )
 endif()
-
-target_link_libraries(gvc PRIVATE
-  $<TARGET_OBJECTS:common_obj>
-  $<TARGET_OBJECTS:pack_obj>
-)
 
 target_link_libraries(gvc PRIVATE
   cdt
