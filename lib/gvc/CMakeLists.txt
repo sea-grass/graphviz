@@ -64,8 +64,6 @@ target_link_libraries(gvc PRIVATE
 target_link_libraries(gvc PRIVATE
   cdt
   cgraph
-  common
-  pack
 )
 
 if(LTDL_FOUND)
