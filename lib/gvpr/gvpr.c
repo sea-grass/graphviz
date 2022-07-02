@@ -924,15 +924,16 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
 {
     Sfdisc_t errdisc;
     Sfdisc_t outdisc;
-    parse_prog *prog = 0;
-    ingraph_state *ing = 0;
-    comp_prog *xprog = 0;
-    Gpr_t *state = 0;
+    volatile parse_prog *prog = 0;
+    volatile ingraph_state *ing = 0;
+    volatile comp_prog *xprog = 0;
+    volatile Gpr_t *state = 0;
     gpr_info info;
     int rv = 0;
-    options* opts = 0;
+    volatile options* opts = 0;
     int cleanup, i, incoreGraphs;
     Agraph_t* nextg = NULL;
+    volatile gvpropts *uopts_copy = uopts;
 
     setErrorErrors (0);
     ingDisc.dflt = sfstdin;
@@ -1085,9 +1086,9 @@ int gvpr (int argc, char *argv[], gvpropts * uopts)
     if (ing) closeIngraph (ing);
     freeOpts (opts);
 
-    if (uopts) {
-	if (uopts->out) sfdisc (sfstdout, 0);
-	if (uopts->err) sfdisc (sfstderr, 0);
+    if (uopts_copy) {
+	if (uopts_copy->out) sfdisc (sfstdout, 0);
+	if (uopts_copy->err) sfdisc (sfstderr, 0);
     }
 
     return rv;
