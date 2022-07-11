@@ -147,6 +147,24 @@ static inline bool isalpha_no_locale(char c) {
   return false;
 }
 
+char *agrec_repr(const Agrec_t *rec);
+/**<
+ * @brief returns string representation of circular linked list of records for debugging
+ *
+ * @param rec data record, usually result of AGDATA(g)
+ * @returns allocated string buffer, which must be freed
+ *
+ * Sample usage:
+ *
+ * @code
+ * Agraph_t *g = agopen("g", Agdirected, 0);
+ * char *s = agrec_repr(AGDATA(g));
+ * puts(s);
+ * free(s);
+ * agclose(g);
+ * @endcode
+ */
+
 #undef UTILS_API
 
 #ifdef __cplusplus
