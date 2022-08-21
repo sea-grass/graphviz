@@ -4,6 +4,7 @@
 **	Written by Kiem-Phong Vo (5/25/96)
 */
 
+#include <assert.h>
 #include <stdlib.h>
 
 #include	<cdt.h>
@@ -30,7 +31,20 @@
 #define HSLOT		(256)
 #define HRESIZE(n)	((n) << 1)
 #define HLOAD(s)	((s) << 1)
-#define HINDEX(n,h)	((h)&((n)-1))
+
+/** \brief Derive an index into a hash table
+ *
+ * The \p ntab parameter is an \p int for legacy reasons. Semantically it is
+ * unsigned.
+ *
+ * \param ntab Number of table entries
+ * \param hash_value Raw input hash
+ * \return Hash table index
+ */
+static inline unsigned HINDEX(int ntab, unsigned hash_value) {
+  assert(ntab >= 0);
+  return ((unsigned)ntab) & (hash_value - 1);
+}
 
 #define UNFLATTEN(dt) \
 		((dt->data->type&DT_FLATTEN) ? dtrestore(dt,NULL) : 0)
