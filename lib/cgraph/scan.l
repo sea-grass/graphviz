@@ -218,6 +218,7 @@ ID		({NAME}|{NUMBER})
 .						return aagtext[0];
 %%
 
+extern void aagerror(const char *str);
 void aagerror(const char *str)
 {
 	char	xbuf[BUFSIZ];
