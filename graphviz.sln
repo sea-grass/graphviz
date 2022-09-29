@@ -41,8 +41,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvplugin_gd", "plugin\gd\gvplugin_gd.vcxproj", "{2FDDC7C5-66E5-4520-B735-FD1A065AA9BA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfio", "lib\sfio\sfio.vcxproj", "{7DC8987A-C87D-465A-94CF-1F6DF59B38FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ast", "lib\ast\ast.vcxproj", "{7D3723C5-06C8-4730-BDA1-1B61D6CCBEB8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expr", "lib\expr\expr.vcxproj", "{5A6981A7-A652-4187-B636-3E5120C7CE52}"
 EndProject
@@ -143,12 +149,24 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "smyrna", "cmd\smyrna\smyrna
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "topfish", "lib\topfish\topfish.vcxproj", "{3CD86498-8B4C-4018-A9BF-F9E008F376DD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osage", "lib\osage\osage.vcxproj", "{8E82D6BD-74D0-48C3-887A-1754EA71DA5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfdp", "lib\sfdpgen\sfdp.vcxproj", "{443EB1A7-C634-4292-9F2D-C752BB2BF40F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rbtree", "lib\rbtree\rbtree.vcxproj", "{D6CEB142-BF8E-471C-AE16-4300F2D5DEDA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvprlib", "lib\gvpr\gvprlib.vcxproj", "{8C103DE9-BC35-4173-A08D-63906EC5EEFD}"
 	ProjectSection(ProjectDependencies) = postProject
