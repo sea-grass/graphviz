@@ -10,31 +10,21 @@
 
 #include <sfdpgen/Multilevel.h>
 #include <sfdpgen/PriorityQueue.h>
-#include <common/memory.h>
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <common/arith.h>
 #include <stddef.h>
 #include <stdbool.h>
 
-Multilevel_control Multilevel_control_new(int scheme, int mode){
-  Multilevel_control ctrl;
-
-  ctrl = GNEW(struct Multilevel_control_struct);
+Multilevel_control Multilevel_control_new(void) {
+  Multilevel_control ctrl = gv_alloc(sizeof(struct Multilevel_control_struct));
   ctrl->minsize = 4;
   ctrl->min_coarsen_factor = 0.75;
   ctrl->maxlevel = 1<<30;
   ctrl->randomize = TRUE;
-  /* now set in spring_electrical_control_new(), as well as by command line argument -c
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_CLUSTER_PERNODE_LEAVES_FIRST;
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_VERTEX_SET_RS;
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE;
-    ctrl->coarsen_scheme = COARSEN_HYBRID;
-    ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
-    ctrl->coarsen_mode = COARSEN_MODE_FORCEFUL; or COARSEN_MODE_GENTLE;
-  */
 
-  ctrl->coarsen_scheme = scheme;
-  ctrl->coarsen_mode = mode;
+  ctrl->coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;
+  ctrl->coarsen_mode = COARSEN_MODE_FORCEFUL;
   return ctrl;
 }
 
@@ -43,10 +33,9 @@ void Multilevel_control_delete(Multilevel_control ctrl){
 }
 
 static Multilevel Multilevel_init(SparseMatrix A, SparseMatrix D, double *node_weights){
-  Multilevel grid;
   if (!A) return NULL;
   assert(A->m == A->n);
-  grid = GNEW(struct Multilevel_struct);
+  Multilevel grid = gv_alloc(sizeof(struct Multilevel_struct));
   grid->level = 0;
   grid->n = A->n;
   grid->A = A;
@@ -90,7 +79,7 @@ static void maximal_independent_vertex_set(SparseMatrix A, int randomize, int **
   m = A->m;
   n = A->n;
   assert(n == m);
-  *vset = N_GNEW(m,int);
+  *vset = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) (*vset)[i] = MAX_IND_VTX_SET_U;
   *nvset = 0;
   *nzc = 0;
@@ -145,7 +134,7 @@ static void maximal_independent_vertex_set_RS(SparseMatrix A, int randomize, int
   m = A->m;
   n = A->n;
   assert(n == m);
-  *vset = N_GNEW(m,int);
+  *vset = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) {
     (*vset)[i] = MAX_IND_VTX_SET_U;
   }
@@ -208,7 +197,7 @@ static void maximal_independent_edge_set(SparseMatrix A, int randomize, int **ma
   m = A->m;
   n = A->n;
   assert(n == m);
-  *matching = N_GNEW(m,int);
+  *matching = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
@@ -254,7 +243,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode(SparseMatrix A, in
   m = A->m;
   n = A->n;
   assert(n == m);
-  *matching = N_GNEW(m,int);
+  *matching = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
@@ -329,7 +318,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
   int *matched, nz, ncmax = 0, nz0, nzz,k ;
-  enum {UNMATCHED = -2, MATCHED = -1};
+  enum {MATCHED = -1};
 
   assert(A);
   assert(SparseMatrix_known_strucural_symmetric(A));
@@ -338,9 +327,9 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
   m = A->m;
   n = A->n;
   assert(n == m);
-  *cluster = N_GNEW(m,int);
-  *clusterp = N_GNEW((m+1),int);
-  matched = N_GNEW(m,int);
+  *cluster = gv_calloc(m, sizeof(int));
+  *clusterp = gv_calloc(m + 1, sizeof(int));
+  matched = gv_calloc(m, sizeof(int));
 
   for (i = 0; i < m; i++) matched[i] = i;
 
@@ -411,7 +400,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -483,7 +471,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_leaves_first(Spars
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -505,7 +492,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   double *a, amax = 0;
   int first = TRUE, jamax = 0;
   int *matched, nz, nz0;
-  enum {UNMATCHED = -2, MATCHED = -1};
+  enum {MATCHED = -1};
   int  nsuper, *super = NULL, *superp = NULL;
 
   assert(A);
@@ -515,9 +502,9 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   m = A->m;
   n = A->n;
   assert(n == m);
-  *cluster = N_GNEW(m,int);
-  *clusterp = N_GNEW((m+1),int);
-  matched = N_GNEW(m,int);
+  *cluster = gv_calloc(m, sizeof(int));
+  *clusterp = gv_calloc(m + 1, sizeof(int));
+  matched = gv_calloc(m, sizeof(int));
 
   for (i = 0; i < m; i++) matched[i] = i;
 
@@ -573,7 +560,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -612,7 +598,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
       }
     }
 
-    /* dan yi dian, wu ban */
     for (i = 0; i < m; i++){
       if (matched[i] == i){
 	(*cluster)[nz++] = i;
@@ -648,7 +633,7 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
   (void)n;
   double *a;
   int *matched, nz,  nz0, nzz,k, nv;
-  enum {UNMATCHED = -2, MATCHED = -1};
+  enum {MATCHED = -1};
   double *vlist;
 
   assert(A);
@@ -658,10 +643,10 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
   m = A->m;
   n = A->n;
   assert(n == m);
-  *cluster = N_GNEW(m,int);
-  *clusterp = N_GNEW((m+1),int);
-  matched = N_GNEW(m,int);
-  vlist = N_GNEW(2*m,double);
+  *cluster = gv_calloc(m, sizeof(int));
+  *clusterp = gv_calloc(m + 1, sizeof(int));
+  matched = gv_calloc(m, sizeof(int));
+  vlist = gv_calloc(2 * m, sizeof(double));
 
   for (i = 0; i < m; i++) matched[i] = i;
 
@@ -727,7 +712,6 @@ static void maximal_independent_edge_set_heavest_cluster_pernode_leaves_first(Sp
     }
   }
   
-  /* dan yi dian, wu ban */
   for (i = 0; i < m; i++){
     if (matched[i] == i){
       (*cluster)[nz++] = i;
@@ -751,7 +735,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_scaled(SparseMatri
   m = A->m;
   n = A->n;
   assert(n == m);
-  *matching = N_GNEW(m,int);
+  *matching = gv_calloc(m, sizeof(int));
   for (i = 0; i < m; i++) (*matching)[i] = i;
   *nmatch = n;
 
@@ -899,9 +883,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 #endif
       goto RETURN;
     }
-    irn = N_GNEW(n,int);
-    jcn = N_GNEW(n,int);
-    val = N_GNEW(n,double);
+    irn = gv_calloc(n, sizeof(int));
+    jcn = gv_calloc(n, sizeof(int));
+    val = gv_calloc(n, sizeof(double));
     nzc = 0; 
     for (i = 0; i < ncluster; i++){
       for (j = clusterp[i]; j < clusterp[i+1]; j++){
@@ -952,9 +936,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 #endif
       goto RETURN;
     }
-    irn = N_GNEW(n,int);
-    jcn = N_GNEW(n,int);
-    val = N_GNEW(n,double);
+    irn = gv_calloc(n, sizeof(int));
+    jcn = gv_calloc(n, sizeof(int));
+    val = gv_calloc(n, sizeof(double));
     nzc = 0; nc = 0;
     for (i = 0; i < n; i++){
       if (matching[i] >= 0){
@@ -1014,9 +998,9 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
 #endif
       goto RETURN;
     }
-    irn = N_GNEW(nzc,int);
-    jcn = N_GNEW(nzc,int);
-    val = N_GNEW(nzc,double);
+    irn = gv_calloc(nzc, sizeof(int));
+    jcn = gv_calloc(nzc, sizeof(int));
+    val = gv_calloc(nzc, sizeof(double));
     nzc = 0; 
     for (i = 0; i < n; i++){
       if (vset[i] == MAX_IND_VTX_SET_F){

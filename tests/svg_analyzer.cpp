@@ -1,11 +1,20 @@
+#include <memory>
 #include <stdexcept>
+
+#include <boost/algorithm/string.hpp>
+#include <catch2/catch.hpp>
+#include <fmt/format.h>
 
 #include "svg_analyzer.h"
 #include "svgpp_context.h"
 #include "svgpp_document_traverser.h"
+#include <cgraph++/AGraph.h>
+#include <gvc++/GVContext.h>
+#include <gvc++/GVLayout.h>
+#include <gvc++/GVRenderData.h>
 
 SVGAnalyzer::SVGAnalyzer(char *text)
-    : m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
+    : m_original_svg(text), m_svg(SVG::SVGElement(SVG::SVGElementType::Svg)) {
   m_elements_in_process.push_back(&m_svg);
   SvgppContext context{this};
   traverseDocumentWithSvgpp(context, text);
@@ -13,6 +22,12 @@ SVGAnalyzer::SVGAnalyzer(char *text)
     throw std::runtime_error{
         "Wrong number of elements in process after traversing SVG document"};
   }
+  m_elements_in_process.pop_back();
+  retrieve_graphviz_components();
+}
+
+const std::vector<GraphvizGraph> &SVGAnalyzer::graphs() const {
+  return m_graphs;
 }
 
 void SVGAnalyzer::on_enter_element_svg() { m_num_svgs++; }
@@ -130,6 +145,64 @@ void SVGAnalyzer::set_class(std::string_view class_) {
   current_element().attributes.class_ = class_;
 }
 
+void SVGAnalyzer::retrieve_graphviz_components() {
+  retrieve_graphviz_components_impl(m_svg);
+}
+
+void SVGAnalyzer::retrieve_graphviz_components_impl(
+    SVG::SVGElement &svg_element) {
+  if (svg_element.type == SVG::SVGElementType::Group) {
+    // The SVG 'class' attribute determines which type of Graphviz element a 'g'
+    // element corresponds to
+    const auto &class_ = svg_element.attributes.class_;
+    if (class_ == "graph") {
+      m_graphs.emplace_back(svg_element);
+    } else if (class_ == "node") {
+      if (m_graphs.empty()) {
+        throw std::runtime_error{
+            fmt::format("No graph to add node {} to", svg_element.graphviz_id)};
+      }
+      m_graphs.back().add_node(svg_element);
+    } else if (class_ == "edge") {
+      if (m_graphs.empty()) {
+        throw std::runtime_error{
+            fmt::format("No graph to add edge {} to", svg_element.graphviz_id)};
+      }
+      m_graphs.back().add_edge(svg_element);
+    } else if (class_ == "cluster") {
+      // ignore for now
+    } else {
+      throw std::runtime_error{fmt::format("Unknown class {}", class_)};
+    }
+  }
+
+  for (auto &child : svg_element.children) {
+    retrieve_graphviz_components_impl(child);
+  }
+}
+
+void SVGAnalyzer::re_create_and_verify_svg() {
+
+  const auto indent_size = 0;
+  auto recreated_svg = svg_string(indent_size);
+
+  // compare the recreated SVG with the original SVG
+  if (recreated_svg != m_original_svg) {
+    std::vector<std::string> original_svg_lines;
+    boost::split(original_svg_lines, m_original_svg, boost::is_any_of("\n"));
+
+    std::vector<std::string> recreated_svg_lines;
+    boost::split(recreated_svg_lines, recreated_svg, boost::is_any_of("\n"));
+
+    for (std::size_t i = 0; i < original_svg_lines.size(); i++) {
+      REQUIRE(i < recreated_svg_lines.size());
+      REQUIRE(recreated_svg_lines[i] == original_svg_lines[i]);
+    }
+
+    REQUIRE(recreated_svg_lines.size() == original_svg_lines.size());
+  }
+}
+
 void SVGAnalyzer::set_cx(double cx) { current_element().attributes.cx = cx; }
 
 void SVGAnalyzer::set_cy(double cy) { current_element().attributes.cy = cy; }
@@ -146,12 +219,24 @@ void SVGAnalyzer::set_fill(std::string_view fill) {
   current_element().attributes.fill = fill;
 }
 
+void SVGAnalyzer::set_fill_opacity(double fill_opacity) {
+  current_element().attributes.fill_opacity = fill_opacity;
+}
+
 void SVGAnalyzer::set_height(double height) {
   current_element().attributes.height = height;
 }
 
 void SVGAnalyzer::set_stroke(std::string_view stroke) {
   current_element().attributes.stroke = stroke;
+}
+
+void SVGAnalyzer::set_stroke_opacity(double stroke_opacity) {
+  current_element().attributes.stroke_opacity = stroke_opacity;
+}
+
+void SVGAnalyzer::set_stroke_width(double stroke_width) {
+  current_element().attributes.stroke_width = stroke_width;
 }
 
 void SVGAnalyzer::set_id(std::string_view id) {
@@ -197,6 +282,46 @@ void SVGAnalyzer::set_width(double width) {
 void SVGAnalyzer::set_x(double x) { current_element().attributes.x = x; }
 
 void SVGAnalyzer::set_y(double y) { current_element().attributes.y = y; }
+
+void SVGAnalyzer::add_bboxes() {
+  for (auto &graph : m_graphs) {
+    graph.add_bboxes();
+  }
+}
+
+void SVGAnalyzer::add_node_edge_outline_bbox_overlaps(double tolerance) {
+  for (auto &graph : m_graphs) {
+    graph.add_node_edge_outline_bbox_overlaps(tolerance);
+  }
+}
+
+void SVGAnalyzer::add_outline_bboxes() {
+  for (auto &graph : m_graphs) {
+    graph.add_outline_bboxes();
+  }
+}
+
+SVGAnalyzer SVGAnalyzer::make_from_dot(const std::string &dot_source,
+                                       const std::string &engine) {
+  auto g = CGraph::AGraph{dot_source};
+
+  const auto demand_loading = false;
+  auto gvc =
+      std::make_shared<GVC::GVContext>(lt_preloaded_symbols, demand_loading);
+
+  const auto layout = GVC::GVLayout(gvc, std::move(g), engine);
+
+  const auto result = layout.render("svg");
+
+  auto svg_analyzer = SVGAnalyzer{result.c_str()};
+
+  svg_analyzer.set_graphviz_version(gvc->version());
+  svg_analyzer.set_graphviz_build_date(gvc->buildDate());
+
+  return svg_analyzer;
+}
+
+std::string_view SVGAnalyzer::original_svg() const { return m_original_svg; }
 
 void SVGAnalyzer::set_transform(double a, double b, double c, double d,
                                 double e, double f) {

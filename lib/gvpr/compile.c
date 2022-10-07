@@ -20,9 +20,11 @@
 #include <gvpr/compile.h>
 #include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/itos.h>
+#include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
 #include <ast/sfstr.h>
@@ -194,7 +196,7 @@ static int posOf(Agnode_t* np, int idx, double* v)
     
 }
 
-#if DEBUG > 1
+#if defined(DEBUG) && DEBUG > 1
 static char *symName(Expr_t * ex, int op)
 {
     if (op >= MINNAME && op <= MAXNAME)
@@ -351,7 +353,7 @@ static void assignable (Agobj_t *objp, unsigned char* name) {
 
     TFA_Init();
     while (TFA_State >= 0 && (ch = *p)) {
-        TFA_Advance(ch > 127 ? 127 : ch);
+        TFA_Advance(ch > 127 ? 127 : (char)ch);
         p++;
     }
     rv = TFA_Definition();
@@ -877,6 +879,8 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		case AGOUTEDGE :
 		    v.string = "E";
 		    break;
+		default:
+		    UNREACHABLE();
 	    }
 	    break;
 	case F_edge:
@@ -2325,7 +2329,6 @@ static void checkGuard(Exnode_t * gp, char *src, int line)
 static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
                           int cnt, const char *lbl)
 {
-    case_stmt *cs;
     int i;
     static const char LONGEST_CALLER_PREFIX[] = "_begin_g_";
     static const char LONGEST_INFIX[] = "__a";
@@ -2336,7 +2339,7 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
     assert(strlen(lbl) + sizeof(LONGEST_INFIX) - 1 +
            CHARS_FOR_NUL_TERM_INT - 1 + 1 <= sizeof(tmp));
 
-    cs = newof(0, case_stmt, cnt, 0);
+    case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
 
     for (i = 0; i < cnt; i++) {
 	if (sp->guard) {
@@ -2485,7 +2488,7 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 	comp_block* bp;
 	parse_block* ibp = inp->blocks;
 
-	p->blocks = bp = newof(0, comp_block, inp->n_blocks, 0);
+	p->blocks = bp = gv_calloc(inp->n_blocks, sizeof(comp_block));
 
 	for (i = 0; i < inp->n_blocks; bp++, i++) {
 	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);

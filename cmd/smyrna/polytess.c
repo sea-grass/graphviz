@@ -9,6 +9,8 @@
  *************************************************************************/
 
 #include "polytess.h"
+#include <cgraph/alloc.h>
+#include <stddef.h>
 #include <xdot/xdot.h>
 tessPoly TP;
 
@@ -20,9 +22,8 @@ static void CALLBACK combineCallback(GLdouble coords[3], GLdouble *vertex_data[4
     (void)vertex_data;
     (void)weight;
 
-    GLdouble *vertex;
     int i;
-    vertex = malloc(6 * sizeof(GLdouble));
+    GLdouble *vertex = gv_calloc(6, sizeof(GLdouble));
     vertex[0] = coords[0];
     vertex[1] = coords[1];
     vertex[2] = coords[2];
@@ -76,16 +77,14 @@ static void Set_Winding_Rule(GLUtesselator *tobj, GLenum winding_rule)
 
 static void Render_Contour2(GLUtesselator *tobj, sdot_op* p)
 {
-    int x=0;
-
-    GLdouble* d = calloc(p->op.u.polygon.cnt * 3, sizeof(GLdouble));
-    for (x=0;x < p->op.u.polygon.cnt; x++)
+    GLdouble *d = gv_calloc(p->op.u.polygon.cnt * 3, sizeof(GLdouble));
+    for (size_t x = 0; x < p->op.u.polygon.cnt; x++)
     {
         d[x * 3] = p->op.u.polygon.pts[x].x;
         d[x * 3 + 1] = p->op.u.polygon.pts[x].y;
         d[x * 3 + 2] = p->op.u.polygon.pts[x].z + view->Topview->global_z;
     }
-    for (x = 0; x < p->op.u.polygon.cnt; x++) //loop through the vertices
+    for (size_t x = 0; x < p->op.u.polygon.cnt; x++) //loop through the vertices
     {
         gluTessVertex(tobj, &d[x * 3], &d[x * 3]); //store the vertex
     }

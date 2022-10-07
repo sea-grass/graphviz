@@ -25,9 +25,9 @@
 %{
 #include <assert.h>
 #include <grammar.h>
-#include <cghdr.h>
-#include <agxbuf.h>
+#include <cgraph/cghdr.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/startswith.h>
 #include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -98,7 +98,7 @@ storeFileName (char* fname, int len)
     static char* buf;
 
     if (len > cnt) {
-	buf = realloc (buf, len+1);
+	buf = gv_realloc(buf, cnt + 1, len + 1);
 	cnt = len;
     }
     strcpy (buf, fname);
@@ -115,7 +115,7 @@ static void ppDirective (void)
     char buf[2];
     char* s = aagtext + 1;  /* skip initial # */
 
-    if (strncmp(s, "line", 4) == 0) s += 4;
+    if (startswith(s, "line")) s += strlen("line");
     r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
     if (r > 0) { /* got line number */
 	line_num = lineno - 1;
@@ -232,24 +232,28 @@ void aagerror(const char *str)
 		agxbprint(&xb, " near '%s'", aagtext);
 	}
 	else switch (YYSTATE) {
-	case qstring :
+	case qstring: {
 		agxbprint(&xb, " scanning a quoted string (missing endquote? longer than %d?)", YY_BUF_SIZE);
-		if (agxblen(&Sbuf) > 0) {
-			size_t len = agxblen(&Sbuf);
+		size_t len = agxblen(&Sbuf);
+		if (len > 0) {
 			if (len > 80)
 				len = 80;
 			agxbprint(&xb, "\nString starting:\"%.*s", (int)len, Sbuf.buf);
 		}
+		agxbclear(&Sbuf);
 		break;
-	case hstring :
+	}
+	case hstring: {
 		agxbprint(&xb, " scanning a HTML string (missing '>'? bad nesting? longer than %d?)", YY_BUF_SIZE);
-		if (agxblen(&Sbuf)) {
-			size_t len = agxblen(&Sbuf);
+		size_t len = agxblen(&Sbuf);
+		if (len > 0) {
 			if (len > 80)
 				len = 80;
 			agxbprint(&xb, "\nString starting:<%.*s", (int)len, Sbuf.buf);
 		}
+		agxbclear(&Sbuf);
 		break;
+	}
 	case comment :
 		agxbprint(&xb, " scanning a /*...*/ comment (missing '*/? longer than %d?)", YY_BUF_SIZE);
 		break;

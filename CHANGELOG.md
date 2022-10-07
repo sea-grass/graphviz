@@ -4,7 +4,52 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (5.0.1)]
+## [Unreleased (6.0.2)]
+
+### Fixed
+
+- Using `aspect` with a custom value in the `packmode` attribute is no longer
+  misparsed.
+- Smyrna bounding box computation has been corrected. There was a regression in
+  4.0.0 that resulted in a degenerate bounding box being computed for any input
+  graph. See #2279 for details.
+- Smyrna warnings about the `on_attrRB0_clicked` and `on_attrSearchBtn_clicked`
+  handlers being not found have been fixed and the buttons to which they are
+  wired should be functional again. This was a regression in 2.50.0 See #2279
+  for details.
+- Smyrna warnings about the `mAttributesSlot` handler being not found have been
+  fixed and the button to which it is wired should be functional again. This was
+  a regression in 2.49.2 See #2279 for details.
+- Graphviz no longer fails to load private Ghostscript symbols ("Could not load
+  `libgvplugin_gs.so.6`) #2280
+- trailing commas issue with fdp layout #2282
+- Missing `-S` in `sccmap` man page usage summary.
+- In `sccmap`, a `-v` option following a `-S` option now re-enables strongly
+  connected component output that the man page implied.
+
+## [6.0.1] – 2022-09-11
+
+### Changed
+
+- **Breaking**: libxdot fields for the size and number of operations, the
+  statistics counts, and polygon line points are now `size_t` values instead of
+  `int` values
+- Accuracy of the bounding boxes printed by the `showboxes` feature have been
+  improved.
+
+### Fixed
+
+- Id attribute is not used in linearGradient. #2258
+- Graphviz 5.0.1 undocumented change of automatically generated output filename
+  with -O flag (missing dot separator). This was a regression in 5.0.1. #2270
+- Assert fail in `aaglex` for multiple calls to `agmemread`. This was a
+  regression in 5.0.1. #2272
+
+### Removed
+
+- The `$GV_FILE_PATH` sandboxing mechanism has been removed #2257
+
+## [5.0.1] – 2022-08-20
 
 ### Fixed
 
@@ -1785,7 +1830,9 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (5.0.1)]: https://gitlab.com/graphviz/graphviz/compare/5.0.0...main
+[Unreleased (6.0.2)]: https://gitlab.com/graphviz/graphviz/compare/6.0.1...main
+[6.0.1]: https://gitlab.com/graphviz/graphviz/compare/5.0.1...6.0.1
+[5.0.1]: https://gitlab.com/graphviz/graphviz/compare/5.0.0...5.0.1
 [5.0.0]: https://gitlab.com/graphviz/graphviz/compare/4.0.0...5.0.0
 [4.0.0]: https://gitlab.com/graphviz/graphviz/compare/3.0.0...4.0.0
 [3.0.0]: https://gitlab.com/graphviz/graphviz/compare/2.50.0...3.0.0

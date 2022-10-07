@@ -9,7 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cgraph/alloc.h>
+#include <cgraph/bitarray.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
 #include <sparse/QuadTree.h>
@@ -17,7 +18,6 @@
 #include <sfdpgen/post_process.h>
 #include <neatogen/overlap.h>
 #include <common/types.h>
-#include <common/memory.h>
 #include <common/arith.h>
 #include <math.h>
 #include <common/globals.h>
@@ -30,7 +30,7 @@
 
 spring_electrical_control spring_electrical_control_new(){
   spring_electrical_control ctrl;
-  ctrl = MALLOC(sizeof(struct spring_electrical_control_struct));
+  ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
   ctrl->p = AUTOP;/*a negativve number default to -1. repulsive force = dist^p */
   ctrl->q = 1;/*a positive number default to 1. Only apply to maxent.
 		attractive force = dist^q. Stress energy = (||x_i-x_j||-d_ij)^{q+1} */
@@ -38,13 +38,6 @@ spring_electrical_control spring_electrical_control_new(){
   ctrl->K = -1;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   ctrl->C = 0.2;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   ctrl->multilevels = FALSE;/* if <=1, single level */
-
-  //ctrl->multilevel_coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET;
-  //ctrl->multilevel_coarsen_mode = COARSEN_MODE_GENTLE;
-
-  ctrl->multilevel_coarsen_scheme = COARSEN_INDEPENDENT_EDGE_SET_HEAVEST_EDGE_PERNODE_SUPERNODES_FIRST;  /* pass on to Multilevel_control->coarsen_scheme */
-  ctrl->multilevel_coarsen_mode = COARSEN_MODE_FORCEFUL;/*alternative: COARSEN_MODE_GENTLE. pass on to Multilevel_control->coarsen_mode */
-
 
   ctrl->quadtree_size = 45;/* cut off size above which quadtree approximation is used */
   ctrl->max_qtree_level = 10;/* max level of quadtree */
@@ -88,8 +81,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
   fprintf (stderr, "  random start %d seed %d\n", ctrl->random_start, ctrl->random_seed);
   fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, ctrl->C);
-  fprintf (stderr, "  max levels %d coarsen_scheme %d coarsen_node %d\n", ctrl->multilevels,
-    ctrl->multilevel_coarsen_scheme,ctrl->multilevel_coarsen_mode);
+  fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
@@ -107,7 +99,7 @@ void oned_optimizer_delete(oned_optimizer opt){
 
 oned_optimizer oned_optimizer_new(int i){
   oned_optimizer opt;
-  opt = MALLOC(sizeof(struct oned_optimizer_struct));
+  opt = gv_alloc(sizeof(struct oned_optimizer_struct));
   opt->i = i;
   opt->direction = OPT_INIT;
   return opt;
@@ -315,14 +307,14 @@ static double update_step(int adaptive_cooling, double step, double Fnorm, doubl
 
 static void check_real_array_size(double **a, int len, int *lenmax){
   if (len >= *lenmax){
-    *lenmax = len + MAX((int) 0.2*len, 10);
+    *lenmax = len + 10;
     *a = REALLOC(*a, sizeof(double)*(*lenmax));
   }
 
 }
 static void check_int_array_size(int **a, int len, int *lenmax){
   if (len >= *lenmax){
-    *lenmax = len + MAX((int) 0.2*len, 10);
+    *lenmax = len + 10;
     *a = REALLOC(*a, sizeof(int)*(*lenmax));
   }
 
@@ -380,21 +372,20 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
 
   assert(!SparseMatrix_has_diagonal(A));
 
-  bool *checked = gcalloc(sizeof(bool), m);
-  angles = MALLOC(sizeof(double)*nangles_max);
-  leaves = MALLOC(sizeof(int)*nleaves_max);
-
+  bitarray_t checked = bitarray_new_or_exit(m);
+  angles = gv_calloc(nangles_max, sizeof(double));
+  leaves = gv_calloc(nleaves_max, sizeof(int));
 
   for (i = 0; i < m; i++){
     if (ia[i+1] - ia[i] != 1) continue;
-    if (checked[i]) continue;
+    if (bitarray_get(checked, i)) continue;
     p = ja[ia[i]];
-    if (!checked[p]){
-      checked[p] = true;
+    if (!bitarray_get(checked, p)) {
+      bitarray_set(&checked, p, true);
       dist = 0; nleaves = 0; nangles = 0;
       for (j = ia[p]; j < ia[p+1]; j++){
 	if (node_degree(ja[j]) == 1){
-	  checked[ja[j]] = TRUE;
+	  bitarray_set(&checked, ja[j], true);
 	  check_int_array_size(&leaves, nleaves, &nleaves_max);
 	  dist += distance(x, dim, p, ja[j]);
 	  leaves[nleaves] = ja[j];
@@ -437,8 +428,7 @@ ang1 = 0; ang2 = 2*PI; maxang = 2*PI;
     }
   }
 
-
-  free(checked);
+  bitarray_reset(&checked);
   free(angles);
   free(leaves);
 }
@@ -531,8 +521,8 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-  xold = MALLOC(sizeof(double)*dim*n);
-  force = MALLOC(sizeof(double)*dim*n);
+  xold = gv_calloc(dim * n, sizeof(double));
+  force = gv_calloc(dim * n, sizeof(double));
 
   do {
 #ifdef TIME
@@ -689,14 +679,14 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
   m = A->m, n = A->n;
   if (n <= 0 || dim <= 0) return;
-  force = MALLOC(sizeof(double)*n*dim);
+  force = gv_calloc(n *dim, sizeof(double));
 
   if (n >= ctrl->quadtree_size) {
     USE_QT = TRUE;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
-    center = MALLOC(sizeof(double)*nsupermax*dim);
-    supernode_wgts = MALLOC(sizeof(double)*nsupermax);
-    distances = MALLOC(sizeof(double)*nsupermax);
+    center = gv_calloc(nsupermax * dim, sizeof(double));
+    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
+    distances = gv_calloc(nsupermax, sizeof(double));
   }
   USE_QT = FALSE;
   *flag = 0;
@@ -733,8 +723,8 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   }
 #endif
 
-  f = MALLOC(sizeof(double)*dim);
-  xold = MALLOC(sizeof(double)*dim*n);
+  f = gv_calloc(dim, sizeof(double));
+  xold = gv_calloc(dim * n, sizeof(double));
   do {
     for (i = 0; i < dim*n; i++) force[i] = 0;
 
@@ -925,9 +915,9 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   if (n >= ctrl->quadtree_size) {
     USE_QT = TRUE;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
-    center = MALLOC(sizeof(double)*nsupermax*dim);
-    supernode_wgts = MALLOC(sizeof(double)*nsupermax);
-    distances = MALLOC(sizeof(double)*nsupermax);
+    center = gv_calloc(nsupermax * dim, sizeof(double));
+    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
+    distances = gv_calloc(nsupermax, sizeof(double));
   }
   *flag = 0;
   if (m != n) {
@@ -963,8 +953,8 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   }
 #endif
 
-  f = MALLOC(sizeof(double)*dim);
-  xold = MALLOC(sizeof(double)*dim*n);
+  f = gv_calloc(dim, sizeof(double));
+  xold = gv_calloc(dim * n, sizeof(double));
   do {
 
     //#define VIS_MULTILEVEL
@@ -1209,9 +1199,9 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
 
   if (ctrl->tscheme != QUAD_TREE_NONE && n >= ctrl->quadtree_size) {
     USE_QT = TRUE;
-    center = MALLOC(sizeof(double)*nsupermax*dim);
-    supernode_wgts = MALLOC(sizeof(double)*nsupermax);
-    distances = MALLOC(sizeof(double)*nsupermax);
+    center = gv_calloc(nsupermax * dim, sizeof(double));
+    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
+    distances = gv_calloc(nsupermax, sizeof(double));
   }
 
   *flag = 0;
@@ -1268,8 +1258,8 @@ static void spring_maxent_embedding(int dim, SparseMatrix A0, SparseMatrix D, sp
   }
 #endif
 
-  f = MALLOC(sizeof(double)*dim);
-  xold = MALLOC(sizeof(double)*dim*n);
+  f = gv_calloc(dim, sizeof(double));
+  xold = gv_calloc(dim * n, sizeof(double));
   do {
     iter++;
     memcpy(xold, x, sizeof(double)*dim*n);
@@ -1415,9 +1405,9 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
 
   if (n >= ctrl->quadtree_size) {
     USE_QT = TRUE;
-    center = MALLOC(sizeof(double)*nsupermax*dim);
-    supernode_wgts = MALLOC(sizeof(double)*nsupermax);
-    distances = MALLOC(sizeof(double)*nsupermax);
+    center = gv_calloc(nsupermax * dim, sizeof(double));
+    supernode_wgts = gv_calloc(nsupermax, sizeof(double));
+    distances = gv_calloc(nsupermax, sizeof(double));
   }
   *flag = 0;
   if (m != n) {
@@ -1456,8 +1446,8 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   }
 #endif
 
-  f = MALLOC(sizeof(double)*dim);
-  xold = MALLOC(sizeof(double)*dim*n);
+  f = gv_calloc(dim, sizeof(double));
+  xold = gv_calloc(dim * n, sizeof(double));
   do {
     iter++;
     memcpy(xold, x, sizeof(double)*dim*n);
@@ -1591,9 +1581,9 @@ void print_matrix(double *x, int n, int dim){
 
 void interpolate_coord(int dim, SparseMatrix A, double *x){
   int i, j, k, *ia = A->ia, *ja = A->ja, nz;
-  double alpha = 0.5, beta, *y;
+  double alpha = 0.5, beta;
 
-  y = MALLOC(sizeof(double)*dim);
+  double *y = gv_calloc(dim, sizeof(double));
   for (i = 0; i < A->m; i++){
     for (k = 0; k < dim; k++) y[k] = 0;
     nz = 0;
@@ -1635,10 +1625,10 @@ static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, 
 
 
 int power_law_graph(SparseMatrix A){
-  int *mask, m, max = 0, i, *ia = A->ia, *ja = A->ja, j, deg;
+  int m, max = 0, i, *ia = A->ia, *ja = A->ja, j, deg;
   int res = FALSE;
   m = A->m;
-  mask = MALLOC(sizeof(int)*(m+1));
+  int *mask = gv_calloc(m + 1, sizeof(int));
 
   for (i = 0; i < m + 1; i++){
     mask[i] = 0;
@@ -1741,12 +1731,11 @@ static void rotate(int n, int dim, double *x, double angle){
 }
 
 static void attach_edge_label_coordinates(int dim, SparseMatrix A, int n_edge_label_nodes, int *edge_label_nodes, double *x, double *x2){
-  int *mask;
   int i, ii, j, k;
   int nnodes = 0;
   double len;
 
-  mask = MALLOC(sizeof(int)*A->m);
+  int *mask = gv_calloc(A->m, sizeof(int));
 
   for (i = 0; i < A->m; i++) mask[i] = 1;
   for (i = 0; i < n_edge_label_nodes; i++) {
@@ -1786,12 +1775,11 @@ static void attach_edge_label_coordinates(int dim, SparseMatrix A, int n_edge_la
 }
 
 static SparseMatrix shorting_edge_label_nodes(SparseMatrix A, int n_edge_label_nodes, int *edge_label_nodes){
-  int *mask;
   int i, id = 0, nz, j, jj, ii;
   int *ia = A->ia, *ja = A->ja, *irn = NULL, *jcn = NULL;
   SparseMatrix B;
 
-  mask = MALLOC(sizeof(int)*A->m);
+  int *mask = gv_calloc(A->m, sizeof(int));
 
   for (i = 0; i < A->m; i++) mask[i] = 1;
 
@@ -1819,8 +1807,8 @@ static SparseMatrix shorting_edge_label_nodes(SparseMatrix A, int n_edge_label_n
   }
 
   if (nz > 0) {
-    irn = MALLOC(sizeof(int)*nz);
-    jcn = MALLOC(sizeof(int)*nz);
+    irn = gv_calloc(nz, sizeof(int));
+    jcn = gv_calloc(nz, sizeof(int));
   }
 
   nz = 0;
@@ -1901,7 +1889,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
       && n_edge_label_nodes > 0){
     SparseMatrix A2;
 
-    double *x2 = MALLOC(sizeof(double)*(A->m)*dim);
+    double *x2 = gv_calloc(A->m * dim, sizeof(double));
     A2 = shorting_edge_label_nodes(A, n_edge_label_nodes, edge_label_nodes);
     multilevel_spring_electrical_embedding(dim, A2, NULL, ctrl, NULL, x2, 0, NULL, flag);
 
@@ -1916,7 +1904,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
     return;
   }
 
-  mctrl = Multilevel_control_new(ctrl->multilevel_coarsen_scheme, ctrl->multilevel_coarsen_mode);
+  mctrl = Multilevel_control_new();
   mctrl->maxlevel = ctrl->multilevels;
   grid0 = Multilevel_new(A, D, mctrl);
 
@@ -1924,7 +1912,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   if (Multilevel_is_finest(grid)){
     xc = x;
   } else {
-    xc = MALLOC(sizeof(double)*grid->n*dim);
+    xc = gv_calloc(grid->n * dim, sizeof(double));
   }
 
   plg = power_law_graph(A);
@@ -1992,7 +1980,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
     if (Multilevel_is_finest(grid)){
       xf = x;
     } else {
-      xf = MALLOC(sizeof(double)*grid->n*dim);
+      xf = gv_calloc(grid->n * dim, sizeof(double));
     }
     prolongate(dim, grid->A, P, grid->R, xc, xf, coarsen_scheme_used, (ctrl->K)*0.001);
     free(xc);

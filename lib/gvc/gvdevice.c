@@ -115,8 +115,7 @@ static void auto_output_filename(GVJ_t *job)
         const char *src_end = src + strlen(src);
         for (const char *q = src_end; ; --q) {
             if (*q == ':') {
-                sprintf(dst, "%.*s.", (int)(src_end - q - 1), q + 1);
-                dst += (size_t)(src_end - q - 1);
+                dst += sprintf(dst, "%.*s.", (int)(src_end - q - 1), q + 1);
                 src_end = q;
             }
             if (q == src) {
@@ -595,14 +594,11 @@ void gvprintpointf(GVJ_t * job, pointf p)
     gvwrite(job, buf, len);
 } 
 
-void gvprintpointflist(GVJ_t * job, pointf *p, int n)
-{
-    int i = 0;
-
-    while (true) {
-	gvprintpointf(job, p[i]);
-        if (++i >= n) break;
-        gvwrite(job, " ", 1);
-    }
+void gvprintpointflist(GVJ_t *job, pointf *p, size_t n) {
+  const char *separator = "";
+  for (size_t i = 0; i < n; ++i) {
+    gvputs(job, separator);
+    gvprintpointf(job, p[i]);
+    separator = " ";
+  }
 } 
-

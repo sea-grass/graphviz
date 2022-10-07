@@ -15,8 +15,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdk.h>
 #include "viewport.h"
+#include <cgraph/alloc.h>
 #include <cgraph/strview.h>
-#include <common/memory.h>
 
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;
@@ -31,8 +31,7 @@ void Color_Widget_bg(char *colorstring, GtkWidget * widget)
     gtk_widget_modify_base(widget, GTK_STATE_NORMAL, &color);
 }
 
-void load_graph_properties(Agraph_t * graph)
-{
+void load_graph_properties(void) {
     //dlgOpenGraph , GtkDialog
     gtk_entry_set_text((GtkEntry *)
 		       glade_xml_get_widget(xml, "entryGraphFileName"),
@@ -90,9 +89,10 @@ void load_attributes(void)
 		    }
 		    break;
 		default:
-		    attr[attrcount].ComboValues =
-			RALLOC(attr[attrcount].ComboValuesCount,
-			       attr[attrcount].ComboValues, char *);
+		    attr[attrcount].ComboValues = gv_recalloc(attr[attrcount].ComboValues,
+		                                              attr[attrcount].ComboValuesCount - 1,
+		                                              attr[attrcount].ComboValuesCount,
+		                                              sizeof(char*));
 		    attr[attrcount].ComboValues[attr[attrcount].
 						ComboValuesCount] = strview_str(ss);
 		    attr[attrcount].ComboValuesCount++;

@@ -1902,7 +1902,32 @@ def test_2225():
 
   p.check_returncode()
 
-@pytest.mark.xfail(strict=True)
+def test_2257():
+  """
+  `$GV_FILE_PATH` being set should prevent Graphviz from running
+
+  `$GV_FILE_PATH` was an environment variable formerly used to implement a file
+  system sandboxing policy when Graphviz was exposed to the internet via a web
+  server. These days, there are safer and more robust techniques to sandbox
+  Graphviz and so `$GV_FILE_PATH` usage has been removed. But if someone
+  attempts to use this legacy mechanism, we do not want Graphviz to
+  “fail-open,” starting anyway and silently ignoring `$GV_FILE_PATH` giving
+  the user the false impression the sandboxing is in force.
+
+  https://gitlab.com/graphviz/graphviz/-/issues/2257
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2257.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  env = os.environ.copy()
+  env["GV_FILE_PATH"] = "/tmp"
+
+  # Graphviz should refuse to process an input file
+  with pytest.raises(subprocess.CalledProcessError):
+    subprocess.check_call(["dot", "-Tsvg", input, "-o", os.devnull], env=env)
+
 def test_2258():
   """
   'id' attribute should be propagated to all graph children in output
@@ -1926,3 +1951,55 @@ def test_2258():
 
   for gradient in gradients:
     assert "G2" in gradient.get("id"), "ID was not applied to linear gradients"
+
+def test_2270(tmp_path: Path):
+  """
+  `-O` should result in the expected output filename
+  https://gitlab.com/graphviz/graphviz/-/issues/2270
+  """
+
+  # write a simple graph
+  input = tmp_path / "hello.gv"
+  input.write_text("digraph { hello -> world }", encoding="utf-8")
+
+  # process it with Graphviz
+  subprocess.check_call(["dot", "-T", "plain:dot:core", "-O", "hello.gv"],
+                        cwd=tmp_path)
+
+  # it should have produced output in the expected location
+  output = tmp_path / "hello.gv.core.dot.plain"
+  assert output.exists(), "-O resulted in an unexpected output filename"
+
+def test_2272():
+  """
+  using `agmemread` with an unterminated string should not fail assertions
+  https://gitlab.com/graphviz/graphviz/-/issues/2272
+  """
+
+  # FIXME: Remove skip when
+  # https://gitlab.com/graphviz/graphviz/-/issues/1777 is fixed
+  if os.getenv("build_system") == "msbuild":
+    pytest.skip("Windows MSBuild release does not contain any header files (#1777)")
+
+  # find co-located test source
+  c_src = (Path(__file__).parent / "2272.c").resolve()
+  assert c_src.exists(), "missing test case"
+
+  # run the test
+  run_c(c_src, link=["cgraph", "gvc"])
+
+def test_2282():
+  """
+  using the `fdp` layout with JSON output should result in valid JSON
+  https://gitlab.com/graphviz/graphviz/-/issues/2282
+  """
+
+  # locate our associated test case in this directory
+  input = Path(__file__).parent / "2282.dot"
+  assert input.exists(), "unexpectedly missing test case"
+
+  # translate this to JSON
+  output = dot("json", input)
+
+  # confirm this is valid JSON
+  json.loads(output)

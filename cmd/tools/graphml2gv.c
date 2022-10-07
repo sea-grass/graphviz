@@ -23,6 +23,7 @@
 #include    <getopt.h>
 #include    <stdio.h>
 #include    <string.h>
+#include    "openFile.h"
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <ctype.h>
@@ -33,15 +34,7 @@
 
 #define NAMEBUF		100
 
-#define GRAPHML_ATTR	"_graphml_"
 #define GRAPHML_ID      "_graphml_id"
-#define GRAPHML_ROLE	"_graphml_role"
-#define GRAPHML_HYPER	"_graphml_hypergraph"
-#define GRAPHML_FROM    "_graphml_fromorder"
-#define GRAPHML_TO      "_graphml_toorder"
-#define GRAPHML_TYPE    "_graphml_type"
-#define GRAPHML_COMP    "_graphml_composite_"
-#define GRAPHML_LOC     "_graphml_locator_"
 
 #define	TAG_NONE	-1
 #define	TAG_GRAPH	0
@@ -98,10 +91,7 @@ typedef struct {
     agxbuf composite_buffer;
     char* gname;
     gv_stack_t elements;
-    int listen;
     int closedElementType;
-    int globalAttrType;
-    int compositeReadState;
     int edgeinverted;
     Dt_t *nameMap;
 } userdata_t;
@@ -145,11 +135,8 @@ static Dtdisc_t nameDisc = {
 static userdata_t *genUserdata(char* dfltname)
 {
     userdata_t *user = gv_alloc(sizeof(*user));
-    user->listen = FALSE;
     user->elements = (gv_stack_t){0};
     user->closedElementType = TAG_NONE;
-    user->globalAttrType = TAG_NONE;
-    user->compositeReadState = FALSE;
     user->edgeinverted = FALSE;
     user->gname = dfltname;
     user->nameMap = dtopen(&nameDisc, Dtoset);
@@ -283,29 +270,6 @@ setNodeAttr(Agnode_t * np, char *name, char *value, userdata_t * ud)
     }
 }
 
-#define NODELBL "node:"
-#define NLBLLEN (sizeof(NODELBL)-1)
-#define EDGELBL "edge:"
-#define ELBLLEN (sizeof(EDGELBL)-1)
-
-/* setGlobalNodeAttr:
- * Set global node attribute.
- * The names must always begin with "node:".
- */
-static void
-setGlobalNodeAttr(Agraph_t * g, char *name, char *value)
-{
-    if (strncmp(name, NODELBL, NLBLLEN))
-	fprintf(stderr,
-		"Warning: global node attribute %s in graph %s does not begin with the prefix %s\n",
-		name, agnameof(g), NODELBL);
-    else
-	name += NLBLLEN;
-    if ((g != root) && !agattr(root, AGNODE, name, 0))
-	agattr(root, AGNODE, name, defval);
-    agattr(G, AGNODE, name, value);
-}
-
 static void
 setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
 {
@@ -336,24 +300,6 @@ setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
 	    ap = agattr(root, AGEDGE, name, defval);
 	agxset(ep, ap, value);
     }
-}
-
-/* setGlobalEdgeAttr:
- * Set global edge attribute.
- * The names always begin with "edge:".
- */
-static void
-setGlobalEdgeAttr(Agraph_t * g, char *name, char *value)
-{
-    if (strncmp(name, EDGELBL, ELBLLEN))
-	fprintf(stderr,
-		"Warning: global edge attribute %s in graph %s does not begin with the prefix %s\n",
-		name, agnameof(g), EDGELBL);
-    else
-	name += ELBLLEN;
-    if ((g != root) && !agattr(root, AGEDGE, name, 0))
-	agattr(root, AGEDGE, name, defval);
-    agattr(g, AGEDGE, name, value);
 }
 
 static void
@@ -540,53 +486,13 @@ static void endElementHandler(void *userData, const char *name)
     } else if (strcmp(name, "attr") == 0) {
 	char *name;
 	char *value;
-	char *dynbuf = 0;
 
 	ud->closedElementType = TAG_NONE;
-	if (ud->compositeReadState) {
-	    size_t len = sizeof(GRAPHML_COMP) + agxblen(&ud->xml_attr_name);
-	    name = dynbuf = gv_calloc(len, sizeof(char));
-	    (void)snprintf(name, len, "%s%s", GRAPHML_COMP, agxbuse(&ud->xml_attr_name));
-	    value = agxbuse(&ud->composite_buffer);
-	    agxbclear(&ud->xml_attr_value);
-	    ud->compositeReadState = FALSE;
-	} else {
-	    name = agxbuse(&ud->xml_attr_name);
-	    value = agxbuse(&ud->xml_attr_value);
-	}
+	name = agxbuse(&ud->xml_attr_name);
+	value = agxbuse(&ud->xml_attr_value);
 
-	switch (ud->globalAttrType) {
-	case TAG_NONE:
-	    setAttr(name, value, ud);
-	    break;
-	case TAG_NODE:
-	    setGlobalNodeAttr(G, name, value);
-	    break;
-	case TAG_EDGE:
-	    setGlobalEdgeAttr(G, name, value);
-	    break;
-	case TAG_GRAPH:
-	    setGraphAttr(G, name, value, ud);
-	    break;
-	}
-	free(dynbuf);
-	ud->globalAttrType = TAG_NONE;
+	setAttr(name, value, ud);
     } 
-}
-
-static void characterDataHandler(void *userData, const char *s, int length)
-{
-    userdata_t *ud = userData;
-
-    if (!ud->listen)
-	return;
-
-    if (ud->compositeReadState) {
-	agxbput_n(&ud->composite_buffer, s, length);
-	return;
-    }
-
-    agxbput_n(&ud->xml_attr_value, s, length);
 }
 
 static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
@@ -599,7 +505,6 @@ static Agraph_t *graphml_to_gv(char* gname, FILE * graphmlFile, int* rv)
     *rv = 0;
     XML_SetUserData(parser, udata);
     XML_SetElementHandler(parser, startElementHandler, endElementHandler);
-    XML_SetCharacterDataHandler(parser, characterDataHandler);
 
     Current_class = TAG_GRAPH;
     root = 0;
@@ -647,19 +552,6 @@ static FILE *getFile(void)
     return rv;
 }
 
-static FILE *openFile(const char *name)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "%s: could not open file %s for writing\n", CmdName, name);
-	perror(name);
-	graphviz_exit(1);
-    }
-    return fp;
-}
-
 static const char *use = "Usage: %s [-gd?] [-o<file>] [<graphs>]\n\
  -g<name>  : use <name> as template for graph names\n\
  -o<file>  : output to <file> (stdout)\n\
@@ -701,7 +593,7 @@ static void initargs(int argc, char **argv)
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
-	    outFile = openFile(optarg);
+	    outFile = openFile(CmdName, optarg, "w");
 	    break;
 	case ':':
 	    fprintf(stderr, "%s: option -%c missing argument\n", CmdName, optopt);

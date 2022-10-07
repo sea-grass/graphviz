@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include "topviewfuncs.h"
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include "smyrna_utils.h"
 #include <common/colorprocs.h>
@@ -18,17 +19,16 @@
 #include <xdot/xdot.h>
 #include <glcomp/glutils.h>
 #include "selectionfuncs.h"
-#include <common/memory.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
+#include <limits.h>
 #include <float.h>
 #include <math.h>
+#include <stddef.h>
 
 static xdot *parseXdotwithattrs(void *e)
 {
-	
-    int cnt=0;
     xdot* xDot=NULL;
     xDot=parseXDotFOn (agget(e,"_draw_" ), OpFns,sizeof(sdot_op), xDot);
     if (agobjkind(e) == AGRAPH)
@@ -40,7 +40,7 @@ static xdot *parseXdotwithattrs(void *e)
     xDot=parseXDotFOn (agget(e,"_tldraw_" ), OpFns,sizeof(sdot_op), xDot);
     if(xDot)
     {
-	for (cnt=0;cnt < xDot->cnt ; cnt++)
+	for (size_t cnt = 0; cnt < xDot->cnt; cnt++)
 	{
 	    ((sdot_op*)(xDot->ops))[cnt].obj=e;
         }
@@ -54,7 +54,7 @@ static void set_boundaries(Agraph_t * g)
     Agnode_t *v;
     Agsym_t* pos_attr = GN_pos(g);
     glCompPoint pos;
-    float left = FLT_MAX, right = -FLT_MAX, top = FLT_MAX, bottom = -FLT_MAX;
+    float left = FLT_MAX, right = -FLT_MAX, top = -FLT_MAX, bottom = FLT_MAX;
 
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
     {
@@ -73,7 +73,6 @@ static void set_boundaries(Agraph_t * g)
 
 static void draw_xdot(xdot* x,float base_z)
 {
-	int i;
 	sdot_op *op;
 	if (!x)
 		return;
@@ -81,7 +80,7 @@ static void draw_xdot(xdot* x,float base_z)
 	view->Topview->global_z=base_z;
 
 	op=(sdot_op*)x->ops;
-	for (i=0; i < x->cnt; i++,op++)
+	for (size_t i = 0; i < x->cnt; i++, op++)
 	{
 		if(op->op.drawfunc)
 			op->op.drawfunc(&op->op,0);
@@ -295,7 +294,7 @@ static void renderSelectedNodes(Agraph_t * g)
 	{
 	    pos = ND_A(v);
 	    glColor4f(c.R, c.G,c.B, c.A);
-            glprintfglut(view->glutfont,pos.x,pos.y,pos.z+0.002,labelOf(g,v));
+	    glprintfglut(view->glutfont, pos.x, pos.y, pos.z + 0.002f, labelOf(g, v));
 	}
     }
 }
@@ -488,9 +487,9 @@ static char* readPoint (char* p, xdot_point* pt)
  * return start of point list (skip over e and s points).
  * return NULL on failure
  */
-static char* countPoints (char* pos, int* have_sp, xdot_point* sp, int* have_ep, xdot_point* ep, int* cntp)
-{
-    int cnt = 0;
+static char *countPoints(char *pos, int *have_sp, xdot_point *sp, int *have_ep,
+                         xdot_point *ep, size_t *cntp) {
+    size_t cnt = 0;
     char* p;
 
     pos = skipWS (pos);
@@ -555,18 +554,16 @@ static int storePoints (char* pos, xdot_point* ps)
 static xdot* makeXDotSpline (char* pos)
 {
     xdot_point s, e;
-    int v, have_s, have_e, cnt;
-    int sz = sizeof(sdot_op);
-    xdot* xd;
-    xdot_op* op;
-    xdot_point* pts;
+    int v, have_s, have_e;
+    size_t cnt;
+    static const size_t sz = sizeof(sdot_op);
 
     if (*pos == '\0') return NULL;
 
     pos = countPoints (pos, &have_s, &s, &have_e, &e, &cnt);
     if (pos == 0) return NULL;
 
-    pts = N_NEW(cnt,xdot_point);
+    xdot_point* pts = gv_calloc(cnt, sizeof(xdot_point));
     if (have_s) {
 	v = storePoints (pos, pts+3);
 	pts[0] = pts[1] = s;
@@ -584,13 +581,13 @@ static xdot* makeXDotSpline (char* pos)
 	pts[cnt-3] = pts[cnt-4];
     }
 
-    op = (xdot_op*)N_NEW(sz,char);
+    xdot_op* op = gv_calloc(sz, sizeof(char));
     op->kind = xd_unfilled_bezier;
     op->drawfunc = OpFns[xop_bezier];
     op->u.bezier.cnt = cnt; 
     op->u.bezier.pts = pts; 
 
-    xd = NEW(xdot);
+    xdot* xd = gv_alloc(sizeof(xdot));
     xd->cnt = 1;
     xd->sz = sz;
     xd->ops = op;
@@ -748,7 +745,7 @@ static void renderEdgeLabels(Agraph_t * g)
 
 static void cacheNodes(Agraph_t * g,topview* t)
 {
-    if(t->cache.node_id!=-1)	/*clean existing cache*/
+    if (t->cache.node_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.node_id,1);
     t->cache.node_id=glGenLists(1);
     glNewList(t->cache.node_id,GL_COMPILE);
@@ -761,7 +758,7 @@ static void cacheNodes(Agraph_t * g,topview* t)
 }
 static void cacheEdges(Agraph_t * g,topview* t)
 {
-    if(t->cache.edge_id!=-1)	/*clean existing cache*/
+    if (t->cache.edge_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.edge_id,1);
     t->cache.edge_id=glGenLists(1);
     glNewList(t->cache.edge_id,GL_COMPILE);
@@ -772,7 +769,7 @@ static void cacheEdges(Agraph_t * g,topview* t)
 }
 void cacheSelectedEdges(Agraph_t * g,topview* t)
 {
-    if(t->cache.seledge_id!=-1)	/*clean existing cache*/
+    if (t->cache.seledge_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.seledge_id,1);
     t->cache.seledge_id=glGenLists(1);
     glNewList(t->cache.seledge_id,GL_COMPILE);
@@ -783,7 +780,7 @@ void cacheSelectedEdges(Agraph_t * g,topview* t)
 }
 void cacheSelectedNodes(Agraph_t * g,topview* t)
 {
-    if(t->cache.selnode_id!=-1)	/*clean existing cache*/
+    if (t->cache.selnode_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.selnode_id,1);
     t->cache.selnode_id=glGenLists(1);
     glNewList(t->cache.selnode_id,GL_COMPILE);
@@ -792,7 +789,7 @@ void cacheSelectedNodes(Agraph_t * g,topview* t)
 }
 static void cacheNodeLabels(Agraph_t * g,topview* t)
 {
-    if(t->cache.nodelabel_id!=-1)	/*clean existing cache*/
+    if (t->cache.nodelabel_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.nodelabel_id,1);
     t->cache.nodelabel_id=glGenLists(1);
     glNewList(t->cache.nodelabel_id,GL_COMPILE);
@@ -801,7 +798,7 @@ static void cacheNodeLabels(Agraph_t * g,topview* t)
 }
 static void cacheEdgeLabels(Agraph_t * g,topview* t)
 {
-    if(t->cache.edgelabel_id!=-1)	/*clean existing cache*/
+    if (t->cache.edgelabel_id != UINT_MAX) // clean existing cache
 	glDeleteLists(t->cache.edgelabel_id,1);
     t->cache.edgelabel_id=glGenLists(1);
     glNewList(t->cache.edgelabel_id,GL_COMPILE);
@@ -866,10 +863,10 @@ void initSmGraph(Agraph_t * g,topview* rv)
     rv->fisheyeParams.h = NULL;
 
     rv->fisheyeParams.active = 0;
-    rv->cache.node_id=-1;
-    rv->cache.selnode_id=-1;
-    rv->cache.edge_id=-1;
-    rv->cache.seledge_id=-1;
+    rv->cache.node_id = UINT_MAX;
+    rv->cache.selnode_id = UINT_MAX;
+    rv->cache.edge_id = UINT_MAX;
+    rv->cache.seledge_id = UINT_MAX;
     rv->sel.selectEdges=0;
     rv->sel.selectNodes=1;
 

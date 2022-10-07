@@ -49,7 +49,6 @@ function find_or_fallback($programs, $fallback_path) {
 
 $build_utilities_path = "$GRAPHVIZ_ROOT\windows\dependencies\graphviz-build-utilities"
 
-find_or_fallback "swig" "$build_utilities_path"
 find_or_fallback "win_bison win_flex" "$build_utilities_path\winflexbison"
 find_or_fallback "makensis" "$build_utilities_path\NSIS\Bin"
 find_or_fallback "cmake cpack" "$CMAKE_BIN"
@@ -59,17 +58,6 @@ if (-NOT (cpack.exe --help | Select-String 'CPACK_GENERATOR')) {
     echo "Moving $CMAKE_BIN to front of PATH in order to find CMake's cpack"
     $Env:Path="$CMAKE_BIN;$path"
 }
-
-$ErrorActionPreference = "Continue"
-if (-NOT (sort.exe /? 2>$null | Select-String "SORT")) {
-    $ErrorActionPreference = "Stop"
-    echo "Moving C:\WINDOWS\system32 to front of PATH in order to find Windows' sort"
-    $Env:Path="C:\WINDOWS\system32;$Env:Path"
-}
-$ErrorActionPreference = "Stop"
-
-$script:all_programs += " sort"
-
 
 echo "Final check where all utilites are found:"
 
@@ -90,15 +78,6 @@ if (-NOT (cpack.exe --help | Select-String 'CPACK_GENERATOR')) {
     Write-Error -EA Continue "Found an unknown cpack at $exe"
     $exit_status = 1
 }
-
-$ErrorActionPreference = "Continue"
-if (-NOT (sort.exe /? 2>$null | Select-String "SORT")) {
-    $ErrorActionPreference = "Stop"
-    $exe = (Get-Command sort.exe 2>$null).Source
-    Write-Error -EA Continue "Found an unknown sort at $exe"
-    $exit_status = 1
-}
-$ErrorActionPreference = "Stop"
 
 if ($exit_status -eq 0) {
     echo "All utilities have been found. Happy building!"

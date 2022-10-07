@@ -10,7 +10,7 @@
 
 
 #include "config.h"
-
+#include "gdgen_text.h"
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -22,15 +22,12 @@
 
 #ifdef HAVE_GD_PNG
 
-/* for N_GNEW() */
-#include <common/memory.h>
-
 /* for gvcolor_t */
 #include <common/color.h>
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <common/memory.h>
 #include <common/render.h>
 
 /* for wind() */
@@ -55,7 +52,7 @@ typedef struct {
 } state_t;
 
 static void vrml_begin_job(GVJ_t *job) {
-  job->context = zmalloc(sizeof(state_t));
+  job->context = gv_alloc(sizeof(state_t));
 }
 
 static void vrml_end_job(GVJ_t *job) {
@@ -339,8 +336,6 @@ static void vrml_end_edge(GVJ_t *job)
     gvputs(job,   "] }\n");
 }
 
-extern void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fontsize, int fontdpi, double fontangle, char *fontname, char *str);
-
 static void vrml_textspan(GVJ_t *job, pointf p, textspan_t * span)
 {
     obj_state_t *obj = job->obj;
@@ -485,6 +480,10 @@ nearTail (GVJ_t* job, pointf a, Agedge_t* e)
 static void
 vrml_bezier(GVJ_t *job, pointf * A, int n, int arrow_at_start, int arrow_at_end, int filled)
 {
+    (void)arrow_at_start;
+    (void)arrow_at_end;
+    (void)filled;
+
     obj_state_t *obj = job->obj;
     edge_t *e = obj->u.e;
     double fstz, sndz;
@@ -604,7 +603,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
     case NODE_OBJTYPE:
 	n = obj->u.n;
 	pen = set_penstyle(job, state->im, brush);
-	points = N_GGNEW(np, gdPoint);
+	points = gv_calloc(np, sizeof(gdPoint));
 	for (i = 0; i < np; i++) {
 	    mp = vrml_node_point(job, n, A[i]);
 	    points[i].x = ROUND(mp.x);
@@ -693,15 +692,9 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 /* doSphere:
  * Output sphere in VRML for point nodes.
  */
-static void 
-doSphere (GVJ_t *job, node_t *n, pointf p, double z, double rx, double ry)
-{
+static void doSphere(GVJ_t *job, pointf p, double z, double rx) {
     obj_state_t *obj = job->obj;
 
-//    if (!(strcmp(cstk[SP].fillcolor, "transparent"))) {
-//	return;
-//    }
- 
     gvputs(job,   "Transform {\n");
     gvprintf(job, "  translation %.3f %.3f %.3f\n", p.x, p.y, z);
     gvprintf(job, "  scale %.3f %.3f %.3f\n", rx, rx, rx);
@@ -750,7 +743,7 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
     case NODE_OBJTYPE:
 	n = obj->u.n;
 	if (shapeOf(n) == SH_POINT) {
-	    doSphere (job, n, A[0], z, rx, ry);
+	    doSphere(job, A[0], z, rx);
 	    return;
 	}
 	pen = set_penstyle(job, state->im, brush);

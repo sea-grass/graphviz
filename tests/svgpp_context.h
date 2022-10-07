@@ -22,7 +22,7 @@ class ISVGAnalyzer;
 
 class SvgppContext {
 public:
-  SvgppContext(ISVGAnalyzer *svgAnalyzer);
+  SvgppContext(ISVGAnalyzer *svg_analyzer);
   void on_enter_element(svgpp::tag::element::svg e);
   void on_enter_element(svgpp::tag::element::g e);
   void on_enter_element(svgpp::tag::element::circle e);
@@ -99,6 +99,8 @@ public:
     throw std::runtime_error{
         "this flavor of the 'fill' attribute is not yet implemented"};
   };
+
+  void set(svgpp::tag::attribute::fill_opacity, double v);
   void set(svgpp::tag::attribute::stroke, svgpp::tag::value::none);
   void set(svgpp::tag::attribute::stroke, svgpp::tag::value::currentColor);
   void set(svgpp::tag::attribute::stroke, color_t color,
@@ -149,6 +151,8 @@ public:
     throw std::runtime_error{
         "this flavor of the 'stroke' attribute is not yet implemented"};
   };
+  void set(svgpp::tag::attribute::stroke_opacity, double v);
+  void set(svgpp::tag::attribute::stroke_width, double v);
   void transform_matrix(const boost::array<double, 6> &matrix);
   void set(svgpp::tag::attribute::r r, double v);
   void set(svgpp::tag::attribute::rx rx, double v);
@@ -194,5 +198,5 @@ public:
   void set_text(boost::iterator_range<const char *> v);
 
 private:
-  ISVGAnalyzer *m_svgAnalyzer = nullptr;
+  ISVGAnalyzer *m_svg_analyzer = nullptr;
 };

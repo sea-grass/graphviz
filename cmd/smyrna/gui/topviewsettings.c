@@ -13,7 +13,6 @@
 #include "gui.h"
 #include <common/colorprocs.h>
 #include "viewport.h"
-#include <common/memory.h>
 
 void color_change_request(GtkWidget * widget, gpointer user_data)
 {
@@ -117,8 +116,7 @@ static int get_text_widget_to_attribute(char *attrib, char *widget_name,
 
     if (strlen(attrib) > 512)
 	return 0;
-    agattr(g, AGRAPH, attrib, 
-	    (char*)gtk_entry_get_text((GtkEntry *)
+    agattr(g, AGRAPH, attrib, gtk_entry_get_text((GtkEntry*)
 			       glade_xml_get_widget(xml, widget_name)));
     return 1;
 }

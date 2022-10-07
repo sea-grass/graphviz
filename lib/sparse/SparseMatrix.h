@@ -21,7 +21,7 @@ extern "C" {
 #define SYMMETRY_EPSILON 0.0000001
 enum {FORMAT_CSC, FORMAT_CSR, FORMAT_COORD};
 enum {UNMASKED = -10, MASKED = 1};
-enum {MATRIX_PATTERN_SYMMETRIC = 1<<0, MATRIX_SYMMETRIC = 1<<1, MATRIX_SKEW = 1<<2, MATRIX_HERMITIAN = 1<<3, MATRIX_UNDIRECTED = 1<<4};
+enum {MATRIX_PATTERN_SYMMETRIC = 1<<0, MATRIX_SYMMETRIC = 1<<1, MATRIX_UNDIRECTED = 1<<4};
 enum {BIPARTITE_RECT = 0, BIPARTITE_PATTERN_UNSYM, BIPARTITE_UNSYM, BIPARTITE_ALWAYS};
 
 
@@ -67,7 +67,7 @@ SparseMatrix SparseMatrix_multiply(SparseMatrix A, SparseMatrix B);
 SparseMatrix SparseMatrix_multiply3(SparseMatrix A, SparseMatrix B, SparseMatrix C);
 
 enum {SUM_REPEATED_NONE = 0, SUM_REPEATED_ALL, };
-SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A, int what_to_sum);
+SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A);
 SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int irn,
                                                     int jcn, void *val);
 int SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only);
@@ -83,10 +83,9 @@ SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A);
 void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim);
 SparseMatrix SparseMatrix_apply_fun(SparseMatrix A, double (*fun)(double x));/* for real only! */
 SparseMatrix SparseMatrix_copy(SparseMatrix A);
-int SparseMatrix_has_diagonal(SparseMatrix A);
+bool SparseMatrix_has_diagonal(SparseMatrix A);
 SparseMatrix SparseMatrix_make_undirected(SparseMatrix A);/* make it strictly low diag only, and set flag to undirected */
 void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reintialize_mask);
-void SparseMatrix_level_sets_khops(int khops, SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reintialize_mask);
 void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int **comps, int **comps_ptr);
 void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int **cluster, int **clusterp);
 SparseMatrix SparseMatrix_get_submatrix(SparseMatrix A, int nrow, int ncol, int *rindices, int *cindices);
@@ -106,15 +105,12 @@ SparseMatrix SparseMatrix_sort(SparseMatrix A);
 SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A);
 
 int SparseMatrix_distance_matrix(SparseMatrix A, int weighted,  double **dist_matrix);
-SparseMatrix SparseMatrix_distance_matrix_khops(int khops, SparseMatrix A, int weighted);
 
 SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 
 #define SparseMatrix_set_undirected(A) set_flag((A)->property, MATRIX_UNDIRECTED)
 #define SparseMatrix_set_symmetric(A) set_flag((A)->property, MATRIX_SYMMETRIC)
 #define SparseMatrix_set_pattern_symmetric(A) set_flag((A)->property, MATRIX_PATTERN_SYMMETRIC)
-#define SparseMatrix_set_skew(A) set_flag((A)->property, MATRIX_SKEW)
-#define SparseMatrix_set_hemitian(A) set_flag((A)->property, MATRIX_HERMITIAN)
 
 
 #define SparseMatrix_known_undirected(A) test_flag((A)->property, MATRIX_UNDIRECTED)

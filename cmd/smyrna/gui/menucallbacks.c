@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include "menucallbacks.h"
 #include "viewport.h"
 #include "tvnodes.h"
@@ -15,12 +16,19 @@
 #include "gvprpipe.h"
 #include "topviewsettings.h"
 #include "gltemplate.h"
-#include <common/memory.h>
 #include <common/const.h>
 #include <cgraph/agxbuf.h>
 #include <assert.h>
 #include <ctype.h>
 #include  "frmobjectui.h"
+
+void mAttributesSlot(GtkWidget * widget, gpointer user_data)
+{
+    (void)widget;
+    (void)user_data;
+
+    showAttrsWidget(view->Topview);
+}
 
 void mOpenSlot(GtkWidget * widget, gpointer user_data)
 {
@@ -192,7 +200,7 @@ void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data)
 
     //there has to be an active graph to open the graph prop page
     if (view->activeGraph > -1) {
-	load_graph_properties(view->g[view->activeGraph]);	//load from graph to gui              
+	load_graph_properties();	//load from graph to gui
 	gtk_dialog_set_response_sensitive((GtkDialog *)
 					  glade_xml_get_widget(xml,
 							       "dlgOpenGraph"),
@@ -275,7 +283,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
     GtkTextIter startit;
     GtkTextIter endit;
     const char *args;
-    int j, argc, cloneGraph;
+    int cloneGraph;
     char **argv;
 
     args =
@@ -294,7 +302,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 	return;
     }
 
-    argc = 1;
+    size_t argc = 1;
     if (*args != '\0')
 	argc += 2;
     if (*bf2 != '\0')
@@ -305,8 +313,8 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
 	argc++;
     } else
 	cloneGraph = 0;
-    argv = N_NEW(argc + 1, char *);
-    j = 0;
+    argv = gv_calloc(argc + 1, sizeof(char*));
+    size_t j = 0;
     argv[j++] = "smyrna";
     if (cloneGraph)
 	argv[j++] = "-C";
