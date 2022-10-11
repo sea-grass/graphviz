@@ -27,8 +27,13 @@ if [ "${ID}" = "fedora" ]; then
   fi
 fi
 
-export CFLAGS="${CFLAGS:-} -Werror=missing-field-initializers"
-export CXXFLAGS="${CXXFLAGS:-} -Werror=missing-field-initializers"
+# Fail CI on any new -Wmissing-field-initializers C warnings. We need to exclude
+# CentOS because it uses GCC 4.8.5 which has a bug making it is impossible to
+# C99-zero-initialize an array of structs without triggering one of either a
+# -Wmissing-field-initializers or a -Wmissing-braces warning.
+if [ "${ID}" != "centos" ]; then
+  export CFLAGS="${CFLAGS:-} -Werror=missing-field-initializers"
+fi
 
 META_DATA_DIR=Metadata/${ID}/${VERSION_ID}
 mkdir -p ${META_DATA_DIR}
