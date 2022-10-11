@@ -3147,7 +3147,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 
     for (j = 0; j < peripheries; j++) {
 	enum {A_size = 2};
-	pointf AF[A_size] = {{0}};
+	pointf AF[A_size] = {0};
 	for (i = 0; i < sides; i++) {
 	    P = vertices[i + j * sides];
 	    if (i < A_size) {
