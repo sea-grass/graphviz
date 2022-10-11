@@ -27,6 +27,9 @@ if [ "${ID}" = "fedora" ]; then
   fi
 fi
 
+export CFLAGS="${CFLAGS:-} -Werror=missing-field-initializers"
+export CXXFLAGS="${CXXFLAGS:-} -Werror=missing-field-initializers"
+
 META_DATA_DIR=Metadata/${ID}/${VERSION_ID}
 mkdir -p ${META_DATA_DIR}
 DIR=$(pwd)/Packages/${ID}/${VERSION_ID}
