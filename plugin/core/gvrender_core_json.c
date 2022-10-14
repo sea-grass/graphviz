@@ -16,6 +16,7 @@
 
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -26,7 +27,6 @@
 
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
-#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
@@ -87,7 +87,6 @@ static void json_begin_graph(GVJ_t *job)
 static void stoj(char *ins, state_t *sp, GVJ_t *job) {
     char* s;
     char* input;
-    static agxbuf xb;
     char c;
 
     if (sp->isLatin)
@@ -95,44 +94,55 @@ static void stoj(char *ins, state_t *sp, GVJ_t *job) {
     else
 	input = ins;
 
-    if (xb.buf == NULL)
-	agxbinit(&xb, BUFSIZ, NULL);
+    // a block of data we will accrue before periodically flushing to output
+    char chunk[BUFSIZ];
+    size_t used = 0;
+
+    gvputc(job, '"');
     for (s = input; (c = *s); s++) {
 	switch (c) {
 	case '"' :
-	    agxbput(&xb, "\\\"");
-	    break;
 	case '\\' :
-	    agxbput(&xb, "\\\\");
-	    break;
 	case '/' :
-	    agxbput(&xb, "\\/");
+	    chunk[used++] = '\\';
+	    chunk[used++] = c;
 	    break;
 	case '\b' :
-	    agxbput(&xb, "\\b");
+	    chunk[used++] = '\\';
+	    chunk[used++] = 'b';
 	    break;
 	case '\f' :
-	    agxbput(&xb, "\\f");
+	    chunk[used++] = '\\';
+	    chunk[used++] = 'f';
 	    break;
 	case '\n' :
-	    agxbput(&xb, "\\n");
+	    chunk[used++] = '\\';
+	    chunk[used++] = 'n';
 	    break;
 	case '\r' :
-	    agxbput(&xb, "\\r");
+	    chunk[used++] = '\\';
+	    chunk[used++] = 'r';
 	    break;
 	case '\t' :
-	    agxbput(&xb, "\\t");
+	    chunk[used++] = '\\';
+	    chunk[used++] = 't';
 	    break;
 	default :
-	    agxbputc(&xb, c);
+	    chunk[used++] = c;
 	    break;
 	}
+
+	// if we are at the upper limit of our accrued chunk or if this is the last
+	// loop iteration, flush to the output stream
+	if (used > sizeof(chunk) - strlen("\\/") || *(s + 1) == '\0') {
+	    gvwrite(job, chunk, used);
+	    used = 0;
+	}
     }
-    s = agxbuse(&xb);
+    gvputc(job, '"');
 
     if (sp->isLatin)
 	free (input);
-    gvprintf(job, "\"%s\"", s);
 }
 
 static void indent(GVJ_t * job, int level)
