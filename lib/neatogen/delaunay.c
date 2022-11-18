@@ -358,18 +358,18 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
     *pnedges = nedges = stats.n;
 
     if (nedges) {
-	edges = N_GNEW(2 * nedges, int);
+	edges = gv_calloc(2 * nedges, sizeof(int));
 	state.n = 0;
 	state.edges = edges;
 	gts_surface_foreach_edge(s, addEdge, &state);
     }
     else {
-	int* vs = N_GNEW(n, int);
+	int* vs = gv_calloc(n, sizeof(int));
 	int* ip;
 	int i, hd, tl;
 
 	*pnedges = nedges = n-1;
-	ip = edges = N_GNEW(2 * nedges, int);
+	ip = edges = gv_calloc(2 * nedges, sizeof(int));
 
 	for (i = 0; i < n; i++)
 	    vs[i] = i;
