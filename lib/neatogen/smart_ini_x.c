@@ -258,14 +258,13 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	int iterations2;
 	int i,j, rv = 0;
 	DistType** Dij;
-	float* f_storage = NULL;	
 	double* x = given_coords;	
 	double uniLength;
 	double* y = new_coords;
-	float** lap = N_GNEW(n, float*);
+	float **lap = gv_calloc(n, sizeof(float *));
 	float degree;
 	double pos_i;
-	double* balance = N_GNEW(n, double);
+	double *balance = gv_calloc(n, sizeof(double));
 	double b;
 	bool converged;
 
@@ -297,7 +296,7 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	CMDS_orthog(n, 1, &y, conj_tol, x, Dij);
 	
 	/* Compute Laplacian: */
-	f_storage = N_GNEW(n*n, float);
+	float *f_storage = gv_calloc(n * n, sizeof(float));
 	
 	for (i=0; i<n; i++) {
 		lap[i]=f_storage+i*n;
