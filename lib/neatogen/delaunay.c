@@ -797,8 +797,8 @@ v_data *UG_graph(double *x, double *y, int n) {
     int j, k, neighbor_j, neighbor_k;
 
     if (n == 2) {
-	int *edges = N_GNEW(4, int);
-	delaunay = N_GNEW(n, v_data);
+	int *edges = gv_calloc(4, sizeof(int));
+	delaunay = gv_calloc(n, sizeof(v_data));
 	delaunay[0].ewgts = NULL;
 	delaunay[0].edges = edges;
 	delaunay[0].nedges = 2;
@@ -811,8 +811,8 @@ v_data *UG_graph(double *x, double *y, int n) {
 	delaunay[1].edges[1] = 0;
 	return delaunay;
     } else if (n == 1) {
-	int *edges = N_GNEW(1, int);
-	delaunay = N_GNEW(n, v_data);
+	int *edges = gv_calloc(1, sizeof(int));
+	delaunay = gv_calloc(n, sizeof(v_data));
 	delaunay[0].ewgts = NULL;
 	delaunay[0].edges = edges;
 	delaunay[0].nedges = 1;
