@@ -23,9 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The libcgraph function `agflatten` has been removed.
 - **Breaking**: The `Agdesc_s.flatlock` field has been removed.
 - **Breaking**: The `str` parameter from `gvPluginList` has been removed.
-- **Breaking**: The definition of the `alloc_elist` macro has been changed to
-  use newer allocation functions. Users were/are not expected to call this 
-  macro.
+- **Breaking**: The definition of the `elist_append` and `alloc_elist` macros
+  have been changed to use newer allocation functions. Users were/are not
+  expected to call these macros.
 
 ### Fixed
 
