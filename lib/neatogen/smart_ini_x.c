@@ -186,7 +186,7 @@ exit:
 static float* 
 compute_avgs(DistType** Dij, int n, float* all_avg) 
 {
-	float* row_avg = N_GNEW(n, float);
+	float* row_avg = gv_calloc(n, sizeof(float));
 	int i,j;
 	double sum=0, sum_row;
 
