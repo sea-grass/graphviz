@@ -37,7 +37,7 @@ static double *diag_precon_new(SparseMatrix A) {
 
   assert(a);
 
-  double *data = N_GNEW(A->m + 1, double);
+  double *data = gv_calloc(A->m + 1, sizeof(double));
   double *diag = data;
 
   diag[0] = m;
