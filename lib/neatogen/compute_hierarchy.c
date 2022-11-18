@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <neatogen/kkutils.h>
@@ -59,7 +60,7 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
     if (given_coords) {
 	y = given_coords;
     } else {
-	y = N_GNEW(n, double);
+	y = gv_calloc(n, sizeof(double));
 	if (compute_y_coords(graph, n, y, n)) {
 	    rv = 1;
 	    goto finish;    
@@ -67,7 +68,7 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
     }
 
     /* sort nodes accoridng to their y-ordering */
-    *orderingp = ordering = N_NEW(n, int);
+    *orderingp = ordering = gv_calloc(n, sizeof(int));
     for (i = 0; i < n; i++) {
 	ordering[i] = i;
     }
@@ -92,11 +93,11 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
     }
     *num_levelsp = num_levels;
     if (num_levels == 0) {
-	*levelsp = levels = N_GNEW(1, int);
+	*levelsp = levels = gv_calloc(1, sizeof(int));
 	levels[0] = n;
     } else {
 	int count = 0;
-	*levelsp = levels = N_GNEW(num_levels, int);
+	*levelsp = levels = gv_calloc(num_levels, sizeof(int));
 	for (i = 1; i < n; i++) {
 	    if (y[ordering[i]] - y[ordering[i - 1]] > tol) {
 		levels[count++] = i;
