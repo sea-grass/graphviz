@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <float.h>
 #include <math.h>
 #include <neatogen/digcola.h>
@@ -70,8 +71,8 @@ power_iteration_orthog(float** square_mat, int n, int neigs,
      */
 
 	int i,j;
-	double *tmp_vec = N_GNEW(n, double);
-	double *last_vec = N_GNEW(n, double);
+	double *tmp_vec = gv_calloc(n, sizeof(double));
+	double *last_vec = gv_calloc(n, sizeof(double));
 	double *curr_vector;
 	double len;
 	double angle;
