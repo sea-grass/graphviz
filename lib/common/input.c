@@ -163,7 +163,8 @@ static void use_library(GVC_t *gvc, const char *name)
 {
     static size_t cnt = 0;
     if (name) {
-	Lib = ALLOC(cnt + 2, Lib, const char *);
+	const size_t old_nmemb = cnt == 0 ? cnt : cnt + 1;
+	Lib = gv_recalloc(Lib, old_nmemb, cnt + 2, sizeof(const char *));
 	Lib[cnt++] = name;
 	Lib[cnt] = NULL;
     }
