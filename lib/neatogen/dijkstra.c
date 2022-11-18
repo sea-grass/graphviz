@@ -293,8 +293,8 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 // returns the number of terms built
 int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     heap h;
-    int *indices = N_GNEW(graph->n, int);
-    float *dists = N_GNEW(graph->n, float);
+    int *indices = gv_calloc(graph->n, sizeof(int));
+    float *dists = gv_calloc(graph->n, sizeof(float));
     for (size_t i= 0; i < graph->n; i++) {
         dists[i] = FLT_MAX;
     }
