@@ -3621,7 +3621,6 @@ static void record_init(node_t * n)
     pointf sz;
     int flip;
     size_t len;
-    char *textbuf;		/* temp buffer for storing labels */
     unsigned char sides = BOTTOM | RIGHT | TOP | LEFT;
 
     /* Always use rankdir to determine how records are laid out */
@@ -3633,7 +3632,7 @@ static void record_init(node_t * n)
      * error path involving "\\N" below.
      */
     len = MAX(MAX(len, 1), strlen("\\N"));
-    textbuf = N_NEW(len + 1, char);
+    char *textbuf = gv_calloc(len + 1, sizeof(char)); // temp buffer for storing labels
     if (!(info = parse_reclbl(n, flip, true, textbuf))) {
 	agerr(AGERR, "bad label format %s\n", ND_label(n)->text);
 	reclblp = "\\N";
