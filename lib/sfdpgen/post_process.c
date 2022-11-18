@@ -788,11 +788,9 @@ void TriangleSmoother_smooth(TriangleSmoother sm, int dim, double *x){
 
 /* ================================ spring and spring-electrical based smoother ================ */
 SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_control ctrl, double *x){
-  SpringSmoother sm;
   int i, j, k, l, m = A->m, *ia = A->ia, *ja = A->ja, *id, *jd;
-  int *mask, nz;
+  int nz;
   double *d, *dd;
-  double *avg_dist;
   SparseMatrix ID = NULL;
 
   assert(SparseMatrix_is_symmetric(A, false));
@@ -800,10 +798,10 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
   ID = ideal_distance_matrix(A, dim, x);
   dd = ID->a;
 
-  sm = N_GNEW(1,struct SpringSmoother_struct);
-  mask = N_GNEW(m,int);
+  SpringSmoother sm = gv_alloc(sizeof(struct SpringSmoother_struct));
+  int *mask = gv_calloc(m, sizeof(int));
 
-  avg_dist = N_GNEW(m,double);
+  double *avg_dist = gv_calloc(m, sizeof(double));
 
   for (i = 0; i < m ;i++){
     avg_dist[i] = 0;
