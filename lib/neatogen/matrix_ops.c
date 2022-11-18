@@ -8,9 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
-#include <common/memory.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,8 +22,8 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
     /* compute the 'neigs' top eigenvectors of 'square_mat' using power iteration */
 
     int i, j;
-    double *tmp_vec = N_GNEW(n, double);
-    double *last_vec = N_GNEW(n, double);
+    double *tmp_vec = gv_calloc(n, sizeof(double));
+    double *last_vec = gv_calloc(n, sizeof(double));
     double *curr_vector;
     double len;
     double angle;
