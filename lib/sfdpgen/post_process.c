@@ -679,15 +679,14 @@ void StressMajorizationSmoother_delete(StressMajorizationSmoother sm){
 
 TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
                                       bool use_triangularization) {
-  TriangleSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, jdiag, nz;
   SparseMatrix B;
-  double *avg_dist, *lambda, *d, *w, diag_d, diag_w, dist;
+  double *d, *w, diag_d, diag_w, dist;
   double s = 0, stop = 0, sbot = 0;
 
   assert(SparseMatrix_is_symmetric(A, false));
 
-  avg_dist = N_GNEW(m,double);
+  double *avg_dist = gv_calloc(m, sizeof(double));
 
   for (i = 0; i < m ;i++){
     avg_dist[i] = 0;
@@ -701,14 +700,14 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
     avg_dist[i] /= nz;
   }
 
-  sm = N_GNEW(1,struct TriangleSmoother_struct);
+  TriangleSmoother sm = gv_alloc(sizeof(struct TriangleSmoother_struct));
   sm->scaling = 1;
   sm->data = NULL;
   sm->scheme = SM_SCHEME_NORMAL;
   sm->tol_cg = 0.01;
   sm->maxit_cg = (int)sqrt((double) A->m);
 
-  lambda = sm->lambda = N_GNEW(m,double);
+  double *lambda = sm->lambda = gv_calloc(m, sizeof(double));
   
   if (m > 2){
     if (use_triangularization){
