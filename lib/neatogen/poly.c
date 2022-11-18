@@ -368,7 +368,7 @@ static int inPoly(Point vertex[], int n, Point q)
     double crossings = 0;	/* number of edge/ray crossings */
 
     if (tp3 == NULL)
-	tp3 = N_GNEW(maxcnt, Point);
+	tp3 = gv_calloc(maxcnt, sizeof(Point));
 
     /* Shift so that q is the origin. */
     for (i = 0; i < n; i++) {
