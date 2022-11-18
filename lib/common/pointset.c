@@ -176,7 +176,7 @@ static Dtdisc_t intMPairDisc = {
 
 PointMap *newPM(void)
 {
-    MPairDisc *dp = GNEW(MPairDisc);
+    MPairDisc *dp = gv_alloc(sizeof(MPairDisc));
 
     dp->disc = intMPairDisc;
     dp->flist = 0;
