@@ -634,7 +634,7 @@ delaunay_tri (double *x, double *y, int n, int* nedges)
     struct triangulateio in, out;
     int i;
 
-    in.pointlist = N_GNEW(2 * n, REAL);
+    in.pointlist = gv_calloc(2 * n, sizeof(REAL));
     for (i = 0; i < n; i++) {
 	in.pointlist[2 * i] = x[i];
 	in.pointlist[2 * i + 1] = y[i];
