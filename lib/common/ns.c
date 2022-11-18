@@ -842,10 +842,8 @@ static bool init_graph(graph_t *g) {
 	    N_edges++;
     }
 
-    Tree_node.list = ALLOC(N_nodes, Tree_node.list, node_t *);
-    Tree_node.size = 0;
-    Tree_edge.list = ALLOC(N_nodes, Tree_edge.list, edge_t *);
-    Tree_edge.size = 0;
+    Tree_node.list = gv_calloc(N_nodes, sizeof(node_t *));
+    Tree_edge.list = gv_calloc(N_nodes, sizeof(edge_t *));
 
     bool feasible = true;
     for (n = GD_nlist(g); n; n = ND_next(n)) {
