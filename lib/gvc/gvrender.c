@@ -610,9 +610,8 @@ void gvrender_polyline(GVJ_t * job, pointf * af, int n)
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
 		gvre->polyline(job, af, n);
 	    else {
-		pointf *AF;
 		assert(n >= 0);
-		AF = gcalloc((size_t)n, sizeof(pointf));
+		pointf *AF = gv_calloc((size_t)n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, (size_t)n);
 		gvre->polyline(job, AF, n);
 		free(AF);
