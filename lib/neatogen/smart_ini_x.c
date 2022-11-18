@@ -206,8 +206,8 @@ static float**
 compute_Bij(DistType** Dij, int n)
 {
 	int i,j;
-	float* storage = N_GNEW(n*n,float);
-	float** Bij = N_GNEW(n, float*);
+	float *storage = gv_calloc(n * n, sizeof(float));
+	float **Bij = gv_calloc(n, sizeof(float *));
 	float* row_avg; 
     float all_avg;
 
