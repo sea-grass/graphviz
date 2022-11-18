@@ -31,6 +31,7 @@
  * Tim Dwyer, 2006
  **********************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #include <stdbool.h>
 #ifdef IPSEPCOLA
@@ -201,7 +202,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     if (opt->clusters->nclusters > 0) {
 	int nn = n + opt->clusters->nclusters * 2;
 	int clap_length = nn + nn * (nn - 1) / 2;
-	float *clap = N_GNEW(clap_length, float);
+	float *clap = gv_calloc(clap_length, sizeof(float));
 	int c0, c1;
 	float v;
 	c0 = c1 = 0;
@@ -230,7 +231,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     }
     /* compute diagonal entries */
     count = 0;
-    degrees = N_GNEW(n, double);
+    degrees = gv_calloc(n, sizeof(double));
     set_vector_val(n, 0, degrees);
     for (i = 0; i < n - 1; i++) {
 	degree = 0;
@@ -246,8 +247,8 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	lap2[count] = (float) degrees[i];
     }
 
-    coords = N_GNEW(dim, float *);
-    f_storage = N_GNEW(dim * n, float);
+    coords = gv_calloc(dim, sizeof(float *));
+    f_storage = gv_calloc(dim * n, sizeof(float));
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
@@ -264,14 +265,14 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	** Layout optimization  **
 	*************************/
 
-    b = N_GNEW(dim, float *);
-    b[0] = N_GNEW(dim * n, float);
+    b = gv_calloc(dim, sizeof(float *));
+    b[0] = gv_calloc(dim * n, sizeof(float));
     for (k = 1; k < dim; k++) {
 	b[k] = b[0] + k * n;
     }
 
-    tmp_coords = N_GNEW(n, float);
-    dist_accumulator = N_GNEW(n, float);
+    tmp_coords = gv_calloc(n, sizeof(float));
+    dist_accumulator = gv_calloc(n, sizeof(float));
 
     old_stress = DBL_MAX;	/* at least one iteration */
 
@@ -284,7 +285,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	goto finish;
     }
 
-    lap1 = N_GNEW(lap_length, float);
+    lap1 = gv_calloc(lap_length, sizeof(float));
 
     for (converged = false, iterations = 0;
 	 iterations < maxi && !converged; iterations++) {
