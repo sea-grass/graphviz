@@ -856,10 +856,10 @@ static bool init_graph(graph_t *g) {
 	    if (ND_rank(aghead(e)) - ND_rank(agtail(e)) < ED_minlen(e))
 		feasible = false;
 	}
-	ND_tree_in(n).list = N_NEW(i + 1, edge_t *);
+	ND_tree_in(n).list = gv_calloc(i + 1, sizeof(edge_t *));
 	ND_tree_in(n).size = 0;
 	for (i = 0; (e = ND_out(n).list[i]); i++);
-	ND_tree_out(n).list = N_NEW(i + 1, edge_t *);
+	ND_tree_out(n).list = gv_calloc(i + 1, sizeof(edge_t *));
 	ND_tree_out(n).size = 0;
     }
     return feasible;
