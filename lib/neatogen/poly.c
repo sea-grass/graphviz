@@ -464,8 +464,8 @@ int polyOverlap(Point p, Poly * pp, Point q, Poly * qp)
     }
 
     if (tp1 == NULL) {
-	tp1 = N_GNEW(maxcnt, Point);
-	tp2 = N_GNEW(maxcnt, Point);
+	tp1 = gv_calloc(maxcnt, sizeof(Point));
+	tp2 = gv_calloc(maxcnt, sizeof(Point));
     }
 
     transCopy(pp->verts, pp->nverts, p, tp1);
