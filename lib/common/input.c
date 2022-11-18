@@ -257,7 +257,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     for (i = 1; i < argc; i++)
 	if (argv[i] && argv[i][0] != '-')
 	    nfiles++;
-    gvc->input_filenames = N_NEW(nfiles + 1, char *);
+    gvc->input_filenames = gv_calloc(nfiles + 1, sizeof(char *));
     nfiles = 0;
     for (i = 1; i < argc; i++) {
 	if (argv[i] &&
