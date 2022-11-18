@@ -226,7 +226,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	b.x = ND_width(n) / 2.0;
 	b.y = ND_height(n) / 2.0;
 	pp->kind = BOX;
-	verts = N_GNEW(sides, Point);
+	verts = gv_calloc(sides, sizeof(Point));
 	PUTPT(verts[0], b.x, b.y);
 	PUTPT(verts[1], -b.x, b.y);
 	PUTPT(verts[2], -b.x, -b.y);
@@ -237,7 +237,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    poly = ND_shape_info(n);
 	    sides = poly->sides;
 	    if (sides >= 3) {	/* real polygon */
-		verts = N_GNEW(sides, Point);
+		verts = gv_calloc(sides, sizeof(Point));
 		for (size_t i = 0; i < sides; i++) {
 		    verts[i].x = PS2INCH(poly->vertices[i].x);
 		    verts[i].y = PS2INCH(poly->vertices[i].y);
@@ -258,7 +258,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    break;
 	case SH_RECORD: {
 	    sides = 4;
-	    verts = N_GNEW(sides, Point);
+	    verts = gv_calloc(sides, sizeof(Point));
 	    boxf b = ((field_t *) ND_shape_info(n))->b;
 	    verts[0] = makeScaledPoint(b.LL.x, b.LL.y);
 	    verts[1] = makeScaledPoint(b.UR.x, b.LL.y);
