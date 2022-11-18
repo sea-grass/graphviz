@@ -197,7 +197,7 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
 
   average = qt->average;
   qt->total_weight = *dist_max = distance_to_group(k, dim, wgt, pts, average);/* store distance in total_weight */
-  if (!(*argmax)) *argmax = MALLOC(sizeof(double)*dim);
+  if (!(*argmax)) *argmax = gv_calloc(dim, sizeof(double));
   memcpy(*argmax, average, sizeof(double)*dim);
 
   qt_list_t candidates = {0};
