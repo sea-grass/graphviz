@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <string.h>
 #include <sfdpgen/sparse_solve.h>
 #include <sfdpgen/sfdpinternal.h>
@@ -64,9 +65,7 @@ static double *Operator_matmul_apply(Operator o, double *x, double *y){
 }
 
 static Operator Operator_matmul_new(SparseMatrix A){
-  Operator o;
-
-  o = GNEW(struct Operator_struct);
+  Operator o = gv_alloc(sizeof(struct Operator_struct));
   o->data = A;
   o->Operator_apply = Operator_matmul_apply;
   return o;
