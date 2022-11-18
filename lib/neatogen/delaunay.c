@@ -145,8 +145,8 @@ tri(double *x, double *y, int npt, int *segs, int nsegs, int sepArr)
 {
     int i;
     GtsSurface *surface;
-    GVertex **vertices = N_GNEW(npt, GVertex *);
-    GtsEdge **edges = N_GNEW(nsegs, GtsEdge*);
+    GVertex **vertices = gv_calloc(npt, sizeof(GVertex *));
+    GtsEdge **edges = gv_calloc(nsegs, sizeof(GtsEdge *));
     GSList *list = NULL;
     GtsVertex *v1, *v2, *v3;
     GtsTriangle *t;
