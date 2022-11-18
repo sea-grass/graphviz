@@ -1276,8 +1276,8 @@ static void sizeLinearArray(htmltbl_t * tbl)
     htmlcell_t **cells;
     int i;
 
-    tbl->heights = N_NEW(tbl->row_count + 1, double);
-    tbl->widths = N_NEW(tbl->column_count + 1, double);
+    tbl->heights = gv_calloc(tbl->row_count + 1, sizeof(double));
+    tbl->widths = gv_calloc(tbl->column_count + 1, sizeof(double));
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
