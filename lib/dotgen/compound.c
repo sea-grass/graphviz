@@ -13,6 +13,7 @@
  */
 
 #include	<cgraph/agxbuf.h>
+#include	<cgraph/alloc.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
 
@@ -443,7 +444,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
     /* complete Bezier, free garbage and attach new Bezier to edge 
      */
     nbez.size = endi - starti + 1;
-    nbez.list = N_GNEW(nbez.size, pointf);
+    nbez.list = gv_calloc(nbez.size, sizeof(pointf));
     for (int i = 0, j = starti; i < nbez.size; i++, j++)
 	nbez.list[i] = bez->list[j];
     free(bez->list);
