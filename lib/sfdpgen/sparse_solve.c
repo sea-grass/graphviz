@@ -55,14 +55,14 @@ static double *diag_precon_new(SparseMatrix A) {
 static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
                                  double *x, double *rhs, double tol,
                                  int maxit) {
-  double *z, *r, *p, *q, res, alpha;
+  double res, alpha;
   double rho, rho_old = 1, res0, beta;
   int iter = 0;
 
-  z = N_GNEW(n,double);
-  r = N_GNEW(n,double);
-  p = N_GNEW(n,double);
-  q = N_GNEW(n,double);
+  double *z = gv_calloc(n, sizeof(double));
+  double *r = gv_calloc(n, sizeof(double));
+  double *p = gv_calloc(n, sizeof(double));
+  double *q = gv_calloc(n, sizeof(double));
 
   SparseMatrix_multiply_vector(A, x, &r);
   r = vector_subtract_to(n, rhs, r);
