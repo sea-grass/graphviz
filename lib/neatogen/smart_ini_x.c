@@ -231,10 +231,10 @@ CMDS_orthog(int n, int dim, double** eigs, double tol,
 {
 	int i,j;
 	float** Bij = compute_Bij(Dij, n);
-	double* evals= N_GNEW(dim, double);
+	double *evals = gv_calloc(dim, sizeof(double));
 	
 	assert(orthog != NULL);
-	double *orthog_aux = N_GNEW(n, double);
+	double *orthog_aux = gv_calloc(n, sizeof(double));
 	for (i=0; i<n; i++) {
 		orthog_aux[i]=orthog[i];
 	}
