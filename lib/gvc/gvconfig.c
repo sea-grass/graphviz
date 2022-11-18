@@ -605,7 +605,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
     	        agerr(AGERR, "%s is zero sized.\n", gvc->config_path);
     	    }
     	    else {
-    	        config_text = gmalloc((size_t)config_st.st_size + 1);
+    	        config_text = gv_alloc((size_t)config_st.st_size + 1);
     	        size_t sz = fread(config_text, 1, (size_t)config_st.st_size, f);
     	        if (sz == 0) {
     	            agerr(AGERR, "%s read error.\n", gvc->config_path);
