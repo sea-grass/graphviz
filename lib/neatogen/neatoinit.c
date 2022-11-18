@@ -1452,7 +1452,7 @@ void neato_layout(Agraph_t * g)
 		    else spline_edges(gc);
 		}
 		if (pin) {
-		    bp = N_NEW(n_cc, bool);
+		    bp = gv_calloc(n_cc, sizeof(bool));
 		    bp[0] = true;
 		} else
 		    bp = NULL;
