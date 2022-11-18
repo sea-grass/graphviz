@@ -7,6 +7,8 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
+
+#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <math.h>
 #include <string.h>
@@ -27,15 +29,14 @@ static int splines_intersect(size_t dim,
 
   */
   size_t len1 = 100, len2 = 100;
-  double *x1, *x2;
   size_t ns1 = 0, ns2 = 0;
   int iter1 = 0, iter2 = 0;
   double cos_a, tmp[2];
   int endp1 = 0, endp2 = 0;
 
   tmp[0] = tmp[1] = 0;
-  x1 = MALLOC(sizeof(double)*len1);
-  x2 = MALLOC(sizeof(double)*len2);
+  double *x1 = gv_calloc(len1, sizeof(double));
+  double *x2 = gv_calloc(len2, sizeof(double));
 
   assert(dim <= 3);
 
@@ -63,15 +64,17 @@ static int splines_intersect(size_t dim,
     if (!xsplines1) break;
     xsplines1++;
     if (ns1*dim >= len1){
-      len1 = ns1 * dim + MAX(10u, ns1 * dim / 5);
-      x1 = REALLOC(x1, sizeof(double)*len1);
+      size_t new_len1 = ns1 * dim + MAX(10u, ns1 * dim / 5);
+      x1 = gv_recalloc(x1, len1, new_len1, sizeof(double));
+      len1 = new_len1;
     }
   }
   if (endp1){/* pad the end point at the last position */
     ns1++;
     if (ns1*dim >= len1){
-      len1 = ns1 * dim + MAX(10u, ns1 * dim / 5);
-      x1 = REALLOC(x1, sizeof(double)*len1);
+      size_t new_len1 = ns1 * dim + MAX(10u, ns1 * dim / 5);
+      x1 = gv_recalloc(x1, len1, new_len1, sizeof(double));
+      len1 = new_len1;
     }
     x1[(ns1-1)*dim] = tmp[0];  x1[(ns1-1)*dim + 1] = tmp[1]; 
   }
@@ -101,15 +104,17 @@ static int splines_intersect(size_t dim,
     if (!xsplines2) break;
     xsplines2++;
     if (ns2*dim >= len2){
-      len2 = ns2 * dim + MAX(10u, ns2 * dim / 5);
-      x2 = REALLOC(x2, sizeof(double)*len2);
+      size_t new_len2 = ns2 * dim + MAX(10u, ns2 * dim / 5);
+      x2 = gv_recalloc(x2, len2, new_len2, sizeof(double));
+      len2 = new_len2;
     }
   }
   if (endp2){/* pad the end point at the last position */
     ns2++;
     if (ns2*dim >= len2){
-      len2 = ns2 * dim + MAX(10u, ns2 * dim / 5);
-      x2 = REALLOC(x2, sizeof(double)*len2);
+      size_t new_len2 = ns2 * dim + MAX(10u, ns2 * dim / 5);
+      x2 = gv_recalloc(x2, len2, new_len2, sizeof(double));
+      len2 = new_len2;
     }
     x2[(ns2-1)*dim] = tmp[0];  x2[(ns2-1)*dim + 1] = tmp[1]; 
   }
