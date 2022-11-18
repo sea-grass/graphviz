@@ -263,15 +263,13 @@ static gint add_edge(void *edge, void *data) {
 }
 
 static v_data *delaunay_triangulation(double *x, double *y, int n) {
-    v_data *delaunay;
     GtsSurface* s = tri(x, y, n, NULL, 0, 1);
     int i, nedges;
-    int* edges;
     estats stats;
 
     if (!s) return NULL;
 
-    delaunay = N_GNEW(n, v_data);
+    v_data *delaunay = gv_calloc(n, sizeof(v_data));
 
     for (i = 0; i < n; i++) {
 	delaunay[i].ewgts = NULL;
@@ -282,7 +280,7 @@ static v_data *delaunay_triangulation(double *x, double *y, int n) {
     stats.delaunay = delaunay;
     edgeStats (s, &stats);
     nedges = stats.n;
-    edges = N_GNEW(2 * nedges + n, int);
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
 
     for (i = 0; i < n; i++) {
 	delaunay[i].edges = edges;
