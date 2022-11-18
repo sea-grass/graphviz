@@ -119,10 +119,10 @@ static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
 
 static double cg(SparseMatrix A, const double *precond, int n, int dim,
                  double *x0, double *rhs, double tol, int maxit) {
-  double *x, *b, res = 0;
+  double res = 0;
   int k, i;
-  x = N_GNEW(n, double);
-  b = N_GNEW(n, double);
+  double *x = gv_calloc(n, sizeof(double));
+  double *b = gv_calloc(n, sizeof(double));
   for (k = 0; k < dim; k++){
     for (i = 0; i < n; i++) {
       x[i] = x0[i*dim+k];
