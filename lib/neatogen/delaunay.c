@@ -536,7 +536,7 @@ get_triangles (double *x, int n, int* tris)
     if (!s) return NULL;
 
     gts_surface_foreach_face(s, cntFace, &nfaces);
-    statf.faces = N_GNEW(3 * nfaces, int);
+    statf.faces = gv_calloc(3 * nfaces, sizeof(int));
     gts_surface_foreach_face(s, addTri, &statf);
 
     gts_object_destroy (GTS_OBJECT (s));
@@ -568,7 +568,7 @@ get_triangles (double *x, int n, int* tris)
 
     in.numberofpoints = n;
     in.numberofpointattributes = 0;
-    in.pointlist = N_GNEW(in.numberofpoints * 2, REAL);
+    in.pointlist = gv_calloc(in.numberofpoints * 2, sizeof(REAL));
 
     for (i = 0; i < n; i++){
 	in.pointlist[i*2] = x[i*2];
