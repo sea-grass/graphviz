@@ -56,7 +56,7 @@ void neato_init_node(node_t * n)
 {
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     common_init_node(n);
-    ND_pos(n) = N_NEW(GD_ndim(agraphof(n)), double);
+    ND_pos(n) = gv_calloc(GD_ndim(agraphof(n)), sizeof(double));
     gv_nodesize(n, GD_flip(agraphof(n)));
 }
 
