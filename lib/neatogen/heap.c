@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <stdbool.h>
@@ -117,7 +118,7 @@ void PQinitialize(void)
     PQmin = 0;
     PQhashsize = 4 * sqrt_nsites;
     if (PQhash == NULL)
-	PQhash = N_GNEW(PQhashsize, Halfedge);
+	PQhash = gv_calloc(PQhashsize, sizeof(Halfedge));
     for (i = 0; i < PQhashsize; ++i)
 	PQhash[i].PQnext = NULL;
 }
