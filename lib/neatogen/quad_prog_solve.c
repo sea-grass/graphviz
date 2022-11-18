@@ -26,11 +26,10 @@
 
 float **unpackMatrix(float *packedMat, int n)
 {
-    float **mat;
     int i, j, k;
 
-    mat = N_GNEW(n, float *);
-    mat[0] = N_GNEW(n * n, float);
+    float **mat = gv_calloc(n, sizeof(float *));
+    mat[0] = gv_calloc(n * n, sizeof(float));
     set_vector_valf(n * n, 0, mat[0]);
     for (i = 1; i < n; i++) {
 	mat[i] = mat[0] + i * n;
