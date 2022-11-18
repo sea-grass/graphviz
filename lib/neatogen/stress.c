@@ -646,9 +646,9 @@ finish0:
 static float *compute_weighted_apsp_packed(vtx_data * graph, int n)
 {
     int i, j, count;
-    float *Dij = N_NEW(n * (n + 1) / 2, float);
+    float *Dij = gv_calloc(n * (n + 1) / 2, sizeof(float));
 
-    float *Di = N_NEW(n, float);
+    float *Di = gv_calloc(n, sizeof(float));
 
     count = 0;
     for (i = 0; i < n; i++) {
