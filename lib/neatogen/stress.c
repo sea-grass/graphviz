@@ -701,9 +701,9 @@ float *mdsModel(vtx_data * graph, int nG)
 float *compute_apsp_packed(vtx_data * graph, int n)
 {
     int i, j, count;
-    float *Dij = N_NEW(n * (n + 1) / 2, float);
+    float *Dij = gv_calloc(n * (n + 1) / 2, sizeof(float));
 
-    DistType *Di = N_NEW(n, DistType);
+    DistType *Di = gv_calloc(n, sizeof(DistType));
 
     count = 0;
     for (i = 0; i < n; i++) {
