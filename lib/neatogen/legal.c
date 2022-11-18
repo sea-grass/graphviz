@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <math.h>
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <neatogen/neato.h>
 #include <pathplan/pathutil.h>
@@ -310,13 +311,13 @@ find_ints(vertex vertex_list[], data *input, intersection ilist[]) {
     int i, j, k, found = 0;
     active_edge_list all;
     active_edge *new, *tempa;
-    vertex *pt1, *pt2, *templ, **pvertex;
+    vertex *pt1, *pt2, *templ;
 
     input->ninters = 0;
     all.first = all.final = 0;
     all.number = 0;
 
-    pvertex = N_GNEW(input->nvertices, vertex *);
+    vertex **pvertex = gv_calloc(input->nvertices, sizeof(vertex*));
 
     for (i = 0; i < input->nvertices; i++)
 	pvertex[i] = vertex_list + i;
@@ -341,7 +342,7 @@ find_ints(vertex vertex_list[], data *input, intersection ilist[]) {
 			goto finish;
 		}
 
-		new = GNEW(active_edge);
+		new = gv_alloc(sizeof(active_edge));
 		if (all.number == 0) {
 		    all.first = new;
 		    new->last = 0;
