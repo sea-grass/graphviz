@@ -262,9 +262,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
     heap H;
     int closestVertex = 0, neighbor;
     float closestDist;
-    int *index;
-
-    index = N_GNEW(n, int);
+    int *index = gv_calloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
