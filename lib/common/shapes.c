@@ -2080,7 +2080,7 @@ static void poly_init(node_t * n)
 
     if (sides < 3) {		/* ellipses */
 	sides = 2;
-	vertices = N_NEW(outp * sides, pointf);
+	vertices = gv_calloc(outp * sides, sizeof(pointf));
 	pointf P;
 	P.x = bb.x / 2.;
 	P.y = bb.y / 2.;
@@ -2131,7 +2131,7 @@ static void poly_init(node_t * n)
  *   the current segments, and outside by GAP distance, intersect.   
  */
 
-	vertices = N_NEW(outp * sides, pointf);
+	vertices = gv_calloc(outp * sides, sizeof(pointf));
 	if (ND_shape(n)->polygon->vertices) {
 	    poly_desc_t* pd = (poly_desc_t*)ND_shape(n)->polygon->vertices;
 	    pd->vertex_gen (vertices, &bb);
