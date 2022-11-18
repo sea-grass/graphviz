@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <limits.h>
 #include <neatogen/neato.h>
@@ -50,11 +51,11 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
             }
         }
     }
-    graph_sgd *graph = N_NEW(1, graph_sgd);
-    graph->sources = N_NEW(n_nodes + 1, size_t);
+    graph_sgd *graph = gv_alloc(sizeof(graph_sgd));
+    graph->sources = gv_calloc(n_nodes + 1, sizeof(size_t));
     graph->pinneds = bitarray_new(n_nodes);
-    graph->targets = N_NEW(n_edges, size_t);
-    graph->weights = N_NEW(n_edges, float);
+    graph->targets = gv_calloc(n_edges, sizeof(size_t));
+    graph->weights = gv_calloc(n_edges, sizeof(float));
 
     graph->n = n_nodes;
     assert(n_edges <= INT_MAX);
