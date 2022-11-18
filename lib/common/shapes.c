@@ -592,7 +592,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
     switch (mode) {
     case ROUNDED:
-	pts = N_GNEW(6 * sides + 2, pointf);
+	pts = gv_calloc(6 * sides + 2, sizeof(pointf));
 	i = 0;
 	for (size_t seg = 0; seg < sides; seg++) {
 	    pts[i++] = B[4 * seg];
