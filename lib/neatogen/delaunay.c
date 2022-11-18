@@ -704,15 +704,13 @@ delaunay_tri (double *x, double *y, int n, int* nedges)
 }
 
 static v_data *delaunay_triangulation(double *x, double *y, int n) {
-    v_data *delaunay;
     int nedges;
-    int *edges;
     int source, dest;
     int* edgelist = delaunay_tri (x, y, n, &nedges);
     int i;
 
-    delaunay = N_GNEW(n, v_data);
-    edges = N_GNEW(2 * nedges + n, int);
+    v_data *delaunay = gv_calloc(n, sizeof(v_data));
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
 
     for (i = 0; i < n; i++) {
 	delaunay[i].ewgts = NULL;
