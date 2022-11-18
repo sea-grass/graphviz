@@ -725,19 +725,14 @@ float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
     int i, j;
     float *old_weights = graph[0].ewgts;
     int nedges = 0;
-    float *weights;
-    int *vtx_vec;
     int deg_i, deg_j, neighbor;
 
     for (i = 0; i < n; i++) {
 	nedges += graph[i].nedges;
     }
 
-    weights = N_NEW(nedges, float);
-    vtx_vec = N_NEW(n, int);
-    for (i = 0; i < n; i++) {
-	vtx_vec[i] = 0;
-    }
+    float *weights = gv_calloc(nedges, sizeof(float));
+    int *vtx_vec = gv_calloc(n, sizeof(int));
 
     if (graph->ewgts) {
 	for (i = 0; i < n; i++) {
