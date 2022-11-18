@@ -10,6 +10,7 @@
 
 
 /* solves the system ab=c using gauss reduction */
+#include <cgraph/alloc.h>
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -20,7 +21,6 @@
 
 void solve(double *a, double *b, double *c, int n)
 {				/*a[n][n],b[n],c[n] */
-    double *asave, *csave;
     double amax, dum, pivot;
     int i, ii, j;
     int k, m, mp;
@@ -29,8 +29,8 @@ void solve(double *a, double *b, double *c, int n)
 
     istar = 0;			/* quiet warnings */
     nsq = n * n;
-    asave = N_GNEW(nsq, double);
-    csave = N_GNEW(n, double);
+    double *asave = gv_calloc(nsq, sizeof(double));
+    double *csave = gv_calloc(n, sizeof(double));
 
     for (i = 0; i < n; i++)
 	csave[i] = c[i];
