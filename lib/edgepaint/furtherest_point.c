@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
 #include <sparse/general.h>
@@ -86,7 +87,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
   qt0 = qt = QuadTree_new(dim, center, width, max_level);
 
   qt->total_weight = *dist_max = distance_to_group(k, dim, wgt, pts, center);/* store distance in total_weight */
-  if (!(*argmax)) *argmax = MALLOC(sizeof(double)*dim);
+  if (!(*argmax)) *argmax = gv_calloc(dim, sizeof(double));
   memcpy(*argmax, center, sizeof(double)*dim);
 
   qt_list_t candidates = {0};
@@ -115,7 +116,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
 
       distance = qt->total_weight;/* total_weight is used to store the distance from the center to the group */
       if (distance + wmax*sqrt(((double) dim))*qt->width < *dist_max) continue;/* this could happen if this candidate was entered into the list earlier than a better one later in the list */
-      qt->qts = MALLOC(sizeof(QuadTree)*(1<<dim));
+      qt->qts = gv_calloc(1 << dim, sizeof(QuadTree));
       for (ii = 0; ii < 1<<dim; ii++) {
 	qt->qts[ii] = QuadTree_new_in_quadrant(qt->dim, qt->center, (qt->width)/2, max_level, ii);
 	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->center);/* store distance in total_weight */
