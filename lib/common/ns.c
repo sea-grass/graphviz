@@ -753,7 +753,7 @@ static void TB_balance(void)
 {
     node_t *n;
     edge_t *e;
-    int low, high, choice, *nrank;
+    int low, high, choice;
     int inweight, outweight;
     int adj = 0;
     char *s;
@@ -761,7 +761,7 @@ static void TB_balance(void)
     scan_and_normalize();
 
     /* find nodes that are not tight and move to less populated ranks */
-    nrank = N_NEW(Maxrank + 1, int);
+    int *nrank = gv_calloc(Maxrank + 1, sizeof(int));
     for (int i = 0; i <= Maxrank; i++)
 	nrank[i] = 0;
     if ( (s = agget(G,"TBbalance")) ) {
