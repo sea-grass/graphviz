@@ -3092,7 +3092,7 @@ static void point_init(node_t * n)
         // periphery with penwidth taken into account
         ++outp;
     }
-    vertices = N_NEW(outp * sides, pointf);
+    vertices = gv_calloc(outp * sides, sizeof(pointf));
     P.y = P.x = sz / 2.;
     vertices[0].x = -P.x;
     vertices[0].y = -P.y;
