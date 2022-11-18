@@ -172,10 +172,10 @@ conjugate_gradient_mkernel(float *A, float *x, float *b, int n,
     int i, rv = 0;
 
     double alpha, beta, r_r, r_r_new, p_Ap;
-    float *r = N_NEW(n, float);
-    float *p = N_NEW(n, float);
-    float *Ap = N_NEW(n, float);
-    float *Ax = N_NEW(n, float);
+    float *r = gv_calloc(n, sizeof(float));
+    float *p = gv_calloc(n, sizeof(float));
+    float *Ap = gv_calloc(n, sizeof(float));
+    float *Ax = gv_calloc(n, sizeof(float));
 
     /* centering x and b  */
     orthog1f(n, x);
