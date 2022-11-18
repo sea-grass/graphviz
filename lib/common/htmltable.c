@@ -1476,8 +1476,8 @@ static void sizeArray(htmltbl_t * tbl)
 	return;
     }
 
-    tbl->heights = N_NEW(tbl->row_count + 1, double);
-    tbl->widths = N_NEW(tbl->column_count + 1, double);
+    tbl->heights = gv_calloc(tbl->row_count + 1, sizeof(double));
+    tbl->widths = gv_calloc(tbl->column_count + 1, sizeof(double));
 
     rowg = agopen("rowg", dir, NULL);
     colg = agopen("colg", dir, NULL);
