@@ -3900,7 +3900,7 @@ static shape_desc *user_shape(char *name)
     if ((p = find_user_shape(name)))
 	return p;
     size_t i = N_UserShape++;
-    UserShape = ALLOC(N_UserShape, UserShape, shape_desc *);
+    UserShape = gv_recalloc(UserShape, N_UserShape - 1, N_UserShape, sizeof(shape_desc *));
     p = UserShape[i] = gv_alloc(sizeof(shape_desc));
     *p = Shapes[0];
     p->name = strdup(name);
