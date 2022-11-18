@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <common/memory.h>
 #include <stdio.h>
 
@@ -36,7 +37,7 @@ typedef struct {
 static void
 PQgen(PQ* pq, int sz, PQTYPE guard)
 {
-    pq->pq = N_NEW(sz+1,PQTYPE);
+    pq->pq = gv_calloc(sz + 1, sizeof(PQTYPE));
     pq->pq[0] = guard;
     pq->PQsize = sz;
     pq->PQcnt = 0;
