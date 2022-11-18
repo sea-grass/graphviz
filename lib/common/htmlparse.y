@@ -215,7 +215,7 @@ mkText(void)
     	
     if (cnt) {
 	int i = 0;
-	hft->spans = N_NEW(cnt,htextspan_t);	
+	hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
     	for(fl=dtfirst(ispan); fl; fl=dtnext(ispan,fl)) {
     	    hft->spans[i] = fl->lp;
     	    i++;
