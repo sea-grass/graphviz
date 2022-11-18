@@ -534,7 +534,7 @@ int feasible_tree(void)
 {
   Agnode_t *n;
   Agedge_t *ee;
-  subtree_t **tree, *tree0, *tree1;
+  subtree_t *tree0, *tree1;
   int i, subtree_count = 0;
   STheap_t *heap = NULL;
   int error = 0;
@@ -544,7 +544,7 @@ int feasible_tree(void)
       ND_subtree_set(n,0);
   }
 
-  tree = N_NEW(N_nodes,subtree_t*);
+  subtree_t **tree = gv_calloc(N_nodes, sizeof(subtree_t *));
   /* given init_rank, find all tight subtrees */
   for (n = GD_nlist(G); n; n = ND_next(n)) {
         if (ND_subtree(n) == 0) {
