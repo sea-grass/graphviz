@@ -1226,7 +1226,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	r++;
     }
 
-    cells = tbl->u.n.cells = N_NEW(cnt + 1, htmlcell_t *);
+    cells = tbl->u.n.cells = gv_calloc(cnt + 1, sizeof(htmlcell_t *));
     rp = (pitem *) dtflatten(rows);
     r = 0;
     while (rp) {
