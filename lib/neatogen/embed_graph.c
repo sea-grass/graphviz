@@ -16,7 +16,7 @@
 
 ************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/dijkstra.h>
 #include <neatogen/bfs.h>
 #include <neatogen/kkutils.h>
@@ -37,15 +37,16 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
 
     int i, j;
     int node;
-    DistType *storage = N_GNEW(n * dim, DistType);
+    DistType *storage = gv_calloc(n * dim, sizeof(DistType));
     DistType **coords = *Coords;
-    DistType *dist = N_GNEW(n, DistType);	/* this vector stores  the distances of
-						   each nodes to the selected "pivots" */
+    DistType *dist = gv_calloc(n, sizeof(DistType)); // this vector stores  the
+                                                     // distances of each nodes
+                                                     // to the selected “pivots”
     float *old_weights = graph[0].ewgts;
     DistType max_dist = 0;
 
     /* this matrix stores the distance between each node and each "pivot" */
-    *Coords = coords = N_GNEW(dim, DistType *);
+    *Coords = coords = gv_calloc(dim, sizeof(DistType *));
     for (i = 0; i < dim; i++)
 	coords[i] = storage + i * n;
 
