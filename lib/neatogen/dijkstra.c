@@ -201,7 +201,7 @@ initHeap_f(heap * h, int startVertex, int index[], float dist[], int n)
 {
     int i, count;
     int j;			/* We cannot use an unsigned value in this loop */
-    h->data = N_GNEW(n - 1, int);
+    h->data = gv_calloc(n - 1, sizeof(int));
     h->heapSize = n - 1;
 
     for (count = 0, i = 0; i < n; i++)
