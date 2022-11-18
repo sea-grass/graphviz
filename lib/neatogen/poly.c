@@ -11,6 +11,7 @@
 /* poly.c
  */
 
+#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <assert.h>
 #include <string.h>
@@ -106,14 +107,13 @@ static Point makeScaledPoint(double x, double y)
 
 static Point *genRound(Agnode_t *n, size_t *sidep, float xm, float ym) {
     size_t sides = 0;
-    Point *verts;
     char *p = agget(n, "samplepoints");
 
     int isides = 0;
     if (p)
 	isides = atoi(p);
     sides = isides < 3 ? DFLT_SAMPLE : (size_t)isides;
-    verts = N_GNEW(sides, Point);
+    Point *verts = gv_calloc(sides, sizeof(Point));
     for (size_t i = 0; i < sides; i++) {
 	verts[i].x =
 	    (ND_width(n) / 2.0 + xm) * cos((double)i / (double)sides * M_PI * 2.0);
