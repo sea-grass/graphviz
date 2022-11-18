@@ -24,6 +24,7 @@
 #include <common/colorprocs.h>
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <gvc/gvcint.h>
 #include <common/geom.h>
@@ -556,8 +557,7 @@ void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled) {
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
 		gvre->polygon(job, af, (int)n, filled);
 	    else {
-		pointf *AF;
-		AF = gcalloc(n, sizeof(pointf));
+		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
 		gvre->polygon(job, AF, (int)n, filled);
 		free(AF);
