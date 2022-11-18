@@ -168,7 +168,7 @@ int initLayout(int n, int dim, double **coords, node_t **nodes) {
 float *circuitModel(vtx_data * graph, int nG)
 {
     int i, j, e, rv, count;
-    float *Dij = N_NEW(nG * (nG + 1) / 2, float);
+    float *Dij = gv_calloc(nG * (nG + 1) / 2, sizeof(float));
     double **Gm;
     double **Gm_inv;
 
