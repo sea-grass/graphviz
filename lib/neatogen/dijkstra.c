@@ -86,7 +86,7 @@ initHeap(heap * h, int startVertex, int index[], Word dist[], int n)
     int i, count;
     int j;    /* We cannot use an unsigned value in this loop */
     if (n == 1) h->data = NULL;
-    else h->data = N_GNEW(n - 1, int);
+    else h->data = gv_calloc(n - 1, sizeof(int));
     h->heapSize = n - 1;
 
     for (count = 0, i = 0; i < n; i++)
