@@ -110,7 +110,7 @@ bool gvplugin_install(GVC_t *gvc, api_t api, const char *typestr, int quality,
         pnext = &(*pnext)->next;
     }
 
-    plugin = GNEW(gvplugin_available_t);
+    plugin = gv_alloc(sizeof(gvplugin_available_t));
     plugin->next = *pnext;
     *pnext = plugin;
     plugin->typestr = t;
