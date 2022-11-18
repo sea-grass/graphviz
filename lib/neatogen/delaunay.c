@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>     /* for agerr() and friends */
 #include <neatogen/delaunay.h>
 #include <common/memory.h>
@@ -482,19 +483,16 @@ mkSurface (double *x, double *y, int n, int* segs, int nsegs)
     estats stats;
     estate state;
     fstate statf;
-    surface_t* sf;
     int nfaces = 0;
-    int* faces; 
-    int* neigh; 
 
     if (!s) return NULL;
 
-    sf = GNEW(surface_t);
+    surface_t *sf = gv_alloc(sizeof(surface_t));
     stats.n = 0;
     stats.delaunay = NULL;
     edgeStats (s, &stats);
     nsegs = stats.n;
-    segs = N_GNEW(2 * nsegs, int);
+    segs = gv_calloc(2 * nsegs, sizeof(int));
 
     state.n = 0;
     state.edges = segs;
@@ -502,8 +500,8 @@ mkSurface (double *x, double *y, int n, int* segs, int nsegs)
 
     gts_surface_foreach_face(s, cntFace, &nfaces);
 
-    faces = N_GNEW(3 * nfaces, int);
-    neigh = N_GNEW(3 * nfaces, int);
+    int *faces = gv_calloc(3 * nfaces, sizeof(int));
+    int *neigh = gv_calloc(3 * nfaces, sizeof(int));
 
     statf.faces = faces;
     statf.neigh = neigh;
