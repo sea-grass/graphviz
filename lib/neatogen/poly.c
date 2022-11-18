@@ -135,7 +135,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	b.x = ND_width(n) / 2.0 + xmargin;
 	b.y = ND_height(n) / 2.0 + ymargin;
 	pp->kind = BOX;
-	verts = N_GNEW(sides, Point);
+	verts = gv_calloc(sides, sizeof(Point));
 	PUTPT(verts[0], b.x, b.y);
 	PUTPT(verts[1], -b.x, b.y);
 	PUTPT(verts[2], -b.x, -b.y);
@@ -157,7 +157,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 		pp->kind = 0;
 
 	    if (sides >= 3) {	/* real polygon */
-		verts = N_GNEW(sides, Point);
+		verts = gv_calloc(sides, sizeof(Point));
 		if (pp->kind == BOX) {
 			/* To do an additive margin, we rely on knowing that
 			 * the vertices are CCW starting from the UR
@@ -186,7 +186,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    break;
 	case SH_RECORD: {
 	    sides = 4;
-	    verts = N_GNEW(sides, Point);
+	    verts = gv_calloc(sides, sizeof(Point));
 	    boxf b = ((field_t*)ND_shape_info(n))->b;
 	    verts[0] = makeScaledTransPoint(b.LL.x, b.LL.y, -xmargin, -ymargin);
 	    verts[1] = makeScaledTransPoint(b.UR.x, b.LL.y, xmargin, -ymargin);
