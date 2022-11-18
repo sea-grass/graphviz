@@ -37,7 +37,6 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
   SparseMatrix D;
   int *ia, *ja, i, j, k, l, nz;
   double *d;
-  int *mask = NULL;
   double len, di, sum, sumd;
 
   assert(SparseMatrix_is_symmetric(A, false));
@@ -48,11 +47,11 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
   if (D->type != MATRIX_TYPE_REAL){
     free(D->a);
     D->type = MATRIX_TYPE_REAL;
-    D->a = N_GNEW(D->nz,double);
+    D->a = gv_calloc(D->nz, sizeof(double));
   }
   d = D->a;
 
-  mask = N_GNEW(D->m,int);
+  int *mask = gv_calloc(D->m, sizeof(int));
   for (i = 0; i < D->m; i++) mask[i] = -1;
 
   for (i = 0; i < D->m; i++){
