@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
 #include <neatogen/conjgrad.h>
 #include <stdbool.h>
@@ -28,13 +28,13 @@ int conjugate_gradient
     int i, rv = 0;
 
     double alpha, beta, r_r, r_r_new, p_Ap;
-    double *r = N_GNEW(n, double);
-    double *p = N_GNEW(n, double);
-    double *Ap = N_GNEW(n, double);
-    double *Ax = N_GNEW(n, double);
-    double *alphap = N_GNEW(n, double);
+    double *r = gv_calloc(n, sizeof(double));
+    double *p = gv_calloc(n, sizeof(double));
+    double *Ap = gv_calloc(n, sizeof(double));
+    double *Ax = gv_calloc(n, sizeof(double));
+    double *alphap = gv_calloc(n, sizeof(double));
 
-    double *orth_b = N_GNEW(n, double);
+    double *orth_b = gv_calloc(n, sizeof(double));
     copy_vector(n, b, orth_b);
     orthog1(n, orth_b);
     orthog1(n, x);
