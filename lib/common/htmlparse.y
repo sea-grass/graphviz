@@ -177,7 +177,7 @@ appendFLineList (int v)
     if (cnt) {
         int i = 0;
 	ln->lp.nitems = cnt;
-	ln->lp.items = N_NEW(cnt, textspan_t);
+	ln->lp.items = gv_calloc(cnt, sizeof(textspan_t));
 
 	fi = (fitem*)dtflatten(ilist);
 	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
