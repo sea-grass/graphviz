@@ -1262,6 +1262,9 @@ static point pagecode(GVJ_t *job, char c)
 	job->pagesArrayFirst.x = job->pagesArraySize.x - 1;
 	rv.x = -1;
 	break;
+    default:
+	// ignore; will trigger a warning later in our caller
+	break;
     }
     return rv;
 }
