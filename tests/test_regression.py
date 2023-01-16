@@ -86,7 +86,8 @@ def test_42():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it with Graphviz
-  subprocess.check_call(["neato", "-n2", "-Tpng", input],
+  neato = which("neato")
+  subprocess.check_call([neato, "-n2", "-Tpng", input],
                         stdout=subprocess.DEVNULL)
 
 def test_56():
@@ -340,11 +341,13 @@ def test_517():
     '}'
 
   # translate it to GXL
-  gxl = subprocess.check_output(["gv2gxl"], input=input,
+  gv2gxl = which("gv2gxl")
+  gxl = subprocess.check_output([gv2gxl], input=input,
     universal_newlines=True)
 
   # translate this back to Dot
-  dot_output = subprocess.check_output(["gxl2gv"], input=gxl,
+  gxl2gv = which("gxl2gv")
+  dot_output = subprocess.check_output([gxl2gv], input=gxl,
     universal_newlines=True)
 
   # the result should have both expected labels somewhere
@@ -449,7 +452,8 @@ def test_1276():
         '}'
 
   # process this to GML
-  gml = subprocess.check_output(["gv2gml"], input=src, universal_newlines=True)
+  gv2gml = which("gv2gml")
+  gml = subprocess.check_output([gv2gml], input=src, universal_newlines=True)
 
   # the unescaped label should not appear in the output
   assert '""Label""' not in gml, "quotes not escaped in label"
@@ -591,7 +595,8 @@ def test_1594():
   input = Path(__file__).parent / "1594.gvpr"
 
   # run GVPR with our (malformed) input program
-  with subprocess.Popen(["gvpr", "-f", input], stdin=subprocess.PIPE,
+  gvpr = which("gvpr")
+  with subprocess.Popen([gvpr, "-f", input], stdin=subprocess.PIPE,
                         stdout=subprocess.DEVNULL, stderr=subprocess.PIPE,
                         universal_newlines=True) as p:
     _, stderr = p.communicate()
@@ -754,7 +759,8 @@ def test_1813():
 
   environ_copy = os.environ.copy()
   environ_copy.pop("DISPLAY", None)
-  output = subprocess.check_output(["gvedit", "-?"],
+  gvedit = which("gvedit")
+  output = subprocess.check_output([gvedit, "-?"],
     env=environ_copy,
     universal_newlines=True)
 
@@ -839,7 +845,8 @@ def test_1865():
   assert input.exists(), "unexpectedly missing test case"
 
   # fdp should not crash when processing this file
-  subprocess.check_call(["fdp", "-o", os.devnull, input])
+  fdp = which("fdp")
+  subprocess.check_call([fdp, "-o", os.devnull, input])
 
 @pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
 @pytest.mark.skipif(which("gml2gv") is None, reason="gml2gv not available")
@@ -854,10 +861,12 @@ def test_1871(penwidth: str):
   input = f"graph {{ a [penwidth={penwidth}] }}"
 
   # pass it through gv2gml
-  gv = subprocess.check_output(["gv2gml"], input=input, universal_newlines=True)
+  gv2gml = which("gv2gml")
+  gv = subprocess.check_output([gv2gml], input=input, universal_newlines=True)
 
   # pass this through gml2gv
-  gml = subprocess.check_output(["gml2gv"], input=gv, universal_newlines=True)
+  gml2gv = which("gml2gv")
+  gml = subprocess.check_output([gml2gv], input=gv, universal_newlines=True)
 
   # the result should have a `penwidth` of 1
   has_1 = re.search(r"\bpenwidth\s*=\s*1[^\.]", gml) is not None
@@ -876,8 +885,9 @@ def test_1876():
   input = "graph { a }"
 
   # process this with fdp
+  fdp = which("fdp")
   try:
-    output = subprocess.check_output(["fdp"], input=input,
+    output = subprocess.check_output([fdp], input=input,
       universal_newlines=True)
   except subprocess.CalledProcessError as e:
     raise RuntimeError("fdp failed to process trivial graph") from e
@@ -896,7 +906,8 @@ def test_1877():
   input = "graph {subgraph cluster_a {}; cluster_a -- b}"
 
   # fdp should be able to process this
-  subprocess.run(["fdp", "-o", os.devnull], input=input, check=True,
+  fdp = which("fdp")
+  subprocess.run([fdp, "-o", os.devnull], input=input, check=True,
     universal_newlines=True)
 
 def test_1880():
@@ -996,7 +1007,8 @@ def test_1869(variant: int):
   assert input.exists(), "unexpectedly missing test case"
 
   # ask gml2gv to translate it to DOT
-  output = subprocess.check_output(["gml2gv", input],
+  gml2gv = which("gml2gv")
+  output = subprocess.check_output([gml2gv, input],
     universal_newlines=True)
 
   assert "style=dashed" in output, "style=dashed not found in DOT output"
@@ -1068,7 +1080,8 @@ def test_1907():
   input = "digraph { A -> B -> C }"
 
   # generate an SVG from this input with twopi
-  output = subprocess.check_output(["twopi", "-Tsvg"], input=input,
+  twopi = which("twopi")
+  output = subprocess.check_output([twopi, "-Tsvg"], input=input,
     universal_newlines=True)
 
   assert "<title>A&#45;&gt;B</title>" in output, \
@@ -1086,7 +1099,8 @@ def test_1909():
   graph = Path(__file__).parent / "1909.dot"
 
   # run GVPR with the given input
-  output = subprocess.check_output(["gvpr", "-c", "-f", prog, graph],
+  gvpr = which("gvpr")
+  output = subprocess.check_output([gvpr, "-c", "-f", prog, graph],
     universal_newlines=True)
 
   # we should have produced this graph without names like "%2" in it
@@ -1224,7 +1238,7 @@ def test_1971():
 
   # run edgepaint with an invalid option, `-rabbit`, that happens to have the
   # same first character as valid options
-  args = ["edgepaint", "-rabbit"]
+  args = [which("edgepaint"), "-rabbit"]
   with subprocess.Popen(args, stdin=subprocess.PIPE,
                         universal_newlines=True) as p:
     p.communicate(input)
@@ -1245,7 +1259,8 @@ def test_1990():
   assert input.exists(), "unexpectedly missing test case"
 
   # process it with Graphviz
-  subprocess.check_call(["circo", "-Tsvg", "-o", os.devnull, input])
+  circo = which("circo")
+  subprocess.check_call([circo, "-Tsvg", "-o", os.devnull, input])
 
 def test_2057():
   """
@@ -1369,7 +1384,8 @@ def test_2092():
   an empty node ID should not cause a dot2gxl NULL pointer dereference
   https://gitlab.com/graphviz/graphviz/-/issues/2092
   """
-  p = subprocess.run(["dot2gxl", "-d"], input='<node id="">',
+  dot2gxl = which("dot2gxl")
+  p = subprocess.run([dot2gxl, "-d"], input='<node id="">',
                      universal_newlines=True)
 
   assert p.returncode != 0, "dot2gxl accepted invalid input"
@@ -1382,7 +1398,8 @@ def test_2093():
   dot2gxl should handle elements with no ID
   https://gitlab.com/graphviz/graphviz/-/issues/2093
   """
-  with subprocess.Popen(["dot2gxl", "-d"], stdin=subprocess.PIPE,
+  dot2gxl = which("dot2gxl")
+  with subprocess.Popen([dot2gxl, "-d"], stdin=subprocess.PIPE,
                         universal_newlines=True) as p:
     p.communicate('<graph x="">')
 
@@ -1416,8 +1433,9 @@ def test_2131():
   input = "digraph { a -> b; }"
 
   # ask gv2gml what it thinks of this
+  gv2gml = which("gv2gml")
   try:
-    subprocess.run(["gv2gml"], input=input, check=True,
+    subprocess.run([gv2gml], input=input, check=True,
                    universal_newlines=True)
   except subprocess.CalledProcessError as e:
     raise RuntimeError("gv2gml rejected a basic graph") from e
@@ -1435,7 +1453,8 @@ def test_2138(examine: str):
   assert script.exists(), "missing test case"
 
   # run it with NUL input
-  out = subprocess.check_output(["gvpr", "-f", script],
+  gvpr = which("gvpr")
+  out = subprocess.check_output([gvpr, "-f", script],
                                 stdin=subprocess.DEVNULL)
 
   # Decode into text. We do this instead of `universal_newlines=True` above
@@ -1514,7 +1533,8 @@ def test_2184_1():
   # run `nop` on a sample with a labelled graph node at the end
   source = Path(__file__).parent / "2184.dot"
   assert source.exists(), "missing test case"
-  nopped = subprocess.check_output(["nop", source], universal_newlines=True)
+  nop = which("nop")
+  nopped = subprocess.check_output([nop, source], universal_newlines=True)
 
   # the normalized output should have a graph with no label within
   # `clusterSurround1`
@@ -1565,7 +1585,8 @@ def test_2185_2():
   assert script.exists(), "missing test case"
 
   # run this with NUL input
-  out = subprocess.check_output(["gvpr", "-f", script],
+  gvpr = which("gvpr")
+  out = subprocess.check_output([gvpr, "-f", script],
                                 stdin=subprocess.DEVNULL)
 
   # decode output in a separate step to gracefully cope with garbage unicode
@@ -1589,7 +1610,8 @@ def test_2185_3():
   assert script.exists(), "missing test case"
 
   # run this with NUL input
-  out = subprocess.check_output(["gvpr", "-f", script],
+  gvpr = which("gvpr")
+  out = subprocess.check_output([gvpr, "-f", script],
                                 stdin=subprocess.DEVNULL)
 
   # decode output in a separate step to gracefully cope with garbage unicode
@@ -1613,7 +1635,8 @@ def test_2185_4():
   assert script.exists(), "missing test case"
 
   # run this with NUL input
-  out = subprocess.check_output(["gvpr", "-f", script],
+  gvpr = which("gvpr")
+  out = subprocess.check_output([gvpr, "-f", script],
                                 stdin=subprocess.DEVNULL)
 
   # decode output in a separate step to gracefully cope with garbage unicode
@@ -1637,7 +1660,8 @@ def test_2185_5():
   assert script.exists(), "missing test case"
 
   # run this with NUL input
-  out = subprocess.check_output(["gvpr", "-f", script],
+  gvpr = which("gvpr")
+  out = subprocess.check_output([gvpr, "-f", script],
                                 stdin=subprocess.DEVNULL)
 
   # decode output in a separate step to gracefully cope with garbage unicode
@@ -1865,7 +1889,8 @@ def test_gvmap_fclose():
           '}'
 
   # pass this through gvmap
-  subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)
+  gvmap = which("gvmap")
+  subprocess.run([gvmap], input=input.encode("utf-8"), check=True)
 
 @pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
 def test_gvpr_usage():
@@ -1877,7 +1902,8 @@ def test_gvpr_usage():
   with tempfile.TemporaryDirectory() as tmp:
 
     # ask GVPR to process a non-existent file
-    with subprocess.Popen(["gvpr", "-f", "nofile"], stderr=subprocess.PIPE,
+    gvpr = which("gvpr")
+    with subprocess.Popen([gvpr, "-f", "nofile"], stderr=subprocess.PIPE,
                           cwd=tmp, universal_newlines=True) as p:
       _, stderr = p.communicate()
 
@@ -1898,7 +1924,8 @@ def test_2225():
   assert input.exists(), "unexpectedly missing test case"
 
   # run this through sfdp
-  p = subprocess.run(["sfdp", "-Gsplines=curved", "-o", os.devnull, input],
+  sfdp = which("sfdp")
+  p = subprocess.run([sfdp, "-Gsplines=curved", "-o", os.devnull, input],
                      stderr=subprocess.PIPE, universal_newlines=True)
 
   # if sfdp was built without libgts, it will not handle anything non-trivial
