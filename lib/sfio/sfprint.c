@@ -176,6 +176,9 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			}
 		    }
 		    goto loop_flags;
+		default:
+		    // skip over
+		    break;
 		}
 	    }
 
