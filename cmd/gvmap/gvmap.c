@@ -56,7 +56,7 @@ typedef struct {
     int maxcluster;
     int nedgep;
     const char *line_color;
-    int include_OK_points;
+    bool include_OK_points;
     int highlight_cluster;
     int seed;      /* seed used to calculate Fiedler vector */
 } params_t;
@@ -171,7 +171,7 @@ init(int argc, char **argv, params_t* pm)
   pm->cmd = cmd;
   pm->infiles = NULL;
   pm->line_color = "#000000";
-  pm->include_OK_points = FALSE;
+  pm->include_OK_points = false;
   pm->seed = 123;
 
   pm->bbox_margin = 0;
@@ -219,7 +219,7 @@ init(int argc, char **argv, params_t* pm)
     case 'p': // ignored
       break;
     case 'k':
-      pm->include_OK_points = TRUE;
+      pm->include_OK_points = true;
       break;
     case 'v':
       Verbose = 1;

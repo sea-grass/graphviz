@@ -1002,7 +1002,7 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
   free(mask);
 }
 
-static void make_map_internal(int include_OK_points,
+static void make_map_internal(bool include_OK_points,
 		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin, int nrandom, int nedgep, 
 		      double shore_depth_tol, int *nverts, double **x_poly, 
 		      SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
@@ -1020,7 +1020,7 @@ static void make_map_internal(int include_OK_points,
   struct Triangle *Tp;
   SparseMatrix E;
   double boxsize[2];
-  int INCLUDE_OK_POINTS = include_OK_points;/* OK points are random points inserted and found to be within shore_depth_tol of real/artificial points,
+  bool INCLUDE_OK_POINTS = include_OK_points;/* OK points are random points inserted and found to be within shore_depth_tol of real/artificial points,
 			      including them instead of throwing away increase realism of boundary */
   int *grouping = grouping0;
 
@@ -1284,7 +1284,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
   }
 }
 
-void make_map_from_rectangle_groups(int include_OK_points,
+void make_map_from_rectangle_groups(bool include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
 				   int *grouping, SparseMatrix graph0, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
