@@ -511,7 +511,6 @@ EXCLUDE = (
     "lib/sfdpgen/spring_electrical.c",
     "lib/sfdpgen/spring_electrical.h",
     "lib/sfdpgen/stress_model.c",
-    "lib/sfdpgen/stress_model.h",
     "lib/sfio/Sfio_f/_sfslen.c",
     "lib/sfio/sfcvt.c",
     "lib/sfio/sfextern.c",
