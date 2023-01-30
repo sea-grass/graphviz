@@ -264,9 +264,8 @@ Agedge_t *agedge(Agraph_t * g, Agnode_t * t, Agnode_t * h, char *name,
 {
     Agedge_t *e;
     IDTYPE my_id;
-    int have_id;
 
-    have_id = agmapnametoid(g, AGEDGE, name, &my_id, FALSE);
+    int have_id = agmapnametoid(g, AGEDGE, name, &my_id, false);
     if (have_id || (name == NULL && (!cflag || agisstrict(g)))) {
 	/* probe for pre-existing edge */
 	Agtag_t key = {0};
@@ -295,7 +294,7 @@ Agedge_t *agedge(Agraph_t * g, Agnode_t * t, Agnode_t * h, char *name,
     }
 
     if (cflag && ok_to_make_edge(g, t, h)
-	&& agmapnametoid(g, AGEDGE, name, &my_id, TRUE)) { /* reserve id */
+	&& agmapnametoid(g, AGEDGE, name, &my_id, true)) { /* reserve id */
 	e = newedge(g, t, h, my_id);
 	agregister(g, AGEDGE, e); /* register new object in external namespace */
     }

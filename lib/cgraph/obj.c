@@ -43,13 +43,11 @@ int agrename(Agobj_t * obj, char *newname)
 	old_id = AGID(obj);
 	g = agraphof(obj);
 	/* can we reserve the id corresponding to newname? */
-	if (agmapnametoid(agroot(g), AGTYPE(obj), newname,
-			  &new_id, FALSE) == 0)
+	if (agmapnametoid(agroot(g), AGTYPE(obj), newname, &new_id, false) == 0)
 	    return FAILURE;
 	if (new_id == old_id)
 	    return SUCCESS;
-	if (agmapnametoid(agroot(g), AGTYPE(obj), newname,
-			  &new_id, TRUE) == 0)
+	if (agmapnametoid(agroot(g), AGTYPE(obj), newname, &new_id, true) == 0)
 	    return FAILURE;
         /* obj* is unchanged, so no need to re agregister() */
 	if (agparent(g) && agidsubg(agparent(g), new_id, 0))

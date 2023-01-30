@@ -29,7 +29,7 @@ static Agnode_t *agfindnode_by_name(Agraph_t * g, char *name)
 {
     IDTYPE id;
 
-    if (agmapnametoid(g, AGNODE, name, &id, FALSE))
+    if (agmapnametoid(g, AGNODE, name, &id, false))
 	return agfindnode_by_id(g, id);
     else
 	return NULL;
@@ -150,7 +150,7 @@ Agnode_t *agnode(Agraph_t * g, char *name, int cflag)
 
     root = agroot(g);
     /* probe for existing node */
-    if (agmapnametoid(g, AGNODE, name, &id, FALSE)) {
+    if (agmapnametoid(g, AGNODE, name, &id, false)) {
 	if ((n = agfindnode_by_id(g, id)))
 	    return n;
 
@@ -160,7 +160,7 @@ Agnode_t *agnode(Agraph_t * g, char *name, int cflag)
 	}
     }
 
-    if (cflag && agmapnametoid(g, AGNODE, name, &id, TRUE)) {	/* reserve id */
+    if (cflag && agmapnametoid(g, AGNODE, name, &id, true)) {	/* reserve id */
 	n = newnode(g, id, agnextseq(g, AGNODE));
 	installnodetoroot(g, n);
 	initnode(g, n);
@@ -240,7 +240,7 @@ int agrelabel_node(Agnode_t * n, char *newname)
     g = agroot(agraphof(n));
     if (agfindnode_by_name(g, newname))
 	return FAILURE;
-    if (agmapnametoid(g, AGNODE, newname, &new_id, TRUE)) {
+    if (agmapnametoid(g, AGNODE, newname, &new_id, true)) {
 	if (agfindnode_by_id(agroot(g), new_id) == NULL) {
 	    agfreeid(g, AGNODE, AGID(n));
 	    agapply(g, (Agobj_t*)n, (agobjfn_t)dict_relabel, &new_id, FALSE);

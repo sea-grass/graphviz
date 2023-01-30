@@ -54,7 +54,7 @@ Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * arg_disc)
     g->desc.maingraph = true;
     g->root = g;
     g->clos->state.id = g->clos->disc.id->open(g, arg_disc);
-    if (agmapnametoid(g, AGRAPH, name, &gid, TRUE))
+    if (agmapnametoid(g, AGRAPH, name, &gid, true))
 	AGID(g) = gid;
     g = agopen1(g);
     agregister(g, AGRAPH, g);

@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <cgraph/cghdr.h>
 #include <inttypes.h>
@@ -95,8 +96,7 @@ Agiddisc_t AgIdDisc = {
 /* aux functions incl. support for disciplines with anonymous IDs */
 
 int agmapnametoid(Agraph_t * g, int objtype, char *str,
-          IDTYPE *result, int createflag)
-{
+          IDTYPE *result, bool createflag) {
     int rv;
 
     if (str && str[0] != LOCALNAMEPREFIX) {
