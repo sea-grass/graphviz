@@ -15,6 +15,7 @@
 
 #include <common/geom.h>
 #include <common/geomprocs.h>
+#include <stdbool.h>
 
 /*
  *--------------------------------------------------------------
@@ -40,17 +41,13 @@
 
 int lineToBox(pointf p, pointf q, boxf b)
 {
-    int inside1, inside2;
-
     /*
      * First check the two points individually to see whether they
      * are inside the rectangle or not.
      */
 
-    inside1 = (p.x >= b.LL.x) && (p.x <= b.UR.x)
-            && (p.y >= b.LL.y) && (p.y <= b.UR.y);
-    inside2 = (q.x >= b.LL.x) && (q.x <= b.UR.x)
-            && (q.y >= b.LL.y) && (q.y <= b.UR.y);
+    bool inside1 = INSIDE(p, b);
+    bool inside2 = INSIDE(q, b);
     if (inside1 != inside2) {
         return 0;
     }
