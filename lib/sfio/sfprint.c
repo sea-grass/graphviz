@@ -499,6 +499,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    goto int_arg;
 	case 'X':
 	    ssp = "0123456789ABCDEF";
+	    // fall through
 	case 'x':
 	    base = 16;
 	    n_s = 15;
@@ -510,6 +511,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    goto d_format;
 	case 'u':
 	    flags &= ~(SFFMT_SIGN | SFFMT_BLANK);
+	    // fall through
 	case 'd':
 	  d_format:
 	    if (base < 2 || base > SF_RADIX)
