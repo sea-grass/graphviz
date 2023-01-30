@@ -39,7 +39,6 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 	data->here = NULL;
 	data->htab = NULL;
 	data->ntab = data->size = data->loop = 0;
-	data->minp = 0;
 
 	dt->data = data;
 	dt->searchf = meth->searchf;

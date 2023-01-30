@@ -15,10 +15,6 @@ static void dthtab(Dt_t* dt)
 	Dtlink_t	*t, *r, *p, **s, **hs, **is, **olds;
 	int n;
 
-	if(dt->data->minp > 0 && dt->data->ntab > 0) /* fixed table size */
-		return;
-	dt->data->minp = 0;
-
 	/* compute new table size */
 	if((n = dt->data->ntab) == 0)
 		n = HSLOT;

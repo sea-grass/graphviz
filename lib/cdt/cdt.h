@@ -83,8 +83,6 @@ struct _dtdata_s
 	int		ntab;	/* number of hash slots			*/
 	int		size;	/* number of objects			*/
 	int		loop;	/* number of nested loops		*/
-	int		minp;	/* min path before splay, always even	*/
-				/* for hash dt, > 0: fixed table size 	*/
 };
 
 /* structure to hold methods that manipulate an object */

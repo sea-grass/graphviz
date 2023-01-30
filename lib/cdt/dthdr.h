@@ -23,9 +23,6 @@
 #define DT_MALLOC	0
 #define DT_MEMORYF	1
 
-/* max search length before splaying */
-#define DT_MINP		(sizeof(size_t)*8 - 2)
-
 /* hash start size and load factor */
 #define HSLOT		(256)
 #define HRESIZE(n)	((n) << 1)

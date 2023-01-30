@@ -15,8 +15,6 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	if(!meth || meth->type == oldmeth->type)
 		return oldmeth;
 
-	dt->data->minp = 0;
-
 	/* get the list of elements */
 	list = dtflatten(dt);
 

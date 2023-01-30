@@ -15,7 +15,6 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 	int		cmp, lk, sz, ky;
 	void		*o, *k, *key;
 	Dtlink_t	*l, *r, *me = NULL, link;
-	int		n, minp, turn[DT_MINP];
 	Dtcompar_f	cmpf;
 	Dtdisc_t*	disc;
 
@@ -94,51 +93,6 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 	else if(root && _DTOBJ(root,lk) != obj)
 	{	key = _DTKEY(obj,ky,sz);
 	do_search:
-		if(dt->meth->type == DT_OSET &&
-		   (minp = dt->data->minp) != 0 && (type&(DT_MATCH|DT_SEARCH)) )
-		{	/* simple search, note that minp should be even */
-			for(t = root, n = 0; n < minp; ++n)
-			{	k = _DTOBJ(t,lk); k = _DTKEY(k,ky,sz);
-				if((cmp = _DTCMP(dt,key,k,disc,cmpf,sz)) == 0)
-					return _DTOBJ(t,lk);
-				else
-				{	turn[n] = cmp;	
-					if(!(t = cmp < 0 ? t->left : t->right) )
-						return NULL;
-				}
-			}
-
-			/* exceed search length, top-down splay now */
-			for(n = 0; n < minp; n += 2)
-			{	if(turn[n] < 0)
-				{	t = root->left;
-					if(turn[n+1] < 0)
-					{	rrotate(root,t);
-						rlink(r,t);
-						root = t->left;
-					}
-					else
-					{	llink(l,t);
-						rlink(r,root);
-						root = t->right;
-					}
-				}
-				else
-				{	t = root->right;
-					if(turn[n+1] > 0)
-					{	lrotate(root,t);
-						llink(l,t);
-						root = t->right;
-					}
-					else
-					{	rlink(r,t);
-						llink(l,root);
-						root = t->left;
-					}
-				}
-			}
-		}
-
 		while(1)
 		{	k = _DTOBJ(root,lk); k = _DTKEY(k,ky,sz);
 			if((cmp = _DTCMP(dt,key,k,disc,cmpf,sz)) == 0)
