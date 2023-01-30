@@ -51,7 +51,7 @@ int lineToBox(pointf p, pointf q, boxf b)
     if (inside1 != inside2) {
         return 0;
     }
-    if (inside1 & inside2) {
+    if (inside1 && inside2) {
         return 1;
     }
 
