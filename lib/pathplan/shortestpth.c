@@ -94,7 +94,7 @@ int *makePath(Ppoint_t p, int pp, COORD * pvis,
     int V = conf->N;
 
     if (directVis(p, pp, q, qp, conf)) {
-	int *dad = malloc(sizeof(int) * (V + 2));
+	int *dad = gv_calloc(V + 2, sizeof(int));
 	dad[V] = V + 1;
 	dad[V + 1] = -1;
 	return dad;
