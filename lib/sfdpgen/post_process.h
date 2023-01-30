@@ -44,7 +44,8 @@ typedef  StressMajorizationSmoother TriangleSmoother;
 
 void TriangleSmoother_delete(TriangleSmoother sm);
 
-TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda, double *x, int use_triangularization);
+TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
+                                      int use_triangularization);
 
 void TriangleSmoother_smooth(TriangleSmoother sm, int dim, double *x);
 
