@@ -19,15 +19,11 @@ static void dthtab(Dt_t* dt)
 		return;
 	dt->data->minp = 0;
 
-	n = 0;
-
 	/* compute new table size */
-	if(n <= 0)
-	{	if((n = dt->data->ntab) == 0)
-			n = HSLOT;
-		while(dt->data->size > HLOAD(n))
-			n = HRESIZE(n);
-	}
+	if((n = dt->data->ntab) == 0)
+		n = HSLOT;
+	while(dt->data->size > HLOAD(n))
+		n = HRESIZE(n);
 	if(n == dt->data->ntab)
 		return;
 
