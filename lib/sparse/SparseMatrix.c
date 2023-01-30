@@ -301,7 +301,6 @@ static SparseMatrix SparseMatrix_init(int m, int n, int type, size_t sz, int for
   case FORMAT_COORD:
     A->ia = NULL;
     break;
-  case FORMAT_CSC:
   case FORMAT_CSR:
   default:
     A->ia = gv_calloc((size_t)(m + 1), sizeof(int));
@@ -325,7 +324,6 @@ static SparseMatrix SparseMatrix_alloc(SparseMatrix A, int nz){
     A->a = gv_calloc(nz_t, A->size);
     break;
   case FORMAT_CSR:
-  case FORMAT_CSC:
   default:
     A->ja = gv_calloc(nz_t, sizeof(int));
     if (A->size > 0 && nz_t > 0) {
@@ -354,7 +352,6 @@ static SparseMatrix SparseMatrix_realloc(SparseMatrix A, int nz){
     } 
     break;
   case FORMAT_CSR:
-  case FORMAT_CSC:
   default:
     A->ja = gv_recalloc(A->ja, A->nzmax, nz_t, sizeof(int));
     if (A->size > 0) {
@@ -541,10 +538,6 @@ void SparseMatrix_export(FILE *f, SparseMatrix A){
   switch (A->format){
   case FORMAT_CSR:
     SparseMatrix_export_csr(f, A);
-    break;
-  case FORMAT_CSC:
-    assert(0);/* not implemented yet...
-		 SparseMatrix_print_csc(c, A);*/
     break;
   case FORMAT_COORD:
     SparseMatrix_export_coord(f, A);
