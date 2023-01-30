@@ -55,7 +55,7 @@ typedef struct {
     agxbuf xml_attr_name;
     agxbuf xml_attr_value;
     agxbuf composite_buffer;
-    int listen;
+    bool listen;
     attr_t closedElementType;
     attr_t globalAttrType;
     bool compositeReadState;
@@ -105,7 +105,7 @@ static Dtdisc_t nameDisc = {
 
 static userdata_t genUserdata(void) {
   userdata_t user = {0};
-  user.listen = FALSE;
+  user.listen = false;
   user.closedElementType = TAG_NONE;
   user.globalAttrType = TAG_NONE;
   user.compositeReadState = false;
@@ -509,7 +509,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	       || strcmp(name, "bool") == 0
 	       || strcmp(name, "int") == 0 || strcmp(name, "float") == 0) {
 
-	ud->listen = TRUE;
+	ud->listen = true;
 	if (ud->compositeReadState) {
 	    agxbprint(&ud->composite_buffer, "<%s>", name);
 	}
@@ -594,7 +594,7 @@ static void endElementHandler(void *userData, const char *name)
     } else if (strcmp(name, "string") == 0
 	       || strcmp(name, "bool") == 0
 	       || strcmp(name, "int") == 0 || strcmp(name, "float") == 0) {
-	ud->listen = FALSE;
+	ud->listen = false;
 	if (ud->compositeReadState) {
 	    agxbprint(&ud->composite_buffer, "</%s>", name);
 	}
