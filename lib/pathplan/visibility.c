@@ -144,7 +144,7 @@ static bool inCone(int i, int j, Ppoint_t pts[], int nextPt[], int prevPt[])
  */
 static bool clear(Ppoint_t pti, Ppoint_t ptj,
 		 int start, int end,
-		 int V, Ppoint_t pts[], int nextPt[], int prevPt[])
+		 int V, Ppoint_t pts[], int nextPt[])
 {
     int k;
 
@@ -193,7 +193,7 @@ static void compVis(vconfig_t * conf) {
 	for (; j >= 0; j--) {
 	    if (inCone(i, j, pts, nextPt, prevPt) &&
 		inCone(j, i, pts, nextPt, prevPt) &&
-		clear(pts[i], pts[j], V, V, V, pts, nextPt, prevPt)) {
+		clear(pts[i], pts[j], V, V, V, pts, nextPt)) {
 		/* if i and j see each other, add edge */
 		d = dist(pts[i], pts[j]);
 		wadj[i][j] = d;
@@ -268,7 +268,7 @@ COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
     for (k = 0; k < start; k++) {
 	pk = pts[k];
 	if (in_cone(pts[prevPt[k]], pk, pts[nextPt[k]], p) &&
-	    clear(p, pk, start, end, V, pts, nextPt, prevPt)) {
+	    clear(p, pk, start, end, V, pts, nextPt)) {
 	    /* if p and pk see each other, add edge */
 	    d = dist(p, pk);
 	    vadj[k] = d;
@@ -282,7 +282,7 @@ COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
     for (k = end; k < V; k++) {
 	pk = pts[k];
 	if (in_cone(pts[prevPt[k]], pk, pts[nextPt[k]], p) &&
-	    clear(p, pk, start, end, V, pts, nextPt, prevPt)) {
+	    clear(p, pk, start, end, V, pts, nextPt)) {
 	    /* if p and pk see each other, add edge */
 	    d = dist(p, pk);
 	    vadj[k] = d;
