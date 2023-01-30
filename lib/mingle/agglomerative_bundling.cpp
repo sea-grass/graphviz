@@ -299,7 +299,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   } else {
     if (Verbose > 1) fprintf(stderr,"no more improvement, orig ink = %f, gain = %f, stop and final bundling found\n", grand_total_ink, grand_total_gain);
     /* no more improvement, stop and final bundling found */
-    for (i = 0; i < n; i++) matching[i] = i;
   }
 
  RETURN:
