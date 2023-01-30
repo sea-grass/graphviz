@@ -53,7 +53,7 @@ spring_electrical_control spring_electrical_control_new(void){
   ctrl->beautify_leaves = false;
   ctrl->smoothing = SMOOTHING_NONE;
   ctrl->overlap = 0;
-  ctrl->do_shrinking = 1;
+  ctrl->do_shrinking = true;
   ctrl->tscheme = QUAD_TREE_HYBRID;
   ctrl->initial_scaling = -4;
   ctrl->rotation = 0.;
@@ -85,7 +85,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
            (int)ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
-    smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, ctrl->do_shrinking);
+    smoothings[ctrl->smoothing], ctrl->overlap, ctrl->initial_scaling, (int)ctrl->do_shrinking);
   fprintf (stderr, "  octree scheme %s\n", tschemes[ctrl->tscheme]);
   fprintf (stderr, "  edge_labeling_scheme %d\n", ctrl->edge_labeling_scheme);
 }
@@ -1461,7 +1461,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
     assert(!(*flag));
     attach_edge_label_coordinates(dim, A, n_edge_label_nodes, edge_label_nodes, x, x2);
     remove_overlap(dim, A, x, label_sizes, ctrl->overlap, ctrl->initial_scaling,
-		   ctrl->edge_labeling_scheme, n_edge_label_nodes, edge_label_nodes, A, ctrl->do_shrinking != 0);
+		   ctrl->edge_labeling_scheme, n_edge_label_nodes, edge_label_nodes, A, ctrl->do_shrinking);
     SparseMatrix_delete(A2);
     free(x2);
     if (A != A0) SparseMatrix_delete(A);
@@ -1546,7 +1546,7 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
 
 
   remove_overlap(dim, A, x, label_sizes, ctrl->overlap, ctrl->initial_scaling,
-		 ctrl->edge_labeling_scheme, n_edge_label_nodes, edge_label_nodes, A, ctrl->do_shrinking != 0);
+		 ctrl->edge_labeling_scheme, n_edge_label_nodes, edge_label_nodes, A, ctrl->do_shrinking);
 
  RETURN:
   *ctrl = ctrl0;

@@ -43,7 +43,7 @@ struct spring_electrical_control_struct {
   bool beautify_leaves : 1;
   int smoothing;
   int overlap;
-  int do_shrinking;
+  bool do_shrinking;
   int tscheme; /* octree scheme. 0 (no octree), 1 (normal), 2 (fast) */
   double initial_scaling;/* how to scale the layout of the graph before passing to overlap removal algorithm.
 			  positive values are absolute in points, negative values are relative
