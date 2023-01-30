@@ -474,7 +474,7 @@ static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode
 	    if (cs->action)
 		exeval(prog, cs->action, state);
 	    else
-		agsubnode(state->target, n, TRUE);
+		agsubnode(state->target, n, 1);
 	}
     }
     return (state->curobj);

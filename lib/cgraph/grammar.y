@@ -409,7 +409,7 @@ static void endedge(void)
 		if (p->tag == T_subgraph) {
 			subg = p->u.subg;
 			for (t = agfstnode(subg); t; t = agnxtnode(subg,t))
-				edgerhs(agsubnode(S->g,t,FALSE),NULL,p->next,key);
+				edgerhs(agsubnode(S->g, t, 0), NULL, p->next, key);
 		}
 		else {
 			for (tptr = p->u.list; tptr; tptr = tptr->next)
@@ -473,11 +473,11 @@ static void edgerhs(Agnode_t *tail, char *tport, item *hlist, char *key)
 	if (hlist->tag == T_subgraph) {
 		subg = hlist->u.subg;
 		for (head = agfstnode(subg); head; head = agnxtnode(subg,head))
-			newedge(tail,tport,agsubnode(S->g,head,FALSE),NULL,key);
+			newedge(tail, tport, agsubnode(S->g, head, 0), NULL, key);
 	}
 	else {
 		for (hptr = hlist->u.list; hptr; hptr = hptr->next)
-			newedge(tail,tport,agsubnode(S->g,hptr->u.n,FALSE),hptr->str,key);
+			newedge(tail, tport, agsubnode(S->g, hptr->u.n, 0), hptr->str, key);
 	}
 }
 

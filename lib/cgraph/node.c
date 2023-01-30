@@ -128,7 +128,7 @@ Agnode_t *agidnode(Agraph_t * g, IDTYPE id, int cflag)
     if (n == NULL && cflag) {
 	root = agroot(g);
 	if ((g != root) && ((n = agfindnode_by_id(root, id))))	/*old */
-	    agsubnode(g, n, TRUE);	/* insert locally */
+	    agsubnode(g, n, 1);	/* insert locally */
 	else {
 	    if (agallocid(g, AGNODE, id)) {	/* new */
 		n = newnode(g, id, agnextseq(g, AGNODE));
@@ -156,7 +156,7 @@ Agnode_t *agnode(Agraph_t * g, char *name, int cflag)
 
 	/* might already exist globally, but need to insert locally */
 	if (cflag && (g != root) && ((n = agfindnode_by_id(root, id)))) {
-	    return agsubnode(g, n, TRUE);
+	    return agsubnode(g, n, 1);
 	}
     }
 

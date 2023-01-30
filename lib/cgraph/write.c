@@ -381,7 +381,7 @@ static bool node_in_subg(Agraph_t * g, Agnode_t * n)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (irrelevant_subgraph(subg))
 	    continue;
-	if (agsubnode(subg, n, FALSE))
+	if (agsubnode(subg, n, 0))
 	    return true;
     }
     return false;

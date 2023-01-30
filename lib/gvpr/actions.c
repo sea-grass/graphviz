@@ -135,7 +135,7 @@ void nodeInduce(Agraph_t * selected)
 	return;
     for (n = agfstnode(selected); n; n = agnxtnode(selected, n)) {
 	for (e = agfstout(base, n); e; e = agnxtout(base, e)) {
-	    if (agsubnode(selected, aghead(e), FALSE))
+	    if (agsubnode(selected, aghead(e), 0))
 		agsubedge(selected, e, 1);
 	}
     }
