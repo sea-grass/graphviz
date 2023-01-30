@@ -5,9 +5,8 @@
 #include <sfdpgen/stress_model.h>
 #include <stdbool.h>
 
-static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_weighted, int maxit_sm, double tol, int *flag){
+static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm, double tol, int *flag) {
   int m;
-  SparseStressMajorizationSmoother sm;
   double lambda = 0;
   int i;
   SparseMatrix A = B;
@@ -30,11 +29,8 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_
     for (i = 0; i < dim*m; i++) (*x)[i] = drand();
   }
 
-  if (edge_len_weighted){
-    sm = SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_SQR_DIST);/* do not under weight the long distances */
-  } else {
-    sm = SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_NONE);/* weight the long distances */
-  }
+  SparseStressMajorizationSmoother sm =
+    SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_NONE);/* weight the long distances */
 
   if (!sm) {
     *flag = -1;
@@ -56,5 +52,5 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int edge_len_
 
 void stress_model(int dim, SparseMatrix D, double **x, int maxit_sm, double tol,
                   int *flag) {
-  stress_model_core(dim, D, x, 0, maxit_sm, tol, flag);
+  stress_model_core(dim, D, x, maxit_sm, tol, flag);
 }
