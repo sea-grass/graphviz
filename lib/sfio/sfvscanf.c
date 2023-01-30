@@ -599,9 +599,10 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			*argv.s++ = inp;
 		} while (--width > 0 && SFGETC(f, inp) >= 0);
 	    } else {		/* if(fmt == '[') */
-		form = setclass((char *) form, accept);
+		char accepted[UCHAR_MAX];
+		form = setclass((char *) form, accepted);
 		do {
-		    if (!accept[inp]) {
+		    if (!accepted[inp]) {
 			if (n > 0 || (flags & SFFMT_ALTER))
 			    break;
 			else {
