@@ -286,7 +286,7 @@ static int write_dict(Agraph_t * g, iochan_t * ofile, char *name,
 static int write_dicts(Agraph_t * g, iochan_t * ofile, int top)
 {
     Agdatadict_t *def;
-    if ((def = agdatadict(g, FALSE))) {
+    if ((def = agdatadict(g, false))) {
 	CHKRV(write_dict(g, ofile, "graph", def->dict.g, top));
 	CHKRV(write_dict(g, ofile, "node", def->dict.n, top));
 	CHKRV(write_dict(g, ofile, "edge", def->dict.e, top));
@@ -366,7 +366,7 @@ static bool irrelevant_subgraph(Agraph_t * g)
 		&& strcmp(sdata->str[i], pdata->str[i]))
 		return false;
     }
-    dd = agdatadict(g, FALSE);
+    dd = agdatadict(g, false);
     if (!dd)
 	return true;
     if (dtsize(dd->dict.n) > 0 || dtsize(dd->dict.e) > 0)
@@ -626,7 +626,7 @@ static int write_body(Agraph_t * g, iochan_t * ofile)
     Agdatadict_t *dd;
 
     CHKRV(write_subgs(g, ofile));
-    dd = agdatadict(g, FALSE);
+    dd = agdatadict(g, false);
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (write_node_test(g, n, AGSEQ(n)))
 	    CHKRV(write_node(n, ofile, dd ? dd->dict.n : 0));

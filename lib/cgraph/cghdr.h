@@ -89,7 +89,7 @@ void *agdictobjmem(Dict_t * dict, void * p, size_t size,
 void agdictobjfree(void *p, Dtdisc_t *disc);
 
 	/* name-value pair operations */
-CGHDR_API Agdatadict_t *agdatadict(Agraph_t * g, int cflag);
+CGHDR_API Agdatadict_t *agdatadict(Agraph_t *g, bool cflag);
 CGHDR_API Agattr_t *agattrrec(void *obj);
 
 void agraphattr_init(Agraph_t * g);

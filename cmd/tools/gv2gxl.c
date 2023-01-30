@@ -395,7 +395,7 @@ writeDict(FILE *gxlFile, const char *name, Dict_t *dict, bool isGraph) {
 static void writeDicts(Agraph_t * g, FILE * gxlFile)
 {
     Agdatadict_t *def;
-    if ((def = agdatadict(g, FALSE))) {
+    if ((def = agdatadict(g, false))) {
 	writeDict(gxlFile, "graph", def->dict.g, true);
 	writeDict(gxlFile, "node", def->dict.n, false);
 	writeDict(gxlFile, "edge", def->dict.e, false);
@@ -687,7 +687,7 @@ writeEdge(gxlstate_t * stp, Agedge_t * e, FILE * gxlFile, Dict_t * d)
 static void writeBody(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
 {
     writeSubgs(stp, g, gxlFile);
-    Agdatadict_t *dd = agdatadict(g, FALSE);
+    Agdatadict_t *dd = agdatadict(g, false);
     for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	Agnode_t *realn = agidnode(stp->root, AGID(n), 0);
 	if (!writeval(realn)) {
