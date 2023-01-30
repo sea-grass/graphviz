@@ -168,11 +168,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 				goto t_arg;
 			    if ((t_str = argv.s) &&
 				(n_str = (int) ft->size) < 0)
-				n_str = strlen(t_str);
+				n_str = (ssize_t)strlen(t_str);
 			} else {
 			  t_arg:
 			    if ((t_str = va_arg(args, char *)))
-				 n_str = strlen(t_str);
+				 n_str = (ssize_t)strlen(t_str);
 			}
 		    }
 		    goto loop_flags;
