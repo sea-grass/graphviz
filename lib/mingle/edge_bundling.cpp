@@ -606,7 +606,6 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
     (void)max_recursion;
     (void)nneighbor;
     agerr (AGERR, "Graphviz built without approximate nearest neighbor library ANN; agglomerative inking not available\n");
-    edges = edges;
 #endif
   } else if (method == METHOD_FD){/* FD method */
     
