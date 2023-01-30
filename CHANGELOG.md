@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   requires Lua ≥ 5.1.
 - **Breaking**: The `Dt_t*` parameter to the callback for `dtwalk` has been
   removed.
+- **Breaking**: The `POINTS_PER_PC` macro has been removed.
 
 ### Fixed
 
