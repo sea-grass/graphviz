@@ -304,12 +304,10 @@ COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
     int *prevPt = conf->prev;
     int k;
     int start, end;
-    COORD *vadj;
     Ppoint_t pk;
     COORD d;
 
-    vadj = malloc((V + 2) * sizeof(COORD));
-
+    COORD *vadj = gv_calloc(V + 2, sizeof(COORD));
 
     if (pp == POLYID_UNKNOWN)
 	pp = polyhit(conf, p);
