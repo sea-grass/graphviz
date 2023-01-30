@@ -591,7 +591,7 @@ static int write_edge_test(Agraph_t * g, Agedge_t * e)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (irrelevant_subgraph(subg))
 	    continue;
-	if (agsubedge(subg, e, FALSE))
+	if (agsubedge(subg, e, 0))
 	    return FALSE;
     }
     return TRUE;

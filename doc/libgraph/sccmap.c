@@ -95,7 +95,7 @@ static void nodeInduce(Agraph_t * g, Agraph_t * map)
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 		for (e = agfstout(rootg, n); e; e = agnxtout(rootg, e)) {
 			if (agsubnode(g, aghead(e), FALSE))
-				agsubedge(g, e, TRUE);
+				agsubedge(g, e, 1);
 			else {
 				Agraph_t *tscc = getscc(agtail(e));
 				Agraph_t *hscc = getscc(aghead(e));
