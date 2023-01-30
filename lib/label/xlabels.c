@@ -24,7 +24,7 @@
 static int icompare(Dt_t *, void *, void *, Dtdisc_t *);
 
 Dtdisc_t Hdisc = { offsetof(HDict_t, key), sizeof(int), -1, 0, 0,
-    icompare, 0, 0, 0
+    icompare, 0, 0
 };
 
 static int icompare(Dt_t * dt, void * v1, void * v2, Dtdisc_t * disc)

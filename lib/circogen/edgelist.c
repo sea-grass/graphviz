@@ -51,7 +51,6 @@ static Dtdisc_t ELDisc = {
     (Dtcompar_f) cmpItem,
     (Dthash_f) 0,
     (Dtmemory_f) 0,
-    (Dtevent_f) 0
 };
 
 edgelist *init_edgelist(void)

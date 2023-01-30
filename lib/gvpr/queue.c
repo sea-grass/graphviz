@@ -46,7 +46,6 @@ static Dtdisc_t ndisc = {
     0,
     0,
     0,
-    0
 };
 
 queue *mkQ(Dtmethod_t * meth)

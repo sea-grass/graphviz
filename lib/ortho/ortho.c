@@ -315,7 +315,6 @@ static Dtdisc_t chanDisc = {
     (Dtcompar_f)chancmpid,
     0,
     0,
-    0
 };
 
 static Dtdisc_t chanItemDisc = {
@@ -327,7 +326,6 @@ static Dtdisc_t chanItemDisc = {
     (Dtcompar_f)dcmpid,
     0,
     0,
-    0
 };
 
 static void

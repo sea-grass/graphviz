@@ -35,7 +35,6 @@ static Dtdisc_t Refstrdisc = {
     NULL,
     NULL,
     agdictobjmem,
-    NULL
 };
 
 static Dict_t *Refdict_default;

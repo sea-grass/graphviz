@@ -157,7 +157,6 @@ static Dtdisc_t gridDisc = {
     (Dtcompar_f) ijcmpf,
     NULL,
     NULL,
-    NULL
 };
 
 /* mkGrid:

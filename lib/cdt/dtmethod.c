@@ -15,9 +15,6 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	if(!meth || meth->type == oldmeth->type)
 		return oldmeth;
 
-	if (disc->eventf && disc->eventf(dt, DT_METH, meth, disc) < 0)
-		return NULL;
-
 	dt->data->minp = 0;
 
 	/* get the list of elements */

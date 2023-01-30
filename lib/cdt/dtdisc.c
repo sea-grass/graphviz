@@ -43,9 +43,6 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 
 	UNFLATTEN(dt);
 
-	if (old->eventf && old->eventf(dt, DT_DISC, disc, old) < 0)
-		return NULL;
-
 	dt->disc = disc;
 	if(!(dt->memoryf = disc->memoryf) )
 		dt->memoryf = dtmemory;

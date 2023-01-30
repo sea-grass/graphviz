@@ -109,7 +109,6 @@ static Dtdisc_t MyDisc = {
     cmpf,			/* Dtcompar_f comparf */
     0,				/* Dthash_f hashf */
     0,				/* Dtmemory_f memoryf */
-    0				/* Dtevent_f eventf */
 };
 
 static Agnode_t *extract_min(Dict_t * Q)

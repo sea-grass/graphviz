@@ -77,7 +77,6 @@ static Dtdisc_t nameDisc = {
     NULL,
     NULL,
     NULL,
-    NULL
 };
 
 typedef struct {
@@ -101,7 +100,6 @@ static Dtdisc_t idDisc = {
     NULL,
     NULL,
     NULL,
-    NULL
 };
 
 typedef struct {

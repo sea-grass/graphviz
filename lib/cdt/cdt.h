@@ -52,7 +52,6 @@ typedef void* 		(*Dtmake_f)(void*,Dtdisc_t*);
 typedef void 			(*Dtfree_f)(void*,Dtdisc_t*);
 typedef int			(*Dtcompar_f)(Dt_t*,void*,void*,Dtdisc_t*);
 typedef unsigned int		(*Dthash_f)(Dt_t*,void*,Dtdisc_t*);
-typedef int			(*Dtevent_f)(Dt_t*,int,void*,Dtdisc_t*);
 
 struct _dtlink_s
 {	Dtlink_t*	right;	/* right child		*/
@@ -99,14 +98,13 @@ struct _dtdisc_s
 	Dtcompar_f	comparf;/* to compare two objects		*/
 	Dthash_f	hashf;	/* to compute hash value of an object	*/
 	Dtmemory_f	memoryf;/* to allocate/free memory		*/
-	Dtevent_f	eventf;	/* to process events			*/
 };
 
-#define DTDISC(dc,ky,sz,lk,mkf,frf,cmpf,hshf,memf,evf) \
+#define DTDISC(dc, ky, sz, lk, mkf, frf, cmpf, hshf, memf) \
 	( (dc)->key = (ky), (dc)->size = (sz), (dc)->link = (lk), \
 	  (dc)->makef = (mkf), (dc)->freef = (frf), \
 	  (dc)->comparf = (cmpf), (dc)->hashf = (hshf), \
-	  (dc)->memoryf = (memf), (dc)->eventf = (evf) )
+	  (dc)->memoryf = (memf) )
 
 /* the dictionary structure itself */
 struct _dt_s
@@ -164,15 +162,6 @@ struct _dtstat_s
 #define DT_ATTACH	0004000	/* attach an object to the dictionary	*/
 #define DT_DETACH	0010000	/* detach an object from the dictionary	*/
 #define DT_APPEND	0020000	/* used on Dtlist to append an object	*/
-
-/* events */
-#define DT_OPEN		1	/* a dictionary is being opened		*/
-#define DT_CLOSE	2	/* a dictionary is being closed		*/
-#define DT_DISC		3	/* discipline is about to be changed	*/
-#define DT_METH		4	/* method is about to be changed	*/
-#define DT_ENDOPEN	5	/* dtopen() is done			*/
-#define DT_ENDCLOSE	6	/* dtclose() is done			*/
-#define DT_HASHSIZE	7	/* setting hash table size		*/
 
 CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
 CDT_API extern Dtmethod_t* 	Dtbag; ///< multiset

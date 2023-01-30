@@ -609,7 +609,6 @@ static Dtdisc_t intDisc = {
     (Dtcompar_f) NULL,
     0,
     0,
-    0
 };
 
 static int lookup (Dt_t* map, char* name)

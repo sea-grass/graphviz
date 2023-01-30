@@ -13,10 +13,7 @@ int dtclose(Dt_t* dt)
 	if(!dt || dt->nview > 0 ) /* can't close if being viewed */
 		return -1;
 
-	/* announce the close event to see if we should continue */
 	disc = dt->disc;
-	if (disc->eventf && (ev = disc->eventf(dt,DT_CLOSE,NULL,disc)) < 0)
-		return -1;
 
 	if(dt->view)	/* turn off viewing */
 		dtview(dt,NULL);
@@ -35,9 +32,6 @@ int dtclose(Dt_t* dt)
 		free(dt);
 	else if(ev == 0 && dt->type == DT_MEMORYF)
 		dt->memoryf(dt, dt, 0, disc);
-
-	if(disc->eventf)
-		(void)disc->eventf(dt, DT_ENDCLOSE, NULL, disc);
 
 	return 0;
 }

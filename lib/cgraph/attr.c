@@ -32,7 +32,6 @@ Dtdisc_t AgDataDictDisc = {
     NULL,
     NULL,
     NULL,
-    NULL,
 };
 
 static char DataDictName[] = "_AG_datadict";
