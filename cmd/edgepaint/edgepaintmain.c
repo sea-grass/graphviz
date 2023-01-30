@@ -95,7 +95,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
   char* cmd = argv[0];
   outfile = NULL;
 
-  Verbose = FALSE;
+  Verbose = 0;
   *accuracy = 0.01;
   *angle = 15;/* 10 degree by default*/
   *check_edges_with_same_endpoint = 0;
@@ -183,7 +183,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
       break;
 
     case 'v':
-      Verbose = TRUE;
+      Verbose = 1;
       break;
 
     case OPT_ACCURACY:
