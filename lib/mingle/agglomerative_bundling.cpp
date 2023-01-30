@@ -277,8 +277,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     level++;
     cgrid = Agglomerative_Ink_Bundling_init(cA, edges, level); 
 
-
-    /* set up R0!!! */
     if (grid->R0){
       R0 = SparseMatrix_multiply(R, grid->R0);
     } else {
