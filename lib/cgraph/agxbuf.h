@@ -349,7 +349,7 @@ static inline char *agxbdisown(agxbuf *xb) {
   }
 
   // reset xb to a state where it is usable
-  agxbinit(xb, 0, NULL);
+  memset(xb, 0, sizeof(*xb));
 
   return buf;
 }
