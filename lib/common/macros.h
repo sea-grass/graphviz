@@ -19,7 +19,7 @@
 #define CL_EDGE_TAG "cl_edge_info"
 #define SET_CLUST_NODE(n) (ND_clustnode(n) = true)
 #define IS_CLUST_NODE(n)  (ND_clustnode(n))
-#define HAS_CLUST_EDGE(g) (aggetrec(g, CL_EDGE_TAG, FALSE))
+#define HAS_CLUST_EDGE(g) (aggetrec(g, CL_EDGE_TAG, 0))
 #define EDGE_TYPE(g) (GD_flags(g) & (7 << 1))
 
 #ifndef streq

@@ -256,12 +256,12 @@ typedef struct {
 
 #define GRECNAME "ccgraphinfo"
 #define NRECNAME "ccgnodeinfo"
-#define GD_cc_subg(g)  (((ccgraphinfo_t*)aggetrec(g, GRECNAME, FALSE))->cc_subg)
+#define GD_cc_subg(g)  (((ccgraphinfo_t*)aggetrec(g, GRECNAME, 0))->cc_subg)
 #ifdef DEBUG
 Agnode_t*
 dnodeOf (Agnode_t* v)
 {
-  ccgnodeinfo_t* ip = (ccgnodeinfo_t*)aggetrec(v, NRECNAME, FALSE);
+  ccgnodeinfo_t* ip = (ccgnodeinfo_t*)aggetrec(v, NRECNAME, 0);
   if (ip)
     return ip->ptr.n;
   fprintf (stderr, "nodeinfo undefined\n");
@@ -270,11 +270,11 @@ dnodeOf (Agnode_t* v)
 void
 dnodeSet (Agnode_t* v, Agnode_t* n)
 {
-  ((ccgnodeinfo_t*)aggetrec(v, NRECNAME, FALSE))->ptr.n = n;
+  ((ccgnodeinfo_t*)aggetrec(v, NRECNAME, 0))->ptr.n = n;
 }
 #else
-#define dnodeOf(v)  (((ccgnodeinfo_t*)aggetrec(v, NRECNAME, FALSE))->ptr.n)
-#define dnodeSet(v,w) (((ccgnodeinfo_t*)aggetrec(v, NRECNAME, FALSE))->ptr.n=w)
+#define dnodeOf(v)  (((ccgnodeinfo_t*)aggetrec(v, NRECNAME, 0))->ptr.n)
+#define dnodeSet(v,w) (((ccgnodeinfo_t*)aggetrec(v, NRECNAME, 0))->ptr.n=w)
 #endif
 
 #define ptrOf(np)  (((ccgnodeinfo_t*)((np)->base.data))->ptr.v)

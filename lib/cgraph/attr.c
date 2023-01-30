@@ -40,12 +40,11 @@ static Agdesc_t ProtoDesc = {.directed = true, .no_loop = true,
 static Agraph_t *ProtoGraph;
 
 Agdatadict_t *agdatadict(Agraph_t *g, bool cflag) {
-    Agdatadict_t *rv;
-    rv = (Agdatadict_t *) aggetrec(g, DataDictName, FALSE);
+    Agdatadict_t *rv = (Agdatadict_t *) aggetrec(g, DataDictName, 0);
     if (rv || !cflag)
 	return rv;
     init_all_attrs(g);
-    rv = (Agdatadict_t *) aggetrec(g, DataDictName, FALSE);
+    rv = (Agdatadict_t *) aggetrec(g, DataDictName, 0);
     return rv;
 }
 
@@ -224,7 +223,7 @@ static void freesym(void *obj, Dtdisc_t *disc) {
 
 Agattr_t *agattrrec(void *obj)
 {
-    return (Agattr_t *) aggetrec(obj, AgDataRecName, FALSE);
+  return (Agattr_t *)aggetrec(obj, AgDataRecName, 0);
 }
 
 
