@@ -15,6 +15,7 @@
 
 #include <common/geom.h>
 #include <common/geomprocs.h>
+#include <math.h>
 #include <stdbool.h>
 
 /*
@@ -78,7 +79,7 @@ int lineToBox(pointf p, pointf q, boxf b)
             return 0;
         }
     } else {
-        double m, x, y, low, high;
+        double m, x, y;
 
         /*
          * Diagonal line.  Compute slope of line and use
@@ -87,11 +88,8 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         m = (q.y - p.y)/(q.x - p.x);
-        if (p.x < q.x) {
-            low = p.x;  high = q.x;
-        } else {
-            low = q.x; high = p.x;
-        }
+        double low = fmin(p.x, q.x);
+        double high = fmax(p.x, q.x);
 
         /*
          * Left edge.
@@ -115,11 +113,8 @@ int lineToBox(pointf p, pointf q, boxf b)
          * Bottom edge.
          */
 
-        if (p.y < q.y) {
-            low = p.y;  high = q.y;
-        } else {
-            low = q.y; high = p.y;
-        }
+        low = fmin(p.y, q.y);
+        high = fmax(p.y, q.y);
         x = p.x + (b.LL.y - p.y)/m;
         if (BETWEEN(b.LL.x, x, b.UR.x) && BETWEEN(low, b.LL.y, high)) {
             return 0;
