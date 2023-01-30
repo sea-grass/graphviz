@@ -58,7 +58,7 @@ typedef struct {
     int listen;
     attr_t closedElementType;
     attr_t globalAttrType;
-    int compositeReadState;
+    bool compositeReadState;
     bool edgeinverted;
     Dt_t *nameMap;
 } userdata_t;
@@ -108,7 +108,7 @@ static userdata_t genUserdata(void) {
   user.listen = FALSE;
   user.closedElementType = TAG_NONE;
   user.globalAttrType = TAG_NONE;
-  user.compositeReadState = FALSE;
+  user.compositeReadState = false;
   user.edgeinverted = false;
   user.nameMap = dtopen(&nameDisc, Dtoset);
   return user;
@@ -531,7 +531,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	       || strcmp(name, "bag") == 0
 	       || strcmp(name, "tup") == 0 || strcmp(name, "enum") == 0) {
 
-	ud->compositeReadState = TRUE;
+	ud->compositeReadState = true;
 	agxbprint(&ud->composite_buffer, "<%s>", name);
     } else {
 	/* must be some extension */
@@ -566,7 +566,7 @@ static void endElementHandler(void *userData, const char *name)
 	    agxbprint(&new_name, "%s%s", GXL_COMP, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->composite_buffer);
 	    agxbclear(&ud->xml_attr_value);
-	    ud->compositeReadState = FALSE;
+	    ud->compositeReadState = false;
 	} else {
 	    agxbput(&new_name, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->xml_attr_value);
