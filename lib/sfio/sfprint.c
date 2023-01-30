@@ -41,7 +41,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
     ssize_t size;
     double dval;
     char *tls[2], **ls;		/* for %..[separ]s              */
-    char *t_str;		/* stuff between ()             */
+    const char *t_str;		/* stuff between ()             */
     ssize_t n_str;		/* its length                   */
 
     Argv_t argv;		/* for extf to return value     */
@@ -135,7 +135,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    continue;
 
 	case LEFTP:		/* get the type enclosed in balanced parens */
-	    t_str = (char *) form;
+	    t_str = form;
 	    for (v = 1;;) {
 		switch (*form++) {
 		case 0:	/* not balancable, retract */
