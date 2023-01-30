@@ -170,7 +170,7 @@ int agnedges(Agraph_t * g)
     int rv = 0;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	rv += agdegree(g, n, 0, TRUE);	/* must use OUT to get self-arcs */
+	rv += agdegree(g, n, 0, 1);	/* must use OUT to get self-arcs */
     return rv;
 }
 

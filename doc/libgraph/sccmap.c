@@ -193,7 +193,7 @@ countComponents(Agraph_t * g, int *max_degree, float *nontree_frac)
 	if (max_degree) {
 		int maxd = 0;
 		for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-			deg = agdegree(g, n, 1, TRUE);
+			deg = agdegree(g, n, 1, 1);
 			if (maxd < deg)
 				maxd = deg;
 			setval(n, 0);
