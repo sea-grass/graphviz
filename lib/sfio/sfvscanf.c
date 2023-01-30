@@ -193,6 +193,9 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			}
 		    }
 		    goto loop_flags;
+		default:
+		    // skip over
+		    break;
 		}
 	    }
 
