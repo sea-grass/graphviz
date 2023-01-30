@@ -59,7 +59,7 @@ typedef struct {
     attr_t closedElementType;
     attr_t globalAttrType;
     int compositeReadState;
-    int edgeinverted;
+    bool edgeinverted;
     Dt_t *nameMap;
 } userdata_t;
 
@@ -109,7 +109,7 @@ static userdata_t genUserdata(void) {
   user.closedElementType = TAG_NONE;
   user.globalAttrType = TAG_NONE;
   user.compositeReadState = FALSE;
-  user.edgeinverted = FALSE;
+  user.edgeinverted = false;
   user.nameMap = dtopen(&nameDisc, Dtoset);
   return user;
 }
@@ -467,9 +467,9 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	tname = agnameof(t);
 
 	if (strcmp(tname, tail) == 0) {
-	    ud->edgeinverted = FALSE;
+	    ud->edgeinverted = false;
 	} else if (strcmp(tname, head) == 0) {
-	    ud->edgeinverted = TRUE;
+	    ud->edgeinverted = true;
 	}
 
 	pos = get_xml_attr("fromorder", atts);
@@ -556,7 +556,7 @@ static void endElementHandler(void *userData, const char *name)
 	Current_class = TAG_GRAPH;
 	E = 0;
 	ud->closedElementType = TAG_EDGE;
-	ud->edgeinverted = FALSE;
+	ud->edgeinverted = false;
     } else if (strcmp(name, "attr") == 0) {
 	agxbuf new_name = {0};
 	char *value;
