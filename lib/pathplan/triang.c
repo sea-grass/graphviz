@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
@@ -45,7 +46,7 @@ int Ptriangulate(Ppoly_t * polygon, void (*fn) (void *, Ppoint_t *),
 
     pointn = polygon->pn;
 
-    pointp = calloc(pointn, sizeof(Ppoint_t *));
+    pointp = gv_calloc(pointn, sizeof(Ppoint_t*));
 
     for (i = 0; i < pointn; i++)
 	pointp[i] = &(polygon->ps[i]);
