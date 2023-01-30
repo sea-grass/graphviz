@@ -66,7 +66,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 			if(rehash)
 			{	void* key = _DTOBJ(list,disc->link);
 				key = _DTKEY(key,disc->key,disc->size);
-				list->hash = _DTHSH(dt,key,disc,disc->size);
+				list->hash = dtstrhash(0, key, disc->size);
 			}
 			(void)meth->searchf(dt, list, DT_RENEW);
 			list = r;

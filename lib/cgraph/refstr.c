@@ -33,7 +33,6 @@ static Dtdisc_t Refstrdisc = {
     NULL,
     agdictobjfree,
     NULL,
-    NULL,
     agdictobjmem,
 };
 

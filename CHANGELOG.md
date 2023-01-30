@@ -44,8 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breakting**: `gvprintf` is now tagged with
   `__attribute__((format(printf, …)))` when compiling with Clang or GCC. This
   enables the compiler to spot more misuses of this function. #2373
-- **Breaking**: The `eventf` member of `Dtdisc_t` has been removed.
-  Correspondingly, the `evf` parameter to the `DTDISC` macro has been removed.
+- **Breaking**: The `hashf` and `eventf` members of `Dtdisc_t` have been
+  removed. Correspondingly, the `hshf` and `evf` parameters to the `DTDISC`
+  macro have been removed. Also the `_DTHSH` macro has been removed.
 
 ### Fixed
 

@@ -51,7 +51,6 @@ typedef void*			(*Dtsearch_f)(Dt_t*,void*,int);
 typedef void* 		(*Dtmake_f)(void*,Dtdisc_t*);
 typedef void 			(*Dtfree_f)(void*,Dtdisc_t*);
 typedef int			(*Dtcompar_f)(Dt_t*,void*,void*,Dtdisc_t*);
-typedef unsigned int		(*Dthash_f)(Dt_t*,void*,Dtdisc_t*);
 
 struct _dtlink_s
 {	Dtlink_t*	right;	/* right child		*/
@@ -96,14 +95,13 @@ struct _dtdisc_s
 	Dtmake_f	makef;	/* object constructor			*/
 	Dtfree_f	freef;	/* object destructor			*/
 	Dtcompar_f	comparf;/* to compare two objects		*/
-	Dthash_f	hashf;	/* to compute hash value of an object	*/
 	Dtmemory_f	memoryf;/* to allocate/free memory		*/
 };
 
-#define DTDISC(dc, ky, sz, lk, mkf, frf, cmpf, hshf, memf) \
+#define DTDISC(dc, ky, sz, lk, mkf, frf, cmpf, memf) \
 	( (dc)->key = (ky), (dc)->size = (sz), (dc)->link = (lk), \
 	  (dc)->makef = (mkf), (dc)->freef = (frf), \
-	  (dc)->comparf = (cmpf), (dc)->hashf = (hshf), \
+	  (dc)->comparf = (cmpf), \
 	  (dc)->memoryf = (memf) )
 
 /* the dictionary structure itself */
@@ -210,7 +208,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 #define _DTCMP(dt,k1,k2,dc,cmpf,sz) \
 			(cmpf ? (*cmpf)(dt,k1,k2,dc) : \
 			 (sz <= 0 ? strcmp(k1,k2) : memcmp(k1,k2,(size_t)sz)) )
-#define _DTHSH(dt,ky,dc,sz) (dc->hashf ? (*dc->hashf)(dt,ky,dc) : dtstrhash(0,ky,sz) )
 
 #define dtlink(d,e)	(((Dtlink_t*)(e))->right)
 #define dtobj(d,e)	_DTOBJ((e), _DT(d)->disc->link)

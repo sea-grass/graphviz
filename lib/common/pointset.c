@@ -55,7 +55,6 @@ static Dtdisc_t intPairDisc = {
     (Dtfree_f) freePair,
     (Dtcompar_f) cmppair,
     0,
-    0,
 };
 
 PointSet *newPS(void)
@@ -160,7 +159,6 @@ static Dtdisc_t intMPairDisc = {
     (Dtmake_f) mkMPair,
     (Dtfree_f) freeMPair,
     (Dtcompar_f) cmppair,
-    0,
     0,
 };
 

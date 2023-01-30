@@ -73,7 +73,6 @@ static Dtdisc_t LookupByName = {
     NULL,
     NULL,
     namecmpf,
-    NULL,
     agdictobjmem,
 };
 
@@ -84,7 +83,6 @@ static Dtdisc_t LookupById = {
     NULL,
     NULL,
     idcmpf,
-    NULL,
     agdictobjmem,
 };
 

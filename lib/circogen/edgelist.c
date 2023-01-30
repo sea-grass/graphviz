@@ -49,7 +49,6 @@ static Dtdisc_t ELDisc = {
     (Dtmake_f) mkItem,
     (Dtfree_f) freeItem,
     (Dtcompar_f) cmpItem,
-    (Dthash_f) 0,
     (Dtmemory_f) 0,
 };
 

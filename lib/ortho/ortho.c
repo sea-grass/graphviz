@@ -314,7 +314,6 @@ static Dtdisc_t chanDisc = {
     (Dtfree_f)freeChannel,
     (Dtcompar_f)chancmpid,
     0,
-    0,
 };
 
 static Dtdisc_t chanItemDisc = {
@@ -324,7 +323,6 @@ static Dtdisc_t chanItemDisc = {
     0,
     (Dtfree_f)freeChanItem,
     (Dtcompar_f)dcmpid,
-    0,
     0,
 };
 
