@@ -519,11 +519,12 @@ static int growpnls(size_t newpnln) {
 static int growops(size_t newopn) {
     if (newopn <= opn)
 	return 0;
-    ops = realloc(ops, POINTSIZE * newopn);
-    if (ops == NULL) {
+    Ppoint_t *new_ops = realloc(ops, POINTSIZE * newopn);
+    if (new_ops == NULL) {
 	prerror("cannot realloc ops");
 	return -1;
     }
+    ops = new_ops;
     opn = newopn;
 
     return 0;
