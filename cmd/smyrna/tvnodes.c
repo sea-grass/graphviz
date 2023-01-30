@@ -140,10 +140,8 @@ int tv_save_as(int withEdges)
 	gtk_widget_destroy(dialog);
 
 	return 1;
-    } else {
-	gtk_widget_destroy(dialog);
-	return 0;
     }
+    gtk_widget_destroy(dialog);
     return 0;
 }
 
