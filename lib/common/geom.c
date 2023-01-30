@@ -67,18 +67,14 @@ int lineToBox(pointf p, pointf q, boxf b)
          * Vertical line.
          */
 
-        if (((p.y >= b.LL.y) ^ (q.y >= b.LL.y))
-                && (p.x >= b.LL.x)
-                && (p.x <= b.UR.x)) {
+        if (((p.y >= b.LL.y) ^ (q.y >= b.LL.y)) && BETWEEN(b.LL.x, p.x, b.UR.x)) {
             return 0;
         }
     } else if (p.y == q.y) {
         /*
          * Horizontal line.
          */
-        if (((p.x >= b.LL.x) ^ (q.x >= b.LL.x))
-                && (p.y >= b.LL.y)
-                && (p.y <= b.UR.y)) {
+        if (((p.x >= b.LL.x) ^ (q.x >= b.LL.x)) && BETWEEN(b.LL.y, p.y, b.UR.y)) {
             return 0;
         }
     } else {
@@ -102,8 +98,7 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         y = p.y + (b.LL.x - p.x)*m;
-        if ((b.LL.x >= low) && (b.LL.x <= high)
-                && (y >= b.LL.y) && (y <= b.UR.y)) {
+        if (BETWEEN(low, b.LL.x, high) && BETWEEN(b.LL.y, y, b.UR.y)) {
             return 0;
         }
 
@@ -112,8 +107,7 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         y += (b.UR.x - b.LL.x)*m;
-        if ((y >= b.LL.y) && (y <= b.UR.y)
-                && (b.UR.x >= low) && (b.UR.x <= high)) {
+        if (BETWEEN(b.LL.y, y, b.UR.y) && BETWEEN(low, b.UR.x, high)) {
             return 0;
         }
 
@@ -127,8 +121,7 @@ int lineToBox(pointf p, pointf q, boxf b)
             low = q.y; high = p.y;
         }
         x = p.x + (b.LL.y - p.y)/m;
-        if ((x >= b.LL.x) && (x <= b.UR.x)
-                && (b.LL.y >= low) && (b.LL.y <= high)) {
+        if (BETWEEN(b.LL.x, x, b.UR.x) && BETWEEN(low, b.LL.y, high)) {
             return 0;
         }
 
@@ -137,8 +130,7 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         x += (b.UR.y - b.LL.y)/m;
-        if ((x >= b.LL.x) && (x <= b.UR.x)
-                && (b.UR.y >= low) && (b.UR.y <= high)) {
+        if (BETWEEN(b.LL.x, x, b.UR.x) && BETWEEN(low, b.UR.y, high)) {
             return 0;
         }
     }
