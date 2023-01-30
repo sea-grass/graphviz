@@ -292,8 +292,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
   return sm;
 }
 	
-StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda0, double *x,
-								int weighting_scheme){
+StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda0, double *x) {
   /* solve a stress model to achieve the ideal distance among a sparse set of edges recorded in A.
      A must be a real matrix.
    */
@@ -352,21 +351,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
 
 	jw[nz] = k;
 	dist = a[j];
-	switch (weighting_scheme){
-	case WEIGHTING_SCHEME_SQR_DIST:
-	  if (dist*dist == 0){
-	    w[nz] = -100000;
-	  } else {
-	    w[nz] = -1/(dist*dist);
-	  }
-	  break;
-	case WEIGHTING_SCHEME_NONE:
-	  w[nz] = -1;
-	  break;
-	default:
-	  assert(0);
-	  return NULL;
-	}
+	w[nz] = -1;
 	diag_w += w[nz];
 	jd[nz] = k;
 	d[nz] = w[nz]*dist;

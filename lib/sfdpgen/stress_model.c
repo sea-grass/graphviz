@@ -30,7 +30,7 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm,
   }
 
   SparseStressMajorizationSmoother sm =
-    SparseStressMajorizationSmoother_new(A, dim, lambda, *x, WEIGHTING_SCHEME_NONE);/* weight the long distances */
+    SparseStressMajorizationSmoother_new(A, dim, lambda, *x);/* weight the long distances */
 
   if (!sm) {
     *flag = -1;
