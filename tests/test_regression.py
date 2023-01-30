@@ -2916,6 +2916,33 @@ def test_2434():
     assert before == after, "agmemread/gvContext ordering affected image output"
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2416"
+)
+def test_2416():
+    """
+    `splines=curved` should not affect arrow directions
+    https://gitlab.com/graphviz/graphviz/-/issues/2416
+    """
+
+    # an input graph that provokes the problem
+    input = "digraph G { splines=curved; b -> a; a -> b; }"
+
+    # run it through Graphviz
+    output = dot("json", source=input)
+    data = json.loads(output)
+
+    edges = data["edges"]
+    assert len(edges) == 2, "unexpected number of output edges"
+
+    # extract the height each edge’s arrow starts at
+    y_1 = edges[0]["_hdraw_"][3]["points"][0][1]
+    y_2 = edges[1]["_hdraw_"][3]["points"][0][1]
+
+    # assuming the graph is vertical, these should not be too close
+    assert abs(y_1 - y_2) > 1, "edge arrows appear to be drawn next to the same node"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
