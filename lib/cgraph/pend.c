@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/unreachable.h>
 #include <stddef.h>
@@ -116,8 +117,7 @@ static Dict_t *dictof(pendingset_t * ds, Agobj_t * obj, cb_t kind)
 	break;
     }
 
-    if (dict_ref == 0)
-	agerr(AGERR, "pend dictof a bad object");
+    assert(dict_ref != 0 && "pend dictof a bad object");
     if (*dict_ref == NULL)
 	*dict_ref = agdtopen(agraphof(obj), &Disc, Dttree);
     return *dict_ref;
