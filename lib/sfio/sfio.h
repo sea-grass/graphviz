@@ -53,7 +53,7 @@ extern "C" {
 	int precis;		/* precision required                   */
 	int base;		/* conversion base                      */
 
-	char *t_str;		/* type string                          */
+	const char *t_str;		/* type string                          */
 	ssize_t n_str;		/* length of t_str                      */
     };
 

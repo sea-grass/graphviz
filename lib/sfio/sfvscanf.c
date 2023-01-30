@@ -82,7 +82,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
     int argp, argn;
 
     void *value;		/* location to assign scanned value */
-    char *t_str;
+    const char *t_str;
     ssize_t n_str;
 
 #define SFGETC(f,c)	((c) = getc(f))
@@ -155,7 +155,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
       loop_flags:		/* LOOP FOR FLAGS, WIDTH, BASE, TYPE */
 	switch ((fmt = *form++)) {
 	case LEFTP:		/* get the type which is enclosed in balanced () */
-	    t_str = (char *) form;
+	    t_str = form;
 	    for (v = 1;;) {
 		switch (*form++) {
 		case 0:	/* not balanceable, retract */
