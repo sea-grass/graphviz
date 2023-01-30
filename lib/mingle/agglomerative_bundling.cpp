@@ -393,7 +393,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 						 improved later */
 	    e = edges[jj] = pedge_double(edges[jj]);
 
-	    e->wgts = (double*)REALLOC(e->wgts, sizeof(double)*4);	
+	    e->wgts.resize(4);	
 	    e->x[1*dim] = meet1.x;
 	    e->x[1*dim+1] = meet1.y;
 	    e->x[2*dim] = meet2.x;
@@ -473,7 +473,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 	    e->x[(k+1)*dim+l] = midedge->x[k*dim+l];
 	  }
 	  if (k < midedge->npoints - 1){
-	    if (midedge->wgts){
+	    if (!midedge->wgts.empty()) {
 	      e->wgts[(k+1)] = midedge->wgts[k];
 	    } else {
 	      e->wgts[(k+1)] = midedge->wgt;

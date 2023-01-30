@@ -291,7 +291,7 @@ static void genBundleInfo(pedge edge, std::ostream &os) {
 			os << std::setprecision(3) << x[j * dim + k];
 		}
 
-		if ((j < edge->npoints-1) && (edge->wgts))  {
+		if (j < edge->npoints - 1 && !edge->wgts.empty())  {
 			os << ';' << std::setprecision(3) << edge->wgts[j];
 		}
 	}
@@ -341,7 +341,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 	  /* figure out max number of bundled original edges in a pedge */
 	for (i = 0; i < ne; i++){
 		edge = edges[i];
-		if (edge->wgts){
+		if (!edge->wgts.empty()) {
 			for (j = 0; j < edge->npoints - 1; j++){
 				maxwgt = MAX(maxwgt, edge->wgts[j]);
 			}
@@ -361,7 +361,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 			agxset(e, esects, buf.str().c_str());
 			buf.str("");
 
-			if (edge->wgts) {
+			if (!edge->wgts.empty()) {
 				if (!eclrs) eclrs = agattr(g, AGEDGE, const_cast<char*>("color"), "");
 				genBundleColors(edge, buf, maxwgt);
 				agxset(e, eclrs, buf.str().c_str());
