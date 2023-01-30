@@ -60,7 +60,7 @@
                                                                                \
     /* do we need to expand the backing storage? */                            \
     if (list->size == list->capacity) {                                        \
-      size_t c = list->capacity == 0 ? 1 : (list->capacity * 2);               \
+      const size_t c = list->capacity == 0 ? 1 : (list->capacity * 2);         \
                                                                                \
       /* will the calculation of the new size overflow? */                     \
       if (UNLIKELY(SIZE_MAX / c < sizeof(type))) {                             \
@@ -129,7 +129,8 @@
    * \param list List to operate on                                            \
    * \param item Value of element to remove                                    \
    */                                                                          \
-  static inline LIST_UNUSED void name##_remove(name##_t *list, type item) {    \
+  static inline LIST_UNUSED void name##_remove(name##_t *list,                 \
+                                               const type item) {              \
     assert(list != NULL);                                                      \
                                                                                \
     for (size_t i = 0; i < list->size; ++i) {                                  \
