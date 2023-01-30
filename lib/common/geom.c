@@ -12,7 +12,8 @@
  * no specific dependence on graphs */
 
 #include "config.h"
-
+#include <assert.h>
+#include <cgraph/unreachable.h>
 #include <common/geom.h>
 #include <common/geomprocs.h>
 #include <math.h>
@@ -140,25 +141,9 @@ void rect2poly(pointf *p)
     p[1].x = p[0].x;
 }
 
-static pointf rotatepf(pointf p, int cwrot)
-{
-    static double sina, cosa;
-    static int last_cwrot;
-    pointf P;
-
-    /* cosa is initially wrong for a cwrot of 0
-     * this caching only works because we are never called for 0 rotations */
-    if (cwrot != last_cwrot) {
-	sincos(cwrot / (2 * M_PI), &sina, &cosa);
-	last_cwrot = cwrot;
-    }
-    P.x = p.x * cosa - p.y * sina;
-    P.y = p.y * cosa + p.x * sina;
-    return P;
-}
-
 pointf cwrotatepf(pointf p, int cwrot)
 {
+    assert(cwrot == 0 || cwrot == 90 || cwrot == 180 || cwrot == 270);
     double x = p.x, y = p.y;
     switch (cwrot) {
     case 0:
@@ -176,17 +161,14 @@ pointf cwrotatepf(pointf p, int cwrot)
 	p.y = x;
 	break;
     default:
-	if (cwrot < 0)
-	    return ccwrotatepf(p, -cwrot);
-        if (cwrot > 360)
-	    return cwrotatepf(p, cwrot%360);
-	return rotatepf(p, cwrot);
+	UNREACHABLE();
     }
     return p;
 }
 
 pointf ccwrotatepf(pointf p, int ccwrot)
 {
+    assert(ccwrot == 0 || ccwrot == 90 || ccwrot == 180 || ccwrot == 270);
     double x = p.x, y = p.y;
     switch (ccwrot) {
     case 0:
@@ -204,11 +186,7 @@ pointf ccwrotatepf(pointf p, int ccwrot)
 	p.y = x;
 	break;
     default:
-	if (ccwrot < 0)
-	    return cwrotatepf(p, -ccwrot);
-        if (ccwrot > 360)
-	    return ccwrotatepf(p, ccwrot%360);
-	return rotatepf(p, 360-ccwrot);
+	UNREACHABLE();
     }
     return p;
 }
