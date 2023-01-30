@@ -298,7 +298,7 @@ static int polyhit(vconfig_t * conf, Ppoint_t p)
  */
 COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
 {
-    int V = conf->N;
+    const int V = conf->N;
     Ppoint_t *pts = conf->P;
     int *nextPt = conf->next;
     int *prevPt = conf->prev;
