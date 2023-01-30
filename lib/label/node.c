@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include <label/index.h>
@@ -21,7 +22,7 @@
 /* Make a new node and initialize to have all branch cells empty.
 */
 Node_t *RTreeNewNode(void) {
-    Node_t *n = malloc(sizeof(Node_t));
+    Node_t *n = gv_alloc(sizeof(Node_t));
     InitNode(n);
     return n;
 }
