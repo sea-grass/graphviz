@@ -124,6 +124,7 @@ UTILS_API Agsym_t *setAttr(graph_t *, void *, char *name, char *value,
                            Agsym_t *);
 UTILS_API void setEdgeType(graph_t *g, int defaultValue);
 UTILS_API bool is_a_cluster(Agraph_t *g);
+UTILS_API bool is_a_cluster_noderep(Agnode_t *n);
 
 /* from postproc.c */
 UTILS_API void gv_nodesize(Agnode_t *n, bool flip);

@@ -201,7 +201,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
 
     cdata->ntoplevel = agnnodes(g);
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
-        if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (is_a_cluster(subg)) {
             nclusters++;
         }
     }
@@ -211,7 +211,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
     cn = cdata->clustersizes = N_GNEW(nclusters,int);
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
         /* clusters are processed by separate calls to ordered_edges */
-        if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (is_a_cluster(subg)) {
             int *c;
 
             *cn = agnnodes(subg);
@@ -476,7 +476,7 @@ dfs(Agraph_t * subg, Agraph_t * parentg, attrsym_t * G_lp, attrsym_t * G_bb)
 {
     boxf bb;
 
-    if (!strncmp(agnameof(subg), "cluster", 7) && chkBB(subg, G_bb, &bb)) {
+    if (is_a_cluster(subg) && chkBB(subg, G_bb, &bb)) {
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_bb(subg) = bb;
 	add_cluster(parentg, subg);
@@ -491,8 +491,8 @@ dfs(Agraph_t * subg, Agraph_t * parentg, attrsym_t * G_lp, attrsym_t * G_bb)
 
 /* nop_init_graphs:
  * Read in clusters and graph label info.
- * A subgraph is a cluster if its name starts with "cluster" and
- * it has a valid bb.
+ * A subgraph is a cluster if it passes the predicate is_a_cluster()
+ * from the common graphviz library, and it has a valid bb.
  */
 static void
 nop_init_graphs(Agraph_t * g, attrsym_t * G_lp, attrsym_t * G_bb)
@@ -548,7 +548,7 @@ int init_nop(Agraph_t * g, int adjust)
 
     scan_graph(g);		/* mainly to set up GD_neato_nlist */
     for (i = 0; (np = GD_neato_nlist(g)[i]); i++) {
-	if (!hasPos(np) && strncmp(agnameof(np), "cluster", 7)) {
+	if (!hasPos(np) && is_a_cluster_noderep(np)) {
 	    agerr(AGERR, "node %s in graph %s has no position\n",
 		  agnameof(np), agnameof(g));
 	    return -1;
@@ -1370,7 +1370,7 @@ addCluster (graph_t* g)
 {
     graph_t *subg;
     for (subg = agfstsubg(agroot(g)); subg; subg = agnxtsubg(subg)) {
-	if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (is_a_cluster(subg)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    add_cluster(g, subg);
 	    compute_bb(subg);

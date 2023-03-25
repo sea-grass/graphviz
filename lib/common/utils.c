@@ -784,6 +784,13 @@ bool is_a_cluster (Agraph_t* g)
          mapBool(agget(g, "cluster"), false);
 }
 
+/* provides an equivalent to the above for node scan in neatoinit.c */
+bool is_a_cluster_noderep (Agnode_t* n)
+{
+  return !strncasecmp(agnameof(n), "cluster", 7) ||
+         mapBool(agget(n, "cluster"), false);
+}
+
 /* setAttr:
  * Sets object's name attribute to the given value.
  * Creates the attribute if not already set.
