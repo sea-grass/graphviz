@@ -400,7 +400,7 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
     int gid = 1;  
     memset (*clusters, 0, sizeof(int)*nnodes);
     for (sg = agfstsubg(g); sg; sg = agnxtsubg(sg)) {
-      if (strncmp(agnameof(sg), "cluster", 7)) continue;
+      if (is_a_cluster(sg)) continue;
       gid++;
       for (n = agfstnode(sg); n; n = agnxtnode (sg, n)) {
         i = ND_id(n);

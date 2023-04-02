@@ -995,7 +995,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg))
 	{
-	if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (is_a_cluster(subg)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = gv_alloc(sizeof(gdata)); // freed in cleanup_subgs
 	    GD_ndim(subg) = GD_ndim(agroot(parent));
