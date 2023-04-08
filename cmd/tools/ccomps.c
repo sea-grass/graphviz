@@ -29,6 +29,8 @@
 #include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
+#include <common/types.h>
+#include <common/utils.h>
 
 typedef struct {
     Agrec_t h;
@@ -116,14 +118,6 @@ static void split(void) {
     } else {
 	path = outfile;
     }
-}
-
-/* isCluster:
- * Return true if graph is a cluster
- */
-static int isCluster(Agraph_t * g)
-{
-    return strncmp(agnameof(g), "cluster", 7) == 0;
 }
 
 static void init(int argc, char *argv[])
@@ -378,7 +372,7 @@ subgInduce(Agraph_t * root, Agraph_t * g, int inCluster)
 	if (GD_cc_subg(subg))
 	    continue;
 	if ((proj = projectG(subg, g, inCluster))) {
-	    in_cluster = inCluster || (useClusters && isCluster(subg));
+	    in_cluster = inCluster || (useClusters && is_a_cluster(subg));
 	    subgInduce(subg, proj, in_cluster);
 	}
     }
@@ -405,7 +399,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     Agnode_t *n;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (is_a_cluster(subg)) {
 	    dn = agnode(dg, agnameof(subg), 1);
 	    agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	    ND_ptr(dn) = (Agobj_t*)subg;

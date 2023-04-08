@@ -19,6 +19,7 @@
 #include <sparse/colorutil.h>
 #include <stdbool.h>
 #include <string.h>
+#include <common/utils.h>
 
 typedef struct {
     Agrec_t h;
