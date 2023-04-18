@@ -252,15 +252,15 @@ CFrmSettings::CFrmSettings() {
   tempDia.setupUi(this);
   graph = nullptr;
   activeWindow = nullptr;
-  QString path;
+  QString pathname;
   char *s = nullptr;
 #ifndef _WIN32
   s = getenv("GVEDIT_PATH");
 #endif
   if (s)
-    path = QString::fromUtf8(s);
+    pathname = QString::fromUtf8(s);
   else
-    path = QString::fromStdString(find_share());
+    pathname = QString::fromStdString(find_share());
 
   connect(WIDGET(QPushButton, pbAdd), &QPushButton::clicked, this,
           &CFrmSettings::addSlot);
@@ -284,9 +284,10 @@ CFrmSettings::CFrmSettings() {
           &CFrmSettings::scopeChangedSlot);
   scopeChangedSlot(0);
 
-  if (!path.isEmpty()) {
-    loadAttrs(path + QLatin1String("/attrs.txt"), WIDGET(QComboBox, cbNameG),
-              WIDGET(QComboBox, cbNameN), WIDGET(QComboBox, cbNameE));
+  if (!pathname.isEmpty()) {
+    loadAttrs(pathname + QLatin1String("/attrs.txt"),
+              WIDGET(QComboBox, cbNameG), WIDGET(QComboBox, cbNameN),
+              WIDGET(QComboBox, cbNameE));
   }
   setWindowIcon(QIcon(QStringLiteral(":/images/icon.png")));
 }
