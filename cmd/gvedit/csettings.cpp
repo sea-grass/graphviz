@@ -44,7 +44,7 @@ extern int errorPipe(char *errMsg);
 
 #ifndef _WIN32
 /// `readlink`-alike but dynamically allocates
-static std::string readln(const std::string &path) {
+static std::string readln(const std::string &pathname) {
 
   std::vector<char> buf(512, '\0');
 
@@ -55,7 +55,7 @@ static std::string readln(const std::string &path) {
 
     // attempt to resolve
     {
-      ssize_t written = readlink(path.c_str(), buf.data(), buf.size());
+      ssize_t written = readlink(pathname.c_str(), buf.data(), buf.size());
       if (written < 0)
         break;
       if (static_cast<size_t>(written) < buf.size()) {
