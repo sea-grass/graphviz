@@ -358,11 +358,12 @@ struct Agclos_s {
 struct Agraph_s {
     Agobj_t base;
     Agdesc_t desc;
-    Dtlink_t link;
+    Dtlink_t seq_link;
+    Dtlink_t id_link;
     Dict_t *n_seq;		/* the node set in sequence */
     Dict_t *n_id;		/* the node set indexed by ID */
     Dict_t *e_seq, *e_id;	/* holders for edge sets */
-    Dict_t *g_dict;		/* subgraphs - descendants */
+    Dict_t *g_seq, *g_id;	/* subgraphs - descendants */
     Agraph_t *parent, *root;	/* subgraphs - ancestors */
     Agclos_t *clos;		/* shared resources */
 };
