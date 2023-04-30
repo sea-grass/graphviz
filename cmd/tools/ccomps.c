@@ -29,8 +29,6 @@
 #include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
-#include <common/types.h>
-#include <common/utils.h>
 
 typedef struct {
     Agrec_t h;

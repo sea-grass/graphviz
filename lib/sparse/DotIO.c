@@ -19,7 +19,8 @@
 #include <sparse/colorutil.h>
 #include <stdbool.h>
 #include <string.h>
-#include <common/utils.h>
+/* I couldn't get #include <common/utils.h> to work here */
+extern bool is_a_cluster(Agraph_t *g);
 
 typedef struct {
     Agrec_t h;
@@ -401,7 +402,7 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
     int gid = 1;  
     memset (*clusters, 0, sizeof(int)*nnodes);
     for (sg = agfstsubg(g); sg; sg = agnxtsubg(sg)) {
-      if (is_a_cluster(sg)) continue;
+      if (!is_a_cluster(sg)) continue;
       gid++;
       for (n = agfstnode(sg); n; n = agnxtnode (sg, n)) {
         i = ND_id(n);
