@@ -29,6 +29,7 @@
 #include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
+#include "iscluster.h"
 
 typedef struct {
     Agrec_t h;

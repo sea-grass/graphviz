@@ -26,6 +26,7 @@
 #include <cgraph/cghdr.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
+#include "iscluster.h"
 
 typedef struct {
     Agrec_t h;
@@ -185,10 +186,9 @@ static void cntCluster(Agraph_t * g, Agobj_t * sg, void *arg)
 {
     (void)g;
 
-    char *sgname = agnameof(sg);
-
-    if (strncmp(sgname, "cluster", 7) == 0)
+    if (is_a_cluster(sg)) {
 	*(int *) (arg) += 1;
+    }
 }
 
 static int cc_decompose(Agraph_t * g)
