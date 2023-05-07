@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Add library functions to recognize clusters consistently
 - Support for versions of Pango prior to 1.22.0 has been removed.
 - On Windows, the Pango plugin now uses the newer `pango_layout_get_baseline`
   API.

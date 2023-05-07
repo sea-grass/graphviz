@@ -778,13 +778,22 @@ void compute_bb(graph_t * g)
     GD_bb(g) = bb;
 }
 
+/*
+ * Graphviz layout programs that recognize clusters should use this.
+ * Unfortunately, programs in cmd/tools can't call this because they
+ * do not share the definitions of graphinfo, nodeinfo and edgeinfo.
+ * So any changes here must be manually copied to cmd/tools/iscluster.h
+ * Also, some gvpr scripts have ad-hoc code to find clusters.
+ */
 bool is_a_cluster (Agraph_t* g)
 {
   return g == g->root || !strncasecmp(agnameof(g), "cluster", 7) ||
          mapBool(agget(g, "cluster"), false);
 }
 
-/* provides an equivalent to the above for node scan in neatoinit.c */
+/*
+ * This provides an analog to the above for node scan in neatoinit.c
+ */
 bool is_a_cluster_noderep (Agnode_t* n)
 {
   return !strncasecmp(agnameof(n), "cluster", 7) ||
