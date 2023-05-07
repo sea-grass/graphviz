@@ -186,7 +186,7 @@ static void cntCluster(Agraph_t * g, Agobj_t * sg, void *arg)
 {
     (void)g;
 
-    if (is_a_cluster(sg)) {
+    if (is_a_cluster((Agraph_t*)sg)) {
 	*(int *) (arg) += 1;
     }
 }
