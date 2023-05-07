@@ -26,7 +26,7 @@
 #include <cgraph/cghdr.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
-#include <iscluster.h>
+#include "iscluster.h"
 
 typedef struct {
     Agrec_t h;
