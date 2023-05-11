@@ -649,11 +649,11 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
 	a[7].y = p.y + v.y;
     }
     if (flag & ARR_MOD_LEFT)
-	gvrender_polygon(job, a, 6, 1);
+	gvrender_polygon(job, a, 5, 1);
     else if (flag & ARR_MOD_RIGHT)
-	gvrender_polygon(job, &a[3], 6, 1);
+	gvrender_polygon(job, &a[4], 5, 1);
     else
-	gvrender_polygon(job, a, 9, 1);
+	gvrender_polygon(job, a, 8, 1);
 
     return q;
 }

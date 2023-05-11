@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   supported.
 - Double arrow head types like `invdot` and `onormalonormal` once again display
   correctly. This was a regression in Graphviz 8.0.1. #2406
+- The `lvee` and `rvee` edge arrow shapes are slighty incorrect for
+  penwidths > 1. #2399
 
 ## [8.1.0] – 2023-07-06
 
