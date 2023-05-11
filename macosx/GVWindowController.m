@@ -87,6 +87,24 @@
 	[documentView setAutoScales:YES];
 }
 
+- (IBAction)search:(id)sender
+{
+    [documentView setHighlightedSelections:nil];
+    NSString *searchString = ((NSSearchFieldCell*)sender).stringValue;
+    NSArray<PDFSelection*>* selection = [documentView.document findString:searchString withOptions:NSCaseInsensitiveSearch];
+    [documentView setHighlightedSelections:selection];
+
+    PDFSelection* nextSelection = [documentView.document findString:searchString fromSelection:documentView.currentSelection withOptions:NSCaseInsensitiveSearch];
+    [documentView setCurrentSelection:nextSelection animate:YES];
+    if (nextSelection != nil)
+        [documentView goToSelection:nextSelection];
+}
+
+- (void)performTextFinderAction:(id)sender
+{
+    [self.searchField becomeFirstResponder];
+}
+
 - (IBAction)printGraphDocument:(id)sender
 {
 	[documentView printWithInfo:[[self document] printInfo] autoRotate:NO];
@@ -112,7 +130,9 @@
 		return YES;
 	else if ([anItem action] == @selector(printGraphDocument:))
 		return YES;
-	else
+    else if ([anItem action] == @selector(performTextFinderAction:))
+        return YES;
+    else
 		return NO;
 }
 - (void)dealloc
