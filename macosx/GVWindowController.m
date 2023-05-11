@@ -42,6 +42,11 @@
 		[window zoom:self];
 
 	[documentView setDelegate:self];
+	[documentView setBackgroundColor:[NSColor textBackgroundColor]];
+	[documentView setAutoScales:YES];
+	if (@available(macOS 10.14, *)) {
+		[documentView enablePageShadows:NO];
+	}
 }
 
 - (void)graphDocumentDidChange:(NSNotification*)notification
@@ -80,7 +85,6 @@
 - (IBAction)zoomToFitView:(id)sender
 {
 	[documentView setAutoScales:YES];
-	[documentView setAutoScales:NO];
 }
 
 - (IBAction)printGraphDocument:(id)sender
