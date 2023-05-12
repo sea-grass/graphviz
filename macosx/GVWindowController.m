@@ -47,6 +47,13 @@
 	if (@available(macOS 10.14, *)) {
 		[documentView enablePageShadows:NO];
 	}
+	
+	// SF Symbols are unavailable before 11.0.
+	// All other fallback images are provided in the app,
+	// but for Attributes button a system image was used
+	if (attributesToolbarItem.image == nil) {
+		attributesToolbarItem.image = [NSImage imageNamed:@"NSInfo"];
+	}
 }
 
 - (void)graphDocumentDidChange:(NSNotification*)notification

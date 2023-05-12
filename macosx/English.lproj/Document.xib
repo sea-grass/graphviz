@@ -4,12 +4,14 @@
         <deployment version="1060" identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21507"/>
         <plugIn identifier="com.apple.pdfkit.ibplugin" version="21507"/>
+        <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Search Toolbar Item" minToolsVersion="12.0" minSystemVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="GVWindowController">
             <connections>
+                <outlet property="attributesToolbarItem" destination="100032" id="bOc-DR-NKa"/>
                 <outlet property="documentView" destination="100022" id="100023"/>
                 <outlet property="searchField" destination="5HE-lg-XwC" id="b3N-Ac-uzn"/>
                 <outlet property="window" destination="5" id="18"/>
@@ -34,35 +36,40 @@
             </view>
             <toolbar key="toolbar" implicitIdentifier="E9A9ADB5-713A-4433-AAA3-B6D7623B1EF1" displayMode="iconAndLabel" sizeMode="regular" id="100024">
                 <allowedToolbarItems>
-                    <toolbarItem implicitItemIdentifier="17DE7292-3A49-457D-8C8D-856E5DCBDED2" label="Attributes" paletteLabel="Attributes" tag="-1" image="NSInfo" catalog="system" id="100032">
+                    <toolbarItem implicitItemIdentifier="17DE7292-3A49-457D-8C8D-856E5DCBDED2" label="Attributes" paletteLabel="Attributes" tag="-1" id="100032">
+                        <imageReference key="image" image="info.circle" catalog="system" symbolScale="large"/>
                         <size key="minSize" width="22" height="22"/>
                         <size key="maxSize" width="22" height="22"/>
                         <connections>
                             <action selector="showAttributeInspector:" target="-1" id="100036"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="5E2EB609-3F36-43FE-8297-CCD3354D1A3E" label="Zoom Out" paletteLabel="Zoom Out" tag="-1" image="ZoomOutToolbarImage" id="100035">
+                    <toolbarItem implicitItemIdentifier="5E2EB609-3F36-43FE-8297-CCD3354D1A3E" label="Zoom Out" paletteLabel="Zoom Out" tag="-1" id="100035">
+                        <imageReference key="image" image="minus.magnifyingglass" catalog="system" symbolScale="large"/>
                         <size key="minSize" width="22" height="22"/>
                         <size key="maxSize" width="22" height="22"/>
                         <connections>
                             <action selector="zoomOutView:" target="-2" id="100042"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="C93CF1E0-362D-436C-A4DE-5305CEDEECA4" label="Actual Size" paletteLabel="Actual Size" tag="-1" image="ActualSizeToolbarImage" id="100033">
+                    <toolbarItem implicitItemIdentifier="C93CF1E0-362D-436C-A4DE-5305CEDEECA4" label="Actual Size" paletteLabel="Actual Size" tag="-1" id="100033">
+                        <imageReference key="image" image="1.magnifyingglass" catalog="system" symbolScale="large"/>
                         <size key="minSize" width="22" height="22"/>
                         <size key="maxSize" width="22" height="22"/>
                         <connections>
                             <action selector="actualSizeView:" target="-2" id="100040"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="A76BA0EB-7A4D-43FD-9371-004A2619F66B" label="Zoom In" paletteLabel="Zoom In" tag="-1" image="ZoomInToolbarImage" id="100034">
+                    <toolbarItem implicitItemIdentifier="A76BA0EB-7A4D-43FD-9371-004A2619F66B" label="Zoom In" paletteLabel="Zoom In" tag="-1" id="100034">
+                        <imageReference key="image" image="plus.magnifyingglass" catalog="system" symbolScale="large"/>
                         <size key="minSize" width="22" height="22"/>
                         <size key="maxSize" width="22" height="22"/>
                         <connections>
                             <action selector="zoomInView:" target="-2" id="100041"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="11EC59ED-53EE-4F57-A97C-1C81DFF1B2FA" label="Zoom To Fit" paletteLabel="Zoom To Fit" tag="-1" image="ZoomToFitToolbarImage" id="100043">
+                    <toolbarItem implicitItemIdentifier="11EC59ED-53EE-4F57-A97C-1C81DFF1B2FA" label="Zoom To Fit" paletteLabel="Zoom To Fit" tag="-1" id="100043">
+                        <imageReference key="image" image="arrow.up.left.and.down.right.magnifyingglass" catalog="system" symbolScale="large"/>
                         <size key="minSize" width="22" height="22"/>
                         <size key="maxSize" width="22" height="22"/>
                         <connections>
@@ -106,10 +113,10 @@
         <customObject id="-3" userLabel="Application"/>
     </objects>
     <resources>
-        <image name="ActualSizeToolbarImage" width="32" height="32"/>
-        <image name="NSInfo" catalog="system" width="32" height="32"/>
-        <image name="ZoomInToolbarImage" width="32" height="32"/>
-        <image name="ZoomOutToolbarImage" width="32" height="32"/>
-        <image name="ZoomToFitToolbarImage" width="32" height="32"/>
+        <image name="1.magnifyingglass" catalog="system" width="20" height="19"/>
+        <image name="arrow.up.left.and.down.right.magnifyingglass" catalog="system" width="20" height="19"/>
+        <image name="info.circle" catalog="system" width="19" height="19"/>
+        <image name="minus.magnifyingglass" catalog="system" width="20" height="19"/>
+        <image name="plus.magnifyingglass" catalog="system" width="20" height="19"/>
     </resources>
 </document>

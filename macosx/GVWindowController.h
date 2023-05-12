@@ -19,6 +19,7 @@
 @interface GVWindowController : NSWindowController <NSUserInterfaceValidations, PDFViewDelegate>
 {
 	IBOutlet PDFView *documentView;
+	IBOutlet NSToolbarItem *attributesToolbarItem;
 }
 @property (assign) IBOutlet NSSearchField *searchField;
 
