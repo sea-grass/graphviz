@@ -27,6 +27,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct adjmatrix_t {
+  int nrows;
+  int ncols;
+  char *data;
+};
+
 /* #define DEBUG */
 #define MARK(v)		(ND_mark(v))
 #define saveorder(v)	(ND_coord(v)).x
