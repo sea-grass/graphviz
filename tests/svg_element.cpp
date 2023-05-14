@@ -279,15 +279,17 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
       // there is always a next point since we iterate only to the next to
       // last point
       const auto &next_point = *std::next(it);
-      const SVG::SVGPoint miter_point =
+      const SVG::SVGPoints miter_shape =
           clockwise ?
                     // Graphviz draws some polygons clockwise and some
                     // counter-clockwise.
-              SVGElement::miter_point(prev_point, point, next_point)
+              SVGElement::miter_shape(prev_point, point, next_point)
                     :
                     // the SVG spec assumes clockwise so we swap the points
-              SVGElement::miter_point(next_point, point, prev_point);
-      m_bbox->extend(miter_point);
+              SVGElement::miter_shape(next_point, point, prev_point);
+      for (const auto &point : miter_shape) {
+        m_bbox->extend(point);
+      }
     }
     break;
   }
@@ -525,13 +527,15 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
         // there is always a next point since we iterate only to the next to
         // last point
         const auto &next_point = *std::next(it);
-        const SVG::SVGPoint miter_point =
+        SVG::SVGPoints miter_shape =
             // Graphviz draws some polylines clockwise and some
             // counter-clockwise.
-            clockwise ? SVGElement::miter_point(prev_point, point, next_point) :
+            clockwise ? SVGElement::miter_shape(prev_point, point, next_point) :
                       // `miter_point` assumes clockwise so we swap the points
-                SVGElement::miter_point(next_point, point, prev_point);
-        m_bbox->extend(miter_point);
+                SVGElement::miter_shape(next_point, point, prev_point);
+        for (const auto &point : miter_shape) {
+          m_bbox->extend(point);
+        }
       }
     }
     break;
@@ -921,12 +925,12 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   }
 }
 
-SVG::SVGPoint
-SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
+SVG::SVGPoints
+SVG::SVGElement::miter_shape(SVG::SVGPoint segment_start,
                              SVG::SVGPoint segment_end,
                              SVG::SVGPoint following_segment_end) const {
   /*
-   * Compute the stroke shape miter point according to
+   * Compute the stroke shape miter shape according to
    * https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
    *
    * The spec assumes the points of a shape are given in clockwise
@@ -1008,7 +1012,7 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
     // the stroke shape is really a point so we just return this point without
     // extending it with stroke width in any direction, which seems to be the
     // way SVG renderers render this.
-    return segment_end;
+    return {segment_end};
   }
 
   const auto stroke_width = attributes.stroke_width;
@@ -1040,6 +1044,7 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
   const auto beta_rev = beta - std::numbers::pi;
   const auto theta = beta_rev - alpha;
 
+  SVG::SVGPoints line_join_shape;
   const auto miter_limit = 4.0;
   const auto miter_length = stroke_width / std::sin(std::abs(theta) / 2.0);
 
@@ -1058,7 +1063,8 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
     const SVG::SVGPoint Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
 
     // SVG has inverted y axis so invert the returned y value
-    return {Pbevel.x, -Pbevel.y};
+    line_join_shape.emplace_back(Pbevel.x, -Pbevel.y);
+    return line_join_shape;
   }
 
   // length between P1 and P3 (and between P2 and P3)
@@ -1067,7 +1073,8 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
   const SVG::SVGPoint P3 = {P1.x + l * cosAlpha, P1.y + l * sinAlpha};
 
   // SVG has inverted y axis so invert the returned y value
-  return {P3.x, -P3.y};
+  line_join_shape.emplace_back(P3.x, -P3.y);
+  return line_join_shape;
 }
 
 std::string

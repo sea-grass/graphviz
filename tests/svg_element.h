@@ -207,9 +207,9 @@ private:
   std::string fill_opacity_attribute_to_string() const;
   /// Compute the stroke shape miter point according to
   /// https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
-  SVG::SVGPoint miter_point(SVG::SVGPoint segment_start,
-                            SVG::SVGPoint segment_end,
-                            SVG::SVGPoint following_segment_end) const;
+  SVG::SVGPoints miter_shape(SVG::SVGPoint segment_start,
+                             SVG::SVGPoint segment_end,
+                             SVG::SVGPoint following_segment_end) const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
   std::string stroke_opacity_attribute_to_string() const;
