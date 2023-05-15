@@ -1040,6 +1040,12 @@ SVG::SVGElement::miter_shape(SVG::SVGPoint segment_start,
   const auto cosBeta = dxB / hypotB;
   const auto beta = dyB > 0 ? std::acos(cosBeta) : -std::acos(cosBeta);
 
+  const auto sinBeta = dyB / hypotB;
+  const auto sinBetaMinusPi = -sinBeta;
+  const auto cosBetaMinusPi = -cosBeta;
+  const SVG::SVGPoint P2 = {P.x + stroke_width / 2.0 * sinBetaMinusPi,
+                            P.y - stroke_width / 2.0 * cosBetaMinusPi};
+
   // angle between the A segment and the B segment in the reverse direction
   const auto beta_rev = beta - std::numbers::pi;
   const auto theta = beta_rev - alpha;
@@ -1048,22 +1054,15 @@ SVG::SVGElement::miter_shape(SVG::SVGPoint segment_start,
   const auto miter_limit = 4.0;
   const auto miter_length = stroke_width / std::sin(std::abs(theta) / 2.0);
 
+  // add the bevel, which is is the triangle formed from the three points P, P1
+  // and P2, to the line join shape. SVG has inverted y axis so invert the
+  // returned y value
+  line_join_shape.emplace_back(P.x, -P.y);
+  line_join_shape.emplace_back(P1.x, -P1.y);
+  line_join_shape.emplace_back(P2.x, -P2.y);
+
   if (miter_length > miter_limit * stroke_width) {
-    // fall back to bevel
-    const auto sinBeta = dyB / hypotB;
-    const auto sinBetaMinusPi = -sinBeta;
-    const auto cosBetaMinusPi = -cosBeta;
-    const SVG::SVGPoint P2 = {P.x + stroke_width / 2.0 * sinBetaMinusPi,
-                              P.y - stroke_width / 2.0 * cosBetaMinusPi};
-
-    // the bevel is the triangle formed from the three points P, P1 and P2 so
-    // a good enough approximation of the miter point in this case is the
-    // crossing of P-P3 with P1-P2 which is the same as the midpoint between
-    // P1 and P2
-    const SVG::SVGPoint Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
-
-    // SVG has inverted y axis so invert the returned y value
-    line_join_shape.emplace_back(Pbevel.x, -Pbevel.y);
+    // fall back to bevel only
     return line_join_shape;
   }
 
