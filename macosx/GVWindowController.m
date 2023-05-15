@@ -85,7 +85,7 @@
 
 - (IBAction)printGraphDocument:(id)sender
 {
-	[documentView printWithInfo:[[self document] printInfo] autoRotate:NO];
+	[documentView printWithInfo:[[self document] printInfo] autoRotate:NO pageScaling:kPDFPrintPageScaleDownToFit];
 }
 
 - (void)PDFViewWillClickOnLink:(PDFView *)sender withURL:(NSURL *)URL
