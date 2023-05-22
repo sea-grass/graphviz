@@ -11,8 +11,8 @@
 // correctly
 
 TEST_CASE("Edge node overlap for all arrow shapes",
-          "[!shouldfail] An edge connected to a node shall touch that node and "
-          "not overlap it too much, regardless of the arrow shape") {
+          "An edge connected to a node shall touch that node and not overlap "
+          "it too much, regardless of the arrow shape") {
 
   std::string filename_base = AUTO_NAME();
 

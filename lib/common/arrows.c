@@ -129,6 +129,7 @@ static pointf arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize
 static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
 
 static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, uint32_t flag);
+static double arrow_length_crow(double lenfact, double arrowsize, double penwidth, uint32_t flag);
 static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, uint32_t flag);
 static double arrow_length_tee(double lenfact, double arrowsize, double penwidth, uint32_t flag);
 static double arrow_length_box(double lenfact, double arrowsize, double penwidth, uint32_t flag);
@@ -138,7 +139,7 @@ static double arrow_length_dot(double lenfact, double arrowsize, double penwidth
 
 static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
-    {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_generic},
+    {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_crow},
     {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_tee},
     {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_box},
     {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_diamond},
@@ -1321,4 +1322,45 @@ static double arrow_length_curve(double lenfact, double arrowsize,
   (void)flag;
 
   return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+}
+
+static double arrow_length_crow(double lenfact, double arrowsize,
+                                 double penwidth, uint32_t flag) {
+  pointf a[9];
+  // set arrow end point at origin
+  const pointf p = {0, 0};
+  // generate an arrowhead vector along x-axis
+  const pointf u = {lenfact * arrowsize * ARROW_LENGTH, 0};
+
+  // arrow start point
+  pointf q = arrow_type_crow0(p, u, arrowsize, penwidth, flag, a);
+
+  const pointf base1 = a[1];
+  const pointf base2 = a[7];
+  const pointf tip = a[0];
+  const pointf shaft1 = a[3];
+  const double full_length = q.x;
+  assert(full_length > 0 && "non-positive full length");
+  const double full_length_without_shaft = full_length - (base1.x - shaft1.x);
+  assert(full_length_without_shaft > 0 && "non-positive full length without shaft");
+  const double nominal_length = fabs(base1.x - tip.x);
+  const double nominal_base_width = base2.y - base1.y;
+  assert(nominal_base_width > 0 && "non-positive nominal base width");
+  // the full base width is proportionally scaled with the length
+  const double full_base_width =
+      nominal_base_width * full_length_without_shaft / nominal_length;
+  assert(full_base_width > 0 && "non-positive full base width");
+
+  // we want a small overlap between the edge path (stem) and the arrow to avoid
+  // gaps between them in case the arrow has a corner towards the edge path
+  const double overlap_at_base = penwidth / 2;
+  // overlap the tip to a point where its width is equal to the penwidth.
+  const double length_where_width_is_penwidth =
+      full_length_without_shaft * penwidth / full_base_width;
+  const double overlap_at_tip = length_where_width_is_penwidth;
+
+  const double overlap = flag & ARR_MOD_INV ? overlap_at_base : overlap_at_tip;
+  // arrow length is the x value of the start point since the arrow points along
+  // the positive x axis and ends at origin
+  return full_length - overlap;
 }

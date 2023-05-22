@@ -5,12 +5,9 @@
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
 
-// FIXME: this test fails for all primitive arrow types except `normal` and
-// `inv` which currently are the only ones fixed for penwidth
-
 TEST_CASE("Edge node overlap for all primitive arrow shapes",
-          "[!shouldfail] An edge connected to a node shall touch that node and "
-          "not overlap it too much, regardless of the primitive arrow shape") {
+          "An edge connected to a node shall touch that node and not overlap "
+          "it too much, regardless of the primitive arrow shape") {
 
   std::string filename_base = AUTO_NAME();
 

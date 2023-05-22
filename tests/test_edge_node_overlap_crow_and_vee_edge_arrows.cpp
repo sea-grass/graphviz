@@ -7,8 +7,8 @@
 #include "test_utilities.h"
 
 TEST_CASE("Edge node overlap for crow and vee arrow",
-          "[!shouldfail] An edge connected to a node shall touch that node and "
-          "not overlap it too much") {
+          "An edge connected to a node shall touch that node and not overlap "
+          "it too much") {
 
   std::string filename_base = AUTO_NAME();
 
