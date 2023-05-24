@@ -72,14 +72,16 @@ Agraph_t *agopen1(Agraph_t * g)
     g->n_id = agdtopen(g, &Ag_subnode_id_disc, Dttree);
     g->e_seq = agdtopen(g, g == agroot(g)? &Ag_mainedge_seq_disc : &Ag_subedge_seq_disc, Dttree);
     g->e_id = agdtopen(g, g == agroot(g)? &Ag_mainedge_id_disc : &Ag_subedge_id_disc, Dttree);
-    g->g_dict = agdtopen(g, &Ag_subgraph_id_disc, Dttree);
+    g->g_seq = agdtopen(g, &Ag_subgraph_seq_disc, Dttree);
+    g->g_id = agdtopen(g, &Ag_subgraph_id_disc, Dttree);
 
     par = agparent(g);
     if (par) {
 	uint64_t seq = agnextseq(par, AGRAPH);
 	assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
 	AGSEQ(g) = seq & SEQ_MASK;
-	dtinsert(par->g_dict, g);
+	dtinsert(par->g_seq, g);
+	dtinsert(par->g_id, g);
     }
     if (!par || par->desc.has_attrs)
 	agraphattr_init(g);
@@ -127,8 +129,11 @@ int agclose(Agraph_t * g)
     assert(dtsize(g->e_seq) == 0);
     if (agdtclose(g, g->e_seq)) return FAILURE;
 
-    assert(dtsize(g->g_dict) == 0);
-    if (agdtclose(g, g->g_dict)) return FAILURE;
+    assert(dtsize(g->g_seq) == 0);
+    if (agdtclose(g, g->g_seq)) return FAILURE;
+
+    assert(dtsize(g->g_id) == 0);
+    if (agdtclose(g, g->g_id)) return FAILURE;
 
     if (g->desc.has_attrs)
 	if (agraphattr_delete(g)) return FAILURE;
@@ -176,7 +181,7 @@ int agnedges(Agraph_t * g)
 
 int agnsubg(Agraph_t * g)
 {
-	return dtsize(g->g_dict);
+	return dtsize(g->g_seq);
 }
 
 int agisdirected(Agraph_t * g)
@@ -239,6 +244,21 @@ int agdegree(Agraph_t * g, Agnode_t * n, int want_in, int want_out)
 	return rv;
 }
 
+static int agraphseqcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
+{
+    (void)d; /* unused */
+    (void)disc; /* unused */
+    Agraph_t *sg0 = arg0;
+    Agraph_t *sg1 = arg1;
+    if (AGSEQ(sg0) < AGSEQ(sg1)) {
+	return -1;
+    }
+    if (AGSEQ(sg0) > AGSEQ(sg1)) {
+	return 1;
+    }
+    return 0;
+}
+
 static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
 {
     (void)d; /* unused */
@@ -254,8 +274,14 @@ static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
     return 0;
 }
 
+Dtdisc_t Ag_subgraph_seq_disc = {
+    .link = offsetof(Agraph_t, seq_link), // link offset
+    .comparf = agraphseqcmpf,
+    .memoryf = agdictobjmem,
+};
+
 Dtdisc_t Ag_subgraph_id_disc = {
-    .link = offsetof(Agraph_t, link), // link offset
+    .link = offsetof(Agraph_t, id_link), // link offset
     .comparf = agraphidcmpf,
     .memoryf = agdictobjmem,
 };

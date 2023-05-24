@@ -57,10 +57,6 @@ typedef struct {
 #define ED_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
 #define GD_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
 
-static bool IS_CLUSTER(Agraph_t *s) {
-  return startswith(agnameof(s), "cluster");
-}
-
 static void json_begin_graph(GVJ_t *job)
 {
     if (job->render.id == FORMAT_JSON) {
@@ -642,7 +638,7 @@ static int label_subgs(Agraph_t* g, int lbl, Dt_t* map)
 
     if (g != agroot(g)) {
 	GD_gid(g) = lbl++;
-	if (IS_CLUSTER(g))
+	if (is_a_cluster(g))
 	    insert (map, agnameof(g), GD_gid(g)); 
     }
     for (sg = agfstsubg(g); sg; sg = agnxtsubg(sg)) {
