@@ -446,14 +446,19 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 // See https://www.w3.org/TR/SVG2/painting.html#TermLineJoinShape for the
 // terminology
 
-static pointf miter_point(pointf base_left, pointf P, pointf base_right,
-                          double penwidth) {
+typedef struct {
+  pointf points[3];
+} triangle;
+
+static triangle
+miter_shape(pointf base_left, pointf P, pointf base_right, double penwidth) {
   if ((base_left.x == P.x && base_left.y == P.y) ||
       (base_right.x == P.x && base_right.y == P.y)) {
     // the stroke shape is really a point so we just return this point without
     // extending it with penwidth in any direction, which seems to be the way
     // SVG renderers render this.
-    return P;
+    const triangle line_join_shape = {{P, P, P}};
+    return line_join_shape;
   }
   const pointf A[] = {base_left, P};
   const double dxA = A[1].x - A[0].x;
@@ -483,21 +488,23 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
   const double stroke_miterlimit = 4.0;
   const double normalized_miter_length = 1.0 / sin(theta / 2.0);
 
+  const double sinBeta = dyB / hypotB;
+  const double sinBetaMinusPi = -sinBeta;
+  const double cosBetaMinusPi = -cosBeta;
+  const pointf P2 = {P.x + penwidth / 2.0 * sinBetaMinusPi,
+                     P.y - penwidth / 2.0 * cosBetaMinusPi};
+
   if (normalized_miter_length > stroke_miterlimit)  {
     // fall back to bevel
-    const double sinBeta = dyB / hypotB;
-    const double sinBetaMinusPi = -sinBeta;
-    const double cosBetaMinusPi = -cosBeta;
-    const pointf P2 = {P.x + penwidth / 2.0 * sinBetaMinusPi,
-                       P.y - penwidth / 2.0 * cosBetaMinusPi};
 
     // the bevel is the triangle formed from the three points P, P1 and P2 so
     // a good enough approximation of the miter point in this case is the
     // crossing of P-P3 with P1-P2 which is the same as the midpoint between
     // P1 and P2
     const pointf Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
+    const triangle line_join_shape = {{Pbevel, P1, P2}};
 
-    return Pbevel;
+    return line_join_shape;
   }
 
   // length between P1 and P3 (and between P2 and P3)
@@ -505,8 +512,9 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
 
   const pointf P3 = {P1.x + l * cosAlpha,
                      P1.y + l * sinAlpha};
+  const triangle line_join_shape = {{P3, P1, P2}};
 
-  return P3;
+  return line_join_shape;
 }
 
 static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
@@ -535,7 +543,8 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
     const pointf inv_tip = u;
     const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
 
-    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+    const pointf P3 = line_join_shape.points[0];
 
     const point delta_tip = {P3.x - P.x, P3.y - P.y};
 
@@ -812,7 +821,8 @@ static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth,
     const pointf tip = scale(-1, u);
     const pointf P = tip;
 
-    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+    const pointf P3 = line_join_shape.points[0];
 
     const pointf delta = sub_pointf(P3, P);
 
