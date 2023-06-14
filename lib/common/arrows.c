@@ -543,15 +543,43 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
     const pointf inv_tip = u;
     const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
 
-    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
-    const pointf P3 = line_join_shape.points[0];
-
-    const point delta_tip = {P3.x - P.x, P3.y - P.y};
+    pointf delta_tip = {0, 0};
 
     if (u.x != 0 || u.y != 0) {
 	// phi = angle of arrow
 	const double cosPhi = P.x / hypot(P.x, P.y);
 	const double sinPhi = P.y / hypot(P.x, P.y);
+	const double phi = P.y > 0 ? acos(cosPhi) : -acos(cosPhi);
+
+	if (flag & ARR_MOD_LEFT) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P1 = line_join_shape.points[1];
+	    // alpha = angle of P -> P1
+	    const double dx_P_P1 = P1.x - P.x;
+	    const double dy_P_P1 = P1.y - P.y;
+	    const double hypot_P_P1 = hypot(dx_P_P1, dy_P_P1);
+	    const double cosAlpha = dx_P_P1 / hypot_P_P1;
+	    const double alpha = dy_P_P1 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P1 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else if (flag & ARR_MOD_RIGHT) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P2 = line_join_shape.points[2];
+	    // alpha = angle of P -> P2
+	    const double dx_P_P2 = P2.x - P.x;
+	    const double dy_P_P2 = P2.y - P.y;
+	    const double hypot_P_P2 = hypot(dx_P_P2, dy_P_P2);
+	    const double cosAlpha = dx_P_P2 / hypot_P_P2;
+	    const double alpha = dy_P_P2 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P2 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P3 = line_join_shape.points[0];
+	    delta_tip = sub_pointf(P3, P);
+	}
 	delta_base = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
     }
 
