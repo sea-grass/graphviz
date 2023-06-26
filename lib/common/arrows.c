@@ -633,9 +633,9 @@ static pointf arrow_type_normal(GVJ_t *job, pointf p, pointf u,
     return q;
 }
 
-static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                              double penwidth, uint32_t flag) {
-    pointf m, q, v, w, a[9];
+static pointf arrow_type_crow0(pointf p, pointf u, double arrowsize,
+			      double penwidth, uint32_t flag, pointf *a) {
+    pointf m, q, v, w;
     double arrowwidth, shaftwidth;
 
     arrowwidth = 0.45;
@@ -654,7 +654,86 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
     q.y = p.y + u.y;
     m.x = p.x + u.x * 0.5;
     m.y = p.y + u.y * 0.5;
+
+    pointf delta_base = {0, 0};
+
+    const pointf origin = {0, 0};
+    const pointf v_inv = {-v.x, -v.y};
+    const pointf normal_left = flag & ARR_MOD_RIGHT ? origin : v;
+    const pointf normal_right = flag & ARR_MOD_LEFT ? origin : v_inv;
+    const pointf base_left = flag & ARR_MOD_INV ? normal_right : normal_left;
+    const pointf base_right = flag & ARR_MOD_INV ? normal_left : normal_right;
+    const pointf normal_tip = u;
+    const pointf inv_tip = {-u.x, -u.y};
+    const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
+
+    pointf delta_tip = {0, 0};
+
+    if (u.x != 0 || u.y != 0) {
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	const double phi = P.y > 0 ? acos(cosPhi) : -acos(cosPhi);
+
+	if ((flag & ARR_MOD_LEFT && flag & ARR_MOD_INV) || (flag & ARR_MOD_RIGHT && !(flag & ARR_MOD_INV))) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P2 = line_join_shape.points[2];
+	    // alpha = angle of P -> P2
+	    const double dx_P_P2 = P2.x - P.x;
+	    const double dy_P_P2 = P2.y - P.y;
+	    const double hypot_P_P2 = hypot(dx_P_P2, dy_P_P2);
+	    const double cosAlpha = dx_P_P2 / hypot_P_P2;
+	    const double alpha = dy_P_P2 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P2 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else if ((flag & ARR_MOD_LEFT && !(flag & ARR_MOD_INV)) || (flag & ARR_MOD_RIGHT && flag & ARR_MOD_INV)) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P1 = line_join_shape.points[1];
+	    // alpha = angle of P -> P1
+	    const double dx_P_P1 = P1.x - P.x;
+	    const double dy_P_P1 = P1.y - P.y;
+	    const double hypot_P_P1 = hypot(dx_P_P1, dy_P_P1);
+	    const double cosAlpha = dx_P_P1 / hypot_P_P1;
+	    const double alpha = dy_P_P1 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P1 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P3 = line_join_shape.points[0];
+	    delta_tip = sub_pointf(P3, P);
+	}
+	if (flag & ARR_MOD_INV) {  /* vee */
+	    delta_base = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+	} else {
+	    // the left and right "toes" of the crow extend in the direction of
+	    // the arrow by the same amount. Their shape is not affected by the
+	    // 'l' or 'r' modifiers. Here we use the right "toe" to calculate
+	    // the extension. This is ok even if it's not actually rendered when
+	    // the 'l' modifier is used.
+	    const pointf toe_base_left = add_pointf(sub_pointf(m, q), w);
+	    const pointf toe_base_right = origin;
+	    const pointf toe_P = sub_pointf(v, u);
+	    const triangle toe_line_join_shape = miter_shape(toe_base_left, toe_P, toe_base_right, penwidth);
+	    const pointf P1 = toe_line_join_shape.points[1];
+	    // alpha = angle of toe_P -> P1
+	    const double dx_P_P1 = P1.x - toe_P.x;
+	    const double dy_P_P1 = P1.y - toe_P.y;
+	    const double hypot_P_P1 = hypot(dx_P_P1, dy_P_P1);
+	    const double cosAlpha = dx_P_P1 / hypot_P_P1;
+	    const double alpha = dy_P_P1 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = -hypot_P_P1 * cos(gamma);
+	    delta_base = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	}
+    }
+
     if (flag & ARR_MOD_INV) {  /* vee */
+	p.x -= delta_tip.x;
+	p.y -= delta_tip.y;
+	q.x -= delta_tip.x;
+	q.y -= delta_tip.y;
 	a[0] = a[8] = p;
 	a[1].x = q.x - v.x;
 	a[1].y = q.y - v.y;
@@ -669,7 +748,13 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
 	a[6].y = m.y + w.y;
 	a[7].x = q.x + v.x;
 	a[7].y = q.y + v.y;
+	q.x -= delta_base.x;
+	q.y -= delta_base.y;
     } else {                     /* crow */
+	p.x += delta_base.x;
+	p.y += delta_base.y;
+	q.x += delta_base.x;
+	q.y += delta_base.y;
 	a[0] = a[8] = q;
 	a[1].x = p.x - v.x;
 	a[1].y = p.y - v.y;
@@ -684,7 +769,19 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
 	a[6].y = m.y + w.y;
 	a[7].x = p.x + v.x;
 	a[7].y = p.y + v.y;
+	q.x += delta_tip.x;
+	q.y += delta_tip.y;
     }
+    return q;
+}
+
+static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
+		      double penwidth, uint32_t flag) {
+    (void)arrowsize;
+
+    pointf a[9];
+
+    pointf q = arrow_type_crow0(p, u, arrowsize, penwidth, flag, a);
     if (flag & ARR_MOD_LEFT)
 	gvrender_polygon(job, a, 5, 1);
     else if (flag & ARR_MOD_RIGHT)
