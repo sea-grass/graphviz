@@ -12,11 +12,12 @@ pages:
     before_script:
         - apk update; apk --quiet add python3 doxygen ttf-freefont graphviz
     script:
+        - mkdir public
         # Ideally it would be better to integrate pages and doxygen with autotools.
         # But it is not trivial and the solution is not yet found.
         # So workaround with sed is much more easier:
         - sed "s/^\(PROJECT_NUMBER\)\s*=.*/\1=$(python3 gen_version.py)/" Doxyfile.in |
-              doxygen -q -
+              (cd ..; doxygen -q -)
     artifacts:
         paths:
             - public
