@@ -907,38 +907,11 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = cmd/dot \
-                         lib/cdt \
-                         lib/cgraph \
-                         lib/circogen \
-                         lib/common \
-                         lib/dotgen \
-                         lib/fdpgen \
-                         lib/gvc \
-                         lib/neatogen \
-                         lib/osage \
-                         lib/pack \
-                         lib/patchwork \
-                         lib/pathplan \
-                         lib/rbtree \
-                         lib/sfdpgen \
-                         lib/sparse \
-                         lib/twopigen \
-                         lib/xdot \
-                         plugin/core \
-                         plugin/devil \
-                         plugin/gd \
-                         plugin/gdk \
-                         plugin/gtk \
-                         plugin/lasi \
-                         plugin/pango \
-                         plugin/dot_layout \
-                         plugin/neato_layout \
-                         plugin/poppler \
-                         plugin/rsvg \
-                         plugin/xlib \
-                         tclpkg/gv \
-                         tclpkg/tcldot
+INPUT                  = cmd \
+                         lib \
+                         dot.demo \
+                         plugin \
+                         tclpkg
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -986,7 +959,7 @@ FILE_PATTERNS          = *.c \
 # be searched for input files as well.
 # The default value is: NO.
 
-RECURSIVE              = NO
+RECURSIVE              = yes
 
 # The EXCLUDE tag can be used to specify files and/or directories that should be
 # excluded from the INPUT source files. This way you can easily exclude a
