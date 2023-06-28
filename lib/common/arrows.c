@@ -760,11 +760,11 @@ static pointf arrow_type_crow0(pointf p, pointf u, double arrowsize,
 	a[1].y = p.y - v.y;
 	a[2].x = m.x - w.x;
 	a[2].y = m.y - w.y;
-	a[3].x = p.x;
-	a[3].y = p.y;
-	a[4] = p;
-	a[5].x = p.x;
-	a[5].y = p.y;
+	a[3].x = p.x + delta_base.x;
+	a[3].y = p.y + delta_base.y;
+	a[4] = add_pointf(p, delta_base);
+	a[5].x = p.x + delta_base.x;
+	a[5].y = p.y + delta_base.y;
 	a[6].x = m.x + w.x;
 	a[6].y = m.y + w.y;
 	a[7].x = p.x + v.x;
