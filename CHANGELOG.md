@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Man page typography has been slightly improved.
 - macOS release artifacts no longer include `vimdot`. This may be restored in
   future. #2423
+- macOS release artifacts no longer include `smyrna`. This may be restored in
+  future. #2422
 
 ### Fixed
 
