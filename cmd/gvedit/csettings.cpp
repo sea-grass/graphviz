@@ -94,7 +94,7 @@ static std::string find_me(void) {
 #elif defined(_WIN32)
   {
     std::vector<char> path;
-    int rc = 0;
+    DWORD rc = 0;
 
     do {
       {
