@@ -217,10 +217,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 			 (sz <= 0 ? strcmp(k1,k2) : memcmp(k1,k2,(size_t)sz)) )
 #define _DTHSH(dt,ky,dc,sz) (dc->hashf ? (*dc->hashf)(dt,ky,dc) : dtstrhash(0,ky,sz) )
 
-#define dtvnext(d)	(_DT(d)->view)
-#define dtvcount(d)	(_DT(d)->nview)
-#define dtvhere(d)	(_DT(d)->walk)
-
 #define dtlink(d,e)	(((Dtlink_t*)(e))->right)
 #define dtobj(d,e)	_DTOBJ((e), _DT(d)->disc->link)
 #define dtfinger(d)	(_DT(d)->data->here ? dtobj((d),_DT(d)->data->here):(void*)(0))

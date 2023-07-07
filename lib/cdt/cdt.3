@@ -88,9 +88,6 @@ int       dtrestore(Dt_t* dt, Dtlink_t* link);
 .Ce
 .Ss "DICTIONARY STATUS"
 .Cs
-Dt_t*     dtvnext(Dt_t* dt);
-int       dtvcount(Dt_t* dt);
-Dt_t*     dtvhere(Dt_t* dt);
 int       dtsize(Dt_t* dt);
 int       dtstat(Dt_t* dt, Dtstat_t*, int all);
 .Ce
@@ -493,13 +490,6 @@ extraction and restoration. Otherwise, undefined behaviors may result.
 .PP
 .Ss "DICTIONARY INFORMATION"
 .PP
-.Ss "  Dt_t* dtvnext(Dt_t* dt)"
-This returns the dictionary that \f5dt\fP is viewing, if any.
-.Ss "  int dtvcount(Dt_t* dt)"
-This returns the number of dictionaries that view \f5dt\fP.
-.Ss "  Dt_t* dtvhere(Dt_t* dt)"
-This returns the dictionary \f5v\fP viewable from \f5dt\fP
-where an object was found from the most recent search or walk operation.
 .Ss "  int dtsize(Dt_t* dt)"
 This function returns the number of objects stored in \f5dt\fP.
 .PP
