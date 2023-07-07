@@ -4,7 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (8.1.1)]
+## [Unreleased (9.0.0)]
+
+### Changed
+
+- **Breaking**: The definition of `adjmatrix_t` is no longer exposed in public
+  headers.
+
+### Fixed
+
+- Processing large graphs that induce ranks containing more than 46340
+  (`floor(√INT_MAX)`) nodes no longer results in an integer overflow during
+  crossing matrix allocation. Ranks of up to `floor(√SIZE_MAX)` nodes are now
+  supported.
 
 ## [8.1.0] – 2023-07-06
 

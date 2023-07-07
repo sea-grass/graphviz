@@ -192,11 +192,7 @@ extern "C" {
 	node_t **tail;
     } nodequeue;
 
-    typedef struct adjmatrix_t {
-	int nrows;
-	int ncols;
-	char *data;
-    } adjmatrix_t;
+    typedef struct adjmatrix_t adjmatrix_t;
 
     typedef struct rank_t {
 	int n;			/* number of nodes in this rank  */

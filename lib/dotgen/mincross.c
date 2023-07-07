@@ -27,10 +27,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct adjmatrix_t {
+  size_t nrows;
+  size_t ncols;
+  char *data;
+};
+
 /* #define DEBUG */
 #define MARK(v)		(ND_mark(v))
 #define saveorder(v)	(ND_coord(v)).x
-#define flatindex(v)	ND_low(v)
+#define flatindex(v)	((size_t)ND_low(v))
 
 	/* forward declarations */
 static bool medians(graph_t * g, int r0, int r1);
@@ -49,7 +55,7 @@ static void mincross_step(graph_t * g, int pass);
 static void mincross_options(graph_t * g);
 static void save_best(graph_t * g);
 static void restore_best(graph_t * g);
-static adjmatrix_t *new_matrix(int i, int j);
+static adjmatrix_t *new_matrix(size_t i, size_t j);
 static void free_matrix(adjmatrix_t * p);
 static int ordercmpf(int *i0, int *i1);
 #ifdef DEBUG
@@ -388,8 +394,7 @@ void dot_mincross(graph_t * g, int doBalance)
     cleanup2(g, nc);
 }
 
-static adjmatrix_t *new_matrix(int i, int j)
-{
+static adjmatrix_t *new_matrix(size_t i, size_t j) {
     adjmatrix_t *rv = gv_alloc(sizeof(adjmatrix_t));
     rv->nrows = i;
     rv->ncols = j;
@@ -1244,10 +1249,10 @@ static void flat_breakcycles(graph_t * g)
 	    v = GD_rank(g)[r].v[i];
 	    ND_mark(v) = FALSE;
 	    ND_onstack(v) = false;
-	    flatindex(v) = i;
+	    ND_low(v) = i;
 	    if (ND_flat_out(v).size > 0 && flat == 0) {
 		GD_rank(g)[r].flat =
-		    new_matrix(GD_rank(g)[r].n, GD_rank(g)[r].n);
+		    new_matrix((size_t)GD_rank(g)[r].n, (size_t)GD_rank(g)[r].n);
 		flat = 1;
 	    }
 	}
