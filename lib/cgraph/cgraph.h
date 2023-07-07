@@ -530,8 +530,6 @@ CGRAPH_API extern Agdesc_t Agstrictundirected;
 /// @defgroup cgraph_fast fast graphs
 /// @{
 void agflatten(Agraph_t * g, int flag);
-typedef Agsubnode_t	Agnoderef_t;
-typedef Dtlink_t	Agedgeref_t;
 
 /* this is expedient but a bit slimey because it "knows" that dict entries of both nodes
 and edges are embedded in main graph objects but allocated separately in subgraphs */

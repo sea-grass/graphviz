@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `AGLEFTPOINTER`, `FIRSTNREF`, `NEXTNREF`, `PREVNREF`, `LASTNREF`, `NODEOF`,
   `FIRSTOUTREF`, `LASTOUTREF`, `FIRSTINREF`, `NEXTEREF`, and `PREVEREF` have
   been removed.
+- **Breaking**: The libcgraph types `Agnoderef_t` and `Agedgeref_t` have been
+  removed.
 
 ### Fixed
 
