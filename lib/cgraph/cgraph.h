@@ -533,24 +533,6 @@ void agflatten(Agraph_t * g, int flag);
 typedef Agsubnode_t	Agnoderef_t;
 typedef Dtlink_t	Agedgeref_t;
 
-#define AGHEADPOINTER(g)	((Agnoderef_t*)(g->n_seq->data->hh._head))
-#define AGRIGHTPOINTER(rep)  	((Agnoderef_t*)((rep)->seq_link.right?((void*)((rep)->seq_link.right) - offsetof(Agsubnode_t,seq_link)):0))
-#define AGLEFTPOINTER(rep)  	((Agnoderef_t*)((rep)->seq_link.hl._left?((void*)((rep)->seq_link.hl._left) - offsetof(Agsubnode_t,seq_link)):0))
-
-#define FIRSTNREF(g)	(agflatten(g,1), AGHEADPOINTER(g))
-
-#define NEXTNREF(g,rep)  	(AGRIGHTPOINTER(rep) == AGHEADPOINTER(g)?0:AGRIGHTPOINTER(rep))
-
-#define PREVNREF(g,rep)  	(((rep)==AGHEADPOINTER(g))?0:(AGLEFTPOINTER(rep)))
-
-#define LASTNREF(g)		(agflatten(g,1), AGHEADPOINTER(g)?AGLEFTPOINTER(AGHEADPOINTER(g)):0)
-#define NODEOF(rep)		((rep)->node)
-
-#define FIRSTOUTREF(g,sn)	(agflatten(g,1), (sn)->out_seq)
-#define LASTOUTREF(g,sn)	(agflatten(g,1), (Agedgeref_t*)dtlast(sn->out_seq))
-#define FIRSTINREF(g,sn)	(agflatten(g,1), (sn)->in_seq)
-#define NEXTEREF(g,rep)  	((rep)->right)
-#define PREVEREF(g,rep)  	((rep)->hl._left)
 /* this is expedient but a bit slimey because it "knows" that dict entries of both nodes
 and edges are embedded in main graph objects but allocated separately in subgraphs */
 #define AGSNMAIN(sn)        ((sn)==(&((sn)->node->mainsub)))

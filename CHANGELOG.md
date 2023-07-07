@@ -14,6 +14,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   has been expanded from `USHRT_MAX` to `INT_MAX`. #2413
 - **Breaking**: The libcdt macros `DTTREEMATCH`, `DTTREESEARCH`, `dtvnext`,
   `dtvcount`, `dtvhere`, and `dtcharhash` have been removed.
+- **Breaking**: The libcgraph macros `AGHEADPOINTER`, `AGRIGHTPOINTER`,
+  `AGLEFTPOINTER`, `FIRSTNREF`, `NEXTNREF`, `PREVNREF`, `LASTNREF`, `NODEOF`,
+  `FIRSTOUTREF`, `LASTOUTREF`, `FIRSTINREF`, `NEXTEREF`, and `PREVEREF` have
+  been removed.
 
 ### Fixed
 

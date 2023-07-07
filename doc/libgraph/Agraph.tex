@@ -970,25 +970,6 @@ or reconstruct the trees if \verb"flag" is \verb"FALSE".
 Note that if any call adds or removes a graph object, the corresponding list
 is automatically returned to its tree form.
 
-The library provides various macros to automate the flattening and simplify
-the standard traversals. For example, the following code performs the usual
-traversal over all out-edges of a graph:
-\begin{verbatim}
-  Agnode_t* n;
-  Agedge_t* e;
-  Agnoderef_t* nr;
-  Agedgeref_t* er;
-  for (nr = FIRSTNREF(g); nr; nr = NEXTNREF(g,nr)) {
-    n = NODEOF(nr);
-    /* do something with node n */
-    for (er = FIRSTOUTREF(g,nr); er; er = NEXTEREF(g,er)) {
-      e = EDGEOF(er);
-      /* do something with edge e */
-    }
-  }
-\end{verbatim}
-Compare this with the code in shown on page \pageref{traversal}. 
-
 \section{Related Libraries}
 \label{sec:relatedlibraries}
 {\bf Libgraph} is a predecessor of Cgraph and is now considered
