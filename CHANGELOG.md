@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The libcgraph types `Agnoderef_t` and `Agedgeref_t` have been
   removed.
 - **Breaking**: The libcgraph function `agflatten` has been removed.
+- **Breaking**: The `Agdesc_s.flatlock` field has been removed.
 
 ### Fixed
 

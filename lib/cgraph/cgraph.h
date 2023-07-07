@@ -195,7 +195,6 @@ struct Agdesc_s {		/* graph descriptor */
     unsigned strict:1;		/* if multi-edges forbidden */
     unsigned no_loop:1;		/* if no loops */
     unsigned maingraph:1;	/* if this is the top level graph */
-    unsigned flatlock:1;	/* if sets are flattened into lists in cdt */
     unsigned no_write:1;	/* if a temporary subgraph */
     unsigned has_attrs:1;	/* if string attr tables should be initialized */
     unsigned has_cmpnd:1;	/* if may contain collapsed nodes */
