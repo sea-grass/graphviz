@@ -238,7 +238,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 #define dtfound(d)	(_DT(d)->type & DT_FOUND)
 
 #define DT_PRIME	17109811 /* 2#00000001 00000101 00010011 00110011 */
-#define dtcharhash(h,c) (((unsigned int)(h) + (unsigned int)(c)) * DT_PRIME )
 
 /**
  * @dir lib/cdt

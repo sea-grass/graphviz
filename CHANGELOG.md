@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The upper limit for minimum edge length (`Agedgeinfo_t.minlen`)
   has been expanded from `USHRT_MAX` to `INT_MAX`. #2413
 - **Breaking**: The libcdt macros `DTTREEMATCH`, `DTTREESEARCH`, `dtvnext`,
-  `dtvcount`, and `dtvhere` have been removed.
+  `dtvcount`, `dtvhere`, and `dtcharhash` have been removed.
 
 ### Fixed
 
