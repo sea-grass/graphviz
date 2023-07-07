@@ -963,12 +963,7 @@ This adds a small but noticeable overhead when traversing the ``lists.''
 For flat-out efficiency,
 there is a way of linearizing the splay trees in which node
 and edge sets are stored, converting them into flat lists.  After
-this they can be traversed very quickly. The function
-\verb"agflatten(Agraph_t *g, int flag)" 
-will flatten the trees if \verb"flag" is \verb"TRUE",
-or reconstruct the trees if \verb"flag" is \verb"FALSE".
-Note that if any call adds or removes a graph object, the corresponding list
-is automatically returned to its tree form.
+this they can be traversed very quickly.
 
 \section{Related Libraries}
 \label{sec:relatedlibraries}

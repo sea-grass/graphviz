@@ -163,7 +163,6 @@ EXCLUDE = (
     "lib/cgraph/cghdr.h",
     "lib/cgraph/cgraph.h",
     "lib/cgraph/edge.c",
-    "lib/cgraph/flatten.c",
     "lib/cgraph/graph.c",
     "lib/cgraph/id.c",
     "lib/cgraph/imap.c",
