@@ -85,9 +85,6 @@ Dtlink_t* dtlink(Dt_t*, Dtlink_t* link);
 void*   dtobj(Dt_t* dt, Dtlink_t* link);
 Dtlink_t* dtextract(Dt_t* dt);
 int       dtrestore(Dt_t* dt, Dtlink_t* link);
-
-#define   DTTREESEARCH(Dt_t* dt, void* obj, action)
-#define   DTTREEMATCH(Dt_t* dt, void* key, action)
 .Ce
 .Ss "DICTIONARY STATUS"
 .Cs
@@ -493,33 +490,6 @@ They are useful to reduce dictionary overhead
 in an application that creates many concurrent dictionaries.
 It is important that the same discipline and method are in use at both
 extraction and restoration. Otherwise, undefined behaviors may result.
-.PP
-.Ss "  #define   DTTREESEARCH(Dt_t* dt, void* obj, action)"
-.Ss "  #define   DTTREEMATCH(Dt_t* dt, void* key, action)"
-These macro functions are analogues of \f5dtsearch()\fP and \f5dtmatch()\fP
-but they can only be used on a dictionary based on a binary
-search tree, i.e., \f5Dtoset\fP or \f5Dtobag\fP.
-.Tp
-\f5obj\fP or \f5key\fP:
-These are used to find a matching object. If there is no match,
-the result is \f5NULL\fP.
-.Tp
-\f5action\fP:
-The matching object \f5o\fP (which may be \f5NULL\fP) will be processed as follow:
-
-.Cs
-    action (o);
-.Ce
-
-Since \f5action\fP is used verbatim, it can be any C code
-fragment combinable with \f5(o)\fP to form a syntactically correct C statement.
-For example, suppose that the matching object is an integer, the below code
-accumulates the integer value in a variable \f5total\fP:
-
-.Cs
-    DTTREEMATCH(dt, key, total += (int));
-.Ce
-
 .PP
 .Ss "DICTIONARY INFORMATION"
 .PP

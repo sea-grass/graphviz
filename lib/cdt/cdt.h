@@ -217,36 +217,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 			 (sz <= 0 ? strcmp(k1,k2) : memcmp(k1,k2,(size_t)sz)) )
 #define _DTHSH(dt,ky,dc,sz) (dc->hashf ? (*dc->hashf)(dt,ky,dc) : dtstrhash(0,ky,sz) )
 
-/* special search function for tree structure only */
-#define _DTMTCH(dt,key,action) \
-	do { Dtlink_t* _e; void *_o, *_k, *_key; Dtdisc_t* _dc; \
-	     int _ky, _sz, _lk, _cmp; Dtcompar_f _cmpf; \
-	     _dc = (dt)->disc; _DTDSC(_dc, _ky, _sz, _lk, _cmpf); \
-	     _key = (key); \
-	     for(_e = (dt)->data->here; _e; _e = _cmp < 0 ? _e->hl._left : _e->right) \
-	     {	_o = _DTOBJ(_e, _lk); _k = _DTKEY(_o, _ky, _sz); \
-		if((_cmp = _DTCMP((dt), _key, _k, _dc, _cmpf, _sz)) == 0) \
-			break; \
-	     } \
-	     action (_e ? _o : (void*)0); \
-	} while(0)
-
-#define _DTSRCH(dt,obj,action) \
-	do { Dtlink_t* _e; void *_o, *_k, *_key; Dtdisc_t* _dc; \
-	     int _ky, _sz, _lk, _cmp; Dtcompar_f _cmpf; \
-	     _dc = (dt)->disc; _DTDSC(_dc, _ky, _sz, _lk, _cmpf); \
-	     _key = _DTKEY(obj, _ky, _sz); \
-	     for(_e = (dt)->data->here; _e; _e = _cmp < 0 ? _e->hl._left : _e->right) \
-	     {	_o = _DTOBJ(_e, _lk); _k = _DTKEY(_o, _ky, _sz); \
-		if((_cmp = _DTCMP((dt), _key, _k, _dc, _cmpf, _sz)) == 0) \
-			break; \
-	     } \
-	     action (_e ? _o : (void*)0); \
-	} while(0)
-
-#define DTTREEMATCH(dt,key,action)	_DTMTCH(_DT(dt),(void*)(key),action)
-#define DTTREESEARCH(dt,obj,action)	_DTSRCH(_DT(dt),(void*)(obj),action)
-
 #define dtvnext(d)	(_DT(d)->view)
 #define dtvcount(d)	(_DT(d)->nview)
 #define dtvhere(d)	(_DT(d)->walk)
