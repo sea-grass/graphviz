@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`floor(√INT_MAX)`) nodes no longer results in an integer overflow during
   crossing matrix allocation. Ranks of up to `floor(√SIZE_MAX)` nodes are now
   supported.
+- Double arrow head types like `invdot` and `onormalonormal` once again display
+  correctly. This was a regression in Graphviz 8.0.1. #2406
 
 ## [8.1.0] – 2023-07-06
 
