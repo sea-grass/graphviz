@@ -2814,6 +2814,23 @@ def test_2404():
     subprocess.check_call(["shellcheck", "-S", "error", gvmap_sh])
 
 
+def test_2406():
+    """
+    arrow types like `invdot` and `onormalonormal` should be displayed correctly
+    https://gitlab.com/graphviz/graphviz/-/issues/2406
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2406.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    output = dot("svg", input)
+
+    # the rounded hollows should be present
+    assert re.search(r"\bellipse\b", output), "missing element of invdot arrow"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
