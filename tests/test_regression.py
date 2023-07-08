@@ -2814,7 +2814,6 @@ def test_2404():
     subprocess.check_call(["shellcheck", "-S", "error", gvmap_sh])
 
 
-@pytest.mark.xfail(strict=True)
 def test_2406():
     """
     arrow types like `invdot` and `onormalonormal` should be displayed correctly
