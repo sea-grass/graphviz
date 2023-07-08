@@ -170,21 +170,13 @@ makeSquareGrid(int dim1, int dim2, int connect_corners, int partial, edgefn ef)
 	for (j = 0; j < dim2; j++) {
 	    // write the neighbors of the node i*dim2+j+1
 	    tl = i * dim2 + j + 1;
-	    if (j > 0
-		&& (!partial || j <= 2 * dim2 / 6 || j > 4 * dim2 / 6
-		    || i <= 2 * dim1 / 6 || i > 4 * dim1 / 6)) {
-		OUTE(i * dim2 + j);
-	    }
 	    if (j < dim2 - 1
 		&& (!partial || j < 2 * dim2 / 6 || j >= 4 * dim2 / 6
 		    || i <= 2 * dim1 / 6 || i > 4 * dim1 / 6)) {
-		OUTE(i * dim2 + j + 2);
-	    }
-	    if (i > 0) {
-		OUTE((i - 1) * dim2 + j + 1);
+		ef(tl, i * dim2 + j + 2);
 	    }
 	    if (i < dim1 - 1) {
-		OUTE((i + 1) * dim2 + j + 1);
+		ef(tl, (i + 1) * dim2 + j + 1);
 	    }
 	    if (connect_corners == 1) {
 		if (i == 0 && j == 0) {	// upper left
