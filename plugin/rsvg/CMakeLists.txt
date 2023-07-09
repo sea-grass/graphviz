@@ -15,6 +15,12 @@ if(PANGOCAIRO_FOUND AND RSVG_FOUND)
   )
 
   target_include_directories(gvplugin_rsvg SYSTEM PRIVATE
+    ${PANGOCAIRO_INCLUDE_DIRS}
+    ${RSVG_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(gvplugin_rsvg
+    gvc
     ${PANGOCAIRO_LIBRARIES}
     ${RSVG_LIBRARIES}
   )
