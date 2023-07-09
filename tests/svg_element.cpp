@@ -392,6 +392,49 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
           }
           break;
         }
+        const auto xmin = std::min(horizontal_start, horizontal_end);
+        const auto xmax = std::max(horizontal_start, horizontal_end);
+        const auto ymin = std::min(vertical_start, vertical_end);
+        const auto ymax = std::max(vertical_start, vertical_end);
+        if (horizontal_control1 >= xmin && horizontal_control1 <= xmax &&
+            horizontal_control2 >= xmin && horizontal_control2 <= xmax &&
+            vertical_control1 >= ymin && vertical_control1 <= ymax &&
+            vertical_control2 >= ymin && vertical_control2 <= ymax) {
+          // the control points are within a bounding box defined by the start
+          // and end points. This means that the Bezier curve is completely
+          // contained within this box, except for the extension caused by the
+          // stroke width. This extension can be calculated using the angle at
+          // the start and end points which is given by the closest control
+          // point. The Graphviz arrow shapes `rcurve`, `lcurve`, `ricurve` and
+          // `licurve` fulfills this condition.
+          const auto start_dx = horizontal_start - horizontal_control1;
+          const auto start_dy = vertical_start - vertical_control1;
+          const auto start_hypot = std::hypot(start_dx, start_dy);
+          const auto start_cos = start_dx / start_hypot;
+          const auto start_sin = start_dy / start_hypot;
+          const SVG::SVGPoint start_extension_left = {
+              horizontal_start + attributes.stroke_width / 2 * start_sin,
+              vertical_start - attributes.stroke_width / 2 * start_cos};
+          const SVG::SVGPoint start_extension_right = {
+              horizontal_start - attributes.stroke_width / 2 * start_sin,
+              vertical_start + attributes.stroke_width / 2 * start_cos};
+          m_bbox->extend(start_extension_left);
+          m_bbox->extend(start_extension_right);
+          const auto end_dx = horizontal_end - horizontal_control2;
+          const auto end_dy = vertical_end - vertical_control2;
+          const auto end_hypot = std::hypot(end_dx, end_dy);
+          const auto end_cos = end_dx / end_hypot;
+          const auto end_sin = end_dy / end_hypot;
+          const SVG::SVGPoint end_extension_left = {
+              horizontal_end + attributes.stroke_width / 2 * end_sin,
+              vertical_end + -attributes.stroke_width / 2 * end_cos};
+          const SVG::SVGPoint end_extension_right = {
+              horizontal_end + -attributes.stroke_width / 2 * end_sin,
+              vertical_end + attributes.stroke_width / 2 * end_cos};
+          m_bbox->extend(end_extension_left);
+          m_bbox->extend(end_extension_right);
+          break;
+        }
       }
       throw std::runtime_error(
           "paths other than straight vertical, straight horizontal or the "
