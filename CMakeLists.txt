@@ -124,6 +124,12 @@ if(enable_ltdl)
 endif()
 
 find_package(PANGOCAIRO)
+find_package(PkgConfig)
+if(PkgConfig_FOUND)
+  pkg_check_modules(RSVG librsvg-2.0)
+else()
+  set(RSVG_FOUND 0)
+endif()
 
 if(with_zlib)
   find_package(ZLIB)
