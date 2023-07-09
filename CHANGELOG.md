@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Breaking**: The definition of `adjmatrix_t` is no longer exposed in public
   headers.
+- **Breaking**: The upper limit for minimum edge length (`Agedgeinfo_t.minlen`)
+  has been expanded from `USHRT_MAX` to `INT_MAX`. #2413
 
 ### Fixed
 

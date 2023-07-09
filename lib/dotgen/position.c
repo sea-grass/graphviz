@@ -60,8 +60,11 @@ dumpNS (graph_t * g)
 static double
 largeMinlen (double l)
 {
-    agerr (AGERR, "Edge length %f larger than maximum %u allowed.\nCheck for overwide node(s).\n", l, USHRT_MAX); 
-    return (double)USHRT_MAX;
+  agerr(AGERR,
+        "Edge length %f larger than maximum %d allowed.\nCheck for overwide "
+        "node(s).\n",
+        l, INT_MAX);
+  return (double)INT_MAX;
 }
 
 /* connectGraph:
@@ -183,7 +186,7 @@ edge_t *make_aux_edge(node_t * u, node_t * v, double len, int wt)
 
     agtail(e) = u;
     aghead(e) = v;
-    if (len > USHRT_MAX)
+    if (len > INT_MAX)
 	len = largeMinlen (len);
     ED_minlen(e) = ROUND(len);
     ED_weight(e) = wt;
@@ -303,8 +306,6 @@ make_LR_constraints(graph_t * g)
                      * ED_dist contains the largest label width.
                      */
 		    m0 = MAX(m0, width + GD_nodesep(g) + ROUND(ED_dist(e)));
-		    if (m0 > USHRT_MAX)
-			m0 = largeMinlen (m0);
 		    ED_minlen(e0) = MAX(ED_minlen(e0), m0);
 		    ED_weight(e0) = MAX(ED_weight(e0), ED_weight(e));
 		}
