@@ -905,6 +905,7 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
     pointf q, v, w;
     pointf AF[4], a[2];
 
+    a[0] = p;
     if (!(flag & ARR_MOD_INV) && (u.x != 0 || u.y != 0)) {
         const pointf P = {-u.x, -u.y};
         // phi = angle of arrow
@@ -923,7 +924,6 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
     v.y = u.x * arrowwidth;
     w.x = v.y; // same direction as u, same magnitude as v.
     w.y = -v.x;
-    a[0] = p;
     a[1] = q;
 
     AF[0].x = p.x + v.x + w.x;
