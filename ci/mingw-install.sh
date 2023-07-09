@@ -21,8 +21,11 @@ pacman -S --noconfirm --needed \
     ${MINGW_PACKAGE_PREFIX}-libgd \
     make \
     ${MINGW_PACKAGE_PREFIX}-libtool \
+    ${MINGW_PACKAGE_PREFIX}-librsvg \
+    ${MINGW_PACKAGE_PREFIX}-libwebp \
     ${MINGW_PACKAGE_PREFIX}-pango \
     ${MINGW_PACKAGE_PREFIX}-pkgconf \
+    ${MINGW_PACKAGE_PREFIX}-poppler \
     ${MINGW_PACKAGE_PREFIX}-python \
     ${MINGW_PACKAGE_PREFIX}-python-pip \
     ${MINGW_PACKAGE_PREFIX}-ninja \
