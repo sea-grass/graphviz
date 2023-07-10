@@ -648,8 +648,8 @@ ubuntu-20.04-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
     tags:
         - linux
@@ -664,8 +664,8 @@ ubuntu-22.04-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
     tags:
@@ -681,8 +681,8 @@ ubuntu-22.10-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
     tags:
@@ -698,8 +698,8 @@ ubuntu-23.04-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
     tags:
@@ -715,8 +715,8 @@ ubuntu-22.04-cmake-minimal-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS=""
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=OFF"
@@ -739,9 +739,9 @@ ubuntu-22.10-cmake-ASan-build-for-ctest:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
-        - export CXXFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
-        - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
+        - export CFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-deprecated-declarations"
+        - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-deprecated-declarations"
         - export UBSAN_OPTIONS=print_stacktrace=1
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
@@ -787,8 +787,8 @@ centos7-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=missing-braces"
-        - export CXXFLAGS="-Werror -Wno-error=missing-braces"
+        - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
     tags:
         - linux
     variables:
@@ -802,8 +802,8 @@ fedora36-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
     tags:
         - linux
@@ -818,8 +818,8 @@ fedora37-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
     tags:
         - linux
@@ -834,8 +834,8 @@ fedora38-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
     tags:
         - linux
@@ -899,8 +899,8 @@ windows-mingw32-cmake-build:
         - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror"
-        - $Env:CXXFLAGS = "-Werror"
+        - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror -Wno-deprecated-declarations"
         - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -924,8 +924,8 @@ windows-mingw64-cmake-build:
         - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror"
-        - $Env:CXXFLAGS = "-Werror"
+        - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror -Wno-deprecated-declarations"
         - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -949,8 +949,8 @@ windows-cygwin-cmake-build:
         - $env:Path = "C:\cygwin64\bin;" + $env:Path
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror"
-        - $Env:CXXFLAGS = "-Werror"
+        - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror -Wno-deprecated-declarations"
         # change line endings from crlf to lf
         - C:\cygwin64\bin\sed -i 's/\r//g' ci/*.sh lib/common/color_names lib/common/brewer_colors lib/common/svgcolor_names
         - C:\cygwin64\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'

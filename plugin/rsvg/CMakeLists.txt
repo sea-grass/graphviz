@@ -1,9 +1,3 @@
-find_package(PANGOCAIRO)
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(RSVG librsvg-2.0)
-endif()
-
 if(PANGOCAIRO_FOUND AND RSVG_FOUND)
 
   add_library(gvplugin_rsvg SHARED
@@ -21,6 +15,12 @@ if(PANGOCAIRO_FOUND AND RSVG_FOUND)
   )
 
   target_include_directories(gvplugin_rsvg SYSTEM PRIVATE
+    ${PANGOCAIRO_INCLUDE_DIRS}
+    ${RSVG_INCLUDE_DIRS}
+  )
+
+  target_link_libraries(gvplugin_rsvg
+    gvc
     ${PANGOCAIRO_LIBRARIES}
     ${RSVG_LIBRARIES}
   )
