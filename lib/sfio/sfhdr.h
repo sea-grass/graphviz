@@ -228,7 +228,6 @@ extern "C" {
 	Fmtpos_t *fp;		/* position list                */
 
 	Sffmt_t *ft;		/* formatting environment       */
-	Sffmtevent_f eventf;	/* event function               */
 	Fmt_t *next;		/* stack frame pointer          */
     };
 

@@ -384,8 +384,6 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 	    if (!(argv.ft = va_arg(args, Sffmt_t *)))
 		continue;
 	    if (!argv.ft->form && ft) {	/* change extension functions */
-		if (ft->eventf && ft->eventf(f, SF_DPOP, (void *) form, ft) < 0)
-		    continue;
 		fmstk->ft = ft = argv.ft;
 	    } else {		/* stack a new environment */
 		if (!(fm = malloc(sizeof(Fmt_t))))
@@ -405,7 +403,6 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		} else
 		    fm->form = NULL;
 
-		fm->eventf = argv.ft->eventf;
 		fm->ft = ft;
 		fm->next = fmstk;
 		fmstk = fm;
@@ -677,13 +674,6 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
   pop_fmt:
     while ((fm = fmstk)) {	/* pop the format stack and continue */
-	if (fm->eventf) {
-	    if (!form || !form[0])
-		fm->eventf(f, SF_FINAL, NULL, ft);
-	    else if (fm->eventf(f, SF_DPOP, (void *) form, ft) < 0)
-		goto loop_fmt;
-	}
-
 	fmstk = fm->next;
 	if ((form = fm->form)) {
 	    va_copy(args, fm->args);
@@ -699,8 +689,6 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 
   done:
     while ((fm = fmstk)) {
-	if (fm->eventf)
-	    fm->eventf(f, SF_FINAL, NULL, fm->ft);
 	fmstk = fm->next;
 	free(fm);
     }

@@ -62,7 +62,6 @@ extern "C" {
     typedef int (*Sffmtevent_f)(Sfio_t *, int, void *, Sffmt_t *);
     struct _sffmt_s {
 	Sffmtext_f extf;	/* function to process arguments        */
-	Sffmtevent_f eventf;	/* process events                       */
 
 	char *form;		/* format string to stack               */
 	va_list args;		/* corresponding arg list               */

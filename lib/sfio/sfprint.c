@@ -125,7 +125,6 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
     va_copy(args, argv.ft->args);
     fp = NULL;
 
-    fm->eventf = argv.ft->eventf;
     fm->ft = ft;
     fm->next = fmstk;
     fmstk = fm;
@@ -909,13 +908,6 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
     free(fp);
     fp = NULL;
     while ((fm = fmstk)) {	/* pop the format stack and continue */
-	if (fm->eventf) {
-	    if (!form || !form[0])
-		fm->eventf(f, SF_FINAL, NULL, ft);
-	    else if (fm->eventf(f, SF_DPOP, (void *) form, ft) < 0)
-		goto loop_fmt;
-	}
-
 	fmstk = fm->next;
 	if ((form = fm->form)) {
 	    va_copy(args, fm->args);
@@ -931,8 +923,6 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
   done:
     free(fp);
     while ((fm = fmstk)) {
-	if (fm->eventf)
-	    fm->eventf(f, SF_FINAL, NULL, fm->ft);
 	fmstk = fm->next;
 	free(fm);
     }
