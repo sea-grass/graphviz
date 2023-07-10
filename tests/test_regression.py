@@ -2831,6 +2831,29 @@ def test_2406():
     assert re.search(r"\bellipse\b", output), "missing element of invdot arrow"
 
 
+@pytest.mark.parametrize("source", ("2413_1.dot", "2413_2.dot"))
+def test_2413(source: str):
+    """
+    graphs that induce an edge length > 65535 should be supported
+    https://gitlab.com/graphviz/graphviz/-/issues/2413
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / source
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    proc = subprocess.run(
+        ["dot", "-Tsvg", "-o", os.devnull, input],
+        stderr=subprocess.PIPE,
+        check=True,
+        universal_newlines=True,
+    )
+
+    # no warnings should have been generated
+    assert proc.stderr == "", "long edges resulted in a warning"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted

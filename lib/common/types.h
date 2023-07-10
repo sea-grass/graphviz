@@ -560,7 +560,7 @@ typedef enum {NATIVEFONTS,PSFONTS,SVGFONTS} fontname_kind;
 	int cutvalue;
 	int tree_index;
 	short count;
-	unsigned short minlen;
+	int minlen;
 	edge_t *to_virt;
 #endif
     } Agedgeinfo_t;
