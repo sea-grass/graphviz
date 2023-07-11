@@ -246,7 +246,7 @@ static void init(int argc, char *argv[], opts_t * opts)
 	    opts->force = 1;
 	    break;
 	case 'l':
-	    optList = gvPluginList(opts->gvc, "layout", &cnt, NULL);
+	    optList = gvPluginList(opts->gvc, "layout", &cnt);
 	    if (checkOpt(optarg, optList, cnt))
 		opts->lay = optarg;
 	    else {
@@ -256,7 +256,7 @@ static void init(int argc, char *argv[], opts_t * opts)
 	    }
 	    break;
 	case 'T':
-	    optList = gvPluginList(opts->gvc, "device", &cnt, NULL);
+	    optList = gvPluginList(opts->gvc, "device", &cnt);
 	    if (checkOpt(optarg, optList, cnt))
 		opts->fmt = optarg;
 	    else {

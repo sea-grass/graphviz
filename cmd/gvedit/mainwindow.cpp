@@ -36,7 +36,7 @@ static void freeList(char **lp, int count)
 static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
                        const QStringList &more, const char *prefer) {
     int count;
-    char **lp = gvPluginList(gvc, kind, &count, nullptr);
+    char **lp = gvPluginList(gvc, kind, &count);
     int idx = -1;
 
     cb.clear();

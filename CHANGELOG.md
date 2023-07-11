@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   removed.
 - **Breaking**: The libcgraph function `agflatten` has been removed.
 - **Breaking**: The `Agdesc_s.flatlock` field has been removed.
+- **Breaking**: The `str` parameter from `gvPluginList` has been removed.
 
 ### Fixed
 

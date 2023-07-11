@@ -392,17 +392,11 @@ DEFINE_LIST(strs, char*)
  * freeing each item, then the list.
  * Returns NULL on error, or if there are no plugins.
  * In the former case, sz is unchanged; in the latter, sz = 0.
- *
- * At present, the str argument is unused, but may be used to modify
- * the search as in gvplugin_list above.
  */
-char **gvPluginList(GVC_t * gvc, const char *kind, int *sz, char *str)
-{
+char **gvPluginList(GVC_t *gvc, const char *kind, int *sz) {
     size_t api;
     const gvplugin_available_t *pnext, *plugin;
     strs_t list = {0};
-
-    (void)str;
 
     if (!kind)
         return NULL;
