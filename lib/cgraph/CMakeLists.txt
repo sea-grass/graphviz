@@ -35,7 +35,6 @@ add_library(cgraph SHARED
   apply.c
   attr.c
   edge.c
-  flatten.c
   graph.c
   id.c
   imap.c

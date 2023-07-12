@@ -121,7 +121,6 @@ win_flex -oscan.c scan.l</Command>
     <ClCompile Include="apply.c" />
     <ClCompile Include="attr.c" />
     <ClCompile Include="edge.c" />
-    <ClCompile Include="flatten.c" />
     <ClCompile Include="grammar.c" />
     <ClCompile Include="graph.c" />
     <ClCompile Include="id.c" />
