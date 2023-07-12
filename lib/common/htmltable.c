@@ -38,7 +38,6 @@
 #include <cdt/cdt.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <cgraph/prisize_t.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <float.h>
