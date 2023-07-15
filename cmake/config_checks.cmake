@@ -40,6 +40,7 @@ endif()
 set(HAVE_PANGOCAIRO ${PANGOCAIRO_FOUND})
 set(HAVE_POPPLER    ${POPPLER_FOUND}   )
 set(HAVE_RSVG       ${RSVG_FOUND}      )
+set(HAVE_WEBP       ${WEBP_FOUND}      )
 
 if(LTDL_FOUND)
   set(ENABLE_LTDL 1)
