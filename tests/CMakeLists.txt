@@ -51,6 +51,7 @@ target_link_libraries(test_common PUBLIC
   gvplugin_gd
   gvplugin_neato_layout
   gvplugin_pango
+  gvplugin_webp
   cgraph
   cgraph++
   gvc

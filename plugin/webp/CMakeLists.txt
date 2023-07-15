@@ -20,6 +20,7 @@ if(WEBP_FOUND)
   )
 
   target_link_libraries(gvplugin_webp
+    gvc
     ${WEBP_LINK_LIBRARIES}
   )
 
