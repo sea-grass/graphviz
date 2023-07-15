@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (9.0.0)]
 
+### Added
+
+- On non-Windows platforms, new `-Tkitty` and `-Tkittyz` output formats are
+  available that render to the Kitty terminal emulator’s graphvics protocol.
+
 ### Changed
 
 - **Breaking**: The definition of `adjmatrix_t` is no longer exposed in public
