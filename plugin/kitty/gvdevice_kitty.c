@@ -189,6 +189,6 @@ static gvdevice_engine_t device_engine_zkitty = {.format = zkitty_format};
 gvplugin_installed_t gvdevice_types_kitty[] = {
     {0, "kitty:cairo", 0, &device_engine_kitty, &device_features_kitty},
 #ifdef HAVE_LIBZ
-    {1, "kitty:cairo", 1, &device_engine_zkitty, &device_features_zkitty},
+    {1, "kittyz:cairo", 1, &device_engine_zkitty, &device_features_zkitty},
 #endif
     {0, NULL, 0, NULL, NULL}};
