@@ -1,8 +1,3 @@
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(WEBP libwebp)
-endif()
-
 if(WEBP_FOUND)
 
   add_library(gvplugin_webp SHARED
@@ -25,6 +20,7 @@ if(WEBP_FOUND)
   )
 
   target_link_libraries(gvplugin_webp
+    gvc
     ${WEBP_LINK_LIBRARIES}
   )
 
