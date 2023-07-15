@@ -38,6 +38,7 @@ if(with_zlib AND ZLIB_FOUND)
   set(HAVE_ZLIB 1)
 endif()
 set(HAVE_PANGOCAIRO ${PANGOCAIRO_FOUND})
+set(HAVE_POPPLER    ${POPPLER_FOUND}   )
 set(HAVE_RSVG       ${RSVG_FOUND}      )
 
 if(LTDL_FOUND)

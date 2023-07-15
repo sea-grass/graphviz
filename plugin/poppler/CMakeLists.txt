@@ -1,9 +1,3 @@
-find_package(PANGOCAIRO)
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(POPPLER poppler-glib)
-endif()
-
 if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
 
   add_library(gvplugin_poppler SHARED
@@ -26,6 +20,7 @@ if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
   )
 
   target_link_libraries(gvplugin_poppler
+    gvc
     ${PANGOCAIRO_LIBRARIES}
     ${POPPLER_LIBRARIES}
   )
