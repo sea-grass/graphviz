@@ -1,6 +1,3 @@
-find_package(PANGOCAIRO)
-find_package(ZLIB)
-
 if(PANGOCAIRO_FOUND)
   add_library(gvplugin_kitty SHARED gvdevice_kitty.c gvplugin_kitty.c)
 
