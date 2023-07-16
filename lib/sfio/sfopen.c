@@ -76,7 +76,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
 	if (fd < 0)
 	    return NULL;
 
-	f = sfnew(f, NULL, SF_UNBOUND, fd, sflags);
+	f = sfnew(NULL, NULL, SF_UNBOUND, fd, sflags);
     }
 
     return f;
