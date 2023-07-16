@@ -23,7 +23,6 @@ add_library(sfio STATIC
   sfread.c
   sfscanf.c
   sfsetbuf.c
-  sfsetfd.c
   sfsk.c
   sfstack.c
   sfswap.c

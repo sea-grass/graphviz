@@ -102,7 +102,6 @@
     <ClCompile Include="sfread.c" />
     <ClCompile Include="sfscanf.c" />
     <ClCompile Include="sfsetbuf.c" />
-    <ClCompile Include="sfsetfd.c" />
     <ClCompile Include="sfsk.c" />
     <ClCompile Include="sfstack.c" />
     <ClCompile Include="sfswap.c" />

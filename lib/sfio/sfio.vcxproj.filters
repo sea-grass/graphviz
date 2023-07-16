@@ -92,9 +92,6 @@
     <ClCompile Include="sfsetbuf.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfsetfd.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfsk.c">
       <Filter>Source Files</Filter>
     </ClCompile>

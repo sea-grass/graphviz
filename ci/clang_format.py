@@ -539,7 +539,6 @@ EXCLUDE = (
     "lib/sfio/sfread.c",
     "lib/sfio/sfscanf.c",
     "lib/sfio/sfsetbuf.c",
-    "lib/sfio/sfsetfd.c",
     "lib/sfio/sfsk.c",
     "lib/sfio/sfstack.c",
     "lib/sfio/sfswap.c",
