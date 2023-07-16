@@ -37,7 +37,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
 
     Sfio_t *f = NULL;
     if (sflags & SF_STRING) {
-	f = sfnew(NULL, (char *)file, file ? strlen(file) : SF_UNBOUND, -1, sflags);
+	f = sfnew((char*)file, file ? strlen(file) : SF_UNBOUND, -1, sflags);
     } else {
 	if (!file)
 	    return NULL;
@@ -76,7 +76,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
 	if (fd < 0)
 	    return NULL;
 
-	f = sfnew(NULL, NULL, SF_UNBOUND, fd, sflags);
+	f = sfnew(NULL, SF_UNBOUND, fd, sflags);
     }
 
     return f;
