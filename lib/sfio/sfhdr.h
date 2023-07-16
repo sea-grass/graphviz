@@ -95,7 +95,6 @@ extern "C" {
 #define SF_PKRD		00001000u	/* did a peek read                      */
 #define SF_GETR		00002000u	/* did a getr on this stream            */
 #define SF_SYNCED	00004000u	/* stream was synced                    */
-#define SF_STDIO	00010000u	/* given up the buffer to stdio         */
 #define SF_AVAIL	00020000u	/* was closed, available for reuse      */
 #define SF_LOCAL	00100000u	/* sentinel for a local call            */
 
@@ -346,9 +345,7 @@ extern "C" {
 				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
 
 /* check to see if the stream can be accessed */
-#define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : \
-			 ((f)->mode&SF_STDIO) ? (*_Sfstdsync)(f) : 0)
-
+#define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : 0)
 
 /* set discipline code */
 #define SFDISC(f,dc,iof) \

@@ -182,9 +182,6 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	}
     }
 
-    if (f->mode & SF_STDIO)	/* synchronizing with stdio pointers */
-	(*_Sfstdsync) (f);
-
     if (f->disc == _Sfudisc && wanted == SF_WRITE &&
 	sfclose((*_Sfstack) (f, NULL)) < 0) {
 	local = 1;
