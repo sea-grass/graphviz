@@ -77,7 +77,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
 	    return NULL;
 
 	/* we may have to reset the file descriptor to its old value */
-	oldfd = f ? f->file : -1;
+	oldfd = -1;
 	if ((f = sfnew(f, NULL, SF_UNBOUND, fd, sflags)) && oldfd >= 0)
 	     (void) sfsetfd(f, oldfd);
     }
