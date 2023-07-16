@@ -329,7 +329,6 @@ extern "C" {
 #define SFRD(f,b,n,d)	(SETLOCAL(f),sfrd(f,(void*)b,n,d))
 #define SFWR(f,b,n,d)	(SETLOCAL(f),sfwr(f,(void*)b,n,d))
 #define SFSYNC(f)	(SETLOCAL(f),sfsync(f))
-#define SFCLOSE(f)	(SETLOCAL(f),sfclose(f))
 #define SFFLSBUF(f,n)	(SETLOCAL(f),_sfflsbuf(f,n))
 #define SFFILBUF(f)	(SETLOCAL(f), _sffilbuf(f ,-1))
 #define SFSETBUF(f,s,n)	(SETLOCAL(f),sfsetbuf(f,s,n))
