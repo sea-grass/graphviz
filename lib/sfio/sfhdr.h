@@ -91,7 +91,6 @@ extern "C" {
 #define SF_RV		00000020u	/* reserve without read or most write   */
 #define SF_LOCK		00000040u	/* stream is locked for io op           */
 #define SF_PUSH		00000100u	/* stream has been pushed               */
-#define SF_POOL		00000200u	/* stream is in a pool but not current  */
 #define SF_PEEK		00000400u	/* there is a pending peek              */
 #define SF_PKRD		00001000u	/* did a peek read                      */
 #define SF_GETR		00002000u	/* did a getr on this stream            */

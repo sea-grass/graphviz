@@ -37,7 +37,6 @@ static void _sfcleanup(void)
     Sfpool_t *p;
     Sfio_t *f;
     int n;
-    int pool;
 
     /* set this so that no more buffering is allowed for write streams */
     _Sfexiting = 1001;
@@ -58,14 +57,11 @@ static void _sfcleanup(void)
 		continue;
 
 	    /* from now on, write streams are unbuffered */
-	    pool = f->mode & SF_POOL;
-	    f->mode &= ~SF_POOL;
 	    if ((f->flags & SF_WRITE) && !(f->mode & SF_WRITE))
 		(void) _sfmode(f, SF_WRITE, 1);
 	    if (((f->bits & SF_MMAP) && f->data) ||
 		((f->mode & SF_WRITE) && f->next == f->data))
 		(void) SFSETBUF(f, NULL, 0);
-	    f->mode |= pool;
 
 	    SFOPEN(f, 0);
 	}
@@ -193,14 +189,6 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	sfclose((*_Sfstack) (f, NULL)) < 0) {
 	local = 1;
 	goto err_notify;
-    }
-
-    if (f->mode & SF_POOL) {	/* move to head of pool */
-	if (f == f->pool->sf[0] || _Sfpmove(f, 0) < 0) {
-	    local = 1;
-	    goto err_notify;
-	}
-	f->mode &= ~SF_POOL;
     }
 
     SFLOCK(f, local);
