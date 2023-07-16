@@ -278,7 +278,6 @@ extern "C" {
 #define _Sfudisc	(&(_Sfextern.sf_udisc))
 #define _Sfcleanup	(_Sfextern.sf_cleanup)
 #define _Sfexiting	(_Sfextern.sf_exiting)
-#define _Sfdone		(_Sfextern.sf_done)
     typedef struct _sfextern_s {
 	ssize_t sf_page;
 	struct _sfpool_s sf_pool;
@@ -287,7 +286,6 @@ extern "C" {
 	struct _sfdisc_s sf_udisc;
 	void (*sf_cleanup) (void);
 	int sf_exiting;
-	int sf_done;
     } Sfextern_t;
 
 /* grain size for buffer increment */
