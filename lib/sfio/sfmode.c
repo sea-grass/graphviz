@@ -328,9 +328,6 @@ int _sfmode(Sfio_t * f, int wanted, int local)
 	if (wanted != (f->mode & SF_RDWR) && f->file >= 0)
 	    errno = EBADF;
 
-	if (_Sfnotify)		/* notify application of the error */
-	    _Sfnotify(f, wanted, f->file);
-
 	rv = -1;
 	break;
     }

@@ -94,8 +94,6 @@ int sfclose(Sfio_t * f)
     }
 
     /* zap the file descriptor */
-    if (_Sfnotify)
-	(*_Sfnotify) (f, SF_CLOSING, f->file);
     if (f->file >= 0 && !(f->flags & SF_STRING))
 	CLOSE(f->file);
     f->file = -1;

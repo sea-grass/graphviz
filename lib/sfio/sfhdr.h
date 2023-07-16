@@ -277,7 +277,6 @@ extern "C" {
 #define _Sfpool		(_Sfextern.sf_pool)
 #define _Sfpmove	(_Sfextern.sf_pmove)
 #define _Sfstack	(_Sfextern.sf_stack)
-#define _Sfnotify	(_Sfextern.sf_notify)
 #define _Sfstdsync	(_Sfextern.sf_stdsync)
 #define _Sfudisc	(&(_Sfextern.sf_udisc))
 #define _Sfcleanup	(_Sfextern.sf_cleanup)
@@ -288,7 +287,6 @@ extern "C" {
 	struct _sfpool_s sf_pool;
 	int (*sf_pmove) (Sfio_t *, int);
 	Sfio_t *(*sf_stack) (Sfio_t *, Sfio_t *);
-	void (*sf_notify) (Sfio_t *, int, int);
 	int (*sf_stdsync) (Sfio_t *);
 	struct _sfdisc_s sf_udisc;
 	void (*sf_cleanup) (void);
