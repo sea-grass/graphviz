@@ -51,7 +51,7 @@ static void _sfcleanup(void)
 	    SFLOCK(f, 0);
 
 	    /* let application know that we are leaving */
-	    (void) SFRAISE(f, SF_ATEXIT, NULL);
+	    (void)SFRAISE(f, SF_ATEXIT);
 
 	    if (f->flags & SF_STRING)
 		continue;

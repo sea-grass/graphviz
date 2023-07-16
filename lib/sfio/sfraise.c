@@ -17,10 +17,8 @@
 /**
  * @param f stream
  * @param type type of event
- * @param data associated data
  */
-int sfraise(Sfio_t * f, int type, void * data)
-{
+int sfraise(Sfio_t *f, int type) {
     Sfdisc_t *disc, *next, *d;
     int local, rv;
 
@@ -41,7 +39,7 @@ int sfraise(Sfio_t * f, int type, void * data)
 
 	if (disc->exceptf) {
 	    SFOPEN(f, 0);
-	    if ((rv = disc->exceptf(f, type, data, disc)) != 0)
+	    if ((rv = disc->exceptf(f, type, NULL, disc)) != 0)
 		SFMTXRETURN(f, rv);
 	    SFLOCK(f, 0);
 	}

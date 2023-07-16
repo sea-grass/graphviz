@@ -55,9 +55,7 @@ int sfclose(Sfio_t * f)
     SFLOCK(f, 0);
 
     /* raise discipline exceptions */
-    if (f->disc
-	&& (ex =
-	    SFRAISE(f, local ? SF_NEW : SF_CLOSING, NULL)) != 0)
+    if (f->disc && (ex = SFRAISE(f, local ? SF_NEW : SF_CLOSING)) != 0)
 	SFMTXRETURN(f, ex);
 
     if (!local && f->pool) {	/* remove from pool */
@@ -109,7 +107,7 @@ int sfclose(Sfio_t * f)
     f->rsrv = NULL;
 
     if (!local) {
-	if (f->disc && (ex = SFRAISE(f, SF_FINAL, NULL)) != 0) {
+	if (f->disc && (ex = SFRAISE(f, SF_FINAL)) != 0) {
 	    rv = ex;
 	    goto done;
 	}

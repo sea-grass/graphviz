@@ -327,7 +327,7 @@ extern "C" {
 #define SFWRITE(f,s,n)	(SETLOCAL(f),sfwrite(f,s,n))
 #define SFREAD(f,s,n)	(SETLOCAL(f),sfread(f,s,n))
 #define SFNPUTC(f,c,n)	(SETLOCAL(f),sfnputc(f,c,n))
-#define SFRAISE(f,e,d)	(SETLOCAL(f),sfraise(f,e,d))
+#define SFRAISE(f, e)	(SETLOCAL(f), sfraise(f, e))
 
 /* lock/open a stream */
 #define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
