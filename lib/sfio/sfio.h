@@ -160,15 +160,14 @@ extern "C" {
 #undef SFIO_API
 
 
-    extern Sfio_t *sfnew(Sfio_t *, void *, size_t, int, int);
+    extern Sfio_t *sfnew(void*, size_t, int, int);
     extern Sfio_t *sfopen(const char *, const char *);
     extern Sfio_t *sfstack(Sfio_t *, Sfio_t *);
     extern Sfio_t *sfswap(Sfio_t *, Sfio_t *);
     extern int sfsync(Sfio_t *);
     extern void *sfsetbuf(Sfio_t *, void *, size_t);
     extern Sfdisc_t *sfdisc(Sfio_t *, Sfdisc_t *);
-    extern int sfraise(Sfio_t *, int, void *);
-    extern int sfsetfd(Sfio_t *, int);
+    extern int sfraise(Sfio_t*, int);
     extern ssize_t sfread(Sfio_t *, void *, size_t);
     extern ssize_t sfwrite(Sfio_t *, const void *, size_t);
     extern int sfclose(Sfio_t *);

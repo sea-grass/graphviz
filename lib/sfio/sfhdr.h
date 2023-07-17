@@ -91,12 +91,10 @@ extern "C" {
 #define SF_RV		00000020u	/* reserve without read or most write   */
 #define SF_LOCK		00000040u	/* stream is locked for io op           */
 #define SF_PUSH		00000100u	/* stream has been pushed               */
-#define SF_POOL		00000200u	/* stream is in a pool but not current  */
 #define SF_PEEK		00000400u	/* there is a pending peek              */
 #define SF_PKRD		00001000u	/* did a peek read                      */
 #define SF_GETR		00002000u	/* did a getr on this stream            */
 #define SF_SYNCED	00004000u	/* stream was synced                    */
-#define SF_STDIO	00010000u	/* given up the buffer to stdio         */
 #define SF_AVAIL	00020000u	/* was closed, available for reuse      */
 #define SF_LOCAL	00100000u	/* sentinel for a local call            */
 
@@ -277,23 +275,17 @@ extern "C" {
 #define _Sfpool		(_Sfextern.sf_pool)
 #define _Sfpmove	(_Sfextern.sf_pmove)
 #define _Sfstack	(_Sfextern.sf_stack)
-#define _Sfnotify	(_Sfextern.sf_notify)
-#define _Sfstdsync	(_Sfextern.sf_stdsync)
 #define _Sfudisc	(&(_Sfextern.sf_udisc))
 #define _Sfcleanup	(_Sfextern.sf_cleanup)
 #define _Sfexiting	(_Sfextern.sf_exiting)
-#define _Sfdone		(_Sfextern.sf_done)
     typedef struct _sfextern_s {
 	ssize_t sf_page;
 	struct _sfpool_s sf_pool;
 	int (*sf_pmove) (Sfio_t *, int);
 	Sfio_t *(*sf_stack) (Sfio_t *, Sfio_t *);
-	void (*sf_notify) (Sfio_t *, int, int);
-	int (*sf_stdsync) (Sfio_t *);
 	struct _sfdisc_s sf_udisc;
 	void (*sf_cleanup) (void);
 	int sf_exiting;
-	int sf_done;
     } Sfextern_t;
 
 /* grain size for buffer increment */
@@ -329,14 +321,13 @@ extern "C" {
 #define SFRD(f,b,n,d)	(SETLOCAL(f),sfrd(f,(void*)b,n,d))
 #define SFWR(f,b,n,d)	(SETLOCAL(f),sfwr(f,(void*)b,n,d))
 #define SFSYNC(f)	(SETLOCAL(f),sfsync(f))
-#define SFCLOSE(f)	(SETLOCAL(f),sfclose(f))
 #define SFFLSBUF(f,n)	(SETLOCAL(f),_sfflsbuf(f,n))
 #define SFFILBUF(f)	(SETLOCAL(f), _sffilbuf(f ,-1))
 #define SFSETBUF(f,s,n)	(SETLOCAL(f),sfsetbuf(f,s,n))
 #define SFWRITE(f,s,n)	(SETLOCAL(f),sfwrite(f,s,n))
 #define SFREAD(f,s,n)	(SETLOCAL(f),sfread(f,s,n))
 #define SFNPUTC(f,c,n)	(SETLOCAL(f),sfnputc(f,c,n))
-#define SFRAISE(f,e,d)	(SETLOCAL(f),sfraise(f,e,d))
+#define SFRAISE(f, e)	(SETLOCAL(f), sfraise(f, e))
 
 /* lock/open a stream */
 #define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
@@ -350,9 +341,7 @@ extern "C" {
 				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
 
 /* check to see if the stream can be accessed */
-#define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : \
-			 ((f)->mode&SF_STDIO) ? (*_Sfstdsync)(f) : 0)
-
+#define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : 0)
 
 /* set discipline code */
 #define SFDISC(f,dc,iof) \

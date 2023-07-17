@@ -105,8 +105,6 @@ int sfsync(Sfio_t * f)
 	    goto next;
 
 	if ((f->mode & SF_WRITE) && (f->next > f->data || (f->bits & SF_HOLE))) {	/* sync the buffer, make sure pool don't move */
-	    unsigned pool = f->mode & SF_POOL;
-	    f->mode &= ~SF_POOL;
 	    if (f->next > f->data && (SFWRALL(f), SFFLSBUF(f, -1)) < 0)
 		rv = -1;
 	    if (!SFISNULL(f) && (f->bits & SF_HOLE)) {	/* realize a previously created hole of 0's */
@@ -114,7 +112,6 @@ int sfsync(Sfio_t * f)
 		    (void) SFWR(f, "", 1, f->disc);
 		f->bits &= (unsigned short)~SF_HOLE;
 	    }
-	    f->mode |= pool;
 	}
 
 	if ((f->mode & SF_READ) && f->extent >= 0 && ((f->bits & SF_MMAP) || f->next < f->endb)) {	/* make sure the file pointer is at the right place */
@@ -139,9 +136,5 @@ int sfsync(Sfio_t * f)
     }
 
   done:
-    if (!local && f && (f->mode & SF_POOL) && f->pool
-	&& f != f->pool->sf[0])
-	SFSYNC(f->pool->sf[0]);
-
     SFMTXRETURN(origf, rv);
 }

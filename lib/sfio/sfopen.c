@@ -27,7 +27,7 @@ static int _sftype(const char *mode, int *oflagsp, int *uflagp);
  */
 Sfio_t *sfopen(const char *file, const char *mode)
 {
-    int fd, oldfd, oflags, sflags;
+    int fd, oflags, sflags;
 
     /* get the control flags */
     if ((sflags = _sftype(mode, &oflags, NULL)) == 0)
@@ -37,7 +37,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
 
     Sfio_t *f = NULL;
     if (sflags & SF_STRING) {
-	f = sfnew(NULL, (char *)file, file ? strlen(file) : SF_UNBOUND, -1, sflags);
+	f = sfnew((char*)file, file ? strlen(file) : SF_UNBOUND, -1, sflags);
     } else {
 	if (!file)
 	    return NULL;
@@ -76,10 +76,7 @@ Sfio_t *sfopen(const char *file, const char *mode)
 	if (fd < 0)
 	    return NULL;
 
-	/* we may have to reset the file descriptor to its old value */
-	oldfd = f ? f->file : -1;
-	if ((f = sfnew(f, NULL, SF_UNBOUND, fd, sflags)) && oldfd >= 0)
-	     (void) sfsetfd(f, oldfd);
+	f = sfnew(NULL, SF_UNBOUND, fd, sflags);
     }
 
     return f;

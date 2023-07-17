@@ -22,7 +22,7 @@ extern "C" {
 
 #include <sfio/sfio.h>
 
-#define sfstropen()	sfnew(NULL, NULL, -1, -1, SF_WRITE | SF_STRING)
+#define sfstropen()	sfnew(NULL, -1, -1, SF_WRITE | SF_STRING)
 #define sfstrclose(f)	sfclose(f)
 
 #define sfstruse(f)	(sfputc(f,0), (char*)((f)->next = (f)->data) )

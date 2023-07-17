@@ -19,64 +19,34 @@
 */
 
 /**
- * @param oldf old stream to be reused
  * @param buf a buffer to read/write, if NULL, will be allocated
  * @param size buffer size if buf is given or desired buffer size
  * @param file file descriptor to read/write from
  * @param flags type of file stream
  */
-Sfio_t *sfnew(Sfio_t * oldf, void * buf, size_t size, int file,
-	      int flags)
-{
-    Sfio_t *f;
+Sfio_t *sfnew(void *buf, size_t size, int file, int flags) {
+    Sfio_t *f = NULL;
     int sflags;
 
     if (!(flags & SF_RDWR))
 	return NULL;
 
     sflags = 0;
-    if ((f = oldf)) {
-	if (flags & SF_EOF) {
-	    oldf = NULL;
-	} else if (f->mode & SF_AVAIL) {	/* only allow SF_STATIC to be already closed */
-	    if (!(f->flags & SF_STATIC))
-		return NULL;
-	    sflags = f->flags;
-	    oldf = NULL;
-	} else {		/* reopening an open stream, close it first */
-	    sflags = f->flags;
 
-	    if (((f->mode & SF_RDWR) != f->mode && _sfmode(f, 0, 0) < 0) ||
-		SFCLOSE(f) < 0)
-		return NULL;
-
-	    if (f->data
-		&& ((flags & SF_STRING) || size != SF_UNBOUND)) {
-		if (sflags & SF_MALLOC)
-		    free(f->data);
-		f->data = NULL;
-	    }
-	    if (!f->data)
-		sflags &= (unsigned short)~SF_MALLOC;
-	}
+    if (!(flags & SF_STRING) && file >= 0 && file <= 2) {
+        f = file == 0 ? sfstdin : file == 1 ? sfstdout : sfstderr;
+        if (f) {
+            if (f->mode & SF_AVAIL) {
+                sflags = f->flags;
+            } else
+                f = NULL;
+        }
     }
 
-    if (!f) {			/* reuse a standard stream structure if possible */
-	if (!(flags & SF_STRING) && file >= 0 && file <= 2) {
-	    f = file == 0 ? sfstdin : file == 1 ? sfstdout : sfstderr;
-	    if (f) {
-		if (f->mode & SF_AVAIL) {
-		    sflags = f->flags;
-		} else
-		    f = NULL;
-	    }
-	}
-
-	if (!f) {
-	    if (!(f = malloc(sizeof(Sfio_t))))
-		return NULL;
-	    SFCLEAR(f);
-	}
+    if (!f) {
+        if (!(f = malloc(sizeof(Sfio_t))))
+            return NULL;
+        SFCLEAR(f);
     }
 
     /* stream type */
@@ -93,9 +63,6 @@ Sfio_t *sfnew(Sfio_t * oldf, void * buf, size_t size, int file,
 	f->data = size <= 0 ? NULL : (uchar *) buf;
     }
     f->endb = f->endr = f->endw = f->next = f->data;
-
-    if (_Sfnotify)
-	_Sfnotify(f, SF_NEW, f->file);
 
     if (f->flags & SF_STRING)
 	(void) _sfmode(f, f->mode & SF_RDWR, 0);
