@@ -442,8 +442,11 @@ void test_edge_node_overlap(const graph_options &graph_options,
           {"box",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"crow",
-           // FIXME: adjust this when `crow` is fixed for penwidth
-           graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
+           [&]() { // FIXME: calculate this accurately for crow/vee arrow
+             const auto tip_scale = 2.222222; // empirical value
+             return graph_options.edge_penwidth / 2 * tip_scale +
+                    graphviz_bezier_clip_margin;
+           }()},
           {"curve",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"diamond",
@@ -467,7 +470,6 @@ void test_edge_node_overlap(const graph_options &graph_options,
           {"tee",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"vee",
-           // FIXME: adjust this when `vee` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
       };
 
