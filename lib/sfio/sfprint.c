@@ -490,11 +490,13 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 		precis = 1;
 	    for (fmt = *sp;;) {
 		if ((n = width - precis) > 0 && !(flags & SFFMT_LEFT)) {
-		SFnputc(f, ' ', n)};
+		    SFnputc(f, ' ', n);
+		}
 		v = precis;
 		SFnputc(f, fmt, v);
 		if (n > 0) {
-		SFnputc(f, ' ', n)};
+		    SFnputc(f, ' ', n);
+		}
 		if (!(fmt = *++sp))
 		    break;
 		else if (base > 0) {
