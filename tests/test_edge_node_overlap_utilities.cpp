@@ -445,7 +445,6 @@ void test_edge_node_overlap(const graph_options &graph_options,
            // FIXME: adjust this when `crow` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"curve",
-           // FIXME: adjust this when `curve` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"diamond",
            [&]() { // FIXME: calculate this accurately for diamond arrow
@@ -456,7 +455,6 @@ void test_edge_node_overlap(const graph_options &graph_options,
           {"dot",
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"icurve",
-           // FIXME: adjust this when `icurve` is fixed for penwidth
            graph_options.edge_penwidth / 2 + graphviz_bezier_clip_margin},
           {"inv",
            [&]() { // FIXME: calculate this accurately for normal/inv arrow
