@@ -2261,19 +2261,18 @@ static Exdisc_t *initDisc(Gpr_t * state)
 static Exnode_t *compile(Expr_t * prog, char *src, char *input, int line,
                          const char *lbl, const char *sfx, int kind) {
     Exnode_t *e = 0;
-    Sfio_t *sf;
-    Sfio_t *prefix;
     int rv;
 
     /* create input stream */
+    FILE *sf = tmpfile();
+    assert(sf != NULL);
+    if (input) {
+	fputs(input, sf);
+    }
     if (sfx) {
-	sf = sfopen(sfx, "rs");
-	if (input) {
-	    prefix = sfopen(input, "rs");
-	    sfstack(sf, prefix);
-	}
-    } else
-	sf = sfopen(input, "rs");
+	fputs(sfx, sf);
+    }
+    rewind(sf);
 
     /*  prefixing label if necessary */
     agxbuf label = {0};
@@ -2285,7 +2284,7 @@ static Exnode_t *compile(Expr_t * prog, char *src, char *input, int line,
     if (!src)
 	src = "<command line>";
     rv = excomp(prog, src, line, sf, lbl ? agxbdisown(&label) : NULL);
-    sfclose(sf);
+    fclose(sf);
 
     if (rv >= 0 && getErrorErrors() == 0)
 	e = exexpr(prog, lbl, NULL, kind);

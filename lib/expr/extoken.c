@@ -286,7 +286,7 @@ lex(Expr_t* ex)
 		}
 		else if (ex->input->fp)
 		{
-			if ((c = sfgetc(ex->input->fp)) == EOF)
+			if ((c = getc(ex->input->fp)) == EOF)
 			{
 				if (!expop(ex))
 					continue;

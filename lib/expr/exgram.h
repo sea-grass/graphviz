@@ -29,6 +29,7 @@ extern "C" {
 
 #include <cgraph/agxbuf.h>
 #include <expr/exlib.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -818,7 +819,7 @@ preprint(Exnode_t* args)
  * push a new input stream and program
  */
 
-int expush(Expr_t *p, const char *name, int line, Sfio_t *fp) {
+int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 	Exinput_t*	in;
 	char*		s;
 	char			buf[PATH_MAX];
@@ -835,7 +836,7 @@ int expush(Expr_t *p, const char *name, int line, Sfio_t *fp) {
 		in->close = 0;
 	else if (name)
 	{
-		if (!(s = pathfind(name, p->disc->lib, p->disc->type, buf, sizeof(buf))) || !(in->fp = sfopen(s, "r")))
+		if (!(s = pathfind(name, p->disc->lib, p->disc->type, buf, sizeof(buf))) || !(in->fp = fopen(s, "r")))
 		{
 			exerror("%s: file not found", name);
 			in->bp = in->sp = "";
@@ -893,7 +894,7 @@ expop(Expr_t* p)
 	else
 	{
 		if (p->errors && in->fp && p->linep != p->line)
-			while ((c = sfgetc(in->fp)) != EOF)
+			while ((c = getc(in->fp)) != EOF)
 				if (c == '\n')
 				{
 					error_info.line++;
@@ -903,7 +904,7 @@ expop(Expr_t* p)
 			error_info.line = in->line;
 	}
 	if (in->fp && in->close)
-		sfclose(in->fp);
+		fclose(in->fp);
 	free(in->pushback);
 	p->input = in->next;
 	free(in);
@@ -921,7 +922,7 @@ void exinit(void) {
 	memset (&expr, 0, sizeof(Exstate_t));
 }
 
-int excomp(Expr_t *p, const char *name, int line, Sfio_t *fp, char *prefix) {
+int excomp(Expr_t *p, const char *name, int line, FILE *fp, char *prefix) {
 	Exid_t*	v;
 	int	eof;
 
@@ -978,7 +979,7 @@ exclose(Expr_t* p, int all)
 			{
 				free(in->pushback);
 				if (in->fp && in->close)
-					sfclose(in->fp);
+					fclose(in->fp);
 				if ((p->input = in->next))
 					free(in);
 			}
