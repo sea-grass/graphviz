@@ -926,7 +926,6 @@ int excomp(Expr_t *p, const char *name, int line, FILE *fp, char *prefix) {
 	Exid_t*	v;
 	int	eof;
 
-	p->more = 0;
 	eof = p->eof;
 	if (expush(p, name, line, fp))
 		return -1;

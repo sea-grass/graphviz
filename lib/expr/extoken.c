@@ -405,9 +405,6 @@ extoken_fn(Expr_t* ex)
 				c = '=';
 			else if (q == '%' && c == '%')
 			{
-				if (ex->input->fp)
-					ex->more = (const char*)ex->input->fp;
-				else ex->more = ex->input->sp;
 				goto eof;
 			}
 			else exunlex(ex, q);

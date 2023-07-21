@@ -224,7 +224,6 @@ struct Expr_s				/* ex program state		*/
 {
 	const char*	id;		/* library id			*/
 	Dt_t*		symbols;	/* symbol table			*/
-	const char*	more;		/* more after %% (sp or != 0)	*/
 	Sfio_t*		file[10];	/* io streams			*/
 	Vmalloc_t*	vm;		/* program store		*/
 
