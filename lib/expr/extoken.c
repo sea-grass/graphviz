@@ -286,7 +286,7 @@ lex(Expr_t* ex)
 		}
 		else if (ex->input->fp)
 		{
-			if ((c = sfgetc(ex->input->fp)) == EOF)
+			if ((c = getc(ex->input->fp)) == EOF)
 			{
 				if (!expop(ex))
 					continue;
@@ -405,9 +405,6 @@ extoken_fn(Expr_t* ex)
 				c = '=';
 			else if (q == '%' && c == '%')
 			{
-				if (ex->input->fp)
-					ex->more = (const char*)ex->input->fp;
-				else ex->more = ex->input->sp;
 				goto eof;
 			}
 			else exunlex(ex, q);

@@ -76,7 +76,7 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 	  } \
 	}
 #define SFwrite(f,s,n) \
-	{ if((endd-d) >= n) { MEMCPY(d,s,n); } \
+	{ if((endd-d) >= n) { memcpy(d, s, n); d += n; } \
 	  else \
 	  { SFEND(f); n_output += (w = SFWRITE(f,(void*)s,n)) > 0 ? w : 0; SFBUF(f); \
 	    if(n != w) goto done; \
@@ -490,11 +490,13 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 		precis = 1;
 	    for (fmt = *sp;;) {
 		if ((n = width - precis) > 0 && !(flags & SFFMT_LEFT)) {
-		SFnputc(f, ' ', n)};
+		    SFnputc(f, ' ', n);
+		}
 		v = precis;
 		SFnputc(f, fmt, v);
 		if (n > 0) {
-		SFnputc(f, ' ', n)};
+		    SFnputc(f, ' ', n);
+		}
 		if (!(fmt = *++sp))
 		    break;
 		else if (base > 0) {

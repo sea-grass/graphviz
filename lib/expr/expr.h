@@ -224,7 +224,6 @@ struct Expr_s				/* ex program state		*/
 {
 	const char*	id;		/* library id			*/
 	Dt_t*		symbols;	/* symbol table			*/
-	const char*	more;		/* more after %% (sp or != 0)	*/
 	Sfio_t*		file[10];	/* io streams			*/
 	Vmalloc_t*	vm;		/* program store		*/
 
@@ -250,7 +249,7 @@ extern void		exclose(Expr_t*, int);
  * \param prefix Optional program text to include ahead of the file content
  * \return 0 on success
  */
-extern int excomp(Expr_t *p, const char *name, int line, Sfio_t *fp,
+extern int excomp(Expr_t *p, const char *name, int line, FILE *fp,
                   char *prefix);
 
 extern char*		excontext(Expr_t*, char*, int);
@@ -270,7 +269,7 @@ extern Exnode_t*	exnewnode(Expr_t*, int, int, int, Exnode_t*, Exnode_t*);
 extern char*		exnospace(void);
 extern Expr_t*		exopen(Exdisc_t*);
 extern int		expop(Expr_t*);
-extern int		expush(Expr_t*, const char*, int, Sfio_t*);
+extern int		expush(Expr_t*, const char*, int, FILE*);
 extern char*		exstash(Sfio_t*, Vmalloc_t*);
 extern int		extoken_fn(Expr_t*);
 extern char*		exstring(Expr_t *, char *);

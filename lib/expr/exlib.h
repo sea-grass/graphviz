@@ -25,13 +25,14 @@ extern "C" {
 #include <ast/ast.h>
 #include <cgraph/agxbuf.h>
 #include <sfio/sfio_t.h>
+#include <stdio.h>
 
 typedef struct Exinput_s		/* input stack			*/
 {
 	struct Exinput_s*next;		/* next in stack		*/
 	int		close;		/* close fp on pop		*/
 	char*		file;		/* previous file		*/
-	Sfio_t*		fp;		/* expression file pointer	*/
+	FILE*		fp;		/* expression file pointer	*/
 	int		line;		/* previous line		*/
 	int		nesting;	/* expression nesting level	*/
 	int		peek;		/* 1 char peek			*/
