@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/geometry.h>
 #include <common/render.h>
 
@@ -60,14 +61,13 @@ void *getfree(Freelist * fl)
 {
     int i;
     Freenode *t;
-    Freeblock *mem;
 
     if (fl->head == NULL) {
 	int size = fl->nodesize;
 	char *cp;
 
-	mem = GNEW(Freeblock);
-	mem->nodes = gmalloc(sqrt_nsites * size);
+	Freeblock *mem = gv_alloc(sizeof(Freeblock));
+	mem->nodes = gv_calloc(sqrt_nsites, size);
 	cp = (char *) (mem->nodes);
 	for (i = 0; i < sqrt_nsites; i++) {
 	    makefree(cp + i * size, fl);

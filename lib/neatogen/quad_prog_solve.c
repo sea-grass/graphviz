@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <math.h>
@@ -427,21 +428,21 @@ CMajEnv *initConstrainedMajorization(float *packedMat, int n,
 				     int *ordering, int *levels,
 				     int num_levels)
 {
-    CMajEnv *e = GNEW(CMajEnv);
+    CMajEnv *e = gv_alloc(sizeof(CMajEnv));
     e->A = NULL;
     e->n = n;
     e->ordering = ordering;
     e->levels = levels;
     e->num_levels = num_levels;
     e->A = unpackMatrix(packedMat, n);
-    e->fArray1 = N_GNEW(n, float);
-    e->fArray2 = N_GNEW(n, float);
-    e->fArray3 = N_GNEW(n, float);
-    e->fArray4 = N_GNEW(n, float);
-    e->iArray1 = N_GNEW(n, int);
-    e->iArray2 = N_GNEW(n, int);
-    e->iArray3 = N_GNEW(n, int);
-    e->iArray4 = N_GNEW(n, int);
+    e->fArray1 = gv_calloc(n, sizeof(float));
+    e->fArray2 = gv_calloc(n, sizeof(float));
+    e->fArray3 = gv_calloc(n, sizeof(float));
+    e->fArray4 = gv_calloc(n, sizeof(float));
+    e->iArray1 = gv_calloc(n, sizeof(int));
+    e->iArray2 = gv_calloc(n, sizeof(int));
+    e->iArray3 = gv_calloc(n, sizeof(int));
+    e->iArray4 = gv_calloc(n, sizeof(int));
     return e;
 }
 #endif				/* DIGCOLA */

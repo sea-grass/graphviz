@@ -15,7 +15,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
+#include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/unused.h>
 #include <common/types.h>
@@ -105,29 +105,28 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
   /* use up to dist 2 neighbor. This is used in overcoming pherical effect with ideal distance of
      2-neighbors equal graph distance etc.
    */
-  StressMajorizationSmoother sm;
   int i, j, k, l, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, *id, *jd;
-  int *mask, nz;
+  int nz;
   double *d, *w, *lambda;
-  double *avg_dist, diag_d, diag_w, dist, s = 0, stop = 0, sbot = 0;
+  double diag_d, diag_w, dist, s = 0, stop = 0, sbot = 0;
   SparseMatrix ID;
 
   assert(SparseMatrix_is_symmetric(A, false));
 
   ID = ideal_distance_matrix(A, dim, x);
 
-  sm = GNEW(struct StressMajorizationSmoother_struct);
+  StressMajorizationSmoother sm = gv_alloc(sizeof(struct StressMajorizationSmoother_struct));
   sm->scaling = 1.;
   sm->data = NULL;
   sm->scheme = SM_SCHEME_NORMAL;
   sm->tol_cg = 0.01;
   sm->maxit_cg = (int)sqrt((double) A->m);
 
-  lambda = sm->lambda = N_GNEW(m,double);
+  lambda = sm->lambda = gv_calloc(m, sizeof(double));
   for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
-  mask = N_GNEW(m,int);
+  int *mask = gv_calloc(m, sizeof(int));
 
-  avg_dist = N_GNEW(m,double);
+  double *avg_dist = gv_calloc(m, sizeof(double));
 
   for (i = 0; i < m ;i++){
     avg_dist[i] = 0;

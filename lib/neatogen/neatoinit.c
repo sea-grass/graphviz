@@ -197,7 +197,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
     int **cs,*cn;
     int i,j,nclusters=0;
     bitarray_t assigned = bitarray_new(agnnodes(g));
-    cluster_data *cdata = GNEW(cluster_data);
+    cluster_data *cdata = gv_alloc(sizeof(cluster_data));
 
     cdata->ntoplevel = agnnodes(g);
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
@@ -207,8 +207,8 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
     }
     cdata->nvars=0;
     cdata->nclusters = nclusters;
-    cs = cdata->clusters = N_GNEW(nclusters,int*);
-    cn = cdata->clustersizes = N_GNEW(nclusters,int);
+    cs = cdata->clusters = gv_calloc(nclusters, sizeof(int*));
+    cn = cdata->clustersizes = gv_calloc(nclusters, sizeof(int));
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
         /* clusters are processed by separate calls to ordered_edges */
         if (!strncmp(agnameof(subg), "cluster", 7)) {
@@ -216,7 +216,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
 
             *cn = agnnodes(subg);
             cdata->nvars += *cn;
-            c = *cs++ = N_GNEW(*cn++,int);
+            c = *cs++ = gv_calloc(*cn++, sizeof(int));
             for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
                 node_t *gn;
                 int ind = 0;
@@ -230,8 +230,8 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
             }
         }
     }
-    cdata->bb=N_GNEW(cdata->nclusters,boxf);
-    cdata->toplevel=N_GNEW(cdata->ntoplevel,int);
+    cdata->bb = gv_calloc(cdata->nclusters, sizeof(boxf));
+    cdata->toplevel = gv_calloc(cdata->ntoplevel, sizeof(int));
     for(i=j=0;i<agnnodes(g);i++) {
         if(!bitarray_get(assigned, i)) {
             cdata->toplevel[j++]=i;
