@@ -362,7 +362,7 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 
 	/* set the correct size */
 	if (flags & (SFFMT_TYPES & ~SFFMT_IFLAG)) {
-	    if ((_Sftype[fmt] & (SFFMT_INT | SFFMT_UINT)) || fmt == 'n') {
+	    if (_Sftype[fmt] & (SFFMT_INT | SFFMT_UINT)) {
 		size = (flags & SFFMT_LLONG) ? sizeof(Sflong_t) :
 		    (flags & SFFMT_LONG) ? sizeof(long) :
 		    (flags & SFFMT_SHORT) ? sizeof(short) :
@@ -503,20 +503,6 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 		    SFputc(f, base);
 		}
 	    }
-	    continue;
-
-	case 'n':		/* return current output length */
-	    SFEND(f);
-	    if (FMTCMP(size, long, Sflong_t))
-		*((long *) argv.vp) = (long) n_output;
-	    else if (sizeof(short) < sizeof(int) &&
-		     FMTCMP(size, short, Sflong_t))
-		*((short *) argv.vp) = (short) n_output;
-	    else if (size == sizeof(char))
-		*((char *) argv.vp) = (char) n_output;
-	    else
-		*((int *) argv.vp) = (int) n_output;
-
 	    continue;
 
 	case 'p':		/* pointer value */
