@@ -47,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Small gap between `lcurve` or `rcurve` arrow shaft and node. #2426
 - Failure of arrowhead and arrowtail to respect penwidth #372 \
   Fixed also for the `crow` and `vee`
-  [edge arrow shapes](https://graphviz.org/doc/info/arrows.html#primitive-shapes).
+  [edge arrow shapes](https://graphviz.org/doc/info/arrows.html#primitive-shapes)
+  and [record based nodes](https://graphviz.org/doc/info/shapes.html#record).
 
 ## [8.1.0] – 2023-07-06
 

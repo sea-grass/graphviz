@@ -7,8 +7,8 @@
 #include "test_utilities.h"
 
 TEST_CASE("Overlap record based node",
-          "[!shouldfail] Test that an edge connected to a record based node "
-          "touches that node and does not overlap it too much") {
+          "Test that an edge connected to a record based node touches that "
+          "node and does not overlap it too much") {
 
   std::string filename_base = AUTO_NAME();
 
