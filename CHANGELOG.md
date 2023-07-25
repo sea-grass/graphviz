@@ -31,8 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The definition of the `elist_append` and `alloc_elist` macros
   have been changed to use newer allocation functions. Users were/are not
   expected to call these macros.
-- The functions `ageqedge`, `agtail`, `aghead`, and `agopp` have been
-  reintroduced. These were previously removed in Graphviz 3.0.0. #2433
+- The functions `ageqedge`, `agtail`, `aghead`, `agopp`, `agmkout`, and `agmkin`
+  have been reintroduced. These were previously removed in Graphviz 3.0.0. #2433
 
 ### Fixed
 
