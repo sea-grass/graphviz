@@ -83,7 +83,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     uchar *d, *endd, *data;
     int inp, shift, base, width;
     ssize_t size;
-    int fmt, flags, dot, n_assign, v, n, n_input;
+    int fmt, flags, dot, n_assign, v, n;
     char *sp;
     char accept[SF_MAXDIGITS];
 
@@ -101,9 +101,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     int rs;
 
 #define SFBUF(f)	(_sfbuf(f,&rs), (data = d = f->next), (endd = f->endb) )
-#define SFLEN(f)	(d-data)
-#define SFEND(f)	((n_input += d-data), \
-			 (rs > 0 ? SFREAD(f,(void*)data,d-data) : ((f->next = d), 0)) )
+#define SFEND(f)	(rs > 0 ? SFREAD(f,(void*)data,d-data) : ((f->next = d), 0))
 #define SFGETC(f,c)	((c) = (d < endd || (SFEND(f), SFBUF(f), d < endd)) ? \
 				(int)(*d++) : -1 )
 #define SFUNGETC(f,c)	(--d)
@@ -122,7 +120,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     SFCVINIT();			/* initialize conversion tables */
 
     SFBUF(f);
-    n_assign = n_input = 0;
+    n_assign = 0;
 
     inp = -1;
 
@@ -370,7 +368,6 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 		if ((ft->flags & SFFMT_VALUE) && !(ft->flags & SFFMT_SKIP))
 		    value = argv.vp;
 	    } else {		/* v > 0: number of input bytes consumed */
-		n_input += v;
 		if (!(ft->flags & SFFMT_SKIP))
 		    n_assign += 1;
 		continue;
@@ -414,19 +411,6 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 	/* get the address to assign value */
 	if (!value && !(flags & SFFMT_SKIP))
 	    value = va_arg(args, void *);
-
-	if (fmt == 'n') {	/* return length of consumed input */
-	    if (sizeof(long) > sizeof(int) && FMTCMP(size, long, Sflong_t))
-		*((long *) value) = (long) (n_input + SFLEN(f));
-	    else if (sizeof(short) < sizeof(int) &&
-		     FMTCMP(size, short, Sflong_t))
-		*((short *) value) = (short) (n_input + SFLEN(f));
-	    else if (size == sizeof(char))
-		*((char *) value) = (char) (n_input + SFLEN(f));
-	    else
-		*((int *) value) = (int) (n_input + SFLEN(f));
-	    continue;
-	}
 
 	/* if get here, start scanning input */
 	if (width == 0)
