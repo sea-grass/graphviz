@@ -22,6 +22,8 @@ struct SVGPoint {
   bool is_more_right_than(const SVGPoint &other) const;
 };
 
+using SVGPoints = std::vector<SVGPoint>;
+
 struct SVGLine {
   double x1;
   double y1;
@@ -75,7 +77,7 @@ struct SVGAttributes {
   double font_size;
   double height;
   std::string id;
-  std::vector<SVGPoint> points;
+  SVGPoints points;
   double rx;
   double ry;
   std::string stroke;
@@ -183,7 +185,7 @@ public:
   /// The Graphviz release version
   std::string graphviz_version;
   /// The points given by the `d` attribute of a path element
-  std::vector<SVGPoint> path_points;
+  SVGPoints path_points;
   /// The SVG element text node contents. Not to be confused with an SVG `text`
   /// element
   std::string text;
@@ -205,9 +207,9 @@ private:
   std::string fill_opacity_attribute_to_string() const;
   /// Compute the stroke shape miter point according to
   /// https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
-  SVG::SVGPoint miter_point(SVG::SVGPoint segment_start,
-                            SVG::SVGPoint segment_end,
-                            SVG::SVGPoint following_segment_end) const;
+  SVG::SVGPoints miter_shape(SVG::SVGPoint segment_start,
+                             SVG::SVGPoint segment_end,
+                             SVG::SVGPoint following_segment_end) const;
   std::string points_attribute_to_string() const;
   std::string stroke_attribute_to_string() const;
   std::string stroke_opacity_attribute_to_string() const;

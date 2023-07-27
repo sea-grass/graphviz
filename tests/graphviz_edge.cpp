@@ -19,18 +19,6 @@ void GraphvizEdge::add_outline_overlap_bbox(const GraphvizNode &node,
 }
 
 static const std::unordered_set<std::string_view>
-    supported_primitive_arrow_shapes = {
-        "box",     //
-        "curve",   //
-        "diamond", //
-        "dot",     //
-        "icurve",  //
-        "inv",     //
-        "normal",  //
-        "tee",     //
-};
-
-static const std::unordered_set<std::string_view>
     path_based_primitive_arrow_shapes = {
         "curve",  //
         "icurve", //
@@ -39,10 +27,12 @@ static const std::unordered_set<std::string_view>
 static const std::unordered_set<std::string_view>
     polygon_based_primitive_arrow_shapes = {
         "box",     //
+        "crow",    //
         "diamond", //
         "inv",     //
         "normal",  //
         "tee",     //
+        "vee",     //
 };
 
 static const std::unordered_set<std::string_view>
@@ -78,11 +68,6 @@ SVG::SVGRect GraphvizEdge::arrowhead_outline_bbox(
   assert((dir == "forward" || dir == "both") &&
          "no arrowhead for this edge direction");
 
-  if (!supported_primitive_arrow_shapes.contains(primitive_arrow_shape)) {
-    throw std::runtime_error{
-        fmt::format("primitive arrow shape {} is not yet supported",
-                    primitive_arrow_shape)};
-  }
   const auto index = dir == "forward" ? 0 : 1;
 
   const auto main_svg_element_type =
@@ -107,11 +92,6 @@ SVG::SVGRect GraphvizEdge::arrowtail_outline_bbox(
     std::string_view dir, std::string_view primitive_arrow_shape) const {
   assert((dir == "back" || dir == "both") &&
          "no arrowhead for this edge direction");
-  if (!supported_primitive_arrow_shapes.contains(primitive_arrow_shape)) {
-    throw std::runtime_error{
-        fmt::format("primitive arrow shape {} is not yet supported",
-                    primitive_arrow_shape)};
-  }
   const auto index = 0;
   const auto main_svg_element_type =
       edge_arrowhead_main_svg_element_type(primitive_arrow_shape);

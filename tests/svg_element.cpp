@@ -279,15 +279,17 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
       // there is always a next point since we iterate only to the next to
       // last point
       const auto &next_point = *std::next(it);
-      const SVG::SVGPoint miter_point =
+      const SVG::SVGPoints miter_shape =
           clockwise ?
                     // Graphviz draws some polygons clockwise and some
                     // counter-clockwise.
-              SVGElement::miter_point(prev_point, point, next_point)
+              SVGElement::miter_shape(prev_point, point, next_point)
                     :
                     // the SVG spec assumes clockwise so we swap the points
-              SVGElement::miter_point(next_point, point, prev_point);
-      m_bbox->extend(miter_point);
+              SVGElement::miter_shape(next_point, point, prev_point);
+      for (const auto &point : miter_shape) {
+        m_bbox->extend(point);
+      }
     }
     break;
   }
@@ -392,6 +394,49 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
           }
           break;
         }
+        const auto xmin = std::min(horizontal_start, horizontal_end);
+        const auto xmax = std::max(horizontal_start, horizontal_end);
+        const auto ymin = std::min(vertical_start, vertical_end);
+        const auto ymax = std::max(vertical_start, vertical_end);
+        if (horizontal_control1 >= xmin && horizontal_control1 <= xmax &&
+            horizontal_control2 >= xmin && horizontal_control2 <= xmax &&
+            vertical_control1 >= ymin && vertical_control1 <= ymax &&
+            vertical_control2 >= ymin && vertical_control2 <= ymax) {
+          // the control points are within a bounding box defined by the start
+          // and end points. This means that the Bezier curve is completely
+          // contained within this box, except for the extension caused by the
+          // stroke width. This extension can be calculated using the angle at
+          // the start and end points which is given by the closest control
+          // point. The Graphviz arrow shapes `rcurve`, `lcurve`, `ricurve` and
+          // `licurve` fulfills this condition.
+          const auto start_dx = horizontal_start - horizontal_control1;
+          const auto start_dy = vertical_start - vertical_control1;
+          const auto start_hypot = std::hypot(start_dx, start_dy);
+          const auto start_cos = start_dx / start_hypot;
+          const auto start_sin = start_dy / start_hypot;
+          const SVG::SVGPoint start_extension_left = {
+              horizontal_start + attributes.stroke_width / 2 * start_sin,
+              vertical_start - attributes.stroke_width / 2 * start_cos};
+          const SVG::SVGPoint start_extension_right = {
+              horizontal_start - attributes.stroke_width / 2 * start_sin,
+              vertical_start + attributes.stroke_width / 2 * start_cos};
+          m_bbox->extend(start_extension_left);
+          m_bbox->extend(start_extension_right);
+          const auto end_dx = horizontal_end - horizontal_control2;
+          const auto end_dy = vertical_end - vertical_control2;
+          const auto end_hypot = std::hypot(end_dx, end_dy);
+          const auto end_cos = end_dx / end_hypot;
+          const auto end_sin = end_dy / end_hypot;
+          const SVG::SVGPoint end_extension_left = {
+              horizontal_end + attributes.stroke_width / 2 * end_sin,
+              vertical_end + -attributes.stroke_width / 2 * end_cos};
+          const SVG::SVGPoint end_extension_right = {
+              horizontal_end + -attributes.stroke_width / 2 * end_sin,
+              vertical_end + attributes.stroke_width / 2 * end_cos};
+          m_bbox->extend(end_extension_left);
+          m_bbox->extend(end_extension_right);
+          break;
+        }
       }
       throw std::runtime_error(
           "paths other than straight vertical, straight horizontal or the "
@@ -482,13 +527,15 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
         // there is always a next point since we iterate only to the next to
         // last point
         const auto &next_point = *std::next(it);
-        const SVG::SVGPoint miter_point =
+        SVG::SVGPoints miter_shape =
             // Graphviz draws some polylines clockwise and some
             // counter-clockwise.
-            clockwise ? SVGElement::miter_point(prev_point, point, next_point) :
+            clockwise ? SVGElement::miter_shape(prev_point, point, next_point) :
                       // `miter_point` assumes clockwise so we swap the points
-                SVGElement::miter_point(next_point, point, prev_point);
-        m_bbox->extend(miter_point);
+                SVGElement::miter_shape(next_point, point, prev_point);
+        for (const auto &point : miter_shape) {
+          m_bbox->extend(point);
+        }
       }
     }
     break;
@@ -878,12 +925,12 @@ void SVG::SVGElement::to_string_impl(std::string &output,
   }
 }
 
-SVG::SVGPoint
-SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
+SVG::SVGPoints
+SVG::SVGElement::miter_shape(SVG::SVGPoint segment_start,
                              SVG::SVGPoint segment_end,
                              SVG::SVGPoint following_segment_end) const {
   /*
-   * Compute the stroke shape miter point according to
+   * Compute the stroke shape miter shape according to
    * https://www.w3.org/TR/SVG2/painting.html#StrokeShape.
    *
    * The spec assumes the points of a shape are given in clockwise
@@ -947,7 +994,7 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
    *     NOTE: In the diagram above, the B segment crosses the x-axis in the
    *           downwards direction so its angle to the x-axis is in this case
    *           larger than a semi-circle (π or 180°). In the picture it is
-   *           around 5π/6 or 300°. The B segement in the opposite direction has
+   *           around 5π/3 or 300°. The B segement in the opposite direction has
    *           an angle to the x-axis which is β-π. This is denoted next to the
    *           Bleft line in the picture.
    *
@@ -965,7 +1012,7 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
     // the stroke shape is really a point so we just return this point without
     // extending it with stroke width in any direction, which seems to be the
     // way SVG renderers render this.
-    return segment_end;
+    return {segment_end};
   }
 
   const auto stroke_width = attributes.stroke_width;
@@ -993,29 +1040,30 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
   const auto cosBeta = dxB / hypotB;
   const auto beta = dyB > 0 ? std::acos(cosBeta) : -std::acos(cosBeta);
 
+  const auto sinBeta = dyB / hypotB;
+  const auto sinBetaMinusPi = -sinBeta;
+  const auto cosBetaMinusPi = -cosBeta;
+  const SVG::SVGPoint P2 = {P.x + stroke_width / 2.0 * sinBetaMinusPi,
+                            P.y - stroke_width / 2.0 * cosBetaMinusPi};
+
   // angle between the A segment and the B segment in the reverse direction
   const auto beta_rev = beta - std::numbers::pi;
   const auto theta = beta_rev - alpha;
 
+  SVG::SVGPoints line_join_shape;
   const auto miter_limit = 4.0;
   const auto miter_length = stroke_width / std::sin(std::abs(theta) / 2.0);
 
+  // add the bevel, which is is the triangle formed from the three points P, P1
+  // and P2, to the line join shape. SVG has inverted y axis so invert the
+  // returned y value
+  line_join_shape.emplace_back(P.x, -P.y);
+  line_join_shape.emplace_back(P1.x, -P1.y);
+  line_join_shape.emplace_back(P2.x, -P2.y);
+
   if (miter_length > miter_limit * stroke_width) {
-    // fall back to bevel
-    const auto sinBeta = dyB / hypotB;
-    const auto sinBetaMinusPi = -sinBeta;
-    const auto cosBetaMinusPi = -cosBeta;
-    const SVG::SVGPoint P2 = {P.x + stroke_width / 2.0 * sinBetaMinusPi,
-                              P.y - stroke_width / 2.0 * cosBetaMinusPi};
-
-    // the bevel is the triangle formed from the three points P, P1 and P2 so
-    // a good enough approximation of the miter point in this case is the
-    // crossing of P-P3 with P1-P2 which is the same as the midpoint between
-    // P1 and P2
-    const SVG::SVGPoint Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
-
-    // SVG has inverted y axis so invert the returned y value
-    return {Pbevel.x, -Pbevel.y};
+    // fall back to bevel only
+    return line_join_shape;
   }
 
   // length between P1 and P3 (and between P2 and P3)
@@ -1024,7 +1072,8 @@ SVG::SVGElement::miter_point(SVG::SVGPoint segment_start,
   const SVG::SVGPoint P3 = {P1.x + l * cosAlpha, P1.y + l * sinAlpha};
 
   // SVG has inverted y axis so invert the returned y value
-  return {P3.x, -P3.y};
+  line_join_shape.emplace_back(P3.x, -P3.y);
+  return line_join_shape;
 }
 
 std::string

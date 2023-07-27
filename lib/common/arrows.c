@@ -129,6 +129,7 @@ static pointf arrow_type_curve(GVJ_t * job, pointf p, pointf u, double arrowsize
 static pointf arrow_type_gap(GVJ_t * job, pointf p, pointf u, double arrowsize, double penwidth, uint32_t flag);
 
 static double arrow_length_generic(double lenfact, double arrowsize, double penwidth, uint32_t flag);
+static double arrow_length_crow(double lenfact, double arrowsize, double penwidth, uint32_t flag);
 static double arrow_length_normal(double lenfact, double arrowsize, double penwidth, uint32_t flag);
 static double arrow_length_tee(double lenfact, double arrowsize, double penwidth, uint32_t flag);
 static double arrow_length_box(double lenfact, double arrowsize, double penwidth, uint32_t flag);
@@ -138,7 +139,7 @@ static double arrow_length_dot(double lenfact, double arrowsize, double penwidth
 
 static const arrowtype_t Arrowtypes[] = {
     {ARR_TYPE_NORM, 1.0, arrow_type_normal, arrow_length_normal},
-    {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_generic},
+    {ARR_TYPE_CROW, 1.0, arrow_type_crow, arrow_length_crow},
     {ARR_TYPE_TEE, 0.5, arrow_type_tee, arrow_length_tee},
     {ARR_TYPE_BOX, 1.0, arrow_type_box, arrow_length_box},
     {ARR_TYPE_DIAMOND, 1.2, arrow_type_diamond, arrow_length_diamond},
@@ -446,14 +447,19 @@ void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
 // See https://www.w3.org/TR/SVG2/painting.html#TermLineJoinShape for the
 // terminology
 
-static pointf miter_point(pointf base_left, pointf P, pointf base_right,
-                          double penwidth) {
+typedef struct {
+  pointf points[3];
+} triangle;
+
+static triangle
+miter_shape(pointf base_left, pointf P, pointf base_right, double penwidth) {
   if ((base_left.x == P.x && base_left.y == P.y) ||
       (base_right.x == P.x && base_right.y == P.y)) {
     // the stroke shape is really a point so we just return this point without
     // extending it with penwidth in any direction, which seems to be the way
     // SVG renderers render this.
-    return P;
+    const triangle line_join_shape = {{P, P, P}};
+    return line_join_shape;
   }
   const pointf A[] = {base_left, P};
   const double dxA = A[1].x - A[0].x;
@@ -483,21 +489,23 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
   const double stroke_miterlimit = 4.0;
   const double normalized_miter_length = 1.0 / sin(theta / 2.0);
 
+  const double sinBeta = dyB / hypotB;
+  const double sinBetaMinusPi = -sinBeta;
+  const double cosBetaMinusPi = -cosBeta;
+  const pointf P2 = {P.x + penwidth / 2.0 * sinBetaMinusPi,
+                     P.y - penwidth / 2.0 * cosBetaMinusPi};
+
   if (normalized_miter_length > stroke_miterlimit)  {
     // fall back to bevel
-    const double sinBeta = dyB / hypotB;
-    const double sinBetaMinusPi = -sinBeta;
-    const double cosBetaMinusPi = -cosBeta;
-    const pointf P2 = {P.x + penwidth / 2.0 * sinBetaMinusPi,
-                       P.y - penwidth / 2.0 * cosBetaMinusPi};
 
     // the bevel is the triangle formed from the three points P, P1 and P2 so
     // a good enough approximation of the miter point in this case is the
     // crossing of P-P3 with P1-P2 which is the same as the midpoint between
     // P1 and P2
     const pointf Pbevel = {(P1.x + P2.x) / 2, (P1.y + P2.y) / 2};
+    const triangle line_join_shape = {{Pbevel, P1, P2}};
 
-    return Pbevel;
+    return line_join_shape;
   }
 
   // length between P1 and P3 (and between P2 and P3)
@@ -505,8 +513,9 @@ static pointf miter_point(pointf base_left, pointf P, pointf base_right,
 
   const pointf P3 = {P1.x + l * cosAlpha,
                      P1.y + l * sinAlpha};
+  const triangle line_join_shape = {{P3, P1, P2}};
 
-  return P3;
+  return line_join_shape;
 }
 
 static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
@@ -535,14 +544,43 @@ static pointf arrow_type_normal0(pointf p, pointf u, double penwidth,
     const pointf inv_tip = u;
     const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
 
-    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
-
-    const point delta_tip = {P3.x - P.x, P3.y - P.y};
+    pointf delta_tip = {0, 0};
 
     if (u.x != 0 || u.y != 0) {
 	// phi = angle of arrow
 	const double cosPhi = P.x / hypot(P.x, P.y);
 	const double sinPhi = P.y / hypot(P.x, P.y);
+	const double phi = P.y > 0 ? acos(cosPhi) : -acos(cosPhi);
+
+	if (flag & ARR_MOD_LEFT) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P1 = line_join_shape.points[1];
+	    // alpha = angle of P -> P1
+	    const double dx_P_P1 = P1.x - P.x;
+	    const double dy_P_P1 = P1.y - P.y;
+	    const double hypot_P_P1 = hypot(dx_P_P1, dy_P_P1);
+	    const double cosAlpha = dx_P_P1 / hypot_P_P1;
+	    const double alpha = dy_P_P1 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P1 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else if (flag & ARR_MOD_RIGHT) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P2 = line_join_shape.points[2];
+	    // alpha = angle of P -> P2
+	    const double dx_P_P2 = P2.x - P.x;
+	    const double dy_P_P2 = P2.y - P.y;
+	    const double hypot_P_P2 = hypot(dx_P_P2, dy_P_P2);
+	    const double cosAlpha = dx_P_P2 / hypot_P_P2;
+	    const double alpha = dy_P_P2 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P2 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P3 = line_join_shape.points[0];
+	    delta_tip = sub_pointf(P3, P);
+	}
 	delta_base = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
     }
 
@@ -596,9 +634,9 @@ static pointf arrow_type_normal(GVJ_t *job, pointf p, pointf u,
     return q;
 }
 
-static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
-                              double penwidth, uint32_t flag) {
-    pointf m, q, v, w, a[9];
+static pointf arrow_type_crow0(pointf p, pointf u, double arrowsize,
+			      double penwidth, uint32_t flag, pointf *a) {
+    pointf m, q, v, w;
     double arrowwidth, shaftwidth;
 
     arrowwidth = 0.45;
@@ -617,7 +655,86 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
     q.y = p.y + u.y;
     m.x = p.x + u.x * 0.5;
     m.y = p.y + u.y * 0.5;
+
+    pointf delta_base = {0, 0};
+
+    const pointf origin = {0, 0};
+    const pointf v_inv = {-v.x, -v.y};
+    const pointf normal_left = flag & ARR_MOD_RIGHT ? origin : v;
+    const pointf normal_right = flag & ARR_MOD_LEFT ? origin : v_inv;
+    const pointf base_left = flag & ARR_MOD_INV ? normal_right : normal_left;
+    const pointf base_right = flag & ARR_MOD_INV ? normal_left : normal_right;
+    const pointf normal_tip = u;
+    const pointf inv_tip = {-u.x, -u.y};
+    const pointf P = flag & ARR_MOD_INV ? inv_tip : normal_tip ;
+
+    pointf delta_tip = {0, 0};
+
+    if (u.x != 0 || u.y != 0) {
+	// phi = angle of arrow
+	const double cosPhi = P.x / hypot(P.x, P.y);
+	const double sinPhi = P.y / hypot(P.x, P.y);
+	const double phi = P.y > 0 ? acos(cosPhi) : -acos(cosPhi);
+
+	if ((flag & ARR_MOD_LEFT && flag & ARR_MOD_INV) || (flag & ARR_MOD_RIGHT && !(flag & ARR_MOD_INV))) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P2 = line_join_shape.points[2];
+	    // alpha = angle of P -> P2
+	    const double dx_P_P2 = P2.x - P.x;
+	    const double dy_P_P2 = P2.y - P.y;
+	    const double hypot_P_P2 = hypot(dx_P_P2, dy_P_P2);
+	    const double cosAlpha = dx_P_P2 / hypot_P_P2;
+	    const double alpha = dy_P_P2 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P2 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else if ((flag & ARR_MOD_LEFT && !(flag & ARR_MOD_INV)) || (flag & ARR_MOD_RIGHT && flag & ARR_MOD_INV)) {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P1 = line_join_shape.points[1];
+	    // alpha = angle of P -> P1
+	    const double dx_P_P1 = P1.x - P.x;
+	    const double dy_P_P1 = P1.y - P.y;
+	    const double hypot_P_P1 = hypot(dx_P_P1, dy_P_P1);
+	    const double cosAlpha = dx_P_P1 / hypot_P_P1;
+	    const double alpha = dy_P_P1 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = hypot_P_P1 * cos(gamma);
+	    delta_tip = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	} else {
+	    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+	    const pointf P3 = line_join_shape.points[0];
+	    delta_tip = sub_pointf(P3, P);
+	}
+	if (flag & ARR_MOD_INV) {  /* vee */
+	    delta_base = (pointf) {penwidth / 2.0 * cosPhi, penwidth / 2.0 * sinPhi};
+	} else {
+	    // the left and right "toes" of the crow extend in the direction of
+	    // the arrow by the same amount. Their shape is not affected by the
+	    // 'l' or 'r' modifiers. Here we use the right "toe" to calculate
+	    // the extension. This is ok even if it's not actually rendered when
+	    // the 'l' modifier is used.
+	    const pointf toe_base_left = add_pointf(sub_pointf(m, q), w);
+	    const pointf toe_base_right = origin;
+	    const pointf toe_P = sub_pointf(v, u);
+	    const triangle toe_line_join_shape = miter_shape(toe_base_left, toe_P, toe_base_right, penwidth);
+	    const pointf P1 = toe_line_join_shape.points[1];
+	    // alpha = angle of toe_P -> P1
+	    const double dx_P_P1 = P1.x - toe_P.x;
+	    const double dy_P_P1 = P1.y - toe_P.y;
+	    const double hypot_P_P1 = hypot(dx_P_P1, dy_P_P1);
+	    const double cosAlpha = dx_P_P1 / hypot_P_P1;
+	    const double alpha = dy_P_P1 > 0 ? acos(cosAlpha) : -acos(cosAlpha);
+	    const double gamma = alpha - phi;
+	    const double delta_tip_length = -hypot_P_P1 * cos(gamma);
+	    delta_base = (pointf){delta_tip_length * cosPhi, delta_tip_length * sinPhi};
+	}
+    }
+
     if (flag & ARR_MOD_INV) {  /* vee */
+	p.x -= delta_tip.x;
+	p.y -= delta_tip.y;
+	q.x -= delta_tip.x;
+	q.y -= delta_tip.y;
 	a[0] = a[8] = p;
 	a[1].x = q.x - v.x;
 	a[1].y = q.y - v.y;
@@ -632,28 +749,46 @@ static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
 	a[6].y = m.y + w.y;
 	a[7].x = q.x + v.x;
 	a[7].y = q.y + v.y;
+	q.x -= delta_base.x;
+	q.y -= delta_base.y;
     } else {                     /* crow */
+	p.x += delta_base.x;
+	p.y += delta_base.y;
+	q.x += delta_base.x;
+	q.y += delta_base.y;
 	a[0] = a[8] = q;
 	a[1].x = p.x - v.x;
 	a[1].y = p.y - v.y;
 	a[2].x = m.x - w.x;
 	a[2].y = m.y - w.y;
-	a[3].x = p.x;
-	a[3].y = p.y;
-	a[4] = p;
-	a[5].x = p.x;
-	a[5].y = p.y;
+	a[3].x = p.x + delta_base.x;
+	a[3].y = p.y + delta_base.y;
+	a[4] = add_pointf(p, delta_base);
+	a[5].x = p.x + delta_base.x;
+	a[5].y = p.y + delta_base.y;
 	a[6].x = m.x + w.x;
 	a[6].y = m.y + w.y;
 	a[7].x = p.x + v.x;
 	a[7].y = p.y + v.y;
+	q.x += delta_tip.x;
+	q.y += delta_tip.y;
     }
+    return q;
+}
+
+static pointf arrow_type_crow(GVJ_t *job, pointf p, pointf u, double arrowsize,
+		      double penwidth, uint32_t flag) {
+    (void)arrowsize;
+
+    pointf a[9];
+
+    pointf q = arrow_type_crow0(p, u, arrowsize, penwidth, flag, a);
     if (flag & ARR_MOD_LEFT)
-	gvrender_polygon(job, a, 6, 1);
+	gvrender_polygon(job, a, 5, 1);
     else if (flag & ARR_MOD_RIGHT)
-	gvrender_polygon(job, &a[3], 6, 1);
+	gvrender_polygon(job, &a[4], 5, 1);
     else
-	gvrender_polygon(job, a, 9, 1);
+	gvrender_polygon(job, a, 8, 1);
 
     return q;
 }
@@ -812,7 +947,8 @@ static pointf arrow_type_diamond0(pointf p, pointf u, double penwidth,
     const pointf tip = scale(-1, u);
     const pointf P = tip;
 
-    const pointf P3 = miter_point(base_left, P, base_right, penwidth);
+    const triangle line_join_shape = miter_shape(base_left, P, base_right, penwidth);
+    const pointf P3 = line_join_shape.points[0];
 
     const pointf delta = sub_pointf(P3, P);
 
@@ -905,6 +1041,7 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
     pointf q, v, w;
     pointf AF[4], a[2];
 
+    a[0] = p;
     if (!(flag & ARR_MOD_INV) && (u.x != 0 || u.y != 0)) {
         const pointf P = {-u.x, -u.y};
         // phi = angle of arrow
@@ -923,7 +1060,6 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
     v.y = u.x * arrowwidth;
     w.x = v.y; // same direction as u, same magnitude as v.
     w.y = -v.x;
-    a[0] = p;
     a[1] = q;
 
     AF[0].x = p.x + v.x + w.x;
@@ -1186,4 +1322,45 @@ static double arrow_length_curve(double lenfact, double arrowsize,
   (void)flag;
 
   return lenfact * arrowsize * ARROW_LENGTH + penwidth / 2;
+}
+
+static double arrow_length_crow(double lenfact, double arrowsize,
+                                 double penwidth, uint32_t flag) {
+  pointf a[9];
+  // set arrow end point at origin
+  const pointf p = {0, 0};
+  // generate an arrowhead vector along x-axis
+  const pointf u = {lenfact * arrowsize * ARROW_LENGTH, 0};
+
+  // arrow start point
+  pointf q = arrow_type_crow0(p, u, arrowsize, penwidth, flag, a);
+
+  const pointf base1 = a[1];
+  const pointf base2 = a[7];
+  const pointf tip = a[0];
+  const pointf shaft1 = a[3];
+  const double full_length = q.x;
+  assert(full_length > 0 && "non-positive full length");
+  const double full_length_without_shaft = full_length - (base1.x - shaft1.x);
+  assert(full_length_without_shaft > 0 && "non-positive full length without shaft");
+  const double nominal_length = fabs(base1.x - tip.x);
+  const double nominal_base_width = base2.y - base1.y;
+  assert(nominal_base_width > 0 && "non-positive nominal base width");
+  // the full base width is proportionally scaled with the length
+  const double full_base_width =
+      nominal_base_width * full_length_without_shaft / nominal_length;
+  assert(full_base_width > 0 && "non-positive full base width");
+
+  // we want a small overlap between the edge path (stem) and the arrow to avoid
+  // gaps between them in case the arrow has a corner towards the edge path
+  const double overlap_at_base = penwidth / 2;
+  // overlap the tip to a point where its width is equal to the penwidth.
+  const double length_where_width_is_penwidth =
+      full_length_without_shaft * penwidth / full_base_width;
+  const double overlap_at_tip = length_where_width_is_penwidth;
+
+  const double overlap = flag & ARR_MOD_INV ? overlap_at_base : overlap_at_tip;
+  // arrow length is the x value of the start point since the arrow points along
+  // the positive x axis and ends at origin
+  return full_length - overlap;
 }
