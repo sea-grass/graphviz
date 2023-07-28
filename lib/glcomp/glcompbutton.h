@@ -19,7 +19,6 @@ extern "C" {
     extern glCompButton *glCompButtonNew(glCompObj * par, GLfloat x,
 					 GLfloat y, GLfloat w, GLfloat h,
 					 char *caption);
-    extern int glCompSetRemoveButton(glCompSet * s, glCompButton * p);
     extern void glCompButtonDraw(glCompButton * p);
     extern int glCompButtonAddPngGlyph(glCompButton * b, char *fileName);
     extern void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
