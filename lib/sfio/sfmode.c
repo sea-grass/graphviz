@@ -114,34 +114,6 @@ int _sfsetpool(Sfio_t * f)
     return rv;
 }
 
-/* create an auxiliary buffer for sfputr */
-Sfrsrv_t *_sfrsrv(Sfio_t * f, ssize_t size)
-{
-    Sfrsrv_t *rsrv, *rs;
-
-    /* make buffer if nothing yet */
-    size = ((size + SF_GRAIN - 1) / SF_GRAIN) * SF_GRAIN;
-    if (!(rsrv = f->rsrv) || size > rsrv->size) {
-	if (!(rs = malloc(size + sizeof(Sfrsrv_t))))
-	    size = -1;
-	else {
-	    if (rsrv) {
-		if (rsrv->slen > 0)
-		    memcpy(rs, rsrv, sizeof(Sfrsrv_t) + rsrv->slen);
-		free(rsrv);
-	    }
-	    f->rsrv = rsrv = rs;
-	    rsrv->size = size;
-	    rsrv->slen = 0;
-	}
-    }
-
-    if (rsrv && size > 0)
-	rsrv->slen = 0;
-
-    return size >= 0 ? rsrv : NULL;
-}
-
 /**
  * @param f change r/w mode and sync file pointer for this stream
  * @param wanted desired mode

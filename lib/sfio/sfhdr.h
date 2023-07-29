@@ -505,7 +505,6 @@ extern "C" {
 
     extern int _sfmode(Sfio_t *, int, int);
     extern int _sfexcept(Sfio_t *, int, ssize_t, Sfdisc_t *);
-    extern Sfrsrv_t *_sfrsrv(Sfio_t *, ssize_t);
     extern int _sfsetpool(Sfio_t *);
     extern char *_sfcvt(void *, int, int *, int *, int);
 
