@@ -1179,7 +1179,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		error(ERROR_WARNING, "NULL graph passed to write()");
 		v.integer = 1;
 	    } else
-		v.integer = sfioWrite (gp, state->outFile, state->dfltIO);
+		v.integer = sfioWrite(gp, state->outFile);
 	    break;
 	case F_writeg:
 	    gp = int2ptr(args[0].integer);
@@ -1187,7 +1187,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		error(ERROR_WARNING, "NULL graph passed to writeG()");
 		v.integer = 1;
 	    } else
-		v.integer = writeFile(gp, args[1].string, state->dfltIO);
+		v.integer = writeFile(gp, args[1].string);
 	    break;
 	case F_readg:
 	    gp = readFile(args[0].string);
@@ -1199,7 +1199,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		error(ERROR_WARNING, "NULL graph passed to fwriteG()");
 		v.integer = 1;
 	    } else
-		v.integer = fwriteFile(pgm, gp, args[1].integer, state->dfltIO);
+		v.integer = fwriteFile(pgm, gp, args[1].integer);
 	    break;
 	case F_freadg:
 	    gp = freadFile(pgm, args[0].integer);

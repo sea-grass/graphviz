@@ -29,8 +29,23 @@
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/unused.h>
+#include <unistd.h>
 
 #define KINDS(p) ((AGTYPE(p) == AGRAPH) ? "graph" : (AGTYPE(p) == AGNODE) ? "node" : "edge")
+
+static int iofread(void *chan, char *buf, int bufsize) {
+  return (int)read(sffileno(chan), buf, bufsize);
+}
+
+static int ioputstr(void *chan, const char *str) {
+  return sfputr(chan, str);
+}
+
+static int ioflush(void *chan) {
+  return sfsync(chan);
+}
+
+static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
 
 /* sameG:
  * Return common root if objects belong to same root graph.
@@ -579,17 +594,16 @@ int deleteObj(Agraph_t * g, Agobj_t * obj)
  * might not use sfio. In this case, we push an sfio discipline on
  * the graph, write it, and then pop it off.
  */
-int sfioWrite(Agraph_t * g, Sfio_t* fp, Agiodisc_t* dfltDisc)
-{
+int sfioWrite(Agraph_t *g, Sfio_t *fp) {
     Agiodisc_t* saveio = NULL;
     int rv;
 
-    if (g->clos->disc.io != dfltDisc) {
+    if (g->clos->disc.io != &gprIoDisc) {
 	saveio = g->clos->disc.io;
-	g->clos->disc.io = dfltDisc;
+	g->clos->disc.io = &gprIoDisc;
     }
     rv = agwrite (g, fp);
-    if (g->clos->disc.io != dfltDisc) {
+    if (g->clos->disc.io != &gprIoDisc) {
 	g->clos->disc.io = saveio;
     }
     return rv;
@@ -599,8 +613,7 @@ int sfioWrite(Agraph_t * g, Sfio_t* fp, Agiodisc_t* dfltDisc)
  * Write graph into file f.
  * Return 0 on success
  */
-int writeFile(Agraph_t * g, char *f, Agiodisc_t* io)
-{
+int writeFile(Agraph_t *g, char *f) {
     int rv;
     Sfio_t *fp;
 
@@ -613,7 +626,7 @@ int writeFile(Agraph_t * g, char *f, Agiodisc_t* io)
 	exwarn("Could not open %s for writing in writeG", f);
 	return 1;
     }
-    rv = sfioWrite(g, fp, io);
+    rv = sfioWrite(g, fp);
     sfclose(fp);
     return rv;
 }
@@ -642,8 +655,7 @@ Agraph_t *readFile(char *f)
     return gp;
 }
 
-int fwriteFile(Expr_t * ex, Agraph_t * g, int fd, Agiodisc_t* io)
-{
+int fwriteFile(Expr_t *ex, Agraph_t *g, int fd) {
     Sfio_t *sp;
 
     if (fd < 0 ||
@@ -652,7 +664,7 @@ int fwriteFile(Expr_t * ex, Agraph_t * g, int fd, Agiodisc_t* io)
 	exerror("fwriteG: %d: invalid descriptor", fd);
 	return 0;
     }
-    return sfioWrite(g, sp, io);
+    return sfioWrite(g, sp);
 }
 
 Agraph_t *freadFile(Expr_t * ex, int fd)

@@ -1054,7 +1054,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 		if (uopts && (uopts->flags & GV_USE_OUTGRAPH))
 		    addOutputGraph(gs->state, uopts);
 		else
-		    sfioWrite(gs->state->outgraph, gs->opts.outFile, gs->state->dfltIO);
+		    sfioWrite(gs->state->outgraph, gs->opts.outFile);
 	    }
 
 	    if (!incoreGraphs)
