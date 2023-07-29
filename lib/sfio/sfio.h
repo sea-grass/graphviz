@@ -190,7 +190,6 @@ extern "C" {
     extern int _sffilbuf(Sfio_t *, int);
 
 /* miscellaneous function analogues of fast in-line functions */
-    extern int sffileno(Sfio_t *);
     extern ssize_t sfslen(void);
 
 #undef extern
