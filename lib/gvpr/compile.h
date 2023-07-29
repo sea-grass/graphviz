@@ -18,6 +18,7 @@ extern "C" {
 #include <parse.h>
 #include <gprstate.h>
 #include <expr/expr.h>
+#include <stdio.h>
 
     typedef struct {
 	Exnode_t *guard;
@@ -85,7 +86,7 @@ extern "C" {
     extern void freeCompileProg (comp_prog *p);
     extern int usesGraph(comp_prog *);
     extern int walksGraph(comp_block *);
-    extern Agraph_t *readG(Sfio_t * fp);
+    extern Agraph_t *readG(FILE *fp);
     extern Agraph_t *openG(char *name, Agdesc_t);
     extern Agraph_t *openSubg(Agraph_t * g, char *name);
     extern Agnode_t *openNode(Agraph_t * g, char *name);

@@ -57,17 +57,17 @@ static Sflong_t ptr2int(const void *p) {
 
 static int iofread(void *chan, char *buf, int bufsize)
 {
-    return (int)read(sffileno(chan), buf, bufsize);
+  return (int)read(fileno(chan), buf, bufsize);
 }
 
 static int ioputstr(void *chan, const char *str)
 {
-    return sfputr(chan, str);
+  return fputs(str, chan);
 }
 
 static int ioflush(void *chan)
 {
-    return sfsync(chan);
+  return fflush(chan);
 }
 
 static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
@@ -2552,8 +2552,7 @@ int usesGraph(comp_prog * p)
  * Read graph from file and initialize
  * dynamic data.
  */
-Agraph_t *readG(Sfio_t * fp)
-{
+Agraph_t *readG(FILE * fp) {
     Agraph_t *g;
 
 #ifdef _WIN32

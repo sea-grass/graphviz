@@ -23,6 +23,7 @@
 
 #include <expr/exlib.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 /*
@@ -48,9 +49,9 @@ exopen(Exdisc_t* disc)
 	program->id = "libexpr:expr";
 	program->disc = disc;
 	setcontext(program);
-	program->file[0] = sfstdin;
-	program->file[1] = sfstdout;
-	program->file[2] = sfstderr;
+	program->file[0] = stdin;
+	program->file[1] = stdout;
+	program->file[2] = stderr;
 	strcpy(program->main.name, "main");
 	program->main.lex = PROCEDURE;
 	program->main.index = PROCEDURE;

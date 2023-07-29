@@ -174,11 +174,9 @@ extern "C" {
     extern ssize_t sfputr(Sfio_t*, const char*);
     extern ssize_t sfnputc(Sfio_t *, int, size_t);
     extern int sfungetc(Sfio_t *, int);
-    extern int sfprint(Sfio_t*, Sffmt_t *format);
-    extern int sfscanf(Sfio_t *, const char *, ...);
-    extern int sfsscanf(const char *, const char *, ...);
-    extern int sfvsscanf(const char *, const char *, va_list);
-    extern int sfvscanf(Sfio_t *, const char *, va_list);
+    extern int sfprint(FILE*, Sffmt_t *format);
+    extern int sfscanf(FILE*, const char *, ...);
+    extern int sfvscanf(FILE*, const char *, va_list);
 
 /* io functions with discipline continuation */
     extern ssize_t sfrd(Sfio_t *, void *, size_t, Sfdisc_t *);

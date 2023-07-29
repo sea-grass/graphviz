@@ -364,24 +364,24 @@ prformat(void* vp, Sffmt_t* dp)
 /*
  * print a list of strings
  */
-static int prints(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
+static int prints(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
     Extype_t v;
     Exnode_t *args;
 
     args = exnode->data.operand.left;
     while (args) {
 	v = eval(ex, args->data.operand.left, env);
-	sfputr(sp, v.string);
+	fputs(v.string, sp);
 	args = args->data.operand.right;
     }
-    sfputc(sp, '\n');
+    putc('\n', sp);
     return 0;
 }
 
 /*
  * do printf
  */
-static int print(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
+static int print(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 	Print_t*	x;
 	Extype_t		v;
 	Fmt_t			fmt;
@@ -391,7 +391,7 @@ static int print(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 		v = eval(ex, exnode->data.print.descriptor, env);
 		if (v.integer < 0 || (long long unsigned)v.integer >= elementsof(ex->file) ||
 		    (!(sp = ex->file[v.integer]) &&
-		    !(sp = ex->file[v.integer] = sfnew(NULL, SF_UNBOUND, (int)v.integer, SF_READ|SF_WRITE))))
+		    !(sp = ex->file[v.integer] = tmpfile())))
 		{
 			exerror("printf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return -1;
@@ -412,7 +412,7 @@ static int print(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 				sfprint(sp, &fmt.fmt);
 			}
 			else
-				sfputr(sp, x->format);
+				fputs(x->format, sp);
 		} while ((x = x->next));
 	else
 	{
@@ -499,7 +499,7 @@ scformat(void* vp, Sffmt_t* dp)
  * do scanf
  */
 
-static int scan(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
+static int scan(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 	Extype_t		v;
 	Extype_t		u;
 	Fmt_t			fmt;
@@ -515,7 +515,7 @@ static int scan(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 		}
 		else
 			v.integer = 0;
-		if (v.integer < 0 || (size_t)v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = sfnew(NULL, SF_UNBOUND, (int)v.integer, SF_READ|SF_WRITE))))
+		if (v.integer < 0 || (size_t)v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = tmpfile())))
 		{
 			exerror("scanf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
 			return 0;
@@ -529,7 +529,19 @@ static int scan(Expr_t *ex, Exnode_t *exnode, void *env, Sfio_t *sp) {
 	u = eval(ex, exnode->data.scan.format, env);
 	fmt.fmt.form = u.string;
 	fmt.actuals = exnode->data.scan.args;
-	n = sp ? sfscanf(sp, "%!", &fmt) : sfsscanf(v.string, "%!", &fmt);
+	if (sp == NULL) {
+		sp = tmpfile();
+		if (sp == NULL) {
+			exerror("scanf: failed to open temporary file");
+			return 0;
+		}
+		fputs(v.string, sp);
+		rewind(sp);
+		n = sfscanf(sp, "%!", &fmt);
+		fclose(sp);
+	} else {
+		n = sfscanf(sp, "%!", &fmt);
+	}
 	if (fmt.actuals && !*fmt.fmt.form)
 		exerror("scanf: %s: too many arguments", fmt.actuals->data.operand.left->data.variable.symbol->name);
 	return n;
@@ -1398,7 +1410,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		n = 1;
 		goto add;
 	case PRINT:
-		v.integer = prints(ex, exnode, env, sfstdout);
+		v.integer = prints(ex, exnode, env, stdout);
 		return v;
 	case PRINTF:
 		v.integer = print(ex, exnode, env, NULL);
@@ -1413,14 +1425,22 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		v.integer = scan(ex, exnode, env, NULL);
 		return v;
 	case SPRINTF: {
-		Sfio_t *buffer = sfstropen();
+		FILE *buffer = tmpfile();
 		if (buffer == NULL) {
 			fprintf(stderr, "out of memory\n");
 			graphviz_exit(EXIT_FAILURE);
 		}
 		print(ex, exnode, env, buffer);
-		v.string = exstash(buffer, ex->ve);
-		sfstrclose(buffer);
+		size_t size = (size_t)ftell(buffer);
+		rewind(buffer);
+		v.string = vmalloc(ex->ve, size + 1);
+		if (v.string == NULL) {
+			v.string = exnospace();
+		} else {
+			fread(v.string, size, 1, buffer);
+			v.string[size] = '\0';
+		}
+		fclose(buffer);
 		return v;
 	}
 	case '=':

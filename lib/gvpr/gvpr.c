@@ -34,6 +34,7 @@
 #include <ast/error.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
 #include <setjmp.h>
@@ -64,7 +65,7 @@ If no files are specified, stdin is used\n";
 
 typedef struct {
     char *cmdName;              /* command name */
-    Sfio_t *outFile;		/* output stream; stdout default */
+    FILE *outFile;		/* output stream; stdout default */
     char *program;              /* program source */
     int useFile;		/* true if program comes from a file */
     int compflags;
@@ -76,11 +77,8 @@ typedef struct {
     int verbose;
 } options;
 
-static Sfio_t *openOut(char *name)
-{
-    Sfio_t *outs;
-
-    outs = sfopen(name, "w");
+static FILE *openOut(char *name) {
+    FILE *outs = fopen(name, "w");
     if (outs == 0) {
 	error(ERROR_ERROR, "could not open %s for writing", name);
     }
@@ -358,8 +356,8 @@ doFlags(char* arg, int argi, int argc, char** argv, options* opts)
 }
 
 static void freeOpts(options opts) {
-    if (opts.outFile != sfstdout)
-	sfclose(opts.outFile);
+    if (opts.outFile != NULL && opts.outFile != stdout)
+	fclose(opts.outFile);
     free(opts.inFiles);
     if (opts.useFile)
 	free(opts.program);
@@ -425,7 +423,7 @@ static options scanArgs(int argc, char **argv) {
 	opts.inFiles = input_filenames;
 
     if (!opts.outFile)
-	opts.outFile = sfstdout;
+	opts.outFile = stdout;
 
   opts_done:
     if (opts.state <= 0) {
@@ -845,7 +843,7 @@ static void chkClose(Agraph_t * g)
 
 static void *ing_open(char *f)
 {
-    return sfopen(f, "r");
+  return fopen(f, "r");
 }
 
 static Agraph_t *ing_read(void *fp)
@@ -855,21 +853,10 @@ static Agraph_t *ing_read(void *fp)
 
 static int ing_close(void *fp)
 {
-    return sfclose(fp);
+  return fclose(fp);
 }
 
 static ingdisc ingDisc = { ing_open, ing_read, ing_close, 0 };
-
-static void
-setDisc (Sfio_t* sp, Sfdisc_t* dp, gvprwr fn)
-{
-    dp->readf = 0;
-    dp->writef = (Sfwrite_f)fn;
-    dp->seekf = 0;
-    dp->exceptf = 0;
-    dp->disc = 0;
-    dp = sfdisc (sp, dp);
-}
 
 static jmp_buf jbuf;
 
@@ -928,18 +915,12 @@ typedef struct {
  */
 static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
                      gvpr_state_t *gs) {
-    Sfdisc_t errdisc;
-    Sfdisc_t outdisc;
     gpr_info info;
     int rv = 0;
     int cleanup, i, incoreGraphs;
 
     setErrorErrors (0);
-    ingDisc.dflt = sfstdin;
-    if (uopts) {
-	if (uopts->out) setDisc (sfstdout, &outdisc, uopts->out);
-	if (uopts->err) setDisc (sfstderr, &errdisc, uopts->err);
-    }
+    ingDisc.dflt = stdin;
 
     gs->opts = scanArgs(argc, argv);
     if (gs->opts.state <= 0) {
@@ -1088,7 +1069,7 @@ int gvpr(int argc, char *argv[], gvpropts *uopts) {
   gvpr_state_t gvpr_state = {0};
 
   // initialize opts to something that makes freeOpts() a no-op if we fail early
-  gvpr_state.opts.outFile = sfstdout;
+  gvpr_state.opts.outFile = stdout;
 
   int rv = gvpr_core(argc, argv, uopts, &gvpr_state);
 
@@ -1100,15 +1081,6 @@ int gvpr(int argc, char *argv[], gvpropts *uopts) {
     closeIngraph(gvpr_state.ing);
   }
   freeOpts(gvpr_state.opts);
-
-  if (uopts != NULL) {
-    if (uopts->out != NULL) {
-      sfdisc(sfstdout, 0);
-    }
-    if (uopts->err != NULL) {
-      sfdisc(sfstderr, 0);
-    }
-  }
 
   return rv;
 }

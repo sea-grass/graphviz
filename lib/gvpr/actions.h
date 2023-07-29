@@ -16,6 +16,7 @@ extern "C" {
 
 #include "cgraph.h"
 #include <expr/expr.h>
+#include <stdio.h>
 
     extern void nodeInduce(Agraph_t * selected);
     extern Agobj_t *cloneO(Agraph_t * g, Agobj_t * obj);
@@ -32,7 +33,7 @@ extern "C" {
     extern Agedge_t *addEdge(Agraph_t * g, Agedge_t * e, int doAdd);
     extern Agraph_t *sameG(void *p1, void *p2, char *fn, char *msg);
     extern int compare(Agobj_t *, Agobj_t *);
-    extern int sfioWrite(Agraph_t*, Sfio_t*);
+    extern int sfioWrite(Agraph_t*, FILE*);
     extern int writeFile(Agraph_t*, char*);
     extern int fwriteFile(Expr_t*, Agraph_t*, int);
     extern Agraph_t *readFile(char *);

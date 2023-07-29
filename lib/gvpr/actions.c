@@ -34,15 +34,15 @@
 #define KINDS(p) ((AGTYPE(p) == AGRAPH) ? "graph" : (AGTYPE(p) == AGNODE) ? "node" : "edge")
 
 static int iofread(void *chan, char *buf, int bufsize) {
-  return (int)read(sffileno(chan), buf, bufsize);
+  return (int)read(fileno(chan), buf, bufsize);
 }
 
 static int ioputstr(void *chan, const char *str) {
-  return sfputr(chan, str);
+  return fputs(str, chan);
 }
 
 static int ioflush(void *chan) {
-  return sfsync(chan);
+  return fflush(chan);
 }
 
 static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
@@ -594,7 +594,7 @@ int deleteObj(Agraph_t * g, Agobj_t * obj)
  * might not use sfio. In this case, we push an sfio discipline on
  * the graph, write it, and then pop it off.
  */
-int sfioWrite(Agraph_t *g, Sfio_t *fp) {
+int sfioWrite(Agraph_t *g, FILE *fp) {
     int rv;
 
     Agiodisc_t* saveio = g->clos->disc.io;
@@ -610,19 +610,18 @@ int sfioWrite(Agraph_t *g, Sfio_t *fp) {
  */
 int writeFile(Agraph_t *g, char *f) {
     int rv;
-    Sfio_t *fp;
 
     if (!f) {
 	exerror("NULL string passed to writeG");
 	return 1;
     }
-    fp = sfopen(f, "w");
+    FILE *fp = fopen(f, "w");
     if (!fp) {
 	exwarn("Could not open %s for writing in writeG", f);
 	return 1;
     }
     rv = sfioWrite(g, fp);
-    sfclose(fp);
+    fclose(fp);
     return rv;
 }
 
@@ -633,25 +632,24 @@ int writeFile(Agraph_t *g, char *f) {
 Agraph_t *readFile(char *f)
 {
     Agraph_t *gp;
-    Sfio_t *fp;
 
     if (!f) {
 	exerror("NULL string passed to readG");
 	return 0;
     }
-    fp = sfopen(f, "r");
+    FILE *fp = fopen(f, "r");
     if (!fp) {
 	exwarn("Could not open %s for reading in readG", f);
 	return 0;
     }
     gp = readG(fp);
-    sfclose(fp);
+    fclose(fp);
 
     return gp;
 }
 
 int fwriteFile(Expr_t *ex, Agraph_t *g, int fd) {
-    Sfio_t *sp;
+    FILE *sp;
 
     if (fd < 0 ||
         (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))
@@ -664,7 +662,7 @@ int fwriteFile(Expr_t *ex, Agraph_t *g, int fd) {
 
 Agraph_t *freadFile(Expr_t * ex, int fd)
 {
-    Sfio_t *sp;
+    FILE *sp;
 
     if (fd < 0 ||
         (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))
@@ -687,7 +685,7 @@ int openFile(Expr_t * ex, const char *fname, const char *mode)
 	exerror("openF: no available descriptors");
 	return -1;
     }
-    ex->file[idx] = sfopen(fname, mode);
+    ex->file[idx] = fopen(fname, mode);
     if (ex->file[idx])
 	return idx;
     else
@@ -706,7 +704,7 @@ int closeFile(Expr_t * ex, int fd)
 	exerror("closeF: stream %d not open", fd);
 	return -1;
     }
-    rv = sfclose(ex->file[fd]);
+    rv = fclose(ex->file[fd]);
     if (!rv)
 	ex->file[fd] = 0;
     return rv;
@@ -718,7 +716,7 @@ int closeFile(Expr_t * ex, int fd)
  */
 char *readLine(Expr_t * ex, int fd)
 {
-    Sfio_t *sp;
+    FILE *sp;
     int c;
     char *line;
 
@@ -728,7 +726,7 @@ char *readLine(Expr_t * ex, int fd)
     }
 
     agxbuf tmps = {0};
-    while ((c = sfgetc(sp)) > 0 && c != '\n')
+    while ((c = getc(sp)) > 0 && c != '\n')
 	agxbputc(&tmps, (char)c);
     if (c == '\n')
 	agxbputc(&tmps, (char)c);
