@@ -71,9 +71,6 @@
     <ClCompile Include="sfpkrd.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfputr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfraise.c">
       <Filter>Source Files</Filter>
     </ClCompile>

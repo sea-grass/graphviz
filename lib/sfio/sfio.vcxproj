@@ -95,7 +95,6 @@
     <ClCompile Include="sfnputc.c" />
     <ClCompile Include="sfopen.c" />
     <ClCompile Include="sfpkrd.c" />
-    <ClCompile Include="sfputr.c" />
     <ClCompile Include="sfraise.c" />
     <ClCompile Include="sfrd.c" />
     <ClCompile Include="sfread.c" />

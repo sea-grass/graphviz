@@ -530,7 +530,6 @@ EXCLUDE = (
     "lib/sfio/sfnputc.c",
     "lib/sfio/sfopen.c",
     "lib/sfio/sfpkrd.c",
-    "lib/sfio/sfputr.c",
     "lib/sfio/sfraise.c",
     "lib/sfio/sfrd.c",
     "lib/sfio/sfread.c",
