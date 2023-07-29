@@ -32,7 +32,6 @@ add_library(sfio STATIC
   sfvscanf.c
   sfwr.c
   sfwrite.c
-  Sfio_f/_sfgetc.c
   Sfio_f/_sfslen.c
 )
 

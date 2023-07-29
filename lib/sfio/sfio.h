@@ -183,8 +183,6 @@ extern "C" {
     extern Sfoff_t sfsk(Sfio_t *, Sfoff_t, int, Sfdisc_t *);
     extern ssize_t sfpkrd(int, void *, size_t, int, int);
 
-    extern int sfgetc(Sfio_t *);
-
     extern int _sfflsbuf(Sfio_t *, int);
 
     extern int _sffilbuf(Sfio_t *, int);

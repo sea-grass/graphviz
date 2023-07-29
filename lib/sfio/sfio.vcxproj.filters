@@ -26,9 +26,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sfio_f\_sfgetc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfio_f\_sfslen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
