@@ -595,17 +595,12 @@ int deleteObj(Agraph_t * g, Agobj_t * obj)
  * the graph, write it, and then pop it off.
  */
 int sfioWrite(Agraph_t *g, Sfio_t *fp) {
-    Agiodisc_t* saveio = NULL;
     int rv;
 
-    if (g->clos->disc.io != &gprIoDisc) {
-	saveio = g->clos->disc.io;
-	g->clos->disc.io = &gprIoDisc;
-    }
+    Agiodisc_t* saveio = g->clos->disc.io;
+    g->clos->disc.io = &gprIoDisc;
     rv = agwrite (g, fp);
-    if (g->clos->disc.io != &gprIoDisc) {
-	g->clos->disc.io = saveio;
-    }
+    g->clos->disc.io = saveio;
     return rv;
 }
 
