@@ -2434,9 +2434,6 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
     const char *endg_sfx = NULL;
     int i, useflags = 0;
 
-    /* Initialize default io */
-    state->dfltIO = &gprIoDisc;
-
     /* Make sure we have enough bits for types */
     assert(BITS_PER_BYTE * sizeof(tctype) >= (1 << TBITS));
 
