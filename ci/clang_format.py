@@ -514,7 +514,6 @@ EXCLUDE = (
     "lib/sfdpgen/stress_model.h",
     "lib/sfio/Sfio_f/_sffileno.c",
     "lib/sfio/Sfio_f/_sfgetc.c",
-    "lib/sfio/Sfio_f/_sfputc.c",
     "lib/sfio/Sfio_f/_sfslen.c",
     "lib/sfio/sfclose.c",
     "lib/sfio/sfcvt.c",
