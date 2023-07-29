@@ -95,9 +95,6 @@
     <ClCompile Include="sftable.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfungetc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfprint.c">
       <Filter>Source Files</Filter>
     </ClCompile>

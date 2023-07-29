@@ -27,7 +27,6 @@ add_library(sfio STATIC
   sfswap.c
   sfsync.c
   sftable.c
-  sfungetc.c
   sfprint.c
   sfvscanf.c
   sfwr.c

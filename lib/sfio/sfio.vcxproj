@@ -103,7 +103,6 @@
     <ClCompile Include="sfswap.c" />
     <ClCompile Include="sfsync.c" />
     <ClCompile Include="sftable.c" />
-    <ClCompile Include="sfungetc.c" />
     <ClCompile Include="sfprint.c" />
     <ClCompile Include="sfvscanf.c" />
     <ClCompile Include="sfwr.c" />
