@@ -30,7 +30,6 @@
 #include <gvpr/queue.h>
 #include <gvpr/gvpr.h>
 #include <gvpr/actions.h>
-#include <ast/sfstr.h>
 #include <ast/error.h>
 #include <stdbool.h>
 #include <stddef.h>

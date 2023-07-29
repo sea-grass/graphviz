@@ -15,7 +15,6 @@
  */
 
 #include <ast/ast.h>
-#include <ast/sfstr.h>
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>

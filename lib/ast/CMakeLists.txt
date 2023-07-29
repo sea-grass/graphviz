@@ -5,7 +5,6 @@ add_library(ast STATIC
 
   # Source files
   pathpath.c
-  sfstr.h
   chresc.c
   chrtoi.c
   error.c

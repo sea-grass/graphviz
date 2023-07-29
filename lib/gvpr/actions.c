@@ -17,7 +17,6 @@
 #include <ast/error.h>
 #include <ast/ast.h>
 #include <gvpr/compile.h>
-#include <ast/sfstr.h>
 #include <limits.h>
 #include <stddef.h>
 #include <string.h>

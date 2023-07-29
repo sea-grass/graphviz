@@ -26,7 +26,6 @@
 #include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
-#include <ast/sfstr.h>
 #include <inttypes.h>
 #include <string.h>
 #include <stdbool.h>
