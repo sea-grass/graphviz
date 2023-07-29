@@ -166,7 +166,6 @@ extern "C" {
     extern Sfio_t *sfswap(Sfio_t *, Sfio_t *);
     extern int sfsync(Sfio_t *);
     extern void *sfsetbuf(Sfio_t *, void *, size_t);
-    extern Sfdisc_t *sfdisc(Sfio_t *, Sfdisc_t *);
     extern int sfraise(Sfio_t*, int);
     extern ssize_t sfread(Sfio_t *, void *, size_t);
     extern ssize_t sfwrite(Sfio_t *, const void *, size_t);

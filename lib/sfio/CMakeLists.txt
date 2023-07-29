@@ -7,7 +7,6 @@ add_library(sfio STATIC
   # Source files
   sfclose.c
   sfcvt.c
-  sfdisc.c
   sfexcept.c
   sfextern.c
   sffilbuf.c

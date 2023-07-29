@@ -35,9 +35,6 @@
     <ClCompile Include="sfcvt.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfdisc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfexcept.c">
       <Filter>Source Files</Filter>
     </ClCompile>

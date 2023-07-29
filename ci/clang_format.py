@@ -515,7 +515,6 @@ EXCLUDE = (
     "lib/sfio/Sfio_f/_sfslen.c",
     "lib/sfio/sfclose.c",
     "lib/sfio/sfcvt.c",
-    "lib/sfio/sfdisc.c",
     "lib/sfio/sfexcept.c",
     "lib/sfio/sfextern.c",
     "lib/sfio/sffilbuf.c",
