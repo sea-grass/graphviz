@@ -24,7 +24,6 @@ add_library(expr STATIC
   extype.c
   exzero.c
   exnospace.c
-  exstash.c
 
   # Generated files
   ${BISON_Exparse_OUTPUTS}
