@@ -377,17 +377,6 @@ extern "C" {
 #define O_APPEND	020
 #define O_EXCL		040
 
-#ifndef O_RDONLY
-#define	O_RDONLY	000
-#endif
-#ifndef O_WRONLY
-#define O_WRONLY	001
-#endif
-#ifndef O_RDWR
-#define O_RDWR		002
-#endif
-#endif				/*O_CREAT */
-
 #ifndef O_BINARY
 #define O_BINARY	000
 #endif
