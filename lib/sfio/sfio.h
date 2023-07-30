@@ -159,19 +159,9 @@ extern "C" {
     SFIO_API extern Sfio_t _Sfstderr;
 #undef SFIO_API
 
-    extern int sfsync(Sfio_t *);
-    extern void *sfsetbuf(Sfio_t *, void *, size_t);
-    extern int sfraise(Sfio_t*, int);
-    extern int sfclose(Sfio_t *);
     extern int sfprint(FILE*, Sffmt_t *format);
     extern int sfscanf(FILE*, const char *, ...);
     extern int sfvscanf(FILE*, const char *, va_list);
-
-/* io functions with discipline continuation */
-    extern ssize_t sfwr(Sfio_t *, const void *, size_t, Sfdisc_t *);
-    extern Sfoff_t sfsk(Sfio_t *, Sfoff_t, int, Sfdisc_t *);
-
-    extern int _sfflsbuf(Sfio_t *, int);
 
 /* miscellaneous function analogues of fast in-line functions */
     extern ssize_t sfslen(void);

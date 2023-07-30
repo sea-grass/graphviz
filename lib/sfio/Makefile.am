@@ -7,15 +7,11 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 noinst_HEADERS = sfhdr.h sfio.h sfio_t.h
 noinst_LTLIBRARIES = libsfio_C.la
 
-libsfio_C_la_SOURCES = sfclose.c sfcvt.c \
-	sfexcept.c sfextern.c \
-	sfflsbuf.c \
-	sfmode.c \
-	sfraise.c \
-	sfscanf.c sfsetbuf.c \
-	sfsk.c sfsync.c \
+libsfio_C_la_SOURCES = sfcvt.c \
+	sfextern.c \
+	sfscanf.c \
 	sftable.c sfprint.c \
-	sfvscanf.c sfwr.c
+	sfvscanf.c
 
 libsfio_C_la_DEPENDENCIES = \
 	Sfio_f/libsfiof_C.la

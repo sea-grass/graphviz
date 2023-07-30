@@ -80,22 +80,13 @@
     <ClInclude Include="sfio_t.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sfclose.c" />
     <ClCompile Include="sfcvt.c" />
-    <ClCompile Include="sfexcept.c" />
     <ClCompile Include="sfextern.c" />
-    <ClCompile Include="sfflsbuf.c" />
     <ClCompile Include="sfio_f\_sfslen.c" />
-    <ClCompile Include="sfmode.c" />
-    <ClCompile Include="sfraise.c" />
     <ClCompile Include="sfscanf.c" />
-    <ClCompile Include="sfsetbuf.c" />
-    <ClCompile Include="sfsk.c" />
-    <ClCompile Include="sfsync.c" />
     <ClCompile Include="sftable.c" />
     <ClCompile Include="sfprint.c" />
     <ClCompile Include="sfvscanf.c" />
-    <ClCompile Include="sfwr.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

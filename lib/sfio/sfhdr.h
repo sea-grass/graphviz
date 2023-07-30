@@ -317,12 +317,6 @@ extern "C" {
 #define SFISALL(f,v)	((((v) = (f)->mode&SF_RV) ? ((f)->mode &= ~SF_RV) : 0), \
 			 ((v) || (f)->extent < 0 || \
 			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
-#define SFSK(f,a,o,d)	(SETLOCAL(f),sfsk(f,(Sfoff_t)a,o,d))
-#define SFWR(f,b,n,d)	(SETLOCAL(f),sfwr(f,(void*)b,n,d))
-#define SFSYNC(f)	(SETLOCAL(f),sfsync(f))
-#define SFFLSBUF(f,n)	(SETLOCAL(f),_sfflsbuf(f,n))
-#define SFSETBUF(f,s,n)	(SETLOCAL(f),sfsetbuf(f,s,n))
-#define SFRAISE(f, e)	(SETLOCAL(f), sfraise(f, e))
 
 /* lock/open a stream */
 #define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
@@ -462,9 +456,6 @@ extern "C" {
     extern Sfextern_t _Sfextern;
     extern Sftab_t _Sftable;
 
-    extern int _sfmode(Sfio_t *, int, int);
-    extern int _sfexcept(Sfio_t *, int, ssize_t, Sfdisc_t *);
-    extern int _sfsetpool(Sfio_t *);
     extern char *_sfcvt(void *, int, int *, int *, int);
 
 #ifdef __cplusplus

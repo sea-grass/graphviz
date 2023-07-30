@@ -29,37 +29,13 @@
     <ClCompile Include="sfio_f\_sfslen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfclose.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfcvt.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfexcept.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sfextern.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfflsbuf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfmode.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfraise.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfscanf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfsetbuf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfsk.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfsync.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sftable.c">
@@ -69,9 +45,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sfvscanf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sfwr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -5,21 +5,12 @@ add_library(sfio STATIC
   sfio_t.h
 
   # Source files
-  sfclose.c
   sfcvt.c
-  sfexcept.c
   sfextern.c
-  sfflsbuf.c
-  sfmode.c
-  sfraise.c
   sfscanf.c
-  sfsetbuf.c
-  sfsk.c
-  sfsync.c
   sftable.c
   sfprint.c
   sfvscanf.c
-  sfwr.c
   Sfio_f/_sfslen.c
 )
 
