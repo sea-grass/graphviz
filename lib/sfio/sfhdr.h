@@ -363,9 +363,6 @@ extern "C" {
 		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
 	}
 
-/* more than this for a line buffer, we might as well flush */
-#define HIFORLINE	128
-
 /* safe closing function */
 #define CLOSE(f)	{ while(close(f) < 0 && errno == EINTR) errno = 0; }
 
