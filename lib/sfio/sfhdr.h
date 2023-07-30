@@ -302,7 +302,6 @@ extern "C" {
 			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
 
 /* lock/open a stream */
-#define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
 #define SFLOCK(f,l)	(void)((f)->mode |= SF_LOCK, (f)->endr = (f)->endw = (f)->data)
 #define _SFOPENRD(f)	((f)->endr = (f)->endb)
 #define _SFOPENWR(f)	((f)->endw = ((f)->flags&SF_LINE) ? (f)->data : (f)->endb)
