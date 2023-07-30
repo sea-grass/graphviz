@@ -89,31 +89,6 @@ extern "C" {
 	  (size_t)0					/* iosz		*/ \
 	}
 
-/* function to clear an Sfio_t structure */
-#define SFCLEAR(f) \
-	( (f)->next = (unsigned char*)0,		/* next		*/ \
-	  (f)->endw = (unsigned char*)0,		/* endw		*/ \
-	  (f)->endr = (unsigned char*)0,		/* endr		*/ \
-	  (f)->endb = (unsigned char*)0,		/* endb		*/ \
-	  (f)->push = (Sfio_t*)0,			/* push		*/ \
-	  (f)->flags = (unsigned short)0,		/* flags	*/ \
-	  (f)->file = -1,				/* file		*/ \
-	  (f)->data = (unsigned char*)0,		/* data		*/ \
-	  (f)->size = (ssize_t)(-1),			/* size		*/ \
-	  (f)->val = (ssize_t)(-1),			/* val		*/ \
-	  (f)->extent = (Sfoff_t)(-1),			/* extent	*/ \
-	  (f)->here = (Sfoff_t)0,			/* here		*/ \
-	  (f)->getr = 0,				/* getr		*/ \
-	  (f)->tiny[0] = 0,				/* tiny		*/ \
-	  (f)->bits = 0,				/* bits		*/ \
-	  (f)->mode = 0,				/* mode		*/ \
-	  (f)->disc = (struct _sfdisc_s*)0,		/* disc		*/ \
-	  (f)->pool = (struct _sfpool_s*)0,		/* pool		*/ \
-	  (f)->rsrv = (struct _sfrsrv_s*)0,		/* rsrv		*/ \
-	  (f)->lpos = (Sfoff_t)0,			/* lpos		*/ \
-	  (f)->iosz = (size_t)0				/* iosz		*/ \
-	)
-
 #ifdef __cplusplus
 }
 #endif
