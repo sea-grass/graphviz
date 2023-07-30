@@ -368,8 +368,6 @@ extern "C" {
 
 /* fast peek of a stream */
 #define _SFAVAIL(f,s,n)	((n) = (f)->endb - ((s) = (f)->next) )
-#define SFWPEEK(f,s,n)	(_SFAVAIL(f,s,n) > 0 ? (n) : \
-				((n) = SFFLSBUF(f,-1), (s) = (f)->next, (n)) )
 
 /* more than this for a line buffer, we might as well flush */
 #define HIFORLINE	128
