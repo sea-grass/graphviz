@@ -18,7 +18,6 @@ add_library(sfio STATIC
   sfpkrd.c
   sfraise.c
   sfrd.c
-  sfread.c
   sfscanf.c
   sfsetbuf.c
   sfsk.c
