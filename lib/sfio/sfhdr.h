@@ -46,10 +46,6 @@ extern "C" {
 #include	<stdint.h>
 #include	<stddef.h>
 
-#ifdef HAVE_SYS_STAT_H
-#	include	<sys/stat.h>
-#endif /*HAVE_SYS_STAT_H*/
-
 #include	<fcntl.h>
 
 #include	<unistd.h>
@@ -59,19 +55,6 @@ extern "C" {
 
 #define SFMTXSTART(f,v)		{ if(!f) return(v); }
 #define SFMTXRETURN(f,v)	{ return(v); }
-
-/* 64-bit vs 32-bit file stuff */
-#ifdef HAVE_SYS_STAT_H
-#ifdef _LARGEFILE64_SOURCE
-    typedef struct stat64 Stat_t;
-#define	lseek		lseek64
-#define stat		stat64
-#define fstat		fstat64
-#define off_t		off64_t
-#else
-    typedef struct stat Stat_t;
-#endif
-#endif
 
 /* Private flags in the "bits" field */
 #define SF_MMAP		00000001	/* in memory mapping mode               */
