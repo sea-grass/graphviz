@@ -347,11 +347,6 @@ extern "C" {
 		while(d && !(d->iof))	d = d->disc; \
 		if(d)	(dc) = d; \
 	}
-#define SFDCRD(f,buf,n,dc,rv) \
-	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
-		rv = (*dc->readf)(f,buf,n,dc); \
-		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
-	}
 #define SFDCWR(f,buf,n,dc,rv) \
 	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
 		rv = (*dc->writef)(f,buf,n,dc); \
