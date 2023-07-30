@@ -89,8 +89,5 @@
     <ClCompile Include="sfwr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfwrite.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

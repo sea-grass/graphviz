@@ -167,7 +167,6 @@ extern "C" {
     extern int sfsync(Sfio_t *);
     extern void *sfsetbuf(Sfio_t *, void *, size_t);
     extern int sfraise(Sfio_t*, int);
-    extern ssize_t sfwrite(Sfio_t *, const void *, size_t);
     extern int sfclose(Sfio_t *);
     extern int sfprint(FILE*, Sffmt_t *format);
     extern int sfscanf(FILE*, const char *, ...);
