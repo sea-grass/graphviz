@@ -115,33 +115,6 @@ extern "C" {
 #define SF_WHOLE	0020000	/* preserve wholeness of sfwrite/sfputr */
 
 #define SF_FLAGS	0077177	/* PUBLIC FLAGS PASSABLE TO SFNEW()     */
-#define SF_SETS		0027163	/* flags passable to sfset()            */
-
-/* exception events: SF_NEW(0), SF_READ(1), SF_WRITE(2) and the below 	*/
-#define SF_SEEK		3	/* seek error                           */
-
-#define SF_CLOSING	4	/* stream is about to be closed.        */
-
-#define SF_DPUSH	5	/* when discipline is being pushed      */
-#define SF_DPOP		6	/* when discipline is being popped      */
-#define SF_DPOLL	7	/* see if stream is ready for I/O       */
-#define SF_DBUFFER	8	/* buffer not empty during push or pop  */
-#define SF_SYNC		9	/* announcing start/end synchronization */
-#define SF_FINAL	11	/* closing is done except stream free   */
-#define SF_READY	12	/* a polled stream is ready             */
-#define SF_LOCKED	13	/* stream is in a locked state          */
-#define SF_ATEXIT	14	/* process is exiting                   */
-#define SF_EVENT	100	/* start of user-defined events         */
-
-/* for stack and disciplines */
-#define SF_POPSTACK	((Sfio_t*)0)	/* pop the stream stack         */
-#define SF_POPDISC	((Sfdisc_t*)0)	/* pop the discipline stack     */
-
-/* for the notify function and discipline exception */
-#define SF_NEW		0	/* new stream                           */
-#define SF_SETFD	(-1)	/* about to set the file descriptor     */
-
-#define SF_UNBOUND SIZE_MAX // unbounded buffer size
 
      extern ssize_t _Sfi;
 
