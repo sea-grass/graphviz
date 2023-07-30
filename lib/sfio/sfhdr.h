@@ -367,16 +367,6 @@ extern "C" {
 			    { (f)->here = s_; if(s_ > (f)->extent) (f)->extent = s_; } \
 			}
 
-/* control flags for open() */
-#ifdef O_CREAT
-#define _has_oflags	1
-#else				/* for example, research UNIX */
-#define _has_oflags	0
-#define O_CREAT		004
-#define O_TRUNC		010
-#define O_APPEND	020
-#define O_EXCL		040
-
 #ifndef O_BINARY
 #define O_BINARY	000
 #endif
