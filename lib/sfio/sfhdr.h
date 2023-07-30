@@ -53,9 +53,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-#define SFMTXSTART(f,v)		{ if(!f) return(v); }
-#define SFMTXRETURN(f,v)	{ return(v); }
-
 /* Private flags in the "bits" field */
 #define SF_MMAP		00000001	/* in memory mapping mode               */
 #define SF_BOTH		00000002	/* both read/write                      */
