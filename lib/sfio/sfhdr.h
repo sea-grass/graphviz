@@ -253,16 +253,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-    typedef struct _sfextern_s {
-	ssize_t sf_page;
-	struct _sfpool_s sf_pool;
-	int (*sf_pmove) (Sfio_t *, int);
-	Sfio_t *(*sf_stack) (Sfio_t *, Sfio_t *);
-	struct _sfdisc_s sf_udisc;
-	void (*sf_cleanup) (void);
-	int sf_exiting;
-    } Sfextern_t;
-
 /* grain size for buffer increment */
 #define SF_GRAIN	1024
 
