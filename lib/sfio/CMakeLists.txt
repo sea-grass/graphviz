@@ -12,7 +12,6 @@ add_library(sfio STATIC
   sfflsbuf.c
   sfmode.c
   sfnew.c
-  sfnputc.c
   sfopen.c
   sfpkrd.c
   sfraise.c

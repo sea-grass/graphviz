@@ -50,9 +50,6 @@
     <ClCompile Include="sfnew.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfnputc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfopen.c">
       <Filter>Source Files</Filter>
     </ClCompile>
