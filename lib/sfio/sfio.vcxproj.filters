@@ -62,9 +62,6 @@
     <ClCompile Include="sfraise.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfrd.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfscanf.c">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -92,7 +92,6 @@
     <ClCompile Include="sfopen.c" />
     <ClCompile Include="sfpkrd.c" />
     <ClCompile Include="sfraise.c" />
-    <ClCompile Include="sfrd.c" />
     <ClCompile Include="sfscanf.c" />
     <ClCompile Include="sfsetbuf.c" />
     <ClCompile Include="sfsk.c" />

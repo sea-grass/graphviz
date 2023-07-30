@@ -175,7 +175,6 @@ extern "C" {
     extern int sfvscanf(FILE*, const char *, va_list);
 
 /* io functions with discipline continuation */
-    extern ssize_t sfrd(Sfio_t *, void *, size_t, Sfdisc_t *);
     extern ssize_t sfwr(Sfio_t *, const void *, size_t, Sfdisc_t *);
     extern Sfoff_t sfsk(Sfio_t *, Sfoff_t, int, Sfdisc_t *);
     extern ssize_t sfpkrd(int, void *, size_t, int, int);
