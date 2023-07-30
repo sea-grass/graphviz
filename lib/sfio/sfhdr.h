@@ -322,7 +322,6 @@ extern "C" {
 #define SFSYNC(f)	(SETLOCAL(f),sfsync(f))
 #define SFFLSBUF(f,n)	(SETLOCAL(f),_sfflsbuf(f,n))
 #define SFSETBUF(f,s,n)	(SETLOCAL(f),sfsetbuf(f,s,n))
-#define SFWRITE(f,s,n)	(SETLOCAL(f),sfwrite(f,s,n))
 #define SFRAISE(f, e)	(SETLOCAL(f), sfraise(f, e))
 
 /* lock/open a stream */
