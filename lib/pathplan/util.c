@@ -82,4 +82,7 @@ make_polyline(Ppolyline_t line, Ppolyline_t* sline)
 /**
  * @dir lib/pathplan
  * @brief finds and smooths shortest paths, API pathplan.h
+ *
+ * [man 3 pathplan](https://graphviz.org/pdf/pathplan.3.pdf)
+ *
  */
