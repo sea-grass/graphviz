@@ -182,8 +182,6 @@ extern "C" {
 
     extern int _sfflsbuf(Sfio_t *, int);
 
-    extern int _sffilbuf(Sfio_t *, int);
-
 /* miscellaneous function analogues of fast in-line functions */
     extern ssize_t sfslen(void);
 

@@ -8,7 +8,7 @@ noinst_HEADERS = sfhdr.h sfio.h sfio_t.h
 noinst_LTLIBRARIES = libsfio_C.la
 
 libsfio_C_la_SOURCES = sfclose.c sfcvt.c \
-	sfexcept.c sfextern.c sffilbuf.c \
+	sfexcept.c sfextern.c \
 	sfflsbuf.c \
 	sfmode.c sfnew.c \
 	sfnputc.c sfopen.c sfpkrd.c \

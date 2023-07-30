@@ -84,7 +84,6 @@
     <ClCompile Include="sfcvt.c" />
     <ClCompile Include="sfexcept.c" />
     <ClCompile Include="sfextern.c" />
-    <ClCompile Include="sffilbuf.c" />
     <ClCompile Include="sfflsbuf.c" />
     <ClCompile Include="sfio_f\_sfslen.c" />
     <ClCompile Include="sfmode.c" />

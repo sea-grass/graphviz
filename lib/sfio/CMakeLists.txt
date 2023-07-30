@@ -9,7 +9,6 @@ add_library(sfio STATIC
   sfcvt.c
   sfexcept.c
   sfextern.c
-  sffilbuf.c
   sfflsbuf.c
   sfmode.c
   sfnew.c
