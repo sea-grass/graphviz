@@ -366,9 +366,6 @@ extern "C" {
 		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
 	}
 
-/* fast peek of a stream */
-#define _SFAVAIL(f,s,n)	((n) = (f)->endb - ((s) = (f)->next) )
-
 /* more than this for a line buffer, we might as well flush */
 #define HIFORLINE	128
 
