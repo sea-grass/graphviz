@@ -16,7 +16,6 @@
 */
 
 /* global variables used internally to the package */
-Sfextern_t _Sfextern;
 
 /* accessible to application code for a few fast macro functions */
 ssize_t _Sfi = -1;

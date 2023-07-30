@@ -427,7 +427,6 @@ extern "C" {
 #undef min
 #define min(x,y)	((x) < (y) ? (x) : (y))
 
-    extern Sfextern_t _Sfextern;
     extern Sftab_t _Sftable;
 
     extern char *_sfcvt(void *, int, int *, int *, int);
