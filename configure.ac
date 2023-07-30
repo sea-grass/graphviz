@@ -392,7 +392,7 @@ dnl Checks for header files
 # AC_HEADER_STDC
 AC_CHECK_HEADERS( \
 	fcntl.h search.h stropts.h \
-	sys/time.h sys/types.h sys/select.h sys/socket.h \
+	sys/time.h sys/types.h sys/select.h \
 	sys/stat.h sys/mman.h \
 	sys/ioctl.h sys/inotify.h)
 
