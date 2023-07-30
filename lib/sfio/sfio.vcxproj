@@ -87,7 +87,6 @@
     <ClCompile Include="sfflsbuf.c" />
     <ClCompile Include="sfio_f\_sfslen.c" />
     <ClCompile Include="sfmode.c" />
-    <ClCompile Include="sfnew.c" />
     <ClCompile Include="sfpkrd.c" />
     <ClCompile Include="sfraise.c" />
     <ClCompile Include="sfscanf.c" />
