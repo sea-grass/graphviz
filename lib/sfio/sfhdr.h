@@ -318,7 +318,6 @@ extern "C" {
 			 ((v) || (f)->extent < 0 || \
 			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
 #define SFSK(f,a,o,d)	(SETLOCAL(f),sfsk(f,(Sfoff_t)a,o,d))
-#define SFRD(f,b,n,d)	(SETLOCAL(f),sfrd(f,(void*)b,n,d))
 #define SFWR(f,b,n,d)	(SETLOCAL(f),sfwr(f,(void*)b,n,d))
 #define SFSYNC(f)	(SETLOCAL(f),sfsync(f))
 #define SFFLSBUF(f,n)	(SETLOCAL(f),_sfflsbuf(f,n))
