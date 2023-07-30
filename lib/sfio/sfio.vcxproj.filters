@@ -47,9 +47,6 @@
     <ClCompile Include="sfmode.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfpkrd.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfraise.c">
       <Filter>Source Files</Filter>
     </ClCompile>
