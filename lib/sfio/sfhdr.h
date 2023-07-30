@@ -253,14 +253,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* local variables used across sf-functions */
-#define _Sfpage		(_Sfextern.sf_page)
-#define _Sfpool		(_Sfextern.sf_pool)
-#define _Sfpmove	(_Sfextern.sf_pmove)
-#define _Sfstack	(_Sfextern.sf_stack)
-#define _Sfudisc	(&(_Sfextern.sf_udisc))
-#define _Sfcleanup	(_Sfextern.sf_cleanup)
-#define _Sfexiting	(_Sfextern.sf_exiting)
     typedef struct _sfextern_s {
 	ssize_t sf_page;
 	struct _sfpool_s sf_pool;
