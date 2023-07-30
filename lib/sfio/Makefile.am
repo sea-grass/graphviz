@@ -13,7 +13,7 @@ libsfio_C_la_SOURCES = sfclose.c sfcvt.c \
 	sfmode.c \
 	sfraise.c \
 	sfscanf.c sfsetbuf.c \
-	sfsk.c sfstack.c sfswap.c sfsync.c \
+	sfsk.c sfswap.c sfsync.c \
 	sftable.c sfprint.c \
 	sfvscanf.c sfwr.c
 

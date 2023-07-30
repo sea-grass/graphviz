@@ -159,7 +159,6 @@ extern "C" {
     SFIO_API extern Sfio_t _Sfstderr;
 #undef SFIO_API
 
-    extern Sfio_t *sfstack(Sfio_t *, Sfio_t *);
     extern Sfio_t *sfswap(Sfio_t *, Sfio_t *);
     extern int sfsync(Sfio_t *);
     extern void *sfsetbuf(Sfio_t *, void *, size_t);

@@ -59,9 +59,6 @@
     <ClCompile Include="sfsk.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfstack.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sfswap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
