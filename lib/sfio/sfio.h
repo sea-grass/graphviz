@@ -145,20 +145,6 @@ extern "C" {
 
      extern ssize_t _Sfi;
 
-#if defined(_BLD_sfio) && defined(GVDLL)
-#define SFIO_API	__declspec(dllexport)
-#else
-#define SFIO_API /* nothing */
-#endif
-/* standard in/out/err streams */
-    SFIO_API extern Sfio_t *sfstdin;
-    SFIO_API extern Sfio_t *sfstdout;
-    SFIO_API extern Sfio_t *sfstderr;
-    SFIO_API extern Sfio_t _Sfstdin;
-    SFIO_API extern Sfio_t _Sfstdout;
-    SFIO_API extern Sfio_t _Sfstderr;
-#undef SFIO_API
-
     extern int sfprint(FILE*, Sffmt_t *format);
     extern int sfscanf(FILE*, const char *, ...);
     extern int sfvscanf(FILE*, const char *, va_list);
