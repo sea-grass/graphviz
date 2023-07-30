@@ -256,12 +256,6 @@ extern "C" {
 /* grain size for buffer increment */
 #define SF_GRAIN	1024
 
-/* when the buffer is empty, certain io requests may be better done directly
-   on the given application buffers. The below condition determines when.
-*/
-#define SFDIRECT(f,n)	(((ssize_t)(n) >= (f)->size) || \
-			 ((n) >= SF_GRAIN && (ssize_t)(n) >= (f)->size/16 ) )
-
 /* the bottomless bit bucket */
 #define DEVNULL		"/dev/null"
 #define SFSETNULL(f)	((f)->extent = (Sfoff_t)(-1), (f)->bits |= SF_NULL)
