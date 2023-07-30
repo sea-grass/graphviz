@@ -253,9 +253,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* grain size for buffer increment */
-#define SF_GRAIN	1024
-
 /* the bottomless bit bucket */
 #define DEVNULL		"/dev/null"
 #define SFSETNULL(f)	((f)->extent = (Sfoff_t)(-1), (f)->bits |= SF_NULL)
