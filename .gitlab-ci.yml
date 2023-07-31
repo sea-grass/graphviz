@@ -403,13 +403,9 @@ windows-mingw32-build-step1-configure:
         - job: portable-source
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -428,14 +424,10 @@ windows-mingw32-build-step2-make:
         - job: windows-mingw32-build-step1-configure
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -452,13 +444,9 @@ windows-mingw64-build-step1-configure:
         - job: portable-source
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -477,14 +465,10 @@ windows-mingw64-build-step2-make:
         - job: windows-mingw64-build-step1-configure
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -501,14 +485,10 @@ windows-mingw64-static-build-step1-configure:
         - job: portable-source
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -527,14 +507,10 @@ windows-mingw64-static-build-step2-make:
         - job: windows-mingw64-static-build-step1-configure
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -551,14 +527,10 @@ windows-mingw32-static-build-step1-configure:
         - job: portable-source
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -577,14 +549,10 @@ windows-mingw32-static-build-step2-make:
         - job: windows-mingw32-static-build-step1-configure
           artifacts: true
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -909,16 +877,12 @@ windows-mingw32-cmake-build:
     stage: build
     needs: []
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
         - $Env:CXXFLAGS = "-Werror -Wno-deprecated-declarations"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -934,16 +898,12 @@ windows-mingw64-cmake-build:
     stage: build
     needs: []
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
         - $Env:CXXFLAGS = "-Werror -Wno-deprecated-declarations"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -1223,18 +1183,14 @@ fedora38-cmake-test:
 
 windows-mingw32-cmake-test:
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
         - $Env:graphviz_install_dir = "C:\Graphviz"
-        - $msys2_release = $(C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'uname -r')
+        - $msys2_release = $(C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'uname -r')
         - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$env:graphviz_install_dir" | Out-Null
         - $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW32 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
     needs:
         - job: "windows-mingw32-cmake-build"
           artifacts: true
@@ -1248,18 +1204,14 @@ windows-mingw32-cmake-test:
 
 windows-mingw64-cmake-test:
     script:
-        # disable Windows Defender
-        - Add-MpPreference -ExclusionPath 'C:\'
-        - $msys2_installer = "msys2-x86_64-latest.sfx.exe"
-        - wget https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer
-        - Invoke-Expression "$env:TEMP/$msys2_installer -oC:\"
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
         - $Env:graphviz_install_dir = "C:\Graphviz"
-        - $msys2_release = $(C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'uname -r')
+        - $msys2_release = $(C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'uname -r')
         - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$env:graphviz_install_dir" | Out-Null
         - $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
-        - C:\msys64\usr\bin\env MSYSTEM=MINGW64 C:\msys64\usr\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
     needs:
         - job: "windows-mingw64-cmake-build"
           artifacts: true
