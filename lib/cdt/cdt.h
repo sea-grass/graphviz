@@ -2,6 +2,12 @@
  * @file
  * @brief container data types API
  * @ingroup public_apis
+ *
+ * **CDT** manages run-time dictionaries using standard container data types:
+ * unordered set/multiset, ordered set/multiset, list, stack, and queue.
+ *
+ * [man 3 cdt](https://graphviz.org/pdf/cdt.3.pdf)
+ *
  */
 
 #pragma once
@@ -242,6 +248,9 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 /**
  * @dir lib/cdt
  * @brief container data types, API cdt.h
+ *
+ * [man 3 cdt](https://graphviz.org/pdf/cdt.3.pdf)
+ *
  */
 
 #ifdef __cplusplus
