@@ -3733,6 +3733,12 @@ static bool record_inside(inside_t * inside_context, pointf p)
     } else
 	bbox = *bp;
 
+    // adjust bbox to outline, i.e., the periphery with penwidth taken into account
+    const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+    const pointf extension = {penwidth / 2, penwidth / 2};
+    bbox.LL = sub_pointf(bbox.LL, extension);
+    bbox.UR = add_pointf(bbox.UR, extension);
+
     return INSIDE(p, bbox);
 }
 
