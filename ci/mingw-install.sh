@@ -28,6 +28,8 @@ pacman -S --noconfirm --needed \
     ${MINGW_PACKAGE_PREFIX}-poppler \
     ${MINGW_PACKAGE_PREFIX}-python \
     ${MINGW_PACKAGE_PREFIX}-python-pip \
+    ${MINGW_PACKAGE_PREFIX}-qt5-base \
+    ${MINGW_PACKAGE_PREFIX}-mesa \
     ${MINGW_PACKAGE_PREFIX}-ninja \
     ${MINGW_PACKAGE_PREFIX}-nsis \
     ${MINGW_PACKAGE_PREFIX}-tcl \
