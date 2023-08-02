@@ -116,7 +116,7 @@ def test_existence(binary: str):
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built on 64-bit Windows due to lacking libgd")
 
-    if binary == "gvedit" and platform.system() == "Windows":
+    if binary == "gvedit" and platform.system() == "Windows" and not is_mingw():
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built on Windows due to lacking Qt")
 
