@@ -1,6 +1,6 @@
 find_path(GS_INCLUDE_DIR ghostscript/iapi.h)
 find_library(GS_LIBRARY NAMES gs)
-find_program(GS_RUNTIME_LIBRARY NAMES gs.dll libgs-9.dll)
+find_program(GS_RUNTIME_LIBRARY NAMES gs.dll libgs-10.dll)
 
 include(FindPackageHandleStandardArgs)
 if(WIN32)
