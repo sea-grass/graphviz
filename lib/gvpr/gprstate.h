@@ -50,7 +50,6 @@ extern "C" {
 	char *tgtname;
 	char *infname;
 	Sfio_t *outFile;
-	Agiodisc_t* dfltIO;
 	trav_type tvt;
 	Agnode_t *tvroot;
 	Agnode_t *tvnext;
