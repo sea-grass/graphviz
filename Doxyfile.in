@@ -2328,7 +2328,13 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = "PRINTF_LIKE(x,y)=" \
                          CGRAPH_API \
                          GVC_API \
-                         GVPLUGIN_LOADIMAGE_API
+                         GVPLUGIN_LOADIMAGE_API \
+                         GVPR_API \
+                         PACK_API \
+                         PATHGEOM_API \
+                         PATHPLAN_API \
+                         UTILS_API \
+                         XDOT_API
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
