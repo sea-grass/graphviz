@@ -37,8 +37,6 @@ extern "C" {
 #define Sfulong_t	unsigned long long
 #define Sfdouble_t	long double
 
-	typedef struct _sfio_s Sfio_t;
-
 /* formatting environment */
     typedef struct _sffmt_s Sffmt_t;
     typedef int (*Sffmtext_f)(void *, Sffmt_t *);
