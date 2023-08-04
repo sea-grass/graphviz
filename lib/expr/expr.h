@@ -224,7 +224,7 @@ struct Expr_s				/* ex program state		*/
 {
 	const char*	id;		/* library id			*/
 	Dt_t*		symbols;	/* symbol table			*/
-	Sfio_t*		file[10];	/* io streams			*/
+	FILE*		file[10];	/* io streams			*/
 	Vmalloc_t*	vm;		/* program store		*/
 
 #ifdef _EX_PROG_PRIVATE_
@@ -270,7 +270,6 @@ extern char*		exnospace(void);
 extern Expr_t*		exopen(Exdisc_t*);
 extern int		expop(Expr_t*);
 extern int		expush(Expr_t*, const char*, int, FILE*);
-extern char*		exstash(Sfio_t*, Vmalloc_t*);
 extern int		extoken_fn(Expr_t*);
 extern char*		exstring(Expr_t *, char *);
 extern void*		exstralloc(Expr_t *, size_t);

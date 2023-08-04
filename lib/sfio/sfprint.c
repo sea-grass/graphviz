@@ -12,6 +12,7 @@
 #include <inttypes.h>
 #include	<sfio/sfhdr.h>
 #include	<stddef.h>
+#include	<stdio.h>
 #include	<string.h>
 
 /*	The engine for formatting data
@@ -31,11 +32,11 @@
  * @param f file to print to
  * @param format Structure describing how to print
  */
-int sfprint(Sfio_t *f, Sffmt_t *format) {
+int sfprint(FILE *f, Sffmt_t *format) {
     int v = 0, n_s, base, fmt, flags;
     Sflong_t lv;
     char *sp, *ssp, *endsp, *ep, *endep;
-    int dot, width, precis, n, n_output;
+    int dot, width, precis, n, n_output = 0;
     int sign, decpt;
     ssize_t size;
     double dval;
@@ -51,53 +52,27 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
     int argp, argn;		/* arg position and number      */
 
 #define SLACK		1024
-    char buf[SF_MAXDIGITS + SLACK], data[SF_GRAIN];
+    char buf[SF_MAXDIGITS + SLACK];
     char decimal = 0, thousand = 0;
 
-    /* fast io system */
-    uchar *d, *endd;
-    int w;
-#define SFBUF(f)	(d = f->next, endd = f->endb)
-#define SFINIT(f)	(SFBUF(f), n_output = 0)
-#define SFEND(f)	((n_output += d - f->next), (f->next = d))
-#define SFputc(f,c) \
-	{ if(d < endd) 	{ *d++ = (uchar)c; } \
-	  else \
-	  { SFEND(f); n_output += (w = SFFLSBUF(f,c)) >= 0 ? 1 : 0; SFBUF(f); \
-	    if(w < 0) goto done; \
-	  } \
-	}
-#define SFnputc(f,c,n) \
-	{ if((endd-d) >= n) { while(n--) *d++ = (uchar)c; } \
-	  else \
-	  { SFEND(f); n_output += (w = SFNPUTC(f,c,n)) > 0 ? w : 0; SFBUF(f); \
-	    if(n != w) goto done; \
-	    n = 0; \
-	  } \
-	}
-#define SFwrite(f,s,n) \
-	{ if((endd-d) >= n) { memcpy(d, s, n); d += n; } \
-	  else \
-	  { SFEND(f); n_output += (w = SFWRITE(f,(void*)s,n)) > 0 ? w : 0; SFBUF(f); \
-	    if(n != w) goto done; \
-	  } \
-	}
-
-    SFCVINIT();			/* initialize conversion tables */
-
-    SFMTXSTART(f, -1);
-
-    /* make sure stream is in write mode and buffer is not NULL */
-    if (f->mode != SF_WRITE && _sfmode(f, SF_WRITE, 0) < 0)
-	SFMTXRETURN(f, -1);
-
-    SFLOCK(f, 0);
-
-    if (!f->data && !(f->flags & SF_STRING)) {
-	f->data = f->next = (uchar *) data;
-	f->endb = f->data + sizeof(data);
-    }
-    SFINIT(f);
+#define SFputc(f,c) do { \
+    if (putc((c), (f)) == EOF) { \
+      goto done; \
+    } \
+} while (0)
+#define SFnputc(f,c,n)  do { \
+    for (int i_ = 0; i_ < (n); ++i_) { \
+      if (putc((c), (f)) == EOF) { \
+        goto done; \
+      } \
+    } \
+    (n) = 0; \
+} while (0)
+#define SFwrite(f,s,n) do { \
+  if (fwrite((s), (n), 1, (f)) < 1) { \
+    goto done; \
+  } \
+} while (0)
 
     tls[1] = NULL;
 
@@ -386,11 +361,7 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 	} else if (ft && ft->extf) {	/* extended processing */
 	    FMTSET(ft, form, args, fmt, size, flags, width, precis, base,
 		   t_str, n_str);
-	    SFEND(f);
-	    SFOPEN(f, 0);
 	    v = ft->extf(&argv, ft);
-	    SFLOCK(f, 0);
-	    SFBUF(f);
 
 	    if (v < 0)
 		goto pop_fmt;
@@ -915,19 +886,5 @@ int sfprint(Sfio_t *f, Sffmt_t *format) {
 	free(fm);
     }
 
-    SFEND(f);
-
-    n = f->next - f->data;
-    if ((d = f->data) == (uchar *) data)
-	f->endw = f->endr = f->endb = f->data = NULL;
-    f->next = f->data;
-
-    if ((((flags = f->flags) & SF_SHARE) && !(flags & SF_PUBLIC)) ||
-	(n > 0 && (d == (uchar *) data || (flags & SF_LINE))))
-	(void) SFWRITE(f, d, n);
-    else
-	f->next += n;
-
-    SFOPEN(f, 0);
-    SFMTXRETURN(f, n_output);
+    return n_output;
 }

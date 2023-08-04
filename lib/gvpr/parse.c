@@ -15,13 +15,13 @@
  */
 
 #include <ast/ast.h>
-#include <ast/sfstr.h>
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -53,10 +53,9 @@ static char *caseStr(case_t cs)
 /* eol:
  * Eat characters until eol.
  */
-static int eol (Sfio_t * str)
-{
+static int eol(FILE *str) {
     int c;
-    while ((c = sfgetc(str)) != '\n') {
+    while ((c = getc(str)) != '\n') {
 	if (c < 0)
 	    return c;
     }
@@ -72,12 +71,11 @@ static int eol (Sfio_t * str)
  * If a newline is seen in comment and ostr
  * is non-null, add newline to ostr.
  */
-static int readc(Sfio_t * str, agxbuf * ostr)
-{
+static int readc(FILE *str, agxbuf *ostr) {
     int c;
     int cc;
 
-    switch (c = sfgetc(str)) {
+    switch (c = getc(str)) {
     case '\n':
 	lineno++;
         col0 = 1;
@@ -89,18 +87,18 @@ static int readc(Sfio_t * str, agxbuf * ostr)
 	else col0 = 0;
 	break;
     case '/':
-	cc = sfgetc(str);
+	cc = getc(str);
 	switch (cc) {
 	case '*':		/* in C comment   */
 	    while (1) {
-		switch (c = sfgetc(str)) {
+		switch (c = getc(str)) {
 		case '\n':
 		    lineno++;
 		    if (ostr)
 			agxbputc(ostr, (char)c);
 		    break;
 		case '*':
-		    switch (cc = sfgetc(str)) {
+		    switch (cc = getc(str)) {
 		    case -1:
 			return cc;
 			break;
@@ -110,7 +108,7 @@ static int readc(Sfio_t * str, agxbuf * ostr)
 			    agxbputc(ostr, (char)cc);
 			break;
 		    case '*':
-			sfungetc(str, cc);
+			ungetc(cc, str);
 			break;
 		    case '/':
 			col0 = 0;
@@ -125,7 +123,7 @@ static int readc(Sfio_t * str, agxbuf * ostr)
 	    break;
 	default:		/* not a comment  */
 	    if (cc >= '\0')
-		sfungetc(str, cc);
+		ungetc(cc, str);
 	    break;
 	}
 	break;
@@ -140,17 +138,15 @@ static int readc(Sfio_t * str, agxbuf * ostr)
  * push character back onto stream;
  * if newline, reduce lineno.
  */
-static void unreadc(Sfio_t * str, int c)
-{
-    sfungetc(str, c);
+static void unreadc(FILE *str, int c) {
+    ungetc(c, str);
     if (c == '\n')
 	lineno--;
 }
 
 /* skipWS:
  */
-static int skipWS(Sfio_t * str)
-{
+static int skipWS(FILE *str) {
     int c;
 
     while (true) {
@@ -165,8 +161,7 @@ static int skipWS(Sfio_t * str)
  * Put initial alpha in buffer;
  * add additional alphas, up to buffer size.
  */
-static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
-{
+static void parseID(FILE *str, int c, char *buf, size_t bsize) {
     char *ptr = buf;
     char *eptr = buf + (bsize - 1);
 
@@ -194,8 +189,7 @@ static void parseID(Sfio_t * str, int c, char *buf, size_t bsize)
  * Look for keywords: BEGIN, END, BEG_G, END_G, N, E
  * As side-effect, sets kwLine to line of keyword.
  */
-static case_t parseKind(Sfio_t * str)
-{
+static case_t parseKind(FILE *str) {
     int c;
     char buf[BSIZE];
     case_t cs = Error;
@@ -235,15 +229,14 @@ static case_t parseKind(Sfio_t * str)
  * up to and including a terminating character ec
  * that is not escaped with a back quote.
  */
-static int endString(Sfio_t * ins, agxbuf * outs, char ec)
-{
+static int endString(FILE *ins, agxbuf *outs, char ec) {
     int sline = lineno;
     int c;
 
-    while ((c = sfgetc(ins)) != ec) {
+    while ((c = getc(ins)) != ec) {
 	if (c == '\\') {
 	    agxbputc(outs, (char)c);
-	    c = sfgetc(ins);
+	    c = getc(ins);
 	}
 	if (c < 0) {
 	    error(ERROR_ERROR, "unclosed string, start line %d", sline);
@@ -264,8 +257,7 @@ static int endString(Sfio_t * ins, agxbuf * outs, char ec)
  * is ignored. Since matching bc-ec pairs might nest,
  * the function is called recursively.
  */
-static int endBracket(Sfio_t * ins, agxbuf * outs, char bc, char ec)
-{
+static int endBracket(FILE *ins, agxbuf *outs, char bc, char ec) {
     int c;
 
     while (true) {
@@ -292,8 +284,7 @@ static int endBracket(Sfio_t * ins, agxbuf * outs, char bc, char ec)
  *  returning <string>
  * As a side-effect, set startLine to beginning of content.
  */
-static char *parseBracket(Sfio_t * str, agxbuf * buf, int bc, int ec)
-{
+static char *parseBracket(FILE *str, agxbuf *buf, int bc, int ec) {
     int c;
 
     c = skipWS(str);
@@ -318,15 +309,13 @@ static char *parseBracket(Sfio_t * str, agxbuf * buf, int bc, int ec)
 
 /* parseAction:
  */
-static char *parseAction(Sfio_t * str, agxbuf * buf)
-{
+static char *parseAction(FILE *str, agxbuf *buf) {
     return parseBracket(str, buf, '{', '}');
 }
 
 /* parseGuard:
  */
-static char *parseGuard(Sfio_t * str, agxbuf * buf)
-{
+static char *parseGuard(FILE *str, agxbuf *buf) {
     return parseBracket(str, buf, '[', ']');
 }
 
@@ -342,8 +331,7 @@ static char *parseGuard(Sfio_t * str, agxbuf * buf)
  *   guard = '[' <expr> ']'
  *   action = '{' <expr> '}'
  */
-static case_t
-parseCase(Sfio_t * str, char **guard, int *gline, char **action,
+static case_t parseCase(FILE *str, char **guard, int *gline, char **action,
 	  int *aline)
 {
     case_t kind;
@@ -456,8 +444,7 @@ bindAction(case_t cs, char *action, int aline, char **ap, int *lp)
  */
 parse_prog *parseProg(char *input, int isFile)
 {
-    Sfio_t *str;
-    char *mode;
+    FILE *str;
     char *guard = NULL;
     char *action = NULL;
     bool more;
@@ -483,15 +470,18 @@ parse_prog *parseProg(char *input, int isFile)
     }
 
     if (isFile) {
-	mode = "r";
+	str = fopen(input, "r");
 	prog->source = input;
 	
     } else {
-	mode = "rs";
+	str = tmpfile();
+	if (str != NULL) {
+	    fputs(input, str);
+	    rewind(str);
+	}
 	prog->source = NULL;	/* command line */
     }
 
-    str = sfopen(input, mode);
     if (!str) {
 	if (isFile)
 	    error(ERROR_ERROR, "could not open %s for reading", input);
@@ -561,7 +551,7 @@ parse_prog *parseProg(char *input, int isFile)
     prog->n_blocks = n_blocks;
     prog->blocks = blocklist;
 
-    sfclose(str);
+    fclose(str);
 
     if (getErrorErrors ()) {
 	freeParseProg (prog);

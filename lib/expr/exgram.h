@@ -966,7 +966,7 @@ exclose(Expr_t* p, int all)
 			size_t i;
 			for (i = 3; i < elementsof(p->file); i++)
 				if (p->file[i])
-					sfclose(p->file[i]);
+					fclose(p->file[i]);
 			if (p->vm)
 				vmclose(p->vm);
 			if (p->ve)

@@ -8,11 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <inttypes.h>
 #include	<limits.h>
 #include	<sfio/sfhdr.h>
 #include	<stdbool.h>
 #include	<stddef.h>
+#include	<stdio.h>
 
 /*	The main engine for reading formatted data
 **
@@ -58,29 +60,13 @@ static char *setclass(char *form, char *accept)
     return form;
 }
 
-static void _sfbuf(Sfio_t * f, int *rs)
-{
-    if (f->next >= f->endb) {
-	if (*rs > 0) {		/* try peeking for a share stream if possible */
-	    f->mode |= SF_RV;
-	    if (SFFILBUF(f) > 0) {
-		f->mode |= SF_PEEK;
-		return;
-	    }
-	    *rs = -1;		/* can't peek, back to normal reads */
-	}
-	(void) SFFILBUF(f);
-    }
-}
-
 /**
  * @param f file to be scanned
  * @param form scanning format
  * @param args
  */
-int sfvscanf(Sfio_t * f, const char *form, va_list args)
+int sfvscanf(FILE *f, const char *form, va_list args)
 {
-    uchar *d, *endd, *data;
     int inp, shift, base, width;
     ssize_t size;
     int fmt, flags, dot, n_assign, v, n;
@@ -98,28 +84,15 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     void *value;		/* location to assign scanned value */
     char *t_str;
     ssize_t n_str;
-    int rs;
 
-#define SFBUF(f)	(_sfbuf(f,&rs), (data = d = f->next), (endd = f->endb) )
-#define SFEND(f)	(rs > 0 ? SFREAD(f,(void*)data,d-data) : ((f->next = d), 0))
-#define SFGETC(f,c)	((c) = (d < endd || (SFEND(f), SFBUF(f), d < endd)) ? \
-				(int)(*d++) : -1 )
-#define SFUNGETC(f,c)	(--d)
+#define SFGETC(f,c)	((c) = getc(f))
+#define SFUNGETC(f,c)	ungetc((c), (f))
 
-    SFMTXSTART(f, -1);
+    assert(f != NULL);
 
     if (!form)
-	SFMTXRETURN(f, -1);
+	return -1;
 
-    if (f->mode != SF_READ && _sfmode(f, SF_READ, 0) < 0)
-	SFMTXRETURN(f, -1);
-    SFLOCK(f, 0);
-
-    rs = (f->extent < 0 && (f->flags & SF_SHARE)) ? 1 : 0;
-
-    SFCVINIT();			/* initialize conversion tables */
-
-    SFBUF(f);
     n_assign = 0;
 
     inp = -1;
@@ -135,7 +108,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
     while ((fmt = *form++)) {
 	if (fmt != '%') {
 	    if (isspace(fmt)) {
-		if (fmt != '\n' || !(f->flags & SF_LINE))
+		if (fmt != '\n')
 		    fmt = -1;
 		for (;;) {
 		    if (SFGETC(f, inp) < 0 || inp == fmt)
@@ -355,11 +328,7 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 	if (ft && ft->extf) {
 	    FMTSET(ft, form, args, fmt, size, flags, width, 0, base, t_str,
 		   n_str);
-	    SFEND(f);
-	    SFOPEN(f, 0);
 	    v = ft->extf(&argv, ft);
-	    SFLOCK(f, 0);
-	    SFBUF(f);
 
 	    if (v < 0)
 		goto pop_fmt;
@@ -677,11 +646,8 @@ int sfvscanf(Sfio_t * f, const char *form, va_list args)
 	free(fm);
     }
 
-    SFEND(f);
-    SFOPEN(f, 0);
-
     if (n_assign == 0 && inp < 0)
 	n_assign = -1;
 
-    SFMTXRETURN(f, n_assign);
+    return n_assign;
 }

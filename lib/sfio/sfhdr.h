@@ -46,32 +46,12 @@ extern "C" {
 #include	<stdint.h>
 #include	<stddef.h>
 
-#ifdef HAVE_SYS_STAT_H
-#	include	<sys/stat.h>
-#endif /*HAVE_SYS_STAT_H*/
-
 #include	<fcntl.h>
 
 #include	<unistd.h>
 
 #include	<errno.h>
 #include	<ctype.h>
-
-#define SFMTXSTART(f,v)		{ if(!f) return(v); }
-#define SFMTXRETURN(f,v)	{ return(v); }
-
-/* 64-bit vs 32-bit file stuff */
-#ifdef HAVE_SYS_STAT_H
-#ifdef _LARGEFILE64_SOURCE
-    typedef struct stat64 Stat_t;
-#define	lseek		lseek64
-#define stat		stat64
-#define fstat		fstat64
-#define off_t		off64_t
-#else
-    typedef struct stat Stat_t;
-#endif
-#endif
 
 /* Private flags in the "bits" field */
 #define SF_MMAP		00000001	/* in memory mapping mode               */
@@ -270,33 +250,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* local variables used across sf-functions */
-#define _Sfpage		(_Sfextern.sf_page)
-#define _Sfpool		(_Sfextern.sf_pool)
-#define _Sfpmove	(_Sfextern.sf_pmove)
-#define _Sfstack	(_Sfextern.sf_stack)
-#define _Sfudisc	(&(_Sfextern.sf_udisc))
-#define _Sfcleanup	(_Sfextern.sf_cleanup)
-#define _Sfexiting	(_Sfextern.sf_exiting)
-    typedef struct _sfextern_s {
-	ssize_t sf_page;
-	struct _sfpool_s sf_pool;
-	int (*sf_pmove) (Sfio_t *, int);
-	Sfio_t *(*sf_stack) (Sfio_t *, Sfio_t *);
-	struct _sfdisc_s sf_udisc;
-	void (*sf_cleanup) (void);
-	int sf_exiting;
-    } Sfextern_t;
-
-/* grain size for buffer increment */
-#define SF_GRAIN	1024
-
-/* when the buffer is empty, certain io requests may be better done directly
-   on the given application buffers. The below condition determines when.
-*/
-#define SFDIRECT(f,n)	(((ssize_t)(n) >= (f)->size) || \
-			 ((n) >= SF_GRAIN && (ssize_t)(n) >= (f)->size/16 ) )
-
 /* the bottomless bit bucket */
 #define DEVNULL		"/dev/null"
 #define SFSETNULL(f)	((f)->extent = (Sfoff_t)(-1), (f)->bits |= SF_NULL)
@@ -317,20 +270,8 @@ extern "C" {
 #define SFISALL(f,v)	((((v) = (f)->mode&SF_RV) ? ((f)->mode &= ~SF_RV) : 0), \
 			 ((v) || (f)->extent < 0 || \
 			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
-#define SFSK(f,a,o,d)	(SETLOCAL(f),sfsk(f,(Sfoff_t)a,o,d))
-#define SFRD(f,b,n,d)	(SETLOCAL(f),sfrd(f,(void*)b,n,d))
-#define SFWR(f,b,n,d)	(SETLOCAL(f),sfwr(f,(void*)b,n,d))
-#define SFSYNC(f)	(SETLOCAL(f),sfsync(f))
-#define SFFLSBUF(f,n)	(SETLOCAL(f),_sfflsbuf(f,n))
-#define SFFILBUF(f)	(SETLOCAL(f), _sffilbuf(f ,-1))
-#define SFSETBUF(f,s,n)	(SETLOCAL(f),sfsetbuf(f,s,n))
-#define SFWRITE(f,s,n)	(SETLOCAL(f),sfwrite(f,s,n))
-#define SFREAD(f,s,n)	(SETLOCAL(f),sfread(f,s,n))
-#define SFNPUTC(f,c,n)	(SETLOCAL(f),sfnputc(f,c,n))
-#define SFRAISE(f, e)	(SETLOCAL(f), sfraise(f, e))
 
 /* lock/open a stream */
-#define SFMODE(f,l)	((f)->mode & ~(SF_RV|SF_RC|((l) ? SF_LOCK : 0)) )
 #define SFLOCK(f,l)	(void)((f)->mode |= SF_LOCK, (f)->endr = (f)->endw = (f)->data)
 #define _SFOPENRD(f)	((f)->endr = (f)->endb)
 #define _SFOPENWR(f)	((f)->endw = ((f)->flags&SF_LINE) ? (f)->data : (f)->endb)
@@ -352,11 +293,6 @@ extern "C" {
 		while(d && !(d->iof))	d = d->disc; \
 		if(d)	(dc) = d; \
 	}
-#define SFDCRD(f,buf,n,dc,rv) \
-	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
-		rv = (*dc->readf)(f,buf,n,dc); \
-		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
-	}
 #define SFDCWR(f,buf,n,dc,rv) \
 	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
 		rv = (*dc->writef)(f,buf,n,dc); \
@@ -368,16 +304,6 @@ extern "C" {
 		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
 	}
 
-/* fast peek of a stream */
-#define _SFAVAIL(f,s,n)	((n) = (f)->endb - ((s) = (f)->next) )
-#define SFRPEEK(f,s,n)	(_SFAVAIL(f,s,n) > 0 ? (n) : \
-				((n) = SFFILBUF(f), (s) = (f)->next, (n)) )
-#define SFWPEEK(f,s,n)	(_SFAVAIL(f,s,n) > 0 ? (n) : \
-				((n) = SFFLSBUF(f,-1), (s) = (f)->next, (n)) )
-
-/* more than this for a line buffer, we might as well flush */
-#define HIFORLINE	128
-
 /* safe closing function */
 #define CLOSE(f)	{ while(close(f) < 0 && errno == EINTR) errno = 0; }
 
@@ -386,27 +312,6 @@ extern "C" {
 			  if(s_ > (f)->here) \
 			    { (f)->here = s_; if(s_ > (f)->extent) (f)->extent = s_; } \
 			}
-
-/* control flags for open() */
-#ifdef O_CREAT
-#define _has_oflags	1
-#else				/* for example, research UNIX */
-#define _has_oflags	0
-#define O_CREAT		004
-#define O_TRUNC		010
-#define O_APPEND	020
-#define O_EXCL		040
-
-#ifndef O_RDONLY
-#define	O_RDONLY	000
-#endif
-#ifndef O_WRONLY
-#define O_WRONLY	001
-#endif
-#ifndef O_RDWR
-#define O_RDWR		002
-#endif
-#endif				/*O_CREAT */
 
 #ifndef O_BINARY
 #define O_BINARY	000
@@ -500,13 +405,8 @@ extern "C" {
 #undef min
 #define min(x,y)	((x) < (y) ? (x) : (y))
 
-    extern Sfextern_t _Sfextern;
     extern Sftab_t _Sftable;
 
-    extern int _sfmode(Sfio_t *, int, int);
-    extern int _sfexcept(Sfio_t *, int, ssize_t, Sfdisc_t *);
-    extern Sfrsrv_t *_sfrsrv(Sfio_t *, ssize_t);
-    extern int _sfsetpool(Sfio_t *);
     extern char *_sfcvt(void *, int, int *, int *, int);
 
 #ifdef __cplusplus

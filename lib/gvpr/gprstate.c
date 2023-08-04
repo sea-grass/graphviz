@@ -16,7 +16,6 @@
 
 #include <gvpr/gprstate.h>
 #include <ast/error.h>
-#include <ast/sfstr.h>
 #include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>

@@ -19,6 +19,7 @@ extern "C" {
 #include <ast/ast.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <vmalloc/vmalloc.h>
 #include <expr/expr.h>
 #include "gvpr.h"
@@ -49,7 +50,7 @@ extern "C" {
 	Exexit_f exitf;
 	char *tgtname;
 	char *infname;
-	Sfio_t *outFile;
+	FILE *outFile;
 	trav_type tvt;
 	Agnode_t *tvroot;
 	Agnode_t *tvnext;
@@ -63,7 +64,7 @@ extern "C" {
     } Gpr_t;
 
     typedef struct {
-	Sfio_t *outFile;
+	FILE *outFile;
 	int argc;
 	char **argv;
 	Exerror_f errf;

@@ -115,87 +115,14 @@ extern "C" {
 #define SF_WHOLE	0020000	/* preserve wholeness of sfwrite/sfputr */
 
 #define SF_FLAGS	0077177	/* PUBLIC FLAGS PASSABLE TO SFNEW()     */
-#define SF_SETS		0027163	/* flags passable to sfset()            */
-
-/* exception events: SF_NEW(0), SF_READ(1), SF_WRITE(2) and the below 	*/
-#define SF_SEEK		3	/* seek error                           */
-
-#define SF_CLOSING	4	/* stream is about to be closed.        */
-
-#define SF_DPUSH	5	/* when discipline is being pushed      */
-#define SF_DPOP		6	/* when discipline is being popped      */
-#define SF_DPOLL	7	/* see if stream is ready for I/O       */
-#define SF_DBUFFER	8	/* buffer not empty during push or pop  */
-#define SF_SYNC		9	/* announcing start/end synchronization */
-#define SF_FINAL	11	/* closing is done except stream free   */
-#define SF_READY	12	/* a polled stream is ready             */
-#define SF_LOCKED	13	/* stream is in a locked state          */
-#define SF_ATEXIT	14	/* process is exiting                   */
-#define SF_EVENT	100	/* start of user-defined events         */
-
-/* for stack and disciplines */
-#define SF_POPSTACK	((Sfio_t*)0)	/* pop the stream stack         */
-#define SF_POPDISC	((Sfdisc_t*)0)	/* pop the discipline stack     */
-
-/* for the notify function and discipline exception */
-#define SF_NEW		0	/* new stream                           */
-#define SF_SETFD	(-1)	/* about to set the file descriptor     */
-
-#define SF_UNBOUND SIZE_MAX // unbounded buffer size
 
      extern ssize_t _Sfi;
 
-#if defined(_BLD_sfio) && defined(GVDLL)
-#define SFIO_API	__declspec(dllexport)
-#else
-#define SFIO_API /* nothing */
-#endif
-/* standard in/out/err streams */
-    SFIO_API extern Sfio_t *sfstdin;
-    SFIO_API extern Sfio_t *sfstdout;
-    SFIO_API extern Sfio_t *sfstderr;
-    SFIO_API extern Sfio_t _Sfstdin;
-    SFIO_API extern Sfio_t _Sfstdout;
-    SFIO_API extern Sfio_t _Sfstderr;
-#undef SFIO_API
-
-
-    extern Sfio_t *sfnew(void*, size_t, int, int);
-    extern Sfio_t *sfopen(const char *, const char *);
-    extern Sfio_t *sfstack(Sfio_t *, Sfio_t *);
-    extern Sfio_t *sfswap(Sfio_t *, Sfio_t *);
-    extern int sfsync(Sfio_t *);
-    extern void *sfsetbuf(Sfio_t *, void *, size_t);
-    extern Sfdisc_t *sfdisc(Sfio_t *, Sfdisc_t *);
-    extern int sfraise(Sfio_t*, int);
-    extern ssize_t sfread(Sfio_t *, void *, size_t);
-    extern ssize_t sfwrite(Sfio_t *, const void *, size_t);
-    extern int sfclose(Sfio_t *);
-    extern ssize_t sfputr(Sfio_t*, const char*);
-    extern ssize_t sfnputc(Sfio_t *, int, size_t);
-    extern int sfungetc(Sfio_t *, int);
-    extern int sfprint(Sfio_t*, Sffmt_t *format);
-    extern int sfscanf(Sfio_t *, const char *, ...);
-    extern int sfsscanf(const char *, const char *, ...);
-    extern int sfvsscanf(const char *, const char *, va_list);
-    extern int sfvscanf(Sfio_t *, const char *, va_list);
-
-/* io functions with discipline continuation */
-    extern ssize_t sfrd(Sfio_t *, void *, size_t, Sfdisc_t *);
-    extern ssize_t sfwr(Sfio_t *, const void *, size_t, Sfdisc_t *);
-    extern Sfoff_t sfsk(Sfio_t *, Sfoff_t, int, Sfdisc_t *);
-    extern ssize_t sfpkrd(int, void *, size_t, int, int);
-
-    extern int sfputc(Sfio_t *, int);
-
-    extern int sfgetc(Sfio_t *);
-
-    extern int _sfflsbuf(Sfio_t *, int);
-
-    extern int _sffilbuf(Sfio_t *, int);
+    extern int sfprint(FILE*, Sffmt_t *format);
+    extern int sfscanf(FILE*, const char *, ...);
+    extern int sfvscanf(FILE*, const char *, va_list);
 
 /* miscellaneous function analogues of fast in-line functions */
-    extern int sffileno(Sfio_t *);
     extern ssize_t sfslen(void);
 
 #undef extern

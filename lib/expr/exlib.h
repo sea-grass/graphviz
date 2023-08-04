@@ -122,7 +122,6 @@ typedef struct Print_s			/* compiled printf arg node	*/
 #include <expr/expr.h>
 #include <ctype.h>
 #include <ast/error.h>
-#include <ast/sfstr.h>
 
 #define id_string	(&exbuiltin[0])
 

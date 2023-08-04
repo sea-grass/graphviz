@@ -59,9 +59,6 @@
     <ClCompile Include="exparse.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="exstash.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="extoken.c">
       <Filter>Source Files</Filter>
     </ClCompile>

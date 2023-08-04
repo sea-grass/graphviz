@@ -19,7 +19,6 @@
 #include "viewport.h"
 #include "frmobjectui.h"
 #include <assert.h>
-#include <ast/sfstr.h>
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
