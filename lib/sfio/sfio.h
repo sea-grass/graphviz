@@ -39,23 +39,6 @@ extern "C" {
 
 	typedef struct _sfio_s Sfio_t;
 
-    typedef struct _sfdisc_s Sfdisc_t;
-    typedef ssize_t(*Sfread_f)
-	(Sfio_t *, void *, size_t, Sfdisc_t *);
-    typedef ssize_t(*Sfwrite_f)
-	(Sfio_t *, const void *, size_t, Sfdisc_t *);
-    typedef Sfoff_t(*Sfseek_f) (Sfio_t *, Sfoff_t, int, Sfdisc_t *);
-    typedef int (*Sfexcept_f) (Sfio_t *, int, void *, Sfdisc_t *);
-
-/* discipline structure */
-    struct _sfdisc_s {
-	Sfread_f readf;		/* read function                */
-	Sfwrite_f writef;	/* write function               */
-	Sfseek_f seekf;		/* seek function                */
-	Sfexcept_f exceptf;	/* to handle exceptions         */
-	Sfdisc_t *disc;		/* the continuing discipline    */
-    };
-
 /* formatting environment */
     typedef struct _sffmt_s Sffmt_t;
     typedef int (*Sffmtext_f)(void *, Sffmt_t *);
