@@ -312,7 +312,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		else if(type&(DT_INSERT|DT_ATTACH))
 		{ dt_insert:
 			if(disc->makef && (type&DT_INSERT))
-				obj = disc->makef(dt, obj, disc);
+				obj = disc->makef(obj, disc);
 			if(obj)
 			{	if(lk >= 0)
 					root = _DTLNK(obj,lk);

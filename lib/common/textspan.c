@@ -106,9 +106,7 @@ pointf textspan_size(GVC_t *gvc, textspan_t * span)
     return span->size;
 }
 
-static void* textfont_makef(Dt_t* dt, void* obj, Dtdisc_t* disc)
-{
-    (void)dt;
+static void *textfont_makef(void *obj, Dtdisc_t *disc) {
     (void)disc;
 
     textfont_t *f1 = obj;

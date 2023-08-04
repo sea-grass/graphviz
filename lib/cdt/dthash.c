@@ -204,7 +204,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 			return _DTOBJ(t,lk);
 		}
 
-		if (disc->makef && (type&DT_INSERT) && !(obj = disc->makef(dt, obj, disc)))
+		if (disc->makef && (type&DT_INSERT) && !(obj = disc->makef(obj, disc)))
 			return NULL;
 		if(lk >= 0)
 			r = _DTLNK(obj,lk);

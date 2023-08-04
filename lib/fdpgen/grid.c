@@ -118,12 +118,10 @@ static Grid _grid; // hack because can't attach info. to Dt_t
  * Allocate a new cell from free store and initialize its indices
  * This is used by the grid discipline to create cells.
  */
-static void *newCell(Dt_t * d, void *obj, Dtdisc_t * disc)
-{
+static void *newCell(void *obj, Dtdisc_t *disc) {
     cell *cellp = obj;
     cell *newp;
 
-    (void)d;
     (void)disc;
     newp = getCell(&_grid);
     newp->p.i = cellp->p.i;

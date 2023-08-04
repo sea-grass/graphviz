@@ -33,6 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   expected to call these macros.
 - The functions `ageqedge`, `agtail`, `aghead`, `agopp`, `agmkout`, and `agmkin`
   have been reintroduced. These were previously removed in Graphviz 3.0.0. #2433
+- **Breaking**: The first parameter `dt` to the `makef` callback defined in
+  cdt.h has been removed.
 
 ### Fixed
 
