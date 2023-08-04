@@ -64,31 +64,6 @@ extern "C" {
 #define SF_WRSTR	(SF_WRITE|SF_STRING)
 #define SF_RDWRSTR	(SF_RDWR|SF_STRING)
 
-/* for static initialization of an Sfio_t structure */
-#define SFNEW(data,size,file,type,disc,mutex)	\
-	{ (unsigned char*)(data),			/* next		*/ \
-	  (unsigned char*)(data),			/* endw		*/ \
-	  (unsigned char*)(data),			/* endr		*/ \
-	  (unsigned char*)(data),			/* endb		*/ \
-	  (Sfio_t*)0,					/* push		*/ \
-	  (unsigned short)((type)&SF_FLAGS),		/* flags	*/ \
-	  (short)(file),				/* file		*/ \
-	  (unsigned char*)(data),			/* data		*/ \
-	  (ssize_t)(size),				/* size		*/ \
-	  (ssize_t)(-1),				/* val		*/ \
-	  (Sfoff_t)0,					/* extent	*/ \
-	  (Sfoff_t)0,					/* here		*/ \
-	  0,						/* getr		*/ \
-	  {0},						/* tiny		*/ \
-	  0,						/* bits		*/ \
-	  (unsigned int)(((type)&(SF_RDWR))|SF_INIT),	/* mode		*/ \
-	  (struct _sfdisc_s*)(disc),			/* disc		*/ \
-	  (struct _sfpool_s*)0,				/* pool		*/ \
-	  (struct _sfrsrv_s*)0,				/* rsrv		*/ \
-	  (Sfoff_t)0,					/* lpos		*/ \
-	  (size_t)0					/* iosz		*/ \
-	}
-
 #ifdef __cplusplus
 }
 #endif
