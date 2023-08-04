@@ -258,9 +258,6 @@ extern "C" {
 #define SFOPEN(f,l)	(void)((l) ? 0 : \
 				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
 
-/* safe closing function */
-#define CLOSE(f)	{ while(close(f) < 0 && errno == EINTR) errno = 0; }
-
 /* string stream extent */
 #define SFSTRSIZE(f)	{ Sfoff_t s_ = (f)->next - (f)->data; \
 			  if(s_ > (f)->here) \
