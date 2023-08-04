@@ -271,11 +271,6 @@ extern "C" {
 /* check to see if the stream can be accessed */
 #define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : 0)
 
-#define SFDCWR(f,buf,n,dc,rv) \
-	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
-		rv = (*dc->writef)(f,buf,n,dc); \
-		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
-	}
 #define SFDCSK(f,addr,type,dc,rv) \
 	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
 		rv = (*dc->seekf)(f,addr,type,dc); \
