@@ -258,9 +258,6 @@ extern "C" {
 #define SFOPEN(f,l)	(void)((l) ? 0 : \
 				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
 
-/* check to see if the stream can be accessed */
-#define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : 0)
-
 /* safe closing function */
 #define CLOSE(f)	{ while(close(f) < 0 && errno == EINTR) errno = 0; }
 
