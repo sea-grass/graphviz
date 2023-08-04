@@ -136,16 +136,6 @@ extern "C" {
 	    } \
 	  } \
 	}
-/* stream pool structure. */
-    typedef struct _sfpool_s Sfpool_t;
-    struct _sfpool_s {
-	Sfpool_t *next;
-	int mode;		/* type of pool                 */
-	int s_sf;		/* size of pool array           */
-	int n_sf;		/* number currently in pool     */
-	Sfio_t **sf;		/* array of streams             */
-	Sfio_t *array[3];	/* start with 3                 */
-    };
 
 /* reserve buffer structure */
     typedef struct _sfrsrv_s Sfrsrv_t;
