@@ -77,7 +77,6 @@
   <ItemGroup>
     <ClInclude Include="sfhdr.h" />
     <ClInclude Include="sfio.h" />
-    <ClInclude Include="sfio_t.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sfcvt.c" />

@@ -517,7 +517,6 @@ EXCLUDE = (
     "lib/sfio/sfextern.c",
     "lib/sfio/sfhdr.h",
     "lib/sfio/sfio.h",
-    "lib/sfio/sfio_t.h",
     "lib/sfio/sfscanf.c",
     "lib/sfio/sftable.c",
     "lib/sfio/sfprint.c",

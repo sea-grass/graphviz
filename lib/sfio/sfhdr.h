@@ -24,7 +24,7 @@ extern "C" {
 **	Written by Kiem-Phong Vo
 */
 
-#include	<sfio/sfio_t.h>
+#include	<sfio/sfio.h>
 #include	"config.h"
 
 #include	<limits.h>

@@ -2,7 +2,6 @@ add_library(sfio STATIC
   # Header files
   sfhdr.h
   sfio.h
-  sfio_t.h
 
   # Source files
   sfcvt.c

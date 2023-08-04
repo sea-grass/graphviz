@@ -21,9 +21,6 @@
     <ClInclude Include="sfio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="sfio_t.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sfio_f\_sfslen.c">
