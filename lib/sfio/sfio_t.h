@@ -27,12 +27,6 @@ extern "C" {
 /* mode bit to indicate that the structure hasn't been initialized */
 #define SF_INIT		0000004u
 
-/* short-hand for common stream types */
-#define SF_RDWR		(SF_READ|SF_WRITE)
-#define SF_RDSTR	(SF_READ|SF_STRING)
-#define SF_WRSTR	(SF_WRITE|SF_STRING)
-#define SF_RDWRSTR	(SF_RDWR|SF_STRING)
-
 #ifdef __cplusplus
 }
 #endif
