@@ -2870,6 +2870,28 @@ def test_2429():
     dot("vt100", source=source)
 
 
+@pytest.mark.skipif(which("nop") is None, reason="nop not available")
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2436"
+)
+def test_2436():
+    """
+    nop should preserve empty labels
+    https://gitlab.com/graphviz/graphviz/-/issues/2436
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2436.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through nop
+    nop = which("nop")
+    output = subprocess.check_output([nop, input], universal_newlines=True)
+
+    # the empty label should be present
+    assert re.search(r'\blabel\s*=\s*""', output), "empty label was not preserved"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
