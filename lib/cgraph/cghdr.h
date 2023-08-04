@@ -86,7 +86,7 @@ int agdtdelete(Agraph_t * g, Dict_t * dict, void *obj);
 int agdtclose(Agraph_t * g, Dict_t * dict);
 void *agdictobjmem(Dict_t * dict, void * p, size_t size,
 		   Dtdisc_t * disc);
-void agdictobjfree(Dict_t * dict, void * p, Dtdisc_t * disc);
+void agdictobjfree(void *p, Dtdisc_t *disc);
 
 	/* name-value pair operations */
 CGHDR_API Agdatadict_t *agdatadict(Agraph_t * g, int cflag);

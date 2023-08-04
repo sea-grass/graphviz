@@ -124,9 +124,7 @@ static void *textfont_makef(void *obj, Dtdisc_t *disc) {
     return f2;
 }
 
-static void textfont_freef(Dt_t* dt, void* obj, Dtdisc_t* disc)
-{
-    (void)dt;
+static void textfont_freef(void *obj, Dtdisc_t *disc) {
     (void)disc;
 
     textfont_t *f = obj;

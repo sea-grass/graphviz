@@ -21,10 +21,7 @@ static void *mkIntItem(intitem *obj, Dtdisc_t *disc) {
     return np;
 }
 
-static void
-freeIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
-{
-    (void)d;
+static void freeIntItem(intitem *obj, Dtdisc_t *disc) {
     (void)disc;
 
     free (obj);

@@ -46,11 +46,9 @@ static void free_symlist(pending_cb_t * pcb)
     }
 }
 
-static void freef(Dict_t * dict, void *ptr, Dtdisc_t * disc)
-{
+static void freef(void *ptr, Dtdisc_t * disc) {
     pending_cb_t *pcb;
 
-    (void)dict;
     (void)disc;
     pcb = ptr;
     free_symlist(pcb);

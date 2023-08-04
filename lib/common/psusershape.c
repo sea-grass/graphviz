@@ -19,9 +19,7 @@
 static int N_EPSF_files;
 static Dict_t *EPSF_contents;
 
-static void ps_image_free(Dict_t * dict, usershape_t * p, Dtdisc_t * disc)
-{
-    (void)dict;
+static void ps_image_free(usershape_t *p, Dtdisc_t *disc) {
     (void)disc;
     free(p->data);
 }

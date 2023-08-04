@@ -33,13 +33,10 @@ static gmledge* E;
 static Dt_t* L;
 static gv_stack_t liststk;
 
-static void free_attr (Dt_t*d, gmlattr* p, Dtdisc_t* ds); /* forward decl */
+static void free_attr(gmlattr *p, Dtdisc_t *ds);
 static char *sortToStr(unsigned short sort);
 
-static void
-free_node (Dt_t*d, gmlnode* p, Dtdisc_t* ds)
-{
-    (void)d;
+static void free_node(gmlnode *p, Dtdisc_t *ds) {
     (void)ds;
 
     if (!p) return;
@@ -47,10 +44,7 @@ free_node (Dt_t*d, gmlnode* p, Dtdisc_t* ds)
     free (p);
 }
 
-static void
-free_edge (Dt_t*d, gmledge* p, Dtdisc_t* ds)
-{
-    (void)d;
+static void free_edge(gmledge *p, Dtdisc_t *ds) {
     (void)ds;
 
     if (!p) return;
@@ -58,10 +52,7 @@ free_edge (Dt_t*d, gmledge* p, Dtdisc_t* ds)
     free (p);
 }
 
-static void
-free_graph (Dt_t*d, gmlgraph* p, Dtdisc_t* ds)
-{
-    (void)d;
+static void free_graph(gmlgraph *p, Dtdisc_t *ds) {
     (void)ds;
 
     if (!p) return;
@@ -117,15 +108,15 @@ cleanup (void)
 	L = NULL;
     }
     if (N) {
-	free_node (0, N, 0);
+	free_node(N, 0);
 	N = NULL;
     }
     if (E) {
-	free_edge (0, E, 0);
+	free_edge(E, 0);
 	E = NULL;
     }
     if (G) {
-	free_graph (0, G, 0);
+	free_graph(G, 0);
 	G = NULL;
     }
 }
@@ -367,10 +358,7 @@ alistitem : NAME INTEGER { $$ = mkAttr ($1, 0, INTEGER, $2, 0); }
 
 %%
 
-static void
-free_attr (Dt_t*d, gmlattr* p, Dtdisc_t* ds)
-{
-    (void)d;
+static void free_attr(gmlattr *p, Dtdisc_t *ds) {
     (void)ds;
 
     if (!p) return;

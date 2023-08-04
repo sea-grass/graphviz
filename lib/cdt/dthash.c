@@ -105,7 +105,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 				while(t)
 				{	r = t->right;
 					if(disc->freef)
-						disc->freef(dt, _DTOBJ(t, lk), disc);
+						disc->freef(_DTOBJ(t, lk), disc);
 					if(disc->link < 0)
 						dt->memoryf(dt, t, 0, disc);
 					t = r;
@@ -214,7 +214,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 				((Dthold_t*)r)->obj = obj;
 			else
 			{	if(disc->makef && disc->freef && (type&DT_INSERT))
-					disc->freef(dt, obj, disc);
+					disc->freef(obj, disc);
 				return NULL;
 			}
 		}
@@ -227,7 +227,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		if(dt->data->ntab == 0)
 		{	dt->data->size -= 1;
 			if(disc->freef && (type&DT_INSERT))
-				disc->freef(dt,obj,disc);
+				disc->freef(obj, disc);
 			if(disc->link < 0)
 				disc->memoryf(dt, r, 0, disc);
 			return NULL;
@@ -288,7 +288,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 			goto do_insert;
 		else
 		{	if(disc->freef)
-				disc->freef(dt, obj, disc);
+				disc->freef(obj, disc);
 			if(disc->link < 0)
 				dt->memoryf(dt, r, 0, disc);
 			return t ? _DTOBJ(t,lk) : NULL;
@@ -312,7 +312,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		dt->data->size -= 1;
 		dt->data->here = p;
 		if(disc->freef && (type&DT_DELETE))
-			disc->freef(dt, obj, disc);
+			disc->freef(obj, disc);
 		if(disc->link < 0)
 			dt->memoryf(dt, t, 0, disc);
 		return obj;

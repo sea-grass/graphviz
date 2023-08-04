@@ -62,9 +62,7 @@ static namev_t *make_nitem(namev_t *objp, Dtdisc_t *disc) {
     return np;
 }
 
-static void free_nitem(Dt_t * d, namev_t * np, Dtdisc_t * disc)
-{
-    (void)d;
+static void free_nitem(namev_t *np, Dtdisc_t *disc) {
     (void)disc;
 
     free(np);
@@ -87,9 +85,7 @@ typedef struct {
     char *name;
 } idv_t;
 
-static void free_iditem(Dt_t * d, idv_t * idp, Dtdisc_t * disc)
-{
-    (void)d;
+static void free_iditem(idv_t *idp, Dtdisc_t *disc) {
     (void)disc;
 
     free(idp->name);

@@ -44,10 +44,7 @@ static struct {
  * Free row. This closes and frees row's list, then
  * the pitem itself is freed.
  */
-static void
-free_ritem(Dt_t* d, pitem* p,Dtdisc_t* ds)
-{
-  (void)d;
+static void free_ritem(pitem *p, Dtdisc_t *ds) {
   (void)ds;
 
   dtclose (p->u.rp);
@@ -58,10 +55,7 @@ free_ritem(Dt_t* d, pitem* p,Dtdisc_t* ds)
  * Generic Dt free. Only frees container, assuming contents
  * have been copied elsewhere.
  */
-static void
-free_item(Dt_t* d, void* p,Dtdisc_t* ds)
-{
-  (void)d;
+static void free_item(void *p, Dtdisc_t *ds) {
   (void)ds;
 
   free (p);
@@ -93,10 +87,7 @@ cleanCell (htmlcell_t* cp)
 /* free_citem:
  * Free cell item during parsing. This frees cell and pitem.
  */
-static void
-free_citem(Dt_t* d, pitem* p,Dtdisc_t* ds)
-{
-  (void)d;
+static void free_citem(pitem *p, Dtdisc_t *ds) {
   (void)ds;
 
   cleanCell (p->u.cp);
@@ -126,20 +117,14 @@ typedef struct {
     htextspan_t  lp;
 } fspan;
 
-static void 
-free_fitem(Dt_t* d, fitem* p, Dtdisc_t* ds)
-{
-    (void)d;
+static void free_fitem(fitem *p, Dtdisc_t *ds) {
     (void)ds;
 
     free (p->ti.str);
     free (p);
 }
 
-static void 
-free_fspan(Dt_t* d, fspan* p, Dtdisc_t* ds)
-{
-    (void)d;
+static void free_fspan(fspan *p, Dtdisc_t *ds) {
     (void)ds;
 
     textspan_t* ti;
