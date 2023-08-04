@@ -863,9 +863,7 @@ static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
 
 /* newItem:
  */
-static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
-{
-    (void)d;
+static void *newItem(item *objp, Dtdisc_t *disc) {
     item *newp = gv_alloc(sizeof(item));
 
     (void)disc;
@@ -879,9 +877,7 @@ static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
 
 /* freeItem:
  */
-static void freeItem(Dt_t * d, item * obj, Dtdisc_t * disc)
-{
-    (void)d;
+static void freeItem(item *obj, Dtdisc_t *disc) {
     (void)disc;
     free(obj);
 }
@@ -1713,9 +1709,7 @@ typedef struct {
     Agraph_t* clp;
 } clust_t;
 
-static void free_clust (Dt_t* dt, clust_t* clp, Dtdisc_t* disc)
-{
-    (void)dt;
+static void free_clust(clust_t *clp, Dtdisc_t *disc) {
     (void)disc;
     free(clp);
 }

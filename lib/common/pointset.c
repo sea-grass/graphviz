@@ -24,9 +24,7 @@ static pair *mkPair(point p)
     return pp;
 }
 
-static void freePair(Dt_t * d, pair* pp, Dtdisc_t * disc)
-{
-    (void)d;
+static void freePair(pair *pp, Dtdisc_t *disc) {
     (void)disc;
 
     free (pp);
@@ -138,10 +136,7 @@ typedef struct {
     mpair *flist;
 } MPairDisc;
 
-static mpair *mkMPair(Dt_t * d, mpair * obj, MPairDisc * disc)
-{
-    (void)d;
-
+static mpair *mkMPair(mpair *obj, MPairDisc *disc) {
     mpair *ap;
 
     if (disc->flist) {
@@ -154,10 +149,7 @@ static mpair *mkMPair(Dt_t * d, mpair * obj, MPairDisc * disc)
     return ap;
 }
 
-static void freeMPair(Dt_t * d, mpair * ap, MPairDisc * disc)
-{
-    (void)d;
-
+static void freeMPair(mpair *ap, MPairDisc *disc) {
     ap->link.right = (Dtlink_t *) (disc->flist);
     disc->flist = ap;
 }

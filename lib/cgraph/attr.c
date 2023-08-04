@@ -21,7 +21,7 @@
 
 #define MINATTR	4		/* minimum allocation */
 
-static void freesym(Dict_t * d, void * obj, Dtdisc_t * disc);
+static void freesym(void *obj, Dtdisc_t *disc);
 
 Dtdisc_t AgDataDictDisc = {
     (int) offsetof(Agsym_t, name),	/* use symbol name as key */
@@ -215,11 +215,9 @@ static void freeattr(Agobj_t * obj, Agattr_t * attr)
     agfree(g, attr->str);
 }
 
-static void freesym(Dict_t * d, void * obj, Dtdisc_t * disc)
-{
+static void freesym(void *obj, Dtdisc_t *disc) {
     Agsym_t *sym;
 
-    (void)d;
     sym = obj;
     (void)disc;
     agstrfree(Ag_G_global, sym->name);

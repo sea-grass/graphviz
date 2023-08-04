@@ -48,8 +48,8 @@ typedef struct _dt_s		Dict_t;	/* for libdict compatibility */
 typedef struct _dtstat_s	Dtstat_t;
 typedef void*			(*Dtmemory_f)(Dt_t*,void*,size_t,Dtdisc_t*);
 typedef void*			(*Dtsearch_f)(Dt_t*,void*,int);
-typedef void* 		(*Dtmake_f)(Dt_t*,void*,Dtdisc_t*);
-typedef void 			(*Dtfree_f)(Dt_t*,void*,Dtdisc_t*);
+typedef void* 		(*Dtmake_f)(void*,Dtdisc_t*);
+typedef void 			(*Dtfree_f)(void*,Dtdisc_t*);
 typedef int			(*Dtcompar_f)(Dt_t*,void*,void*,Dtdisc_t*);
 typedef unsigned int		(*Dthash_f)(Dt_t*,void*,Dtdisc_t*);
 typedef int			(*Dtevent_f)(Dt_t*,int,void*,Dtdisc_t*);

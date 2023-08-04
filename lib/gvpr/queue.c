@@ -23,9 +23,7 @@ typedef struct {
     void *np;
 } nsitem;
 
-static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
-{
-    (void)d;
+static void *makef(nsitem *obj, Dtdisc_t *disc) {
     (void)disc;
 
     nsitem *p = gv_alloc(sizeof(nsitem));
@@ -33,9 +31,7 @@ static void *makef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
     return p;
 }
 
-static void freef(Dt_t * d, nsitem * obj, Dtdisc_t * disc)
-{
-    (void)d;
+static void freef(nsitem *obj, Dtdisc_t *disc) {
     (void)disc;
 
     free(obj);

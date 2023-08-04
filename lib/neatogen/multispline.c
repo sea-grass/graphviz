@@ -70,11 +70,9 @@ static int cmpItem(Dt_t * d, int p1[], int p2[], Dtdisc_t * disc)
 
 /* newItem:
  */
-static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
-{
+static void *newItem(item *objp, Dtdisc_t *disc) {
     item *newp = gv_alloc(sizeof(item));
 
-    (void)d;
     (void)disc;
     newp->a[0] = objp->a[0];
     newp->a[1] = objp->a[1];
@@ -83,9 +81,7 @@ static void *newItem(Dt_t * d, item * objp, Dtdisc_t * disc)
     return newp;
 }
 
-static void freeItem(Dt_t * d, item * obj, Dtdisc_t * disc)
-{
-    (void)d;
+static void freeItem(item *obj, Dtdisc_t *disc) {
     (void)disc;
     free(obj);
 }
@@ -175,11 +171,9 @@ static int cmpIpair(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
     return 0;
 }
 
-static void *newIpair(Dt_t * d, Ipair * objp, Dtdisc_t * disc)
-{
+static void *newIpair(Ipair *objp, Dtdisc_t *disc) {
     Ipair *newp = gv_alloc(sizeof(Ipair));
 
-    (void)d;
     (void)disc;
     newp->i = objp->i;
     newp->j = objp->j;
@@ -187,9 +181,7 @@ static void *newIpair(Dt_t * d, Ipair * objp, Dtdisc_t * disc)
     return newp;
 }
 
-static void freeIpair(Dt_t * d, Ipair * obj, Dtdisc_t * disc)
-{
-    (void)d;
+static void freeIpair(Ipair *obj, Dtdisc_t *disc) {
     (void)disc;
     free(obj);
 }

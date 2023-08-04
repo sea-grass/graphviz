@@ -308,10 +308,7 @@ static int agsubnodeseqcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
  * dictionaries use the same subnode object, so only one
  * should do the deletion.
  */
-static void
-free_subnode (Dt_t* d, Agsubnode_t* sn, Dtdisc_t * disc)
-{
-   (void)d; /* unused */
+static void free_subnode(Agsubnode_t *sn, Dtdisc_t *disc) {
    (void)disc; /* unused */
    if (!AGSNMAIN(sn)) 
 	agfree (sn->node->root, sn);

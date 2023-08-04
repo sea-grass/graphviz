@@ -254,10 +254,7 @@ typedef struct {
     Dt_t*     chans;
 } chanItem;
 
-static void
-freeChannel (Dt_t* d, channel* cp, Dtdisc_t* disc)
-{
-    (void)d;
+static void freeChannel(channel *cp, Dtdisc_t *disc) {
     (void)disc;
 
     free_graph (cp->G);
@@ -265,10 +262,7 @@ freeChannel (Dt_t* d, channel* cp, Dtdisc_t* disc)
     free (cp);
 }
 
-static void
-freeChanItem (Dt_t* d, chanItem* cp, Dtdisc_t* disc)
-{
-    (void)d;
+static void freeChanItem(chanItem *cp, Dtdisc_t *disc) {
     (void)disc;
 
     dtclose (cp->chans);

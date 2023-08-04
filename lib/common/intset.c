@@ -13,10 +13,7 @@
 #include <stddef.h>
 #include <common/intset.h>
 
-static void*
-mkIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
-{ 
-    (void)d;
+static void *mkIntItem(intitem *obj, Dtdisc_t *disc) {
     (void)disc;
 
     intitem* np = gv_alloc(sizeof(intitem));
@@ -24,10 +21,7 @@ mkIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
     return np;
 }
 
-static void
-freeIntItem(Dt_t* d,intitem* obj,Dtdisc_t* disc)
-{
-    (void)d;
+static void freeIntItem(intitem *obj, Dtdisc_t *disc) {
     (void)disc;
 
     free (obj);

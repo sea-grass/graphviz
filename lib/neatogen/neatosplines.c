@@ -105,11 +105,9 @@ typedef struct {
     edge_t *e;
 } edgeitem;
 
-static void *newitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
-{
+static void *newitem(edgeitem *obj, Dtdisc_t *disc) {
     edgeitem *newp;
 
-    (void)d;
     (void)disc;
     newp = gv_alloc(sizeof(edgeitem));
     newp->id = obj->id;
@@ -119,9 +117,7 @@ static void *newitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
     return newp;
 }
 
-static void freeitem(Dt_t * d, edgeitem * obj, Dtdisc_t * disc)
-{
-    (void)d;
+static void freeitem(edgeitem *obj, Dtdisc_t *disc) {
     (void)disc;
     free(obj);
 }
