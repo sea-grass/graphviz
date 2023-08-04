@@ -258,12 +258,6 @@ extern "C" {
 #define SFOPEN(f,l)	(void)((l) ? 0 : \
 				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
 
-/* string stream extent */
-#define SFSTRSIZE(f)	{ Sfoff_t s_ = (f)->next - (f)->data; \
-			  if(s_ > (f)->here) \
-			    { (f)->here = s_; if(s_ > (f)->extent) (f)->extent = s_; } \
-			}
-
 #ifndef O_BINARY
 #define O_BINARY	000
 #endif
