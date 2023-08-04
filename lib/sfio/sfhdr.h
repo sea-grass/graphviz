@@ -271,15 +271,6 @@ extern "C" {
 /* check to see if the stream can be accessed */
 #define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : 0)
 
-/* set discipline code */
-#define SFDISC(f,dc,iof) \
-	{	Sfdisc_t* d; \
-		if(!(dc)) \
-			d = (dc) = (f)->disc; \
-		else 	d = (f->bits&SF_DCDOWN) ? ((dc) = (dc)->disc) : (dc); \
-		while(d && !(d->iof))	d = d->disc; \
-		if(d)	(dc) = d; \
-	}
 #define SFDCWR(f,buf,n,dc,rv) \
 	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
 		rv = (*dc->writef)(f,buf,n,dc); \
