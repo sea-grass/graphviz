@@ -244,7 +244,7 @@ static void core_loadimage_tk(GVJ_t * job, usershape_t *us, boxf b, bool filled)
     gvprintf (job, "image create photo \"photo_%s\" -file \"%s\"\n",
 	us->name, us->name);
     gvprintf (job, "$c create image %.2f %.2f -image \"photo_%s\"\n",
-	us->name, (b.UR.x + b.LL.x) / 2, (b.UR.y + b.LL.y) / 2);
+	(b.UR.x + b.LL.x) / 2, (b.UR.y + b.LL.y) / 2, us->name);
 }
 
 static void core_loadimage_null(GVJ_t *gvc, usershape_t *us, boxf b, bool filled)
