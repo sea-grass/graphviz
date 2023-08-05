@@ -510,7 +510,7 @@ vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	    (obj->penwidth), -(obj->penwidth), -(obj->penwidth),
 	    (obj->penwidth), -(obj->penwidth));
     gvputs(job,   "}\n");
-    gvprintf(job, " appearance DEF E%ld Appearance {\n", AGSEQ(e));
+    gvprintf(job, " appearance DEF E%d Appearance {\n", AGSEQ(e));
     gvputs(job,   "   material Material {\n"
                   "   ambientIntensity 0.33\n");
     gvprintf(job, "   diffuseColor %.3f %.3f %.3f\n",
@@ -613,7 +613,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	              "      ambientIntensity 0.33\n"
 	              "        diffuseColor 1 1 1\n"
 	              "    }\n");
-	gvprintf(job, "    texture ImageTexture { url \"node%ld.png\" }\n", AGSEQ(n));
+	gvprintf(job, "    texture ImageTexture { url \"node%d.png\" }\n", AGSEQ(n));
 	gvputs(job,   "  }\n"
 	              "  geometry Extrusion {\n"
 	              "    crossSection [");
@@ -670,7 +670,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	              "        Shape {\n");
 	gvprintf(job, "          geometry Cone {bottomRadius %.3f height %.3f }\n",
 		obj->penwidth * 2.5, obj->penwidth * 10.0);
-	gvprintf(job, "          appearance USE E%ld\n", AGSEQ(e));
+	gvprintf(job, "          appearance USE E%d\n", AGSEQ(e));
 	gvputs(job,   "        }\n"
 	              "      ]\n"
 	              "    }\n"
@@ -768,7 +768,7 @@ static void vrml_ellipse(GVJ_t * job, pointf * A, int filled)
 	              "              ambientIntensity 0.33\n"
 	              "              diffuseColor 1 1 1\n"
 	              "            }\n");
-	gvprintf(job, "            texture ImageTexture { url \"node%ld.png\" }\n", AGSEQ(n));
+	gvprintf(job, "            texture ImageTexture { url \"node%d.png\" }\n", AGSEQ(n));
 	gvputs(job,   "          }\n"
 	              "        }\n"
 	              "      ]\n"
