@@ -593,6 +593,19 @@ void CMainWindow::toolBars()
 
 void CMainWindow::readSettings()
 {
+    // first try new settings
+    {
+      QSettings settings("Graphviz", "gvedit");
+      if (settings.contains("pos") and settings.contains("size")) {
+        QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
+        QSize size = settings.value("size", QSize(400, 400)).toSize();
+        move(pos);
+        resize(size);
+        return;
+      }
+    }
+
+    // fall back to old settings
     QSettings settings("Trolltech", "MDI Example");
     QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
     QSize size = settings.value("size", QSize(400, 400)).toSize();
@@ -602,7 +615,7 @@ void CMainWindow::readSettings()
 
 void CMainWindow::writeSettings()
 {
-    QSettings settings("Trolltech", "MDI Example");
+    QSettings settings("Graphviz", "gvedit");
     settings.setValue("pos", pos());
     settings.setValue("size", size());
 }
