@@ -413,7 +413,7 @@ LIBS=$save_LIBS
 
 # Checks for library functions
 AC_CHECK_FUNCS([lrand48 drand48 srand48 setmode setenv \
-  ftruncate lseek64 memrchr stat64 select dl_iterate_phdr])
+  ftruncate memrchr stat64 select dl_iterate_phdr])
 
 AC_REPLACE_FUNCS([strcasestr])
 
