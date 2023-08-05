@@ -27,19 +27,6 @@ extern "C" {
 #include	<sfio/sfio_t.h>
 #include	"config.h"
 
-#if defined(__mips) && __mips == 2 && !defined(_NO_LARGEFILE64_SOURCE)
-#define _NO_LARGEFILE64_SOURCE  1
-#endif
-#if !defined(_NO_LARGEFILE64_SOURCE) && \
-	defined(HAVE_LSEEK64) && defined(HAVE_STAT64) && defined(HAVE_OFF64_T) && \
-	defined(HAVE_STRUCT_STAT64)
-#	if !defined(_LARGEFILE64_SOURCE)
-#	define _LARGEFILE64_SOURCE     1
-#	endif
-#else
-#	undef  _LARGEFILE64_SOURCE
-#endif
-
 #include	<limits.h>
 #include	<stdlib.h>
 #include	<string.h>
