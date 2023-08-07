@@ -40,18 +40,15 @@ static void test_empty_vmclear(void) {
   assert(v != NULL);
 
   // we should be able to clear this repeatedly with no effect
-  int r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
   assert(v->size == 0);
-  r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
   assert(v->size == 0);
-  r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
   assert(v->size == 0);
 
   // close the region
-  r = vmclose(v);
+  int r = vmclose(v);
   assert(r == 0);
 }
 
@@ -103,8 +100,7 @@ static void test_lifecycle(void) {
   assert(v->size == allocations_len - 3);
 
   // free the rest of the allocations in one sweep
-  int r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
 
   /* the allocator should have dropped all pointers it was tracking */
   assert(v->size == 0);
@@ -134,7 +130,7 @@ static void test_lifecycle(void) {
   }
 
   // clean up
-  r = vmclose(v);
+  int r = vmclose(v);
   assert(r == 0);
 }
 

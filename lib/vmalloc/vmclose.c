@@ -19,10 +19,7 @@
 int vmclose(Vmalloc_t *vm) {
 
   // clear the region
-  int r = vmclear(vm);
-  if (r != 0) {
-    return r;
-  }
+  vmclear(vm);
 
   // free the allocator itself
   free(vm);
