@@ -43,14 +43,15 @@ Agrec_t *aggetrec(void *obj, const char *name, int mtf)
 	if (d == first)
 	    return NULL;
     }
-    if (d) {
-	if (hdr->tag.mtflock) {
-	    if (mtf && hdr->data != d)
-		agerr(AGERR, "move to front lock inconsistency");
-	} else {
-	    if (d != first || mtf != hdr->tag.mtflock)
-		set_data(hdr, d, mtf != 0);	/* Always optimize */
-	}
+    if (!d)
+	return NULL;
+
+    if (hdr->tag.mtflock) {
+	if (mtf && hdr->data != d)
+	    agerr(AGERR, "move to front lock inconsistency");
+    } else {
+	if (d != first || mtf != hdr->tag.mtflock)
+	    set_data(hdr, d, mtf != 0);	/* Always optimize */
     }
     return d;
 }
