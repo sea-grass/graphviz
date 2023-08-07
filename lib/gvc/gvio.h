@@ -40,7 +40,18 @@ extern "C" {
     GVIO_API void gvputs_nonascii(GVJ_t* job, const char *s);
 
     GVIO_API int gvflush (GVJ_t * job);
-    GVIO_API void gvprintf(GVJ_t * job, const char *format, ...);
+
+// support for extra API misuse warnings if available
+#ifdef __GNUC__
+#define GV_PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
+#else
+#define GV_PRINTF_LIKE(index, first) /* nothing */
+#endif
+
+    GVIO_API GV_PRINTF_LIKE(2, 3) void gvprintf(GVJ_t * job, const char *format, ...);
+
+#undef GV_PRINTF_LIKE
+
     GVIO_API void gvprintdouble(GVJ_t * job, double num);
     GVIO_API void gvprintpointf(GVJ_t * job, pointf p);
     GVIO_API void gvprintpointflist(GVJ_t *job, pointf *p, size_t n);

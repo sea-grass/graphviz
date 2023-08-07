@@ -41,6 +41,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   have existing settings under the old identification, Gvedit will attempt to
   migrate them to the new identification the first time it reads then writes
   settings. #2383
+- **Breakting**: `gvprintf` is now tagged with
+  `__attribute__((format(printf, …)))` when compiling with Clang or GCC. This
+  enables the compiler to spot more misuses of this function. #2373
 
 ### Fixed
 
@@ -57,6 +60,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Fixed also for the `crow` and `vee`
   [edge arrow shapes](https://graphviz.org/doc/info/arrows.html#primitive-shapes)
   and [record based nodes](https://graphviz.org/doc/info/shapes.html#record).
+- Various incorrect calls to `gvprintf` have been corrected. On some platforms
+  like x86-64, these problems were benign thanks to coincidences in the
+  Application Binary Interface (ABI). On other platforms, these problems may
+  have caused stack corruption and crashes. #2373
 
 ## [8.1.0] – 2023-07-06
 
