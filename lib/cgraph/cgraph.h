@@ -143,6 +143,12 @@ typedef struct Agsubnode_s Agsubnode_t;
  *  head of the list @ref Agobj_s.data,
  *  so it can be accessed directly by @ref AGDATA(obj).
  *
+ *  The lock protects the data pointer from being moved.
+ *  Function @ref aggetrec reports error when data pointer and lock
+ *  are reassigned.
+ *
+ *  The lock can be released or reset by a call to @ref agdelrec.
+ *
  */
 
 typedef struct Agrec_s Agrec_t;
