@@ -381,11 +381,6 @@ dnl Check for various typedefs and provide substitutes if they do not exist.
 AC_TYPE_PID_T
 AC_TYPE_SSIZE_T
 
-AC_CHECK_TYPES([
-	off64_t,
-	struct stat64,
-])
-
 dnl -----------------------------------
 dnl Checks for header files
 
@@ -413,7 +408,7 @@ LIBS=$save_LIBS
 
 # Checks for library functions
 AC_CHECK_FUNCS([lrand48 drand48 srand48 setmode setenv \
-  ftruncate lseek64 memrchr stat64 select dl_iterate_phdr])
+  memrchr select dl_iterate_phdr])
 
 AC_REPLACE_FUNCS([strcasestr])
 
