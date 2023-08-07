@@ -35,6 +35,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   have been reintroduced. These were previously removed in Graphviz 3.0.0. #2433
 - **Breaking**: The first parameter `dt` to the `makef` and `freef` callbacks
   defined in cdt.h has been removed.
+- Gvedit now identifies itself with organization name “Graphviz” and application
+  name “gvedit” when reading and writing Qt-based settings. It would previously
+  use organization name “Trolltech” and application name “MDI Example”. If you
+  have existing settings under the old identification, Gvedit will attempt to
+  migrate them to the new identification the first time it reads then writes
+  settings. #2383
 
 ### Fixed
 
