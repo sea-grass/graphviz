@@ -2854,6 +2854,22 @@ def test_2413(source: str):
     assert proc.stderr == "", "long edges resulted in a warning"
 
 
+@pytest.mark.skipif(
+    platform.system() == "Windows", reason="vt100 target is not supported on Windows"
+)
+def test_2429():
+    """
+    the vt100 target should be usable
+    https://gitlab.com/graphviz/graphviz/-/issues/2429
+    """
+
+    # a basic graph
+    source = "digraph { a -> b; }"
+
+    # run it through Graphviz
+    dot("vt100", source=source)
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
