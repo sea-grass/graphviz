@@ -27,8 +27,7 @@
  * @param form format string
  * @param accept accepted characters are set to 1
  */
-static char *setclass(char *form, char *accept)
-{
+static const char *setclass(const char *form, char *accept) {
     int fmt, c, yes;
 
     if ((fmt = *form++) == '^') {	/* we want the complement of this set */
@@ -600,7 +599,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		} while (--width > 0 && SFGETC(f, inp) >= 0);
 	    } else {		/* if(fmt == '[') */
 		char accepted[UCHAR_MAX];
-		form = setclass((char *) form, accepted);
+		form = setclass(form, accepted);
 		do {
 		    if (!accepted[inp]) {
 			if (n > 0 || (flags & SFFMT_ALTER))
