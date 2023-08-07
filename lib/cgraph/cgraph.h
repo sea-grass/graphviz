@@ -114,6 +114,35 @@ typedef struct Agsubnode_s Agsubnode_t;
  *  with @ref Agobj_s.data pointing somewhere in the list.
  *  The search function @ref aggetrec has an option to lock this pointer on a given record.
  *  The application must be written so only one such lock is outstanding at a time.
+ *
+ *  Records are created and managed by Libcgraph.
+ *  A programmer must explicitly attach them to the objects in a graph,
+ *  either to individual objects one at a time via @ref agbindrec,
+ *  or to all the objects of the same class in a graph via @ref aginit.
+ *  The `name` argument of a record distinguishes various types of records,
+ *  and is programmer defined.
+ *
+ *  Libcgraph reserves the prefix "_AG_" (in
+ *  @ref DataDictName,
+ *  @ref AgDataRecName,
+ *  @ref DRName).
+ *
+ *  To allow referencing application-dependent data without function calls or search,
+ *  Libcgraph allows setting and locking the list pointer
+ *  of a graph, node, or edge on a particular record
+ *  (see @ref Agtag_s.mtflock and @ref Agobj_s.data).
+ *  This pointer can be obtained with the macro @ref AGDATA(obj).
+ *  A cast, generally within a macro or inline function,
+ *  is usually applied to convert the list pointer to
+ *  an appropriate programmer-defined type (eg. @ref GD_parent).
+ *
+ *  To control the setting of this pointer,
+ *  the `move_to_front` flag may be TRUE or FALSE.
+ *  If `move_to_front` is TRUE, the record will be
+ *  locked @ref Agtag_s.mtflock at the
+ *  head of the list @ref Agobj_s.data,
+ *  so it can be accessed directly by @ref AGDATA(obj).
+ *
  */
 
 typedef struct Agrec_s Agrec_t;
