@@ -40,10 +40,8 @@ Agrec_t *aggetrec(void *obj, const char *name, int mtf)
     first = d = hdr->data;
     while (d && !streq(name, d->name)) {
 	d = d->next;
-	if (d == first) {
-	    d = NULL;
-	    break;
-	}
+	if (d == first)
+	    return NULL;
     }
     if (d) {
 	if (hdr->tag.mtflock) {
