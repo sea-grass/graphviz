@@ -228,9 +228,6 @@ extern "C" {
 #define SFSETNULL(f)	((f)->extent = (Sfoff_t)(-1), (f)->bits |= SF_NULL)
 #define SFISNULL(f)	((f)->extent < 0 && ((f)->bits&SF_NULL) )
 
-#define SFKILL(f)	((f)->mode = (SF_AVAIL|SF_LOCK) )
-#define SFKILLED(f)	(((f)->mode&(SF_AVAIL|SF_LOCK)) == (SF_AVAIL|SF_LOCK) )
-
 /* exception types */
 #define SF_EDONE	0	/* stop this operation and return       */
 #define SF_EDISC	1	/* discipline says it's ok              */
