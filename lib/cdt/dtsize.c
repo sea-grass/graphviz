@@ -19,7 +19,7 @@ int dtsize(Dt_t* dt)
 	if(dt->data->size < 0) /* !(dt->data->type&(DT_SET|DT_BAG)) */
 	{	if(dt->data->type&(DT_OSET|DT_OBAG))
 			dt->data->size = treecount(dt->data->here);
-		else if(dt->data->type&(DT_STACK|DT_QUEUE))
+		else if(dt->data->type&DT_QUEUE)
 		{	for(size = 0, t = dt->data->head; t; t = t->right)
 				size += 1;
 			dt->data->size = size;

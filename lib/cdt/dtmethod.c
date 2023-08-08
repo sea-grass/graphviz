@@ -18,7 +18,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	/* get the list of elements */
 	list = dtflatten(dt);
 
-	if(dt->data->type&(DT_STACK|DT_QUEUE) )
+	if(dt->data->type&DT_QUEUE)
 		dt->data->head = NULL;
 	else if(dt->data->type&(DT_SET|DT_BAG) )
 	{	if(dt->data->ntab > 0)
@@ -33,8 +33,8 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	if(dt->searchf == oldmeth->searchf)
 		dt->searchf = meth->searchf;
 
-	if(meth->type&(DT_STACK|DT_QUEUE) )
-	{	if(!(oldmeth->type&(DT_STACK|DT_QUEUE)) )
+	if(meth->type&DT_QUEUE)
+	{	if(!(oldmeth->type&DT_QUEUE))
 		{	if((r = list) )
 			{	Dtlink_t*	t;
 				for(t = r->right; t; r = t, t = t->right )

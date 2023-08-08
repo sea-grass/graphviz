@@ -65,29 +65,17 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 			}
 		}
 
-		if(dt->data->type&DT_STACK)
-		{
-			r->right = t = dt->data->head;
-			if(t)
-			{	r->left = t->left;
-				t->left = r;
-			}
-			else	r->left = r;
-			dt->data->head = r;
+		/* if(dt->data->type&DT_QUEUE) */
+		if((t = dt->data->head) )
+		{	t->left->right = r;
+			r->left = t->left;
+			t->left = r;
 		}
-		else /* if(dt->data->type&DT_QUEUE) */
-		{
-			if((t = dt->data->head) )
-			{	t->left->right = r;
-				r->left = t->left;
-				t->left = r;
-			}
-			else
-			{	dt->data->head = r;
-				r->left = r;
-			}
-			r->right = NULL;
+		else
+		{	dt->data->head = r;
+			r->left = r;
 		}
+		r->right = NULL;
 
 		if(dt->data->size >= 0)
 			dt->data->size += 1;
@@ -143,8 +131,6 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 	return r ? _DTOBJ(r,lk) : NULL;
 }
 
-Dtmethod_t _Dtstack = { dtlist, DT_STACK };
 Dtmethod_t _Dtqueue = { dtlist, DT_QUEUE };
 
-Dtmethod_t* Dtstack = &_Dtstack;
 Dtmethod_t* Dtqueue = &_Dtqueue;
