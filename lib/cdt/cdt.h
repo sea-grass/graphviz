@@ -162,9 +162,7 @@ CDT_API extern Dtmethod_t*	Dtqueue; ///< queue: insert at top, delete at tail
 
 CDT_API extern Dtmethod_t*	Dtorder;
 CDT_API extern Dtmethod_t*	Dttree;
-CDT_API extern Dtmethod_t*	Dthash;
 CDT_API extern Dtmethod_t	_Dttree;
-CDT_API extern Dtmethod_t	_Dthash;
 CDT_API extern Dtmethod_t	_Dtqueue;
 
 CDT_API Dt_t*		dtopen(Dtdisc_t*, Dtmethod_t*);

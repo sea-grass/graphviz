@@ -279,6 +279,3 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 
 static Dtmethod_t	_Dtset = { dthash, DT_SET };
 Dtmethod_t* Dtset = &_Dtset;
-
-Dtmethod_t		_Dthash = { dthash, DT_SET };
-Dtmethod_t* Dthash = &_Dthash;

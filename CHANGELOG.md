@@ -50,8 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `Dtdata_t.minp` field has been removed.
 - The print functionality of the macOS Graphviz app scales the graph to fit the
   output page size.
-- **Breaking**: The libcdt containers `Dtbag`, `Dtlist`, `Dtdeque`, and
-  `Dtstack` have been removed.
+- **Breaking**: The libcdt containers `Dtbag`, `Dthash`, `Dtlist`, `Dtdeque`,
+  and `Dtstack` have been removed.
 
 ### Fixed
 
