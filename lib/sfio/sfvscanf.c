@@ -575,7 +575,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		    if (fmt == 'd' || fmt == 'i')
 			*((int *) value) = (int) argv.ll;
 		    else
-			*((uint *) value) = (uint) argv.lu;
+			*((unsigned*)value) = (unsigned)argv.lu;
 		}
 	    }
 	} else if (fmt == 's' || fmt == 'c' || fmt == '[') {

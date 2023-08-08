@@ -9,7 +9,6 @@
 #include	<cdt.h>
 
 /* short-hand notations */
-#define uint	unsigned int
 #define left	hl._left
 #define hash	hl._hash
 #define htab	hh._htab

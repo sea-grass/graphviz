@@ -60,9 +60,6 @@ extern "C" {
 #ifndef ulong
 #define ulong		uint64_t
 #endif
-#ifndef uint
-#define uint		unsigned int
-#endif
 #ifndef ushort
 #define ushort		unsigned short
 #endif
@@ -129,7 +126,7 @@ extern "C" {
 	int i, *ip;
 	long l, *lp;
 	short h, *hp;
-	uint ui;
+	unsigned ui;
 	ulong ul;
 	ushort uh;
 	Sflong_t ll, *llp;

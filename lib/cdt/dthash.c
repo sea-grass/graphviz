@@ -53,7 +53,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 {
 	Dtlink_t	*t, *r = NULL, *p;
 	void	*k, *key;
-	uint	hsh;
+	unsigned hsh;
 	int		lk, sz, ky;
 	Dtcompar_f	cmpf;
 	Dtdisc_t*	disc;
