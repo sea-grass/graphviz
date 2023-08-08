@@ -223,11 +223,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* the bottomless bit bucket */
-#define DEVNULL		"/dev/null"
-#define SFSETNULL(f)	((f)->extent = (Sfoff_t)(-1), (f)->bits |= SF_NULL)
-#define SFISNULL(f)	((f)->extent < 0 && ((f)->bits&SF_NULL) )
-
 /* exception types */
 #define SF_EDONE	0	/* stop this operation and return       */
 #define SF_EDISC	1	/* discipline says it's ok              */
