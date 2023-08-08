@@ -24,7 +24,7 @@ extern "C" {
 **	Written by Kiem-Phong Vo
 */
 
-#include	<sfio/sfio_t.h>
+#include	<sfio/sfio.h>
 #include	"config.h"
 
 #include	<limits.h>
@@ -136,16 +136,6 @@ extern "C" {
 	    } \
 	  } \
 	}
-/* stream pool structure. */
-    typedef struct _sfpool_s Sfpool_t;
-    struct _sfpool_s {
-	Sfpool_t *next;
-	int mode;		/* type of pool                 */
-	int s_sf;		/* size of pool array           */
-	int n_sf;		/* number currently in pool     */
-	Sfio_t **sf;		/* array of streams             */
-	Sfio_t *array[3];	/* start with 3                 */
-    };
 
 /* reserve buffer structure */
     typedef struct _sfrsrv_s Sfrsrv_t;
@@ -267,38 +257,6 @@ extern "C" {
 			 ((f)->endw = (f)->endr = (f)->data) )
 #define SFOPEN(f,l)	(void)((l) ? 0 : \
 				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
-
-/* check to see if the stream can be accessed */
-#define SFFROZEN(f)	((f)->mode&(SF_PUSH|SF_LOCK|SF_PEEK) ? 1 : 0)
-
-/* set discipline code */
-#define SFDISC(f,dc,iof) \
-	{	Sfdisc_t* d; \
-		if(!(dc)) \
-			d = (dc) = (f)->disc; \
-		else 	d = (f->bits&SF_DCDOWN) ? ((dc) = (dc)->disc) : (dc); \
-		while(d && !(d->iof))	d = d->disc; \
-		if(d)	(dc) = d; \
-	}
-#define SFDCWR(f,buf,n,dc,rv) \
-	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
-		rv = (*dc->writef)(f,buf,n,dc); \
-		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
-	}
-#define SFDCSK(f,addr,type,dc,rv) \
-	{	int		dcdown = f->bits&SF_DCDOWN; f->bits |= SF_DCDOWN; \
-		rv = (*dc->seekf)(f,addr,type,dc); \
-		if(!dcdown)	f->bits &= (unsigned short)~SF_DCDOWN; \
-	}
-
-/* safe closing function */
-#define CLOSE(f)	{ while(close(f) < 0 && errno == EINTR) errno = 0; }
-
-/* string stream extent */
-#define SFSTRSIZE(f)	{ Sfoff_t s_ = (f)->next - (f)->data; \
-			  if(s_ > (f)->here) \
-			    { (f)->here = s_; if(s_ > (f)->extent) (f)->extent = s_; } \
-			}
 
 #ifndef O_BINARY
 #define O_BINARY	000
