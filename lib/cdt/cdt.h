@@ -130,7 +130,6 @@ struct _dtstat_s
 
 /* supported storage methods */
 #define DT_SET		0000001	/* set with unique elements		*/
-#define DT_BAG		0000002	/* multiset				*/
 #define DT_OSET		0000004	/* ordered set (self-adjusting tree)	*/
 #define DT_OBAG		0000010	/* ordered multiset			*/
 #define DT_QUEUE	0000100	/* queue: insert at top, delete at tail	*/
@@ -157,7 +156,6 @@ struct _dtstat_s
 #define DT_APPEND	0020000	/* used on Dtlist to append an object	*/
 
 CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
-CDT_API extern Dtmethod_t* 	Dtbag; ///< multiset
 CDT_API extern Dtmethod_t* 	Dtoset; ///< ordered set (self-adjusting tree)
 CDT_API extern Dtmethod_t* 	Dtobag; ///< ordered multiset
 CDT_API extern Dtmethod_t*	Dtqueue; ///< queue: insert at top, delete at tail

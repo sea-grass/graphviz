@@ -49,12 +49,7 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 
 	if(dt->data->type&DT_QUEUE)
 		goto done;
-	else if(dt->data->type&DT_BAG)
-	{	if(type&DT_SAMEHASH)
-			goto done;
-		else	goto dt_renew;
-	}
-	else if(dt->data->type&(DT_SET|DT_BAG))
+	else if(dt->data->type&DT_SET)
 	{	if((type&DT_SAMEHASH) && (type&DT_SAMECMP))
 			goto done;
 		else	goto dt_renew;
@@ -68,7 +63,7 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 		dt->data->here = NULL;
 		dt->data->size = 0;
 
-		if(dt->data->type&(DT_SET|DT_BAG))
+		if(dt->data->type&DT_SET)
 		{	Dtlink_t	**s, **ends;
 			ends = (s = dt->data->htab) + dt->data->ntab;
 			while(s < ends)

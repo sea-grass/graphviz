@@ -16,7 +16,7 @@ Dtlink_t* dtflatten(Dt_t* dt)
 		return dt->data->here;
 
 	list = last = NULL;
-	if(dt->data->type&(DT_SET|DT_BAG))
+	if(dt->data->type&DT_SET)
 	{	for(ends = (s = dt->data->htab) + dt->data->ntab; s < ends; ++s)
 		{	if((t = *s) )
 			{	if(last)

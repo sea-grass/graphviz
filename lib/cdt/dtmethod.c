@@ -20,7 +20,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 
 	if(dt->data->type&DT_QUEUE)
 		dt->data->head = NULL;
-	else if(dt->data->type&(DT_SET|DT_BAG) )
+	else if(dt->data->type&DT_SET)
 	{	if(dt->data->ntab > 0)
 			dt->memoryf(dt, dt->data->htab, 0, disc);
 		dt->data->ntab = 0;
@@ -52,9 +52,9 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 			list = r;
 		}
 	}
-	else if(!((meth->type&DT_BAG) && (oldmeth->type&DT_SET)) )
+	else if(oldmeth->type&DT_SET)
 	{	int	rehash;
-		if((meth->type&(DT_SET|DT_BAG)) && !(oldmeth->type&(DT_SET|DT_BAG)))
+		if((meth->type&DT_SET) && !(oldmeth->type&DT_SET))
 			rehash = 1;
 		else	rehash = 0;
 
