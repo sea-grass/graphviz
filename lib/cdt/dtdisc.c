@@ -48,12 +48,8 @@ Dtdisc_t *dtdisc(Dt_t *dt, Dtdisc_t *disc) {
 
 	if(dt->data->type&DT_QUEUE)
 		goto done;
-	else if(dt->data->type&DT_SET)
-	{	goto dt_renew;
-	}
-	else /*if(dt->data->type&(DT_OSET|DT_OBAG))*/
+	else /*if(dt->data->type&(DT_SET|DT_OSET|DT_OBAG))*/
 	{
-	dt_renew:
 		r = dtflatten(dt);
 		dt->data->type &= ~DT_FLATTEN;
 		dt->data->here = NULL;
