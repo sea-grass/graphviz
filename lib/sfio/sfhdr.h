@@ -105,19 +105,6 @@ extern "C" {
 #define SF_CREATMODE	0666
 #endif
 
-/* a couple of error number that we use, default values are like Linux */
-#ifndef EINTR
-#define EINTR	4
-#endif
-#ifndef EBADF
-#define EBADF	9
-#endif
-#ifndef EAGAIN
-#define EAGAIN	11
-#endif
-#ifndef EINVAL
-#define EINVAL	22
-#endif
 /* function to get the decimal point for local environment */
 #include	<locale.h>
 #define SFSETLOCALE(decimal,thousand) \
