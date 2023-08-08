@@ -22,8 +22,7 @@ static void* dtmemory(Dt_t* dt,void* addr,size_t size,Dtdisc_t* disc)
 	else	return size > 0 ? malloc(size) : NULL;
 }
 
-Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
-{
+Dtdisc_t *dtdisc(Dt_t *dt, Dtdisc_t *disc) {
 	Dtsearch_f	searchf;
 	Dtlink_t	*r, *t;
 	char*	k;
@@ -50,13 +49,10 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 	if(dt->data->type&DT_QUEUE)
 		goto done;
 	else if(dt->data->type&DT_SET)
-	{	if((type&DT_SAMEHASH) && (type&DT_SAMECMP))
-			goto done;
-		else	goto dt_renew;
+	{	goto dt_renew;
 	}
 	else /*if(dt->data->type&(DT_OSET|DT_OBAG))*/
-	{	if(type&DT_SAMECMP)
-			goto done;
+	{
 	dt_renew:
 		r = dtflatten(dt);
 		dt->data->type &= ~DT_FLATTEN;
@@ -73,11 +69,9 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 		/* reinsert them */
 		while(r)
 		{	t = r->right;
-			if(!(type&DT_SAMEHASH))	/* new hash value */
-			{	k = _DTOBJ(r,disc->link);
-				k = _DTKEY(k, disc->key, disc->size);
-				r->hash = dtstrhash(0, k, disc->size);
-			}
+			k = _DTOBJ(r,disc->link);
+			k = _DTKEY(k, disc->key, disc->size);
+			r->hash = dtstrhash(0, k, disc->size);
 			(void)searchf(dt, r, DT_RENEW);
 			r = t;
 		}

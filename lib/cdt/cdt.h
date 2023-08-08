@@ -135,10 +135,6 @@ struct _dtstat_s
 #define DT_QUEUE	0000100	/* queue: insert at top, delete at tail	*/
 #define DT_METHODS	0000377	/* all currently supported methods	*/
 
-/* asserts to dtdisc() */
-#define DT_SAMECMP	0000001	/* compare methods equivalent		*/
-#define DT_SAMEHASH	0000002	/* hash methods equivalent		*/
-
 /* types of search */
 #define DT_INSERT	0000001	/* insert object if not found		*/
 #define DT_DELETE	0000002	/* delete object if found		*/
@@ -165,7 +161,7 @@ CDT_API extern Dtmethod_t	_Dtqueue;
 CDT_API Dt_t*		dtopen(Dtdisc_t*, Dtmethod_t*);
 CDT_API int		dtclose(Dt_t*);
 CDT_API Dt_t*		dtview(Dt_t*, Dt_t*);
-CDT_API Dtdisc_t*	dtdisc(Dt_t* dt, Dtdisc_t*, int);
+CDT_API Dtdisc_t*	dtdisc(Dt_t *dt, Dtdisc_t*);
 CDT_API Dtmethod_t*	dtmethod(Dt_t*, Dtmethod_t*);
 
 CDT_API Dtlink_t*	dtflatten(Dt_t*);

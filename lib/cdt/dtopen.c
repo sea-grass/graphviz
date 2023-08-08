@@ -22,7 +22,7 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 	dt->searchf = NULL;
 	dt->meth = NULL;
 	dt->disc = NULL;
-	dtdisc(dt,disc,0);
+	dtdisc(dt, disc);
 	dt->type = DT_MALLOC;
 	dt->nview = 0;
 	dt->view = dt->walk = NULL;
