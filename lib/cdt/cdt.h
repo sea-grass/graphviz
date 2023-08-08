@@ -151,7 +151,6 @@ struct _dtstat_s
 #define DT_LAST		0000400	/* get last object			*/
 #define DT_MATCH	0001000	/* find object matching key		*/
 #define DT_VSEARCH	0002000	/* search using internal representation	*/
-#define DT_ATTACH	0004000	/* attach an object to the dictionary	*/
 #define DT_DETACH	0010000	/* detach an object from the dictionary	*/
 
 CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
@@ -207,7 +206,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 #define dtmatch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_MATCH)
 #define dtinsert(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_INSERT)
 #define dtdelete(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DELETE)
-#define dtattach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_ATTACH)
 #define dtdetach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DETACH)
 #define dtclear(d)	(*(_DT(d)->searchf))((d),(void*)(0),DT_CLEAR)
 #define dtfound(d)	(_DT(d)->type & DT_FOUND)

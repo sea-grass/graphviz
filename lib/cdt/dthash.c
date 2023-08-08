@@ -108,7 +108,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		}
 	}
 
-	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT|DT_ATTACH) )
+	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT) )
 	{	key = (type&DT_MATCH) ? obj : _DTKEY(obj,ky,sz);
 		hsh = dtstrhash(0, key, sz);
 		goto do_search;
@@ -157,7 +157,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		dt->data->here = t;
 		return _DTOBJ(t,lk);
 	}
-	else if(type&(DT_INSERT|DT_ATTACH))
+	else if(type&DT_INSERT)
 	{	if(t && (dt->data->type&DT_SET) )
 		{	dt->data->here = t;
 			return _DTOBJ(t,lk);

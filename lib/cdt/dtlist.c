@@ -49,7 +49,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 		else	return NULL;
 	}
 
-	if(type&(DT_INSERT|DT_ATTACH))
+	if(type&DT_INSERT)
 	{	if (disc->makef && (type&DT_INSERT) && !(obj = disc->makef(obj, disc)))
 			return NULL;
 		if(lk >= 0)

@@ -78,7 +78,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		}
 	}
 
-	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT|DT_ATTACH))
+	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT))
 	{	key = (type&DT_MATCH) ? obj : _DTKEY(obj,ky,sz);
 		if(root)
 			goto do_search;
@@ -220,7 +220,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 				dt->data->size = -1;
 			goto no_root;
 		}
-		else if(type&(DT_INSERT|DT_ATTACH))
+		else if(type&DT_INSERT)
 		{	if(dt->meth->type&DT_OSET)
 				goto has_root;
 			else
@@ -263,7 +263,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			dt->data->here = link.left;
 			return (type&DT_DELETE) ? obj : NULL;
 		}
-		else if(type&(DT_INSERT|DT_ATTACH))
+		else if(type&DT_INSERT)
 		{ dt_insert:
 			if(disc->makef && (type&DT_INSERT))
 				obj = disc->makef(obj, disc);
