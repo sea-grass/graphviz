@@ -47,7 +47,7 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 	if(!(dt->memoryf = disc->memoryf) )
 		dt->memoryf = dtmemory;
 
-	if(dt->data->type&(DT_STACK|DT_QUEUE|DT_LIST))
+	if(dt->data->type&(DT_STACK|DT_QUEUE))
 		goto done;
 	else if(dt->data->type&DT_BAG)
 	{	if(type&DT_SAMEHASH)
