@@ -16,8 +16,8 @@
 ** Written by Kiem-Phong Vo (02/28/03)
 */
 
-uint dtstrhash(uint h, void* args, int n)
-{
+uint dtstrhash(void *args, int n) {
+	unsigned h = 0;
 	unsigned char *s = args;
 
 	if(n <= 0)

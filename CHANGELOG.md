@@ -63,6 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `POINTS_PER_PC` macro has been removed.
 - **Breaking**: The `INITIAL_XDOT_CAPACITY` macro has been removed.
 - **Breaking**: The `type` parameter to `dtdisc` has been removed.
+- **Breaking**: The `h` parameter to `dtstrhash` has been removed.
 
 ### Fixed
 

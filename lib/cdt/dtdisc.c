@@ -67,7 +67,7 @@ Dtdisc_t *dtdisc(Dt_t *dt, Dtdisc_t *disc) {
 		{	t = r->right;
 			k = _DTOBJ(r,disc->link);
 			k = _DTKEY(k, disc->key, disc->size);
-			r->hash = dtstrhash(0, k, disc->size);
+			r->hash = dtstrhash(k, disc->size);
 			(void)searchf(dt, r, DT_RENEW);
 			r = t;
 		}

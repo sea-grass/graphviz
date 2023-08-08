@@ -110,7 +110,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 
 	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT) )
 	{	key = (type&DT_MATCH) ? obj : _DTKEY(obj,ky,sz);
-		hsh = dtstrhash(0, key, sz);
+		hsh = dtstrhash(key, sz);
 		goto do_search;
 	}
 	else if(type&(DT_RENEW|DT_VSEARCH) )
@@ -128,7 +128,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		}
 		else
 		{	key = _DTKEY(obj,ky,sz);
-			hsh = dtstrhash(0, key, sz);
+			hsh = dtstrhash(key, sz);
 		do_search:
 			t = dt->data->ntab <= 0 ? NULL :
 			 	*(s = dt->data->htab + HINDEX(dt->data->ntab,hsh));

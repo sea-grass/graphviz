@@ -174,7 +174,7 @@ CDT_API void*		dtrenew(Dt_t*, void*);
 
 CDT_API int		dtsize(Dt_t*);
 CDT_API int		dtstat(Dt_t*, Dtstat_t*, int);
-CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
+CDT_API unsigned int dtstrhash(void*, int);
 
 /* internal functions for translating among holder, object and key */
 #define _DT(dt)		((Dt_t*)(dt))
