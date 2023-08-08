@@ -171,28 +171,7 @@ static double edge_compatibility_full(pedge e1, pedge e2){
 }
 
 static void fprint_rgb(FILE* fp, int r, int g, int b, int alpha){
-  fprintf(fp,"#");
-  if (r >= 16) {
-    fprintf(fp,"%2x",r);
-  } else {
-    fprintf(fp,"0%1x",r);
-  }
-  if (g >= 16) {
-    fprintf(fp,"%2x",g);
-  } else {
-    fprintf(fp,"0%1x",g);
-  }
-  if (b >= 16) {
-    fprintf(fp,"%2x",b);
-  } else {
-    fprintf(fp,"0%1x",b);
-  }
-  if (alpha >= 16) {
-    fprintf(fp,"%2x",alpha);
-  } else {
-    fprintf(fp,"0%1x",alpha);
-  }
-
+  fprintf(fp, "#%02x%02x%02x%02x", r, g, b, alpha);
 }
 
 void pedge_export_gv(FILE *fp, int ne, pedge *edges){
