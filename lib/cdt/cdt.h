@@ -136,7 +136,6 @@ struct _dtstat_s
 #define DT_LIST		0000020	/* linked list				*/
 #define DT_STACK	0000040	/* stack: insert/delete at top		*/
 #define DT_QUEUE	0000100	/* queue: insert at top, delete at tail	*/
-#define DT_DEQUE	0000200 /* deque: insert at top, append at tail	*/
 #define DT_METHODS	0000377	/* all currently supported methods	*/
 
 /* asserts to dtdisc() */
@@ -166,7 +165,6 @@ CDT_API extern Dtmethod_t* 	Dtobag; ///< ordered multiset
 CDT_API extern Dtmethod_t*	Dtlist; ///< linked list
 CDT_API extern Dtmethod_t*	Dtstack; ///< stack: insert/delete at top
 CDT_API extern Dtmethod_t*	Dtqueue; ///< queue: insert at top, delete at tail
-CDT_API extern Dtmethod_t*	Dtdeque; ///< deque: insert at top, append at tail
 
 CDT_API extern Dtmethod_t*	Dtorder;
 CDT_API extern Dtmethod_t*	Dttree;

@@ -28,7 +28,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 			return r ? _DTOBJ(r,lk) : NULL;
 		}
 		else if(type&(DT_DELETE|DT_DETACH))
-		{	if((dt->data->type&(DT_LIST|DT_DEQUE)) || !(r = dt->data->head))
+		{	if((dt->data->type&DT_LIST) || !(r = dt->data->head))
 				return NULL;
 			else	goto dt_delete;
 		}
@@ -65,12 +65,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 			}
 		}
 
-		if(dt->data->type&DT_DEQUE)
-		{	if(type&DT_APPEND)
-				goto dt_queue;
-			else	goto dt_stack;
-		}
-		else if(dt->data->type&DT_LIST)
+		if(dt->data->type&DT_LIST)
 		{	if(type&DT_APPEND)
 			{	if(!(t = dt->data->here) || !t->right)
 					goto dt_queue;
@@ -167,11 +162,9 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 }
 
 Dtmethod_t _Dtlist  = { dtlist, DT_LIST  };
-Dtmethod_t _Dtdeque  = { dtlist, DT_DEQUE  };
 Dtmethod_t _Dtstack = { dtlist, DT_STACK };
 Dtmethod_t _Dtqueue = { dtlist, DT_QUEUE };
 
 Dtmethod_t* Dtlist = &_Dtlist;
-Dtmethod_t* Dtdeque = &_Dtdeque;
 Dtmethod_t* Dtstack = &_Dtstack;
 Dtmethod_t* Dtqueue = &_Dtqueue;
