@@ -99,12 +99,6 @@ extern "C" {
 #define S_ISCHR(m)	(((m)&S_IFMT) == S_IFCHR)
 #endif
 
-#if defined(S_IRUSR) && defined(S_IWUSR) && defined(S_IRGRP) && defined(S_IWGRP) && defined(S_IROTH) && defined(S_IWOTH)
-#define SF_CREATMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-#else
-#define SF_CREATMODE	0666
-#endif
-
 /* function to get the decimal point for local environment */
 #include	<locale.h>
 #define SFSETLOCALE(decimal,thousand) \
