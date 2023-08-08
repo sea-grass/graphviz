@@ -21,7 +21,7 @@
 **	Written by Kiem-Phong Vo.
 */
 
-#define MAXWIDTH	(int)(((uint)~0)>>1)	/* max amount to scan   */
+#define MAXWIDTH	INT_MAX	// max amount to scan
 
 /**
  * @param form format string
