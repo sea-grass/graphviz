@@ -160,7 +160,6 @@ CDT_API extern Dtmethod_t* 	Dtoset; ///< ordered set (self-adjusting tree)
 CDT_API extern Dtmethod_t* 	Dtobag; ///< ordered multiset
 CDT_API extern Dtmethod_t*	Dtqueue; ///< queue: insert at top, delete at tail
 
-CDT_API extern Dtmethod_t*	Dtorder;
 CDT_API extern Dtmethod_t*	Dttree;
 CDT_API extern Dtmethod_t	_Dttree;
 CDT_API extern Dtmethod_t	_Dtqueue;
