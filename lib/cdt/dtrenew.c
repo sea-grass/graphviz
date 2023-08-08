@@ -43,7 +43,7 @@ void* dtrenew(Dt_t* dt, void* obj)
 			t->right = e->right;
 		}
 		key = _DTKEY(obj,disc->key,disc->size);
-		e->hash = _DTHSH(dt,key,disc,disc->size);
+		e->hash = dtstrhash(0, key, disc->size);
 		dt->data->here = NULL;
 	}
 

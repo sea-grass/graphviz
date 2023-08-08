@@ -51,8 +51,6 @@ typedef void*			(*Dtsearch_f)(Dt_t*,void*,int);
 typedef void* 		(*Dtmake_f)(void*,Dtdisc_t*);
 typedef void 			(*Dtfree_f)(void*,Dtdisc_t*);
 typedef int			(*Dtcompar_f)(Dt_t*,void*,void*,Dtdisc_t*);
-typedef unsigned int		(*Dthash_f)(Dt_t*,void*,Dtdisc_t*);
-typedef int			(*Dtevent_f)(Dt_t*,int,void*,Dtdisc_t*);
 
 struct _dtlink_s
 {	Dtlink_t*	right;	/* right child		*/
@@ -85,8 +83,6 @@ struct _dtdata_s
 	int		ntab;	/* number of hash slots			*/
 	int		size;	/* number of objects			*/
 	int		loop;	/* number of nested loops		*/
-	int		minp;	/* min path before splay, always even	*/
-				/* for hash dt, > 0: fixed table size 	*/
 };
 
 /* structure to hold methods that manipulate an object */
@@ -97,16 +93,14 @@ struct _dtdisc_s
 	Dtmake_f	makef;	/* object constructor			*/
 	Dtfree_f	freef;	/* object destructor			*/
 	Dtcompar_f	comparf;/* to compare two objects		*/
-	Dthash_f	hashf;	/* to compute hash value of an object	*/
 	Dtmemory_f	memoryf;/* to allocate/free memory		*/
-	Dtevent_f	eventf;	/* to process events			*/
 };
 
-#define DTDISC(dc,ky,sz,lk,mkf,frf,cmpf,hshf,memf,evf) \
+#define DTDISC(dc, ky, sz, lk, mkf, frf, cmpf, memf) \
 	( (dc)->key = (ky), (dc)->size = (sz), (dc)->link = (lk), \
 	  (dc)->makef = (mkf), (dc)->freef = (frf), \
-	  (dc)->comparf = (cmpf), (dc)->hashf = (hshf), \
-	  (dc)->memoryf = (memf), (dc)->eventf = (evf) )
+	  (dc)->comparf = (cmpf), \
+	  (dc)->memoryf = (memf) )
 
 /* the dictionary structure itself */
 struct _dt_s
@@ -165,15 +159,6 @@ struct _dtstat_s
 #define DT_DETACH	0010000	/* detach an object from the dictionary	*/
 #define DT_APPEND	0020000	/* used on Dtlist to append an object	*/
 
-/* events */
-#define DT_OPEN		1	/* a dictionary is being opened		*/
-#define DT_CLOSE	2	/* a dictionary is being closed		*/
-#define DT_DISC		3	/* discipline is about to be changed	*/
-#define DT_METH		4	/* method is about to be changed	*/
-#define DT_ENDOPEN	5	/* dtopen() is done			*/
-#define DT_ENDCLOSE	6	/* dtclose() is done			*/
-#define DT_HASHSIZE	7	/* setting hash table size		*/
-
 CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
 CDT_API extern Dtmethod_t* 	Dtbag; ///< multiset
 CDT_API extern Dtmethod_t* 	Dtoset; ///< ordered set (self-adjusting tree)
@@ -221,7 +206,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 #define _DTCMP(dt,k1,k2,dc,cmpf,sz) \
 			(cmpf ? (*cmpf)(dt,k1,k2,dc) : \
 			 (sz <= 0 ? strcmp(k1,k2) : memcmp(k1,k2,(size_t)sz)) )
-#define _DTHSH(dt,ky,dc,sz) (dc->hashf ? (*dc->hashf)(dt,ky,dc) : dtstrhash(0,ky,sz) )
 
 #define dtlink(d,e)	(((Dtlink_t*)(e))->right)
 #define dtobj(d,e)	_DTOBJ((e), _DT(d)->disc->link)

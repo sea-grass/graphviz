@@ -15,11 +15,6 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 	if(!meth || meth->type == oldmeth->type)
 		return oldmeth;
 
-	if (disc->eventf && disc->eventf(dt, DT_METH, meth, disc) < 0)
-		return NULL;
-
-	dt->data->minp = 0;
-
 	/* get the list of elements */
 	list = dtflatten(dt);
 
@@ -69,7 +64,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 			if(rehash)
 			{	void* key = _DTOBJ(list,disc->link);
 				key = _DTKEY(key,disc->key,disc->size);
-				list->hash = _DTHSH(dt,key,disc,disc->size);
+				list->hash = dtstrhash(0, key, disc->size);
 			}
 			(void)meth->searchf(dt, list, DT_RENEW);
 			list = r;

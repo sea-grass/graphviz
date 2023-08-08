@@ -43,9 +43,6 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 
 	UNFLATTEN(dt);
 
-	if (old->eventf && old->eventf(dt, DT_DISC, disc, old) < 0)
-		return NULL;
-
 	dt->disc = disc;
 	if(!(dt->memoryf = disc->memoryf) )
 		dt->memoryf = dtmemory;
@@ -84,7 +81,7 @@ Dtdisc_t* dtdisc(Dt_t* dt, Dtdisc_t* disc, int type)
 			if(!(type&DT_SAMEHASH))	/* new hash value */
 			{	k = _DTOBJ(r,disc->link);
 				k = _DTKEY(k, disc->key, disc->size);
-				r->hash = _DTHSH(dt,k,disc,disc->size);
+				r->hash = dtstrhash(0, k, disc->size);
 			}
 			(void)searchf(dt, r, DT_RENEW);
 			r = t;

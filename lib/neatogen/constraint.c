@@ -58,8 +58,6 @@ static Dtdisc_t constr = {
     NULL,
     (Dtcompar_f) cmpitem,
     NULL,
-    NULL,
-    NULL
 };
 
 static int distY(box * b1, box * b2)

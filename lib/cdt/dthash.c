@@ -13,35 +13,13 @@
 static void dthtab(Dt_t* dt)
 {
 	Dtlink_t	*t, *r, *p, **s, **hs, **is, **olds;
-	int		n, k;
-
-	if(dt->data->minp > 0 && dt->data->ntab > 0) /* fixed table size */
-		return;
-	dt->data->minp = 0;
-
-	n = dt->data->ntab;
-	if(dt->disc && dt->disc->eventf &&
-	   dt->disc->eventf(dt, DT_HASHSIZE, &n, dt->disc) > 0)
-	{	if(n < 0) /* fix table size */
-		{	dt->data->minp = 1;
-			if(dt->data->ntab > 0 )
-				return;
-		}
-		else /* set a particular size */
-		{	for(k = 2; k < n; k *= 2)
-				;
-			n = k;
-		}
-	}
-	else	n = 0;
+	int n;
 
 	/* compute new table size */
-	if(n <= 0)
-	{	if((n = dt->data->ntab) == 0)
-			n = HSLOT;
-		while(dt->data->size > HLOAD(n))
-			n = HRESIZE(n);
-	}
+	if((n = dt->data->ntab) == 0)
+		n = HSLOT;
+	while(dt->data->size > HLOAD(n))
+		n = HRESIZE(n);
 	if(n == dt->data->ntab)
 		return;
 
@@ -151,7 +129,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 
 	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT|DT_ATTACH) )
 	{	key = (type&DT_MATCH) ? obj : _DTKEY(obj,ky,sz);
-		hsh = _DTHSH(dt,key,disc,sz);
+		hsh = dtstrhash(0, key, sz);
 		goto do_search;
 	}
 	else if(type&(DT_RENEW|DT_VSEARCH) )
@@ -169,7 +147,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		}
 		else
 		{	key = _DTKEY(obj,ky,sz);
-			hsh = _DTHSH(dt,key,disc,sz);
+			hsh = dtstrhash(0, key, sz);
 		do_search:
 			t = dt->data->ntab <= 0 ? NULL :
 			 	*(s = dt->data->htab + HINDEX(dt->data->ntab,hsh));

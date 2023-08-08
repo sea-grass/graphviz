@@ -76,8 +76,6 @@ static Dtdisc_t nameDisc = {
     (Dtfree_f) free_nitem,
     NULL,
     NULL,
-    NULL,
-    NULL
 };
 
 typedef struct {
@@ -100,8 +98,6 @@ static Dtdisc_t idDisc = {
     (Dtfree_f) free_iditem,
     NULL,
     NULL,
-    NULL,
-    NULL
 };
 
 typedef struct {
