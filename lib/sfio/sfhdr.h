@@ -36,14 +36,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-/* Private flags in the "bits" field */
-#define SF_MMAP		00000001	/* in memory mapping mode               */
-#define SF_BOTH		00000002	/* both read/write                      */
-#define SF_HOLE		00000004	/* a hole of zero's was created         */
-#define SF_NULL		00000010	/* stream is /dev/null                  */
-#define SF_SEQUENTIAL	00000020	/* sequential access                    */
-#define SF_JUSTSEEK	00000040	/* just did a sfseek                    */
-
 /* on closing, don't be a hero about reread/rewrite on interrupts */
 #define SF_ENDING	00000400
 
