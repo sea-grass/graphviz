@@ -153,7 +153,6 @@ struct _dtstat_s
 #define DT_VSEARCH	0002000	/* search using internal representation	*/
 #define DT_ATTACH	0004000	/* attach an object to the dictionary	*/
 #define DT_DETACH	0010000	/* detach an object from the dictionary	*/
-#define DT_APPEND	0020000	/* used on Dtlist to append an object	*/
 
 CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
 CDT_API extern Dtmethod_t* 	Dtoset; ///< ordered set (self-adjusting tree)
@@ -207,7 +206,6 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 #define dtsearch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_SEARCH)
 #define dtmatch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_MATCH)
 #define dtinsert(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_INSERT)
-#define dtappend(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_INSERT|DT_APPEND)
 #define dtdelete(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DELETE)
 #define dtattach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_ATTACH)
 #define dtdetach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DETACH)
