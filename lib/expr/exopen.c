@@ -15,12 +15,6 @@
  * expression library
  */
 
-#include "config.h"
-
-#ifdef GVDLL
-#define _BLD_sfio 1
-#endif
-
 #include <expr/exlib.h>
 #include <stdlib.h>
 #include <stdio.h>

@@ -25,14 +25,6 @@
  * expression library grammar and compiler
  */
 
-#ifdef _WIN32
-#include <config.h>
-
-#ifdef GVDLL
-#define _BLD_sfio 1
-#endif
-#endif
-
 #include <assert.h>
 #include <ctype.h>
 #include <expr/exop.h>

@@ -14,10 +14,6 @@
 extern "C" {
 #endif
 
-#if !defined(_BLD_sfio)
-#define _BLD_sfio	1
-#endif
-
 #include <inttypes.h>
 
 /*	Internal definitions for sfio.
