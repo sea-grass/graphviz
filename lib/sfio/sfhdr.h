@@ -244,23 +244,6 @@ extern "C" {
 			 ((v) || (f)->extent < 0 || \
 			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
 
-/* lock/open a stream */
-#define SFLOCK(f,l)	(void)((f)->mode |= SF_LOCK, (f)->endr = (f)->endw = (f)->data)
-#define _SFOPENRD(f)	((f)->endr = (f)->endb)
-#define _SFOPENWR(f)	((f)->endw = ((f)->flags&SF_LINE) ? (f)->data : (f)->endb)
-#define _SFOPEN(f)	((f)->mode == SF_READ  ? _SFOPENRD(f) : \
-			 (f)->mode == SF_WRITE ? _SFOPENWR(f) : \
-			 ((f)->endw = (f)->endr = (f)->data) )
-#define SFOPEN(f,l)	(void)((l) ? 0 : \
-				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
-
-#ifndef O_BINARY
-#define O_BINARY	000
-#endif
-#ifndef O_TEXT
-#define O_TEXT		000
-#endif
-
 #define	SF_RADIX	64	/* maximum integer conversion base */
 
 /* floating point to ascii conversion */
