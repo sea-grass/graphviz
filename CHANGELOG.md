@@ -48,6 +48,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   removed. Correspondingly, the `hshf` and `evf` parameters to the `DTDISC`
   macro have been removed. Also the `_DTHSH` macro has been removed.
 - **Breaking**: The `Dtdata_t.minp` field has been removed.
+- The print functionality of the macOS Graphviz app scales the graph to fit the
+  output page size.
 
 ### Fixed
 
