@@ -50,7 +50,7 @@ int dtstat(Dt_t* dt, Dtstat_t* ds, int all)
 	if(!all)
 		return 0;
 
-	if(dt->data->type&(DT_SET|DT_BAG))
+	if(dt->data->type&DT_SET)
 	{	dthstat(dt->data,ds,NULL);
 		if(ds->dt_max+1 > Size)
 		{	if(Size > 0)

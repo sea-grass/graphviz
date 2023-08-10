@@ -27,7 +27,7 @@ int dtrestore(Dt_t* dt, Dtlink_t* list)
 	}
 	dt->data->type &= ~DT_FLATTEN;
 
-	if(dt->data->type&(DT_SET|DT_BAG))
+	if(dt->data->type&DT_SET)
 	{	dt->data->here = NULL;
 		if(type) /* restoring a flattened dictionary */
 		{	for(ends = (s = dt->data->htab) + dt->data->ntab; s < ends; ++s)

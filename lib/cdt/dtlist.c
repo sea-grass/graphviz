@@ -28,7 +28,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 			return r ? _DTOBJ(r,lk) : NULL;
 		}
 		else if(type&(DT_DELETE|DT_DETACH))
-		{	if((dt->data->type&(DT_LIST|DT_DEQUE)) || !(r = dt->data->head))
+		{	if(!(r = dt->data->head))
 				return NULL;
 			else	goto dt_delete;
 		}
@@ -49,7 +49,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 		else	return NULL;
 	}
 
-	if(type&(DT_INSERT|DT_ATTACH))
+	if(type&DT_INSERT)
 	{	if (disc->makef && (type&DT_INSERT) && !(obj = disc->makef(obj, disc)))
 			return NULL;
 		if(lk >= 0)
@@ -65,52 +65,17 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 			}
 		}
 
-		if(dt->data->type&DT_DEQUE)
-		{	if(type&DT_APPEND)
-				goto dt_queue;
-			else	goto dt_stack;
+		/* if(dt->data->type&DT_QUEUE) */
+		if((t = dt->data->head) )
+		{	t->left->right = r;
+			r->left = t->left;
+			t->left = r;
 		}
-		else if(dt->data->type&DT_LIST)
-		{	if(type&DT_APPEND)
-			{	if(!(t = dt->data->here) || !t->right)
-					goto dt_queue;
-				r->right = t->right;
-				r->right->left = r;
-				r->left = t;
-				r->left->right = r;
-			}
-			else
-			{	if(!(t = dt->data->here) || t == dt->data->head)
-					goto dt_stack;
-				r->left = t->left;
-				r->left->right = r;
-				r->right = t;
-				r->right->left = r;
-			}
+		else
+		{	dt->data->head = r;
+			r->left = r;
 		}
-		else if(dt->data->type&DT_STACK)
-		{ dt_stack:
-			r->right = t = dt->data->head;
-			if(t)
-			{	r->left = t->left;
-				t->left = r;
-			}
-			else	r->left = r;
-			dt->data->head = r;
-		}
-		else /* if(dt->data->type&DT_QUEUE) */
-		{ dt_queue:
-			if((t = dt->data->head) )
-			{	t->left->right = r;
-				r->left = t->left;
-				t->left = r;
-			}
-			else
-			{	dt->data->head = r;
-				r->left = r;
-			}
-			r->right = NULL;
-		}
+		r->right = NULL;
 
 		if(dt->data->size >= 0)
 			dt->data->size += 1;
@@ -166,12 +131,6 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 	return r ? _DTOBJ(r,lk) : NULL;
 }
 
-Dtmethod_t _Dtlist  = { dtlist, DT_LIST  };
-Dtmethod_t _Dtdeque  = { dtlist, DT_DEQUE  };
-Dtmethod_t _Dtstack = { dtlist, DT_STACK };
 Dtmethod_t _Dtqueue = { dtlist, DT_QUEUE };
 
-Dtmethod_t* Dtlist = &_Dtlist;
-Dtmethod_t* Dtdeque = &_Dtdeque;
-Dtmethod_t* Dtstack = &_Dtstack;
 Dtmethod_t* Dtqueue = &_Dtqueue;

@@ -12,7 +12,7 @@ Dtlink_t* dtextract(Dt_t* dt)
 
 	if(dt->data->type&(DT_OSET|DT_OBAG) )
 		list = dt->data->here;
-	else if(dt->data->type&(DT_SET|DT_BAG))
+	else if(dt->data->type&DT_SET)
 	{	list = dtflatten(dt);
 		for(ends = (s = dt->data->htab) + dt->data->ntab; s < ends; ++s)
 			*s = NULL;

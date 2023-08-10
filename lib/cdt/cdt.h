@@ -130,13 +130,9 @@ struct _dtstat_s
 
 /* supported storage methods */
 #define DT_SET		0000001	/* set with unique elements		*/
-#define DT_BAG		0000002	/* multiset				*/
 #define DT_OSET		0000004	/* ordered set (self-adjusting tree)	*/
 #define DT_OBAG		0000010	/* ordered multiset			*/
-#define DT_LIST		0000020	/* linked list				*/
-#define DT_STACK	0000040	/* stack: insert/delete at top		*/
 #define DT_QUEUE	0000100	/* queue: insert at top, delete at tail	*/
-#define DT_DEQUE	0000200 /* deque: insert at top, append at tail	*/
 #define DT_METHODS	0000377	/* all currently supported methods	*/
 
 /* asserts to dtdisc() */
@@ -155,27 +151,16 @@ struct _dtstat_s
 #define DT_LAST		0000400	/* get last object			*/
 #define DT_MATCH	0001000	/* find object matching key		*/
 #define DT_VSEARCH	0002000	/* search using internal representation	*/
-#define DT_ATTACH	0004000	/* attach an object to the dictionary	*/
 #define DT_DETACH	0010000	/* detach an object from the dictionary	*/
-#define DT_APPEND	0020000	/* used on Dtlist to append an object	*/
 
 CDT_API extern Dtmethod_t* 	Dtset; ///< set with unique elements
-CDT_API extern Dtmethod_t* 	Dtbag; ///< multiset
 CDT_API extern Dtmethod_t* 	Dtoset; ///< ordered set (self-adjusting tree)
 CDT_API extern Dtmethod_t* 	Dtobag; ///< ordered multiset
-CDT_API extern Dtmethod_t*	Dtlist; ///< linked list
-CDT_API extern Dtmethod_t*	Dtstack; ///< stack: insert/delete at top
 CDT_API extern Dtmethod_t*	Dtqueue; ///< queue: insert at top, delete at tail
-CDT_API extern Dtmethod_t*	Dtdeque; ///< deque: insert at top, append at tail
 
-CDT_API extern Dtmethod_t*	Dtorder;
 CDT_API extern Dtmethod_t*	Dttree;
-CDT_API extern Dtmethod_t*	Dthash;
 CDT_API extern Dtmethod_t	_Dttree;
-CDT_API extern Dtmethod_t	_Dthash;
-CDT_API extern Dtmethod_t	_Dtlist;
 CDT_API extern Dtmethod_t	_Dtqueue;
-CDT_API extern Dtmethod_t	_Dtstack;
 
 CDT_API Dt_t*		dtopen(Dtdisc_t*, Dtmethod_t*);
 CDT_API int		dtclose(Dt_t*);
@@ -220,9 +205,7 @@ CDT_API unsigned int	dtstrhash(unsigned int, void*, int);
 #define dtsearch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_SEARCH)
 #define dtmatch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_MATCH)
 #define dtinsert(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_INSERT)
-#define dtappend(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_INSERT|DT_APPEND)
 #define dtdelete(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DELETE)
-#define dtattach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_ATTACH)
 #define dtdetach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DETACH)
 #define dtclear(d)	(*(_DT(d)->searchf))((d),(void*)(0),DT_CLEAR)
 #define dtfound(d)	(_DT(d)->type & DT_FOUND)

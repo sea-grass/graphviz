@@ -108,26 +108,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		}
 	}
 
-	/* allow apps to delete an object "actually" in the dictionary */
-	if(dt->meth->type == DT_BAG && (type&(DT_DELETE|DT_DETACH)) )
-	{	if(!dtsearch(dt,obj) )
-			return NULL;
-
-		s = dt->data->htab + HINDEX(dt->data->ntab,dt->data->here->hash);
-		r = NULL;
-		for(p = NULL, t = *s; t; p = t, t = t->right)
-		{	if(_DTOBJ(t,lk) == obj) /* delete this specific object */
-				goto do_delete;
-			if(t == dt->data->here)
-				r = p;
-		}
-
-		/* delete some matching object */
-		p = r; t = dt->data->here;
-		goto do_delete;
-	}
-
-	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT|DT_ATTACH) )
+	if(type&(DT_MATCH|DT_SEARCH|DT_INSERT) )
 	{	key = (type&DT_MATCH) ? obj : _DTKEY(obj,ky,sz);
 		hsh = dtstrhash(0, key, sz);
 		goto do_search;
@@ -176,7 +157,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		dt->data->here = t;
 		return _DTOBJ(t,lk);
 	}
-	else if(type&(DT_INSERT|DT_ATTACH))
+	else if(type&DT_INSERT)
 	{	if(t && (dt->data->type&DT_SET) )
 		{	dt->data->here = t;
 			return _DTOBJ(t,lk);
@@ -262,7 +243,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		}
 	}
 	else if(type&DT_RENEW)
-	{	if(!t || (dt->data->type&DT_BAG) )
+	{	if(!t)
 			goto do_insert;
 		else
 		{	if(disc->freef)
@@ -274,7 +255,6 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 	}
 	else /*if(type&(DT_DELETE|DT_DETACH))*/
 	{	/* take an element out of the dictionary */
-	do_delete:
 		if(!t)
 			return NULL;
 		else if(p)
@@ -298,9 +278,4 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 }
 
 static Dtmethod_t	_Dtset = { dthash, DT_SET };
-static Dtmethod_t	_Dtbag = { dthash, DT_BAG };
 Dtmethod_t* Dtset = &_Dtset;
-Dtmethod_t* Dtbag = &_Dtbag;
-
-Dtmethod_t		_Dthash = { dthash, DT_SET };
-Dtmethod_t* Dthash = &_Dthash;
