@@ -58,8 +58,8 @@ ruby \
 # Language extension gv_go
 golang-go \
 # Language extension gv_guile
-guile-2.2 \
-guile-2.2-dev \
+guile-3.0 \
+guile-3.0-dev \
 # Language extension gv_lua
 lua5.3 \
 liblua5.3-dev \
