@@ -1360,4 +1360,7 @@ getPackInfo(Agraph_t * g, pack_mode dflt, int dfltMargin, pack_info* pinfo)
 /**
  * @dir lib/pack
  * @brief support for connected components, API pack.h
+ *
+ * [man 3 libpack](https://graphviz.org/pdf/pack.3.pdf)
+ *
  */
