@@ -27,15 +27,15 @@
  * @param form format string
  * @param accept accepted characters are set to 1
  */
-static char *setclass(char *form, char *accept)
-{
-    int fmt, c, yes;
+static const char *setclass(const char *form, bool *accept) {
+    int fmt, c;
+    bool yes;
 
     if ((fmt = *form++) == '^') {	/* we want the complement of this set */
-	yes = 0;
+	yes = false;
 	fmt = *form++;
     } else
-	yes = 1;
+	yes = true;
 
     for (c = 0; c <= UCHAR_MAX; ++c)
 	accept[c] = !yes;
@@ -82,7 +82,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
     int argp, argn;
 
     void *value;		/* location to assign scanned value */
-    char *t_str;
+    const char *t_str;
     ssize_t n_str;
 
 #define SFGETC(f,c)	((c) = getc(f))
@@ -155,7 +155,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
       loop_flags:		/* LOOP FOR FLAGS, WIDTH, BASE, TYPE */
 	switch ((fmt = *form++)) {
 	case LEFTP:		/* get the type which is enclosed in balanced () */
-	    t_str = (char *) form;
+	    t_str = form;
 	    for (v = 1;;) {
 		switch (*form++) {
 		case 0:	/* not balanceable, retract */
@@ -185,14 +185,17 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 				goto t_arg;
 			    if ((t_str = argv.s) &&
 				(n_str = (int) ft->size) < 0)
-				n_str = strlen(t_str);
+				n_str = (ssize_t)strlen(t_str);
 			} else {
 			  t_arg:
 			    if ((t_str = va_arg(args, char *)))
-				 n_str = strlen(t_str);
+				 n_str = (ssize_t)strlen(t_str);
 			}
 		    }
 		    goto loop_flags;
+		default:
+		    // skip over
+		    break;
 		}
 	    }
 
@@ -599,9 +602,10 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			*argv.s++ = inp;
 		} while (--width > 0 && SFGETC(f, inp) >= 0);
 	    } else {		/* if(fmt == '[') */
-		form = setclass((char *) form, accept);
+		bool accepted[UCHAR_MAX];
+		form = setclass(form, accepted);
 		do {
-		    if (!accept[inp]) {
+		    if (!accepted[inp]) {
 			if (n > 0 || (flags & SFFMT_ALTER))
 			    break;
 			else {

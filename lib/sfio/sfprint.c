@@ -41,7 +41,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
     ssize_t size;
     double dval;
     char *tls[2], **ls;		/* for %..[separ]s              */
-    char *t_str;		/* stuff between ()             */
+    const char *t_str;		/* stuff between ()             */
     ssize_t n_str;		/* its length                   */
 
     Argv_t argv;		/* for extf to return value     */
@@ -135,7 +135,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    continue;
 
 	case LEFTP:		/* get the type enclosed in balanced parens */
-	    t_str = (char *) form;
+	    t_str = form;
 	    for (v = 1;;) {
 		switch (*form++) {
 		case 0:	/* not balancable, retract */
@@ -168,14 +168,17 @@ int sfprint(FILE *f, Sffmt_t *format) {
 				goto t_arg;
 			    if ((t_str = argv.s) &&
 				(n_str = (int) ft->size) < 0)
-				n_str = strlen(t_str);
+				n_str = (ssize_t)strlen(t_str);
 			} else {
 			  t_arg:
 			    if ((t_str = va_arg(args, char *)))
-				 n_str = strlen(t_str);
+				 n_str = (ssize_t)strlen(t_str);
 			}
 		    }
 		    goto loop_flags;
+		default:
+		    // skip over
+		    break;
 		}
 	    }
 
@@ -499,6 +502,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    goto int_arg;
 	case 'X':
 	    ssp = "0123456789ABCDEF";
+	    // fall through
 	case 'x':
 	    base = 16;
 	    n_s = 15;
@@ -510,6 +514,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    goto d_format;
 	case 'u':
 	    flags &= ~(SFFMT_SIGN | SFFMT_BLANK);
+	    // fall through
 	case 'd':
 	  d_format:
 	    if (base < 2 || base > SF_RADIX)
