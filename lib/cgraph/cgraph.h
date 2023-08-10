@@ -3,11 +3,23 @@
  * @brief abstract graph C library, @ref cgraph_api
  * @ingroup cgraph_api
  *
+ * **Libcgraph** supports graph programming by maintaining graphs
+ * in memory and reading and writing graph files.
+ * Graphs are composed of nodes, edges, and nested subgraphs.
+ * These graph objects may be attributed with string name-value pairs
+ * and programmer-defined records (see Attributes).
+ * All of Libcgraph’s global symbols have the prefix **ag** (case varying).
+ * In the following, if a function has a parameter `int createflag` and
+ * the object does not exist, the function will create the specified object
+ * if `createflag` is non-zero; otherwise, it will return NULL.
+ *
  * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
  *
  * @defgroup cgraph_api Cgraph API
- * @brief Abstract graph C library
+ * @brief Abstract graph C library. API cgraph.h
  * @ingroup public_apis
+ *
+ * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
  *
  * Main types @ref Agraph_t, @ref Agnode_t, @ref Agedge_t.
  * @{
