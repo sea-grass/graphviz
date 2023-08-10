@@ -15,12 +15,6 @@
  * expression library evaluator
  */
 
-#include "config.h"
-
-#ifdef GVDLL
-#define _BLD_sfio 1
-#endif
-
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
 #include <cgraph/exit.h>

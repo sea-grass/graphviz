@@ -12,14 +12,6 @@
  * standalone mini error implementation
  */
 
-#ifdef _WIN32
-#include <config.h>
-
-#ifdef GVDLL
-#define _BLD_sfio 1
-#endif
-#endif
-
 #include <ast/ast.h>
 #include <ast/error.h>
 #include <cgraph/exit.h>

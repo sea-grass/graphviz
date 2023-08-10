@@ -14,10 +14,6 @@
 extern "C" {
 #endif
 
-#if !defined(_BLD_sfio)
-#define _BLD_sfio	1
-#endif
-
 #include <inttypes.h>
 
 /*	Internal definitions for sfio.
@@ -39,14 +35,6 @@ extern "C" {
 
 #include	<errno.h>
 #include	<ctype.h>
-
-/* Private flags in the "bits" field */
-#define SF_MMAP		00000001	/* in memory mapping mode               */
-#define SF_BOTH		00000002	/* both read/write                      */
-#define SF_HOLE		00000004	/* a hole of zero's was created         */
-#define SF_NULL		00000010	/* stream is /dev/null                  */
-#define SF_SEQUENTIAL	00000020	/* sequential access                    */
-#define SF_JUSTSEEK	00000040	/* just did a sfseek                    */
 
 /* on closing, don't be a hero about reread/rewrite on interrupts */
 #define SF_ENDING	00000400
@@ -103,25 +91,6 @@ extern "C" {
 #define S_ISCHR(m)	(((m)&S_IFMT) == S_IFCHR)
 #endif
 
-#if defined(S_IRUSR) && defined(S_IWUSR) && defined(S_IRGRP) && defined(S_IWGRP) && defined(S_IROTH) && defined(S_IWOTH)
-#define SF_CREATMODE	(S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
-#else
-#define SF_CREATMODE	0666
-#endif
-
-/* a couple of error number that we use, default values are like Linux */
-#ifndef EINTR
-#define EINTR	4
-#endif
-#ifndef EBADF
-#define EBADF	9
-#endif
-#ifndef EAGAIN
-#define EAGAIN	11
-#endif
-#ifndef EINVAL
-#define EINVAL	22
-#endif
 /* function to get the decimal point for local environment */
 #include	<locale.h>
 #define SFSETLOCALE(decimal,thousand) \
@@ -227,14 +196,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* the bottomless bit bucket */
-#define DEVNULL		"/dev/null"
-#define SFSETNULL(f)	((f)->extent = (Sfoff_t)(-1), (f)->bits |= SF_NULL)
-#define SFISNULL(f)	((f)->extent < 0 && ((f)->bits&SF_NULL) )
-
-#define SFKILL(f)	((f)->mode = (SF_AVAIL|SF_LOCK) )
-#define SFKILLED(f)	(((f)->mode&(SF_AVAIL|SF_LOCK)) == (SF_AVAIL|SF_LOCK) )
-
 /* exception types */
 #define SF_EDONE	0	/* stop this operation and return       */
 #define SF_EDISC	1	/* discipline says it's ok              */
@@ -247,23 +208,6 @@ extern "C" {
 #define SFISALL(f,v)	((((v) = (f)->mode&SF_RV) ? ((f)->mode &= ~SF_RV) : 0), \
 			 ((v) || (f)->extent < 0 || \
 			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
-
-/* lock/open a stream */
-#define SFLOCK(f,l)	(void)((f)->mode |= SF_LOCK, (f)->endr = (f)->endw = (f)->data)
-#define _SFOPENRD(f)	((f)->endr = (f)->endb)
-#define _SFOPENWR(f)	((f)->endw = ((f)->flags&SF_LINE) ? (f)->data : (f)->endb)
-#define _SFOPEN(f)	((f)->mode == SF_READ  ? _SFOPENRD(f) : \
-			 (f)->mode == SF_WRITE ? _SFOPENWR(f) : \
-			 ((f)->endw = (f)->endr = (f)->data) )
-#define SFOPEN(f,l)	(void)((l) ? 0 : \
-				((f)->mode &= ~(SF_LOCK|SF_RC|SF_RV), _SFOPEN(f), 0) )
-
-#ifndef O_BINARY
-#define O_BINARY	000
-#endif
-#ifndef O_TEXT
-#define O_TEXT		000
-#endif
 
 #define	SF_RADIX	64	/* maximum integer conversion base */
 
