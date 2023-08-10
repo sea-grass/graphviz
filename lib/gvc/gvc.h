@@ -2,6 +2,13 @@
  * @file
  * @brief Graphviz context library
  * @ingroup gvc_api
+ *
+ * **libgvc** provides a context for applications wishing to manipulate
+ * and render graphs. It provides command line parsing,
+ * common rendering code, and a plugin mechanism for renderers.
+ *
+ * [man 3 gvc](https://graphviz.org/pdf/gvc.3.pdf)
+ *
  */
 
 /*************************************************************************

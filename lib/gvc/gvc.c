@@ -236,4 +236,7 @@ char *gvcBuildDate(GVC_t* gvc) { return gvc->common.info[2]; }
 /**
  * @dir lib/gvc
  * @brief Graphviz context library, API gvc.h
+ *
+ * [man 3 gvc](https://graphviz.org/pdf/gvc.3.pdf)
+ *
  */
