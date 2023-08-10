@@ -704,10 +704,10 @@ ubuntu-22.04-cmake-minimal-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-22.10-cmake-ASan-build-for-ctest:
+ubuntu-23.04-cmake-ASan-build-for-ctest:
     <<: *deb_build_definition
     needs:
-        - job: docker_build_ubuntu-22.10
+        - job: docker_build_ubuntu-23.04
           artifacts: false
     before_script:
         - export build_system="cmake"
@@ -750,7 +750,7 @@ ubuntu-22.10-cmake-ASan-build-for-ctest:
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-22.10
+      IMAGE: ubuntu-23.04
 
 centos7-cmake-build:
     <<: *rpm_build_definition
@@ -1068,7 +1068,7 @@ ubuntu-23.04-cmake-test:
     variables:
       IMAGE: ubuntu-23.04
 
-ubuntu-22.10-cmake-ASan-test-including-ctest:
+ubuntu-23.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
@@ -1080,12 +1080,12 @@ ubuntu-22.10-cmake-ASan-test-including-ctest:
         - export LSAN_OPTIONS=suppressions=$(pwd)/suppressions.txt
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu-22.10-cmake-ASan-build-for-ctest"
+        - job: "ubuntu-23.04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-22.10
+      IMAGE: ubuntu-23.04
 
 centos7-cmake-test:
     <<: *linux_test_definition
