@@ -200,10 +200,10 @@ struct Agtag_s {
 #define AGINEDGE			3	/* (1 << 1) indicates an edge tag.   */
 #define AGEDGE 				AGOUTEDGE	/* synonym in object kind args */
 
-/// a generic graph/node/edge header
+/// a generic header of @ref Agraph_s, @ref Agnode_s and @ref Agedge_s
 struct Agobj_s {
-    Agtag_t tag;
-    Agrec_t *data;
+    Agtag_t tag;   ///< access with @ref AGTAG
+    Agrec_t *data; ///< stores programmer-defined data, access with @ref AGDATA
 };
 
 #define AGTAG(obj)		(((Agobj_t*)(obj))->tag)
