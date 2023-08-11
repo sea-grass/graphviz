@@ -179,14 +179,15 @@ struct Agrec_s {
  * @{
  */
 
-/** @brief Object tag for graphs, nodes, and edges.
+/** @brief tag in @ref Agobj_s for graphs, nodes, and edges.
 
 While there may be several structs
 for a given node or edges, there is only one unique ID (per main graph).  */
 
 struct Agtag_s {
+    /// access with @ref AGTYPE
     unsigned objtype:2;		/* see literal tags below */
-    unsigned mtflock:1;		/* move-to-front lock, see above */
+    unsigned mtflock:1; ///< @brief move-to-front lock, guards @ref Agobj_s.data
     unsigned attrwf:1;		/* attrs written (parity, write.c) */
     unsigned seq:(sizeof(unsigned) * 8 - 4);	/* sequence no. */
     IDTYPE id;		        /* client  ID */
