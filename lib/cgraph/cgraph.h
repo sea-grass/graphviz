@@ -132,6 +132,8 @@ typedef struct Agsubnode_s Agsubnode_t;
  *  @ref AgDataRecName,
  *  @ref DRName).
  *
+ *  Internally, records Agrec_s are maintained in circular linked lists
+ *  attached to graph objects Agobj_s.
  *  To allow referencing application-dependent data without function calls or search,
  *  Libcgraph allows setting and locking the list pointer
  *  of a graph, node, or edge on a particular record
@@ -162,7 +164,7 @@ typedef struct Agrec_s Agrec_t;
 /// implementation of @ref Agrec_t
 struct Agrec_s {
     char *name;
-    Agrec_t *next;
+    Agrec_t *next; ///< **circular** linked list of records
     /* following this would be any programmer-defined data */
 };
 /// @}
