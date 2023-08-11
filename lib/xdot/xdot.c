@@ -984,5 +984,8 @@ void freeXDotColor (xdot_color* cp)
 
 /**
  * @dir lib/xdot
- * @brief API xdot/xdot.h
+ * @brief parsing and deparsing of xdot operations, API xdot.h
+ *
+ * [man 3 xdot](https://graphviz.org/pdf/xdot.3.pdf)
+ *
  */
