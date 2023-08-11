@@ -353,9 +353,8 @@ xdot *parseXDotFOn(char *s, drawfunc_t fns[], size_t sz, xdot *x) {
 	ops = gv_calloc(XDBSIZE, sz);
     }
     else {
-	ops = (char*)(x->ops);
 	bufsz = initcnt + XDBSIZE;
-	ops = gv_recalloc(ops, initcnt, bufsz, sz);
+	ops = gv_recalloc(x->ops, initcnt, bufsz, sz);
     }
 
     while ((s = parseOp(&op, s, fns, &error))) {
