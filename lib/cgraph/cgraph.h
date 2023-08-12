@@ -542,6 +542,9 @@ CGRAPH_API void aginit(Agraph_t * g, int kind, const char *rec_name,
  */
 
 CGRAPH_API void agclean(Agraph_t * g, int kind, char *rec_name);
+///< @brief calls @ref agdelrec for all objects
+/// of the same class in an entire graph
+
 /// @}
 
 CGRAPH_API char *agget(void *obj, char *name);
