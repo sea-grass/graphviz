@@ -2892,6 +2892,30 @@ def test_2436():
     assert re.search(r'\blabel\s*=\s*""', output), "empty label was not preserved"
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2434"
+)
+def test_2434():
+    """
+    the order in which `agmemread` and `gvContext` calls are made should have
+    no impact
+    https://gitlab.com/graphviz/graphviz/-/issues/2434
+    """
+
+    # find co-located test source
+    c_src = (Path(__file__).parent / "2434.c").resolve()
+    assert c_src.exists(), "missing test case"
+
+    # generate an SVG by calling `gvContext` first
+    before, _ = run_c(c_src, ["before"], link=["cgraph", "gvc"])
+
+    # generate an SVG by calling `gvContext` second
+    after, _ = run_c(c_src, ["after"], link=["cgraph", "gvc"])
+
+    # resulting images should be identical
+    assert before == after, "agmemread/gvContext ordering affected image output"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
