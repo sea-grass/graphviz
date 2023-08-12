@@ -534,6 +534,13 @@ CGRAPH_API int agdelrec(void *obj, const char *name);
 
 CGRAPH_API void aginit(Agraph_t * g, int kind, const char *rec_name,
                        int rec_size, int move_to_front);
+/**< @brief attach new records to objects of specified kind
+ *
+ * @param kind may be @ref AGRAPH, @ref AGNODE, or @ref AGEDGE
+ * @param rec_size if is negative (of the actual rec_size) for graphs,
+ * @ref aginit is applied recursively to the graph and its subgraphs
+ */
+
 CGRAPH_API void agclean(Agraph_t * g, int kind, char *rec_name);
 /// @}
 
