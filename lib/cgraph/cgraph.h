@@ -639,10 +639,11 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 
 /// @addtogroup cgraph_graph
 /// @{
-CGRAPH_API extern Agdesc_t Agdirected;
+CGRAPH_API extern Agdesc_t Agdirected; ///< directed
 CGRAPH_API extern Agdesc_t Agstrictdirected;
-CGRAPH_API extern Agdesc_t Agundirected;
-CGRAPH_API extern Agdesc_t Agstrictundirected;
+///< strict directed. A strict graph cannot have multi-edges or self-arcs.
+CGRAPH_API extern Agdesc_t Agundirected; ///< undirected
+CGRAPH_API extern Agdesc_t Agstrictundirected; ///< strict undirected
 /// @}
 
 /// @defgroup cgraph_fast fast graphs
