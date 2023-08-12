@@ -277,7 +277,13 @@ struct Agdesc_s {		/* graph descriptor */
  *  @{
  */
 
-/// object ID allocator discipline
+/**
+ * @brief object ID allocator discipline
+ *
+ * An ID allocator discipline allows a client to control assignment
+ * of IDs (uninterpreted integer values) to objects, and possibly how
+ * they are mapped to and from strings.
+ */
 
 struct Agiddisc_s {
     void *(*open) (Agraph_t * g, Agdisc_t*);	/* associated with a graph */
