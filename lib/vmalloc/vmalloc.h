@@ -30,8 +30,8 @@ extern "C" {
     };
 
     extern Vmalloc_t *vmopen(void);
-    extern int vmclose(Vmalloc_t *);
-    extern int vmclear(Vmalloc_t *);
+    extern void vmclose(Vmalloc_t*);
+    extern void vmclear(Vmalloc_t*);
 
 /** allocate heap memory
  *

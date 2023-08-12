@@ -17,9 +17,8 @@
  * previous allocations made within this region.
  *
  * @param vm Vmalloc to operate on
- * @returns 0 on success
  */
-int vmclear(Vmalloc_t *vm) {
+void vmclear(Vmalloc_t *vm) {
 
   // free all allocated pointers
   for (size_t i = 0; i < vm->size; ++i) {
@@ -30,6 +29,4 @@ int vmclear(Vmalloc_t *vm) {
   free(vm->allocated);
   vm->allocated = NULL;
   vm->size = vm->capacity = 0;
-
-  return 0;
 }

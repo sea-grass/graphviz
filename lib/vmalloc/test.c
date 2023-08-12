@@ -28,8 +28,7 @@ static void test_basic_lifecycle(void) {
   assert(v != NULL);
 
   // close the region
-  int r = vmclose(v);
-  assert(r == 0);
+  vmclose(v);
 }
 
 // vmclear should be fine to call repeatedly on an empty region
@@ -40,19 +39,15 @@ static void test_empty_vmclear(void) {
   assert(v != NULL);
 
   // we should be able to clear this repeatedly with no effect
-  int r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
   assert(v->size == 0);
-  r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
   assert(v->size == 0);
-  r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
   assert(v->size == 0);
 
   // close the region
-  r = vmclose(v);
-  assert(r == 0);
+  vmclose(v);
 }
 
 // a more realistic lifecycle usage of a vmalloc
@@ -103,8 +98,7 @@ static void test_lifecycle(void) {
   assert(v->size == allocations_len - 3);
 
   // free the rest of the allocations in one sweep
-  int r = vmclear(v);
-  assert(r == 0);
+  vmclear(v);
 
   /* the allocator should have dropped all pointers it was tracking */
   assert(v->size == 0);
@@ -134,8 +128,7 @@ static void test_lifecycle(void) {
   }
 
   // clean up
-  r = vmclose(v);
-  assert(r == 0);
+  vmclose(v);
 }
 
 // basic test of our strdup analogue
@@ -183,8 +176,7 @@ static void test_strdup(void) {
   assert(strcmp(sc, t) == 0);
 
   // clean up
-  int r = vmclose(v);
-  assert(r == 0);
+  vmclose(v);
 }
 
 int main(void) {

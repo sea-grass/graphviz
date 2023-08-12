@@ -14,18 +14,12 @@
 /** Close down a region.
  *
  * @param vm Vmalloc to operate on
- * @returns 0 on success
  */
-int vmclose(Vmalloc_t *vm) {
+void vmclose(Vmalloc_t *vm) {
 
   // clear the region
-  int r = vmclear(vm);
-  if (r != 0) {
-    return r;
-  }
+  vmclear(vm);
 
   // free the allocator itself
   free(vm);
-
-  return 0;
 }
