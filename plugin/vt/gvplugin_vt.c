@@ -130,8 +130,8 @@ static gvdevice_features_t device_features = {
 };
 
 static gvplugin_installed_t device_types[] = {
-    {8, "vt100:cairo", 0, &engine3, &device_features},
-    {1 << 24, "vt100-24bit:cairo", 0, &engine24, &device_features},
+    {8, "vt:cairo", 0, &engine3, &device_features},
+    {1 << 24, "vt-24bit:cairo", 0, &engine24, &device_features},
     {0},
 };
 
@@ -140,4 +140,4 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-gvplugin_library_t gvplugin_vt100_LTX_library = {"vt100", apis};
+gvplugin_library_t gvplugin_vt_LTX_library = {"vt", apis};
