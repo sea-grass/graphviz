@@ -631,11 +631,7 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
  * generate global declarations
  */
 
-static int
-global(Dt_t* table, void* object, void* handle)
-{
-	(void)table;
-
+static int global(void *object, void *handle) {
 	agxbuf *stream = handle;
 	Exid_t*	sym = object;
 

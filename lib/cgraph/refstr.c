@@ -178,12 +178,8 @@ void agmarkhtmlstr(char *s)
 }
 
 #ifdef DEBUG
-static int refstrprint(Dict_t * dict, void *ptr, void *user)
-{
-    refstr_t *r;
-
-    (void)dict;
-    r = ptr;
+static int refstrprint(void *ptr, void *user) {
+    refstr_t *r = ptr;
     (void)user;
     fprintf(stderr, "%s\n", r->s);
     return 0;

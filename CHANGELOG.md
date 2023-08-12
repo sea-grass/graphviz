@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The libcdt `dtappend` and `dtattach`  macros have been removed.
 - Support for Lua 5.0 has been removed. Building the Graphviz Lua bindings now
   requires Lua ≥ 5.1.
+- **Breaking**: The `Dt_t*` parameter to the callback for `dtwalk` has been
+  removed.
 
 ### Fixed
 

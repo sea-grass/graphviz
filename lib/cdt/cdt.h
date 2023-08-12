@@ -172,7 +172,7 @@ CDT_API Dtlink_t*	dtflatten(Dt_t*);
 CDT_API Dtlink_t*	dtextract(Dt_t*);
 CDT_API int		dtrestore(Dt_t*, Dtlink_t*);
 
-CDT_API int		dtwalk(Dt_t*, int(*)(Dt_t*,void*,void*), void*);
+CDT_API int		dtwalk(Dt_t*, int(*)(void*,void*), void*);
 
 CDT_API void*		dtrenew(Dt_t*, void*);
 
