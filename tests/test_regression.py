@@ -2728,9 +2728,6 @@ def test_2375():
     run_c(c_src, link=["gvc"])
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2377"
-)
 def test_2377():
     """
     3 letter hex color codes should be accepted
