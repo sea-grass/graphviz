@@ -83,8 +83,6 @@ extern "C" {
 /* miscellaneous function analogues of fast in-line functions */
     extern ssize_t sfslen(void);
 
-#undef extern
-
 #ifdef __cplusplus
 }
 #endif
