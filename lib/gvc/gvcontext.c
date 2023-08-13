@@ -67,12 +67,6 @@ int gvFreeContext(GVC_t * gvc)
     gvplugin_package_t *package, *package_next;
     gvplugin_available_t *api, *api_next;
 
-#define ELEM(x) +1
-    /* See gvcext.h for APIS and gvcint.h for an example usage of "+1"
-       to get the number of APIs. */
-    unsigned int num_apis = APIS, i;
-#undef ELEM
-
     emit_once_reset();
     gvg_next = gvc->gvgs;
     while ((gvg = gvg_next)) {
@@ -90,7 +84,7 @@ int gvFreeContext(GVC_t * gvc)
     free(gvc->config_path);
     free(gvc->input_filenames);
     textfont_dict_close(gvc);
-    for (i = 0; i != num_apis; ++i) {
+    for (size_t i = 0; i < sizeof(gvc->apis) / sizeof(gvc->apis[0]); ++i) {
 	for (api = gvc->apis[i]; api != NULL; api = api_next) {
 	    api_next = api->next;
 	    free(api->typestr);
