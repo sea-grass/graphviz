@@ -161,11 +161,9 @@ static int textfont_comparf (Dt_t* dt, void* key1, void* key2, Dtdisc_t* disc)
     return 0;
 }
 
-Dt_t * textfont_dict_open(GVC_t *gvc)
-{
+void textfont_dict_open(GVC_t *gvc) {
     DTDISC(&gvc->textfont_disc, 0, sizeof(textfont_t), -1, textfont_makef, textfont_freef, textfont_comparf, NULL);
     gvc->textfont_dt = dtopen(&(gvc->textfont_disc), Dtoset);
-    return gvc->textfont_dt;
 }
 
 void textfont_dict_close(GVC_t *gvc)

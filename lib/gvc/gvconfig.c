@@ -62,7 +62,7 @@ static int glob (GVC_t * gvc, char*, int, int (*errfunc)(const char *, int), glo
 #include        <gvc/gvcproc.h>
 
 /* FIXME */
-extern Dt_t * textfont_dict_open(GVC_t *gvc);
+extern void textfont_dict_open(GVC_t *gvc);
 
 /*
     A config for gvrender is a text file containing a
