@@ -809,7 +809,7 @@ else
             if test "x$PKG_CONFIG" != "x"; then
 	        AC_MSG_CHECKING(for Lua headers and libraries with pkg-config)
 	        echo
-	        for l in "$lua_suffix" "" "53" "5.3" "52" "5.2" "51" "5.1" "50" "5.0" ; do
+	        for l in "$lua_suffix" "" "53" "5.3" "52" "5.2" "51" "5.1" ; do
 	            pkgconfig_lua_found=`$PKG_CONFIG --exists lua$l 2>/dev/null`
 	            if test "x$?" = "x0" ; then
                         LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lua$l`
@@ -829,7 +829,7 @@ else
 
         if test "x$LUA_INCLUDES" = "x" -o "x$LUA_LIBS" = "x" ; then
             LUACONFIG=""
-            AC_CHECK_PROGS(LUACONFIG, lua-config lua-config52 lua-config5.2 lua-config51 lua-config5.1 lua-config50 lua-config5.0)
+            AC_CHECK_PROGS(LUACONFIG, lua-config lua-config52 lua-config5.2 lua-config51 lua-config5.1)
             if test "x$LUACONFIG" != "x" ; then
                 AC_MSG_CHECKING(for Lua headers and libraries with lua-config)
 	        echo
@@ -847,7 +847,7 @@ else
             if test "x$ac_found_lua_header" = "xyes" -a "x$ac_found_liblua_header" = "xyes"; then
                 LUA_INCLUDES="$CFLAGS"
             fi
-            for l in "$lua_suffix" "" "52" "5.2" "51" "5.1" "50" "5.0" ; do
+            for l in "$lua_suffix" "" "52" "5.2" "51" "5.1" ; do
                 AC_CHECK_LIB(lua$l,lua_call,ac_found_lua_lib="yes",ac_found_lua_lib="no")
                 if test "x$ac_found_lua_lib" = "xyes" ; then
 	            LUA_LIBS="$LDFLAGS -llua$l -lm"
@@ -879,7 +879,7 @@ else
         if test "x$LUA_TEST" != "x0" ; then
           AC_MSG_RESULT(no)
           AC_MSG_WARN([
-*** Lua (>=5.0) headers and/or libraries could not be found in your system.
+*** Lua (>=5.1) headers and/or libraries could not be found in your system.
 *** Try to install liblua, liblualib and liblua-dev with your software package manager.
 *** Graphviz will be built without Lua support.])
           use_lua="No (lua compiling/linking failed)"
