@@ -74,13 +74,6 @@ extern "C" {
 #define SFFMT_JFLAG	04000000	/* 'j' flag, intmax_t                  */
 #define SFFMT_SET	07777770	/* flags settable on calling extf      */
 
-/* bits for various types of files */
-#define	SF_READ		0000001	/* open for reading                     */
-#define SF_WRITE	0000002	/* open for writing                     */
-#define SF_STRING	0000004	/* a string stream                      */
-
-#define SF_APPENDWR	0000010	/* file is in append mode only.         */
-
 #define SF_MALLOC	0000020	/* buffer is malloc-ed                  */
 #define SF_LINE		0000040	/* line buffering                       */
 #define SF_SHARE	0000100	/* stream with shared file descriptor   */
