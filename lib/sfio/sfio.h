@@ -29,10 +29,6 @@ extern "C" {
 #include <stdarg.h>
 #include <stdio.h>
 
-/* Sfoff_t should be large enough for largest file address */
-
-
-#define Sfoff_t		long long
 #define Sflong_t	long long
 #define Sfulong_t	unsigned long long
 #define Sfdouble_t	long double
