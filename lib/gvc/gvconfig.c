@@ -14,6 +14,7 @@
 #define _GNU_SOURCE 1
 #endif
 
+#include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
@@ -583,6 +584,8 @@ void gvconfig(GVC_t * gvc, bool rescan)
     	    config_rescan(gvc, gvc->config_path);
     	    gvc->config_found = true;
 	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
+	    assert(gvc->textfont_dt != NULL &&
+	           "config rescan performed without any prior first scan");
     	    return;
         }
     
