@@ -74,17 +74,6 @@ extern "C" {
 #define SFFMT_JFLAG	04000000	/* 'j' flag, intmax_t                  */
 #define SFFMT_SET	07777770	/* flags settable on calling extf      */
 
-#define SF_MALLOC	0000020	/* buffer is malloc-ed                  */
-#define SF_LINE		0000040	/* line buffering                       */
-#define SF_SHARE	0000100	/* stream with shared file descriptor   */
-#define SF_EOF		0000200	/* eof was detected                     */
-#define SF_STATIC	0001000	/* a stream that cannot be freed        */
-#define SF_IOCHECK	0002000	/* call exceptf before doing IO         */
-#define SF_PUBLIC	0004000	/* SF_SHARE and follow physical seek    */
-#define SF_WHOLE	0020000	/* preserve wholeness of sfwrite/sfputr */
-
-#define SF_FLAGS	0077177	/* PUBLIC FLAGS PASSABLE TO SFNEW()     */
-
      extern ssize_t _Sfi;
 
     extern int sfprint(FILE*, Sffmt_t *format);
