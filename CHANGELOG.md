@@ -73,6 +73,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   like x86-64, these problems were benign thanks to coincidences in the
   Application Binary Interface (ABI). On other platforms, these problems may
   have caused stack corruption and crashes. #2373
+- The font dictionary is now initialized even if a configuration file is not
+  found. Previously this situation could lead to a crash when using Graphviz
+  programmatically. This problem was present as least as far back as Graphviz
+  2.38.0. #1520
 
 ## [8.1.0] – 2023-07-06
 
