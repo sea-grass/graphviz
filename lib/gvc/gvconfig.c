@@ -575,10 +575,9 @@ void gvconfig(GVC_t * gvc, bool rescan)
         }
     
         if (! gvc->config_path) {
-            gvc->config_path = gmalloc(strlen(libdir) + 1 + strlen(config_file_name) + 1);
-            strcpy(gvc->config_path, libdir);
-            strcat(gvc->config_path, DIRSEP);
-            strcat(gvc->config_path, config_file_name);
+            agxbuf xb = {0};
+            agxbprint(&xb, "%s%s%s", libdir, DIRSEP, config_file_name);
+            gvc->config_path = agxbdisown(&xb);
         }
     	
         if (rescan) {
