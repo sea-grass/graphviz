@@ -1868,7 +1868,7 @@ refval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref)
  * stored in l.
  * May be unary, with r = NULL
  * Return -1 if operation cannot be done, 0 otherwise.
- * If arg is > 0, operation unnecessary; just report possibility.
+ * If arg is != 0, operation unnecessary; just report possibility.
  */
 static int binary(Exnode_t * l, Exnode_t * ex, Exnode_t * r, int arg) {
     Agobj_t *lobjp;
@@ -2081,7 +2081,7 @@ static char *tvtypeToStr(long long v) {
  * Convert value x to type string.
  * Assume x does not have a built-in type
  * Return -1 if conversion cannot be done, 0 otherwise.
- * If arg is > 0, conversion unnecessary; just report possibility.
+ * If arg is != 0, conversion unnecessary; just report possibility.
  */
 static int stringOf(Expr_t *prog, Exnode_t *x, int arg) {
     Agobj_t *objp;
@@ -2113,7 +2113,7 @@ static int stringOf(Expr_t *prog, Exnode_t *x, int arg) {
 /* convert:
  * Convert value x of type x->type to type type.
  * Return -1 if conversion cannot be done, 0 otherwise.
- * If arg is > 0, conversion unnecessary; just report possibility.
+ * If arg is != 0, conversion unnecessary; just report possibility.
  * In particular, assume x != 0 if arg == 0.
  */
 static int convert(Exnode_t *x, int type, int arg) {
