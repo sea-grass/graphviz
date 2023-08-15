@@ -29,10 +29,6 @@ extern "C" {
 #include <stdarg.h>
 #include <stdio.h>
 
-/* Sfoff_t should be large enough for largest file address */
-
-
-#define Sfoff_t		long long
 #define Sflong_t	long long
 #define Sfulong_t	unsigned long long
 #define Sfdouble_t	long double
@@ -78,24 +74,6 @@ extern "C" {
 #define SFFMT_JFLAG	04000000	/* 'j' flag, intmax_t                  */
 #define SFFMT_SET	07777770	/* flags settable on calling extf      */
 
-/* bits for various types of files */
-#define	SF_READ		0000001	/* open for reading                     */
-#define SF_WRITE	0000002	/* open for writing                     */
-#define SF_STRING	0000004	/* a string stream                      */
-
-#define SF_APPENDWR	0000010	/* file is in append mode only.         */
-
-#define SF_MALLOC	0000020	/* buffer is malloc-ed                  */
-#define SF_LINE		0000040	/* line buffering                       */
-#define SF_SHARE	0000100	/* stream with shared file descriptor   */
-#define SF_EOF		0000200	/* eof was detected                     */
-#define SF_STATIC	0001000	/* a stream that cannot be freed        */
-#define SF_IOCHECK	0002000	/* call exceptf before doing IO         */
-#define SF_PUBLIC	0004000	/* SF_SHARE and follow physical seek    */
-#define SF_WHOLE	0020000	/* preserve wholeness of sfwrite/sfputr */
-
-#define SF_FLAGS	0077177	/* PUBLIC FLAGS PASSABLE TO SFNEW()     */
-
      extern ssize_t _Sfi;
 
     extern int sfprint(FILE*, Sffmt_t *format);
@@ -104,8 +82,6 @@ extern "C" {
 
 /* miscellaneous function analogues of fast in-line functions */
     extern ssize_t sfslen(void);
-
-#undef extern
 
 #ifdef __cplusplus
 }

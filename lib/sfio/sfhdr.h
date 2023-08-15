@@ -202,13 +202,6 @@ extern "C" {
 #define SF_ESTACK	2	/* stack was popped                     */
 #define SF_ECONT	3	/* can continue normally                */
 
-#define SETLOCAL(f)	((f)->mode |= SF_LOCAL)
-#define GETLOCAL(f,v)	((v) = ((f)->mode&SF_LOCAL), (f)->mode &= ~SF_LOCAL, (void)(v))
-#define SFWRALL(f)	((f)->mode |= SF_RV)
-#define SFISALL(f,v)	((((v) = (f)->mode&SF_RV) ? ((f)->mode &= ~SF_RV) : 0), \
-			 ((v) || (f)->extent < 0 || \
-			  ((f)->flags&(SF_SHARE|SF_APPENDWR|SF_WHOLE)) ) )
-
 #define	SF_RADIX	64	/* maximum integer conversion base */
 
 /* floating point to ascii conversion */
