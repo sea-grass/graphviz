@@ -14,6 +14,7 @@
 #define _GNU_SOURCE 1
 #endif
 
+#include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
@@ -62,7 +63,7 @@ static int glob (GVC_t * gvc, char*, int, int (*errfunc)(const char *, int), glo
 #include        <gvc/gvcproc.h>
 
 /* FIXME */
-extern Dt_t * textfont_dict_open(GVC_t *gvc);
+extern void textfont_dict_open(GVC_t *gvc);
 
 /*
     A config for gvrender is a text file containing a
@@ -569,22 +570,22 @@ void gvconfig(GVC_t * gvc, bool rescan)
         /* see if there are any new plugins */
         libdir = gvconfig_libdir(gvc);
         if (access(libdir, F_OK) < 0) {
-	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
     	    /* if we fail to stat it then it probably doesn't exist so just fail silently */
-	    return;
+	    goto done;
         }
     
         if (! gvc->config_path) {
-            gvc->config_path = gmalloc(strlen(libdir) + 1 + strlen(config_file_name) + 1);
-            strcpy(gvc->config_path, libdir);
-            strcat(gvc->config_path, DIRSEP);
-            strcat(gvc->config_path, config_file_name);
+            agxbuf xb = {0};
+            agxbprint(&xb, "%s%s%s", libdir, DIRSEP, config_file_name);
+            gvc->config_path = agxbdisown(&xb);
         }
     	
         if (rescan) {
     	    config_rescan(gvc, gvc->config_path);
     	    gvc->config_found = true;
 	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
+	    assert(gvc->textfont_dt != NULL &&
+	           "config rescan performed without any prior first scan");
     	    return;
         }
     
@@ -592,9 +593,8 @@ void gvconfig(GVC_t * gvc, bool rescan)
     
         rc = stat(gvc->config_path, &config_st);
         if (rc == -1) {
-	    gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
     	    /* silently return without setting gvc->config_found = TRUE */
-    	    return;
+    	    goto done;
         }
         else {
     	    f = fopen(gvc->config_path,"r");
@@ -606,7 +606,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
     	        agerr(AGERR, "%s is zero sized.\n", gvc->config_path);
     	    }
     	    else {
-    	        config_text = gmalloc((size_t)config_st.st_size + 1);
+    	        config_text = gv_alloc((size_t)config_st.st_size + 1);
     	        size_t sz = fread(config_text, 1, (size_t)config_st.st_size, f);
     	        if (sz == 0) {
     	            agerr(AGERR, "%s read error.\n", gvc->config_path);
@@ -623,6 +623,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
 	    }
         }
     }
+done:
 #endif
     gvtextlayout_select(gvc);   /* choose best available textlayout plugin immediately */
     textfont_dict_open(gvc);    /* initialize font dict */
