@@ -272,15 +272,13 @@ static void doNeighbor(Grid * grid, int i, int j, node_list * nodes)
     }
 }
 
-static int gridRepulse(Dt_t * dt, cell * cellp, Grid * grid)
-{
+static int gridRepulse(cell *cellp, Grid *grid) {
     node_list *nodes = cellp->nodes;
     int i = cellp->p.i;
     int j = cellp->p.j;
     node_list *p;
     node_list *q;
 
-    (void)dt;
 #ifdef DEBUG
     if (Verbose >= 3) {
 	prIndent();

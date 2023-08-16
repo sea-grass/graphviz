@@ -230,7 +230,7 @@ void addGrid(Grid * g, int i, int j, Agnode_t * n)
     }
 }
 
-typedef int (*walkfn_t) (Dt_t *, void *, void *);
+typedef int (*walkfn_t)(void*, void*);
 
 /* walkGrid:
  * Apply function walkf to each cell in the grid.
@@ -238,7 +238,7 @@ typedef int (*walkfn_t) (Dt_t *, void *, void *);
  * third argument is the grid. (The first argument
  * is the dictionary.) walkf must return 0.
  */
-void walkGrid(Grid * g, int (*walkf) (Dt_t *, cell *, Grid *))
+void walkGrid(Grid *g, int (*walkf)(cell*, Grid*))
 {
     dtwalk(g->data, (walkfn_t) walkf, g);
 }
