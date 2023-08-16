@@ -2728,6 +2728,23 @@ def test_2375():
     run_c(c_src, link=["gvc"])
 
 
+def test_2377():
+    """
+    3 letter hex color codes should be accepted
+    https://gitlab.com/graphviz/graphviz/-/issues/2377
+    """
+
+    # run some 6 letter color input through Graphviz
+    input = 'digraph { n [color="#cc0000" fillcolor="#ffcc00" style=filled] }'
+    svg1 = dot("svg", source=input)
+
+    # try the equivalent with 3 letter colors
+    input = 'digraph { n [color="#c00" fillcolor="#fc0" style=filled] }'
+    svg2 = dot("svg", source=input)
+
+    assert svg1 == svg2, "3 letter hex colors were not translated correctly"
+
+
 def test_2390():
     """
     using an out of range `xdotversion` should not crash Graphviz

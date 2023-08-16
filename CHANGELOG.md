@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - On non-Windows platforms, new `-Tkitty` and `-Tkittyz` output formats are
   available that render to the Kitty terminal emulator’s graphvics protocol.
+- HTML/CSS-style 3 letter hex colors are supported. Each R/G/B letter is
+  duplicated to form a 6 letter hex color. E.g. `#09c` is equivalent to
+  `#0099cc`. #2377
 
 ### Changed
 
