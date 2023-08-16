@@ -38,23 +38,20 @@ Agrec_t *aggetrec(void *obj, const char *name, int mtf)
 
     hdr = obj;
     first = d = hdr->data;
-    while (d) {
-	if (streq(name, d->name))
-	    break;
+    while (d && !streq(name, d->name)) {
 	d = d->next;
-	if (d == first) {
-	    d = NULL;
-	    break;
-	}
+	if (d == first)
+	    return NULL;
     }
-    if (d) {
-	if (hdr->tag.mtflock) {
-	    if (mtf && hdr->data != d)
-		agerr(AGERR, "move to front lock inconsistency");
-	} else {
-	    if (d != first || mtf != hdr->tag.mtflock)
-		set_data(hdr, d, mtf != 0);	/* Always optimize */
-	}
+    if (!d)
+	return NULL;
+
+    if (hdr->tag.mtflock) {
+	if (mtf && hdr->data != d)
+	    agerr(AGERR, "move to front lock inconsistency");
+    } else {
+	if (d != first || mtf != hdr->tag.mtflock)
+	    set_data(hdr, d, mtf != 0);	/* Always optimize */
     }
     return d;
 }
