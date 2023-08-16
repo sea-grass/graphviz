@@ -49,8 +49,7 @@ Make sure to:
 The policy is to merge a request when:
 
 no maintainer has objected AND ((the request was submitted by a maintainer AND
-(was opened ≥ 5 days ago OR the request is approved by ≥ 1 maintainer)) OR the
-request is approved by ≥ 2 maintainers)
+was opened ≥ 5 days ago) OR the request is approved by ≥ 1 maintainer)
 
 Changes that have user-facing effects will need a CHANGELOG.md entry, to be
 appended to the relevant section (Added, Changed, or Fixed) after any existing
