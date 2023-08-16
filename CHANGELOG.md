@@ -84,6 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   found. Previously this situation could lead to a crash when using Graphviz
   programmatically. This problem was present as least as far back as Graphviz
   2.38.0. #1520
+- **Breaking**: The `vt100` output format has been renamed to `vt`. This fixes a
+  problem where it was not discoverable on macOS. #2429
 
 ## [8.1.0] – 2023-07-06
 

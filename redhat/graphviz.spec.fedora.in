@@ -405,28 +405,28 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %dir %{_libdir}/graphviz
 %{_libdir}/graphviz/libgvplugin_gd.so.*
 
-#-- graphviz-plugins-vt100 rpm --------------------------------------------------
-%package plugins-vt100
+#-- graphviz-plugins-vt rpm --------------------------------------------------
+%package plugins-vt
 Group:            Applications/Multimedia
-Summary:          Graphviz plugin for vt100 format
+Summary:          Graphviz plugin for vt format
 Requires:         %{name}-x = %{version}-%{release}
-Obsoletes:        %{name}-vt100 <= 2.41
-Provides:         %{name}-vt100 = %{version}-%{release}
+Obsoletes:        %{name}-vt <= 2.41
+Provides:         %{name}-vt = %{version}-%{release}
 
-%description plugins-vt100
-Graphviz plugin for vt100 terminal rendering.
+%description plugins-vt
+Graphviz plugin for vt terminal rendering.
 
 # run "dot -c" to generate plugin config in {_libdir}/graphviz/config6
-%post plugins-vt100
+%post plugins-vt
 LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 
-%postun plugins-vt100
+%postun plugins-vt
 [ -x %{_bindir}/dot ] && LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c || :
 
-%files plugins-vt100
+%files plugins-vt
 %defattr(-,root,root,-)
 %dir %{_libdir}/graphviz
-%{_libdir}/graphviz/libgvplugin_vt100.so.*
+%{_libdir}/graphviz/libgvplugin_vt.so.*
 
 #-- graphviz-plugins-webp rpm --------------------------------------------------
 %if %{WEBP}

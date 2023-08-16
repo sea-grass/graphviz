@@ -2872,11 +2872,11 @@ def test_2413(source: str):
 
 
 @pytest.mark.skipif(
-    platform.system() == "Windows", reason="vt100 target is not supported on Windows"
+    platform.system() == "Windows", reason="vt target is not supported on Windows"
 )
 def test_2429():
     """
-    the vt100 target should be usable
+    the vt target should be usable
     https://gitlab.com/graphviz/graphviz/-/issues/2429
     """
 
@@ -2884,7 +2884,7 @@ def test_2429():
     source = "digraph { a -> b; }"
 
     # run it through Graphviz
-    dot("vt100", source=source)
+    dot("vt", source=source)
 
 
 @pytest.mark.skipif(which("nop") is None, reason="nop not available")
