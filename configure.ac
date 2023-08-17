@@ -1487,7 +1487,7 @@ AC_ARG_WITH(ghostscript,
 if test "x$with_ghostscript" != "xyes"; then
   use_ghostscript="No (disabled)"
 else
-  if test "x$HAVE_XRENDER" != "xyes"; then
+  if test "x$HAVE_XRENDER" != "xyes" -a "x$MINGW32" != "xyes"; then
     use_ghostscript="No (missing Xrender)"
   else
       AC_CHECK_HEADER(ghostscript/iapi.h, GS_CFLAGS="",use_ghostscript="No (missing headers)")
