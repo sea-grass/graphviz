@@ -36,9 +36,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-/* on closing, don't be a hero about reread/rewrite on interrupts */
-#define SF_ENDING	00000400
-
 #define SF_DCDOWN	00001000	/* recurse down the discipline stack    */
 
 /* bits for the mode field, SF_INIT defined in sfio_t.h */
