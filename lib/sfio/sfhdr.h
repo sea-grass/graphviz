@@ -144,12 +144,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* exception types */
-#define SF_EDONE	0	/* stop this operation and return       */
-#define SF_EDISC	1	/* discipline says it's ok              */
-#define SF_ESTACK	2	/* stack was popped                     */
-#define SF_ECONT	3	/* can continue normally                */
-
 #define	SF_RADIX	64	/* maximum integer conversion base */
 
 /* floating point to ascii conversion */
