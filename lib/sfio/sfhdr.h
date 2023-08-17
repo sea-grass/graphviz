@@ -47,30 +47,6 @@ extern "C" {
 #define ushort		unsigned short
 #endif
 
-/* macros do determine stream types from Stat_t data */
-#ifndef S_IFMT
-#define S_IFMT	0
-#endif
-#ifndef S_IFDIR
-#define S_IFDIR	0
-#endif
-#ifndef S_IFREG
-#define S_IFREG	0
-#endif
-#ifndef S_IFCHR
-#define S_IFCHR	0
-#endif
-
-#ifndef S_ISDIR
-#define S_ISDIR(m)	(((m)&S_IFMT) == S_IFDIR)
-#endif
-#ifndef S_ISREG
-#define S_ISREG(m)	(((m)&S_IFMT) == S_IFREG)
-#endif
-#ifndef S_ISCHR
-#define S_ISCHR(m)	(((m)&S_IFMT) == S_IFCHR)
-#endif
-
 /* function to get the decimal point for local environment */
 #include	<locale.h>
 #define SFSETLOCALE(decimal,thousand) \
