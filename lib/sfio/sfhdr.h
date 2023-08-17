@@ -36,18 +36,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-/* bits for the mode field, SF_INIT defined in sfio_t.h */
-#define SF_RC		00000010u	/* peeking for a record                 */
-#define SF_RV		00000020u	/* reserve without read or most write   */
-#define SF_LOCK		00000040u	/* stream is locked for io op           */
-#define SF_PUSH		00000100u	/* stream has been pushed               */
-#define SF_PEEK		00000400u	/* there is a pending peek              */
-#define SF_PKRD		00001000u	/* did a peek read                      */
-#define SF_GETR		00002000u	/* did a getr on this stream            */
-#define SF_SYNCED	00004000u	/* stream was synced                    */
-#define SF_AVAIL	00020000u	/* was closed, available for reuse      */
-#define SF_LOCAL	00100000u	/* sentinel for a local call            */
-
 /* short-hands */
 #ifndef uchar
 #define uchar		unsigned char
