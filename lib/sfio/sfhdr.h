@@ -36,8 +36,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-#define SF_DCDOWN	00001000	/* recurse down the discipline stack    */
-
 /* bits for the mode field, SF_INIT defined in sfio_t.h */
 #define SF_RC		00000010u	/* peeking for a record                 */
 #define SF_RV		00000020u	/* reserve without read or most write   */
