@@ -62,14 +62,6 @@ extern "C" {
 	  } \
 	}
 
-/* reserve buffer structure */
-    typedef struct _sfrsrv_s Sfrsrv_t;
-    struct _sfrsrv_s {
-	ssize_t slen;		/* last string length           */
-	ssize_t size;		/* buffer size                  */
-	uchar data[1];		/* data buffer                  */
-    };
-
 /* extensions to sfvprintf/sfvscanf */
 #define FP_SET(fp,fn)	(fp < 0 ? (fn += 1) : (fn = fp) )
 #define FP_WIDTH	0
