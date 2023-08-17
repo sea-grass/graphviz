@@ -22,6 +22,7 @@
 #include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
+#include    <stdbool.h>
 #include    <stdio.h>
 #include    <string.h>
 #include    "openFile.h"
@@ -90,7 +91,7 @@ typedef struct {
     char* gname;
     gv_stack_t elements;
     int closedElementType;
-    int edgeinverted;
+    bool edgeinverted;
 } userdata_t;
 
 static Agraph_t *root;		/* root graph */
@@ -105,7 +106,7 @@ static userdata_t genUserdata(char *dfltname) {
   userdata_t user = {0};
   user.elements = (gv_stack_t){0};
   user.closedElementType = TAG_NONE;
-  user.edgeinverted = FALSE;
+  user.edgeinverted = false;
   user.gname = dfltname;
   return user;
 }
@@ -312,9 +313,9 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    tname = agnameof(t);
 
 	    if (strcmp(tname, tail) == 0) {
-	        ud->edgeinverted = FALSE;
+	        ud->edgeinverted = false;
 	    } else if (strcmp(tname, head) == 0) {
-	        ud->edgeinverted = TRUE;
+	        ud->edgeinverted = true;
 	    }
 
 	    pos = get_xml_attr("id", atts);
@@ -352,7 +353,7 @@ static void endElementHandler(void *userData, const char *name)
 	Current_class = TAG_GRAPH;
 	E = 0;
 	ud->closedElementType = TAG_EDGE;
-	ud->edgeinverted = FALSE;
+	ud->edgeinverted = false;
     }
 }
 

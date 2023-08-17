@@ -40,8 +40,6 @@ extern "C" {
 #define XDOT_API /* nothing */
 #endif
 
-#define INITIAL_XDOT_CAPACITY 512
-
 typedef enum {
     xd_none,
     xd_linear,

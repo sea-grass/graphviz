@@ -53,13 +53,13 @@ Agraph_t *agsubg(Agraph_t * g, char *name, int cflag)
     IDTYPE id;
     Agraph_t *subg;
 
-    if (name && agmapnametoid(g, AGRAPH, name, &id, FALSE)) {
+    if (name && agmapnametoid(g, AGRAPH, name, &id, false)) {
 	/* might already exist */
 	if ((subg = agfindsubg_by_id(g, id)))
 	    return subg;
     }
 
-    if (cflag && agmapnametoid(g, AGRAPH, name, &id, TRUE)) {	/* reserve id */
+    if (cflag && agmapnametoid(g, AGRAPH, name, &id, true)) {	/* reserve id */
 	subg = localsubg(g, id);
 	agregister(g, AGRAPH, subg);
 	return subg;

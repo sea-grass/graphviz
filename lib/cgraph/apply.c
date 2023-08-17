@@ -18,14 +18,14 @@ static Agobj_t *subnode_search(Agraph_t * sub, Agobj_t * n)
 {
     if (agraphof(n) == sub)
 	return n;
-    return (Agobj_t *) agsubnode(sub, (Agnode_t *) n, FALSE);
+    return (Agobj_t *) agsubnode(sub, (Agnode_t *) n, 0);
 }
 
 static Agobj_t *subedge_search(Agraph_t * sub, Agobj_t * e)
 {
     if (agraphof(e) == sub)
 	return e;
-    return (Agobj_t *) agsubedge(sub, (Agedge_t *) e, FALSE);
+    return (Agobj_t *) agsubedge(sub, (Agedge_t *) e, 0);
 }
 
 static Agobj_t *subgraph_search(Agraph_t * sub, Agobj_t * g)

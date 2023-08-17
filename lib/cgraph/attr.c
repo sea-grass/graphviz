@@ -39,14 +39,12 @@ static Agdesc_t ProtoDesc = {.directed = true, .no_loop = true,
                              .no_write = true};
 static Agraph_t *ProtoGraph;
 
-Agdatadict_t *agdatadict(Agraph_t * g, int cflag)
-{
-    Agdatadict_t *rv;
-    rv = (Agdatadict_t *) aggetrec(g, DataDictName, FALSE);
+Agdatadict_t *agdatadict(Agraph_t *g, bool cflag) {
+    Agdatadict_t *rv = (Agdatadict_t *) aggetrec(g, DataDictName, 0);
     if (rv || !cflag)
 	return rv;
     init_all_attrs(g);
-    rv = (Agdatadict_t *) aggetrec(g, DataDictName, FALSE);
+    rv = (Agdatadict_t *) aggetrec(g, DataDictName, 0);
     return rv;
 }
 
@@ -55,7 +53,7 @@ static Dict_t *agdictof(Agraph_t * g, int kind)
     Agdatadict_t *dd;
     Dict_t *dict;
 
-    dd = agdatadict(g, FALSE);
+    dd = agdatadict(g, false);
     if (dd)
 	switch (kind) {
 	case AGRAPH:
@@ -111,7 +109,7 @@ static Agdatadict_t *agmakedatadict(Agraph_t * g)
     dd->dict.e = agdtopen(g, &AgDataDictDisc, Dttree);
     dd->dict.g = agdtopen(g, &AgDataDictDisc, Dttree);
     if ((par = agparent(g))) {
-	parent_dd = agdatadict(par, FALSE);
+	parent_dd = agdatadict(par, false);
 	assert(dd != parent_dd);
 	dtview(dd->dict.n, parent_dd->dict.n);
 	dtview(dd->dict.e, parent_dd->dict.e);
@@ -120,7 +118,7 @@ static Agdatadict_t *agmakedatadict(Agraph_t * g)
 	if (ProtoGraph && g != ProtoGraph) {
 	    /* it's not ok to dtview here for several reasons. the proto
 	       graph could change, and the sym indices don't match */
-	    parent_dd = agdatadict(ProtoGraph, FALSE);
+	    parent_dd = agdatadict(ProtoGraph, false);
 	    agcopydict(parent_dd->dict.n, dd->dict.n, g, AGNODE);
 	    agcopydict(parent_dd->dict.e, dd->dict.e, g, AGEDGE);
 	    agcopydict(parent_dd->dict.g, dd->dict.g, g, AGRAPH);
@@ -225,7 +223,7 @@ static void freesym(void *obj, Dtdisc_t *disc) {
 
 Agattr_t *agattrrec(void *obj)
 {
-    return (Agattr_t *) aggetrec(obj, AgDataRecName, FALSE);
+  return (Agattr_t *)aggetrec(obj, AgDataRecName, 0);
 }
 
 
@@ -263,7 +261,7 @@ static void unviewsubgraphsattr(Agraph_t *parent, char *name) {
     return; // supposedly can't happen, see setattr()
   }
   for (subg = agfstsubg(parent); subg; subg = agnxtsubg(subg)) {
-    ldict = agdatadict(subg, TRUE)->dict.g;
+    ldict = agdatadict(subg, true)->dict.g;
     lsym = aglocaldictsym(ldict, name);
     if (lsym) {
       continue;
@@ -282,7 +280,7 @@ static Agsym_t *setattr(Agraph_t * g, int kind, char *name, const char *value) {
 
     assert(value);
     root = agroot(g);
-    agdatadict(g, TRUE);	/* force initialization of string attributes */
+    agdatadict(g, true);	/* force initialization of string attributes */
     ldict = agdictof(g, kind);
     lsym = aglocaldictsym(ldict, name);
     if (lsym) {			/* update old local definition */
@@ -391,7 +389,7 @@ int agraphattr_delete(Agraph_t * g)
 	agdelrec(g, attr->h.name);
     }
 
-    if ((dd = agdatadict(g, FALSE))) {
+    if ((dd = agdatadict(g, false))) {
 	if (agdtclose(g, dd->dict.n)) return 1;
 	if (agdtclose(g, dd->dict.e)) return 1;
 	if (agdtclose(g, dd->dict.g)) return 1;
@@ -493,7 +491,7 @@ int agxset(void *obj, Agsym_t * sym, const char *value)
     if (hdr->tag.objtype == AGRAPH) {
 	/* also update dict default */
 	Dict_t *dict;
-	dict = agdatadict(g, FALSE)->dict.g;
+	dict = agdatadict(g, false)->dict.g;
 	if ((lsym = aglocaldictsym(dict, sym->name))) {
 	    agstrfree(g, lsym->defval);
 	    lsym->defval = agstrdup(g, value);

@@ -85,18 +85,17 @@ void *agbindrec(void *arg_obj, const char *recname, unsigned int recsize,
 {
     Agraph_t *g;
     Agobj_t *obj;
-    Agrec_t *rec;
 
     obj = arg_obj;
     g = agraphof(obj);
-    rec = aggetrec(obj, recname, FALSE);
+    Agrec_t *rec = aggetrec(obj, recname, 0);
     if (rec == NULL && recsize > 0) {
 	rec = agalloc(g, recsize);
 	rec->name = agstrdup(g, recname);
 	objputrec(obj, rec);
     }
     if (move_to_front)
-	aggetrec(arg_obj, recname, TRUE);
+	aggetrec(arg_obj, recname, 1);
     return rec;
 }
 
@@ -132,12 +131,11 @@ static void listdelrec(Agobj_t * obj, Agrec_t * rec)
 int agdelrec(void *arg_obj, const char *name)
 {
     Agobj_t *obj;
-    Agrec_t *rec;
     Agraph_t *g;
 
     obj = arg_obj;
     g = agraphof(obj);
-    rec = aggetrec(obj, name, FALSE);
+    Agrec_t *rec = aggetrec(obj, name, 0);
     if (rec) {
 	listdelrec(obj, rec);	/* zap it from the circular list */
 	switch (obj->tag.objtype) {	/* refresh any stale pointers */

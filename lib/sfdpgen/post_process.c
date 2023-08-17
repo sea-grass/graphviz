@@ -292,8 +292,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
   return sm;
 }
 	
-StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda0, double *x,
-								int weighting_scheme){
+StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda0, double *x) {
   /* solve a stress model to achieve the ideal distance among a sparse set of edges recorded in A.
      A must be a real matrix.
    */
@@ -352,21 +351,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
 
 	jw[nz] = k;
 	dist = a[j];
-	switch (weighting_scheme){
-	case WEIGHTING_SCHEME_SQR_DIST:
-	  if (dist*dist == 0){
-	    w[nz] = -100000;
-	  } else {
-	    w[nz] = -1/(dist*dist);
-	  }
-	  break;
-	case WEIGHTING_SCHEME_NONE:
-	  w[nz] = -1;
-	  break;
-	default:
-	  assert(0);
-	  return NULL;
-	}
+	w[nz] = -1;
 	diag_w += w[nz];
 	jd[nz] = k;
 	d[nz] = w[nz]*dist;
@@ -740,8 +725,7 @@ void StressMajorizationSmoother_delete(StressMajorizationSmoother sm){
   free(sm);
 }
 
-
-TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda0, double *x, int use_triangularization){
+TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x, int use_triangularization) {
   TriangleSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, jdiag, nz;
   SparseMatrix B;
@@ -772,7 +756,6 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda0, d
   sm->maxit_cg = (int)sqrt((double) A->m);
 
   lambda = sm->lambda = N_GNEW(m,double);
-  for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
   
   if (m > 2){
     if (use_triangularization){
@@ -825,7 +808,7 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double lambda0, d
 
     }
 
-    lambda[i] *= (-diag_w);/* alternatively don't do that then we have a constant penalty term scaled by lambda0 */
+    lambda[i] *= (-diag_w);
 
     assert(jdiag >= 0);
     w[jdiag] = -diag_w + lambda[i];
@@ -999,9 +982,9 @@ void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control c
 
     if (A->m > 2) {  /* triangles need at least 3 nodes */
       if (ctrl->smoothing == SMOOTHING_RNG){
-        sm = TriangleSmoother_new(A, dim, 0, x, FALSE);
+        sm = TriangleSmoother_new(A, dim, x, FALSE);
       } else {
-        sm = TriangleSmoother_new(A, dim, 0, x, TRUE);
+        sm = TriangleSmoother_new(A, dim, x, TRUE);
       }
       TriangleSmoother_smooth(sm, dim, x);
       TriangleSmoother_delete(sm);

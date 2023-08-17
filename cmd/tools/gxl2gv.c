@@ -55,11 +55,11 @@ typedef struct {
     agxbuf xml_attr_name;
     agxbuf xml_attr_value;
     agxbuf composite_buffer;
-    int listen;
+    bool listen;
     attr_t closedElementType;
     attr_t globalAttrType;
-    int compositeReadState;
-    int edgeinverted;
+    bool compositeReadState;
+    bool edgeinverted;
     Dt_t *nameMap;
 } userdata_t;
 
@@ -105,11 +105,11 @@ static Dtdisc_t nameDisc = {
 
 static userdata_t genUserdata(void) {
   userdata_t user = {0};
-  user.listen = FALSE;
+  user.listen = false;
   user.closedElementType = TAG_NONE;
   user.globalAttrType = TAG_NONE;
-  user.compositeReadState = FALSE;
-  user.edgeinverted = FALSE;
+  user.compositeReadState = false;
+  user.edgeinverted = false;
   user.nameMap = dtopen(&nameDisc, Dtoset);
   return user;
 }
@@ -467,9 +467,9 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	tname = agnameof(t);
 
 	if (strcmp(tname, tail) == 0) {
-	    ud->edgeinverted = FALSE;
+	    ud->edgeinverted = false;
 	} else if (strcmp(tname, head) == 0) {
-	    ud->edgeinverted = TRUE;
+	    ud->edgeinverted = true;
 	}
 
 	pos = get_xml_attr("fromorder", atts);
@@ -509,7 +509,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	       || strcmp(name, "bool") == 0
 	       || strcmp(name, "int") == 0 || strcmp(name, "float") == 0) {
 
-	ud->listen = TRUE;
+	ud->listen = true;
 	if (ud->compositeReadState) {
 	    agxbprint(&ud->composite_buffer, "<%s>", name);
 	}
@@ -531,7 +531,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	       || strcmp(name, "bag") == 0
 	       || strcmp(name, "tup") == 0 || strcmp(name, "enum") == 0) {
 
-	ud->compositeReadState = TRUE;
+	ud->compositeReadState = true;
 	agxbprint(&ud->composite_buffer, "<%s>", name);
     } else {
 	/* must be some extension */
@@ -556,7 +556,7 @@ static void endElementHandler(void *userData, const char *name)
 	Current_class = TAG_GRAPH;
 	E = 0;
 	ud->closedElementType = TAG_EDGE;
-	ud->edgeinverted = FALSE;
+	ud->edgeinverted = false;
     } else if (strcmp(name, "attr") == 0) {
 	agxbuf new_name = {0};
 	char *value;
@@ -566,7 +566,7 @@ static void endElementHandler(void *userData, const char *name)
 	    agxbprint(&new_name, "%s%s", GXL_COMP, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->composite_buffer);
 	    agxbclear(&ud->xml_attr_value);
-	    ud->compositeReadState = FALSE;
+	    ud->compositeReadState = false;
 	} else {
 	    agxbput(&new_name, agxbuse(&ud->xml_attr_name));
 	    value = agxbuse(&ud->xml_attr_value);
@@ -594,7 +594,7 @@ static void endElementHandler(void *userData, const char *name)
     } else if (strcmp(name, "string") == 0
 	       || strcmp(name, "bool") == 0
 	       || strcmp(name, "int") == 0 || strcmp(name, "float") == 0) {
-	ud->listen = FALSE;
+	ud->listen = false;
 	if (ud->compositeReadState) {
 	    agxbprint(&ud->composite_buffer, "</%s>", name);
 	}

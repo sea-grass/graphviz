@@ -12,9 +12,12 @@
  * no specific dependence on graphs */
 
 #include "config.h"
-
+#include <assert.h>
+#include <cgraph/unreachable.h>
 #include <common/geom.h>
 #include <common/geomprocs.h>
+#include <math.h>
+#include <stdbool.h>
 
 /*
  *--------------------------------------------------------------
@@ -40,21 +43,17 @@
 
 int lineToBox(pointf p, pointf q, boxf b)
 {
-    int inside1, inside2;
-
     /*
      * First check the two points individually to see whether they
      * are inside the rectangle or not.
      */
 
-    inside1 = (p.x >= b.LL.x) && (p.x <= b.UR.x)
-            && (p.y >= b.LL.y) && (p.y <= b.UR.y);
-    inside2 = (q.x >= b.LL.x) && (q.x <= b.UR.x)
-            && (q.y >= b.LL.y) && (q.y <= b.UR.y);
+    bool inside1 = INSIDE(p, b);
+    bool inside2 = INSIDE(q, b);
     if (inside1 != inside2) {
         return 0;
     }
-    if (inside1 & inside2) {
+    if (inside1 && inside2) {
         return 1;
     }
 
@@ -70,22 +69,18 @@ int lineToBox(pointf p, pointf q, boxf b)
          * Vertical line.
          */
 
-        if (((p.y >= b.LL.y) ^ (q.y >= b.LL.y))
-                && (p.x >= b.LL.x)
-                && (p.x <= b.UR.x)) {
+        if (((p.y >= b.LL.y) ^ (q.y >= b.LL.y)) && BETWEEN(b.LL.x, p.x, b.UR.x)) {
             return 0;
         }
     } else if (p.y == q.y) {
         /*
          * Horizontal line.
          */
-        if (((p.x >= b.LL.x) ^ (q.x >= b.LL.x))
-                && (p.y >= b.LL.y)
-                && (p.y <= b.UR.y)) {
+        if (((p.x >= b.LL.x) ^ (q.x >= b.LL.x)) && BETWEEN(b.LL.y, p.y, b.UR.y)) {
             return 0;
         }
     } else {
-        double m, x, y, low, high;
+        double m, x, y;
 
         /*
          * Diagonal line.  Compute slope of line and use
@@ -94,19 +89,15 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         m = (q.y - p.y)/(q.x - p.x);
-        if (p.x < q.x) {
-            low = p.x;  high = q.x;
-        } else {
-            low = q.x; high = p.x;
-        }
+        double low = fmin(p.x, q.x);
+        double high = fmax(p.x, q.x);
 
         /*
          * Left edge.
          */
 
         y = p.y + (b.LL.x - p.x)*m;
-        if ((b.LL.x >= low) && (b.LL.x <= high)
-                && (y >= b.LL.y) && (y <= b.UR.y)) {
+        if (BETWEEN(low, b.LL.x, high) && BETWEEN(b.LL.y, y, b.UR.y)) {
             return 0;
         }
 
@@ -115,8 +106,7 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         y += (b.UR.x - b.LL.x)*m;
-        if ((y >= b.LL.y) && (y <= b.UR.y)
-                && (b.UR.x >= low) && (b.UR.x <= high)) {
+        if (BETWEEN(b.LL.y, y, b.UR.y) && BETWEEN(low, b.UR.x, high)) {
             return 0;
         }
 
@@ -124,14 +114,10 @@ int lineToBox(pointf p, pointf q, boxf b)
          * Bottom edge.
          */
 
-        if (p.y < q.y) {
-            low = p.y;  high = q.y;
-        } else {
-            low = q.y; high = p.y;
-        }
+        low = fmin(p.y, q.y);
+        high = fmax(p.y, q.y);
         x = p.x + (b.LL.y - p.y)/m;
-        if ((x >= b.LL.x) && (x <= b.UR.x)
-                && (b.LL.y >= low) && (b.LL.y <= high)) {
+        if (BETWEEN(b.LL.x, x, b.UR.x) && BETWEEN(low, b.LL.y, high)) {
             return 0;
         }
 
@@ -140,8 +126,7 @@ int lineToBox(pointf p, pointf q, boxf b)
          */
 
         x += (b.UR.y - b.LL.y)/m;
-        if ((x >= b.LL.x) && (x <= b.UR.x)
-                && (b.UR.y >= low) && (b.UR.y <= high)) {
+        if (BETWEEN(b.LL.x, x, b.UR.x) && BETWEEN(low, b.UR.y, high)) {
             return 0;
         }
     }
@@ -156,25 +141,9 @@ void rect2poly(pointf *p)
     p[1].x = p[0].x;
 }
 
-static pointf rotatepf(pointf p, int cwrot)
-{
-    static double sina, cosa;
-    static int last_cwrot;
-    pointf P;
-
-    /* cosa is initially wrong for a cwrot of 0
-     * this caching only works because we are never called for 0 rotations */
-    if (cwrot != last_cwrot) {
-	sincos(cwrot / (2 * M_PI), &sina, &cosa);
-	last_cwrot = cwrot;
-    }
-    P.x = p.x * cosa - p.y * sina;
-    P.y = p.y * cosa + p.x * sina;
-    return P;
-}
-
 pointf cwrotatepf(pointf p, int cwrot)
 {
+    assert(cwrot == 0 || cwrot == 90 || cwrot == 180 || cwrot == 270);
     double x = p.x, y = p.y;
     switch (cwrot) {
     case 0:
@@ -192,17 +161,14 @@ pointf cwrotatepf(pointf p, int cwrot)
 	p.y = x;
 	break;
     default:
-	if (cwrot < 0)
-	    return ccwrotatepf(p, -cwrot);
-        if (cwrot > 360)
-	    return cwrotatepf(p, cwrot%360);
-	return rotatepf(p, cwrot);
+	UNREACHABLE();
     }
     return p;
 }
 
 pointf ccwrotatepf(pointf p, int ccwrot)
 {
+    assert(ccwrot == 0 || ccwrot == 90 || ccwrot == 180 || ccwrot == 270);
     double x = p.x, y = p.y;
     switch (ccwrot) {
     case 0:
@@ -220,11 +186,7 @@ pointf ccwrotatepf(pointf p, int ccwrot)
 	p.y = x;
 	break;
     default:
-	if (ccwrot < 0)
-	    return cwrotatepf(p, -ccwrot);
-        if (ccwrot > 360)
-	    return ccwrotatepf(p, ccwrot%360);
-	return rotatepf(p, 360-ccwrot);
+	UNREACHABLE();
     }
     return p;
 }

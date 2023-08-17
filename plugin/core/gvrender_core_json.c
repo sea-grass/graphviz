@@ -53,9 +53,9 @@ typedef struct {
 } gvid_t;
 
 #define ID "id"
-#define ND_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
-#define ED_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
-#define GD_gid(n) (((gvid_t*)aggetrec(n, ID, FALSE))->id) 
+#define ND_gid(n) (((gvid_t*)aggetrec(n, ID, 0))->id) 
+#define ED_gid(n) (((gvid_t*)aggetrec(n, ID, 0))->id) 
+#define GD_gid(n) (((gvid_t*)aggetrec(n, ID, 0))->id) 
 
 static bool IS_CLUSTER(Agraph_t *s) {
   return startswith(agnameof(s), "cluster");

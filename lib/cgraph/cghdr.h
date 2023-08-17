@@ -89,7 +89,7 @@ void *agdictobjmem(Dict_t * dict, void * p, size_t size,
 void agdictobjfree(void *p, Dtdisc_t *disc);
 
 	/* name-value pair operations */
-CGHDR_API Agdatadict_t *agdatadict(Agraph_t * g, int cflag);
+CGHDR_API Agdatadict_t *agdatadict(Agraph_t *g, bool cflag);
 CGHDR_API Agattr_t *agattrrec(void *obj);
 
 void agraphattr_init(Agraph_t * g);
@@ -107,8 +107,8 @@ void aglexeof(void);
 void aglexbad(void);
 
 	/* ID management */
-int agmapnametoid(Agraph_t * g, int objtype, char *str,
-          IDTYPE *result, int createflag);
+int agmapnametoid(Agraph_t *g, int objtype, char *str, IDTYPE *result,
+                  bool createflag);
 int agallocid(Agraph_t * g, int objtype, IDTYPE request);
 void agfreeid(Agraph_t * g, int objtype, IDTYPE id);
 char *agprintid(Agobj_t * obj);

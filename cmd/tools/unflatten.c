@@ -41,7 +41,7 @@ static char *cmd;
 
 static int myindegree(Agnode_t *n)
 {
-	return agdegree(n->root, n, TRUE, FALSE);
+	return agdegree(n->root, n, 1, 0);
 }
 
 /* need outdegree without selfarcs */

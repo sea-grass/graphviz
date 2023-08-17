@@ -3860,7 +3860,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
             gvrender_set_fillcolor(job, fillcolor);
 	}
     }
-    else filled = FALSE;
+    else filled = 0;
 
     if (streq(ND_shape(n)->name, "Mrecord"))
 	style |= ROUNDED;

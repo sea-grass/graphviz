@@ -97,8 +97,8 @@ static void nodeInduce(Agraph_t * g, Agraph_t* map)
     
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	for (e = agfstout(rootg, n); e; e = agnxtout(rootg, e)) {
-	    if (agsubnode(g, aghead(e), FALSE))
-		agsubedge(g, e, TRUE);
+	    if (agsubnode(g, aghead(e), 0))
+		agsubedge(g, e, 1);
 	    else {
 		Agraph_t* tscc = getscc(agtail(e));
 		Agraph_t* hscc = getscc(aghead(e));
@@ -143,7 +143,7 @@ static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) 
 	    setrep(subg, agnode(map, name, TRUE));
 	    do {
 		t = stack_pop(sp);
-		agsubnode(subg, t, TRUE);
+		agsubnode(subg, t, 1);
 		setval(t, INF);
 		setscc(t, subg);
 		st->N_nodes_in_nontriv_SCC++;
@@ -195,7 +195,7 @@ countComponents(Agraph_t * g, int *max_degree, float *nontree_frac)
     if (max_degree) {
 	int maxd = 0;
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	    deg = agdegree(g, n, TRUE, TRUE);
+	    deg = agdegree(g, n, 1, 1);
 	    if (maxd < deg)
 		maxd = deg;
 	    setval(n, 0);
