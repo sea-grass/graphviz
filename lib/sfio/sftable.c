@@ -58,15 +58,6 @@ static int sfcvinit(void)
 	_Sfcv64[(uchar) _Sfdigits[d]] = d;
     }
 
-    _Sftype['d'] = _Sftype['i'] = SFFMT_INT;
-    _Sftype['u'] = _Sftype['o'] = _Sftype['x'] = _Sftype['X'] = SFFMT_UINT;
-    _Sftype['e'] = _Sftype['E'] =
-	_Sftype['g'] = _Sftype['G'] = _Sftype['f'] = SFFMT_FLOAT;
-    _Sftype['s'] = _Sftype['n'] = _Sftype['p'] = _Sftype['!'] =
-	SFFMT_POINTER;
-    _Sftype['c'] = SFFMT_BYTE;
-    _Sftype['['] = SFFMT_CLASS;
-
     return 1;
 }
 
@@ -101,5 +92,24 @@ Sftab_t _Sftable = {
     .sf_digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_",
 
     .sf_cvinitf = sfcvinit,
-    .sf_fmtintf = sffmtint
+    .sf_fmtintf = sffmtint,
+    .sf_type = {
+        ['d'] = SFFMT_INT,
+        ['i'] = SFFMT_INT,
+        ['u'] = SFFMT_UINT,
+        ['o'] = SFFMT_UINT,
+        ['x'] = SFFMT_UINT,
+        ['X'] = SFFMT_UINT,
+        ['e'] = SFFMT_FLOAT,
+        ['E'] = SFFMT_FLOAT,
+        ['g'] = SFFMT_FLOAT,
+        ['G'] = SFFMT_FLOAT,
+        ['f'] = SFFMT_FLOAT,
+        ['s'] = SFFMT_POINTER,
+        ['n'] = SFFMT_POINTER,
+        ['p'] = SFFMT_POINTER,
+        ['!'] = SFFMT_POINTER,
+        ['c'] = SFFMT_BYTE,
+        ['['] = SFFMT_CLASS,
+    }
 };
