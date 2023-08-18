@@ -1181,10 +1181,6 @@ else
 	    use_ruby="No (ruby not available)"
           else
             RUBY_CFLAGS="-I`$RUBY $srcdir/config/config_ruby.rb archdir`"
-	    # hack for powerpc-darwin8 (10.4)
-	    if test "x$DARWIN" = "xyes"; then
-	      RUBY_CFLAGS=`echo $RUBY_CFLAGS | sed 's/powerpc/universal/'`
-	    fi
             RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb lib` `$RUBY -rrbconfig -e \"puts RbConfig::CONFIG[['LIBRUBYARG_SHARED']]\"`"
             RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
 	    if test "x$RUBY_INSTALL_DIR" = "x"; then
