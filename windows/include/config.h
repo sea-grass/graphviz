@@ -48,9 +48,6 @@
 /* Define to 1 if you have the <expat.h> header file. */
 #define HAVE_EXPAT_H 1
 
-/* Define if you have the freetype2 library */
-#define HAVE_FREETYPE2 1
-
 /* Define if you have the GDI+ framework for Windows */
 /* #undef HAVE_GDIPLUS */
 
