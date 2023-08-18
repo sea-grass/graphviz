@@ -464,7 +464,6 @@ else
   PKG_CHECK_MODULES(XRENDER, [xrender],HAVE_XRENDER="yes" ,HAVE_XRENDER="no")
 fi
 AM_CONDITIONAL(WITH_X, [test "x$use_xlib" = "xYes"])
-AM_CONDITIONAL(WITH_XRENDER, [test "x$,HAVE_XRENDER" = "xyes"])
 
 dnl -----------------------------------
 dnl check for SWIG - needed for script-language bindings
