@@ -25,12 +25,6 @@ static char *sffmtint(const char *str, int *v)
     return (char *) str;
 }
 
-/* function to initialize conversion tables */
-static int sfcvinit(void)
-{
-    return 1;
-}
-
 /* table for floating point and integer conversions */
 Sftab_t _Sftable = {
     .sf_pos10 = {1e1, 1e2, 1e4, 1e8, 1e16, 1e32},
@@ -61,7 +55,6 @@ Sftab_t _Sftable = {
 
     .sf_digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_",
 
-    .sf_cvinitf = sfcvinit,
     .sf_fmtintf = sffmtint,
     .sf_cv36 =
         {
