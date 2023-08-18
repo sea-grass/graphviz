@@ -465,8 +465,7 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 		if (x->op != CONSTANT) {
 			Exid_t *sym = (xref ? xref->data.variable.symbol : NULL);
 			if (EXTERNAL(t2t)) {
-				int a = (arg ? arg : 1);
-		    	if (p->disc->convertf(x, type, a) < 0) {
+		    	if (p->disc->convertf(x, type, 1) < 0) {
 					if (xref) {
 						if ((sym->lex == FUNCTION) && arg)
 							exerror ("%s: cannot use value of type %s as argument %d in function %s",
