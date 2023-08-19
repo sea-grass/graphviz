@@ -71,7 +71,7 @@ int agdtclose(Agraph_t * g, Dict_t * dict)
     Dtmemory_f memf;
     Dtdisc_t *disc;
 
-    disc = dtdisc(dict, NULL, 0);
+    disc = dtdisc(dict, NULL);
     memf = disc->memoryf;
     disc->memoryf = agdictobjmem;
     Ag_dictop_G = g;
@@ -85,8 +85,8 @@ int agdtclose(Agraph_t * g, Dict_t * dict)
 void agdtdisc(Agraph_t * g, Dict_t * dict, Dtdisc_t * disc)
 {
     (void)g; /* unused */
-    if (disc && dtdisc(dict, NULL, 0) != disc) {
-	dtdisc(dict, disc, 0);
+    if (disc && dtdisc(dict, NULL) != disc) {
+	dtdisc(dict, disc);
     }
     /* else unchanged, disc is same as old disc */
 }

@@ -20,7 +20,7 @@
 **	Written by Kiem-Phong Vo.
 */
 
-#define HIGHBITI	(~((~((uint)0)) >> 1))
+#define HIGHBITI	(~((~0u) >> 1))
 #define HIGHBITL	(~((~((Sfulong_t)0)) >> 1))
 
 #define SFFMT_PREFIX	(SFFMT_MINUS|SFFMT_SIGN|SFFMT_BLANK)
@@ -601,20 +601,20 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    flags |= SFFMT_MINUS;
 		    if (v == HIGHBITI) {	/* avoid overflow */
 			v = (int) (HIGHBITI / base);
-			*--sp = _Sfdigits[HIGHBITI - ((uint) v) * base];
+			*--sp = _Sfdigits[HIGHBITI - (unsigned)v * base];
 		    } else
 			v = -v;
 		}
 		if (n_s < 0) {	/* base 10 */
-		    sfucvt(v, sp, n, ssp, int, uint);
+		    sfucvt(v, sp, n, ssp, int, unsigned);
 		} else if (n_s > 0) {	/* base power-of-2 */
 		    do {
 			*--sp = ssp[v & n_s];
-		    } while ((v = ((uint) v) >> n));
+		    } while ((v = (unsigned)v >> n));
 		} else {	/* n_s == 0, general base */
 		    do {
-			*--sp = ssp[((uint) v) % base];
-		    } while ((v = ((uint) v) / base));
+			*--sp = ssp[(unsigned)v % base];
+		    } while ((v = (unsigned)v / base));
 		}
 	    }
 
