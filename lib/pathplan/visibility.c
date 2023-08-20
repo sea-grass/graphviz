@@ -14,13 +14,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-	/* TRANSPARENT means router sees past colinear obstacles */
-#ifdef TRANSPARENT
-#define INTERSECT(a,b,c,d,e) intersect1((a),(b),(c),(d),(e))
-#else
-#define INTERSECT(a,b,c,d,e) intersect((a),(b),(c),(d))
-#endif
-
 /* allocArray:
  * Allocate a VxV array of COORD values.
  * (array2 is a pointer to an array of pointers; the array is
@@ -77,52 +70,6 @@ static bool inBetween(Ppoint_t a, Ppoint_t b, Ppoint_t c)
 	return (a.y < c.y && c.y < b.y) || (b.y < c.y && c.y < a.y);
 }
 
-	/* TRANSPARENT means router sees past colinear obstacles */
-#ifdef TRANSPARENT
-/* intersect1:
- * Returns true if the polygon segment [q,n) blocks a and b from seeing
- * each other.
- * More specifically, returns true iff the two segments intersect as open
- * sets, or if q lies on (a,b) and either n and p lie on
- * different sides of (a,b), i.e., wind(a,b,n)*wind(a,b,p) < 0, or the polygon
- * makes a left turn at q, i.e., wind(p,q,n) > 0.
- *
- * We are assuming the p,q,n are three consecutive vertices of a barrier
- * polygon with the polygon interior to the right of p-q-n.
- *
- * Note that given the constraints of our problem, we could probably
- * simplify this code even more. For example, if abq are collinear, but
- * q is not in (a,b), we could return false since n will not be in (a,b)
- * nor will the (a,b) intersect (q,n).
- *
- * Also note that we are computing w_abq twice in a tour of a polygon,
- * once for each edge of which it is a vertex.
- */
-static bool intersect1(Ppoint_t a, Ppoint_t b, Ppoint_t q, Ppoint_t n,
-		      Ppoint_t p)
-{
-    int w_abq;
-    int w_abn;
-    int w_qna;
-    int w_qnb;
-
-    w_abq = wind(a, b, q);
-    w_abn = wind(a, b, n);
-
-    /* If q lies on (a,b),... */
-    if (w_abq == 0 && inBetween(a, b, q)) {
-	return w_abn * wind(a, b, p) < 0 || wind(p, q, n) > 0;
-    } else {
-	w_qna = wind(q, n, a);
-	w_qnb = wind(q, n, b);
-	/* True if q and n are on opposite sides of ab,
-	 * and a and b are on opposite sides of qn.
-	 */
-	return w_abq * w_abn < 0 && w_qna * w_qnb < 0;
-    }
-}
-#else
-
 /* intersect:
  * Returns true if the segment [c,d] blocks a and b from seeing each other.
  * More specifically, returns true iff c or d lies on (a,b) or the two
@@ -151,7 +98,6 @@ static bool intersect(Ppoint_t a, Ppoint_t b, Ppoint_t c, Ppoint_t d)
      */
     return a_abc * a_abd < 0 && a_cda * a_cdb < 0;
 }
-#endif
 
 /* in_cone:
  * Returns true iff point b is in the cone a0,a1,a2
@@ -198,16 +144,16 @@ static bool inCone(int i, int j, Ppoint_t pts[], int nextPt[], int prevPt[])
  */
 static bool clear(Ppoint_t pti, Ppoint_t ptj,
 		 int start, int end,
-		 int V, Ppoint_t pts[], int nextPt[], int prevPt[])
+		 int V, Ppoint_t pts[], int nextPt[])
 {
     int k;
 
     for (k = 0; k < start; k++) {
-	if (INTERSECT(pti, ptj, pts[k], pts[nextPt[k]], pts[prevPt[k]]))
+	if (intersect(pti, ptj, pts[k], pts[nextPt[k]]))
 	    return false;
     }
     for (k = end; k < V; k++) {
-	if (INTERSECT(pti, ptj, pts[k], pts[nextPt[k]], pts[prevPt[k]]))
+	if (intersect(pti, ptj, pts[k], pts[nextPt[k]]))
 	    return false;
     }
     return true;
@@ -247,7 +193,7 @@ static void compVis(vconfig_t * conf) {
 	for (; j >= 0; j--) {
 	    if (inCone(i, j, pts, nextPt, prevPt) &&
 		inCone(j, i, pts, nextPt, prevPt) &&
-		clear(pts[i], pts[j], V, V, V, pts, nextPt, prevPt)) {
+		clear(pts[i], pts[j], V, V, V, pts, nextPt)) {
 		/* if i and j see each other, add edge */
 		d = dist(pts[i], pts[j]);
 		wadj[i][j] = d;
@@ -298,18 +244,16 @@ static int polyhit(vconfig_t * conf, Ppoint_t p)
  */
 COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
 {
-    int V = conf->N;
+    const int V = conf->N;
     Ppoint_t *pts = conf->P;
     int *nextPt = conf->next;
     int *prevPt = conf->prev;
     int k;
     int start, end;
-    COORD *vadj;
     Ppoint_t pk;
     COORD d;
 
-    vadj = malloc((V + 2) * sizeof(COORD));
-
+    COORD *vadj = gv_calloc(V + 2, sizeof(COORD));
 
     if (pp == POLYID_UNKNOWN)
 	pp = polyhit(conf, p);
@@ -324,7 +268,7 @@ COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
     for (k = 0; k < start; k++) {
 	pk = pts[k];
 	if (in_cone(pts[prevPt[k]], pk, pts[nextPt[k]], p) &&
-	    clear(p, pk, start, end, V, pts, nextPt, prevPt)) {
+	    clear(p, pk, start, end, V, pts, nextPt)) {
 	    /* if p and pk see each other, add edge */
 	    d = dist(p, pk);
 	    vadj[k] = d;
@@ -338,7 +282,7 @@ COORD *ptVis(vconfig_t * conf, int pp, Ppoint_t p)
     for (k = end; k < V; k++) {
 	pk = pts[k];
 	if (in_cone(pts[prevPt[k]], pk, pts[nextPt[k]], p) &&
-	    clear(p, pk, start, end, V, pts, nextPt, prevPt)) {
+	    clear(p, pk, start, end, V, pts, nextPt)) {
 	    /* if p and pk see each other, add edge */
 	    d = dist(p, pk);
 	    vadj[k] = d;
@@ -394,15 +338,15 @@ bool directVis(Ppoint_t p, int pp, Ppoint_t q, int qp, vconfig_t * conf)
     }
 
     for (k = 0; k < s1; k++) {
-	if (INTERSECT(p, q, pts[k], pts[nextPt[k]], pts[prevPt[k]]))
+	if (intersect(p, q, pts[k], pts[nextPt[k]]))
 	    return false;
     }
     for (k = e1; k < s2; k++) {
-	if (INTERSECT(p, q, pts[k], pts[nextPt[k]], pts[prevPt[k]]))
+	if (intersect(p, q, pts[k], pts[nextPt[k]]))
 	    return false;
     }
     for (k = e2; k < V; k++) {
-	if (INTERSECT(p, q, pts[k], pts[nextPt[k]], pts[prevPt[k]]))
+	if (intersect(p, q, pts[k], pts[nextPt[k]]))
 	    return false;
     }
     return true;

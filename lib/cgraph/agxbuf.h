@@ -72,16 +72,12 @@ static inline bool agxbuf_is_inline(const agxbuf *xb) {
 
 /* agxbinit:
  * Initializes new agxbuf; caller provides memory.
- * Assume if init is non-null, hint = sizeof(init[])
+ * Assume hint = sizeof(init[])
  */
 static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
-  if (init != NULL) {
-    xb->buf = init;
-    xb->located = AGXBUF_ON_STACK;
-  } else {
-    memset(xb->store, 0, sizeof(agxbuf));
-    return;
-  }
+  assert(init != NULL);
+  xb->buf = init;
+  xb->located = AGXBUF_ON_STACK;
   xb->size = 0;
   xb->capacity = hint;
 }
@@ -349,7 +345,7 @@ static inline char *agxbdisown(agxbuf *xb) {
   }
 
   // reset xb to a state where it is usable
-  agxbinit(xb, 0, NULL);
+  memset(xb, 0, sizeof(*xb));
 
   return buf;
 }

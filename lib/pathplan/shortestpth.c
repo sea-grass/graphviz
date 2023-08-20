@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <pathplan/vis.h>
 
 static COORD unseen = (double) INT_MAX;
@@ -27,15 +27,13 @@ static COORD unseen = (double) INT_MAX;
  */
 static int *shortestPath(int root, int target, int V, array2 wadj)
 {
-    int *dad;
-    COORD *vl;
     COORD *val;
     int min;
     int k, t;
 
     /* allocate arrays */
-    dad = malloc(V * sizeof(int));
-    vl = malloc((V + 1) * sizeof(COORD));	/* One extra for sentinel */
+    int *dad = gv_calloc(V, sizeof(int));
+    COORD *vl = gv_calloc(V + 1, sizeof(COORD)); // One extra for sentinel
     val = vl + 1;
 
     /* initialize arrays */
@@ -96,7 +94,7 @@ int *makePath(Ppoint_t p, int pp, COORD * pvis,
     int V = conf->N;
 
     if (directVis(p, pp, q, qp, conf)) {
-	int *dad = malloc(sizeof(int) * (V + 2));
+	int *dad = gv_calloc(V + 2, sizeof(int));
 	dad[V] = V + 1;
 	dad[V + 1] = -1;
 	return dad;

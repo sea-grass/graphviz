@@ -606,16 +606,4 @@ setAspect (Agraph_t * g, aspect_t* adata)
     adata->badGraph = 0;
     adata->nPasses = 0;
     return NULL;
-    
-    if (rv < MIN_AR) rv = MIN_AR;
-    else if (rv > MAX_AR) rv = MAX_AR;
-    adata->targetAR = rv;
-    adata->nextIter = -1;
-    adata->nPasses = passes;
-    adata->badGraph = 0;
-
-    if (Verbose) 
-        fprintf(stderr, "Target AR = %g\n", adata->targetAR);
-
-    return adata;
 }

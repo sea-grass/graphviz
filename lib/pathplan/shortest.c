@@ -500,16 +500,18 @@ static int pointintri(size_t trii, Ppoint_t *pp) {
 static int growpnls(size_t newpnln) {
     if (newpnln <= pnln)
 	return 0;
-    pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
-    if (pnls == NULL) {
+    pointnlink_t *new_pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
+    if (new_pnls == NULL) {
 	prerror("cannot realloc pnls");
 	return -1;
     }
-    pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln);
-    if (pnlps == NULL) {
+    pnls = new_pnls;
+    pointnlink_t **new_pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln);
+    if (new_pnlps == NULL) {
 	prerror("cannot realloc pnlps");
 	return -1;
     }
+    pnlps = new_pnlps;
     pnln = newpnln;
     return 0;
 }
@@ -517,11 +519,12 @@ static int growpnls(size_t newpnln) {
 static int growops(size_t newopn) {
     if (newopn <= opn)
 	return 0;
-    ops = realloc(ops, POINTSIZE * newopn);
-    if (ops == NULL) {
+    Ppoint_t *new_ops = realloc(ops, POINTSIZE * newopn);
+    if (new_ops == NULL) {
 	prerror("cannot realloc ops");
 	return -1;
     }
+    ops = new_ops;
     opn = newopn;
 
     return 0;

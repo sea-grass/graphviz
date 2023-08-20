@@ -23,6 +23,33 @@
 
 enum {MINGLE_DEBUG=0};
 
+namespace {
+struct Agglomerative_Ink_Bundling_struct {
+  int level; /* 0, 1, ... */
+  int n;
+  SparseMatrix A;  /* n x n matrix, where n is the number of edges/bundles in
+                      this level */
+  SparseMatrix P;  /* prolongation matrix from level + 1 to level */
+  SparseMatrix R0; /* this is basically R[level - 1].R[level - 2]...R[0], which
+                      gives the map of bundling i to the original edges: first
+                      row of R0 gives the nodes on the finest grid corresponding
+                      to the coarsest node 1, etc */
+  SparseMatrix R;  /* striction mtrix from level to level + 1*/
+  Agglomerative_Ink_Bundling_struct *next;
+  std::vector<double>
+      inks; /* amount of ink needed to draw this edge/bundle. Dimension n. */
+  double total_ink; /* amount of ink needed to draw this edge/bundle. Dimension
+                       n. */
+  pedge
+      *edges; /* the original edge info. This does not vary level to level and
+                 is of dimenion n0, where n0 is the number of original edges */
+  bool delete_top_level_A; /*whether the top level matrix should be deleted on
+                              garbage collecting the grid */
+};
+} // namespace
+
+using Agglomerative_Ink_Bundling = Agglomerative_Ink_Bundling_struct *;
+
 static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_init(SparseMatrix A, pedge *edges, int level){
   Agglomerative_Ink_Bundling grid;
   int n = A->n, i;
@@ -250,8 +277,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     level++;
     cgrid = Agglomerative_Ink_Bundling_init(cA, edges, level); 
 
-
-    /* set up R0!!! */
     if (grid->R0){
       R0 = SparseMatrix_multiply(R, grid->R0);
     } else {
@@ -272,7 +297,6 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
   } else {
     if (Verbose > 1) fprintf(stderr,"no more improvement, orig ink = %f, gain = %f, stop and final bundling found\n", grand_total_ink, grand_total_gain);
     /* no more improvement, stop and final bundling found */
-    for (i = 0; i < n; i++) matching[i] = i;
   }
 
  RETURN:
@@ -366,7 +390,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 						 improved later */
 	    e = edges[jj] = pedge_double(edges[jj]);
 
-	    e->wgts = (double*)REALLOC(e->wgts, sizeof(double)*4);	
+	    e->wgts.resize(4);	
 	    e->x[1*dim] = meet1.x;
 	    e->x[1*dim+1] = meet1.y;
 	    e->x[2*dim] = meet2.x;
@@ -387,7 +411,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
       } 
     }
   } else {
-    pedge *mid_edges, midedge;/* middle section of edges that will be bundled again */
+    pedge midedge;/* middle section of edges that will be bundled again */
     int ne, npp, l;
     SparseMatrix A_mid;
     double eps = 0., wgt;
@@ -404,7 +428,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     ia = R->ia;
     ja = R->ja;
     ne = R->m;
-    mid_edges = (pedge*)MALLOC(sizeof(pedge)*ne);
+    std::vector<pedge> mid_edges(ne);
     std::vector<double> xx(4 * ne);
     for (i = 0; i < R->m; i++){
       pick = &(ja[ia[i]]);
@@ -424,7 +448,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 
     A_mid = nearest_neighbor_graph(ne, MIN(nneighbors, ne), xx.data(), eps);
 
-    agglomerative_ink_bundling_internal(dim, A_mid, mid_edges, nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
+    agglomerative_ink_bundling_internal(dim, A_mid, mid_edges.data(), nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
     SparseMatrix_delete(A_mid);
     
     /* patching edges with the new mid-section */
@@ -446,7 +470,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 	    e->x[(k+1)*dim+l] = midedge->x[k*dim+l];
 	  }
 	  if (k < midedge->npoints - 1){
-	    if (midedge->wgts){
+	    if (!midedge->wgts.empty()) {
 	      e->wgts[(k+1)] = midedge->wgts[k];
 	    } else {
 	      e->wgts[(k+1)] = midedge->wgt;

@@ -76,11 +76,8 @@ static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
 	job->output_data[job->output_data_position] = '\0'; /* keep null terminated */
 	return len;
     }
-    else {
-        assert(job->output_file != NULL);
-        return fwrite(s, sizeof(char), len, job->output_file);
-    }
-    return 0;
+    assert(job->output_file != NULL);
+    return fwrite(s, sizeof(char), len, job->output_file);
 }
 
 static void auto_output_filename(GVJ_t *job)

@@ -57,8 +57,6 @@ int agrename(Agobj_t * obj, char *newname)
 	break;
     case AGNODE:
 	return agrelabel_node((Agnode_t *) obj, newname);
-	agrename(obj, newname);
-	break;
     case AGINEDGE:
     case AGOUTEDGE:
 	return FAILURE;

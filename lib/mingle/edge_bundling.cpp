@@ -55,7 +55,6 @@ pedge pedge_new(int np, int dim, double *x){
   memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = 1.;
-  e->wgts = NULL;
   return e;
 
 }
@@ -71,7 +70,7 @@ pedge pedge_wgt_new(int np, int dim, double *x, double wgt){
   memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = wgt;
-  e->wgts = (double*)MALLOC(sizeof(double)*(np - 1));
+  e->wgts.resize(np - 1);
   for (i = 0; i < np - 1; i++) e->wgts[i] = wgt;
   return e;
 
@@ -211,7 +210,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
   /* figure out max number of bundled original edges in a pedge */
   for (i = 0; i < ne; i++){
     edge = edges[i];
-    if (edge->wgts){
+    if (!edge->wgts.empty()) {
       for (j = 0; j < edge->npoints - 1; j++){
 	maxwgt = std::max(maxwgt, edge->wgts[j]);
       }
@@ -255,7 +254,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
       }
     }
     /* colors based on how much bundling */
-    if (edge->wgts){
+    if (!edge->wgts.empty()) {
       fprintf(fp, "\", wgts=\"");
       for (j = 0; j < edge->npoints - 1; j++){
 	if (j != 0) fprintf(fp,",");
@@ -316,11 +315,11 @@ pedge pedge_wgts_realloc(pedge e, int n){
   int i;
   if (n <= e->npoints) return e;
   e->x = (double*)REALLOC(e->x, e->dim*n*sizeof(double));
-  if (!(e->wgts)){
-    e->wgts = (double*)REALLOC(e->wgts, (n-1)*sizeof(double));
+  if (e->wgts.empty()){
+    e->wgts.resize(n - 1);
     for (i = 0; i < e->npoints; i++) e->wgts[i] = e->wgt;
   } else {
-    e->wgts = (double*)REALLOC(e->wgts, (n-1)*sizeof(double));
+    e->wgts.resize(n - 1);
   }
   e->len = n;
   return e;
@@ -607,7 +606,6 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
     (void)max_recursion;
     (void)nneighbor;
     agerr (AGERR, "Graphviz built without approximate nearest neighbor library ANN; agglomerative inking not available\n");
-    edges = edges;
 #endif
   } else if (method == METHOD_FD){/* FD method */
     
