@@ -1569,6 +1569,8 @@ if test "x$with_freetype2" != "xyes"; then
 else
   PKG_CHECK_MODULES(FREETYPE2, [freetype2],[
     use_freetype="Yes"
+    AC_SUBST([FREETYPE2_CFLAGS])
+    AC_SUBST([FREETYPE2_LIBS])
   ],[
     AC_MSG_WARN(pkg-config did not find a freetype2.pc.  Looking for freetype-config.)
   ])
@@ -1590,18 +1592,13 @@ if test "x$use_freetype" = "x"; then
 	fi
 	FREETYPE2_LIBS=`$FREETYPE_CONFIG --libs`
 	use_freetype="Yes"
+	AC_SUBST([FREETYPE2_CFLAGS])
+	AC_SUBST([FREETYPE2_LIBS])
     else
         AC_MSG_WARN(freetype library not available)
 	use_freetype="No (missing freetype-config)"
     fi
 fi
-
-if test "x$use_freetype" = "xYes"; then
-  AC_DEFINE_UNQUOTED(HAVE_FREETYPE2,1,[Define if you have the freetype2 library])
-  AC_SUBST([FREETYPE2_CFLAGS])
-  AC_SUBST([FREETYPE2_LIBS])
-fi
-AM_CONDITIONAL(WITH_FREETYPE2, [test "x$ue_freetype" = "xYes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GDK
