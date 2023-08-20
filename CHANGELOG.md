@@ -64,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `INITIAL_XDOT_CAPACITY` macro has been removed.
 - **Breaking**: The `type` parameter to `dtdisc` has been removed.
 - **Breaking**: The `h` parameter to `dtstrhash` has been removed.
+- In addition to Guile 2.0 and Guile 2.2, Guile 3.0 is now supported by the
+  Graphviz Guile bindings.
 
 ### Fixed
 

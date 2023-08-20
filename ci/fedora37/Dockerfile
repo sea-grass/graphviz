@@ -46,7 +46,7 @@ librsvg2-devel \
 golang \
 gcc-go \
 # Language extension gv_guile
-guile-devel \
+guile30-devel \
 # Language extension gv_java
 java-devel \
 # Language extension gv_lua

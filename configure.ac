@@ -624,7 +624,7 @@ else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-guile *- Generate'` = 0; then
       use_guile="No (swig does not support -guile option)"
     else
-      AC_CHECK_PROGS(GUILE_CONFIG,guile-config2.2 guile-config)
+      AC_CHECK_PROGS(GUILE_CONFIG,guile-config3.0 guile-config2.2 guile-config)
       if test "x$GUILE_CONFIG" = "x"; then
         use_guile="No (guile not available)"
       else

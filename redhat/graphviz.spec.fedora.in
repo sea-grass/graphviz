@@ -83,7 +83,11 @@ BuildRequires: libglade2-devel gtkglext-devel
 BuildRequires: gts-devel
 %endif
 %if %{GUILE}
+%if 0%{?fedora} > 0
+BuildRequires: guile30-devel
+%else
 BuildRequires: guile-devel
+%endif
 %endif
 %if %{JAVA}
 BuildRequires: java-devel
@@ -557,7 +561,11 @@ Guile extension for graphviz.
 %package lang-guile
 Group:          Applications/Multimedia
 Summary:        Guile extension for graphviz
+%if 0%{?fedora} > 0
+Requires:       %{name} = %{version}-%{release}, guile30
+%else
 Requires:       %{name} = %{version}-%{release}, guile
+%endif
 Obsoletes:      %{name}-guile <= 2.41
 Provides:       %{name}-guile = %{version}-%{release}
 
