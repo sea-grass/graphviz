@@ -90,7 +90,6 @@ void CMainWindow::createConsole()
     consoleLayout->addWidget(logSaveBtn);
     consoleLayout->addStretch();
 
-    consoleLayout->setContentsMargins(1, 1, 1, 1);;
     consoleLayout->setContentsMargins(1, 1, 1, 1);
 
     fr->setLayout(consoleLayout);

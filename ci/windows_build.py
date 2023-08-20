@@ -3,7 +3,6 @@
 """Graphviz CI script for compilation on Windows"""
 
 import argparse
-import os
 import shlex
 import shutil
 import subprocess
@@ -61,7 +60,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         build = root / "build"
         if build.exists():
             shutil.rmtree(build)
-        os.makedirs(build)
+        build.mkdir(parents=True)
         run(["cmake", "--version"], build, options.logfile)
         run(
             [
@@ -99,8 +98,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
             options.logfile,
         )
         if options.configuration == "Release":
-            for filename in os.listdir(root / "Release" / "Graphviz" / "bin"):
-                src = root / "Release" / "Graphviz" / "bin" / filename
+            for src in (root / "Release" / "Graphviz" / "bin").iterdir():
                 if src.suffix in (
                     ".lastcodeanalysissucceeded",
                     ".iobj",
