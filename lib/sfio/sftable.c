@@ -25,51 +25,6 @@ static char *sffmtint(const char *str, int *v)
     return (char *) str;
 }
 
-/* function to initialize conversion tables */
-static int sfcvinit(void)
-{
-    for (int d = 0; d <= UCHAR_MAX; ++d) {
-	_Sfcv36[d] = SF_RADIX;
-	_Sfcv64[d] = SF_RADIX;
-    }
-
-    /* [0-9] */
-    unsigned char d;
-    for (d = 0; d < 10; ++d) {
-	_Sfcv36[(uchar) _Sfdigits[d]] = d;
-	_Sfcv64[(uchar) _Sfdigits[d]] = d;
-    }
-
-    /* [a-z] */
-    for (; d < 36; ++d) {
-	_Sfcv36[(uchar) _Sfdigits[d]] = d;
-	_Sfcv64[(uchar) _Sfdigits[d]] = d;
-    }
-
-    /* [A-Z] */
-    for (unsigned char l = 10; d < 62; ++l, ++d) {
-	_Sfcv36[(uchar) _Sfdigits[d]] = l;
-	_Sfcv64[(uchar) _Sfdigits[d]] = d;
-    }
-
-    /* remaining digits */
-    for (; d < SF_RADIX; ++d) {
-	_Sfcv36[(uchar) _Sfdigits[d]] = d;
-	_Sfcv64[(uchar) _Sfdigits[d]] = d;
-    }
-
-    _Sftype['d'] = _Sftype['i'] = SFFMT_INT;
-    _Sftype['u'] = _Sftype['o'] = _Sftype['x'] = _Sftype['X'] = SFFMT_UINT;
-    _Sftype['e'] = _Sftype['E'] =
-	_Sftype['g'] = _Sftype['G'] = _Sftype['f'] = SFFMT_FLOAT;
-    _Sftype['s'] = _Sftype['n'] = _Sftype['p'] = _Sftype['!'] =
-	SFFMT_POINTER;
-    _Sftype['c'] = SFFMT_BYTE;
-    _Sftype['['] = SFFMT_CLASS;
-
-    return 1;
-}
-
 /* table for floating point and integer conversions */
 Sftab_t _Sftable = {
     .sf_pos10 = {1e1, 1e2, 1e4, 1e8, 1e16, 1e32},
@@ -100,6 +55,116 @@ Sftab_t _Sftable = {
 
     .sf_digits = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@_",
 
-    .sf_cvinitf = sfcvinit,
-    .sf_fmtintf = sffmtint
+    .sf_fmtintf = sffmtint,
+    .sf_cv36 =
+        {
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            0,        1,        2,        3,        4,        5,
+            6,        7,        8,        9,        SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, 62,       10,
+            11,       12,       13,       14,       15,       16,
+            17,       18,       19,       20,       21,       22,
+            23,       24,       25,       26,       27,       28,
+            29,       30,       31,       32,       33,       34,
+            35,       SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, 63,
+            SF_RADIX, 10,       11,       12,       13,       14,
+            15,       16,       17,       18,       19,       20,
+            21,       22,       23,       24,       25,       26,
+            27,       28,       29,       30,       31,       32,
+            33,       34,       35,       SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+        },
+    .sf_cv64 =
+        {
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            0,        1,        2,        3,        4,        5,
+            6,        7,        8,        9,        SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, 62,       36,
+            37,       38,       39,       40,       41,       42,
+            43,       44,       45,       46,       47,       48,
+            49,       50,       51,       52,       53,       54,
+            55,       56,       57,       58,       59,       60,
+            61,       SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, 63,
+            SF_RADIX, 10,       11,       12,       13,       14,
+            15,       16,       17,       18,       19,       20,
+            21,       22,       23,       24,       25,       26,
+            27,       28,       29,       30,       31,       32,
+            33,       34,       35,       SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+            SF_RADIX, SF_RADIX, SF_RADIX, SF_RADIX,
+        },
+    .sf_type = {
+        ['d'] = SFFMT_INT,
+        ['i'] = SFFMT_INT,
+        ['u'] = SFFMT_UINT,
+        ['o'] = SFFMT_UINT,
+        ['x'] = SFFMT_UINT,
+        ['X'] = SFFMT_UINT,
+        ['e'] = SFFMT_FLOAT,
+        ['E'] = SFFMT_FLOAT,
+        ['g'] = SFFMT_FLOAT,
+        ['G'] = SFFMT_FLOAT,
+        ['f'] = SFFMT_FLOAT,
+        ['s'] = SFFMT_POINTER,
+        ['n'] = SFFMT_POINTER,
+        ['p'] = SFFMT_POINTER,
+        ['!'] = SFFMT_POINTER,
+        ['c'] = SFFMT_BYTE,
+        ['['] = SFFMT_CLASS,
+    }
 };

@@ -36,23 +36,6 @@ extern "C" {
 #include	<errno.h>
 #include	<ctype.h>
 
-/* on closing, don't be a hero about reread/rewrite on interrupts */
-#define SF_ENDING	00000400
-
-#define SF_DCDOWN	00001000	/* recurse down the discipline stack    */
-
-/* bits for the mode field, SF_INIT defined in sfio_t.h */
-#define SF_RC		00000010u	/* peeking for a record                 */
-#define SF_RV		00000020u	/* reserve without read or most write   */
-#define SF_LOCK		00000040u	/* stream is locked for io op           */
-#define SF_PUSH		00000100u	/* stream has been pushed               */
-#define SF_PEEK		00000400u	/* there is a pending peek              */
-#define SF_PKRD		00001000u	/* did a peek read                      */
-#define SF_GETR		00002000u	/* did a getr on this stream            */
-#define SF_SYNCED	00004000u	/* stream was synced                    */
-#define SF_AVAIL	00020000u	/* was closed, available for reuse      */
-#define SF_LOCAL	00100000u	/* sentinel for a local call            */
-
 /* short-hands */
 #ifndef uchar
 #define uchar		unsigned char
@@ -62,30 +45,6 @@ extern "C" {
 #endif
 #ifndef ushort
 #define ushort		unsigned short
-#endif
-
-/* macros do determine stream types from Stat_t data */
-#ifndef S_IFMT
-#define S_IFMT	0
-#endif
-#ifndef S_IFDIR
-#define S_IFDIR	0
-#endif
-#ifndef S_IFREG
-#define S_IFREG	0
-#endif
-#ifndef S_IFCHR
-#define S_IFCHR	0
-#endif
-
-#ifndef S_ISDIR
-#define S_ISDIR(m)	(((m)&S_IFMT) == S_IFDIR)
-#endif
-#ifndef S_ISREG
-#define S_ISREG(m)	(((m)&S_IFMT) == S_IFREG)
-#endif
-#ifndef S_ISCHR
-#define S_ISCHR(m)	(((m)&S_IFMT) == S_IFCHR)
 #endif
 
 /* function to get the decimal point for local environment */
@@ -102,14 +61,6 @@ extern "C" {
 	    } \
 	  } \
 	}
-
-/* reserve buffer structure */
-    typedef struct _sfrsrv_s Sfrsrv_t;
-    struct _sfrsrv_s {
-	ssize_t slen;		/* last string length           */
-	ssize_t size;		/* buffer size                  */
-	uchar data[1];		/* data buffer                  */
-    };
 
 /* extensions to sfvprintf/sfvscanf */
 #define FP_SET(fp,fn)	(fp < 0 ? (fn += 1) : (fn = fp) )
@@ -193,12 +144,6 @@ extern "C" {
 #define SFFMT_POINTER	020	/* %p, %n               */
 #define SFFMT_CLASS	040	/* %[                   */
 
-/* exception types */
-#define SF_EDONE	0	/* stop this operation and return       */
-#define SF_EDISC	1	/* discipline says it's ok              */
-#define SF_ESTACK	2	/* stack was popped                     */
-#define SF_ECONT	3	/* can continue normally                */
-
 #define	SF_RADIX	64	/* maximum integer conversion base */
 
 /* floating point to ascii conversion */
@@ -212,7 +157,6 @@ extern "C" {
 #define _Sfneg10	(_Sftable.sf_neg10)
 #define _Sfdec		(_Sftable.sf_dec)
 #define _Sfdigits	(_Sftable.sf_digits)
-#define _Sfcvinitf	(_Sftable.sf_cvinitf)
 #define _Sfcvinit	(_Sftable.sf_cvinit)
 #define _Sffmtintf	(_Sftable.sf_fmtintf)
 #define _Sfcv36		(_Sftable.sf_cv36)
@@ -223,16 +167,12 @@ extern "C" {
 	Sfdouble_t sf_neg10[SF_MAXEXP10];	/* negative powers of 10        */
 	uchar sf_dec[200];	/* ascii reps of values < 100   */
 	char *sf_digits;	/* digits for general bases     */
-	int (*sf_cvinitf) (void);	/* initialization function      */
 	int sf_cvinit;		/* initialization state         */
 	char *(*sf_fmtintf) (const char *, int *);
 	uchar sf_cv36[UCHAR_MAX + 1];	/* conversion for base [2-36]   */
 	uchar sf_cv64[UCHAR_MAX + 1];	/* conversion for base [37-64]  */
 	uchar sf_type[UCHAR_MAX + 1];	/* conversion formats&types     */
     } Sftab_t;
-
-/* thread-safe macro/function to initialize _Sfcv* conversion tables */
-#define SFCVINIT()      (_Sfcvinit ? 1 : (_Sfcvinit = (*_Sfcvinitf)()) )
 
 /* sfucvt() converts decimal integers to ASCII */
 #define SFDIGIT(v,scale,digit) \
