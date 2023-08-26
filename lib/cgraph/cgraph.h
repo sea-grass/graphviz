@@ -107,6 +107,12 @@ typedef struct Agsubnode_s Agsubnode_t;
  *  @brief These records are attached by client programs dynamically at runtime.
  *  @{
  *
+ *  Uninterpreted records may be attached to graphs, subgraphs, nodes,
+ *  and edges for efficient operations on values such as marks, weights,
+ *  counts, and pointers needed by algorithms.
+ *  Application programmers define the fields of these records,
+ *  but they must be declared with a common record header @ref Agrec_t.
+ *
  *  A unique string ID (stored in @ref Agrec_s.name) must be given
  *  to each record attached to the same object.
  *  Cgraph has functions to create, search for, and delete these records.
