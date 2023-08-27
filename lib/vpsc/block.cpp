@@ -206,7 +206,7 @@ void Block::deleteMinInConstraint() {
 void Block::deleteMinOutConstraint() {
 	out->deleteMin();
 }
-inline bool Block::canFollowLeft(Constraint *c, Variable *last) {
+inline bool Block::canFollowLeft(const Constraint *c, Variable *last) {
 	return c->left->block==this && c->active && last!=c->left;
 }
 inline bool Block::canFollowRight(Constraint *c, Variable *last) {
