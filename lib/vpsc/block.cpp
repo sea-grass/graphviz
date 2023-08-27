@@ -209,7 +209,7 @@ void Block::deleteMinOutConstraint() {
 inline bool Block::canFollowLeft(const Constraint *c, Variable *last) {
 	return c->left->block==this && c->active && last!=c->left;
 }
-inline bool Block::canFollowRight(Constraint *c, Variable *last) {
+inline bool Block::canFollowRight(const Constraint *c, Variable *last) {
 	return c->right->block==this && c->active && last!=c->right;
 }
 
