@@ -141,8 +141,8 @@ Constraint *Block::findMinInConstraint() {
 	vector<Constraint*> outOfDate;
 	while (!in->isEmpty()) {
 		v = in->findMin();
-		Block *lb=v->left->block;
-		Block *rb=v->right->block;
+		const Block *lb = v->left->block;
+		const Block *rb = v->right->block;
 		// rb may not be this if called between merge and mergeIn
 		if (RECTANGLE_OVERLAP_LOGGING) {
 			ofstream f(LOGFILE,ios::app);
