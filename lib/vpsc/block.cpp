@@ -80,7 +80,7 @@ void Block::merge(Block* b, Constraint* c) {
 		ofstream f(LOGFILE,ios::app);
 		f<<"  merging on: "<<*c<<",c->left->offset="<<c->left->offset<<",c->right->offset="<<c->right->offset<<"\n";
 	}
-	double dist = c->right->offset - c->left->offset - c->gap;
+	const double dist = c->right->offset - c->left->offset - c->gap;
 	Block *l=c->left->block;
 	Block *r=c->right->block;
 	if (vars.size() < b->vars.size()) {
