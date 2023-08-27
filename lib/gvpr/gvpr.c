@@ -845,8 +845,6 @@ static Agraph_t *ing_read(void *fp)
     return readG(fp);
 }
 
-static ingdisc ingDisc = { ing_read };
-
 static jmp_buf jbuf;
 
 /* gvexitf:
@@ -972,9 +970,9 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
     /* if program is not null */
     if (usesGraph(gs->xprog)) {
 	if (uopts && uopts->ingraphs)
-	    gs->ing = newIngGraphs(0, uopts->ingraphs, &ingDisc);
+	    gs->ing = newIngGraphs(0, uopts->ingraphs, ing_read);
 	else
-	    gs->ing = newIng(0, gs->opts.inFiles, &ingDisc);
+	    gs->ing = newIng(0, gs->opts.inFiles, ing_read);
 	
 	if (gs->opts.verbose) gvstart_timer ();
 	Agraph_t* nextg = NULL;

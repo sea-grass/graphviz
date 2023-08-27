@@ -69,7 +69,7 @@ Agraph_t *nextGraph(ingraph_state * sp)
     g = NULL;
 
     while (sp->fp != NULL) {
-	if ((g = sp->fns->readf(sp->fp)) != 0)
+	if ((g = sp->readf(sp->fp)) != 0)
 	    break;
 	if (sp->u.Files)	/* Only close if not using stdin */
 	    (void)fclose(sp->fp);
@@ -83,7 +83,7 @@ Agraph_t *nextGraph(ingraph_state * sp)
  * assume user is supplying memory.
  */
 static ingraph_state*
-new_ing(ingraph_state * sp, char **files, Agraph_t** graphs, ingdisc * disc)
+new_ing(ingraph_state * sp, char **files, Agraph_t** graphs, Agraph_t *(*readf)(void*))
 {
     if (!sp) {
 	sp = malloc(sizeof(ingraph_state));
@@ -105,52 +105,40 @@ new_ing(ingraph_state * sp, char **files, Agraph_t** graphs, ingdisc * disc)
     sp->ctr = 0;
     sp->errors = 0;
     sp->fp = NULL;
-    sp->fns = malloc(sizeof(ingdisc));
-    if (!sp->fns) {
-	fprintf(stderr, "ingraphs: out of memory\n");
+    if (!readf) {
 	if (sp->heap)
 	    free(sp);
+	fprintf(stderr, "ingraphs: NULL read function\n");
 	return 0;
     }
-    if (!disc->readf) {
-	free(sp->fns);
-	if (sp->heap)
-	    free(sp);
-	fprintf(stderr, "ingraphs: NULL field in ingdisc argument\n");
-	return 0;
-    }
-    *sp->fns = *disc;
+    sp->readf = readf;
     return sp;
 }
 
-ingraph_state*
-newIng(ingraph_state * sp, char **files, ingdisc * disc)
-{
-    return new_ing(sp, files, 0, disc);
+ingraph_state *newIng(ingraph_state *sp, char **files,
+                      Agraph_t *(*readf)(void *)) {
+  return new_ing(sp, files, 0, readf);
 }
 
 /* newIngGraphs:
  * Create new ingraph state using supplied graphs. If sp is non-NULL, we
  * assume user is supplying memory.
  */
-ingraph_state*
-newIngGraphs(ingraph_state * sp , Agraph_t** graphs, ingdisc *disc)
-{
-    return new_ing(sp, 0, graphs, disc);
+ingraph_state *newIngGraphs(ingraph_state *sp, Agraph_t **graphs,
+                            Agraph_t *(*readf)(void *)) {
+  return new_ing(sp, 0, graphs, readf);
 }
 
 static Agraph_t *dflt_read(void *fp) {
   return agread(fp, NULL);
 }
 
-static ingdisc dflt_disc = { dflt_read };
-
 /* newIngraph:
  * At present, we require opf to be non-NULL. In
  * theory, we could assume a function agread(FILE*,void*)
  */
 ingraph_state *newIngraph(ingraph_state * sp, char **files) {
-    return newIng(sp, files, &dflt_disc);
+  return newIng(sp, files, dflt_read);
 }
 
 /* closeIngraph:
@@ -161,7 +149,6 @@ void closeIngraph(ingraph_state * sp)
 {
     if (!sp->ingraphs && sp->u.Files && sp->fp)
 	(void)fclose(sp->fp);
-    free(sp->fns);
     if (sp->heap)
 	free(sp);
 }
