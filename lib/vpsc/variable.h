@@ -30,7 +30,7 @@ public:
 	double desiredPosition;
 	const double weight;
 	double offset;
-	Block *block;
+	Block *block = nullptr;
 	bool visited;
 	Constraints in;
 	Constraints out;
