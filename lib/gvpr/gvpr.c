@@ -845,7 +845,7 @@ static Agraph_t *ing_read(void *fp)
     return readG(fp);
 }
 
-static ingdisc ingDisc = { ing_read, 0 };
+static ingdisc ingDisc = { ing_read };
 
 static jmp_buf jbuf;
 
@@ -909,7 +909,6 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
     int cleanup, i, incoreGraphs;
 
     setErrorErrors (0);
-    ingDisc.dflt = stdin;
 
     gs->opts = scanArgs(argc, argv);
     if (gs->opts.state <= 0) {

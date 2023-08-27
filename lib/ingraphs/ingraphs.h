@@ -24,7 +24,6 @@ extern "C" {
 
     typedef struct {
 	Agraph_t *(*readf) (void *);
-	void *dflt;
     } ingdisc;
 
     typedef struct {

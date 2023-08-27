@@ -31,12 +31,12 @@ static void nextFile(ingraph_state * sp)
 
     if (sp->u.Files == NULL) {
 	if (sp->ctr++ == 0) {
-	    rv = sp->fns->dflt;
+	    rv = stdin;
 	}
     } else {
 	while ((fname = sp->u.Files[sp->ctr++])) {
 	    if (*fname == '-') {
-		rv = sp->fns->dflt;
+		rv = stdin;
 		break;
 	    } else if ((rv = fopen(fname, "r")) != 0)
 		break;
@@ -112,7 +112,7 @@ new_ing(ingraph_state * sp, char **files, Agraph_t** graphs, ingdisc * disc)
 	    free(sp);
 	return 0;
     }
-    if (!disc->readf || !disc->dflt) {
+    if (!disc->readf) {
 	free(sp->fns);
 	if (sp->heap)
 	    free(sp);
@@ -143,15 +143,13 @@ static Agraph_t *dflt_read(void *fp) {
   return agread(fp, NULL);
 }
 
-static ingdisc dflt_disc = { dflt_read, 0 };
+static ingdisc dflt_disc = { dflt_read };
 
 /* newIngraph:
  * At present, we require opf to be non-NULL. In
  * theory, we could assume a function agread(FILE*,void*)
  */
 ingraph_state *newIngraph(ingraph_state * sp, char **files) {
-    if (!dflt_disc.dflt)
-	dflt_disc.dflt = stdin;
     return newIng(sp, files, &dflt_disc);
 }
 
