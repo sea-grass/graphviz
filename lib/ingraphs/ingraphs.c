@@ -13,15 +13,10 @@
  * Written by Emden Gansner
  */
 
+#include <cgraph/cgraph.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-typedef struct {
-    char *dummy;
-} Agraph_t;
-
-extern void agsetfile(const char *);
 
 #include <ingraphs/ingraphs.h>
 
