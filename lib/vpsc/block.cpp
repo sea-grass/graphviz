@@ -62,14 +62,14 @@ void Block::setUpOutConstraints() {
 	setUpConstraintHeap(out,false);
 }
 void Block::setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h,
-	  bool in) {
+	  bool use_in) {
 	h = std::unique_ptr<PairingHeap<Constraint*>>(
 	  new PairingHeap<Constraint*>(&compareConstraints));
 	for (Variable *v : vars) {
-		vector<Constraint*> *cs=in?&(v->in):&(v->out);
+		vector<Constraint*> *cs= use_in ? &v->in : &v->out;
 		for (Constraint *c : *cs) {
 			c->timeStamp=blockTimeCtr;
-			if ((c->left->block != this && in) || (c->right->block != this && !in)) {
+			if ((c->left->block != this && use_in) || (c->right->block != this && !use_in)) {
 				h->insert(c);
 			}
 		}
