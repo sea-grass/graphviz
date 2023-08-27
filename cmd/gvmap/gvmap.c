@@ -420,11 +420,6 @@ static void mapFromGraph (Agraph_t* g, params_t* pm)
   makeMap (graph, n, x, width, grouping, labels, fsz, rgb_r, rgb_g, rgb_b, pm, g);
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char *argv[])
 {
   params_t pm;
@@ -434,7 +429,7 @@ int main(int argc, char *argv[])
 
   init(argc, argv, &pm);
 
-  newIngraph (&ig, pm.infiles, gread);
+  newIngraph(&ig, pm.infiles);
   while ((g = nextGraph (&ig)) != 0) {
     if (prevg) agclose (prevg);
     mapFromGraph (g, &pm);

@@ -22,8 +22,6 @@
 extern "C" {
 #endif
 
-    typedef Agraph_t *(*opengfn) (FILE *);
-
     typedef struct {
 	void *(*openf) (char *);
 	Agraph_t *(*readf) (void *);
@@ -44,7 +42,7 @@ extern "C" {
 	unsigned errors;
     } ingraph_state;
 
-    extern ingraph_state *newIngraph(ingraph_state *, char **, opengfn);
+    extern ingraph_state *newIngraph(ingraph_state *, char **);
     extern ingraph_state *newIng(ingraph_state *, char **, ingdisc *);
     extern ingraph_state *newIngGraphs(ingraph_state *, Agraph_t**, ingdisc *);
     extern void closeIngraph(ingraph_state * sp);

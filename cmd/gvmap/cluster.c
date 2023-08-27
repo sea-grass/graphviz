@@ -114,11 +114,6 @@ static void init(int argc, char *argv[], opts_t* opts) {
     opts->infiles = NULL;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 static void clusterGraph (Agraph_t* g, int maxcluster, int clustering_method){
   initDotIO(g);
   attached_clustering(g, maxcluster, clustering_method);
@@ -132,7 +127,7 @@ int main(int argc, char *argv[])
 
   init(argc, argv, &opts);
 
-  newIngraph (&ig, opts.infiles, gread);
+  newIngraph(&ig, opts.infiles);
 
   while ((g = nextGraph (&ig)) != 0) {
     if (prevg) agclose (prevg);

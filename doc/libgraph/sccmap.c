@@ -319,18 +319,13 @@ static void scanArgs(int argc, char **argv)
 		outfp = stdout;			/* stdout the default */
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-	return agread(fp, NULL);
-}
-
 int main(int argc, char **argv)
 {
 	Agraph_t *g;
 	ingraph_state ig;
 
 	scanArgs(argc, argv);
-	newIngraph(&ig, Files, gread);
+	newIngraph(&ig, Files);
 
 	while ((g = nextGraph(&ig)) != 0) {
 		if (agisdirected(g))

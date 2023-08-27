@@ -349,11 +349,6 @@ static void init(int argc, char *argv[])
 	Files = argv;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-  return agread(fp, NULL);
-}
-
 int main(int argc, char *argv[])
 {
     Agraph_t *g;
@@ -362,7 +357,7 @@ int main(int argc, char *argv[])
     int gcnt = 0;
 
     init(argc, argv);
-    newIngraph(&ig, Files, gread);
+    newIngraph(&ig, Files);
 
     while ((g = nextGraph(&ig)) != 0) {
 	r |= process(g, gcnt);

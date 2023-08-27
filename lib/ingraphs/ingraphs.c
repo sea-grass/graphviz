@@ -149,24 +149,19 @@ static int dflt_close(void *fp)
     return fclose(fp);
 }
 
-typedef Agraph_t *(*xopengfn) (void *);
+static Agraph_t *dflt_read(void *fp) {
+  return agread(fp, NULL);
+}
 
-static ingdisc dflt_disc = { dflt_open, 0, dflt_close, 0 };
+static ingdisc dflt_disc = { dflt_open, dflt_read, dflt_close, 0 };
 
 /* newIngraph:
  * At present, we require opf to be non-NULL. In
  * theory, we could assume a function agread(FILE*,void*)
  */
-ingraph_state *newIngraph(ingraph_state * sp, char **files, opengfn opf)
-{
+ingraph_state *newIngraph(ingraph_state * sp, char **files) {
     if (!dflt_disc.dflt)
 	dflt_disc.dflt = stdin;
-    if (opf)
-	dflt_disc.readf = (xopengfn) opf;
-    else {
-	fprintf(stderr, "ingraphs: NULL graph reader\n");
-	return 0;
-    }
     return newIng(sp, files, &dflt_disc);
 }
 

@@ -795,11 +795,6 @@ static int process(Agraph_t * g, char* graphName)
     return c_cnt > 1;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 /* chkGraphName:
  * If the graph is anonymous, its name starts with '%'.
  * If we use this as the prefix for subgraphs, they will not be
@@ -829,7 +824,7 @@ int main(int argc, char *argv[])
     ingraph_state ig;
     int r = 0;
     init(argc, argv);
-    newIngraph(&ig, Files, gread);
+    newIngraph(&ig, Files);
 
     while ((g = nextGraph(&ig)) != 0) {
 	r += process(g, chkGraphName(g));
