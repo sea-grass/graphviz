@@ -840,17 +840,12 @@ static void chkClose(Agraph_t * g)
 	agclose(g);
 }
 
-static void *ing_open(char *f)
-{
-  return fopen(f, "r");
-}
-
 static Agraph_t *ing_read(void *fp)
 {
     return readG(fp);
 }
 
-static ingdisc ingDisc = { ing_open, ing_read, 0 };
+static ingdisc ingDisc = { ing_read, 0 };
 
 static jmp_buf jbuf;
 

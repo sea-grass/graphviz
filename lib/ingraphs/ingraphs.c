@@ -38,7 +38,7 @@ static void nextFile(ingraph_state * sp)
 	    if (*fname == '-') {
 		rv = sp->fns->dflt;
 		break;
-	    } else if ((rv = sp->fns->openf(fname)) != 0)
+	    } else if ((rv = fopen(fname, "r")) != 0)
 		break;
 	    else {
 		fprintf(stderr, "Can't open %s\n", sp->u.Files[sp->ctr - 1]);
@@ -112,7 +112,7 @@ new_ing(ingraph_state * sp, char **files, Agraph_t** graphs, ingdisc * disc)
 	    free(sp);
 	return 0;
     }
-    if (!disc->openf || !disc->readf || !disc->dflt) {
+    if (!disc->readf || !disc->dflt) {
 	free(sp->fns);
 	if (sp->heap)
 	    free(sp);
@@ -139,16 +139,11 @@ newIngGraphs(ingraph_state * sp , Agraph_t** graphs, ingdisc *disc)
     return new_ing(sp, 0, graphs, disc);
 }
 
-static void *dflt_open(char *f)
-{
-    return fopen(f, "r");
-}
-
 static Agraph_t *dflt_read(void *fp) {
   return agread(fp, NULL);
 }
 
-static ingdisc dflt_disc = { dflt_open, dflt_read, 0 };
+static ingdisc dflt_disc = { dflt_read, 0 };
 
 /* newIngraph:
  * At present, we require opf to be non-NULL. In
