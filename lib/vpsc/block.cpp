@@ -50,7 +50,7 @@ Block::Block(Variable *v) {
 
 double Block::desiredWeightedPosition() {
 	double wp = 0;
-	for (Variable *v : vars) {
+	for (const Variable *v : vars) {
 		wp += (v->desiredPosition - v->offset) * v->weight;
 	}
 	return wp;
