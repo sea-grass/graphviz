@@ -174,9 +174,9 @@ Constraint *Block::findMinInConstraint() {
 			break;
 		}
 	}
-	for (Constraint *v : outOfDate) {
-		v->timeStamp=blockTimeCtr;
-		in->insert(v);
+	for (Constraint *c : outOfDate) {
+		c->timeStamp=blockTimeCtr;
+		in->insert(c);
 	}
 	if(in->isEmpty()) {
 		v=nullptr;
