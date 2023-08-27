@@ -72,7 +72,7 @@ Agraph_t *nextGraph(ingraph_state * sp)
 	if ((g = sp->fns->readf(sp->fp)) != 0)
 	    break;
 	if (sp->u.Files)	/* Only close if not using stdin */
-	    sp->fns->closef(sp->fp);
+	    (void)fclose(sp->fp);
 	nextFile(sp);
     }
     return g;
@@ -112,7 +112,7 @@ new_ing(ingraph_state * sp, char **files, Agraph_t** graphs, ingdisc * disc)
 	    free(sp);
 	return 0;
     }
-    if (!disc->openf || !disc->readf || !disc->closef || !disc->dflt) {
+    if (!disc->openf || !disc->readf || !disc->dflt) {
 	free(sp->fns);
 	if (sp->heap)
 	    free(sp);
@@ -144,16 +144,11 @@ static void *dflt_open(char *f)
     return fopen(f, "r");
 }
 
-static int dflt_close(void *fp)
-{
-    return fclose(fp);
-}
-
 static Agraph_t *dflt_read(void *fp) {
   return agread(fp, NULL);
 }
 
-static ingdisc dflt_disc = { dflt_open, dflt_read, dflt_close, 0 };
+static ingdisc dflt_disc = { dflt_open, dflt_read, 0 };
 
 /* newIngraph:
  * At present, we require opf to be non-NULL. In
@@ -172,7 +167,7 @@ ingraph_state *newIngraph(ingraph_state * sp, char **files) {
 void closeIngraph(ingraph_state * sp)
 {
     if (!sp->ingraphs && sp->u.Files && sp->fp)
-	sp->fns->closef(sp->fp);
+	(void)fclose(sp->fp);
     free(sp->fns);
     if (sp->heap)
 	free(sp);
