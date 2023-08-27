@@ -98,7 +98,7 @@ static void Agglomerative_Ink_Bundling_delete(Agglomerative_Ink_Bundling grid){
   free(grid);
 }
 
-static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomerative_Ink_Bundling grid, int *pick, double angle_param, double angle){
+static void Agglomerative_Ink_Bundling_establish(Agglomerative_Ink_Bundling grid, int *pick, double angle_param, double angle){
   /* pick is a work array of dimension n, with n the total number of original edges */
   SparseMatrix A = grid->A;
   int n = grid->n, level = grid->level, nc = 0;
@@ -267,9 +267,9 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
     SparseMatrix_delete(R1);
     P = SparseMatrix_transpose(R);
     B = SparseMatrix_multiply(R, A);
-    if (!B) goto RETURN;
+    if (!B) return;
     cA = SparseMatrix_multiply(B, P); 
-    if (!cA) goto RETURN;
+    if (!cA) return;
     SparseMatrix_delete(B);
     grid->P = P;
     grid->R = R;
@@ -291,16 +291,13 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_establish(Agglomera
 			 cgrid->n, grid->total_ink, grand_total_ink, grid->total_ink - grand_total_ink, grand_total_gain);	 
     assert(fabs(grid->total_ink - cgrid->total_ink - grand_total_gain) <= 0.0001*grid->total_ink);
 
-    cgrid = Agglomerative_Ink_Bundling_establish(cgrid, pick, angle_param, angle);
+    Agglomerative_Ink_Bundling_establish(cgrid, pick, angle_param, angle);
     grid->next = cgrid;
 
   } else {
     if (Verbose > 1) fprintf(stderr,"no more improvement, orig ink = %f, gain = %f, stop and final bundling found\n", grand_total_ink, grand_total_gain);
     /* no more improvement, stop and final bundling found */
   }
-
- RETURN:
-  return grid;
 }
 
 static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges, double angle_param, double angle){
@@ -315,8 +312,7 @@ static Agglomerative_Ink_Bundling Agglomerative_Ink_Bundling_new(SparseMatrix A0
 
   std::vector<int> pick(A0->m);
   
-  grid = Agglomerative_Ink_Bundling_establish(grid, pick.data(), angle_param,
-                                              angle);
+  Agglomerative_Ink_Bundling_establish(grid, pick.data(), angle_param, angle);
 
   if (A != A0) grid->delete_top_level_A = true; // be sure to clean up later
 
