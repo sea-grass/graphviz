@@ -60,7 +60,7 @@ Agraph_t *nextGraph(ingraph_state * sp)
     Agraph_t *g;
 
     if (sp->ingraphs) {
-	g = (Agraph_t*)(sp->u.Graphs[sp->ctr]);
+	g = sp->u.Graphs[sp->ctr];
 	if (g) sp->ctr++;
 	return g;
     }
