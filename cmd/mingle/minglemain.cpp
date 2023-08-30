@@ -382,7 +382,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	pedge* edges;
     double eps = 0.;
     int nz = 0;
-    int *ia, *ja, i, j, k;
+    int *ja, i, j, k;
 	int rv = 0;
 
 	if (checkG(g)) {
@@ -408,7 +408,8 @@ bundle (Agraph_t* g, opts_t* opts)
 		Agedge_t* e;
 		int idx = 0;
 
-		ia = A->ia; ja = A->ja;
+		const int *ia = A->ia;
+		ja = A->ja;
 		for (i = 0; i < A->m; i++){
 			for (j = ia[i]; j < ia[i+1]; j++){
 				if (ja[j] > i){
@@ -437,7 +438,8 @@ bundle (Agraph_t* g, opts_t* opts)
 		freePM (pm);
 	}
 		
-	ia = A->ia; ja = A->ja;
+	const int *ia = A->ia;
+	ja = A->ja;
 	nz = A->nz;
 	std::vector<double> xx(nz * 4);
 	nz = 0;
