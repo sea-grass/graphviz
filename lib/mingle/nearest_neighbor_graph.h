@@ -10,5 +10,4 @@
 
 #pragma once
 
-SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors, double *x,
-                                    double eps);
+SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors, double *x);

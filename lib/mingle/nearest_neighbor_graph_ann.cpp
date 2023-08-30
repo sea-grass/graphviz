@@ -50,7 +50,7 @@ static void sortPtsY(int n, ANNpointArray pts){
   }
 }
 
-void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x,
+void nearest_neighbor_graph_ann(int nPts, int k, double *x,
                                 int &nz0, std::vector<int> &irn,
                                 std::vector<int> &jcn,
                                 std::vector<double> &val) {
@@ -60,7 +60,6 @@ void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x,
     nPts: number of points
     dim: dimension
     k: number of neighbors needed
-    eps: error tolerance
     x: nPts*dim vector. The i-th point is x[i*dim : i*dim + dim - 1]
     nz: number of entries in the connectivity matrix irn/jcn/val
     irn, jcn: the connectivity 
@@ -68,6 +67,9 @@ void nearest_neighbor_graph_ann(int nPts, int k, double eps, double *x,
 
     note that there could be repeates
   */
+
+  // error tolerance
+  const double eps = 0;
 
   ANNpointArray dataPts = annAllocPts(nPts, dim);			// allocate data points
   std::vector<ANNidx> nnIdx(k);						// allocate near neighbor indices

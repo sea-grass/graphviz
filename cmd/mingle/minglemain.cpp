@@ -378,7 +378,6 @@ bundle (Agraph_t* g, opts_t* opts)
 {
 	double *x = nullptr;
 	int dim = 2;
-    double eps = 0.;
     int i;
 	int rv = 0;
 
@@ -453,7 +452,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx.data(), eps);
+	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx.data());
 
 	SparseMatrix_delete(A);
 	A = B;
