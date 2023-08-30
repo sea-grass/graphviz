@@ -130,11 +130,8 @@ static void listdelrec(Agobj_t * obj, Agrec_t * rec)
 
 int agdelrec(void *arg_obj, const char *name)
 {
-    Agobj_t *obj;
-    Agraph_t *g;
-
-    obj = arg_obj;
-    g = agraphof(obj);
+    Agobj_t *obj = arg_obj;
+    Agraph_t *g = agraphof(obj);
     Agrec_t *rec = aggetrec(obj, name, 0);
     if (!rec)
 	return FAILURE;
