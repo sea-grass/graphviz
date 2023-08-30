@@ -379,7 +379,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	double *x = nullptr;
 	int dim = 2;
     double eps = 0.;
-    int i, k;
+    int i;
 	int rv = 0;
 
 	if (checkG(g)) {
@@ -424,7 +424,7 @@ bundle (Agraph_t* g, opts_t* opts)
 				if (j < i) {
 					std::swap(i, j);
 				}
-				k = insertPM (pm, i, j, -1);
+				int k = insertPM (pm, i, j, -1);
 				assert (k >= 0);
 				agbindrec (e, "info", sizeof(etoi_t), true);
 				ED_idx(e) = k;
