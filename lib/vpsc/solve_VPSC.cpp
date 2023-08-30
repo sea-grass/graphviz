@@ -236,16 +236,16 @@ void IncVPSC::splitBlocks() {
 				f<<"    found split point: "<<*v<<" lm="<<v->lm<<"\n";
 			}
 			splitCnt++;
-			Block *b = v->left->block, *l=nullptr, *r=nullptr;
+			Block *b2 = v->left->block, *l=nullptr, *r=nullptr;
 			assert(v->left->block == v->right->block);
-			double pos = b->posn;
-			b->split(l,r,v);
+			double pos = b2->posn;
+			b2->split(l,r,v);
 			l->posn=r->posn=pos;
 			l->wposn = l->posn * l->weight;
 			r->wposn = r->posn * r->weight;
 			bs.insert(l);
 			bs.insert(r);
-			b->deleted=true;
+			b2->deleted=true;
 			inactive.push_back(v);
 			if (RECTANGLE_OVERLAP_LOGGING) {
 				ofstream f(LOGFILE,ios::app);

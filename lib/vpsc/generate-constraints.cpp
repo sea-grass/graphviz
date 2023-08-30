@@ -63,11 +63,11 @@ struct Node {
 	void setNeighbours(const NodeSet &left, const NodeSet &right) {
 		leftNeighbours=left;
 		rightNeighbours=right;
-		for(Node *v : left) {
-			v->addRightNeighbour(this);
+		for(Node *n : left) {
+			n->addRightNeighbour(this);
 		}
-		for(Node *v : right) {
-			v->addLeftNeighbour(this);
+		for(Node *n : right) {
+			n->addLeftNeighbour(this);
 		}
 	}
 };

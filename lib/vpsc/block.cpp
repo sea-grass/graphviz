@@ -50,7 +50,7 @@ Block::Block(Variable *v) {
 
 double Block::desiredWeightedPosition() {
 	double wp = 0;
-	for (Variable *v : vars) {
+	for (const Variable *v : vars) {
 		wp += (v->desiredPosition - v->offset) * v->weight;
 	}
 	return wp;
@@ -62,14 +62,14 @@ void Block::setUpOutConstraints() {
 	setUpConstraintHeap(out,false);
 }
 void Block::setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h,
-	  bool in) {
+	  bool use_in) {
 	h = std::unique_ptr<PairingHeap<Constraint*>>(
 	  new PairingHeap<Constraint*>(&compareConstraints));
 	for (Variable *v : vars) {
-		vector<Constraint*> *cs=in?&(v->in):&(v->out);
+		vector<Constraint*> *cs= use_in ? &v->in : &v->out;
 		for (Constraint *c : *cs) {
 			c->timeStamp=blockTimeCtr;
-			if ((c->left->block != this && in) || (c->right->block != this && !in)) {
+			if ((c->left->block != this && use_in) || (c->right->block != this && !use_in)) {
 				h->insert(c);
 			}
 		}
@@ -80,7 +80,7 @@ void Block::merge(Block* b, Constraint* c) {
 		ofstream f(LOGFILE,ios::app);
 		f<<"  merging on: "<<*c<<",c->left->offset="<<c->left->offset<<",c->right->offset="<<c->right->offset<<"\n";
 	}
-	double dist = c->right->offset - c->left->offset - c->gap;
+	const double dist = c->right->offset - c->left->offset - c->gap;
 	Block *l=c->left->block;
 	Block *r=c->right->block;
 	if (vars.size() < b->vars.size()) {
@@ -141,8 +141,8 @@ Constraint *Block::findMinInConstraint() {
 	vector<Constraint*> outOfDate;
 	while (!in->isEmpty()) {
 		v = in->findMin();
-		Block *lb=v->left->block;
-		Block *rb=v->right->block;
+		const Block *lb = v->left->block;
+		const Block *rb = v->right->block;
 		// rb may not be this if called between merge and mergeIn
 		if (RECTANGLE_OVERLAP_LOGGING) {
 			ofstream f(LOGFILE,ios::app);
@@ -174,9 +174,9 @@ Constraint *Block::findMinInConstraint() {
 			break;
 		}
 	}
-	for (Constraint *v : outOfDate) {
-		v->timeStamp=blockTimeCtr;
-		in->insert(v);
+	for (Constraint *c : outOfDate) {
+		c->timeStamp=blockTimeCtr;
+		in->insert(c);
 	}
 	if(in->isEmpty()) {
 		v=nullptr;
@@ -206,10 +206,10 @@ void Block::deleteMinInConstraint() {
 void Block::deleteMinOutConstraint() {
 	out->deleteMin();
 }
-inline bool Block::canFollowLeft(Constraint *c, Variable *last) {
+inline bool Block::canFollowLeft(const Constraint *c, Variable *last) {
 	return c->left->block==this && c->active && last!=c->left;
 }
-inline bool Block::canFollowRight(Constraint *c, Variable *last) {
+inline bool Block::canFollowRight(const Constraint *c, Variable *last) {
 	return c->right->block==this && c->active && last!=c->right;
 }
 
