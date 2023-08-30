@@ -378,7 +378,6 @@ bundle (Agraph_t* g, opts_t* opts)
 {
 	double *x = nullptr;
 	int dim = 2;
-	pedge* edges;
     double eps = 0.;
     int i, j, k;
 	int rv = 0;
@@ -463,7 +462,10 @@ bundle (Agraph_t* g, opts_t* opts)
 	free(x);
 	x = xx.data();
 
-	edges = edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method, opts->nneighbors, opts->compatibility_method, opts->max_recursion, opts->angle_param, opts->angle);
+	pedge *edges = edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method,
+	                             opts->nneighbors, opts->compatibility_method,
+	                             opts->max_recursion, opts->angle_param,
+	                             opts->angle);
 	
 	if (opts->fmt == FMT_GV) {
 	    	export_dot (outfile, A->m, edges, g);
