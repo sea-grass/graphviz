@@ -422,9 +422,7 @@ bundle (Agraph_t* g, opts_t* opts)
 				i = getDotNodeID (agtail(e));
 				int j = getDotNodeID (aghead(e));
 				if (j < i) {
-					k = i;
-					i = j;
-					j = k;
+					std::swap(i, j);
 				}
 				k = insertPM (pm, i, j, -1);
 				assert (k >= 0);
