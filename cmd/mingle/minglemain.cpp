@@ -379,7 +379,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	double *x = nullptr;
 	int dim = 2;
     double eps = 0.;
-    int i, j, k;
+    int i, k;
 	int rv = 0;
 
 	if (checkG(g)) {
@@ -408,7 +408,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		const int *ia = A->ia;
 		const int *ja = A->ja;
 		for (i = 0; i < A->m; i++){
-			for (j = ia[i]; j < ia[i+1]; j++){
+			for (int j = ia[i]; j < ia[i+1]; j++){
 				if (ja[j] > i){
 					insertPM (pm, i, ja[j], idx++);
 				}
@@ -420,7 +420,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		for (i = 0, n = agfstnode(g); n; n = agnxtnode(g,n)) {
 			for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
 				i = getDotNodeID (agtail(e));
-				j = getDotNodeID (aghead(e));
+				int j = getDotNodeID (aghead(e));
 				if (j < i) {
 					k = i;
 					i = j;
@@ -442,7 +442,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){
-		for (j = ia[i]; j < ia[i+1]; j++){
+		for (int j = ia[i]; j < ia[i+1]; j++){
 			if (ja[j] > i){
 				xx[nz*dim] = x[i*2];
 				xx[nz*dim+1] = x[i*2+1];
