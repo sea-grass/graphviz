@@ -22,15 +22,6 @@
 extern "C" {
 #endif
 
-    typedef Agraph_t *(*opengfn) (FILE *);
-
-    typedef struct {
-	void *(*openf) (char *);
-	Agraph_t *(*readf) (void *);
-	int (*closef) (void *);
-	void *dflt;
-    } ingdisc;
-
     typedef struct {
 	union {
 	    char**     Files;
@@ -39,14 +30,14 @@ extern "C" {
 	int ctr;
 	int ingraphs;
 	void *fp;
-	ingdisc *fns;
+	Agraph_t *(*readf)(void*);
 	bool heap;
 	unsigned errors;
     } ingraph_state;
 
-    extern ingraph_state *newIngraph(ingraph_state *, char **, opengfn);
-    extern ingraph_state *newIng(ingraph_state *, char **, ingdisc *);
-    extern ingraph_state *newIngGraphs(ingraph_state *, Agraph_t**, ingdisc *);
+    extern ingraph_state *newIngraph(ingraph_state *, char **);
+    extern ingraph_state *newIng(ingraph_state *, char **, Agraph_t *(*readf)(void*));
+    extern ingraph_state *newIngGraphs(ingraph_state *, Agraph_t**, Agraph_t *(*readf)(void*));
     extern void closeIngraph(ingraph_state * sp);
     extern Agraph_t *nextGraph(ingraph_state *);
     extern char *fileName(ingraph_state *);

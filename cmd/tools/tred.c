@@ -259,11 +259,6 @@ static void process(Agraph_t *g, gv_stack_t *sp) {
     fflush(stdout);
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char **argv)
 {
     Agraph_t *g;
@@ -271,7 +266,7 @@ int main(int argc, char **argv)
     gv_stack_t estk = {0};
 
     init(argc, argv);
-    newIngraph(&ig, Files, gread);
+    newIngraph(&ig, Files);
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (agisdirected(g))

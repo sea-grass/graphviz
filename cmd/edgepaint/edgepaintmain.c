@@ -262,11 +262,6 @@ static int clarify(Agraph_t* g, double angle, double accuracy, int check_edges_w
   return 0;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char *argv[])
 {
   double accuracy;
@@ -280,7 +275,7 @@ int main(int argc, char *argv[])
   int rv = EXIT_SUCCESS;
 
 	init(argc, argv, &angle, &accuracy, &check_edges_with_same_endpoint, &seed, &color_scheme, &lightness);
-	newIngraph(&ig, Files, gread);
+	newIngraph(&ig, Files);
 
 	while ((g = nextGraph(&ig)) != 0) {
 		if (prev)

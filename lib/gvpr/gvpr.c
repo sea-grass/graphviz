@@ -840,22 +840,10 @@ static void chkClose(Agraph_t * g)
 	agclose(g);
 }
 
-static void *ing_open(char *f)
-{
-  return fopen(f, "r");
-}
-
 static Agraph_t *ing_read(void *fp)
 {
     return readG(fp);
 }
-
-static int ing_close(void *fp)
-{
-  return fclose(fp);
-}
-
-static ingdisc ingDisc = { ing_open, ing_read, ing_close, 0 };
 
 static jmp_buf jbuf;
 
@@ -919,7 +907,6 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
     int cleanup, i, incoreGraphs;
 
     setErrorErrors (0);
-    ingDisc.dflt = stdin;
 
     gs->opts = scanArgs(argc, argv);
     if (gs->opts.state <= 0) {
@@ -983,9 +970,9 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
     /* if program is not null */
     if (usesGraph(gs->xprog)) {
 	if (uopts && uopts->ingraphs)
-	    gs->ing = newIngGraphs(0, uopts->ingraphs, &ingDisc);
+	    gs->ing = newIngGraphs(0, uopts->ingraphs, ing_read);
 	else
-	    gs->ing = newIng(0, gs->opts.inFiles, &ingDisc);
+	    gs->ing = newIng(0, gs->opts.inFiles, ing_read);
 	
 	if (gs->opts.verbose) gvstart_timer ();
 	Agraph_t* nextg = NULL;

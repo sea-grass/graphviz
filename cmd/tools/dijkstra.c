@@ -281,11 +281,6 @@ static void init(int argc, char *argv[])
     Nodes[j] = Files[j] = NULL;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char **argv)
 {
     Agraph_t *g;
@@ -296,7 +291,7 @@ int main(int argc, char **argv)
     Dict_t *Q;
 
     init(argc, argv);
-    newIngraph(&ig, Files, gread);
+    newIngraph(&ig, Files);
 
     Q = dtopen(&MyDisc, Dtoset);
     while ((g = nextGraph(&ig)) != 0) {

@@ -637,11 +637,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     return root;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, nullptr);
-}
-
 /* readGraphs:
  * Read input, parse the graphs, use init_nop (neato -n) to
  * read in all attributes need for layout.
@@ -662,7 +657,7 @@ static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
     PSinputscale = POINTS_PER_INCH;
     Nop = 2;
 
-    newIngraph(&ig, myFiles, gread);
+    newIngraph(&ig, myFiles);
     while ((g = nextGraph(&ig)) != 0) {
 	if (verbose)
 	    std::cerr << "Reading graph " << agnameof(g) << '\n';

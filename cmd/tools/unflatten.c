@@ -206,11 +206,6 @@ static char **scanargs(int argc, char **argv)
 	return 0;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char **argv)
 {
     Agraph_t *g;
@@ -218,7 +213,7 @@ int main(int argc, char **argv)
     char **files;
 
     files = scanargs(argc, argv);
-    newIngraph(&ig, files, gread);
+    newIngraph(&ig, files);
     while ((g = nextGraph(&ig))) {
 	transform(g);
 	agwrite(g, outFile);

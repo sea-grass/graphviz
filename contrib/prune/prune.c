@@ -42,9 +42,6 @@ static void addnode(nodes_t *l, char *n);
 
 int verbose = 0;		/* Flag to indicate verbose message output */
 
-/* wrapper to match libcgraph conventions with libingraph */
-static Agraph_t *gread(FILE *fp);
-
 #define NDNAME "mk"
 
 typedef struct {
@@ -129,7 +126,7 @@ int main(int argc, char **argv)
 	files = NULL;
     }
 
-    newIngraph(&ig, files, gread);
+    newIngraph(&ig, files);
     while ((graph = nextGraph(&ig)) != NULL) {
 	if (agisdirected(graph) == 0) {
 	    fprintf(stderr,
@@ -231,11 +228,6 @@ Options:\n\
   -N<attrspec> : Attribute specification to apply to pruned nodes\n\
 \n\
 Both options `-n' and `-N' can be used multiple times on the command line.\n", progname);
-}
-
-/* wrapper to match libcgraph conventions with libingraph */
-static Agraph_t *gread(FILE *fp) {
-    return agread(fp, NULL);
 }
 
 /* add element to attribute list */

@@ -474,11 +474,6 @@ bundle (Agraph_t* g, opts_t* opts)
 	return rv;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, nullptr);
-}
-
 int main(int argc, char *argv[])
 {
 	Agraph_t *g;
@@ -488,7 +483,7 @@ int main(int argc, char *argv[])
 	opts_t opts;
 
 	init(argc, argv, &opts);
-	newIngraph(&ig, Files, gread);
+	newIngraph(&ig, Files);
 
 	while ((g = nextGraph(&ig)) != 0) {
 		if (prev)

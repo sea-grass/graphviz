@@ -187,11 +187,6 @@ static void initargs(int argc, char **argv)
 	setAction();
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char **argv)
 {
     Agraph_t *G;
@@ -200,7 +195,7 @@ int main(int argc, char **argv)
     initargs(argc, argv);
     if (act == ToGXL) {
 	ingraph_state ig;
-	newIngraph(&ig, Files, gread);
+	newIngraph(&ig, Files);
 
 	while ((G = nextGraph(&ig))) {
 	    if (prev)

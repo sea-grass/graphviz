@@ -67,18 +67,13 @@ static void init(int argc, char *argv[])
 	Files = argv;
 }
 
-static Agraph_t *gread(FILE * fp)
-{
-    return agread(fp, NULL);
-}
-
 int main(int argc, char **argv)
 {
     Agraph_t *g;
     ingraph_state ig;
 
     init(argc, argv);
-    newIngraph(&ig, Files, gread);
+    newIngraph(&ig, Files);
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (!chkOnly) agwrite(g, stdout);
