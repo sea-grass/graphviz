@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <algorithm>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
@@ -456,7 +457,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	SparseMatrix B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.data(), eps);
+	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx.data(), eps);
 
 	SparseMatrix_delete(A);
 	A = B;
