@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -50,6 +51,43 @@ static bool is_id_char(char c) {
   return isalnum(c) || c == '.' || c == '-' || !isascii(c);
 }
 
+// is the prefix of this string a recognized Graphviz escape sequence?
+// https://graphviz.org/docs/attr-types/escString/
+static bool is_escape(const char *str) {
+  assert(str != NULL);
+
+  if (*str != '\\')
+    return false;
+
+  if (str[1] == 'E')
+    return true;
+  if (str[1] == 'G')
+    return true;
+  if (str[1] == 'H')
+    return true;
+  if (str[1] == 'L')
+    return true;
+  if (str[1] == 'N')
+    return true;
+  if (str[1] == 'T')
+    return true;
+
+  if (str[1] == 'l')
+    return true;
+  if (str[1] == 'n')
+    return true;
+  if (str[1] == 'r')
+    return true;
+
+  if (str[1] == '\\')
+    return true;
+
+  if (str[1] == '"')
+    return true;
+
+  return false;
+}
+
 /* _agstrcanon:
  * Canonicalize ordinary strings. 
  * Assumes buf is large enough to hold output.
@@ -60,6 +98,7 @@ static char *_agstrcanon(char *arg, char *buf)
     char uc;
     int cnt = 0, dotcnt = 0;
     bool needs_quotes = false;
+    bool part_of_escape = false;
     bool maybe_num;
     bool backslash_pending = false;
     static const char *tokenlist[]	/* must agree with scan.l */
@@ -76,11 +115,13 @@ static char *_agstrcanon(char *arg, char *buf)
     uc = *s++;
     maybe_num = isdigit(uc) != 0 || uc == '.' || uc == '-';
     while (uc) {
-	if (uc == '\"') {
+	if (uc == '\"' && !part_of_escape) {
 	    *p++ = '\\';
 	    needs_quotes = true;
-	} 
-	else if (maybe_num) {
+	} else if (!part_of_escape && is_escape(&s[-1])) {
+	    needs_quotes = true;
+	    part_of_escape = true;
+	} else if (maybe_num) {
 	    if (uc == '-') {
 		if (cnt) {
 		    maybe_num = false;
@@ -97,9 +138,12 @@ static char *_agstrcanon(char *arg, char *buf)
 		maybe_num = false;
 		needs_quotes = true;
 	    }
+	    part_of_escape = false;
 	}
-	else if (!(isalnum(uc) || uc == '_' || !isascii(uc)))
+	else if (!(isalnum(uc) || uc == '_' || !isascii(uc))) {
 	    needs_quotes = true;
+	    part_of_escape = false;
+	}
 	*p++ = uc;
 	uc = *s++;
 	cnt++;

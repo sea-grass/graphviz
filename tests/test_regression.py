@@ -29,6 +29,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     ROOT,
     dot,
     gvpr,
+    is_mingw,
     remove_xtype_warnings,
     run_c,
     which,
@@ -2788,7 +2789,11 @@ def test_2391_1():
     dot("svg", input)
 
 
-@pytest.mark.xfail(strict=True)  # FIXME
+@pytest.mark.xfail(
+    platform.system() == "Windows" and not is_mingw(),
+    reason="cannot link Agdirected on Windows",
+    strict=True,
+)  # FIXME
 def test_2397():
     """
     escapes in strings should be handled correctly

@@ -92,6 +92,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   2.38.0. #1520
 - **Breaking**: The `vt100` output format has been renamed to `vt`. This fixes a
   problem where it was not discoverable on macOS. #2429
+- Escape sequences like `\"` are recognized in strings and double escaping
+  (producing `\\"`) is avoided. #2397
 
 ## [8.1.0] – 2023-07-06
 
