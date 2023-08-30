@@ -380,7 +380,6 @@ bundle (Agraph_t* g, opts_t* opts)
 	int dim = 2;
 	pedge* edges;
     double eps = 0.;
-    int nz = 0;
     int i, j, k;
 	int rv = 0;
 
@@ -439,7 +438,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		
 	const int *ia = A->ia;
 	const int *ja = A->ja;
-	nz = A->nz;
+	int nz = A->nz;
 	std::vector<double> xx(nz * 4);
 	nz = 0;
 	dim = 4;
