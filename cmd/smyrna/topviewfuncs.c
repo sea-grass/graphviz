@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <float.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 static xdot *parseXdotwithattrs(void *e)
@@ -837,8 +838,8 @@ void updateSmGraph(Agraph_t * g,topview* t)
 	t->Nodecount++;
 
     }
-    aginit(g, AGNODE, "nodeRec", sizeof(nodeRec), 0);
-    aginit(g, AGEDGE, "edgeRec", sizeof(edgeRec), 0);
+    aginit(g, AGNODE, "nodeRec", sizeof(nodeRec), false);
+    aginit(g, AGEDGE, "edgeRec", sizeof(edgeRec), false);
 
     set_boundaries(g);
     view->Topview=t;

@@ -575,9 +575,9 @@ static void gvevent_read (GVJ_t * job, const char *filename, const char *layout)
 	agclose(gvc->g);
     }
 
-    aginit (g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
-    aginit (g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
-    aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+    aginit (g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
+    aginit (g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
+    aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
     gvc->g = g;
     GD_gvc(g) = gvc;
     if (gvLayout(gvc, g, layout) == -1)

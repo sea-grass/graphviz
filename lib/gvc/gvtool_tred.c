@@ -73,7 +73,7 @@ int gvToolTred(Agraph_t * g)
     int warn = 0;
 
     if (agisdirected(g)) {
-        aginit(g, AGNODE, "info", sizeof(Agmarknodeinfo_t), TRUE);
+        aginit(g, AGNODE, "info", sizeof(Agmarknodeinfo_t), true);
         for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    warn = dfs(n, NULL, warn);
         }

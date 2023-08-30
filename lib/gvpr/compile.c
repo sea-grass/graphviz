@@ -2559,9 +2559,9 @@ Agraph_t *readG(FILE * fp) {
 #endif
     g = agread(fp, &gprDisc);
     if (g) {
-	aginit(g, AGRAPH, UDATA, sizeof(gdata), 0);
-	aginit(g, AGNODE, UDATA, sizeof(ndata), 0);
-	aginit(g, AGEDGE, UDATA, sizeof(edata), 0);
+	aginit(g, AGRAPH, UDATA, sizeof(gdata), false);
+	aginit(g, AGNODE, UDATA, sizeof(ndata), false);
+	aginit(g, AGEDGE, UDATA, sizeof(edata), false);
     }
     return g;
 }

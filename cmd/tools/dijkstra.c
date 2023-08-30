@@ -138,7 +138,7 @@ static void update(Dict_t * Q, Agnode_t * dest, Agnode_t * src, double len)
 static void pre(Agraph_t * g)
 {
     len_sym = agattr(g, AGEDGE, "len", NULL);
-    aginit(g, AGNODE, "dijkstra", sizeof(nodedata_t), 1);
+    aginit(g, AGNODE, "dijkstra", sizeof(nodedata_t), true);
 }
 
 static void post(Agraph_t * g)

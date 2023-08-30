@@ -224,9 +224,9 @@ static int process(Agraph_t * g, int gcnt)
     Agraph_t *tree;
     int bcnt;
 
-    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), TRUE);
-    aginit(g, AGEDGE, "info", sizeof(Agedgeinfo_t), TRUE);
-    aginit(g, AGRAPH, "info", sizeof(Agraphinfo_t), TRUE);
+    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
+    aginit(g, AGEDGE, "info", sizeof(Agedgeinfo_t), true);
+    aginit(g, AGRAPH, "info", sizeof(Agraphinfo_t), true);
 
     state.count = 0;
     state.nComp = 0;
