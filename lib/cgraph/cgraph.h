@@ -402,6 +402,14 @@ CGRAPH_API int agnodebefore(Agnode_t *u, Agnode_t *v); /* we have no shame */
  * If a graph has multi-edges between the same pair of nodes,
  * the edge's string name behaves as a secondary key.
  *
+ * Note that an abstract edge has two distinct concrete
+ * representations: as an in-edge and as an out-edge.
+ * In particular, the pointer as an out-edge is different
+ * from the pointer as an in-edge.
+ * The function @ref ageqedge canonicalizes the pointers before
+ * doing a comparison and so can be used to test edge equality.
+ * The sense of an edge can be flipped using @ref agopp.
+ *
  * @{
  */
 
@@ -572,9 +580,9 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 /// @addtogroup cgraph_other
 /// @{
 /* data access macros */
-/* this assumes that e[0] is out and e[1] is inedge, see edgepair in edge.c  */
-#define AGIN2OUT(e)		((e)-1)
-#define AGOUT2IN(e)		((e)+1)
+/* this assumes that e[0] is out and e[1] is inedge, see @ref Agedgepair_s  */
+#define AGIN2OUT(inedge)		((inedge)-1) ///< Agedgepair_s.in -> Agedgepair_s.out
+#define AGOUT2IN(outedge)		((outedge)+1) ///< Agedgepair_s.out -> Agedgepair_s.in
 #define AGOPP(e)		((AGTYPE(e)==AGINEDGE)?AGIN2OUT(e):AGOUT2IN(e))
 #define AGMKOUT(e)		(AGTYPE(e) == AGOUTEDGE? (e): AGIN2OUT(e))
 #define AGMKIN(e)		(AGTYPE(e) == AGINEDGE?  (e): AGOUT2IN(e))
@@ -584,8 +592,8 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 /* These macros are also exposed as functions, so they can be linked against. */
 #define agtail(e)		AGTAIL(e)
 #define aghead(e)		AGHEAD(e)
-#define agopp(e)		AGOPP(e)
-#define ageqedge(e,f)		AGEQEDGE(e,f)
+#define agopp(e)		AGOPP(e) ///< opposite edge: flip Agedgepair_s.out ⇄ Agedgepair_s.in
+#define ageqedge(e,f)		AGEQEDGE(e,f) ///< edges are equal
 
 #define TAILPORT_ID		"tailport"
 #define HEADPORT_ID		"headport"
