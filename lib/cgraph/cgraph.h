@@ -393,8 +393,18 @@ CGRAPH_API Agsubnode_t *agsubrep(Agraph_t * g, Agnode_t * n);
 CGRAPH_API int agnodebefore(Agnode_t *u, Agnode_t *v); /* we have no shame */
 /// @}
 
-/// @defgroup cgraph_edge edges
-/// @{
+/** @defgroup cgraph_edge edges
+ *
+ * An abstract edge has two endpoint nodes called tail and head
+ * where all outedges of the same node have it as the tail
+ * value and similarly all inedges have it as the head.
+ * In an undirected graph, head and tail are interchangeable.
+ * If a graph has multi-edges between the same pair of nodes,
+ * the edge's string name behaves as a secondary key.
+ *
+ * @{
+ */
+
 CGRAPH_API Agedge_t *agedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 			char *name, int createflag);
 CGRAPH_API Agedge_t *agidedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
