@@ -422,8 +422,18 @@ CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *);
 /// @}
 
-/// @defgroup cgraph_attr strings, symbols, attributes and records
-/// @{
+/** @defgroup cgraph_attr attributes
+ *  @brief strings, symbols, and @ref cgraph_rec
+ *  @ingroup cgraph_api
+ *
+ * Programmer-defined values may be dynamically
+ * attached to graphs, subgraphs, nodes, and edges.
+ * Such values are either character string data (for I/O)
+ * or uninterpreted binary @ref cgraph_rec (for implementing algorithms efficiently).
+ *
+ * @{
+ */
+
 CGRAPH_API char *agstrdup(Agraph_t *, const char *);
 CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
 CGRAPH_API int aghtmlstr(const char *);
