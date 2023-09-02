@@ -166,6 +166,16 @@ struct Agrec_s {
     /* following this would be any programmer-defined data */
 };
 /// @}
+/// @}
+
+/** @defgroup cgraph_object objects
+ *  @brief parent for @ref cgraph_graph, @ref cgraph_node, and @ref cgraph_edge.
+ *  @ingroup cgraph_api
+ *
+ * Common parameter for functions:
+ * @param obj generic pointer to @ref Agraph_t, @ref Agnode_t or @ref Agedge_t
+ * @{
+ */
 
 /** @brief Object tag for graphs, nodes, and edges.
 
@@ -416,8 +426,11 @@ CGRAPH_API Agedge_t *agfstedge(Agraph_t * g, Agnode_t * n);
 CGRAPH_API Agedge_t *agnxtedge(Agraph_t * g, Agedge_t * e, Agnode_t * n);
 /// @}
 
-/// @defgroup cgraph_generic generic
+/// @addtogroup cgraph_object
 /// @{
+
+// Generic object (graphs, nodes and edges) functions
+
 CGRAPH_API Agraph_t *agraphof(void* obj);
 CGRAPH_API Agraph_t *agroot(void* obj);
 CGRAPH_API int agcontains(Agraph_t *, void *);

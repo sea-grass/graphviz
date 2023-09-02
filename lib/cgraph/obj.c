@@ -1,3 +1,7 @@
+/// @file
+/// @brief generic manipulations with @ref Agobj_t and derived objects graphs, nodes and edges
+/// @ingroup cgraph_object
+
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
