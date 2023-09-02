@@ -201,8 +201,14 @@ struct Agobj_s {
 #define AGDATA(obj)		(((Agobj_t*)(obj))->data)
 /// @}
 
-/// @addtogroup cgraph_node
-/// @{
+/** @defgroup cgraph_node nodes
+ *
+ * A node is created by giving a unique string name or programmer
+ * defined integer ID, and is represented by a unique internal object.
+ * (%Node equality can checked by pointer comparison.)
+ *
+ * @{
+ */
 
 /** @brief This is the node struct allocated per graph (or subgraph).
 
@@ -363,7 +369,7 @@ CGRAPH_API int agisstrict(Agraph_t * g);
 CGRAPH_API int agissimple(Agraph_t * g);
 /// @}
 
-/// @defgroup cgraph_node nodes
+/// @addtogroup cgraph_node
 /// @{
 CGRAPH_API Agnode_t *agnode(Agraph_t * g, char *name, int createflag);
 CGRAPH_API Agnode_t *agidnode(Agraph_t * g, IDTYPE id, int createflag);
