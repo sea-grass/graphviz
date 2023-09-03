@@ -66,6 +66,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `h` parameter to `dtstrhash` has been removed.
 - In addition to Guile 2.0 and Guile 2.2, Guile 3.0 is now supported by the
   Graphviz Guile bindings.
+- **Breaking**: The concept of “memory allocator discipline” has been removed,
+  along with the type `Agmemdisc_t` and fields `Agdisc_t.mem` and
+  `Agdstate_t.mem`.
 
 ### Fixed
 
