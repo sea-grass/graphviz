@@ -237,7 +237,7 @@ convertSPtoRoute (sgraph* g, snode* fst, snode* lst)
 	next = N_DAD(next);
     }
 
-    rte.segs = realloc (rte.segs, rte.n*sizeof(segment));
+    rte.segs = gv_recalloc(rte.segs, sz - 2, rte.n, sizeof(segment));
     for (size_t i=0; i<rte.n; i++) {
 	if (i > 0)
 	    rte.segs[i].prev = rte.segs + (i-1);
