@@ -684,8 +684,6 @@ EXCLUDE = (
     "tclpkg/tclpathplan/wrapper.c",
     "tclpkg/tclstubs/tclInt.h",
     "tclpkg/tclstubs/tclStubLib.c",
-    "tclpkg/tkspline/dllEntry.c",
-    "tclpkg/tkspline/tkspline.c",
     "tclpkg/tkstubs/tkInt.h",
     "tclpkg/tkstubs/tkStubImg.c",
     "tclpkg/tkstubs/tkStubLib.c",
