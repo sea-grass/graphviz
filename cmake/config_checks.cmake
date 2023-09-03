@@ -42,7 +42,6 @@ set(HAVE_RSVG       ${RSVG_FOUND}      )
 set(HAVE_WEBP       ${WEBP_FOUND}      )
 
 if(LTDL_FOUND)
-  set(ENABLE_LTDL 1)
   set(LTDL_H 1)
 endif()
 
