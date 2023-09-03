@@ -834,7 +834,7 @@ is_parallel(segment* s1, segment* s2)
 static int
 decide_point(pair *ret, segment* si, segment* sj, int dir1, int dir2)
 {
-    int prec, ans = 0, temp;
+    int prec = 0, ans = 0, temp;
     segment* np1;
     segment *np2 = NULL;
     
