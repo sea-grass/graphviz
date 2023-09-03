@@ -836,7 +836,7 @@ decide_point(pair *ret, segment* si, segment* sj, int dir1, int dir2)
 {
     int prec, ans = 0, temp;
     segment* np1;
-    segment* np2;
+    segment *np2 = NULL;
     
     while ((np1 = next_seg(si,dir1)) && (np2 = next_seg(sj,dir2)) &&
 	is_parallel(np1, np2)) {
