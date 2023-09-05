@@ -169,7 +169,6 @@ EXCLUDE = (
     "lib/cgraph/mem.c",
     "lib/cgraph/node.c",
     "lib/cgraph/obj.c",
-    "lib/cgraph/pend.c",
     "lib/cgraph/rec.c",
     "lib/cgraph/refstr.c",
     "lib/cgraph/subg.c",

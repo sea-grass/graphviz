@@ -22,7 +22,7 @@ endif
 
 libcgraph_C_la_SOURCES = agerror.c apply.c attr.c edge.c \
 	graph.c grammar.y id.c imap.c io.c mem.c node.c \
-	obj.c pend.c rec.c refstr.c scan.l subg.c utils.c write.c
+	obj.c rec.c refstr.c scan.l subg.c utils.c write.c
 
 libcgraph_la_LDFLAGS = -version-info $(CGRAPH_VERSION) -no-undefined
 libcgraph_la_SOURCES = $(libcgraph_C_la_SOURCES)
