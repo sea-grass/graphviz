@@ -232,8 +232,7 @@ static void addattr(Agraph_t * g, Agobj_t * obj, Agsym_t * sym)
     Agattr_t *attr = agattrrec(obj);
     assert(attr != NULL);
     if (sym->id >= MINATTR)
-	attr->str = (char **) AGDISC(g, mem)->resize(AGCLOS(g, mem),
-						     attr->str,
+	attr->str = agrealloc(g, attr->str,
 						     (size_t) sym->id *
 						     sizeof(char *),
 						     ((size_t) sym->id +

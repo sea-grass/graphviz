@@ -86,7 +86,6 @@ static Agraph_t *agmemread0(Agraph_t *arg_g, const char *cp)
     rdr.len = strlen(cp);
     rdr.cur = 0;
 
-    disc.mem = &AgMemDisc;
     disc.id = &AgIdDisc;
     disc.io = &memIoDisc;  
     if (arg_g) g = agconcat(arg_g, &rdr, &disc);

@@ -59,7 +59,7 @@ static int ioflush(void *chan)
 
 static Agiodisc_t gprIoDisc = { iofread, ioputstr, ioflush };
 
-static Agdisc_t gprDisc = { &AgMemDisc, &AgIdDisc, &gprIoDisc };
+static Agdisc_t gprDisc = { &AgIdDisc, &gprIoDisc };
 
 int
 main (int argc, char* argv[])

@@ -11,48 +11,11 @@
 #include <cgraph/cghdr.h>
 #include <stdlib.h>
 
-/* memory management discipline and entry points */
-static void *memopen(Agdisc_t* disc)
-{
-    (void)disc; /* unused */
-    return NULL;
-}
-
-static void *memalloc(void *heap, size_t request)
-{
-    void *rv;
-
-    (void)heap;
-    rv = calloc(1, request);
-    return rv;
-}
-
-static void *memresize(void *heap, void *ptr, size_t oldsize,
-		       size_t request)
-{
-    void *rv;
-
-    (void)heap;
-    rv = realloc(ptr, request);
-    if (rv != NULL && request > oldsize)
-	memset((char *) rv + oldsize, 0, request - oldsize);
-    return rv;
-}
-
-static void memfree(void *heap, void *ptr)
-{
-    (void)heap;
-    free(ptr);
-}
-
-Agmemdisc_t AgMemDisc =
-    { memopen, memalloc, memresize, memfree, NULL };
-
 void *agalloc(Agraph_t * g, size_t size)
 {
-    void *mem;
+    (void)g;
 
-    mem = AGDISC(g, mem)->alloc(AGCLOS(g, mem), size);
+    void *mem = calloc(1, size);
     if (mem == NULL)
 	 agerr(AGERR,"memory allocation failure");
     return mem;
@@ -65,9 +28,12 @@ void *agrealloc(Agraph_t * g, void *ptr, size_t oldsize, size_t size)
     if (size > 0) {
 	if (ptr == 0)
 	    mem = agalloc(g, size);
-	else
-	    mem =
-		AGDISC(g, mem)->resize(AGCLOS(g, mem), ptr, oldsize, size);
+	else {
+	    mem = realloc(ptr, size);
+	    if (mem != NULL && size > oldsize) {
+	        memset((char*)mem + oldsize, 0, size - oldsize);
+	    }
+	}
 	if (mem == NULL)
 	     agerr(AGERR,"memory re-allocation failure");
     } else
@@ -77,6 +43,8 @@ void *agrealloc(Agraph_t * g, void *ptr, size_t oldsize, size_t size)
 
 void agfree(Agraph_t * g, void *ptr)
 {
+    (void)g;
+
     if (ptr)
-	(AGDISC(g, mem)->free) (AGCLOS(g, mem), ptr);
+	free(ptr);
 }

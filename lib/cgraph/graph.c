@@ -9,9 +9,10 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdlib.h>
 
 Agraph_t *Ag_G_global;
 
@@ -21,16 +22,10 @@ Agraph_t *Ag_G_global;
  */
 static Agclos_t *agclos(Agdisc_t * proto)
 {
-    Agmemdisc_t *memdisc;
-    void *memclosure;
     Agclos_t *rv;
 
     /* establish an allocation arena */
-    memdisc = ((proto && proto->mem) ? proto->mem : &AgMemDisc);
-    memclosure = memdisc->open(proto);
-    rv = memdisc->alloc(memclosure, sizeof(Agclos_t));
-    rv->disc.mem = memdisc;
-    rv->state.mem = memclosure;
+    rv = gv_calloc(1, sizeof(Agclos_t));
     rv->disc.id = ((proto && proto->id) ? proto->id : &AgIdDisc);
     rv->disc.io = ((proto && proto->io) ? proto->io : &AgIoDisc);
     rv->callbacks_enabled = TRUE;
@@ -47,7 +42,7 @@ Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * arg_disc)
     IDTYPE gid;
 
     clos = agclos(arg_disc);
-    g = clos->disc.mem->alloc(clos->state.mem, sizeof(Agraph_t));
+    g = gv_calloc(1, sizeof(Agraph_t));
     AGTYPE(g) = AGRAPH;
     g->clos = clos;
     g->desc = desc;
@@ -96,13 +91,6 @@ int agclose(Agraph_t * g)
     Agnode_t *n, *next_n;
 
     par = agparent(g);
-    if (par == NULL && AGDISC(g, mem)->close) {
-	/* free entire heap */
-	agmethod_delete(g, g);	/* invoke user callbacks */
-	agfreeid(g, AGRAPH, AGID(g));
-	AGDISC(g, mem)->close(AGCLOS(g, mem));	/* whoosh */
-	return SUCCESS;
-    }
 
     for (subg = agfstsubg(g); subg; subg = next_subg) {
 	next_subg = agnxtsubg(subg);
@@ -139,17 +127,14 @@ int agclose(Agraph_t * g)
 	agdelsubg(par, g);
 	agfree(par, g);
     } else {
-	Agmemdisc_t *memdisc;
-	void *memclos, *clos;
+	void *clos;
 	while (g->clos->cb)
 	    agpopdisc(g, g->clos->cb->f);
 	AGDISC(g, id)->close(AGCLOS(g, id));
 	if (agstrclose(g)) return FAILURE;
-	memdisc = AGDISC(g, mem);
-	memclos = AGCLOS(g, mem);
 	clos = g->clos;
-	(memdisc->free) (memclos, g);
-	(memdisc->free) (memclos, clos);
+	free(g);
+	free(clos);
     }
     return SUCCESS;
 }
@@ -265,7 +250,7 @@ Agdesc_t Agstrictdirected = {.directed = true, .strict = true, .maingraph = true
 Agdesc_t Agundirected = {.maingraph = true};
 Agdesc_t Agstrictundirected = {.strict = true, .maingraph = true};
 
-Agdisc_t AgDefaultDisc = { &AgMemDisc, &AgIdDisc, &AgIoDisc };
+Agdisc_t AgDefaultDisc = { &AgIdDisc, &AgIoDisc };
 
 /**
  * @dir lib/cgraph

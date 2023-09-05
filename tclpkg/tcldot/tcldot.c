@@ -162,7 +162,6 @@ int Tcldot_Init(Tcl_Interp * interp)
     ictx->myioDisc.putstr = AgIoDisc.putstr; /* no change */
     ictx->myioDisc.flush = AgIoDisc.flush;   /* no change */
 
-    ictx->mydisc.mem = &AgMemDisc;           /* no change */
     ictx->mydisc.id = &myiddisc;             /* complete replacement */
     ictx->mydisc.io = &(ictx->myioDisc);     /* change parts */
 

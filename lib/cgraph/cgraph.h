@@ -85,7 +85,6 @@ typedef struct Agedge_s Agedge_t;       ///< node pair
 typedef struct Agdesc_s Agdesc_t;       ///< graph descriptor
 /// @addtogroup cgraph_other
 /// @{
-typedef struct Agmemdisc_s Agmemdisc_t; ///< memory allocator
 typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
 typedef struct Agiodisc_s Agiodisc_t;   ///< IO services
 typedef struct Agdisc_s Agdisc_t;       ///< union of client discipline methods
@@ -259,16 +258,6 @@ struct Agdesc_s {		/* graph descriptor */
  *  @{
  */
 
-/// memory allocator discipline, independent of other resources
-
-struct Agmemdisc_s {
-    void *(*open) (Agdisc_t*);
-    void *(*alloc) (void *state, size_t req);
-    void *(*resize) (void *state, void *ptr, size_t old, size_t req);
-    void (*free) (void *state, void *ptr);
-    void (*close) (void *state);
-};
-
 /// object ID allocator discipline
 
 struct Agiddisc_s {
@@ -292,14 +281,12 @@ struct Agiodisc_s {
 /// user's discipline
 
 struct Agdisc_s {
-    Agmemdisc_t *mem;
     Agiddisc_t *id;
     Agiodisc_t *io;
 };
 
 	/* default resource disciplines */
 
-CGRAPH_API extern Agmemdisc_t AgMemDisc;
 CGRAPH_API extern Agiddisc_t AgIdDisc;
 CGRAPH_API extern Agiodisc_t AgIoDisc;
 
@@ -310,7 +297,6 @@ CGRAPH_API extern Agdisc_t AgDefaultDisc;
  *  @{
  */
 struct Agdstate_s {
-    void *mem;
     void *id;
     /* IO must be initialized and finalized outside Cgraph,
      * and channels (FILES) are passed as void* arguments. */
