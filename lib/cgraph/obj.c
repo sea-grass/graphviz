@@ -72,10 +72,7 @@ int agrename(Agobj_t * obj, char *newname)
 
 void agmethod_init(Agraph_t * g, void *obj)
 {
-    if (g->clos->callbacks_enabled)
-	aginitcb(g, obj, g->clos->cb);
-    else
-	agrecord_callback(g, obj, CB_INITIALIZE, NULL);
+  aginitcb(g, obj, g->clos->cb);
 }
 
 void aginitcb(Agraph_t * g, void *obj, Agcbstack_t * cbstack)
@@ -103,10 +100,7 @@ void aginitcb(Agraph_t * g, void *obj, Agcbstack_t * cbstack)
 
 void agmethod_upd(Agraph_t * g, void *obj, Agsym_t * sym)
 {
-    if (g->clos->callbacks_enabled)
-	agupdcb(g, obj, sym, g->clos->cb);
-    else
-	agrecord_callback(g, obj, CB_UPDATE, sym);
+  agupdcb(g, obj, sym, g->clos->cb);
 }
 
 void agupdcb(Agraph_t * g, void *obj, Agsym_t * sym, Agcbstack_t * cbstack)
@@ -134,10 +128,7 @@ void agupdcb(Agraph_t * g, void *obj, Agsym_t * sym, Agcbstack_t * cbstack)
 
 void agmethod_delete(Agraph_t * g, void *obj)
 {
-    if (g->clos->callbacks_enabled)
-	agdelcb(g, obj, g->clos->cb);
-    else
-	agrecord_callback(g, obj, CB_DELETION, NULL);
+  agdelcb(g, obj, g->clos->cb);
 }
 
 void agdelcb(Agraph_t * g, void *obj, Agcbstack_t * cbstack)

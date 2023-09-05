@@ -328,7 +328,6 @@ struct Agclos_s {
     Dict_t *strdict;		/* shared string dict */
     uint64_t seq[3];	/* local object sequence number counter */
     Agcbstack_t *cb;		/* user and system callback function stacks */
-    unsigned char callbacks_enabled;	/* issue user callbacks or hold them? */
     Dict_t *lookup_by_name[3];
     Dict_t *lookup_by_id[3];
 };
