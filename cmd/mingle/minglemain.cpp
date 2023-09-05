@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <algorithm>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <ingraphs/ingraphs.h>
@@ -377,12 +378,7 @@ bundle (Agraph_t* g, opts_t* opts)
 {
 	double *x = nullptr;
 	int dim = 2;
-	SparseMatrix A;
-	SparseMatrix B;
-	pedge* edges;
-    double eps = 0.;
-    int nz = 0;
-    int *ia, *ja, i, j, k;
+    int i;
 	int rv = 0;
 
 	if (checkG(g)) {
@@ -391,7 +387,7 @@ bundle (Agraph_t* g, opts_t* opts)
 		return 1;
 	}
     initDotIO(g);
-	A = SparseMatrix_import_dot(g, dim, &x, FORMAT_CSR);
+	SparseMatrix A = SparseMatrix_import_dot(g, dim, &x, FORMAT_CSR);
 	if (!A){
 		agerr (AGERR, "Error: could not convert graph %s (%s) into matrix\n", agnameof(g), fname);
 		return 1;
@@ -408,9 +404,10 @@ bundle (Agraph_t* g, opts_t* opts)
 		Agedge_t* e;
 		int idx = 0;
 
-		ia = A->ia; ja = A->ja;
+		const int *ia = A->ia;
+		const int *ja = A->ja;
 		for (i = 0; i < A->m; i++){
-			for (j = ia[i]; j < ia[i+1]; j++){
+			for (int j = ia[i]; j < ia[i+1]; j++){
 				if (ja[j] > i){
 					insertPM (pm, i, ja[j], idx++);
 				}
@@ -422,13 +419,11 @@ bundle (Agraph_t* g, opts_t* opts)
 		for (i = 0, n = agfstnode(g); n; n = agnxtnode(g,n)) {
 			for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
 				i = getDotNodeID (agtail(e));
-				j = getDotNodeID (aghead(e));
+				int j = getDotNodeID (aghead(e));
 				if (j < i) {
-					k = i;
-					i = j;
-					j = k;
+					std::swap(i, j);
 				}
-				k = insertPM (pm, i, j, -1);
+				int k = insertPM (pm, i, j, -1);
 				assert (k >= 0);
 				agbindrec (e, "info", sizeof(etoi_t), true);
 				ED_idx(e) = k;
@@ -437,13 +432,14 @@ bundle (Agraph_t* g, opts_t* opts)
 		freePM (pm);
 	}
 		
-	ia = A->ia; ja = A->ja;
-	nz = A->nz;
+	const int *ia = A->ia;
+	const int *ja = A->ja;
+	int nz = A->nz;
 	std::vector<double> xx(nz * 4);
 	nz = 0;
 	dim = 4;
 	for (i = 0; i < A->m; i++){
-		for (j = ia[i]; j < ia[i+1]; j++){
+		for (int j = ia[i]; j < ia[i+1]; j++){
 			if (ja[j] > i){
 				xx[nz*dim] = x[i*2];
 				xx[nz*dim+1] = x[i*2+1];
@@ -456,14 +452,17 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	B = nearest_neighbor_graph(nz, MIN(opts->nneighbors, nz), xx.data(), eps);
+	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx.data());
 
 	SparseMatrix_delete(A);
 	A = B;
 	free(x);
 	x = xx.data();
 
-	edges = edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method, opts->nneighbors, opts->compatibility_method, opts->max_recursion, opts->angle_param, opts->angle);
+	pedge *edges = edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method,
+	                             opts->nneighbors, opts->compatibility_method,
+	                             opts->max_recursion, opts->angle_param,
+	                             opts->angle);
 	
 	if (opts->fmt == FMT_GV) {
 	    	export_dot (outfile, A->m, edges, g);
