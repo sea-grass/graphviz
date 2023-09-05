@@ -347,7 +347,6 @@ struct Agraph_s {
 
 CGRAPH_API void agpushdisc(Agraph_t * g, Agcbdisc_t * disc, void *state);
 CGRAPH_API int agpopdisc(Agraph_t * g, Agcbdisc_t * disc);
-CGRAPH_API int agcallbacks(Agraph_t * g, int flag);	/* return prev value */
 
 /* graphs */
 CGRAPH_API Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * disc);
