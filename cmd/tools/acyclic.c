@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
 
     if ((g = agread(inFile, NULL)) != NULL) {
 	if (agisdirected (g)) {
-	    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), TRUE);
+	    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
 	    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 		if (ND_mark(n) == 0)
 		    rv |= dfs(g, n, 0);

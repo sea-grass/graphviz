@@ -8,6 +8,7 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -135,7 +136,7 @@ int main(int argc, char **argv)
 	}
 
 	/* attach node data for marking to all nodes */
-	aginit(graph, AGNODE, NDNAME, sizeof(ndata), 1);
+	aginit(graph, AGNODE, NDNAME, sizeof(ndata), true);
 
 	/* prune all nodes specified on the commandline */
 	for (size_t i = 0; i < nodes_size(&node_list); ++i) {

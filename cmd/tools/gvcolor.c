@@ -29,6 +29,7 @@
 #include <cgraph/exit.h>
 #include "colorxlate.h"
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 typedef struct {
     Agrec_t h;
@@ -127,7 +128,7 @@ static void color(Agraph_t * g)
 		"graph must be run through 'dot' before 'gvcolor'\n");
 	graphviz_exit(1);
     }
-    aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+    aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
     if (agattr(g, AGNODE, "style", 0) == NULL)
 	agattr(g, AGNODE, "style", "filled");
     if ((p = agget(g, "Defcolor")))

@@ -581,7 +581,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    out = agsubg(g, name, 1);
 	    agxbfree(&buf);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
+	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	dn = ND_dn(n);
 	n_cnt = dfs(dg, dn, dout);
@@ -610,7 +610,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    out = agsubg(g, name, 1);
 	    agxbfree(&buf);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
+	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
@@ -677,7 +677,7 @@ bindGraphinfo (Agraph_t * g)
 {
     Agraph_t *subg;
 
-    aginit(g, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
+    aginit(g, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	bindGraphinfo (subg);
     }
@@ -693,7 +693,7 @@ static int process(Agraph_t * g, char* graphName)
     Agnode_t *n;
     int extracted = 0;
 
-    aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+    aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
     bindGraphinfo (g);
 
     if (useClusters)
@@ -713,7 +713,7 @@ static int process(Agraph_t * g, char* graphName)
 	    out = agsubg(g, agxbuse(&name), 1);
 	    agxbfree(&name);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
+	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	if (doEdges)
@@ -738,7 +738,7 @@ static int process(Agraph_t * g, char* graphName)
 	    out = agsubg(g, agxbuse(&name), 1);
 	    agxbfree(&name);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), TRUE);
+	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	if (doEdges)

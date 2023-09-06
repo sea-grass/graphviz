@@ -14,6 +14,7 @@
 
 #include <graphviz/gvc.h>
 #include <graphviz/pack.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,8 +29,8 @@ int main(int argc, char *argv[]) {
     fp = stdin;
   graph_t *g = agread(fp, NULL);
 
-  aginit(g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
-  aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+  aginit(g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
+  aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 
   int ncc;
   graph_t **cc = ccomps(g, &ncc, NULL);

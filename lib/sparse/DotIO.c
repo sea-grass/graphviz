@@ -654,7 +654,7 @@ void attached_clustering(Agraph_t* g, int maxcluster, int clustering_scheme){
 
 void initDotIO (Agraph_t *g)
 {
-  aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), TRUE);
+  aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
 }
 
 void setDotNodeID (Agnode_t* n, int v)

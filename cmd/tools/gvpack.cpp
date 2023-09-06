@@ -266,9 +266,9 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     node_t *n;
     edge_t *e;
 
-    aginit (g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), TRUE);
-    aginit (g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
-    aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), TRUE);
+    aginit (g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
+    aginit (g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
+    aginit (g, AGEDGE, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
     GD_gvc(g) = gvc;
     graph_init(g, false);
     d = late_int(g, agfindgraphattr(g, const_cast<char*>("dim")), 2, 2);

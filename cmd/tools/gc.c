@@ -275,7 +275,7 @@ static int eval(Agraph_t * g, int root)
 	return 1;
 
     if (root) {
-	aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), TRUE);
+	aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
     }
 
     if ((flags & CL) && root)

@@ -221,8 +221,8 @@ static void process(Agraph_t * G)
     gv_stack_t stack = {0};
     sccstate state;
 
-    aginit(G, AGRAPH, "scc_graph", sizeof(Agraphinfo_t), TRUE);
-    aginit(G, AGNODE, "scc_node", sizeof(Agnodeinfo_t), TRUE);
+    aginit(G, AGRAPH, "scc_graph", sizeof(Agraphinfo_t), true);
+    aginit(G, AGNODE, "scc_node", sizeof(Agnodeinfo_t), true);
     state.Comp = state.ID = 0;
     state.N_nodes_in_nontriv_SCC = 0;
 

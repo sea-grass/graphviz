@@ -658,9 +658,9 @@ static void write_graph(Agraph_t *g, GVJ_t *job, bool top, state_t *sp) {
 
     if (top) {
 	map = dtopen (&intDisc, Dtoset);
-	aginit(g, AGNODE, ID, sizeof(gvid_t), FALSE);
-	aginit(g, AGEDGE, ID, sizeof(gvid_t), FALSE);
-	aginit(g, AGRAPH, ID, -((int)sizeof(gvid_t)), FALSE);
+	aginit(g, AGNODE, ID, sizeof(gvid_t), false);
+	aginit(g, AGEDGE, ID, sizeof(gvid_t), false);
+	aginit(g, AGRAPH, ID, -((int)sizeof(gvid_t)), false);
 	sgcnt = label_subgs(g, sgcnt, map);
 	for (np = agfstnode(g); np; np = agnxtnode(g,np)) {
 	    if (IS_CLUST_NODE(np)) {

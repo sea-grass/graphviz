@@ -519,10 +519,10 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     }
     
     /* Bind ccgraphinfo to graph and all subgraphs */
-    aginit(g, AGRAPH, GRECNAME, -sz, FALSE);
+    aginit(g, AGRAPH, GRECNAME, -sz, false);
 
     /* Bind ccgraphinfo to graph and all subgraphs */
-    aginit(g, AGNODE, NRECNAME, sizeof(ccgnodeinfo_t), FALSE);
+    aginit(g, AGNODE, NRECNAME, sizeof(ccgnodeinfo_t), false);
 
     dg = deriveGraph(g);
 

@@ -92,7 +92,7 @@ void fdp_init_node_edge(graph_t * g)
     int nn;
     int i;
 
-    aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), TRUE);
+    aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
     processClusterEdges(g);
 
     /* Get node count after processClusterEdges(), as this function may
