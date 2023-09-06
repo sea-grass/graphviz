@@ -21,6 +21,7 @@
 #include <common/render.h>
 #include <pack/pack.h>
 #include <common/pointset.h>
+#include <stdbool.h>
 
 #define C 100			/* Max. avg. polyomino size */
 
@@ -165,8 +166,7 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
  */
 static void
 fillEdge(Agedge_t * e, point p, PointSet * ps, int dx, int dy,
-	 int ssize, int doS)
-{
+         int ssize, bool doS) {
     int j, k;
     bezier bz;
     pointf pt, hpt;
@@ -292,7 +292,7 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
     int dx, dy;
     graph_t *subg;
     unsigned int margin = pinfo->margin;
-    int doSplines = pinfo->doSplines;
+    bool doSplines = pinfo->doSplines;
     box bb;
 
     if (root)
@@ -1066,8 +1066,7 @@ static void shiftGraph(Agraph_t * g, int dx, int dy)
  * the spl field in Aedgeinfo_t.
  */
 int
-shiftGraphs(int ng, Agraph_t ** gs, point * pp, Agraph_t * root,
-	    int doSplines)
+shiftGraphs(int ng, Agraph_t ** gs, point * pp, Agraph_t * root, bool doSplines)
 {
     int i;
     int dx, dy;
@@ -1174,7 +1173,7 @@ pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed)
     pack_info info;
 
     getPackInfo(root, l_graph, CL_OFFSET, &info);
-    info.doSplines = 1;
+    info.doSplines = true;
     info.fixed = fixed;
     ret = packSubgraphs(ng, gs, root, &info);
     if (ret == 0) dotneato_postprocess (root);
@@ -1351,7 +1350,7 @@ getPackInfo(Agraph_t * g, pack_mode dflt, int dfltMargin, pack_info* pinfo)
     if (Verbose) {
 	fprintf (stderr, "  margin %u\n", pinfo->margin);
     }
-    pinfo->doSplines = 0;
+    pinfo->doSplines = false;
     pinfo->fixed = NULL;
     getPackModeInfo(g, dflt, pinfo);
 

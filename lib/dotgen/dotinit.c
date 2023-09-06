@@ -461,7 +461,7 @@ static void doDot (Agraph_t* g)
 	if (ncc == 1) {
 	    dotLayout(g);
 	} else if (GD_drawing(g)->ratio_kind == R_NONE) {
-	    pinfo.doSplines = 1;
+	    pinfo.doSplines = true;
 
 	    for (i = 0; i < ncc; i++) {
 		sg = ccs[i];

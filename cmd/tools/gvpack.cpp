@@ -167,7 +167,7 @@ static void init(int argc, char *argv[], pack_info* pinfo)
     agnodeattr(nullptr, const_cast<char*>("label"), NODENAME_ESC);
     pinfo->mode = l_clust;
     pinfo->margin = CL_OFFSET;
-    pinfo->doSplines = TRUE; /* Use edges in packing */
+    pinfo->doSplines = true; // Use edges in packing
     pinfo->fixed = nullptr;
     pinfo->sz = 0;
 
