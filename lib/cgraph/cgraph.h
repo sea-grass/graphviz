@@ -328,7 +328,6 @@ struct Agclos_s {
     Dict_t *strdict;		/* shared string dict */
     uint64_t seq[3];	/* local object sequence number counter */
     Agcbstack_t *cb;		/* user and system callback function stacks */
-    unsigned char callbacks_enabled;	/* issue user callbacks or hold them? */
     Dict_t *lookup_by_name[3];
     Dict_t *lookup_by_id[3];
 };
@@ -347,7 +346,6 @@ struct Agraph_s {
 
 CGRAPH_API void agpushdisc(Agraph_t * g, Agcbdisc_t * disc, void *state);
 CGRAPH_API int agpopdisc(Agraph_t * g, Agcbdisc_t * disc);
-CGRAPH_API int agcallbacks(Agraph_t * g, int flag);	/* return prev value */
 
 /* graphs */
 CGRAPH_API Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * disc);

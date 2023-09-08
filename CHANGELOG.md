@@ -69,6 +69,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The concept of “memory allocator discipline” has been removed,
   along with the type `Agmemdisc_t` and fields `Agdisc_t.mem` and
   `Agdstate_t.mem`.
+- **Breaking**: The `agcallbacks` function and `Agclos_t.callbacks_enabled` have
+  been removed.
 
 ### Fixed
 

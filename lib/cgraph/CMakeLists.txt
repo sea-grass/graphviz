@@ -42,7 +42,6 @@ add_library(cgraph SHARED
   mem.c
   node.c
   obj.c
-  pend.c
   rec.c
   refstr.c
   subg.c

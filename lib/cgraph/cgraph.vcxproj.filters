@@ -107,9 +107,6 @@
     <ClCompile Include="obj.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pend.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="rec.c">
       <Filter>Source Files</Filter>
     </ClCompile>

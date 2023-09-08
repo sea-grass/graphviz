@@ -28,7 +28,6 @@ static Agclos_t *agclos(Agdisc_t * proto)
     rv = gv_calloc(1, sizeof(Agclos_t));
     rv->disc.id = ((proto && proto->id) ? proto->id : &AgIdDisc);
     rv->disc.io = ((proto && proto->io) ? proto->io : &AgIoDisc);
-    rv->callbacks_enabled = TRUE;
     return rv;
 }
 
