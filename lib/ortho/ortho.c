@@ -237,7 +237,7 @@ convertSPtoRoute (sgraph* g, snode* fst, snode* lst)
 	next = N_DAD(next);
     }
 
-    rte.segs = realloc (rte.segs, rte.n*sizeof(segment));
+    rte.segs = gv_recalloc(rte.segs, sz - 2, rte.n, sizeof(segment));
     for (size_t i=0; i<rte.n; i++) {
 	if (i > 0)
 	    rte.segs[i].prev = rte.segs + (i-1);
@@ -834,9 +834,9 @@ is_parallel(segment* s1, segment* s2)
 static int
 decide_point(pair *ret, segment* si, segment* sj, int dir1, int dir2)
 {
-    int prec, ans = 0, temp;
+    int prec = 0, ans = 0, temp;
     segment* np1;
-    segment* np2;
+    segment *np2 = NULL;
     
     while ((np1 = next_seg(si,dir1)) && (np2 = next_seg(sj,dir2)) &&
 	is_parallel(np1, np2)) {
