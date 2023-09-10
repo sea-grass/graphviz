@@ -27,7 +27,7 @@
  * @param form format string
  * @param accept accepted characters are set to 1
  */
-static const char *setclass(const char *form, bool *accept) {
+static const unsigned char *setclass(const unsigned char *form, bool *accept) {
     int fmt, c;
     bool yes;
 
@@ -603,7 +603,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		} while (--width > 0 && SFGETC(f, inp) >= 0);
 	    } else {		/* if(fmt == '[') */
 		bool accepted[UCHAR_MAX + 1];
-		form = setclass(form, accepted);
+		form = (const char*)setclass((const unsigned char*)form, accepted);
 		do {
 		    if (!accepted[inp]) {
 			if (n > 0 || (flags & SFFMT_ALTER))
