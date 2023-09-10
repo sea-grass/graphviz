@@ -258,7 +258,7 @@ PairingHeap<T>::combineSiblings( PairNode<T> *firstSibling ) const
 	vector<PairNode<T>*> treeArray;
 
 	// Store the subtrees in an array
-	int numSiblings = 0;
+	size_t numSiblings = 0;
 	for( ; firstSibling != nullptr; numSiblings++ )
 	{
 		treeArray.push_back(firstSibling);
@@ -268,15 +268,15 @@ PairingHeap<T>::combineSiblings( PairNode<T> *firstSibling ) const
 	treeArray.push_back(nullptr);
 
 	// Combine subtrees two at a time, going left to right
-	int i = 0;
+	size_t i = 0;
 	for( ; i + 1 < numSiblings; i += 2 )
 		compareAndLink( treeArray[ i ], treeArray[ i + 1 ] );
 
-	int j = i - 2;
+	size_t j = i - 2;
 
 	// j has the result of last compareAndLink.
 	// If an odd number of trees, get the last one.
-	if( j == numSiblings - 3 )
+	if (j + 3 == numSiblings)
 		compareAndLink( treeArray[ j ], treeArray[ j + 2 ] );
 
 	// Now go right to left, merging last tree with
