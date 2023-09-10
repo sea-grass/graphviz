@@ -84,7 +84,6 @@ public:
 
 	bool isEmpty( ) const;
 	bool isFull( ) const;
-	int size();
 
 	PairNode<T> *insert( const T & x );
 	const T & findMin( ) const;
@@ -101,7 +100,6 @@ public:
 		} else {
 			compareAndLink(root, broot);
 		}
-		counter+=rhs->size();
 	}
 
 	const PairingHeap & operator=( const PairingHeap & rhs );
@@ -114,7 +112,6 @@ protected:
 private:
 	PairNode<T> *root;
 	bool (*lessThan)(T const &lhs, T const &rhs);
-	int counter;
 	void reclaimMemory( PairNode<T> *t ) const;
 	void compareAndLink( PairNode<T> * & first, PairNode<T> *second ) const;
 	PairNode<T> * combineSiblings( PairNode<T> *firstSibling ) const;

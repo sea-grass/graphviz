@@ -37,7 +37,6 @@ template <class T>
 PairingHeap<T>::PairingHeap( bool (*lessThan)(T const &lhs, T const &rhs) )
 {
 	root = nullptr;
-	counter=0;
 	this->lessThan=lessThan;
 }
 
@@ -49,7 +48,6 @@ template <class T>
 PairingHeap<T>::PairingHeap( const PairingHeap<T> & rhs )
 {
 	root = nullptr;
-	counter=rhs->size();
 	*this = rhs;
 }
 
@@ -76,12 +74,7 @@ PairingHeap<T>::insert( const T & x )
 		root = newNode;
 	else
 		compareAndLink( root, newNode );
-	counter++;
 	return newNode;
-}
-template <class T>
-int PairingHeap<T>::size() {
-	return counter;
 }
 /**
 * Find the smallest item in the priority queue.
@@ -110,7 +103,6 @@ void PairingHeap<T>::deleteMin( )
         root = nullptr;
     else
         root = combineSiblings( root->leftChild );
-    counter--;
     delete oldRoot;
 }
 
