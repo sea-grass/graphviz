@@ -475,7 +475,7 @@ static void svg_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    gvprintf(job, " font-style=\"%s\"", style);
     } else
 	gvprintf(job, " font-family=\"%s\"", span->font->name);
-    if (span->font && (flags = span->font->flags)) {
+    if ((flags = span->font->flags)) {
 	if ((flags & HTML_BF) && !weight)
 	    gvputs(job, " font-weight=\"bold\"");
 	if ((flags & HTML_IF) && !style)
