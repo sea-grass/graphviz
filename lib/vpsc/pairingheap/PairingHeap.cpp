@@ -42,16 +42,6 @@ PairingHeap<T>::PairingHeap( bool (*lessThan)(T const &lhs, T const &rhs) )
 
 
 /**
-* Copy constructor
-*/
-template <class T>
-PairingHeap<T>::PairingHeap( const PairingHeap<T> & rhs )
-{
-	root = nullptr;
-	*this = rhs;
-}
-
-/**
 * Destroy the leftist heap.
 */
 template <class T>
@@ -124,22 +114,6 @@ void PairingHeap<T>::makeEmpty( )
 {
 	reclaimMemory( root );
 	root = nullptr;
-}
-
-/**
-* Deep copy.
-*/
-template <class T>
-const PairingHeap<T> &
-PairingHeap<T>::operator=( const PairingHeap<T> & rhs )
-{
-	if( this != &rhs )
-	{
-		makeEmpty( );
-		root = clone( rhs.root );
-	}
-
-	return *this;
 }
 
 /**
@@ -268,26 +242,6 @@ PairingHeap<T>::combineSiblings( PairNode<T> *firstSibling ) const
 	return treeArray[ 0 ];
 }
 
-/**
-* Internal method to clone subtree.
-* WARNING: This is prone to running out of stack space.
-*/
-template <class T>
-PairNode<T> *
-PairingHeap<T>::clone( PairNode<T> * t ) const
-{
-	if( t == nullptr ) 
-		return nullptr;
-	else
-	{
-		PairNode<T> *p = new PairNode<T>( t->element );
-		if( ( p->leftChild = clone( t->leftChild ) ) != nullptr )
-			p->leftChild->prev = p;
-		if( ( p->nextSibling = clone( t->nextSibling ) ) != nullptr )
-			p->nextSibling->prev = p;
-		return p;
-	}
-}
 template <class T>
 ostream& operator <<(ostream &os, const PairingHeap<T> &b)
 {

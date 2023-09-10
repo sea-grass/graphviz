@@ -71,7 +71,6 @@ class PairingHeap
 	friend std::ostream& operator<< <T>(std::ostream &os,const PairingHeap<T> &b);
 public:
 	PairingHeap( bool (*lessThan)(T const &lhs, T const &rhs) );
-	PairingHeap( const PairingHeap & rhs );
 	~PairingHeap( );
 
 	bool isEmpty( ) const;
@@ -93,7 +92,10 @@ public:
 		}
 	}
 
-	const PairingHeap & operator=( const PairingHeap & rhs );
+	PairingHeap(const PairingHeap &rhs) = delete;
+	PairingHeap(PairingHeap &&rhs) = delete;
+	PairingHeap &operator=(const PairingHeap &rhs) = delete;
+	PairingHeap &operator=(PairingHeap &&rhs) = delete;
 protected:
 	PairNode<T> * getRoot() {
 		PairNode<T> *r=root;
@@ -106,7 +108,6 @@ private:
 	void reclaimMemory( PairNode<T> *t ) const;
 	void compareAndLink( PairNode<T> * & first, PairNode<T> *second ) const;
 	PairNode<T> * combineSiblings( PairNode<T> *firstSibling ) const;
-	PairNode<T> * clone( PairNode<T> * t ) const;
 };
 
 #include "PairingHeap.cpp"
