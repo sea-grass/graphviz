@@ -255,22 +255,17 @@ PairingHeap<T>::combineSiblings( PairNode<T> *firstSibling ) const
 	if( firstSibling->nextSibling == nullptr )
 		return firstSibling;
 
-	// Allocate the array
-	static vector<PairNode<T> *> treeArray( 5 );
+	vector<PairNode<T>*> treeArray;
 
 	// Store the subtrees in an array
 	int numSiblings = 0;
 	for( ; firstSibling != nullptr; numSiblings++ )
 	{
-		if( numSiblings == (int)treeArray.size( ) )
-			treeArray.resize( numSiblings * 2 );
-		treeArray[ numSiblings ] = firstSibling;
+		treeArray.push_back(firstSibling);
 		firstSibling->prev->nextSibling = nullptr;  // break links
 		firstSibling = firstSibling->nextSibling;
 	}
-	if( numSiblings == (int)treeArray.size( ) )
-		treeArray.resize( numSiblings + 1 );
-	treeArray[ numSiblings ] = nullptr;
+	treeArray.push_back(nullptr);
 
 	// Combine subtrees two at a time, going left to right
 	int i = 0;
