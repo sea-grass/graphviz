@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   have existing settings under the old identification, Gvedit will attempt to
   migrate them to the new identification the first time it reads then writes
   settings. #2383
-- **Breakting**: `gvprintf` is now tagged with
+- **Breaking**: `gvprintf` is now tagged with
   `__attribute__((format(printf, …)))` when compiling with Clang or GCC. This
   enables the compiler to spot more misuses of this function. #2373
 - **Breaking**: The `hashf` and `eventf` members of `Dtdisc_t` have been
