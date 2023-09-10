@@ -37,7 +37,6 @@ Constraint** newConstraints(int m);
 void deleteConstraints(int m,Constraint**);
 void remapInConstraints(Variable *u, Variable *v, double dgap);
 void remapOutConstraints(Variable *u, Variable *v, double dgap);
-double getSeparation(Constraint *c);
 
 #ifndef HAVE_POINTF_S
 typedef struct pointf_s { double x, y; } pointf;

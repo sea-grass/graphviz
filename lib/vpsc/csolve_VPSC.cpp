@@ -105,6 +105,3 @@ void remapOutConstraints(Variable *u, Variable *v, double dgap) {
 	}
 	u->out.clear();
 }
-double getSeparation(Constraint *c){
-	return c->gap;
-}
