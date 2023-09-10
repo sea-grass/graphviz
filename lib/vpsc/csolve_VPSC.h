@@ -37,7 +37,6 @@ Constraint** newConstraints(int m);
 void deleteConstraints(int m,Constraint**);
 void remapInConstraints(Variable *u, Variable *v, double dgap);
 void remapOutConstraints(Variable *u, Variable *v, double dgap);
-int getLeftVarID(Constraint *c);
 int getRightVarID(Constraint *c);
 double getSeparation(Constraint *c);
 

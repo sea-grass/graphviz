@@ -105,9 +105,6 @@ void remapOutConstraints(Variable *u, Variable *v, double dgap) {
 	}
 	u->out.clear();
 }
-int getLeftVarID(Constraint *c) {
-	return c->left->id;
-}
 int getRightVarID(Constraint *c){
 	return c->right->id;
 }
