@@ -117,16 +117,6 @@ bool PairingHeap<T>::isEmpty( ) const
 }
 
 /**
-* Test if the priority queue is logically full.
-* Returns false in this implementation.
-*/
-template <class T>
-bool PairingHeap<T>::isFull( ) const
-{
-	return false;
-}
-
-/**
 * Make the priority queue logically empty.
 */
 template <class T>

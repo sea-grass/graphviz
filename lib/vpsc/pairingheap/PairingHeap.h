@@ -34,7 +34,6 @@
 // deleteMin( minItem )   --> Remove (and optionally return) smallest item
 // T findMin( )  --> Return smallest item
 // bool isEmpty( )        --> Return true if empty; else false
-// bool isFull( )         --> Return true if empty; else false
 // void makeEmpty( )      --> Remove all items
 // void decreaseKey( PairNode p, newVal )
 //                        --> Decrease value in node p
@@ -76,7 +75,6 @@ public:
 	~PairingHeap( );
 
 	bool isEmpty( ) const;
-	bool isFull( ) const;
 
 	PairNode<T> *insert( const T & x );
 	const T & findMin( ) const;
