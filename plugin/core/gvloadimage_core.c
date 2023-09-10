@@ -181,7 +181,8 @@ static void core_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 			us->data = NULL;
 #else
 		us->data = malloc(statbuf.st_size);
-		read(fd, us->data, statbuf.st_size);
+		if (us->data != NULL)
+			read(fd, us->data, statbuf.st_size);
 #endif
 		us->must_inline = true;
                 break;
