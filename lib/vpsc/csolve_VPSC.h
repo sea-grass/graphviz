@@ -37,7 +37,6 @@ Constraint** newConstraints(int m);
 void deleteConstraints(int m,Constraint**);
 void remapInConstraints(Variable *u, Variable *v, double dgap);
 void remapOutConstraints(Variable *u, Variable *v, double dgap);
-int getRightVarID(Constraint *c);
 double getSeparation(Constraint *c);
 
 #ifndef HAVE_POINTF_S
