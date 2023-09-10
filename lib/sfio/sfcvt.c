@@ -37,11 +37,11 @@ char *_sfcvt(void * dv, int n_digit, int *decpt, int *sign, int format)
 
     *sign = *decpt = 0;
     {
-	double dval = *((double *) dv);
+	double dval = *(double *)dv;
 
 	if (dval == 0.)
 	    return SF_ZERO;
-	else if ((*sign = (dval < 0.)))	/* assignment = */
+	else if ((*sign = dval < 0.))	/* assignment = */
 	    dval = -dval;
 
 	n = 0;
@@ -52,7 +52,7 @@ char *_sfcvt(void * dv, int n_digit, int *decpt, int *sign, int format)
 		    v -= 1;
 		else {
 		    dval *= _Sfneg10[v];
-		    if ((n += (1 << v)) >= SF_IDIGITS)
+		    if ((n += 1 << v) >= SF_IDIGITS)
 			return SF_INFINITE;
 		}
 	    } while (dval >= (double)LONG_MAX);
@@ -79,7 +79,7 @@ char *_sfcvt(void * dv, int n_digit, int *decpt, int *sign, int format)
 	if (n_digit > 0)
 	    n += n_digit;
 
-	if ((ep = (sp + n)) > (endsp = Buf + (SF_MAXDIGITS - 2)))
+	if ((ep = sp + n) > (endsp = Buf + (SF_MAXDIGITS - 2)))
 	    ep = endsp;
 	if (sp > ep)
 	    sp = ep;
