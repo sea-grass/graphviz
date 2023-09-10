@@ -81,7 +81,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Double arrow head types like `invdot` and `onormalonormal` once again display
   correctly. This was a regression in Graphviz 8.0.1. #2406
 - The `lvee` and `rvee` edge arrow shapes are slighty incorrect for
-  penwidths > 1. #2399
+  penwidths &gt; 1. #2399
 - Small gap between `lcurve` or `rcurve` arrow shaft and node. #2426
 - Failure of arrowhead and arrowtail to respect penwidth #372 \
   Fixed also for the `crow` and `vee`
@@ -99,6 +99,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   problem where it was not discoverable on macOS. #2429
 - Escape sequences like `\"` are recognized in strings and double escaping
   (producing `\\"`) is avoided. #2397
+- The Autotools build system no longer uses headers and libraries from the
+  `--prefix` path given on the command line. This previously caused
+  cross-compilation to incorrectly pick up host headers and libraries. #2442
 
 ## [8.1.0] – 2023-07-06
 
