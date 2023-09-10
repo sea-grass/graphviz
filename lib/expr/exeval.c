@@ -1155,9 +1155,9 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 	case SRAND:
 		v.integer = seed;
 		if (exnode->binary) {
-			seed = eval(ex, x, env).integer;
+			seed = (long)eval(ex, x, env).integer;
 		} else
-			seed = time(0);
+			seed = (long)time(0);
 		srand48(seed);
 		return v;
 	case RAND:
