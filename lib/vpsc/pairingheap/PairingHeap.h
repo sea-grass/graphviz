@@ -35,8 +35,6 @@
 // T findMin( )  --> Return smallest item
 // bool isEmpty( )        --> Return true if empty; else false
 // void makeEmpty( )      --> Remove all items
-// void decreaseKey( PairNode p, newVal )
-//                        --> Decrease value in node p
 // ******************ERRORS********************************
 // Throws Underflow as warranted
 
@@ -79,7 +77,6 @@ public:
 	const T & findMin( ) const;
 	void deleteMin( );
 	void makeEmpty( );
-	void decreaseKey( PairNode<T> *p, const T & newVal );
 	void merge( PairingHeap<T> *rhs )
 	{	
 		PairNode<T> *broot=rhs->getRoot();

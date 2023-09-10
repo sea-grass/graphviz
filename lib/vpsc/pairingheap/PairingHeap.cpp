@@ -132,34 +132,6 @@ void PairingHeap<T>::reclaimMemory( PairNode<T> * t ) const
 }
 
 /**
-* Change the value of the item stored in the pairing heap.
-* Does nothing if newVal is larger than currently stored value.
-* p points to a node returned by insert.
-* newVal is the new value, which must be smaller
-*    than the currently stored value.
-*/
-template <class T>
-void PairingHeap<T>::decreaseKey( PairNode<T> *p,
-										  const T & newVal )
-{
-	if( p->element < newVal )
-		return;    // newVal cannot be bigger
-	p->element = newVal;
-	if( p != root )
-	{
-		if( p->nextSibling != nullptr )
-			p->nextSibling->prev = p->prev;
-		if( p->prev->leftChild == p )
-			p->prev->leftChild = p->nextSibling;
-		else
-			p->prev->nextSibling = p->nextSibling;
-
-		p->nextSibling = nullptr;
-		compareAndLink( root, p );
-	}
-}
-
-/**
 * Internal method that is the basic operation to maintain order.
 * Links first and second together to satisfy heap order.
 * first is root of tree 1, which may not be nullptr.
