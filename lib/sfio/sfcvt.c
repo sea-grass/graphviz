@@ -33,11 +33,7 @@ char *_sfcvt(void * dv, int n_digit, int *decpt, int *sign, int format)
     char *sp;
     long n, v;
     char *ep, *buf, *endsp;
-    static char *Buf;
-
-    /* set up local buffer */
-    if (!Buf && !(Buf = malloc(SF_MAXDIGITS)))
-	return SF_INFINITE;
+    static char Buf[SF_MAXDIGITS];
 
     *sign = *decpt = 0;
     {
