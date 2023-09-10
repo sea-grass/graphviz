@@ -602,7 +602,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			*argv.s++ = inp;
 		} while (--width > 0 && SFGETC(f, inp) >= 0);
 	    } else {		/* if(fmt == '[') */
-		bool accepted[UCHAR_MAX];
+		bool accepted[UCHAR_MAX + 1];
 		form = setclass(form, accepted);
 		do {
 		    if (!accepted[inp]) {
