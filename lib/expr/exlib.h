@@ -115,7 +115,7 @@ typedef struct Print_s			/* compiled printf arg node	*/
 	int		errors;		/* fatal error count		*/ \
 	int		formals;	/* parsing formal args		*/ \
 	int		linewrap;	/* linep wrapped around line[]	*/ \
-	int		loopcount;	/* break|continue|return count	*/ \
+	long long loopcount; /* break|continue|return count	*/ \
 	int		loopop;		/* break|continue|return op	*/ \
 	int		nesting;	/* exstatement() nesting	*/
 
