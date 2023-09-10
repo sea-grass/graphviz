@@ -24,7 +24,7 @@ extern "C" {
 typedef struct Variable Variable;
 Variable* newVariable(int id, double desiredPos, double weight);
 void setVariableDesiredPos(Variable *, double desiredPos);
-double getVariablePos(Variable*);
+double getVariablePos(const Variable*);
 
 typedef struct Constraint Constraint;
 Constraint* newConstraint(Variable* left, Variable* right, double gap);
