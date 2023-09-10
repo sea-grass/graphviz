@@ -437,9 +437,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    if (value) {
 		*val = '\0';
 		    argv.d = strtod(accept, NULL);
-	    }
 
-	    if (value) {
 		n_assign += 1;
 		if (FMTCMP(size, double, Sfdouble_t))
 		    *((double *) value) = argv.d;
