@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (9.0.0)]
+## [9.0.0] - 2023-09-11
 
 ### Added
 
@@ -44,7 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   have existing settings under the old identification, Gvedit will attempt to
   migrate them to the new identification the first time it reads then writes
   settings. #2383
-- **Breakting**: `gvprintf` is now tagged with
+- **Breaking**: `gvprintf` is now tagged with
   `__attribute__((format(printf, …)))` when compiling with Clang or GCC. This
   enables the compiler to spot more misuses of this function. #2373
 - **Breaking**: The `hashf` and `eventf` members of `Dtdisc_t` have been
@@ -1138,7 +1138,7 @@ October 9, 2019
 	- Documentation (Warning about HTML label usage)
 
 September 17, 2019
-    - Release 2.42.2 - ( Never fully released due to CI/CD hardware issues ) 
+    - Release 2.42.2 - ( Never fully released due to CI/CD hardware issues )
     - Fix deployment issues.  Builds can now be found under:
 	             http://www2.graphviz.org/Packages/
 July 17, 2019
@@ -1164,7 +1164,7 @@ December 20, 2016
 	- Allow user to specify clustering algorithm in gvmap. (Emden Gansner)
 	- Add Sierpinski graph generator to gvgen. (Emden Gansner)
 	- Extensive code cleanup (Erwin Janssen)
-	- Removal of libgd source - use vanilla libgd from separate install 
+	- Removal of libgd source - use vanilla libgd from separate install
 	- Windows builds (Erwin Janssen)
 	- Appveyor CI for automated Windows build testing (Erwin Janssen)
 	- Travis CI for Fedora/Centos builds (Erwin Janssen)
@@ -1307,8 +1307,8 @@ May 6, 2011
 	- Make overlap=false denote overlap=prism
 	- More efficient xdot library
 	- HTML-like labels provide ID
-	- Fixed bugs: 1480 1980 2044 2087 2088 2089 2091 2093 2094 
-	2095 2101 2102 2103 2104 2112 2113 2118 2128 2129 2139 2149 
+	- Fixed bugs: 1480 1980 2044 2087 2088 2089 2091 2093 2094
+	2095 2101 2102 2103 2104 2112 2113 2118 2128 2129 2139 2149
 	2157 2113 2159 2160 2161 2163
 March 31, 2011
 	- Add many new gvpr scripts to release package
@@ -1316,7 +1316,7 @@ March 31, 2011
 October 14, 2010
 	- Add <B>,<I>,<U> to html strings via cairo
 February 15, 2010
-	- migrated to 2005 version of cdt 
+	- migrated to 2005 version of cdt
 January 26, 2010
 	- Release 2.26.3
 	- libcgraph.so   version bumped from 4 to 5 due to API changes
@@ -1335,8 +1335,8 @@ December 10, 2009
 		  through plugins.  Dropped some output formats for which
 		  plugins have not been developed: -Tdia, -Tmif
 		- gvpr converted to a library; additional array handling and
-		  text processing functions added; language extended to allow 
-		  multiple BEG_G/N/E blocks. 
+		  text processing functions added; language extended to allow
+		  multiple BEG_G/N/E blocks.
 		- allow background images specified via xdot
 	- Ports added/dropped from nightly builds:
 	  (The dropped ports could probably be re-added if there was demand.)
@@ -1356,10 +1356,10 @@ June 16, 2009
 		- add new layout engine for large graphs: sfdp
 		- add new layout engine for nested graphs: osage
         - pack library extended to handle array-based packing modes
-          using array bounds, aspect ratio, user-controlled sorting, etc. 
+          using array bounds, aspect ratio, user-controlled sorting, etc.
 	- Fixed bugs: 1515 1590 1598 1601 1605 1607 1609 1610 1611 1614
 	1615 1617 1625 1628 1634 1635 1640 1641 1642 1646 1649 1651 1652
-	
+
 March 13, 2009
 	- Release 2.22.2
 		- fix for buffer overflow (present in 2.22.0 and 2.22.1)
@@ -1402,16 +1402,16 @@ March 3, 2009
 	- Linux:
 		- new Ubuntu8 builds
 		- new Fedora 10 and 11 builds
-	- MacOSx: 
+	- MacOSx:
 		- Universal binary for Leopard: i386, x86_64, ppc, ppc64
 		- Should not conflict with parallel install of MacPorts
 		  version of graphviz
-		- Improved GUI 
+		- Improved GUI
 	- Windows:
 		- VisualC project files now available, in addition to the GNU
 		  Makefiles that are used the mingw builds.
 	- Language Bindings:
-		- fixed problem with writing dot, xdot, plain, canon to 
+		- fixed problem with writing dot, xdot, plain, canon to
 		  memory or to Tcl_Channels
 		- renamed man pages to Debian style:  gv.3tcl, gv.3perl, etc
 	- Fixed bugs: 827 1365 1366 1367 1368 1374 1375 1376 1378 1380 1382
@@ -1423,10 +1423,10 @@ March 3, 2009
 	1503 1505 1509 1513 1521 1523 1525 1530 1531 1532 1533 1535 1536
 	1539 1540 1542 1543 1546 1547 1551 1553 1554 1561 1565 1566 1568
 	1569 1570 1571 1573 1577 1578 1579 1580 1581 1582 1584 1586
-		
+
 June 25, 2008
 	- Release 2.20.2
-	- Fix bug in HTML-like labels 
+	- Fix bug in HTML-like labels
 June 23, 2008
 	- Release 2.20.1
 	- Fix bug in ccomps related to conversion to cgraph
@@ -1435,7 +1435,7 @@ June 20, 2008
 	- Preparing for Release 2.20
 	- Fixed bugs: 1315, 1317, 1324, 1336, 1343, 1364
 	- Add new "folder" shape for nodes.
-	- Migration of gvpr tools to libcgraph.   
+	- Migration of gvpr tools to libcgraph.
 	- New output format -Teps  (encapsulated postscript)
 	- Various NetBSD and SuSE fixes incorporated
 	- ./configure now provides a summary
@@ -1443,8 +1443,8 @@ June 20, 2008
 	- Add MacOS support (Glen Low)
 March 10, 2008
 	- Release 2.18
-	- Fixed bugs: 1249 1255 1256 1268 1276 1289 1295 1300 
-		Fedora BZ#247376, 
+	- Fixed bugs: 1249 1255 1256 1268 1276 1289 1295 1300
+		Fedora BZ#247376,
 	- in -Tps use a new number formatter that suppresses trailing 0.
 	- support tcl/tk-8.5
 	- support gcc-4.3
@@ -1476,7 +1476,7 @@ November 9, 2007
 	- replace arith.h in distro
 	- add functions to access version info to avoid need for gvcint.h
 	- Fix problem with irregular character spacing at 96dpi in pango/cairo output formats.
-	- Add gdk_pixbuf plugin providing: .bmp .ico .jpg .png .tif 
+	- Add gdk_pixbuf plugin providing: .bmp .ico .jpg .png .tif
 	- Add DevIL plugin providing: .bmp .jpg .png .tif .tga
 	- Extend GD plugin to provide a backend to cairo for: .gif .jpg .png .gd .gd2 .wbmp  <- gifs are now antialiased
 	- Rework plugin framework to separate device from renderer, and to autoload load dependendent plugins
@@ -1555,7 +1555,7 @@ November 27, 2006
 	- Fixes for builds on Mac OS/X
 	- dot - new -O switch to automatically generate output file
 	names based on the input filename and the -T value.
-	 e.g.  "dot -Tpng -O *.dot"   
+	 e.g.  "dot -Tpng -O *.dot"
 	Also works for case of multiple graphs in a single input file.
 	- add support for "Brewer" color nameset
 	- move reusable .so libraries to $PREFIX/lib per frequent request
@@ -1581,7 +1581,7 @@ February 3, 2006
 	- Add support for simulated duplex edges using parallel edges:
 	head arrow takes first color, tail arrow takes second color.
 	- source code management moved back to CVS until GIT matures a bit more
-	- distribute separe rpms for binares of language bindings : 
+	- distribute separe rpms for binares of language bindings :
 	- Add a small pad region around graph renderings to allow for finite
 	penwidths at the drawing edges
 	- Add protonode(g) and E=protoedge(g) functions to simplify
@@ -1608,7 +1608,7 @@ August 28, 2005
 	- additional "event" support for GUIs (e.g. "DotEdit" graphviz-cairo)
 	- add some information about plugins to "dot -v" output.
 	- lefty/dotty fixes
-	- fix bugs 746 750 752 753 754 756 761 763 764 765 768 
+	- fix bugs 746 750 752 753 754 756 761 763 764 765 768
 		771 772 773 774 775 776 777 778
 	- not a bug 757 760 770
 July 20, 2005
@@ -1651,7 +1651,7 @@ December 11, 2004
 	- sync with gd-2.0.32
 	- attempt to catch some out-of-memory conditions with very large graphs
 	- support background and node-fill partial transparency when truecolor=true
-		
+
 September 14, 2004
 	- release 1.16
 	dotneato
@@ -1740,7 +1740,7 @@ February 23, 2004
 	- fix memory leak in gd/gdft.c
 	- clean up calculation of whitespace around labels
     - dotty, lefty
-	- fix for bug #400	
+	- fix for bug #400
 December 23, 2003
 	- added dijkstra (single source distance) filter
 September 10, 2003
@@ -1817,7 +1817,7 @@ July 3, 2003
 		- use tcl's file requestor instead of homebrew
 		- add zooming controlled by mousewheel
 		- support additional export formats
-	    
+
 January 31, 2003
 	- declare this version 1.9
 		(3-level version numbering has been dropped now
@@ -1898,7 +1898,7 @@ August 2, 2002
 	        graphviz, graphviz-tcl, graphviz-graphs, graphviz-devel
 	    - gcc3 warning cleanup
 	    - Install lincdt, libgraph, libagraph, libgd, libpathplan, libexp,
-	    	and libpack so that they can be used by other programs. 
+		and libpack so that they can be used by other programs.
 		Headers and man3 in graphviz-devel
 	- dynagraph, graphsearch
  	    - New tools based on libagraph and written in C++
@@ -1935,9 +1935,9 @@ July 5, 2002
 	- remove wrong assert in gdgen.c
 	- fix graph centering in bitmap outputs
 	- provide enough margins
-	- fix line widths after scaling 
+	- fix line widths after scaling
 		(test with directed/proc3d.dot)
-	- fix text rotations (requires libfreetype.so.6.3.1) 
+	- fix text rotations (requires libfreetype.so.6.3.1)
 		(test with directed/NaN.dot)
 July 5, 2002
 	    - declare this version 1.8.7
@@ -1967,7 +1967,7 @@ July 2, 2002
 	- Fix for bug #158 "Nodes disappear with ports"
 	- Various Windows-specific #ifdefs
 	- Fix edge coordinates in -Tplain.
-	
+
 May 24, 2002
 	    - declare this version 1.8.6
 May 19, 2002
@@ -2001,7 +2001,7 @@ April 16, 2002
 
 April 11, 2002
 	     - declared this version 1.8.5
-	- various portability fixes 
+	- various portability fixes
 	- various SVG fixes and optimizations
 April 5, 2002:
 	     - declared this version 1.8.4
@@ -2075,7 +2075,7 @@ February 5, 2002: graphviz-1.7.17-0
     - various 64bit portability fixes
     - various bug fixes
 January 2, 2002: graphviz-1.7.16-0
-    - dotneato 
+    - dotneato
 	- fix bugs in -Tps output due to pen/fill color changes
 	- various -Tfig.c fixes
 	- various portability fixes
@@ -2118,9 +2118,9 @@ October 22, 2001: graphviz-1.7.11-0
 	      - fix linewidth
 	      - fix xmnls:xlink reference
     - doc
-	- Dot.ref - updated 
+	- Dot.ref - updated
     - graphs/directed
-        - newarrows.dot expanded 
+        - newarrows.dot expanded
 	- honda-tokoro.dot added
 October 21, 2001: graphviz-1.7.10-0
     - lefty & dotty
@@ -2168,10 +2168,10 @@ July 1, 2001: graphviz-1.7.6-3
 	- fix support for graph margins in bitmapped outputs
 	- correction to PostScript preamble
 	- SVG generator improvement - now works with Amaya and SodiPodi
-    - tcldot 
+    - tcldot
 	- now uses Tcl Channels properly for input
 	- fixes for linewidth support
-	- command extensions 
+	- command extensions
 	    - listattributes now accepts list
 	    - queryattributes now accepts list
 	    - setattributes now accepts list
@@ -2182,7 +2182,7 @@ July 1, 2001: graphviz-1.7.6-3
     - doted
 	- fix resizing problems
 	- add PNG and SVG output formats
- 
+
 April 27, 2001: graphviz-1.7.6
 
     NEW FEATURES
@@ -2235,7 +2235,7 @@ April 27, 2001: graphviz-1.7.6
     Add support for [color=transparent]
 
     Fix broken support for specific capitalized fontnames
-    (Times Helvetica Arial Courier) 
+    (Times Helvetica Arial Courier)
 
     Fix broken support for DOTFONTPATH
 
@@ -2258,7 +2258,7 @@ April 27, 2001: graphviz-1.7.6
 
 December 23, 2000: graphviz-1.7.5
 
-   - update to gd-1.8.4 and freetype2 
+   - update to gd-1.8.4 and freetype2
    - add support for font paths
 
 
@@ -2309,7 +2309,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (9.0.0)]: https://gitlab.com/graphviz/graphviz/compare/8.1.0...main
+[9.0.0]: https://gitlab.com/graphviz/graphviz/compare/8.1.0...9.0.0
 [8.1.0]: https://gitlab.com/graphviz/graphviz/compare/8.0.5...8.1.0
 [8.0.5]: https://gitlab.com/graphviz/graphviz/compare/8.0.3...8.0.5
 [8.0.3]: https://gitlab.com/graphviz/graphviz/compare/8.0.2...8.0.3
