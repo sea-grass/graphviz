@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 #include "gui.h"
@@ -287,7 +288,7 @@ static gboolean motion_notify_event(GtkWidget * widget,
     float x = (float) event->x;
     float y = (float) event->y;
 
-    gboolean redraw = FALSE;
+    bool redraw = false;
     if (view->widgets)
 	view->widgets->common.functions.mouseover((glCompObj*)view->widgets, (GLfloat) x,(GLfloat) y);
 
@@ -300,24 +301,21 @@ static gboolean motion_notify_event(GtkWidget * widget,
     if((view->mouse.t==glMouseLeftButton) && (view->mouse.down)  )
     {
 	appmouse_left_drag(view,(int)event->x,(int)event->y);
-	redraw = TRUE;
+	redraw = true;
 
     }
     if((view->mouse.t==glMouseRightButton) && (view->mouse.down))
     {
 	appmouse_right_drag(view,(int)event->x,(int)event->y);
-	redraw = TRUE;
+	redraw = true;
     }
     if((view->mouse.t==glMouseMiddleButton) && (view->mouse.down))
     {
 	appmouse_middle_drag(view,(int)event->x,(int)event->y);
-	redraw = TRUE;
+	redraw = true;
     }
     if(view->Topview->sel.selPoly.cnt > 0)
-	redraw=TRUE;
-
-
-
+	redraw = true;
 
     begin_x = x;
     begin_y = y;

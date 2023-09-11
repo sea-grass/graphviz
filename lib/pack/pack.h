@@ -67,7 +67,7 @@ typedef unsigned int packval_t;
 	float aspect;		/* desired aspect ratio */
 	int sz;			/* row/column size size */
 	unsigned int margin;	/* margin left around objects, in points */
-	int doSplines;		/* use splines in constructing graph shape */
+	bool doSplines; ///< use splines in constructing graph shape
 	pack_mode mode;		/* granularity and method */
 	bool *fixed;		/* fixed[i] == true implies g[i] should not be moved */
 	packval_t* vals;	/* for arrays, sort numbers */
@@ -94,7 +94,7 @@ typedef unsigned int packval_t;
     PACK_API int packSubgraphs(int, Agraph_t **, Agraph_t *, pack_info *);
     PACK_API int pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed);
 
-    PACK_API int shiftGraphs(int, Agraph_t**, point*, Agraph_t*, int);
+    PACK_API int shiftGraphs(int, Agraph_t**, point*, Agraph_t*, bool);
 
     PACK_API pack_mode getPackMode(Agraph_t * g, pack_mode dflt);
     PACK_API int getPack(Agraph_t *, int not_def, int dflt);

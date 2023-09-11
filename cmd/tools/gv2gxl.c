@@ -784,9 +784,9 @@ void gv_to_gxl(Agraph_t * g, FILE * gxlFile)
     fprintf(gxlFile, "<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>\n");
     fprintf(gxlFile, "<gxl>\n");
 
-    writeHdr(&stp, g, gxlFile, TRUE);
+    writeHdr(&stp, g, gxlFile, true);
     writeBody(&stp, g, gxlFile);
-    writeTrl(g, gxlFile, TRUE);
+    writeTrl(g, gxlFile, true);
 
     fprintf(gxlFile, "</gxl>\n");
 

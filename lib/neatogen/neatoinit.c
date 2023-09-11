@@ -1457,7 +1457,7 @@ void neato_layout(Agraph_t * g)
 		    bp = NULL;
 		pinfo.margin = (unsigned)Pack;
 		pinfo.fixed = bp;
-		pinfo.doSplines = 1;
+		pinfo.doSplines = true;
 		packGraphs(n_cc, cc, g, &pinfo);
 		free(bp);
 	    }

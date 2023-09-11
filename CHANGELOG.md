@@ -71,6 +71,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Agdstate_t.mem`.
 - **Breaking**: The `agcallbacks` function and `Agclos_t.callbacks_enabled` have
   been removed.
+- **Breaking**: `pack_info.doSplines` is now a C99 `bool`. Correspondingly, the
+  `doSplines` parameter to `shiftGraphs` is now a C99 `bool`.
 
 ### Fixed
 

@@ -134,7 +134,7 @@ void twopi_layout(Agraph_t * g)
 	} else {
 	    pack_info pinfo;
 	    getPackInfo (g, l_node, CL_OFFSET, &pinfo);
-	    pinfo.doSplines = 0;
+	    pinfo.doSplines = false;
 
 	    for (i = 0; i < ncc; i++) {
 		sg = ccs[i];

@@ -275,7 +275,7 @@ void sfdp_layout(graph_t * g)
 	} else {
 	    pack_info pinfo;
 	    getPackInfo(g, l_node, CL_OFFSET, &pinfo);
-	    pinfo.doSplines = 1;
+	    pinfo.doSplines = true;
 
 	    for (i = 0; i < ncc; i++) {
 		sg = ccs[i];
