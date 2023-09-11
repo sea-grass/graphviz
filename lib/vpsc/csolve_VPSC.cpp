@@ -41,7 +41,7 @@ int genXConstraints(int n, boxf *bb, Variable **vs, Constraint ***cs,
 	for(int i=0;i<n;i++) {
 		rs.emplace_back(bb[i].LL.x,bb[i].UR.x,bb[i].LL.y,bb[i].UR.y);
 	}
-	int m = generateXConstraints(rs, vs, *cs, transitiveClosure);
+	const int m = generateXConstraints(rs, vs, *cs, transitiveClosure);
 	return m;
 }
 int genYConstraints(int n, boxf* bb, Variable** vs, Constraint*** cs) {
@@ -49,7 +49,7 @@ int genYConstraints(int n, boxf* bb, Variable** vs, Constraint*** cs) {
 	for(int i=0;i<n;i++) {
 		rs.emplace_back(bb[i].LL.x,bb[i].UR.x,bb[i].LL.y,bb[i].UR.y);
 	}
-	int m = generateYConstraints(rs,vs,*cs);
+	const int m = generateYConstraints(rs, vs, *cs);
 	return m;
 }
 
@@ -86,7 +86,7 @@ void solveVPSC(VPSC* vpsc) {
 void setVariableDesiredPos(Variable *v, double desiredPos) {
 	v->desiredPosition = desiredPos;
 }
-double getVariablePos(Variable *v) {
+double getVariablePos(const Variable *v) {
 	return v->position();
 }
 void remapInConstraints(Variable *u, Variable *v, double dgap) {
@@ -104,13 +104,4 @@ void remapOutConstraints(Variable *u, Variable *v, double dgap) {
 		v->out.push_back(c);
 	}
 	u->out.clear();
-}
-int getLeftVarID(Constraint *c) {
-	return c->left->id;
-}
-int getRightVarID(Constraint *c){
-	return c->right->id;
-}
-double getSeparation(Constraint *c){
-	return c->gap;
 }

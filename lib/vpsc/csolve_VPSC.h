@@ -24,7 +24,7 @@ extern "C" {
 typedef struct Variable Variable;
 Variable* newVariable(int id, double desiredPos, double weight);
 void setVariableDesiredPos(Variable *, double desiredPos);
-double getVariablePos(Variable*);
+double getVariablePos(const Variable*);
 
 typedef struct Constraint Constraint;
 Constraint* newConstraint(Variable* left, Variable* right, double gap);
@@ -37,9 +37,6 @@ Constraint** newConstraints(int m);
 void deleteConstraints(int m,Constraint**);
 void remapInConstraints(Variable *u, Variable *v, double dgap);
 void remapOutConstraints(Variable *u, Variable *v, double dgap);
-int getLeftVarID(Constraint *c);
-int getRightVarID(Constraint *c);
-double getSeparation(Constraint *c);
 
 #ifndef HAVE_POINTF_S
 typedef struct pointf_s { double x, y; } pointf;

@@ -18,6 +18,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
 #include <cgraph/exit.h>
+#include <cgraph/unreachable.h>
 #include <expr/exlib.h>
 #include <expr/exop.h>
 #include <inttypes.h>
@@ -1154,9 +1155,9 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 	case SRAND:
 		v.integer = seed;
 		if (exnode->binary) {
-			seed = eval(ex, x, env).integer;
+			seed = (long)eval(ex, x, env).integer;
 		} else
-			seed = time(0);
+			seed = (long)time(0);
 		srand48(seed);
 		return v;
 	case RAND:
@@ -1168,9 +1169,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			ex->disc->exitf(ex, env, (int)v.integer);
 		else
 			graphviz_exit((int)v.integer);
-		/*NOTREACHED*/
-		v.integer = -1;
-		return v;
+		UNREACHABLE();
 	case IF:
 		v = eval(ex, x, env);
 		if (v.integer)

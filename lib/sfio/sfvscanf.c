@@ -27,7 +27,7 @@
  * @param form format string
  * @param accept accepted characters are set to 1
  */
-static const char *setclass(const char *form, bool *accept) {
+static const unsigned char *setclass(const unsigned char *form, bool *accept) {
     int fmt, c;
     bool yes;
 
@@ -437,9 +437,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    if (value) {
 		*val = '\0';
 		    argv.d = strtod(accept, NULL);
-	    }
 
-	    if (value) {
 		n_assign += 1;
 		if (FMTCMP(size, double, Sfdouble_t))
 		    *((double *) value) = argv.d;
@@ -602,8 +600,8 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			*argv.s++ = inp;
 		} while (--width > 0 && SFGETC(f, inp) >= 0);
 	    } else {		/* if(fmt == '[') */
-		bool accepted[UCHAR_MAX];
-		form = setclass(form, accepted);
+		bool accepted[UCHAR_MAX + 1];
+		form = (const char*)setclass((const unsigned char*)form, accepted);
 		do {
 		    if (!accepted[inp]) {
 			if (n > 0 || (flags & SFFMT_ALTER))

@@ -384,11 +384,10 @@ bool VPSC::blockGraphIsCyclic() {
 		if(i==graph.end()) {
 			//cycle found!
 			return true;
-		} else {
-			graph.erase(i);
-			for(node * v : u->out) {
-				v->in.erase(u);
-			}
+		}
+		graph.erase(i);
+		for(node *v : u->out) {
+			v->in.erase(u);
 		}
 	}
 	return false;

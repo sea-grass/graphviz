@@ -63,8 +63,8 @@ private:
 	double compute_dfdv(Variable *v, Variable *u, Constraint *&min_lm);
 	Pair compute_dfdv_between(
 			Variable*, Variable*, Variable*, Direction, bool);
-	bool canFollowLeft(const Constraint *c, Variable *last);
-	bool canFollowRight(const Constraint *c, Variable *last);
+	bool canFollowLeft(const Constraint *c, const Variable *last);
+	bool canFollowRight(const Constraint *c, const Variable *last);
 	void populateSplitBlock(Block *b, Variable *v, Variable *u);
 	void addVariable(Variable *v);
 	void setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h, bool use_in);

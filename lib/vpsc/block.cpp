@@ -206,10 +206,10 @@ void Block::deleteMinInConstraint() {
 void Block::deleteMinOutConstraint() {
 	out->deleteMin();
 }
-inline bool Block::canFollowLeft(const Constraint *c, Variable *last) {
+inline bool Block::canFollowLeft(const Constraint *c, const Variable *last) {
 	return c->left->block==this && c->active && last!=c->left;
 }
-inline bool Block::canFollowRight(const Constraint *c, Variable *last) {
+inline bool Block::canFollowRight(const Constraint *c, const Variable *last) {
 	return c->right->block==this && c->active && last!=c->right;
 }
 
@@ -373,8 +373,8 @@ void Block::split(Block* &l, Block* &r, Constraint* c) {
  */
 double Block::cost() {
 	double c = 0;
-	for (Variable *v : vars) {
-		double diff = v->position() - v->desiredPosition;
+	for (const Variable *v : vars) {
+		const double diff = v->position() - v->desiredPosition;
 		c += v->weight * diff * diff;
 	}
 	return c;
@@ -382,7 +382,7 @@ double Block::cost() {
 ostream& operator <<(ostream &os, const Block &b)
 {
 	os<<"Block:";
-	for(Variable *v : b.vars) {
+	for(const Variable *v : b.vars) {
 		os<<" "<<*v;
 	}
 	if(b.deleted) {
