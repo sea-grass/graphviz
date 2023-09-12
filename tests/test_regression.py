@@ -3156,3 +3156,63 @@ def test_gvpr_printf(statement: str, expected: str):
 
     # confirm we got the expected output
     assert result == expected, "incorrect GVPR printf behavior"
+
+
+usage_info = """\
+Usage: dot [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>
+(additional options for neato)    [-x] [-n<v>]
+(additional options for fdp)      [-L(gO)] [-L(nUCT)<val>]
+(additional options for memtest)  [-m<v>]
+(additional options for config)  [-cv]
+
+ -V          - Print version and exit
+ -v          - Enable verbose mode 
+ -Gname=val  - Set graph attribute 'name' to 'val'
+ -Nname=val  - Set node attribute 'name' to 'val'
+ -Ename=val  - Set edge attribute 'name' to 'val'
+ -Tv         - Set output format to 'v'
+ -Kv         - Set layout engine to 'v' (overrides default based on command name)
+ -lv         - Use external library 'v'
+ -ofile      - Write output to 'file'
+ -O          - Automatically generate an output filename based on the input filename with a .'format' appended. (Causes all -ofile options to be ignored.) 
+ -P          - Internally generate a graph of the current plugins. 
+ -q[l]       - Set level of message suppression (=1)
+ -s[v]       - Scale input by 'v' (=72)
+ -y          - Invert y coordinate in output
+
+ -n[v]       - No layout mode 'v' (=1)
+ -x          - Reduce graph
+
+ -Lg         - Don't use grid
+ -LO         - Use old attractive force
+ -Ln<i>      - Set number of iterations to i
+ -LU<i>      - Set unscaled factor to i
+ -LC<v>      - Set overlap expansion factor to v
+ -LT[*]<v>   - Set temperature (temperature factor) to v
+
+ -m          - Memory test (Observe no growth with top. Kill when done.)
+ -m[v]       - Memory test - v iterations.
+
+ -c          - Configure plugins (Writes $prefix/lib/graphviz/config 
+               with available plugin information.  Needs write privilege.)
+ -?          - Print usage and exit
+"""
+
+
+def test_dot_randomV():
+    """
+    test the output from a malformed command
+    """
+
+    expected = f"Error: dot: option -r unrecognized\n\n{usage_info}"
+
+    proc = subprocess.run(
+        ["dot", "-randomV"],
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        check=False,
+    )
+
+    assert proc.returncode != 0, "malformed options were accepted"
+
+    assert proc.stderr == expected, "unexpected usage info"
