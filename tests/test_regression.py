@@ -3233,3 +3233,25 @@ def test_dot_randomV():
     assert proc.returncode != 0, "malformed options were accepted"
 
     assert proc.stderr == expected, "unexpected usage info"
+
+
+@pytest.mark.skipif(
+    os.getenv("build_system") == "msbuild",
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/1777",
+)
+def test_dot_Vquestionmark():
+    """
+    test the output from two short options combined
+    """
+
+    proc = subprocess.run(
+        ["dot", "-V?"], stderr=subprocess.PIPE, universal_newlines=True, check=True
+    )
+
+    c_src = (Path(__file__).parent / "get-package-version.c").resolve()
+    assert c_src.exists(), "missing test case"
+    package_version, _ = run_c(c_src)
+
+    assert proc.stderr.startswith(
+        f"dot - graphviz version {package_version.strip()} ("
+    ), "unexpected -V info"
