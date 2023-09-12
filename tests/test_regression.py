@@ -3199,6 +3199,19 @@ Usage: dot [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>
 """
 
 
+def test_dot_questionmarkV():
+    """
+    test the output from two short options combined
+    """
+
+    out = subprocess.check_output(
+        ["dot", "-?V"],
+        universal_newlines=True,
+    )
+
+    assert out == usage_info, "unexpected usage info"
+
+
 def test_dot_randomV():
     """
     test the output from a malformed command
