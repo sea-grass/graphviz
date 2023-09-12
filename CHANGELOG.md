@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (9.0.1)]
 
+### Changed
+
+- The Criterion unit tests have been removed and migrated to Pytest. This is
+  primarily relevant to downstream packagers of Graphviz. #2443
+
 ## [9.0.0] - 2023-09-11
 
 ### Added

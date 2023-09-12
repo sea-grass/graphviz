@@ -684,7 +684,6 @@ EXCLUDE = (
     "tclpkg/tclpathplan/wrapper.c",
     "tclpkg/tclstubs/tclInt.h",
     "tclpkg/tclstubs/tclStubLib.c",
-    "tests/unit_tests/lib/common/command_line.c",
     "windows/gvedit/Application.h",
     "windows/gvedit/GraphX.cpp",
     "windows/gvedit/UAbout.cpp",
