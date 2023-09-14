@@ -130,31 +130,29 @@ static void listdelrec(Agobj_t * obj, Agrec_t * rec)
 
 int agdelrec(void *arg_obj, const char *name)
 {
-    Agobj_t *obj;
-    Agraph_t *g;
-
-    obj = arg_obj;
-    g = agraphof(obj);
+    Agobj_t *obj = arg_obj;
+    Agraph_t *g = agraphof(obj);
     Agrec_t *rec = aggetrec(obj, name, 0);
-    if (rec) {
-	listdelrec(obj, rec);	/* zap it from the circular list */
-	switch (obj->tag.objtype) {	/* refresh any stale pointers */
-	case AGRAPH:
-	    objdelrec(g, obj, rec);
-	    break;
-	case AGNODE:
-	case AGINEDGE:
-	case AGOUTEDGE:
-	    agapply(agroot(g), obj, objdelrec, rec, FALSE);
-	    break;
-	default:
-	    UNREACHABLE();
-	}
-	agstrfree(g, rec->name);
-	agfree(g, rec);
-	return SUCCESS;
-    } else
+    if (!rec)
 	return FAILURE;
+
+    listdelrec(obj, rec);	/* zap it from the circular list */
+    switch (obj->tag.objtype) {	/* refresh any stale pointers */
+    case AGRAPH:
+	objdelrec(g, obj, rec);
+	break;
+    case AGNODE:
+    case AGINEDGE:
+    case AGOUTEDGE:
+	agapply(agroot(g), obj, objdelrec, rec, FALSE);
+	break;
+    default:
+	UNREACHABLE();
+    }
+    agstrfree(g, rec->name);
+    agfree(g, rec);
+
+    return SUCCESS;
 }
 
 static void simple_delrec(Agraph_t * g, Agobj_t * obj, void *rec_name)
