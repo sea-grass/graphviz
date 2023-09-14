@@ -2020,6 +2020,28 @@ def test_2215():
     subprocess.run(["dot", "-v"], input=input, check=True, universal_newlines=True)
 
 
+@pytest.mark.xfail(
+    platform.system() == "Windows",
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2242",
+    strict=True,
+)
+def test_2242():
+    """
+    repeated runs of a graph with subgraphs should yield a stable result
+    https://gitlab.com/graphviz/graphviz/-/issues/2242
+    """
+
+    # get our baseline reference
+    input = Path(__file__).parent / "2242.dot"
+    assert input.exists(), "unexpectedly missing test case"
+    ref = dot("png", input)
+
+    # now repeat this, expecting it not to change
+    for _ in range(20):
+        png = dot("png", input)
+        assert ref == png, "repeated rendering changed output"
+
+
 def test_2342():
     """
     using an arrow with size 0 should not trigger an assertion failure
