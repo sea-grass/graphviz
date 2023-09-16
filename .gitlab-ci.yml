@@ -187,7 +187,7 @@ portable-source:
     script:
         - ci/install-packages.sh
         - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
-        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests
+        - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
     artifacts:
         reports:
             junit: report.xml
@@ -215,7 +215,7 @@ portable-source:
         # memory leak detections. Disable those for now.
         - export ASAN_OPTIONS=detect_leaks=0
         - export UBSAN_OPTIONS=print_stacktrace=1
-        - python3 -m pytest --verbose --junitxml=report.xml ci/tests.py tests
+        - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
         - ci/test_coverage.py --analyze
     # enable test coverage visualization in MR diff view
     coverage: '/  lines\.{6}: \d+\.\d+%/'
