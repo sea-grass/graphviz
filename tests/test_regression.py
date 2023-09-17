@@ -828,6 +828,23 @@ def test_1624():
     dot("svg", input)
 
 
+def test_1644():
+    """
+    neato results should be deterministic
+    https://gitlab.com/graphviz/graphviz/-/issues/1644
+    """
+
+    # get our baseline reference
+    input = Path(__file__).parent / "1644.dot"
+    assert input.exists(), "unexpectedly missing test case"
+    ref = subprocess.check_output(["neato", input], universal_newlines=True)
+
+    # now repeat this, expecting it not to change
+    for _ in range(20):
+        out = subprocess.check_output(["neato", input], universal_newlines=True)
+        assert ref == out, "repeated rendering changed output"
+
+
 def test_1658():
     """
     the graph associated with this test case should not crash Graphviz
