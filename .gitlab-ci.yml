@@ -373,7 +373,7 @@ out-of-source-build:
 # get below the one hour per job limit of the GitLab shared Windows
 # runners
 
-windows-mingw32-build-step1-configure:
+windows-mingw32-build:
     stage: build
     needs:
         - job: portable-source
@@ -381,29 +381,8 @@ windows-mingw32-build-step1-configure:
     script:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - GRAPHVIZ_VERSION
-            - graphviz-*
-            - build
-    tags:
-        - windows
-    except:
-        - tags
-
-windows-mingw32-build-step2-make:
-    stage: build
-    needs:
-        - job: windows-mingw32-build-step1-configure
-          artifacts: true
-    script:
-        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
-        - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
