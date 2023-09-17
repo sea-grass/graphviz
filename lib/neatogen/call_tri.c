@@ -76,7 +76,7 @@ SparseMatrix call_tri2(int n, int dim, double * xx)
 	y[i] = xx[dim * i + 1];
     }
 
-    delaunay = UG_graph(x, y, n, 0);
+    delaunay = UG_graph(x, y, n);
 
     A = SparseMatrix_new(n, n, 1, MATRIX_TYPE_REAL, FORMAT_COORD);
 

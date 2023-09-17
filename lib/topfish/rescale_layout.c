@@ -202,7 +202,7 @@ void rescale_layout(double *x_coords, double *y_coords, size_t n, int interval,
 
     // construct mutual neighborhood graph
     assert(n <= INT_MAX);
-    graph = UG_graph(x_coords, y_coords, (int)n, 0);
+    graph = UG_graph(x_coords, y_coords, (int)n);
     rescaleLayout(graph, n, x_coords, y_coords, interval, distortion);
     free(graph[0].edges);
     free(graph);
@@ -358,7 +358,7 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 
     // construct mutual neighborhood graph
     assert(n <= INT_MAX);
-    graph = UG_graph(x_coords, y_coords, (int)n, 0);
+    graph = UG_graph(x_coords, y_coords, (int)n);
 
     if (num_foci == 1) 
 	{	// accelerate execution of most common case
