@@ -247,9 +247,8 @@ check_overlap_RETURN:
 
 
 static void relative_position_constraints_delete(void *d){
-  relative_position_constraints data;
   if (!d) return;
-  data = (relative_position_constraints) d;
+  relative_position_constraints data = d;
   free(data->irn);
   free(data->jcn);
   free(data->val);
