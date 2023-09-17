@@ -77,8 +77,7 @@ typedef  StressMajorizationSmoother SparseStressMajorizationSmoother;
 void SparseStressMajorizationSmoother_delete(SparseStressMajorizationSmoother sm);
 
 SparseStressMajorizationSmoother
-SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda,
-                                     double *x);
+SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double *x);
 
 double SparseStressMajorizationSmoother_smooth(SparseStressMajorizationSmoother sm, int dim, double *x, int maxit_sm, double tol);
 

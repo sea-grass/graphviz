@@ -292,7 +292,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
   return sm;
 }
 	
-StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda0, double *x) {
+StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double *x) {
   /* solve a stress model to achieve the ideal distance among a sparse set of edges recorded in A.
      A must be a real matrix.
    */
@@ -325,7 +325,6 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   sm->maxit_cg = (int)sqrt((double) A->m);
 
   lambda = sm->lambda = gv_calloc(m, sizeof(double));
-  for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
 
   nz = A->nz;
 
