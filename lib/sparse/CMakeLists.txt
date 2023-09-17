@@ -1,6 +1,5 @@
 add_library(sparse STATIC
   # Header files
-  BinaryHeap.h
   clustering.h
   color_palette.h
   colorutil.h
@@ -12,7 +11,6 @@ add_library(sparse STATIC
   SparseMatrix.h
 
   # Source files
-  BinaryHeap.c
   clustering.c
   color_palette.c
   colorutil.c

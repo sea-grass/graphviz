@@ -16,7 +16,6 @@
 #include <common/arith.h>
 #include <limits.h>
 #include <sparse/SparseMatrix.h>
-#include <sparse/BinaryHeap.h>
 #include <stddef.h>
 #include <stdbool.h>
 
