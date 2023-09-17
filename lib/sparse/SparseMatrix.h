@@ -102,7 +102,7 @@ SparseMatrix SparseMatrix_sort(SparseMatrix A);
 
 SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A);
 
-int SparseMatrix_distance_matrix(SparseMatrix A, int weighted,  double **dist_matrix);
+int SparseMatrix_distance_matrix(SparseMatrix A, double **dist_matrix);
 
 SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
 

@@ -1699,142 +1699,6 @@ void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int *
   free(mask);
 }
 
-
-
-struct nodedata_struct {
-  double dist;/* distance to root */
-  int id;/*node id */
-};
-typedef struct nodedata_struct* nodedata;
-
-static int cmp(void*i, void*j){
-  nodedata d1, d2;
-
-  d1 = i;
-  d2 = j;
-  if (d1->dist > d2->dist){
-    return 1;
-  }
-  if (d1->dist < d2->dist) {
-    return -1;
-  }
-  return 0;
-}
-
-static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist, int *list, double *dist_max){
-  /* Find the shortest path distance of all nodes to root. If khops >= 0, the shortest ath is of distance <= khops,
-
-     A: the nxn connectivity matrix. Entries are assumed to be nonnegative. Absolute value will be taken if 
-     .  entry value is negative.
-     dist: length n. On on exit contain the distance from root to every other node. dist[root] = 0. dist[i] = distance from root to node i.
-     .     if the graph is disconnected, unreachable node have a distance -1.
-     .     note: ||root - list[i]|| =!= dist[i] !!!, instead, ||root - list[i]|| == dist[list[i]]
-     nlist: number of nodes visited
-     list: length n. the list of node in order of their extraction from the heap. 
-     .     The distance from root to last in the list should be the maximum
-     dist_max: the maximum distance, should be realized at node list[nlist-1].
-     return: 0 if every node is reachable. -1 if not */
-
-  int m = A->m, i, j, jj, *ia = A->ia, *ja = A->ja, heap_id;
-  BinaryHeap h;
-  double *a = NULL, *aa;
-  int *ai;
-  nodedata ndata, ndata_min;
-  enum {UNVISITED = -2, FINISHED = -1};
-  int *heap_ids; /* node ID to heap ID array. Initialised to UNVISITED. 
-		   Set to FINISHED after extracted as min from heap */
-  int found = 0;
-
-  assert(SparseMatrix_is_symmetric(A, true));
-
-  assert(m == A->n);
-
-  switch (A->type){
-  case MATRIX_TYPE_COMPLEX:
-    aa = A->a;
-    a = gv_calloc((size_t)A->nz, sizeof(double));
-    for (i = 0; i < A->nz; i++) a[i] = aa[i*2];
-    break;
-  case MATRIX_TYPE_REAL:
-    a = A->a;
-    break;
-  case MATRIX_TYPE_INTEGER:
-    ai = A->a;
-    a = gv_calloc((size_t)A->nz, sizeof(double));
-    for (i = 0; i < A->nz; i++) a[i] = (double) ai[i];
-    break;
-  case MATRIX_TYPE_PATTERN:
-    a = gv_calloc((size_t)A->nz, sizeof(double));
-    for (i = 0; i < A->nz; i++) a[i] = 1.;
-    break;
-  default:
-    assert(0);/* no such matrix type */
-  }
-
-  heap_ids = gv_calloc((size_t)m, sizeof(int));
-  for (i = 0; i < m; i++) {
-    dist[i] = -1;
-    heap_ids[i] = UNVISITED;
-  }
-
-  h = BinaryHeap_new(cmp);
-  assert(h);
-
-  /* add root as the first item in the heap */
-  ndata = gv_alloc(sizeof(struct nodedata_struct));
-  ndata->dist = 0;
-  ndata->id = root;
-  heap_ids[root] = BinaryHeap_insert(h, ndata);
-  
-  assert(heap_ids[root] >= 0);/* by design heap ID from BinaryHeap_insert >=0*/
-
-  while ((ndata_min = BinaryHeap_extract_min(h))){
-    i = ndata_min->id;
-    dist[i] = ndata_min->dist;
-    list[found++] = i;
-    heap_ids[i] = FINISHED;
-    //fprintf(stderr," =================\n min extracted is id=%d, dist=%f\n",i, ndata_min->dist);
-    for (j = ia[i]; j < ia[i+1]; j++){
-      jj = ja[j];
-      heap_id = heap_ids[jj];
-
-      if (jj == i || heap_id == FINISHED) continue;
-
-      if (heap_id == UNVISITED){
-	ndata = gv_alloc(sizeof(struct nodedata_struct));
-	ndata->dist = fabs(a[j]) + ndata_min->dist;
-	ndata->id = jj;
-	heap_ids[jj] = BinaryHeap_insert(h, ndata);
-	//fprintf(stderr," set neighbor id=%d, dist=%f, hid = %d, a[%d]=%f, dist=%f\n",jj, ndata->dist, heap_ids[jj], jj, a[j], ndata->dist);
-
-      } else {
-	ndata = BinaryHeap_get_item(h, heap_id);
-	ndata->dist = MIN(ndata->dist, fabs(a[j]) + ndata_min->dist);
-	assert(ndata->id == jj);
-	BinaryHeap_reset(h, heap_id, ndata); 
-	//fprintf(stderr," reset neighbor id=%d, dist=%f, hid = %d, a[%d]=%f, dist=%f\n",jj, ndata->dist,heap_id, jj, a[j], ndata->dist);
-     }
-    }
-    free(ndata_min);
-  }
-  *nlist = found;
-  *dist_max = dist[i];
-
-
-  BinaryHeap_delete(h, free);
-  free(heap_ids);
-  if (a && a != A->a) free(a);
-  if (found == m){
-    return 0;
-  } else {
-    return -1;
-  }
-}
-
-static int Dijkstra(SparseMatrix A, int root, double *dist, int *nlist, int *list, double *dist_max){
-  return Dijkstra_internal(A, root, dist, nlist, list, dist_max);
-}
-
 void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int **cluster, int **clusterp){
   /* nodes for a super variable if they share exactly the same neighbors. This is know as modules in graph theory.
      We work on columns only and columns with the same pattern are grouped as a super variable
@@ -2190,12 +2054,10 @@ SparseMatrix SparseMatrix_from_dense(int m, int n, double *x){
 
 }
 
-
-int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
+int SparseMatrix_distance_matrix(SparseMatrix D0, double **dist0){
   /*
     Input:
-    D: the graph. If weighted, the entry values is used.
-    weighted: whether to treat the graph as weighted
+    D: the graph. Entry values are unused.
     Output:
     dist: of dimension nxn, dist[i*n+j] gives the distance of node i to j.
     return: flag. if not zero, the graph is not connected, or out of memory.
@@ -2203,10 +2065,7 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
   SparseMatrix D = D0;
   int m = D->m, n = D->n;
   int *levelset_ptr = NULL, *levelset = NULL, *mask = NULL;
-  double *dist = NULL;
-  int nlist, *list = NULL;
   int flag = 0, i, j, k, nlevel;
-  double dmax;
 
   if (!SparseMatrix_is_symmetric(D, false)){
     D = SparseMatrix_symmetrize(D, false);
@@ -2218,21 +2077,13 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
   if (!(*dist0)) *dist0 = gv_calloc(n * n, sizeof(double));
   for (i = 0; i < n*n; i++) (*dist0)[i] = -1;
 
-  if (!weighted){
-    for (k = 0; k < n; k++){
-      SparseMatrix_level_sets(D, k, &nlevel, &levelset_ptr, &levelset, &mask, TRUE);
-      assert(levelset_ptr[nlevel] == n);
-      for (i = 0; i < nlevel; i++) {
-	for (j = levelset_ptr[i]; j < levelset_ptr[i+1]; j++){
-	  (*dist0)[k*n+levelset[j]] = i;
-	}
+  for (k = 0; k < n; k++) {
+    SparseMatrix_level_sets(D, k, &nlevel, &levelset_ptr, &levelset, &mask, TRUE);
+    assert(levelset_ptr[nlevel] == n);
+    for (i = 0; i < nlevel; i++) {
+      for (j = levelset_ptr[i]; j < levelset_ptr[i+1]; j++) {
+        (*dist0)[k*n+levelset[j]] = i;
       }
-     }
- } else {
-    list = gv_calloc(n, sizeof(int));
-    for (k = 0; k < n; k++){
-      dist = &((*dist0)[k*n]);
-      flag = Dijkstra(D, k, dist, &nlist, list, &dmax);
     }
   }
 
@@ -2241,6 +2092,5 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, int weighted, double **dist0){
   free(mask);
   
   if (D != D0) SparseMatrix_delete(D);
-  free(list);
   return flag;
 }
