@@ -466,7 +466,7 @@ void OverlapSmoother_delete(OverlapSmoother sm){
 double OverlapSmoother_smooth(OverlapSmoother sm, int dim, double *x){
   int maxit_sm = 1;/* only using 1 iteration of stress majorization 
 		      is found to give better results and save time! */
-  double res = StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm, 0.001);
+  double res = StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm);
 #ifdef DEBUG
   {FILE *fp;
   fp = fopen("/tmp/222","w");
