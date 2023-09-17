@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 
-/will be compiled with the following:/,/^  criterion:     No/ {
+/will be compiled with the following:/,/^  gdtclft:.*$/ {
     enable = 1;
 }
 {
@@ -8,6 +8,6 @@
         print $0;
     }
 }
-/^  criterion:     No/ {
+/^  gdtclft:.*$/ {
     enable = 0;
 }
