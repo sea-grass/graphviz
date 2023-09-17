@@ -378,7 +378,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   sm->tol_cg = 0.01;
   sm->maxit_cg = sqrt((double) A->m);
 
-  double *lambda = sm->lambda = gv_calloc(m, sizeof(double));
+  sm->lambda = gv_calloc(m, sizeof(double));
   
   B= call_tri(m, x);
 
@@ -454,10 +454,8 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
 
     }
 
-    lambda[i] *= (-diag_w);/* alternatively don't do that then we have a constant penalty term scaled by lambda0 */
-
     assert(jdiag >= 0);
-    w[jdiag] = -diag_w + lambda[i];
+    w[jdiag] = -diag_w;
     d[jdiag] = -diag_d;
   }
  RETURN:
