@@ -1619,11 +1619,10 @@ bool SparseMatrix_has_diagonal(SparseMatrix A) {
   return false;
 }
 
-static void SparseMatrix_level_sets_internal(int khops, SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
+static void SparseMatrix_level_sets_internal(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
   /* mask is assumed to be initialized to negative if provided.
      . On exit, mask = levels for visited nodes (1 for root, 2 for its neighbors, etc), 
      . unless reinitialize_mask = TRUE, in which case mask = -1.
-     khops: max number of hops allowed. If khops < 0, no limit is applied.
      A: the graph, undirected
      root: starting node
      nlevel: max distance to root from any node (in the connected comp)
@@ -1648,7 +1647,7 @@ static void SparseMatrix_level_sets_internal(int khops, SparseMatrix A, int root
   *nlevel = 1;
   nz = 1;
   sta = 0; sto = 1;
-  while (sto > sta && (khops < 0 || *nlevel <= khops)){
+  while (sto > sta){
     for (i = sta; i < sto; i++){
       ii = (*levelset)[i];
       for (j = ia[ii]; j < ia[ii+1]; j++){
@@ -1663,18 +1662,12 @@ static void SparseMatrix_level_sets_internal(int khops, SparseMatrix A, int root
     sta = sto;
     sto = nz;
   }
-  if (khops < 0 || *nlevel <= khops){
-    (*nlevel)--;
-  }
+  (*nlevel)--;
   if (reinitialize_mask) for (i = 0; i < (*levelset_ptr)[*nlevel]; i++) (*mask)[(*levelset)[i]] = UNMASKED;
 }
 
 void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
-
-  int khops = -1;
-
-  return SparseMatrix_level_sets_internal(khops, A, root, nlevel, levelset_ptr, levelset, mask, reinitialize_mask);
-
+  return SparseMatrix_level_sets_internal(A, root, nlevel, levelset_ptr, levelset, mask, reinitialize_mask);
 }
 
 void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int **comps, int **comps_ptr){
