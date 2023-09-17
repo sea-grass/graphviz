@@ -20,7 +20,7 @@ typedef  StressMajorizationSmoother OverlapSmoother;
 void OverlapSmoother_delete(OverlapSmoother sm);
 
 OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m, 
-				    int dim, double *x, double *width, int include_original_graph, int neighborhood_only,
+				    int dim, double *x, double *width, int neighborhood_only,
 				    double *max_overlap, double *min_overlap,
 				    int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes, SparseMatrix A_constr, int shrink
 				    );

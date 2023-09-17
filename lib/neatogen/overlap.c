@@ -355,7 +355,7 @@ static double overlap_scaling(int dim, int m, double *x, double *width,
 }
  
 OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m, 
-				    int dim, double *x, double *width, int include_original_graph, int neighborhood_only,
+				    int dim, double *x, double *width, int neighborhood_only,
 				    double *max_overlap, double *min_overlap,
 				    int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes, SparseMatrix A_constr, int shrink
 				    ){
@@ -390,12 +390,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
     SparseMatrix_delete(C);
     B = D;
   }
-  if (include_original_graph){
-    sm->Lw = SparseMatrix_add(A, B);
-    SparseMatrix_delete(B);
-  } else {
-    sm->Lw = B;
-  }
+  sm->Lw = B;
   sm->Lwd = SparseMatrix_copy(sm->Lw);
 
 #ifdef DEBUG
@@ -539,7 +534,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
   */
 
   OverlapSmoother sm;
-  int include_original_graph = 0, i;
+  int i;
   double LARGE = 100000;
   double avg_label_size, res = LARGE;
   double max_overlap = 0, min_overlap = 999;
@@ -589,7 +584,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
   has_penalty_terms = (edge_labeling_scheme != ELSCHEME_NONE && n_constr_nodes > 0);
   for (i = 0; i < ntry; i++){
     if (Verbose) print_bounding_box(A->m, dim, x);
-    sm = OverlapSmoother_new(A, A->m, dim, x, label_sizes, include_original_graph, neighborhood_only,
+    sm = OverlapSmoother_new(A, A->m, dim, x, label_sizes, neighborhood_only,
 			     &max_overlap, &min_overlap, edge_labeling_scheme, n_constr_nodes, constr_nodes, A_constr, shrink); 
     if (Verbose) fprintf(stderr, "overlap removal neighbors only?= %d iter -- %d, overlap factor = %g underlap factor = %g\n", neighborhood_only, i, max_overlap - 1, min_overlap);
     if (check_convergence(max_overlap, res, has_penalty_terms, epsilon)){
