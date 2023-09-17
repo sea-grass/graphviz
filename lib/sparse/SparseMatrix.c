@@ -2053,18 +2053,17 @@ SparseMatrix SparseMatrix_from_dense(int m, int n, double *x){
 
 }
 
-int SparseMatrix_distance_matrix(SparseMatrix D0, double **dist0){
+void SparseMatrix_distance_matrix(SparseMatrix D0, double **dist0) {
   /*
     Input:
     D: the graph. Entry values are unused.
     Output:
     dist: of dimension nxn, dist[i*n+j] gives the distance of node i to j.
-    return: flag. if not zero, the graph is not connected, or out of memory.
   */
   SparseMatrix D = D0;
   int m = D->m, n = D->n;
   int *levelset_ptr = NULL, *levelset = NULL, *mask = NULL;
-  int flag = 0, i, j, k, nlevel;
+  int i, j, k, nlevel;
 
   if (!SparseMatrix_is_symmetric(D, false)){
     D = SparseMatrix_symmetrize(D, false);
@@ -2091,5 +2090,4 @@ int SparseMatrix_distance_matrix(SparseMatrix D0, double **dist0){
   free(mask);
   
   if (D != D0) SparseMatrix_delete(D);
-  return flag;
 }
