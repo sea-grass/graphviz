@@ -996,7 +996,7 @@ void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control c
   case SMOOTHING_STRESS_MAJORIZATION_AVG_DIST:
     {
       StressMajorizationSmoother sm;
-      int k, dist_scheme = IDEAL_AVG_DIST;
+      int dist_scheme = IDEAL_AVG_DIST;
 
       if (ctrl->smoothing == SMOOTHING_STRESS_MAJORIZATION_GRAPH_DIST){
 	dist_scheme = IDEAL_GRAPH_DIST;
@@ -1006,22 +1006,15 @@ void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control c
 	dist_scheme = IDEAL_POWER_DIST;
       }
 
-      for (k = 0; k < 1; k++){
-	sm = StressMajorizationSmoother2_new(A, dim, 0.05, x, dist_scheme);
-	StressMajorizationSmoother_smooth(sm, dim, x, 50, 0.001);
-	StressMajorizationSmoother_delete(sm);
-      }
+      sm = StressMajorizationSmoother2_new(A, dim, 0.05, x, dist_scheme);
+      StressMajorizationSmoother_smooth(sm, dim, x, 50, 0.001);
+      StressMajorizationSmoother_delete(sm);
       break;
     }
   case SMOOTHING_SPRING:{
-    SpringSmoother sm;
-    int k;
-
-    for (k = 0; k < 1; k++){
-      sm = SpringSmoother_new(A, dim, ctrl, x);
-      SpringSmoother_smooth(sm, A, dim, x);
-      SpringSmoother_delete(sm);
-    }
+    SpringSmoother sm = SpringSmoother_new(A, dim, ctrl, x);
+    SpringSmoother_smooth(sm, A, dim, x);
+    SpringSmoother_delete(sm);
 
     break;
   }
