@@ -413,7 +413,7 @@ windows-mingw64-build:
     except:
         - tags
 
-windows-mingw64-static-build-step1-configure:
+windows-mingw64-static-build:
     stage: build
     needs:
         - job: portable-source
@@ -422,29 +422,8 @@ windows-mingw64-static-build-step1-configure:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - GRAPHVIZ_VERSION
-            - graphviz-*
-            - build
-    tags:
-        - windows
-    except:
-        - tags
-
-windows-mingw64-static-build-step2-make:
-    stage: build
-    needs:
-        - job: windows-mingw64-static-build-step1-configure
-          artifacts: true
-    script:
-        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
-        - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
