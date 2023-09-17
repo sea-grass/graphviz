@@ -19,8 +19,7 @@
 static double p_iteration_threshold = 1e-3;
 
 bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
-		double *evals, int initialize)
-{
+		double *evals) {
     /* compute the 'neigs' top eigenvectors of 'square_mat' using power iteration */
 
     int i, j;
@@ -45,9 +44,8 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	curr_vector = eigs[i];
 	/* guess the i-th eigen vector */
       choose:
-	if (initialize)
-	    for (j = 0; j < n; j++)
-		curr_vector[j] = rand() % 100;
+        for (j = 0; j < n; j++)
+            curr_vector[j] = rand() % 100;
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
 	    alpha = -dot(eigs[j], 0, n - 1, curr_vector);

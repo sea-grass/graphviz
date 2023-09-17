@@ -53,7 +53,7 @@ PCA_alloc(DistType ** coords, int dim, int n, double **new_coords,
 	}
     }
 
-    power_iteration(DD, dim, new_dim, eigs, evals, TRUE);
+    power_iteration(DD, dim, new_dim, eigs, evals);
 
     for (j = 0; j < new_dim; j++) {
 	for (i = 0; i < n; i++) {
@@ -95,6 +95,6 @@ bool iterativePCA_1D(double **coords, int dim, int n, double *new_direction) {
     free(mat1);
 
     /* Compute direction */
-    return power_iteration(mat, dim, 1, &new_direction, &eval, TRUE);
+    return power_iteration(mat, dim, 1, &new_direction, &eval);
 /* ?? When is mat freed? */
 }
