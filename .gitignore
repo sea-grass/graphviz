@@ -197,9 +197,6 @@ tests/**/*.trs
 tests/**/output/**
 tests/**/difference/**
 
-## Binaries
-tests/unit_tests/lib/common/command_line
-
 # Cmake build folder
 build/**
 
