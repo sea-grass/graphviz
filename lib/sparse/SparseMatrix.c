@@ -1721,7 +1721,7 @@ static int cmp(void*i, void*j){
   return 0;
 }
 
-static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist, int *list, double *dist_max, int *mask){
+static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist, int *list, double *dist_max){
   /* Find the shortest path distance of all nodes to root. If khops >= 0, the shortest ath is of distance <= khops,
 
      A: the nxn connectivity matrix. Entries are assumed to be nonnegative. Absolute value will be taken if 
@@ -1733,7 +1733,6 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
      list: length n. the list of node in order of their extraction from the heap. 
      .     The distance from root to last in the list should be the maximum
      dist_max: the maximum distance, should be realized at node list[nlist-1].
-     mask: if NULL, not used. Otherwise, only nodes i with mask[i] > 0 will be considered
      return: 0 if every node is reachable. -1 if not */
 
   int m = A->m, i, j, jj, *ia = A->ia, *ja = A->ja, heap_id;
@@ -1799,7 +1798,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
       jj = ja[j];
       heap_id = heap_ids[jj];
 
-      if (jj == i || heap_id == FINISHED || (mask && mask[jj] < 0)) continue;
+      if (jj == i || heap_id == FINISHED) continue;
 
       if (heap_id == UNVISITED){
 	ndata = gv_alloc(sizeof(struct nodedata_struct));
@@ -1825,7 +1824,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
   BinaryHeap_delete(h, free);
   free(heap_ids);
   if (a && a != A->a) free(a);
-  if (found == m || mask){
+  if (found == m){
     return 0;
   } else {
     return -1;
@@ -1833,7 +1832,7 @@ static int Dijkstra_internal(SparseMatrix A, int root, double *dist, int *nlist,
 }
 
 static int Dijkstra(SparseMatrix A, int root, double *dist, int *nlist, int *list, double *dist_max){
-  return Dijkstra_internal(A, root, dist, nlist, list, dist_max, NULL);
+  return Dijkstra_internal(A, root, dist, nlist, list, dist_max);
 }
 
 void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int **cluster, int **clusterp){
