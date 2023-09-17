@@ -2098,11 +2098,15 @@ def test_package_version():
         pytest.skip("Windows MSBuild release does not contain any header files (#1777)")
 
     # find co-located test source
-    c_src = (Path(__file__).parent / "check-package-version.c").resolve()
+    c_src = (Path(__file__).parent / "get-package-version.c").resolve()
     assert c_src.exists(), "missing test case"
 
     # run the test
-    _, _ = run_c(c_src)
+    package_version, _ = run_c(c_src)
+
+    assert (
+        package_version.strip() != ""
+    ), "invalid PACKAGE_VERSION in graphviz_version.h"
 
 
 def test_user_shapes():
