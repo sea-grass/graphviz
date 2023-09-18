@@ -24,7 +24,6 @@
 	int width;		/* viewport width */
 	int height;		/* viewport height */
 	int margin;		/* viewport margin */
-	int graphSize;		/* 0 -- 100: percent to shrink w x h */
 	double distortion;	/* default of 1.0 */
     } reposition_t;
 
