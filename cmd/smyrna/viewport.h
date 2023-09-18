@@ -30,7 +30,6 @@
     int do_graph_layout(Agraph_t * graph, int Engine, int keeppos);
 
     void glexpose(void);
-    void move_nodes(Agraph_t * g);
     extern void getcolorfromschema(colorschemaset * sc, float l,
 				   float maxl, glCompColor * c);
     void updateRecord (Agraph_t* g);
