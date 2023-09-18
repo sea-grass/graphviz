@@ -19,27 +19,13 @@
 	double *y_foci;
     } focus_t;
 
-/* Conversion from logical to physical coordinates:
- * NoRescale - simple copy
- * For Scale, Polar and Rectilinear, the coordinates are all
- * scaled and translated to map into the rectangle
- *   ((margin,margin),(w,h)) 
- * where w = width*graphSize/100 - 2*margin
- * and   h = height*graphSize/100 - 2*margin
- * 
- * For Scale, this is all that is done.
- * For Polar and Rectilinear, more space is provided around the foci. 
- */
-    typedef enum { NoRescale, Scale, Polar, Rectilinear } RescaleType;
-
     typedef struct {
-/* First 5 must be set i rescale = Polar or Rectilinear */
+  // All 5 must be set
 	int width;		/* viewport width */
 	int height;		/* viewport height */
 	int margin;		/* viewport margin */
 	int graphSize;		/* 0 -- 100: percent to shrink w x h */
 	double distortion;	/* default of 1.0 */
-	RescaleType rescale;
     } reposition_t;
 
     void positionAllItems(Hierarchy * hp, focus_t * fs,

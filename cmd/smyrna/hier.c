@@ -15,47 +15,6 @@
 #include <neatogen/delaunay.h>
 #include <stddef.h>
 
-/* scale_coords:
- */
-static void scale_coords(double *x_coords, double *y_coords, size_t n, double w,
-                         double h, double margin) {
-    double minX, maxX, minY, maxY;
-    double scale_ratioX;
-    double scale_ratioY;
-    double scale_ratio;
-
-    w -= 2 * margin;
-    h -= 2 * margin;
-
-    minX = maxX = x_coords[0];
-    minY = maxY = y_coords[0];
-    for (size_t i = 1; i < n; i++) {
-	minX = fmin(minX, x_coords[i]);
-	minY = fmin(minY, y_coords[i]);
-	maxX = fmax(maxX, x_coords[i]);
-	maxY = fmax(maxY, y_coords[i]);
-    }
-    for (size_t i = 0; i < n; i++) {
-	x_coords[i] -= minX;
-	y_coords[i] -= minY;
-    }
-
-    // scale the layout to fill canvas:
-
-    scale_ratioX = w / (maxX - minX);
-    scale_ratioY = h / (maxY - minY);
-    scale_ratio = MIN(scale_ratioX, scale_ratioY);
-    for (size_t i = 0; i < n; i++) {
-	x_coords[i] *= scale_ratio;
-	y_coords[i] *= scale_ratio;
-    }
-
-    for (size_t i = 0; i < n; i++) {
-	x_coords[i] += margin;
-	y_coords[i] += margin;
-    }
-}
-
 void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 {
     int interval = 20;
@@ -80,29 +39,12 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
      */
     width *= parms->graphSize / 100.0;
     height *= parms->graphSize / 100.0;
-    if (fs->num_foci == 0) {
-	if (parms->rescale == Scale)
-	    scale_coords(x_coords, y_coords, counter, width, height,
-			 margin);
-    } else
-	switch (parms->rescale) {
-	case Polar:
-	    rescale_layout_polar(x_coords, y_coords, fs->x_foci,
+    if (fs->num_foci != 0) {
+	rescale_layout_polar(x_coords, y_coords, fs->x_foci,
 				 fs->y_foci, fs->num_foci, counter,
 				 interval, width, height, margin,
 				 distortion);
-	    break;
-	case Rectilinear:
-	    rescale_layout(x_coords, y_coords, counter, interval,
-			   width, height, margin, distortion);
-	    break;
-	case Scale:
-	    scale_coords(x_coords, y_coords, counter, width, height,
-			 margin);
-	    break;
-	case NoRescale:
-	    break;
-	}
+    }
 
     /* Update the final physical coordinates of the active nodes */
     for (int count = 0, i = 0; i < hp->nvtxs[max_level]; i++) {
