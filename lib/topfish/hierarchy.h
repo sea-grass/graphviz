@@ -63,8 +63,6 @@ typedef struct {
     int dist2_limit; /* TRUE */
 } hierparms_t;
 
-void release(Hierarchy*);
-
 Hierarchy* create_hierarchy(v_data * graph, int nvtxs, int nedges, 
     ex_vtx_data* geom_graph, int ngeom_edges, hierparms_t*);
 	
