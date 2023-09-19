@@ -369,11 +369,7 @@ out-of-source-build:
     variables:
       IMAGE: ubuntu-22.04
 
-# We do the MinGW autotools builds in two steps in separate jobs to
-# get below the one hour per job limit of the GitLab shared Windows
-# runners
-
-windows-mingw32-build-step1-configure:
+windows-mingw32-build:
     stage: build
     needs:
         - job: portable-source
@@ -381,29 +377,8 @@ windows-mingw32-build-step1-configure:
     script:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - GRAPHVIZ_VERSION
-            - graphviz-*
-            - build
-    tags:
-        - windows
-    except:
-        - tags
-
-windows-mingw32-build-step2-make:
-    stage: build
-    needs:
-        - job: windows-mingw32-build-step1-configure
-          artifacts: true
-    script:
-        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
-        - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -414,7 +389,7 @@ windows-mingw32-build-step2-make:
     except:
         - tags
 
-windows-mingw64-build-step1-configure:
+windows-mingw64-build:
     stage: build
     needs:
         - job: portable-source
@@ -422,29 +397,8 @@ windows-mingw64-build-step1-configure:
     script:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - GRAPHVIZ_VERSION
-            - graphviz-*
-            - build
-    tags:
-        - windows
-    except:
-        - tags
-
-windows-mingw64-build-step2-make:
-    stage: build
-    needs:
-        - job: windows-mingw64-build-step1-configure
-          artifacts: true
-    script:
-        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
-        - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -455,7 +409,7 @@ windows-mingw64-build-step2-make:
     except:
         - tags
 
-windows-mingw64-static-build-step1-configure:
+windows-mingw64-static-build:
     stage: build
     needs:
         - job: portable-source
@@ -464,29 +418,8 @@ windows-mingw64-static-build-step1-configure:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - GRAPHVIZ_VERSION
-            - graphviz-*
-            - build
-    tags:
-        - windows
-    except:
-        - tags
-
-windows-mingw64-static-build-step2-make:
-    stage: build
-    needs:
-        - job: windows-mingw64-static-build-step1-configure
-          artifacts: true
-    script:
-        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
-        - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
@@ -497,7 +430,7 @@ windows-mingw64-static-build-step2-make:
     except:
         - tags
 
-windows-mingw32-static-build-step1-configure:
+windows-mingw32-static-build:
     stage: build
     needs:
         - job: portable-source
@@ -506,29 +439,8 @@ windows-mingw32-static-build-step1-configure:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-configure.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - GRAPHVIZ_VERSION
-            - graphviz-*
-            - build
-    tags:
-        - windows
-    except:
-        - tags
-
-windows-mingw32-static-build-step2-make:
-    stage: build
-    needs:
-        - job: windows-mingw32-static-build-step1-configure
-          artifacts: true
-    script:
-        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
-        - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
-        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-make.sh'
+        - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
         expire_in: 1 week
