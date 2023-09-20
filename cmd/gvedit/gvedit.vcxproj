@@ -82,7 +82,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\manual-link\qtmaind.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Guid.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Cored.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Widgetsd.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6EntryPointd.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Guid.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Cored.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Widgetsd.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -143,7 +143,7 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\de
     </ResourceCompile>
     <Link>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\manual-link\qtmain.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Gui.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Core.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Widgets.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6EntryPoint.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Gui.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Core.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Widgets.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
