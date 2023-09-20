@@ -68,7 +68,7 @@ PROJECT_LOGO           =
 # entered, it will be relative to the location where doxygen was started. If
 # left blank the current directory will be used.
 
-OUTPUT_DIRECTORY       = graphviz/public
+OUTPUT_DIRECTORY       = @top_builddir@/public
 
 # If the CREATE_SUBDIRS tag is set to YES then doxygen will create up to 4096
 # sub-directories (in 2 levels) under the output directory of each output format
@@ -911,11 +911,11 @@ WARN_LOGFILE           =
 # because doxygen builds directory dependency graphs only for root children,
 # but not for root directory itself.
 
-INPUT                  = graphviz/cmd \
-                         graphviz/lib \
-                         graphviz/dot.demo \
-                         graphviz/plugin \
-                         graphviz/tclpkg
+INPUT                  = @top_srcdir@/cmd \
+                         @top_srcdir@/lib \
+                         @top_srcdir@/dot.demo \
+                         @top_srcdir@/plugin \
+                         @top_srcdir@/tclpkg
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
