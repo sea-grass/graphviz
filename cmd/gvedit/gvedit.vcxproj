@@ -100,16 +100,16 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\de
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\bz2d.dll $(OutDir)bz2d.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\freetyped.dll $(OutDir)freetyped.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\harfbuzz.dll $(OutDir)harfbuzz.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icuind67.dll $(OutDir)icuind67.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icudtd67.dll $(OutDir)icudtd67.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icuucd67.dll $(OutDir)icuucd67.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icuind73.dll $(OutDir)icuind73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icudtd73.dll $(OutDir)icudtd73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icuucd73.dll $(OutDir)icuucd73.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libpng16d.dll $(OutDir)libpng16d.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\pcre2-16d.dll $(OutDir)pcre2-16d.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\turbojpegd.dll $(OutDir)turbojpegd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\turbojpeg.dll $(OutDir)turbojpeg.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\zlibd1.dll $(OutDir)zlibd1.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\debug\bin\zstdd.dll $(OutDir)zstdd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\zstd.dll $(OutDir)zstd.dll
 mkdir $(OutDir)platforms
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\plugins\platforms\qwindowsd.dll $(OutDir)platforms\qwindowsd.dll</Command>
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\Qt6\plugins\platforms\qwindowsd.dll $(OutDir)platforms\qwindowsd.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -161,16 +161,16 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bi
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\bz2.dll $(OutDir)bz2.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\freetype.dll $(OutDir)freetype.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\harfbuzz.dll $(OutDir)harfbuzz.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icuin67.dll $(OutDir)icuin67.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icudt67.dll $(OutDir)icudt67.dll
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icuuc67.dll $(OutDir)icuuc67.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icuin73.dll $(OutDir)icuin73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icudt73.dll $(OutDir)icudt73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icuuc73.dll $(OutDir)icuuc73.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libpng16.dll $(OutDir)libpng16.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\pcre2-16.dll $(OutDir)pcre2-16.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\turbojpeg.dll $(OutDir)turbojpeg.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\zlib1.dll $(OutDir)zlib1.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\zstd.dll $(OutDir)zstd.dll
 mkdir $(OutDir)platforms
-copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\plugins\platforms\qwindows.dll $(OutDir)platforms\qwindows.dll</Command>
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\Qt6\plugins\platforms\qwindows.dll $(OutDir)platforms\qwindows.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
