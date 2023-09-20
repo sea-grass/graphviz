@@ -58,7 +58,7 @@
       <EnableErrorChecks>None</EnableErrorChecks>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Zc:__cplusplus -Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtWidgets;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtPrintSupport;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)\lib;..\..\lib\gvc;..\..\lib\common;..\..\lib\pathplan;..\..\lib\cgraph;..\..\lib\cdt;..\..;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt;debug;..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;GVDLL;QT_LARGEFILE_SUPPORT;QT_DLL;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -118,7 +118,7 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\de
       <EnableErrorChecks>None</EnableErrorChecks>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Zc:__cplusplus -Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtWidgets;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtPrintSupport;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)\lib;..\..\lib\gvc;..\..\lib\common;..\..\lib\pathplan;..\..\lib\cgraph;..\..\lib\cdt;..\..;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt;release;..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;GVDLL;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
