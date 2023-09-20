@@ -49,11 +49,11 @@ function find_or_fallback($programs, $fallback_path) {
 
 $build_utilities_path = "$GRAPHVIZ_ROOT\windows\dependencies\graphviz-build-utilities"
 $libraries_path = "$GRAPHVIZ_ROOT\windows\dependencies\libraries"
-$qt5_tools = "$libraries_path\vcpkg\installed\x86-windows\tools\qt5"
+$qt6_tools = "$libraries_path\vcpkg\installed\x86-windows\tools\Qt6"
 
 find_or_fallback "win_bison win_flex" "$build_utilities_path\winflexbison"
 find_or_fallback "makensis" "$build_utilities_path\NSIS\Bin"
-find_or_fallback "moc rcc" "$qt5_tools/bin"
+find_or_fallback "moc rcc" "$qt6_tools/bin"
 find_or_fallback "cmake cpack" "$CMAKE_BIN"
 find_or_fallback "msbuild" "$MSBUILD_BIN"
 
