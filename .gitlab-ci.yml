@@ -8,6 +8,7 @@ stages:
 
 # generate doxygen documentation from sources for https://graphviz.gitlab.io/graphviz/doxygen/
 pages:
+    needs: []
     image: alpine
     before_script:
         - apk update; apk --quiet add python3 doxygen ttf-freefont graphviz
