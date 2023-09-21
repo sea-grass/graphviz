@@ -87,7 +87,6 @@ def test_existence(binary: str):
         "dot2gxl",
         "dot_builtins",
         "gv2gxl",
-        "gvedit",
         "gvmap.sh",
         "gxl2dot",
         "vimdot",
