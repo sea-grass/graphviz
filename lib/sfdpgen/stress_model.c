@@ -5,9 +5,8 @@
 #include <sfdpgen/stress_model.h>
 #include <stdbool.h>
 
-static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm, double tol, int *flag) {
+void stress_model(int dim, SparseMatrix B, double **x, int maxit_sm, int *flag) {
   int m;
-  double lambda = 0;
   int i;
   SparseMatrix A = B;
 
@@ -30,7 +29,7 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm,
   }
 
   SparseStressMajorizationSmoother sm =
-    SparseStressMajorizationSmoother_new(A, dim, lambda, *x);/* weight the long distances */
+    SparseStressMajorizationSmoother_new(A, dim, *x);/* weight the long distances */
 
   if (!sm) {
     *flag = -1;
@@ -40,7 +39,7 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm,
 
   sm->tol_cg = 0.1; /* we found that there is no need to solve the Laplacian accurately */
   sm->scheme = SM_SCHEME_STRESS;
-  SparseStressMajorizationSmoother_smooth(sm, dim, *x, maxit_sm, tol);
+  SparseStressMajorizationSmoother_smooth(sm, dim, *x, maxit_sm);
   for (i = 0; i < dim*m; i++) {
     (*x)[i] /= sm->scaling;
   }
@@ -48,9 +47,4 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm,
 
  RETURN:
   if (A != B) SparseMatrix_delete(A);
-}
-
-void stress_model(int dim, SparseMatrix D, double **x, int maxit_sm, double tol,
-                  int *flag) {
-  stress_model_core(dim, D, x, maxit_sm, tol, flag);
 }

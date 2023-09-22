@@ -794,8 +794,7 @@ static void remove_edge(v_data * graph, int source, int dest)
     }
 }
 
-v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
-{
+v_data *UG_graph(double *x, double *y, int n) {
     v_data *delaunay;
     int i;
     double dist_ij, dist_ik, dist_jk, x_i, y_i, x_j, y_j;
@@ -827,70 +826,37 @@ v_data *UG_graph(double *x, double *y, int n, int accurate_computation)
 
     delaunay = delaunay_triangulation(x, y, n);
 
-    if (accurate_computation) {
-	for (i = 0; i < n; i++) {
-	    x_i = x[i];
-	    y_i = y[i];
-	    for (j = 1; j < delaunay[i].nedges;) {
-		neighbor_j = delaunay[i].edges[j];
-		if (neighbor_j < i) {
-		    j++;
-		    continue;
-		}
-		x_j = x[neighbor_j];
-		y_j = y[neighbor_j];
-		dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
-		bool removed = false;
-		for (k = 0; k < n && !removed; k++) {
-		    dist_ik = (x[k] - x_i) * (x[k] - x_i) + (y[k] - y_i) * (y[k] - y_i);
-		    if (dist_ik < dist_ij) {
-			dist_jk = (x[k] - x_j) * (x[k] - x_j) + (y[k] - y_j) * (y[k] - y_j);
-			if (dist_jk < dist_ij) {
-			    // remove the edge beteween i and neighbor j
-			    delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
-			    remove_edge(delaunay, neighbor_j, i);
-			    removed = true;
-			}
-		    }
-		}
-		if (!removed) {
-		    j++;
-		}
-	    }
-	}
-    } else {
-	// remove all edges v-u if there is w, neighbor of u or v, that is closer to both u and v than dist(u,v)
-	for (i = 0; i < n; i++) {
-	    x_i = x[i];
-	    y_i = y[i];
-	    for (j = 1; j < delaunay[i].nedges;) {
-		neighbor_j = delaunay[i].edges[j];
-		x_j = x[neighbor_j];
-		y_j = y[neighbor_j];
-		dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
-		// now look at i'th neighbors to see whether there is a node in the "forbidden region"
-		// we will also go through neighbor_j's neighbors when we traverse the edge from its other side
-		bool removed = false;
-		for (k = 1; k < delaunay[i].nedges && !removed; k++) {
-		    neighbor_k = delaunay[i].edges[k];
-		    dist_ik = (x[neighbor_k] - x_i) * (x[neighbor_k] - x_i) +
-			(y[neighbor_k] - y_i) * (y[neighbor_k] - y_i);
-		    if (dist_ik < dist_ij) {
-			dist_jk = (x[neighbor_k] - x_j) * (x[neighbor_k] - x_j) +
-			    (y[neighbor_k] - y_j) * (y[neighbor_k] - y_j);
-			if (dist_jk < dist_ij) {
-			    // remove the edge beteween i and neighbor j
-			    delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
-			    remove_edge(delaunay, neighbor_j, i);
-			    removed = true;
-			}
-		    }
-		}
-		if (!removed) {
-		    j++;
-		}
-	    }
-	}
+    // remove all edges v-u if there is w, neighbor of u or v, that is closer to both u and v than dist(u,v)
+    for (i = 0; i < n; i++) {
+        x_i = x[i];
+        y_i = y[i];
+        for (j = 1; j < delaunay[i].nedges;) {
+            neighbor_j = delaunay[i].edges[j];
+            x_j = x[neighbor_j];
+            y_j = y[neighbor_j];
+            dist_ij = (x_j - x_i) * (x_j - x_i) + (y_j - y_i) * (y_j - y_i);
+            // now look at i'th neighbors to see whether there is a node in the "forbidden region"
+            // we will also go through neighbor_j's neighbors when we traverse the edge from its other side
+            bool removed = false;
+            for (k = 1; k < delaunay[i].nedges && !removed; k++) {
+                neighbor_k = delaunay[i].edges[k];
+                dist_ik = (x[neighbor_k] - x_i) * (x[neighbor_k] - x_i) +
+                    (y[neighbor_k] - y_i) * (y[neighbor_k] - y_i);
+                if (dist_ik < dist_ij) {
+                    dist_jk = (x[neighbor_k] - x_j) * (x[neighbor_k] - x_j) +
+                        (y[neighbor_k] - y_j) * (y[neighbor_k] - y_j);
+                    if (dist_jk < dist_ij) {
+                        // remove the edge beteween i and neighbor j
+                        delaunay[i].edges[j] = delaunay[i].edges[--delaunay[i].nedges];
+                        remove_edge(delaunay, neighbor_j, i);
+                        removed = true;
+                    }
+                }
+            }
+            if (!removed) {
+                j++;
+            }
+        }
     }
     return delaunay;
 }

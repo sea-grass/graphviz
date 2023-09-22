@@ -167,7 +167,7 @@ Hierarchy *makeHier(int nn, int ne, v_data * graph, double *x_coords,
     Hierarchy *hp;
     int i;
 
-    delaunay = UG_graph(x_coords, y_coords, nn, 0);
+    delaunay = UG_graph(x_coords, y_coords, nn);
 
     ngeom_edges =
 	init_ex_graph(delaunay, graph, nn, x_coords, y_coords,

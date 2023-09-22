@@ -20,9 +20,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BinaryHeap.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="clustering.c">
       <Filter>Source Files</Filter>
     </ClCompile>

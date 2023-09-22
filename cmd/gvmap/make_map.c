@@ -49,7 +49,7 @@ void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0,
 
   {double *dist = NULL;
     A = SparseMatrix_symmetrize(A0, false);
-    SparseMatrix_distance_matrix(A, 0, &dist);
+    SparseMatrix_distance_matrix(A, &dist);
     SparseMatrix_delete(A);
     A = SparseMatrix_from_dense(n, n, dist);
     free(dist);
@@ -120,7 +120,6 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
   double dist;
   int nbad = 0, flag;
   int maxit = 10;
-  double tol = 0.001;
 
   D = SparseMatrix_get_real_adjacency_matrix_symmetrized(graph);
 
@@ -149,7 +148,7 @@ void improve_contiguity(int n, int dim, int *grouping, SparseMatrix poly_point_m
   }
 
   if (Verbose) fprintf(stderr,"ratio (edges among discontiguous regions vs total edges)=%f\n",((double) nbad)/ia[n]);
-  stress_model(dim, D, &x, maxit, tol, &flag);
+  stress_model(dim, D, &x, maxit, &flag);
 
   assert(!flag);
 

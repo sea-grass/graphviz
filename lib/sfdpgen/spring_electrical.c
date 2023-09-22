@@ -28,8 +28,6 @@
 #include <string.h>
 #include <time.h>
 
-#define PI M_PI
-
 spring_electrical_control spring_electrical_control_new(void){
   spring_electrical_control ctrl;
   ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
@@ -162,44 +160,6 @@ double average_edge_length(SparseMatrix A, int dim, double *coord){
   }
   return dist/ia[A->m];
 }
-
-#ifdef ENERGY
-static double spring_electrical_energy(int dim, SparseMatrix A, double *x, double p, double CRK, double KP){
-      /* 1. Grad[||x-y||^k,x] = k||x-y||^(k-1)*0.5*(x-y)/||x-y|| = k/2*||x-y||^(k-2) (x-y)
-	 which should equal to -force (force = -gradient),
-	 hence energy for force ||x-y||^m (y-x) is ||x-y||^(m+2)*2/(m+2) where m != 2
-	 2. Grad[Log[||x-y||],x] = 1/||x-y||*0.5*(x-y)/||x-y|| = 0.5*(x-y)/||x-y||^2,
-	 hence the energy to give force ||x-y||^-2 (x-y) is -2*Log[||x-y||]
-
-      */
-  int i, j, k, *ia = A->ia, *ja = A->ja, n = A->m;
-  double energy = 0, dist;
-
-  for (i = 0; i < n; i++){
-    /* attractive force   C^((2-p)/3) ||x_i-x_j||/K * (x_j - x_i) */
-    for (j = ia[i]; j < ia[i+1]; j++){
-      if (ja[j] == i) continue;
-      dist = distance(x, dim, i, ja[j]);
-      energy += CRK*pow(dist, 3.)*2./3.;
-    }
-
-    /* repulsive force K^(1 - p)/||x_i-x_j||^(1 - p) (x_i - x_j) */
-    for (j = 0; j < n; j++){
-      if (j == i) continue;
-      dist = distance_cropped(x, dim, i, j);
-      for (k = 0; k < dim; k++){
-	if (p == -1){
-	  energy  += -KP*2*log(dist);
-	} else {
-	  energy += -KP*pow(dist,p+1)*2/(p+1);
-	}
-      }
-    }
-  }
-  return energy;
-}
-
-#endif
 
 void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *width){
   int i, j, k, *ia=A->ia, *ja = A->ja;
@@ -529,9 +489,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
     } else {
       if (Verbose) {
         fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nz = %d  K = %f                                  ",iter, step, Fnorm, A->nz,K);
-#ifdef ENERGY
-        fprintf(stderr, "energy = %f\n",spring_electrical_energy(dim, A, x, p, CRK, KP));
-#endif
       }
     }
 
@@ -681,14 +638,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
       for (k = 0; k < dim; k++) x[i*dim+k] += step*f[k];
 
     }/* done vertex i */
-
-#ifdef ENERGY
-    if (Verbose) {
-        fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = 0 nz = %d  K = %f                                  ",iter, step, Fnorm,A->nz,K);
-        fprintf(stderr, "energy = %f\n",spring_electrical_energy(dim, A, x, p, CRK, KP));
-    }
-#endif
-
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
   } while (step > tol && iter < maxiter);
@@ -900,14 +849,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
       oned_optimizer_train(qtree_level_optimizer, 5*nsuper_avg + counts_avg);
     }
 
-#ifdef ENERGY
-    if (Verbose) {
-        fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f                                  ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
-        fprintf(stderr, "energy = %f\n",spring_electrical_energy(dim, A, x, p, CRK, KP));
-    }
-#endif
-
-
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
   } while (step > tol && iter < maxiter);
 
@@ -1101,9 +1042,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
 #ifdef DEBUG_PRINT
     if (Verbose && 0) {
         fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f                                  ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
-#ifdef ENERGY
-        fprintf(stderr, "energy = %f\n",spring_electrical_energy(dim, A, x, p, CRK, KP));
-#endif
     }
 #else
     (void)nsuper_avg;

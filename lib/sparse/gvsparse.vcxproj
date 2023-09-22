@@ -79,7 +79,6 @@
     <ClInclude Include="SparseMatrix.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BinaryHeap.c" />
     <ClCompile Include="clustering.c" />
     <ClCompile Include="colorutil.c" />
     <ClCompile Include="color_palette.c" />

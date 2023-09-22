@@ -36,7 +36,7 @@ void StressMajorizationSmoother_delete(StressMajorizationSmoother sm);
 enum {IDEAL_GRAPH_DIST, IDEAL_AVG_DIST, IDEAL_POWER_DIST};
 StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int dim, double lambda, double *x, int ideal_dist_scheme);
 
-double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim, double *x, int maxit, double tol);
+double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim, double *x, int maxit);
 /*-------------------- triangle/neirhborhood graph based smoother ------------------- */
 typedef  StressMajorizationSmoother TriangleSmoother;
 
@@ -77,9 +77,8 @@ typedef  StressMajorizationSmoother SparseStressMajorizationSmoother;
 void SparseStressMajorizationSmoother_delete(SparseStressMajorizationSmoother sm);
 
 SparseStressMajorizationSmoother
-SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double lambda,
-                                     double *x);
+SparseStressMajorizationSmoother_new(SparseMatrix A, int dim, double *x);
 
-double SparseStressMajorizationSmoother_smooth(SparseStressMajorizationSmoother sm, int dim, double *x, int maxit_sm, double tol);
+double SparseStressMajorizationSmoother_smooth(SparseStressMajorizationSmoother sm, int dim, double *x, int maxit_sm);
 
 /*--------------------------------------------------------------*/

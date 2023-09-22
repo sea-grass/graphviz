@@ -519,8 +519,6 @@ EXCLUDE = (
     "lib/sfio/sftable.c",
     "lib/sfio/sfprint.c",
     "lib/sfio/sfvscanf.c",
-    "lib/sparse/BinaryHeap.c",
-    "lib/sparse/BinaryHeap.h",
     "lib/sparse/DotIO.c",
     "lib/sparse/DotIO.h",
     "lib/sparse/LinkedList.c",
