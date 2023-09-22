@@ -166,6 +166,16 @@ struct Agrec_s {
     /* following this would be any programmer-defined data */
 };
 /// @}
+/// @}
+
+/** @defgroup cgraph_object objects
+ *  @brief parent for @ref cgraph_graph, @ref cgraph_node, and @ref cgraph_edge.
+ *  @ingroup cgraph_api
+ *
+ * Common parameter for functions:
+ * @param obj generic pointer to @ref Agraph_t, @ref Agnode_t or @ref Agedge_t
+ * @{
+ */
 
 /** @brief Object tag for graphs, nodes, and edges.
 
@@ -201,8 +211,14 @@ struct Agobj_s {
 #define AGDATA(obj)		(((Agobj_t*)(obj))->data)
 /// @}
 
-/// @addtogroup cgraph_node
-/// @{
+/** @defgroup cgraph_node nodes
+ *
+ * A node is created by giving a unique string name or programmer
+ * defined integer ID, and is represented by a unique internal object.
+ * (%Node equality can checked by pointer comparison.)
+ *
+ * @{
+ */
 
 /** @brief This is the node struct allocated per graph (or subgraph).
 
@@ -363,7 +379,7 @@ CGRAPH_API int agisstrict(Agraph_t * g);
 CGRAPH_API int agissimple(Agraph_t * g);
 /// @}
 
-/// @defgroup cgraph_node nodes
+/// @addtogroup cgraph_node
 /// @{
 CGRAPH_API Agnode_t *agnode(Agraph_t * g, char *name, int createflag);
 CGRAPH_API Agnode_t *agidnode(Agraph_t * g, IDTYPE id, int createflag);
@@ -410,8 +426,11 @@ CGRAPH_API Agedge_t *agfstedge(Agraph_t * g, Agnode_t * n);
 CGRAPH_API Agedge_t *agnxtedge(Agraph_t * g, Agedge_t * e, Agnode_t * n);
 /// @}
 
-/// @defgroup cgraph_generic generic
+/// @addtogroup cgraph_object
 /// @{
+
+// Generic object (graphs, nodes and edges) functions
+
 CGRAPH_API Agraph_t *agraphof(void* obj);
 CGRAPH_API Agraph_t *agroot(void* obj);
 CGRAPH_API int agcontains(Agraph_t *, void *);
