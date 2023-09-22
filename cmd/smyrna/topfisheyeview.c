@@ -164,7 +164,6 @@ void prepare_topological_fisheye(Agraph_t* g,topview * t)
 	(int) (view->bdxRight - view->bdxLeft);
     view->Topview->fisheyeParams.repos.height =
 	(int) (view->bdyTop - view->bdyBottom);
-    view->Topview->fisheyeParams.repos.rescale = Polar;
 
     //topological fisheye
 

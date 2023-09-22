@@ -83,9 +83,6 @@ int init_ex_graph(v_data * graph1, v_data * graph2, int n,
    double *x_coords, double *y_coords, ex_vtx_data ** gp);
 
 // layout distortion:
-void rescale_layout(double *x_coords, double *y_coords,
-    size_t n, int interval, double width, double height,
-    double margin, double distortion);
 void rescale_layout_polar(double * x_coords, double * y_coords, 
     double * x_foci, double * y_foci, int num_foci, size_t n, int interval,
     double width, double height, double margin, double distortion);
