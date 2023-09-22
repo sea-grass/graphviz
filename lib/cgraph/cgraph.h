@@ -132,6 +132,8 @@ typedef struct Agsubnode_s Agsubnode_t;
  *  @ref AgDataRecName,
  *  @ref DRName).
  *
+ *  Internally, records Agrec_s are maintained in circular linked lists
+ *  attached to graph objects Agobj_s.
  *  To allow referencing application-dependent data without function calls or search,
  *  Libcgraph allows setting and locking the list pointer
  *  of a graph, node, or edge on a particular record
@@ -162,7 +164,7 @@ typedef struct Agrec_s Agrec_t;
 /// implementation of @ref Agrec_t
 struct Agrec_s {
     char *name;
-    Agrec_t *next;
+    Agrec_t *next; ///< **circular** linked list of records
     /* following this would be any programmer-defined data */
 };
 /// @}
@@ -177,14 +179,15 @@ struct Agrec_s {
  * @{
  */
 
-/** @brief Object tag for graphs, nodes, and edges.
+/** @brief tag in @ref Agobj_s for graphs, nodes, and edges.
 
 While there may be several structs
 for a given node or edges, there is only one unique ID (per main graph).  */
 
 struct Agtag_s {
+    /// access with @ref AGTYPE
     unsigned objtype:2;		/* see literal tags below */
-    unsigned mtflock:1;		/* move-to-front lock, see above */
+    unsigned mtflock:1; ///< @brief move-to-front lock, guards @ref Agobj_s.data
     unsigned attrwf:1;		/* attrs written (parity, write.c) */
     unsigned seq:(sizeof(unsigned) * 8 - 4);	/* sequence no. */
     IDTYPE id;		        /* client  ID */
@@ -197,10 +200,10 @@ struct Agtag_s {
 #define AGINEDGE			3	/* (1 << 1) indicates an edge tag.   */
 #define AGEDGE 				AGOUTEDGE	/* synonym in object kind args */
 
-/// a generic graph/node/edge header
+/// a generic header of @ref Agraph_s, @ref Agnode_s and @ref Agedge_s
 struct Agobj_s {
-    Agtag_t tag;
-    Agrec_t *data;
+    Agtag_t tag;   ///< access with @ref AGTAG
+    Agrec_t *data; ///< stores programmer-defined data, access with @ref AGDATA
 };
 
 #define AGTAG(obj)		(((Agobj_t*)(obj))->tag)
@@ -274,7 +277,13 @@ struct Agdesc_s {		/* graph descriptor */
  *  @{
  */
 
-/// object ID allocator discipline
+/**
+ * @brief object ID allocator discipline
+ *
+ * An ID allocator discipline allows a client to control assignment
+ * of IDs (uninterpreted integer values) to objects, and possibly how
+ * they are mapped to and from strings.
+ */
 
 struct Agiddisc_s {
     void *(*open) (Agraph_t * g, Agdisc_t*);	/* associated with a graph */
