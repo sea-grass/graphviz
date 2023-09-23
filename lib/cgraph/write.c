@@ -621,8 +621,7 @@ static int write_port(Agedge_t * e, iochan_t * ofile, Agsym_t * port)
     return 0;
 }
 
-static int write_edge_test(Agraph_t * g, Agedge_t * e)
-{
+static bool write_edge_test(Agraph_t *g, Agedge_t *e) {
     Agraph_t *subg;
 
     /* can use agedge() because we subverted the dict compar_f */
@@ -630,9 +629,9 @@ static int write_edge_test(Agraph_t * g, Agedge_t * e)
 	if (irrelevant_subgraph(subg))
 	    continue;
 	if (agsubedge(subg, e, 0))
-	    return FALSE;
+	    return false;
     }
-    return TRUE;
+    return true;
 }
 
 static int write_edge(Agedge_t * e, iochan_t * ofile, Dict_t * d)
