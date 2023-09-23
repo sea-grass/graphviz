@@ -251,9 +251,7 @@ char *agcanon(char *str, int html)
 	return _agstrcanon(str, buf);
 }
 
-static int _write_canonstr(Agraph_t * g, iochan_t * ofile, char *str,
-			   int chk)
-{
+static int _write_canonstr(Agraph_t *g, iochan_t *ofile, char *str, bool chk) {
     if (chk) {
 	str = agcanonStr(str);
     } else {
@@ -268,14 +266,13 @@ static int _write_canonstr(Agraph_t * g, iochan_t * ofile, char *str,
 static int write_canonstr(Agraph_t * g, iochan_t * ofile, char *str)
 {
     char *s;
-    int r;
 
     /* str may not have been allocated by agstrdup, so we first need to turn it
      * into a valid refstr
      */
     s = agstrdup(g, str);
 
-    r = _write_canonstr(g, ofile, s, TRUE);
+    int r = _write_canonstr(g, ofile, s, true);
 
     agstrfree(g, s);
     return r;
@@ -613,12 +610,12 @@ static int write_port(Agedge_t * e, iochan_t * ofile, Agsym_t * port)
 	char *s = strchr(val, ':');
 	if (s) {
 	    *s = '\0';
-	    CHKRV(_write_canonstr(g, ofile, val, FALSE));
+	    CHKRV(_write_canonstr(g, ofile, val, false));
 	    CHKRV(ioput(g, ofile, ":"));
-	    CHKRV(_write_canonstr(g, ofile, s + 1, FALSE));
+	    CHKRV(_write_canonstr(g, ofile, s + 1, false));
 	    *s = ':';
 	} else {
-	    CHKRV(_write_canonstr(g, ofile, val, FALSE));
+	    CHKRV(_write_canonstr(g, ofile, val, false));
 	}
     }
     return 0;
