@@ -336,8 +336,7 @@ static int write_dicts(Agraph_t *g, iochan_t *ofile, bool top) {
     return 0;
 }
 
-static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
-{
+static int write_hdr(Agraph_t *g, iochan_t *ofile, bool top) {
     char *name, *sep, *kind, *strict;
     bool root = false;
     bool hasName = true;
@@ -375,7 +374,7 @@ static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
     CHKRV(ioput(g, ofile, sep));
     CHKRV(ioput(g, ofile, "{\n"));
     Level++;
-    CHKRV(write_dicts(g, ofile, top != 0));
+    CHKRV(write_dicts(g, ofile, top));
     AGATTRWF(g) = TRUE;
     return 0;
 }
@@ -471,7 +470,7 @@ static int write_subgs(Agraph_t * g, iochan_t * ofile)
 	    write_subgs(subg, ofile);
 	}
 	else {
-	    CHKRV(write_hdr(subg, ofile, FALSE));
+	    CHKRV(write_hdr(subg, ofile, false));
 	    CHKRV(write_body(subg, ofile));
 	    CHKRV(write_trl(subg, ofile));
 	}
@@ -719,7 +718,7 @@ int agwrite(Agraph_t * g, void *ofile)
 	    Max_outputline = (int)len;
     }
     set_attrwf(g, true, false);
-    CHKRV(write_hdr(g, ofile, TRUE));
+    CHKRV(write_hdr(g, ofile, true));
     CHKRV(write_body(g, ofile));
     CHKRV(write_trl(g, ofile));
     Max_outputline = MAX_OUTPUTLINE;
