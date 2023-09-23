@@ -375,7 +375,7 @@ static int write_hdr(Agraph_t *g, iochan_t *ofile, bool top) {
     CHKRV(ioput(g, ofile, "{\n"));
     Level++;
     CHKRV(write_dicts(g, ofile, top));
-    AGATTRWF(g) = TRUE;
+    AGATTRWF(g) = true;
     return 0;
 }
 
@@ -542,7 +542,7 @@ static int write_nondefault_attrs(void *obj, iochan_t * ofile,
 	CHKRV(ioput(g, ofile, "]"));
 	Level--;
     }
-    AGATTRWF(obj) = TRUE;
+    AGATTRWF(obj) = true;
     return 0;
 }
 
