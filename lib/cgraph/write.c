@@ -326,13 +326,12 @@ static int write_dict(Agraph_t * g, iochan_t * ofile, char *name,
     return 0;
 }
 
-static int write_dicts(Agraph_t * g, iochan_t * ofile, int top)
-{
+static int write_dicts(Agraph_t *g, iochan_t *ofile, bool top) {
     Agdatadict_t *def;
     if ((def = agdatadict(g, false))) {
-	CHKRV(write_dict(g, ofile, "graph", def->dict.g, top != 0));
-	CHKRV(write_dict(g, ofile, "node", def->dict.n, top != 0));
-	CHKRV(write_dict(g, ofile, "edge", def->dict.e, top != 0));
+	CHKRV(write_dict(g, ofile, "graph", def->dict.g, top));
+	CHKRV(write_dict(g, ofile, "node", def->dict.n, top));
+	CHKRV(write_dict(g, ofile, "edge", def->dict.e, top));
     }
     return 0;
 }
@@ -376,7 +375,7 @@ static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
     CHKRV(ioput(g, ofile, sep));
     CHKRV(ioput(g, ofile, "{\n"));
     Level++;
-    CHKRV(write_dicts(g, ofile, top));
+    CHKRV(write_dicts(g, ofile, top != 0));
     AGATTRWF(g) = TRUE;
     return 0;
 }
