@@ -282,8 +282,7 @@ static int write_canonstr(Agraph_t * g, iochan_t * ofile, char *str)
 }
 
 static int write_dict(Agraph_t * g, iochan_t * ofile, char *name,
-		      Dict_t * dict, int top)
-{
+                      Dict_t * dict, bool top) {
     int cnt = 0;
     Dict_t *view;
     Agsym_t *sym, *psym;
@@ -331,9 +330,9 @@ static int write_dicts(Agraph_t * g, iochan_t * ofile, int top)
 {
     Agdatadict_t *def;
     if ((def = agdatadict(g, false))) {
-	CHKRV(write_dict(g, ofile, "graph", def->dict.g, top));
-	CHKRV(write_dict(g, ofile, "node", def->dict.n, top));
-	CHKRV(write_dict(g, ofile, "edge", def->dict.e, top));
+	CHKRV(write_dict(g, ofile, "graph", def->dict.g, top != 0));
+	CHKRV(write_dict(g, ofile, "node", def->dict.n, top != 0));
+	CHKRV(write_dict(g, ofile, "edge", def->dict.e, top != 0));
     }
     return 0;
 }
