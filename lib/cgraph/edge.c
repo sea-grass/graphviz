@@ -224,19 +224,18 @@ static Agedge_t *newedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 }
 
 /* edge creation predicate */
-static int ok_to_make_edge(Agraph_t * g, Agnode_t * t, Agnode_t * h)
-{
+static bool ok_to_make_edge(Agraph_t *g, Agnode_t *t, Agnode_t *h) {
     Agtag_t key = {0};
 
     /* protect against self, multi-edges in strict graphs */
     if (agisstrict(g)) {
 	key.objtype = 0;	/* wild card */
 	if (agfindedge_by_key(g, t, h, key))
-	    return FALSE;
+	    return false;
     }
     if (g->desc.no_loop && (t == h)) /* simple graphs */
-	return FALSE;
-    return TRUE;
+	return false;
+    return true;
 }
 
 Agedge_t *agidedge(Agraph_t * g, Agnode_t * t, Agnode_t * h,
