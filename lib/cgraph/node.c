@@ -211,7 +211,7 @@ int agdelnode(Agraph_t * g, Agnode_t * n)
 	agrecclose((Agobj_t *) n);
 	agfreeid(g, AGNODE, AGID(n));
     }
-    if (agapply (g, (Agobj_t *) n, (agobjfn_t) agdelnodeimage, NULL, FALSE) == SUCCESS) {
+    if (agapply(g, (Agobj_t *)n, (agobjfn_t)agdelnodeimage, NULL, false) == SUCCESS) {
 	if (g == agroot(g))
 	    agfree(g, n);
 	return SUCCESS;
@@ -245,7 +245,7 @@ int agrelabel_node(Agnode_t * n, char *newname)
     if (agmapnametoid(g, AGNODE, newname, &new_id, true)) {
 	if (agfindnode_by_id(agroot(g), new_id) == NULL) {
 	    agfreeid(g, AGNODE, AGID(n));
-	    agapply(g, (Agobj_t*)n, (agobjfn_t)dict_relabel, &new_id, FALSE);
+	    agapply(g, (Agobj_t*)n, (agobjfn_t)dict_relabel, &new_id, false);
 	    return SUCCESS;
 	} else {
 	    agfreeid(g, AGNODE, new_id);	/* couldn't use it after all */
@@ -355,27 +355,39 @@ int agnodebefore(Agnode_t *fst, Agnode_t *snd)
 
 	/* move snd out of the way somewhere */
 	n = snd;
-	if (agapply (g, (Agobj_t *) n, (agobjfn_t) agnodesetfinger, n, FALSE) != SUCCESS) return FAILURE;
+	if (agapply (g,(Agobj_t *)n, (agobjfn_t)agnodesetfinger, n, false) != SUCCESS) {
+		return FAILURE;
+	}
 	{
 		uint64_t seq = g->clos->seq[AGNODE] + 2;
 		assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
 		AGSEQ(snd) = seq & SEQ_MASK;
 	}
-	if (agapply (g, (Agobj_t *) n, (agobjfn_t) agnoderenew, n, FALSE) != SUCCESS) return FAILURE;
+	if (agapply(g, (Agobj_t *)n, (agobjfn_t)agnoderenew, n, false) != SUCCESS) {
+		return FAILURE;
+	}
 	n = agprvnode(g,snd);
 	do {
 		nxt = agprvnode(g,n);
-		if (agapply (g, (Agobj_t *) n, (agobjfn_t) agnodesetfinger, n, FALSE) != SUCCESS) return FAILURE;
+		if (agapply(g, (Agobj_t *)n, (agobjfn_t)agnodesetfinger, n, false) != SUCCESS) {
+		  return FAILURE;
+		}
 		uint64_t seq = AGSEQ(n) + 1;
 		assert((seq & SEQ_MASK) == seq && "sequence ID overflow");
 		AGSEQ(n) = seq & SEQ_MASK;
-		if (agapply (g, (Agobj_t *) n, (agobjfn_t) agnoderenew, n, FALSE) != SUCCESS) return FAILURE;
+		if (agapply(g, (Agobj_t *)n, (agobjfn_t)agnoderenew, n, false) != SUCCESS) {
+		  return FAILURE;
+		}
 		if (n == fst) break;
 		n = nxt;
 	} while (n);
-	if (agapply (g, (Agobj_t *) snd, (agobjfn_t) agnodesetfinger, n, FALSE) != SUCCESS) return FAILURE;
+	if (agapply(g, (Agobj_t *)snd, (agobjfn_t)agnodesetfinger, n, false) != SUCCESS) {
+		return FAILURE;
+	}
 	assert(AGSEQ(fst) != 0 && "sequence ID overflow");
 	AGSEQ(snd) = (AGSEQ(fst) - 1) & SEQ_MASK;
-	if (agapply (g, (Agobj_t *) snd, (agobjfn_t) agnoderenew, snd, FALSE) != SUCCESS) return FAILURE;
+	if (agapply(g, (Agobj_t *)snd, (agobjfn_t)agnoderenew, snd, false) != SUCCESS) {
+		return FAILURE;
+	}
 	return SUCCESS;
 } 

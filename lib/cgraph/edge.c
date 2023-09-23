@@ -348,7 +348,7 @@ int agdeledge(Agraph_t * g, Agedge_t * e)
 	agrecclose((Agobj_t *) e);
 	agfreeid(g, AGEDGE, AGID(e));
     }
-    if (agapply (g, (Agobj_t *) e, (agobjfn_t) agdeledgeimage, NULL, FALSE) == SUCCESS) {
+    if (agapply(g, (Agobj_t *)e, (agobjfn_t)agdeledgeimage, NULL, false) == SUCCESS) {
 	if (g == agroot(g))
 		agfree(g, e);
 	return SUCCESS;
