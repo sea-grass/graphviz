@@ -409,15 +409,18 @@ static void mapFromGraph (Agraph_t* g, params_t* pm)
   double* x;
   char** labels = NULL;
   int* grouping;
-  float* rgb_r;
-  float* rgb_g;
-  float* rgb_b;
+  float* rgb_r = NULL;
+  float* rgb_g = NULL;
+  float* rgb_b = NULL;
   float* fsz;
 
   initDotIO(g);
   graph = Import_coord_clusters_from_dot(g, pm->maxcluster, pm->dim, &n, &width, &x, &grouping, 
 					   &rgb_r,  &rgb_g,  &rgb_b,  &fsz, &labels, pm->color_scheme, pm->clusterMethod, pm->useClusters);
   makeMap (graph, n, x, width, grouping, labels, fsz, rgb_r, rgb_g, rgb_b, pm, g);
+  free(rgb_r);
+  free(rgb_g);
+  free(rgb_b);
 }
 
 int main(int argc, char *argv[])
