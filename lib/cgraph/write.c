@@ -475,8 +475,7 @@ static int write_subgs(Agraph_t * g, iochan_t * ofile)
     return 0;
 }
 
-static int write_edge_name(Agedge_t * e, iochan_t * ofile, int terminate)
-{
+static int write_edge_name(Agedge_t *e, iochan_t *ofile, bool terminate) {
     int rv;
     char *p;
     Agraph_t *g;
@@ -508,7 +507,7 @@ static int write_nondefault_attrs(void *obj, iochan_t * ofile,
     int rv;
 
     if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
-	CHKRV(rv = write_edge_name(obj, ofile, FALSE));
+	CHKRV(rv = write_edge_name(obj, ofile, false));
 	if (rv)
 	    cnt++;
     }
@@ -651,7 +650,7 @@ static int write_edge(Agedge_t * e, iochan_t * ofile, Dict_t * d)
     if (!attrs_written(e)) {
 	CHKRV(write_nondefault_attrs(e, ofile, d));
     } else {
-	CHKRV(write_edge_name(e, ofile, TRUE));
+	CHKRV(write_edge_name(e, ofile, true));
     }
     return ioput(g, ofile, ";\n");
 }
