@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Criterion unit tests have been removed and migrated to Pytest. This is
   primarily relevant to downstream packagers of Graphviz. #2443
 
+### Fixed
+
+- The paper size for Doxygen docs generation in the Autotools build system has
+  been corrected to `a4`.
+
 ## [9.0.0] - 2023-09-11
 
 ### Added
