@@ -277,12 +277,12 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\Qt
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RCC mdi.qrc</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">rcc.exe -name mdi mdi.qrc -o debug\qrc_mdi.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\qrc_mdi.cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">RCC mdi.qrc</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">rcc.exe -name mdi mdi.qrc -o release\qrc_mdi.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\qrc_mdi.cpp;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
