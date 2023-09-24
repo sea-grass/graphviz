@@ -532,9 +532,8 @@ printSorted (Agraph_t* root, int c_cnt)
 	    if (sortFinal == -1)
 		sortFinal = agnnodes(ccs[0]);
             for (i = 0; i < c_cnt ; i++) {
-		int sz;
 		subg = ccs[i];
-		sz = agnnodes(subg);
+		int sz = agnnodes(subg);
 		if (sz > sortFinal) continue;
 		if (sz < sortIndex) break;
 		if (doAll)
