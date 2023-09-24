@@ -512,6 +512,7 @@ printSorted (Agraph_t* root, int c_cnt)
 		fprintf(stderr,
 		    "ccomps: component %d not found in graph %s - ignored\n",
 		    sortIndex, agnameof(root));
+		free(ccs);
 		return;
 	    }
 	    if (sortFinal >= sortIndex) {
