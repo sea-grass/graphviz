@@ -53,15 +53,6 @@ char* getAttrStr(Agraph_t* g,void* obj,char* attr_name,char* def)
     return late_string(obj, attr,def);
 }
 
-
-void setColor(glCompColor* c,GLfloat R,GLfloat G,GLfloat B,GLfloat A)
-{
-    c->R=R;
-    c->G=G;
-    c->B=B;
-    c->A=A;
-}
-
 glCompPoint getPointFromStr(const char *str) {
     glCompPoint p = {0};
     (void)sscanf(str, "%f,%f,%f", &p.x, &p.y, &p.z);

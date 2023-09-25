@@ -609,36 +609,6 @@ coarsen_match (
 			     cnvtxs, v2cv, cv2v);
 }
 
-/* release:
- * Free memory resources for hierarchy.
- */
-void release(Hierarchy * hierarchy)
-{
-    v_data *graph;
-    ex_vtx_data *ex_graph;
-    int i;
-    for (i = 0; i < hierarchy->nlevels; i++) {
-	graph = hierarchy->graphs[i];
-	ex_graph = hierarchy->geom_graphs[i];
-	freeGraph (graph);
-	free(ex_graph[0].edges);
-	free(ex_graph);
-	if (i < hierarchy->nlevels - 1) {
-	    free(hierarchy->v2cv[i]);
-	}
-	if (i > 0) {
-	    free(hierarchy->cv2v[i]);
-	}
-    }
-
-    free(hierarchy->graphs);
-    free(hierarchy->geom_graphs);
-    free(hierarchy->nvtxs);
-    free(hierarchy->nedges);
-    free(hierarchy->cv2v);
-    free(hierarchy->v2cv);
-}
-
 static v_data *cpGraph(v_data * graph, int n, int nedges)
 {
     float *ewgts = NULL;
