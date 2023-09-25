@@ -1080,7 +1080,6 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	return;
     }
 
-    edge_t *e0 = e;
     if (APPROXEQPT(dumb[0], dumb[3], MILLIPOINT)) {
 	/* degenerate case */
 	dumb[1] = dumb[0];
@@ -1105,7 +1104,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
     }
 
     for (int i = 0; i < e_cnt; i++) {
-	e0 = edge_list[i];
+	edge_t *e0 = edge_list[i];
 	pointf dumber[4];
 	if (aghead(e0) == head) {
 	    for (size_t j = 0; j < 4; j++) {
