@@ -251,9 +251,7 @@ char *agcanon(char *str, int html)
 	return _agstrcanon(str, buf);
 }
 
-static int _write_canonstr(Agraph_t * g, iochan_t * ofile, char *str,
-			   int chk)
-{
+static int _write_canonstr(Agraph_t *g, iochan_t *ofile, char *str, bool chk) {
     if (chk) {
 	str = agcanonStr(str);
     } else {
@@ -268,22 +266,20 @@ static int _write_canonstr(Agraph_t * g, iochan_t * ofile, char *str,
 static int write_canonstr(Agraph_t * g, iochan_t * ofile, char *str)
 {
     char *s;
-    int r;
 
     /* str may not have been allocated by agstrdup, so we first need to turn it
      * into a valid refstr
      */
     s = agstrdup(g, str);
 
-    r = _write_canonstr(g, ofile, s, TRUE);
+    int r = _write_canonstr(g, ofile, s, true);
 
     agstrfree(g, s);
     return r;
 }
 
 static int write_dict(Agraph_t * g, iochan_t * ofile, char *name,
-		      Dict_t * dict, int top)
-{
+                      Dict_t * dict, bool top) {
     int cnt = 0;
     Dict_t *view;
     Agsym_t *sym, *psym;
@@ -327,8 +323,7 @@ static int write_dict(Agraph_t * g, iochan_t * ofile, char *name,
     return 0;
 }
 
-static int write_dicts(Agraph_t * g, iochan_t * ofile, int top)
-{
+static int write_dicts(Agraph_t *g, iochan_t *ofile, bool top) {
     Agdatadict_t *def;
     if ((def = agdatadict(g, false))) {
 	CHKRV(write_dict(g, ofile, "graph", def->dict.g, top));
@@ -338,8 +333,7 @@ static int write_dicts(Agraph_t * g, iochan_t * ofile, int top)
     return 0;
 }
 
-static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
-{
+static int write_hdr(Agraph_t *g, iochan_t *ofile, bool top) {
     char *name, *sep, *kind, *strict;
     bool root = false;
     bool hasName = true;
@@ -378,7 +372,7 @@ static int write_hdr(Agraph_t * g, iochan_t * ofile, int top)
     CHKRV(ioput(g, ofile, "{\n"));
     Level++;
     CHKRV(write_dicts(g, ofile, top));
-    AGATTRWF(g) = TRUE;
+    AGATTRWF(g) = true;
     return 0;
 }
 
@@ -473,7 +467,7 @@ static int write_subgs(Agraph_t * g, iochan_t * ofile)
 	    write_subgs(subg, ofile);
 	}
 	else {
-	    CHKRV(write_hdr(subg, ofile, FALSE));
+	    CHKRV(write_hdr(subg, ofile, false));
 	    CHKRV(write_body(subg, ofile));
 	    CHKRV(write_trl(subg, ofile));
 	}
@@ -481,8 +475,7 @@ static int write_subgs(Agraph_t * g, iochan_t * ofile)
     return 0;
 }
 
-static int write_edge_name(Agedge_t * e, iochan_t * ofile, int terminate)
-{
+static int write_edge_name(Agedge_t *e, iochan_t *ofile, bool terminate) {
     int rv;
     char *p;
     Agraph_t *g;
@@ -514,7 +507,7 @@ static int write_nondefault_attrs(void *obj, iochan_t * ofile,
     int rv;
 
     if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
-	CHKRV(rv = write_edge_name(obj, ofile, FALSE));
+	CHKRV(rv = write_edge_name(obj, ofile, false));
 	if (rv)
 	    cnt++;
     }
@@ -545,7 +538,7 @@ static int write_nondefault_attrs(void *obj, iochan_t * ofile,
 	CHKRV(ioput(g, ofile, "]"));
 	Level--;
     }
-    AGATTRWF(obj) = TRUE;
+    AGATTRWF(obj) = true;
     return 0;
 }
 
@@ -616,19 +609,18 @@ static int write_port(Agedge_t * e, iochan_t * ofile, Agsym_t * port)
 	char *s = strchr(val, ':');
 	if (s) {
 	    *s = '\0';
-	    CHKRV(_write_canonstr(g, ofile, val, FALSE));
+	    CHKRV(_write_canonstr(g, ofile, val, false));
 	    CHKRV(ioput(g, ofile, ":"));
-	    CHKRV(_write_canonstr(g, ofile, s + 1, FALSE));
+	    CHKRV(_write_canonstr(g, ofile, s + 1, false));
 	    *s = ':';
 	} else {
-	    CHKRV(_write_canonstr(g, ofile, val, FALSE));
+	    CHKRV(_write_canonstr(g, ofile, val, false));
 	}
     }
     return 0;
 }
 
-static int write_edge_test(Agraph_t * g, Agedge_t * e)
-{
+static bool write_edge_test(Agraph_t *g, Agedge_t *e) {
     Agraph_t *subg;
 
     /* can use agedge() because we subverted the dict compar_f */
@@ -636,9 +628,9 @@ static int write_edge_test(Agraph_t * g, Agedge_t * e)
 	if (irrelevant_subgraph(subg))
 	    continue;
 	if (agsubedge(subg, e, 0))
-	    return FALSE;
+	    return false;
     }
-    return TRUE;
+    return true;
 }
 
 static int write_edge(Agedge_t * e, iochan_t * ofile, Dict_t * d)
@@ -658,7 +650,7 @@ static int write_edge(Agedge_t * e, iochan_t * ofile, Dict_t * d)
     if (!attrs_written(e)) {
 	CHKRV(write_nondefault_attrs(e, ofile, d));
     } else {
-	CHKRV(write_edge_name(e, ofile, TRUE));
+	CHKRV(write_edge_name(e, ofile, true));
     }
     return ioput(g, ofile, ";\n");
 }
@@ -721,7 +713,7 @@ int agwrite(Agraph_t * g, void *ofile)
 	    Max_outputline = (int)len;
     }
     set_attrwf(g, true, false);
-    CHKRV(write_hdr(g, ofile, TRUE));
+    CHKRV(write_hdr(g, ofile, true));
     CHKRV(write_body(g, ofile));
     CHKRV(write_trl(g, ofile));
     Max_outputline = MAX_OUTPUTLINE;

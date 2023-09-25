@@ -143,7 +143,7 @@ int agdelrec(void *arg_obj, const char *name)
     case AGNODE:
     case AGINEDGE:
     case AGOUTEDGE:
-	agapply(agroot(g), obj, objdelrec, rec, FALSE);
+	agapply(agroot(g), obj, objdelrec, rec, false);
 	break;
     default:
 	UNREACHABLE();
@@ -199,7 +199,7 @@ void agclean(Agraph_t * g, int kind, char *rec_name)
 
     switch (kind) {
     case AGRAPH:
-	agapply(g, (Agobj_t *) g, simple_delrec, rec_name, TRUE);
+	agapply(g, (Agobj_t *)g, simple_delrec, rec_name, true);
 	break;
     case AGNODE:
     case AGOUTEDGE:

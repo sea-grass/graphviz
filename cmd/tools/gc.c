@@ -18,6 +18,7 @@
  * Written by Emden Gansner
  */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -279,7 +280,7 @@ static int eval(Agraph_t * g, int root)
     }
 
     if ((flags & CL) && root)
-        agapply(g, (Agobj_t *) g, cntCluster, &cl_count, 0);
+        agapply(g, (Agobj_t *) g, cntCluster, &cl_count, false);
 
     emit(g, root, cl_count);
 

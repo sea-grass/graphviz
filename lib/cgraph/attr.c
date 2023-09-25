@@ -303,8 +303,7 @@ static Agsym_t *setattr(Agraph_t * g, int kind, char *name, const char *value) {
 	    dtinsert(rdict, rsym);
 	    switch (kind) {
 	    case AGRAPH:
-		agapply(root, (Agobj_t *) root, (agobjfn_t) addattr,
-			rsym, TRUE);
+		agapply(root, (Agobj_t *)root, (agobjfn_t)addattr, rsym, true);
 		break;
 	    case AGNODE:
 		for (n = agfstnode(root); n; n = agnxtnode(root, n))
@@ -532,7 +531,7 @@ static void init_all_attrs(Agraph_t * g)
     Agedge_t *e;
 
     root = agroot(g);
-    agapply(root, (Agobj_t*)root, agraphattr_init_wrapper, NULL, TRUE);
+    agapply(root, (Agobj_t*)root, agraphattr_init_wrapper, NULL, true);
     for (n = agfstnode(root); n; n = agnxtnode(root, n)) {
 	agnodeattr_init(g, n);
 	for (e = agfstout(root, n); e; e = agnxtout(root, e)) {
