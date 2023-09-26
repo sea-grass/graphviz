@@ -1074,6 +1074,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
 	if (ps == NULL || pn == 0) {
 	    free(ps);
+	    free(earray);
 	    return;
 	}
 	ED_label(e)->pos.x = ctrx;
@@ -1130,6 +1131,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
 	if (ps == NULL || pn == 0) {
 	    free(ps);
+	    free(earray);
 	    return;
 	}
 	clip_and_install(e, aghead(e), ps, pn, &sinfo);
