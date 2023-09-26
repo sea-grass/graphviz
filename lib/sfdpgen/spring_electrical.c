@@ -752,20 +752,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   f = gv_calloc(dim, sizeof(double));
   do {
 
-    //#define VIS_MULTILEVEL
-#ifdef VIS_MULTILEVEL
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    static int count = 0;
-    agxbprint(&fname, "/tmp/multilevel_%d", count++);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
     iter++;
     Fnorm0 = Fnorm;
     Fnorm = 0.;

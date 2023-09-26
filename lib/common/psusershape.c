@@ -172,8 +172,6 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
     }
 }
 
-#define FILTER_EPSF 1
-#ifdef FILTER_EPSF
 /* this removes EPSF DSC comments that, when nested in another
  * document, cause errors in Ghostview and other Postscript
  * processors (although legal according to the Adobe EPSF spec).
@@ -203,12 +201,6 @@ void epsf_emit_body(GVJ_t *job, usershape_t *us)
 	gvputc(job, '\n');
     }
 }
-#else
-void epsf_emit_body(GVJ_t *job, usershape_t *us)
-{
-	gvputs(job, us->data);
-}
-#endif
 
 void epsf_define(GVJ_t *job)
 {

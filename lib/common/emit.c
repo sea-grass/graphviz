@@ -803,7 +803,7 @@ void update_bb_bz(boxf *bb, pointf *cp)
         }
         else { /* else refine the segment */
             pointf left[4], right[4];
-            Bezier (cp, 3, 0.5, left, right);
+            Bezier (cp, 0.5, left, right);
             update_bb_bz(bb, left);
             update_bb_bz(bb, right);
         }
@@ -881,7 +881,7 @@ static segitem_t* approx_bezier (pointf *cp, segitem_t* lp)
         lp = appendSeg (cp[3], lp);
     }
     else {
-        Bezier (cp, 3, 0.5, left, right);
+        Bezier (cp, 0.5, left, right);
         lp = approx_bezier (left, lp);
         lp = approx_bezier (right, lp);
     }
@@ -2042,7 +2042,7 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
 	left->list = gv_calloc(4, sizeof(pointf));
 	right->size = 4;
 	right->list = gv_calloc(4, sizeof(pointf));
-	Bezier (bz->list, 3, t, left->list, right->list);
+	Bezier (bz->list, t, left->list, right->list);
 	return;
     }
     
@@ -2074,7 +2074,7 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
 
     last = lens[i];
     r = (len - (sum - last))/last;
-    Bezier (bz->list + 3*i, 3, r, left->list + 3*i, right->list);
+    Bezier (bz->list + 3*i, r, left->list + 3*i, right->list);
 
     free (lens);
 }

@@ -47,11 +47,7 @@ void makevertex(Site * v)
 {
     v->sitenbr = nvertices;
     ++nvertices;
-#ifdef STANDALONE
-    out_vertex(v);
-#endif
 }
-
 
 void deref(Site * v)
 {

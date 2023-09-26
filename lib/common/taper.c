@@ -138,7 +138,7 @@ static vararr_t pathtolines(bezier *bez) {
 	    V[j] = A[i + j];
 	p0 = V[0];
 	for (step = 1; step <= BEZIERSUBDIVISION; step++) {
-	    p1 = Bezier(V, 3, (double) step / BEZIERSUBDIVISION, NULL, NULL);
+	    p1 = Bezier(V, (double) step / BEZIERSUBDIVISION, NULL, NULL);
 	    seglen = l2dist(p0, p1);
 	    /* If initwid is large, this may never happen, so turn off. I assume this is to prevent
 	     * too man points or too small a movement. Perhaps a better test can be made, but for now

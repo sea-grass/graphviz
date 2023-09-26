@@ -1085,9 +1085,9 @@ static pointf arrow_type_curve(GVJ_t *job, pointf p, pointf u, double arrowsize,
 
     gvrender_polyline(job, a, 2);
     if (flag & ARR_MOD_LEFT)
-	Bezier(AF, 3, 0.5, NULL, AF);
+	Bezier(AF, 0.5, NULL, AF);
     else if (flag & ARR_MOD_RIGHT)
-	Bezier(AF, 3, 0.5, AF, NULL);
+	Bezier(AF, 0.5, AF, NULL);
     gvrender_beziercurve(job, AF, sizeof(AF) / sizeof(pointf), 0);
 
     return q;

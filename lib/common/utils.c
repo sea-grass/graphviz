@@ -202,8 +202,8 @@ pointf coord(node_t * n)
  *	"Right" are non-null.
  *
  */
-pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right)
-{
+pointf Bezier(pointf *V, double t, pointf *Left, pointf *Right) {
+    const int degree = 3;
     int i, j;			/* Index variables      */
     pointf Vtemp[W_DEGREE + 1][W_DEGREE + 1];
 
@@ -402,7 +402,7 @@ pointf dotneato_closest(splines * spl, pointf pt)
     dhigh2 = DIST2(c[3], pt);
     do {
 	t = (low + high) / 2.0;
-	pt2 = Bezier(c, 3, t, NULL, NULL);
+	pt2 = Bezier(c, t, NULL, NULL);
 	if (fabs(dlow2 - dhigh2) < 1.0)
 	    break;
 	if (fabs(high - low) < .00001)
@@ -416,62 +416,6 @@ pointf dotneato_closest(splines * spl, pointf pt)
 	}
     } while (1);
     return pt2;
-}
-
-pointf spline_at_y(splines * spl, double y)
-{
-    int i, j;
-    double low, high, d, t;
-    pointf c[4], p;
-    static bezier bz;
-
-/* this caching seems to prevent p.x from getting set from bz.list[0].x
-	- optimizer problem ? */
-
-	for (i = 0; i < spl->size; i++) {
-	    bz = spl->list[i];
-	    if (BETWEEN(bz.list[bz.size - 1].y, y, bz.list[0].y))
-		break;
-	}
-    if (y > bz.list[0].y)
-	p = bz.list[0];
-    else if (y < bz.list[bz.size - 1].y)
-	p = bz.list[bz.size - 1];
-    else {
-	for (i = 0; i < bz.size; i += 3) {
-	    for (j = 0; j < 3; j++) {
-		if (bz.list[i + j].y <= y && y <= bz.list[i + j + 1].y)
-		    break;
-		if (bz.list[i + j].y >= y && y >= bz.list[i + j + 1].y)
-		    break;
-	    }
-	    if (j < 3)
-		break;
-	}
-	assert(i < bz.size);
-	for (j = 0; j < 4; j++) {
-	    c[j].x = bz.list[i + j].x;
-	    c[j].y = bz.list[i + j].y;
-	    /* make the spline be monotonic in Y, awful but it works for now */
-	    if (j > 0 && c[j].y > c[j - 1].y)
-		c[j].y = c[j - 1].y;
-	}
-	low = 0.0;
-	high = 1.0;
-	do {
-	    t = (low + high) / 2.0;
-	    p = Bezier(c, 3, t, NULL, NULL);
-	    d = p.y - y;
-	    if (fabs(d) <= 1)
-		break;
-	    if (d < 0)
-		high = t;
-	    else
-		low = t;
-	} while (1);
-    }
-    p.y = y;
-    return p;
 }
 
 static int Tflag;

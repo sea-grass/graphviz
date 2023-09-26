@@ -14,9 +14,6 @@
 #include <neatogen/neato.h>
 #include <pathplan/pathutil.h>
 
-#define MAXINTS  10000		/* modify this line to reflect the max no. of 
-				   intersections you want reported -- 50000 seems to break the program */
-
 #define SLOPE(p,q) ( ( ( p.y ) - ( q.y ) ) / ( ( p.x ) - ( q.x ) ) )
 
 #define EQ_PT(v,w) (((v).x == (w).x) && ((v).y == (w).y))
@@ -37,14 +34,6 @@ typedef struct polygon polygon;
 	vertex *start, *finish;
 	boxf bb;
     };
-
-    typedef struct {
-	vertex *firstv, *secondv;
-#ifdef RECORD_INTERSECTS
-	polygon *firstp, *secondp;
-#endif
-	double x, y;
-    } intersection ;
 
     struct active_edge {
 	vertex *name;
@@ -237,10 +226,7 @@ realIntersect (vertex *firstv, vertex *secondv, pointf p)
  * detect whether segments l and m intersect      
  * Return 1 if found; 0 otherwise;
  */
-static int find_intersection(vertex *l,
-		  vertex *m,
-		  intersection* ilist, data *input)
-{
+static int find_intersection(vertex *l, vertex *m) {
     double x, y;
     pointf p;
 	int i[3];
@@ -262,23 +248,6 @@ static int find_intersection(vertex *l,
 			       online(l, m, 1)) : online(l, m, abs(i[0]))))
 	return 0;
 
-#ifdef RECORD_INTERSECTS
-    if (input->ninters >= MAXINTS) {
-	agerr(AGERR, "using too many intersections\n");
-	graphviz_exit(1);
-    }
-
-    ilist[input->ninters].firstv = l;
-    ilist[input->ninters].secondv = m;
-    ilist[input->ninters].firstp = l->poly;
-    ilist[input->ninters].secondp = m->poly;
-    ilist[input->ninters].x = x;
-    ilist[input->ninters].y = y;
-    input->ninters++;
-#else
-    (void)ilist;
-    (void)input;
-#endif
     p.x = x;
     p.y = y;
     return realIntersect(l, m, p);
@@ -306,27 +275,25 @@ static int gt(const void *a, const void *b) {
  * Check for pairwise intersection of polygon sides
  * Return 1 if intersection found, 0 for not found, -1 for error.
  */
-static int
-find_ints(vertex vertex_list[], data *input, intersection ilist[]) {
+static int find_ints(vertex vertex_list[], int nvertices) {
     int i, j, k, found = 0;
     active_edge_list all;
     active_edge *new, *tempa;
     vertex *pt1, *pt2, *templ;
 
-    input->ninters = 0;
     all.first = all.final = 0;
     all.number = 0;
 
-    vertex **pvertex = gv_calloc(input->nvertices, sizeof(vertex*));
+    vertex **pvertex = gv_calloc(nvertices, sizeof(vertex*));
 
-    for (i = 0; i < input->nvertices; i++)
+    for (i = 0; i < nvertices; i++)
 	pvertex[i] = vertex_list + i;
 
 /* sort vertices by x coordinate	*/
-    qsort(pvertex, input->nvertices, sizeof(vertex *), gt);
+    qsort(pvertex, nvertices, sizeof(vertex *), gt);
 
 /* walk through the vertices in order of increasing x coordinate	*/
-    for (i = 0; i < input->nvertices; i++) {
+    for (i = 0; i < nvertices; i++) {
 	pt1 = pvertex[i];
 	templ = pt2 = prior(pvertex[i]);
 	for (k = 0; k < 2; k++) {	/* each vertex has 2 edges */
@@ -337,7 +304,7 @@ find_ints(vertex vertex_list[], data *input, intersection ilist[]) {
                  /* test */
 		for (tempa = all.first, j = 0; j < all.number;
 		     j++, tempa = tempa->next) {
-		    found = find_intersection(tempa->name, templ, ilist, input);
+		    found = find_intersection(tempa->name, templ);
 		    if (found)
 			goto finish;
 		}
@@ -444,8 +411,6 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
     int i, j, vno, nverts, found;
     vertex *vertex_list;
     polygon *polygon_list;
-    data input;
-    intersection ilist[MAXINTS];
     boxf bb;
     double x, y;
 
@@ -477,9 +442,7 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 	polygon_list[i].bb = bb;
     }
 
-    input.nvertices = nverts;
-
-    found = find_ints(vertex_list, &input, ilist);
+    found = find_ints(vertex_list, nverts);
     if (found < 0) {
 	free(polygon_list);
 	free(vertex_list);

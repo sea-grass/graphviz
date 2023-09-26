@@ -48,7 +48,7 @@ UTILS_API nodequeue *new_queue(size_t);
 UTILS_API void free_queue(nodequeue *);
 UTILS_API void enqueue(nodequeue *, Agnode_t *);
 UTILS_API Agnode_t *dequeue(nodequeue *);
-UTILS_API pointf Bezier(pointf *, int, double, pointf *, pointf *);
+UTILS_API pointf Bezier(pointf *, double, pointf *, pointf *);
 UTILS_API void attach_attrs_and_arrows(graph_t *, int *, int *);
 
 /** XML-escape a string
@@ -118,7 +118,6 @@ UTILS_API char *utf8ToLatin1(char *ins);
 UTILS_API char *scanEntity(char *t, agxbuf *xb);
 
 UTILS_API pointf dotneato_closest(splines *spl, pointf p);
-UTILS_API pointf spline_at_y(splines *spl, double y);
 
 UTILS_API Agsym_t *setAttr(graph_t *, void *, char *name, char *value,
                            Agsym_t *);
