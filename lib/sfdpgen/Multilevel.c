@@ -303,8 +303,6 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   grid->next = cgrid;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;
-  cgrid->A = cA;
-  cgrid->D = cD;
   cgrid->P = P;
   grid->R = R;
   cgrid->prev = grid;
