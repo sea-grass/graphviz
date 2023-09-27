@@ -162,7 +162,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   int *matching = NULL, nc, nzc, n, i;
   int *irn = NULL, *jcn = NULL;
   double *val = NULL;
-  SparseMatrix B = NULL;
   int *vset = NULL, j;
   int *cluster=NULL, *clusterp=NULL, ncluster;
 
@@ -200,12 +199,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   *R = SparseMatrix_transpose(*P);
 
   *cA = SparseMatrix_multiply3(*R, A, *P); 
-
-  /*
-    B = SparseMatrix_multiply(*R, A);
-    if (!B) goto RETURN;
-    *cA = SparseMatrix_multiply(B, *P); 
-    */
   if (!*cA) goto RETURN;
 
   SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
@@ -220,7 +213,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   free(irn);
   free(jcn);
   free(val);
-  if (B) SparseMatrix_delete(B);
 
   free(cluster);
   free(clusterp);
