@@ -513,8 +513,10 @@ static void print_bounding_box(int n, int dim, double *x){
   free(xmax);
 }
 
-static int check_convergence(double max_overlap, double res, int has_penalty_terms, double epsilon){
-  if (!has_penalty_terms) return (max_overlap <= 1);
+static int check_convergence(double max_overlap, double res,
+                             bool has_penalty_terms, double epsilon) {
+  if (!has_penalty_terms)
+    return (max_overlap <= 1);
   return res < epsilon;
 }
 
@@ -584,7 +586,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
               "overlap removal neighbors only?= %d iter -- %d, overlap factor = %g underlap factor = %g\n",
               (int)neighborhood_only, i, max_overlap - 1, min_overlap);
     }
-    if (check_convergence(max_overlap, res, has_penalty_terms, epsilon)){
+    if (check_convergence(max_overlap, res, has_penalty_terms != 0, epsilon)) {
     
       OverlapSmoother_delete(sm);
       if (!neighborhood_only){
