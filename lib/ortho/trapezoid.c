@@ -410,7 +410,8 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   int tfirstr = 0, tlastr = 0, tfirstl = 0, tlastl = 0;
   int i1, i2, t, tn;
   pointf tpt;
-  int tribot = 0, is_swapped;
+  int tribot = 0;
+  bool is_swapped;
   int tmptriseg;
 
   s = seg[segnum];
@@ -423,9 +424,9 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
       tmp = s.root0;
       s.root0 = s.root1;
       s.root1 = tmp;
-      is_swapped = TRUE;
+      is_swapped = true;
     }
-  else is_swapped = FALSE;
+  else is_swapped = false;
 
   if (!inserted(segnum, seg, is_swapped ? LASTPT : FIRSTPT))
     /* insert v0 in the tree */
