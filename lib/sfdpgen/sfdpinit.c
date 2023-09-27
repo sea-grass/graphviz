@@ -85,7 +85,6 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     Agnode_t *n;
     int flag, i;
     int n_edge_label_nodes = 0, *edge_label_nodes = NULL;
-    SparseMatrix D = NULL;
     SparseMatrix A = makeMatrix(g);
 
     if (ctrl->overlap >= 0) {
@@ -98,7 +97,7 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
 	sizes = NULL;
     pos = getPos(g);
 
-    multilevel_spring_electrical_embedding(Ndim, A, D, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
+    multilevel_spring_electrical_embedding(Ndim, A, ctrl, sizes, pos, n_edge_label_nodes, edge_label_nodes, &flag);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double *npos = pos + (Ndim * ND_id(n));
@@ -110,7 +109,6 @@ static void sfdpLayout(graph_t * g, spring_electrical_control ctrl,
     free(sizes);
     free(pos);
     SparseMatrix_delete (A);
-    if (D) SparseMatrix_delete (D);
     free(edge_label_nodes);
 }
 
