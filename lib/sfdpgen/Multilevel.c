@@ -159,7 +159,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
                                         double *node_wgt, double **cnode_wgt,
                                         SparseMatrix *P, SparseMatrix *R,
                                         Multilevel_control ctrl) {
-  int *matching = NULL, nc, nzc, n, i;
+  int nc, nzc, n, i;
   int *irn = NULL, *jcn = NULL;
   double *val = NULL;
   int *vset = NULL, j;
@@ -208,7 +208,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   *cA = SparseMatrix_remove_diagonal(*cA);
 
  RETURN:
-  free(matching);
   free(vset);
   free(irn);
   free(jcn);
