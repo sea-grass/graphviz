@@ -53,7 +53,7 @@ cleanup1(graph_t * g)
 	    for (n = GD_nlist(g); n; n = ND_next(n)) {
 	        renewlist(&ND_in(n));
 	        renewlist(&ND_out(n));
-	        ND_mark(n) = FALSE;
+	        ND_mark(n) = false;
 	    }
     }
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -838,7 +838,7 @@ static void dfs(graph_t * g, node_t * v)
 
     if (ND_mark(v))
 	return;
-    ND_mark(v) = TRUE;
+    ND_mark(v) = true;
     ND_onstack(v) = true;
     for (e = agfstout(g, v); e; e = f) {
 	f = agnxtout(g, e);
@@ -858,7 +858,7 @@ static void break_cycles(graph_t * g)
     node_t *n;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	ND_mark(n) = FALSE;
+	ND_mark(n) = false;
 	ND_onstack(n) = false;
     }
     for (n = agfstnode(g); n; n = agnxtnode(g, n))

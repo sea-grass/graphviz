@@ -716,7 +716,7 @@ dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
     double x = mode==MODE_IPSEP?-1.0:1.0;
 
     np = nodes[i];
-    ND_mark(np) = TRUE;
+    ND_mark(np) = true;
     ND_onstack(np) = true;
     for (e = 1; e < graph[i].nedges; e++) {
 	if (graph[i].edists[e] == 1.0) continue;  /* in edge */
@@ -745,7 +745,7 @@ acyclic (vtx_data* graph, int nv, int mode, node_t* nodes[])
 
     for (i = 0; i < nv; i++) {
 	np = nodes[i];
-	ND_mark(np) = FALSE;
+	ND_mark(np) = false;
 	ND_onstack(np) = false;
     }
     for (i = 0; i < nv; i++) {

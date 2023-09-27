@@ -37,7 +37,7 @@ dfs(node_t * n)
 
     if (ND_mark(n))
 	return;
-    ND_mark(n) = TRUE;
+    ND_mark(n) = true;
     ND_onstack(n) = true;
     for (i = 0; (e = ND_out(n).list[i]); i++) {
 	w = aghead(e);
@@ -60,7 +60,7 @@ void acyclic(graph_t * g)
     for (size_t c = 0; c < GD_comp(g).size; c++) {
 	GD_nlist(g) = GD_comp(g).list[c];
 	for (n = GD_nlist(g); n; n = ND_next(n))
-	    ND_mark(n) = FALSE;
+	    ND_mark(n) = false;
 	for (n = GD_nlist(g); n; n = ND_next(n))
 	    dfs(n);
     }
