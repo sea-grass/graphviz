@@ -54,5 +54,6 @@ void print_padding(int n);
 #define Multilevel_is_finest(grid) (!((grid)->prev))
 #define Multilevel_is_coarsest(grid) (!((grid)->next))
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
-			SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl);
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double *node_wgt,
+                        double **cnode_wgt, SparseMatrix *P, SparseMatrix *R,
+                        Multilevel_control ctrl);

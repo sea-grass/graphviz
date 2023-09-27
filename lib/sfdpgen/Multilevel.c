@@ -226,13 +226,13 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   free(clusterp);
 }
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double *node_wgt, double **cnode_wgt,
 			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
   SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
   double *cnode_wgt0 = NULL;
   int nc = 0, n;
   
-  *P = NULL; *R = NULL; *cA = NULL; *cnode_wgt = NULL, *cD = NULL;
+  *P = NULL; *R = NULL; *cA = NULL; *cnode_wgt = NULL;
 
   n = A->n;
 
@@ -261,8 +261,6 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, doub
 
     if (*cA) SparseMatrix_delete(*cA);
     *cA = cA0;
-    if (*cD) SparseMatrix_delete(*cD);
-    *cD = NULL;
 
     if (*cnode_wgt) free(*cnode_wgt);
     *cnode_wgt = cnode_wgt0;
@@ -280,7 +278,7 @@ void print_padding(int n){
 static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
   Multilevel cgrid;
   double *cnode_weights = NULL;
-  SparseMatrix P, R, A, cA, cD;
+  SparseMatrix P, R, A, cA, cD = NULL;
 
 #ifdef DEBUG_PRINT
   if (Verbose) {
@@ -298,7 +296,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
 #endif
     return grid;
   }
-  Multilevel_coarsen(A, &cA, &cD, grid->node_weights, &cnode_weights, &P, &R, ctrl);
+  Multilevel_coarsen(A, &cA, grid->node_weights, &cnode_weights, &P, &R, ctrl);
   if (!cA) return grid;
 
   cgrid = Multilevel_init(cA, cD, cnode_weights);
