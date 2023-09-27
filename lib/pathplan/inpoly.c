@@ -18,9 +18,9 @@
 #include <stdlib.h>
 #include <pathplan/vispath.h>
 #include <pathplan/pathutil.h>
+#include <stdbool.h>
 
-int in_poly(Ppoly_t poly, Ppoint_t q)
-{
+bool in_poly(Ppoly_t poly, Ppoint_t q) {
     int i, i1;			/* point index; i1 = i-1 mod n */
     int n;
     Ppoint_t *P;
@@ -29,7 +29,7 @@ int in_poly(Ppoly_t poly, Ppoint_t q)
     n = poly.pn;
     for (i = 0; i < n; i++) {
 	i1 = (i + n - 1) % n;
-	if (wind(P[i1],P[i],q) == 1) return FALSE;
+	if (wind(P[i1], P[i], q) == 1) return false;
     }
-    return TRUE;
+    return true;
 }

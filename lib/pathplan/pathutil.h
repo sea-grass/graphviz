@@ -11,6 +11,7 @@
 #pragma once
 
 #include "pathplan.h"
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,7 +38,7 @@ extern "C" {
     PATHUTIL_API int wind(Ppoint_t a, Ppoint_t b, Ppoint_t c);
     PATHUTIL_API COORD dist2(Ppoint_t, Ppoint_t);
 
-    PATHUTIL_API int in_poly(Ppoly_t argpoly, Ppoint_t q);
+    PATHUTIL_API bool in_poly(Ppoly_t argpoly, Ppoint_t q);
 
 #undef PATHUTIL_API
 #ifdef __cplusplus
