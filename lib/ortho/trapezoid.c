@@ -109,9 +109,9 @@ static void _min (pointf *yval, pointf *v0, pointf *v1)
 static bool _greater_than_equal_to (pointf *v0, pointf *v1)
 {
   if (v0->y > v1->y + C_EPS)
-    return TRUE;
+    return true;
   else if (v0->y < v1->y - C_EPS)
-    return FALSE;
+    return false;
   else
     return v0->x >= v1->x;
 }
