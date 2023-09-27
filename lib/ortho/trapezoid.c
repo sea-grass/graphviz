@@ -404,7 +404,7 @@ merge_trapezoids(int segnum, int tfirst, int tlast, int side, traps_t *tr,
  * Q-structure. Then start from the topmost trapezoid and go down to
  * the  lower trapezoid dividing all the trapezoids in between .
  */
-static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
+static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   segment_t s;
   int tu, tl, sk, tfirst, tlast;
   int tfirstr = 0, tlastr = 0, tfirstl = 0, tlastl = 0;
@@ -963,7 +963,6 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   merge_trapezoids(segnum, tfirstr, tlastr, S_RIGHT, tr, qs);
 
   seg[segnum].is_inserted = true;
-  return 0;
 }
 
 /* Update the roots stored for each of the endpoints of the segment.
