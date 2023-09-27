@@ -19,11 +19,12 @@ typedef  StressMajorizationSmoother OverlapSmoother;
 
 void OverlapSmoother_delete(OverlapSmoother sm);
 
-OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m, 
-				    int dim, double *x, double *width, int neighborhood_only,
-				    double *max_overlap, double *min_overlap,
-				    int edge_labeling_scheme, int n_constr_nodes, int *constr_nodes, SparseMatrix A_constr, int shrink
-				    );
+OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m, int dim, double *x,
+                                    double *width, bool neighborhood_only,
+                                    double *max_overlap, double *min_overlap,
+                                    int edge_labeling_scheme,
+                                    int n_constr_nodes, int *constr_nodes,
+                                    SparseMatrix A_constr, int shrink);
 
 enum {ELSCHEME_NONE = 0, ELSCHEME_PENALTY, ELSCHEME_PENALTY2, ELSCHEME_STRAIGHTLINE_PENALTY, ELSCHEME_STRAIGHTLINE_PENALTY2};
 
