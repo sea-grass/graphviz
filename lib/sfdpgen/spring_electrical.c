@@ -1342,9 +1342,12 @@ static SparseMatrix shorting_edge_label_nodes(SparseMatrix A, int n_edge_label_n
 
 }
 
-static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0, SparseMatrix D0, spring_electrical_control ctrl, double *label_sizes,
-					    double *x, int n_edge_label_nodes, int *edge_label_nodes, int *flag){
-
+void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
+                                            SparseMatrix D0,
+                                            spring_electrical_control ctrl,
+                                            double *label_sizes, double *x,
+                                            int n_edge_label_nodes,
+                                            int *edge_label_nodes, int *flag) {
 
   Multilevel_control mctrl = NULL;
   int n, plg;
@@ -1478,9 +1481,4 @@ static void multilevel_spring_electrical_embedding_core(int dim, SparseMatrix A0
   if (D && D != D0) SparseMatrix_delete(D);
   Multilevel_control_delete(mctrl);
   Multilevel_delete(grid0);
-}
-
-void multilevel_spring_electrical_embedding(int dim, SparseMatrix A, SparseMatrix D, spring_electrical_control ctrl, double *label_sizes,
-				 double *x, int n_edge_label_nodes, int *edge_label_nodes, int *flag){
-  multilevel_spring_electrical_embedding_core(dim, A, D, ctrl, label_sizes, x, n_edge_label_nodes, edge_label_nodes, flag);
-}
+ }
