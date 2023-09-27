@@ -69,7 +69,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   (void)n;
   double *a, amax = 0;
-  int first = TRUE, jamax = 0;
+  int jamax = 0;
   int *matched, nz, nz0;
   enum {MATCHED = -1};
   int  nsuper, *super = NULL, *superp = NULL;
@@ -114,7 +114,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   p = random_permutation(m);
   for (ii = 0; ii < m; ii++){
     i = p[ii];
-    first = TRUE;
+    bool first = true;
     if (matched[i] == MATCHED) continue;
     for (j = ia[i]; j < ia[i+1]; j++){
       if (i == ja[j]) continue;
@@ -122,7 +122,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
         if (first) {
           amax = a[j];
           jamax = ja[j];
-          first = FALSE;
+          first = false;
         } else {
           if (a[j] > amax){
             amax = a[j];
