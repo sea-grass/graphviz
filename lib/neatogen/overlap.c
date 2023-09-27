@@ -540,7 +540,6 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
   double avg_label_size, res = LARGE;
   double max_overlap = 0, min_overlap = 999;
   bool neighborhood_only = true;
-  int has_penalty_terms = FALSE;
   double epsilon = 0.005;
   int shrink = 0;
 
@@ -576,7 +575,8 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
   }
 #endif
 
-  has_penalty_terms = (edge_labeling_scheme != ELSCHEME_NONE && n_constr_nodes > 0);
+  bool has_penalty_terms =
+      edge_labeling_scheme != ELSCHEME_NONE && n_constr_nodes > 0;
   for (i = 0; i < ntry; i++){
     if (Verbose) print_bounding_box(A->m, dim, x);
     sm = OverlapSmoother_new(A, A->m, dim, x, label_sizes, neighborhood_only,
@@ -586,7 +586,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
               "overlap removal neighbors only?= %d iter -- %d, overlap factor = %g underlap factor = %g\n",
               (int)neighborhood_only, i, max_overlap - 1, min_overlap);
     }
-    if (check_convergence(max_overlap, res, has_penalty_terms != 0, epsilon)) {
+    if (check_convergence(max_overlap, res, has_penalty_terms, epsilon)) {
     
       OverlapSmoother_delete(sm);
       if (!neighborhood_only){
