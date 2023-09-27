@@ -278,7 +278,7 @@ void print_padding(int n){
 static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
   Multilevel cgrid;
   double *cnode_weights = NULL;
-  SparseMatrix P, R, A, cA, cD = NULL;
+  SparseMatrix P, R, A, cA;
 
 #ifdef DEBUG_PRINT
   if (Verbose) {
@@ -299,7 +299,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   Multilevel_coarsen(A, &cA, grid->node_weights, &cnode_weights, &P, &R, ctrl);
   if (!cA) return grid;
 
-  cgrid = Multilevel_init(cA, cD, cnode_weights);
+  cgrid = Multilevel_init(cA, NULL, cnode_weights);
   grid->next = cgrid;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;
