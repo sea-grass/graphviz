@@ -476,7 +476,6 @@ static int write_subgs(Agraph_t * g, iochan_t * ofile)
 }
 
 static int write_edge_name(Agedge_t *e, iochan_t *ofile, bool terminate) {
-    int rv;
     char *p;
     Agraph_t *g;
 
@@ -490,10 +489,9 @@ static int write_edge_name(Agedge_t *e, iochan_t *ofile, bool terminate) {
 	CHKRV(write_canonstr(g, ofile, p));
 	if (terminate)
 	    CHKRV(ioput(g, ofile, "]"));
-	rv = TRUE;
-    } else
-	rv = FALSE;
-    return rv;
+	return 1;
+    }
+    return 0;
 }
 
 
