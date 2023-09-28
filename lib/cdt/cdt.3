@@ -55,7 +55,6 @@ Dtmethod_t* Dtdeque;
 .Ce
 .Ss "DISCIPLINE"
 .Cs
-#define DTOFFSET(struct_s,member)
 #define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)
 typedef void*      (*Dtmake_f)(Dt_t*, void*, Dtdisc_t*);
 typedef void         (*Dtfree_f)(Dt_t*, void*, Dtdisc_t*);
@@ -267,11 +266,6 @@ If \f5addr\fP is not \f5NULL\fP and \f5size\fP is zero, \f5addr\fP is to be free
 If \f5addr\fP is not \f5NULL\fP and \f5size\fP is positive,
 \f5addr\fP is to be resized to the given size.
 If \f5memoryf\fP is \f5NULL\fP, \fImalloc(3)\fP is used.
-.PP
-.Ss "#define DTOFFSET(struct_s,member)"
-This macro function computes the offset of \f5member\fP from the start
-of structure \f5struct_s\fP. It is useful for getting the offset of
-a \f5Dtlink_t\fP embedded inside an object.
 .PP
 .Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)"
 This macro function initializes the discipline pointed to by \f5disc\fP

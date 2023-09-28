@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   been corrected to `a4`.
 - References to `eventf` and `hashf` data structures in the libcdt man page
   have been removed. These data structures were removed in Graphviz 9.0.0.
+- References to `DTOFFSET` in the libcdt man page have been removed. This macro
+  was removed in Graphviz 2.40.0.
 
 ## [9.0.0] - 2023-09-11
 
