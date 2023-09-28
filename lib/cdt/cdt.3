@@ -53,7 +53,7 @@ Dtmethod_t* Dtqueue;
 .Cs
 #define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)
 typedef void*      (*Dtmake_f)(Dt_t*, void*, Dtdisc_t*);
-typedef void         (*Dtfree_f)(Dt_t*, void*, Dtdisc_t*);
+typedef void         (*Dtfree_f)(void*, Dtdisc_t*);
 typedef int          (*Dtcompar_f)(Dt_t*, void*, void*, Dtdisc_t*);
 typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
 .Ce
@@ -212,7 +212,7 @@ If \f5makef\fP is not \f5NULL\fP,
 to make a copy of \f5obj\fP suitable for insertion into \f5dt\fP.
 If \f5makef\fP is \f5NULL\fP, \f5obj\fP itself will be inserted into \f5dt\fP.
 .PP
-.Ss "  void (*freef)(Dt_t* dt, void* obj, Dtdisc_t* disc)"
+.Ss "  void (*freef)(void* obj, Dtdisc_t* disc)"
 If not \f5NULL\fP,
 \f5freef\fP is used to destroy data associated with \f5obj\fP.
 .PP
