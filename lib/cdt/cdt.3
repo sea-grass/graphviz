@@ -48,7 +48,6 @@ Dtmethod_t* Dtset;
 Dtmethod_t* Dtoset;
 Dtmethod_t* Dtobag;
 Dtmethod_t* Dtqueue;
-Dtmethod_t* Dtdeque;
 .Ce
 .Ss "DISCIPLINE"
 .Cs
@@ -131,7 +130,7 @@ This deletes all objects in \f5dt\fP without closing \f5dt\fP.
 If \f5meth\fP is \f5NULL\fP, \f5dtmethod()\fP returns the current method.
 Otherwise, it changes the storage method of \f5dt\fP to \f5meth\fP.
 Object order remains the same during a
-method switch among \f5Dtqueue\fP and \f5Dtdeque\fP.
+method switch for \f5Dtqueue\fP.
 Switching to and from \f5Dtset\fP and \f5Dtoset/Dtobag\fP may cause
 objects to be rehashed, reordered, or removed as the case requires.
 \f5dtmethod()\fP returns the previous method or \f5NULL\fP on error.
@@ -170,9 +169,6 @@ Objects are ordered by comparisons.
 Objects are unordered.
 \f5Dtset\fP keeps unique objects.
 This method uses a hash table with chaining to manage the objects.
-.PP
-.Ss "  Dtdeque"
-Objects are kept in a deque.
 .PP
 .Ss "  Dtqueue"
 Objects are kept in a queue, i.e., in order of insertion.
