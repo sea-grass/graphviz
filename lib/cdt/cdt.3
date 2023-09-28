@@ -45,7 +45,6 @@ Dt_t*       dtview(Dt_t* dt, Dt_t* view);
 .Ss "STORAGE METHODS"
 .Cs
 Dtmethod_t* Dtset;
-Dtmethod_t* Dtbag;
 Dtmethod_t* Dtoset;
 Dtmethod_t* Dtobag;
 Dtmethod_t* Dtlist;
@@ -135,7 +134,7 @@ If \f5meth\fP is \f5NULL\fP, \f5dtmethod()\fP returns the current method.
 Otherwise, it changes the storage method of \f5dt\fP to \f5meth\fP.
 Object order remains the same during a
 method switch among \f5Dtlist\fP, \f5Dtstack\fP, \f5Dtqueue\fP and \f5Dtdeque\fP.
-Switching to and from \f5Dtset/Dtbag\fP and \f5Dtoset/Dtobag\fP may cause
+Switching to and from \f5Dtset\fP and \f5Dtoset/Dtobag\fP may cause
 objects to be rehashed, reordered, or removed as the case requires.
 \f5dtmethod()\fP returns the previous method or \f5NULL\fP on error.
 .PP
@@ -170,12 +169,9 @@ Objects are ordered by comparisons.
 \f5Dtobag\fP allows repeatable objects.
 .PP
 .Ss "  Dtset"
-.Ss "  Dtbag"
 Objects are unordered.
 \f5Dtset\fP keeps unique objects.
-\f5Dtbag\fP allows repeatable objects and always keeps them together
-(note the effect on dictionary walking.)
-These methods use a hash table with chaining to manage the objects.
+This method uses a hash table with chaining to manage the objects.
 .PP
 .Ss "  Dtlist"
 Objects are kept in a list.
@@ -279,9 +275,9 @@ while \f5NULL\fP is returned on error.
 If \f5obj\fP is \f5NULL\fP, methods \f5Dtstack\fP and \f5Dtqueue\fP
 delete respectively stack top or queue head while other methods do nothing.
 If \f5obj\fP is not \f5NULL\fP, there are two cases.
-If the method in use is not \f5Dtbag\fP or \f5Dtobag\fP,
+If the method in use is not \f5Dtobag\fP,
 the first object matching \f5obj\fP is deleted.
-On the other hand, if the method in use is \f5Dtbag\fP or \f5Dtobag\fP,
+On the other hand, if the method in use is or \f5Dtobag\fP,
 the library check to see if \f5obj\fP is in the dictionary and delete it.
 If \f5obj\fP is not in the dictionary, some object matching it will be deleted.
 See \f5Dtdisc_t.freef\fP for object destruction.
@@ -308,14 +304,14 @@ For \f5Dtoset\fP and \f5Dtobag\fP, objects are ordered by object comparisons.
 For \f5Dtstack\fP, objects are ordered in reverse order of insertion.
 For \f5Dtqueue\fP, objects are ordered in order of insertion.
 For \f5Dtlist\fP, objects are ordered by list position.
-For \f5Dtset\fP and \f5Dtbag\fP,
+For \f5Dtset\fP,
 objects are ordered by some internal order (more below).
 Thus, objects in a dictionary or a viewpath can be walked using
 a \f5for(;;)\fP loop as below.
 .Cs
     for(obj = dtfirst(dt); obj; obj = dtnext(dt,obj))
 .Ce
-When a dictionary uses \f5Dtset\fP or \f5Dtbag\fP,
+When a dictionary uses \f5Dtset\fP,
 the object order is determined upon a call to \f5dtfirst()\fP/\f5dtlast()\fP.
 This order is frozen until a call \f5dtnext()\fP/\f5dtprev()\fP returns \f5NULL\fP
 or when these same functions are called with a \f5NULL\fP object argument.
@@ -402,14 +398,14 @@ It returns \f50\fP on success and \f5-1\fP on error.
 \f5Dtstat_t\fP contains the below fields:
 .Tp
 \f5int dt_type\fP:
-This is one of \f5DT_SET\fP, \f5DT_BAG\fP, \f5DT_OSET\fP, \f5DT_OBAG\fP,
+This is one of \f5DT_SET\fP, \f5DT_OSET\fP, \f5DT_OBAG\fP,
 \f5DT_LIST\fP, \f5DT_STACK\fP, and \f5DT_QUEUE\fP.
 .Tp
 \f5int dt_size\fP:
 This contains the number of objects in the dictionary.
 .Tp
 \f5int dt_n\fP:
-For \f5Dtset\fP and \f5Dtbag\fP,
+For \f5Dtset\fP,
 this is the number of non-empty chains in the hash table.
 For \f5Dtoset\fP and \f5Dtobag\fP,
 this is the deepest level in the tree (counting from zero.)
@@ -417,11 +413,11 @@ Each level in the tree contains all nodes of equal distance from the root node.
 \f5dt_n\fP and the below two fields are undefined for other methods.
 .Tp
 \f5int dt_max\fP:
-For \f5Dtbag\fP and \f5Dtset\fP, this is the size of a largest chain.
+For \f5Dtset\fP, this is the size of a largest chain.
 For \f5Dtoset\fP and \f5Dtobag\fP, this is the size of a largest level.
 .Tp
 \f5int* dt_count\fP:
-For \f5Dtset\fP and \f5Dtbag\fP,
+For \f5Dtset\fP,
 this is the list of counts for chains of particular sizes.
 For example, \f5dt_count[1]\fP is the number of chains of size \f51\fP.
 For \f5Dtoset\fP and \f5Dtobag\fP, this is the list of sizes of the levels.
@@ -436,7 +432,7 @@ If \f5n\fP is positive, \f5str\fP is a byte array of length \f5n\fP;
 otherwise, \f5str\fP is a null-terminated string.
 .PP
 .SH IMPLEMENTATION NOTES
-\f5Dtset\fP and \f5Dtbag\fP are based on hash tables with
+\f5Dtset\fP are based on hash tables with
 move-to-front collision chains.
 \f5Dtoset\fP and \f5Dtobag\fP are based on top-down splay trees.
 \f5Dtlist\fP, \f5Dtstack\fP and \f5Dtqueue\fP are based on doubly linked list.
