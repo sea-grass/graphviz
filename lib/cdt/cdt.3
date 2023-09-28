@@ -56,11 +56,10 @@ Dtmethod_t* Dtdeque;
 .Ss "DISCIPLINE"
 .Cs
 #define DTOFFSET(struct_s,member)
-#define DTDISC(disc,key,size,link,makef,freef,comparf,hashf,memoryf)
+#define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)
 typedef void*      (*Dtmake_f)(Dt_t*, void*, Dtdisc_t*);
 typedef void         (*Dtfree_f)(Dt_t*, void*, Dtdisc_t*);
 typedef int          (*Dtcompar_f)(Dt_t*, void*, void*, Dtdisc_t*);
-typedef unsigned int (*Dthash_f)(Dt_t*, void*, Dtdisc_t*);
 typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
 .Ce
 .Ss "OBJECT OPERATIONS"
@@ -221,7 +220,6 @@ defined in the type \f5Dtdisc_t\fP:
       Dtmake_f   makef;
       Dtfree_f   freef;
       Dtcompar_f comparf;
-      Dthash_f   hashf;
       Dtmemory_f memoryf;
     } Dtdisc_t;
 .Ce
@@ -262,13 +260,6 @@ indicates equality and a non-zero value indicates inequality.
 If \f5(*comparf)()\fP is \f5NULL\fP, an internal function is used
 to compare the keys as defined by the \f5Dtdisc_t.size\fP field.
 .PP
-.Ss "  unsigned int (*hashf)(Dt_t* dt, void* key, Dtdisc_t* disc)"
-If not \f5NULL\fP,
-\f5hashf\fP is used to compute the hash value of \f5key\fP.
-It is required that keys compared equal will also have same hash values.
-If \f5hashf\fP is \f5NULL\fP, an internal function is used to hash
-the key as defined by the \f5Dtdisc_t.size\fP field.
-.PP
 .Ss "  void* (*memoryf)(Dt_t* dt, void* addr, size_t size, Dtdisc_t* disc)"
 If not \f5NULL\fP, \f5memoryf\fP is used to allocate and free memory.
 When \f5addr\fP is \f5NULL\fP, a memory segment of size \f5size\fP is requested.
@@ -282,7 +273,7 @@ This macro function computes the offset of \f5member\fP from the start
 of structure \f5struct_s\fP. It is useful for getting the offset of
 a \f5Dtlink_t\fP embedded inside an object.
 .PP
-.Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf,hashf,memoryf)"
+.Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)"
 This macro function initializes the discipline pointed to by \f5disc\fP
 with the given values.
 .PP
