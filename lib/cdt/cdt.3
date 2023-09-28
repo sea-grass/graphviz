@@ -64,7 +64,6 @@ typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
 .Ss "OBJECT OPERATIONS"
 .Cs
 void*   dtinsert(Dt_t* dt, void* obj);
-void*   dtappend(Dt_t* dt, void* obj);
 void*   dtdelete(Dt_t* dt, void* obj);
 void*   dtdetach(Dt_t* dt, void* obj);
 void*   dtsearch(Dt_t* dt, void* obj);
@@ -183,9 +182,6 @@ Objects are kept in a list.
 The call \f5dtinsert()\fP inserts a new object
 in front of \fIthe current object\fP (see \f5dtfinger()\fP) if it is defined
 or at list front if no current object is defined.
-Similarly, the call \f5dtappend()\fP appends a new object
-after \fIthe current object\fP (see \f5dtfinger()\fP) if it is defined
-or at list end if no current object is defined.
 .PP
 .Ss "  Dtdeque"
 Objects are kept in a deque. This is similar to \f5Dtlist\fP
@@ -235,7 +231,7 @@ i.e., at address \f5(Dtlink_t*)((char*)obj+link)\fP.
 .PP
 .Ss "  void* (*makef)(Dt_t* dt, void* obj, Dtdisc_t* disc)"
 If \f5makef\fP is not \f5NULL\fP,
-\f5dtinsert(dt,obj)\fP or \f5dtappend()\fP will call it
+\f5dtinsert(dt,obj)\fP will call it
 to make a copy of \f5obj\fP suitable for insertion into \f5dt\fP.
 If \f5makef\fP is \f5NULL\fP, \f5obj\fP itself will be inserted into \f5dt\fP.
 .PP
@@ -268,13 +264,12 @@ with the given values.
 .Ss "OBJECT OPERATIONS"
 .PP
 .Ss "  void* dtinsert(Dt_t* dt, void* obj)"
-.Ss "  void* dtappend(Dt_t* dt, void* obj)"
-These functions add an object prototyped by \f5obj\fP into \f5dt\fP.
-\f5dtinsert()\fP and \f5dtappend()\fP perform the same function
+This function adds an object prototyped by \f5obj\fP into \f5dt\fP.
+\f5dtinsert()\fP performs the same function
 for all methods except for \f5Dtlist\fP. See \f5Dtlist\fP for details.
 If there is an existing object in \f5dt\fP matching \f5obj\fP
 and the storage method is \f5Dtset\fP or \f5Dtoset\fP,
-\f5dtinsert()\fP and \f5dtappend()\fP will simply return the matching object.
+\f5dtinsert()\fP will simply return the matching object.
 Otherwise, a new object is inserted according to the method in use.
 See \f5Dtdisc_t.makef\fP for object construction.
 The new object or a matching object as noted will be returned on success
