@@ -52,7 +52,7 @@ Dtmethod_t* Dtqueue;
 .Ss "DISCIPLINE"
 .Cs
 #define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)
-typedef void*      (*Dtmake_f)(Dt_t*, void*, Dtdisc_t*);
+typedef void*      (*Dtmake_f)(void*, Dtdisc_t*);
 typedef void         (*Dtfree_f)(void*, Dtdisc_t*);
 typedef int          (*Dtcompar_f)(Dt_t*, void*, void*, Dtdisc_t*);
 typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
@@ -206,7 +206,7 @@ to hold \f5obj\fP. Otherwise, \f5obj\fP should have
 a \f5Dtlink_t\fP structure embedded \f5link\fP bytes into it,
 i.e., at address \f5(Dtlink_t*)((char*)obj+link)\fP.
 .PP
-.Ss "  void* (*makef)(Dt_t* dt, void* obj, Dtdisc_t* disc)"
+.Ss "  void* (*makef)(void* obj, Dtdisc_t* disc)"
 If \f5makef\fP is not \f5NULL\fP,
 \f5dtinsert(dt,obj)\fP will call it
 to make a copy of \f5obj\fP suitable for insertion into \f5dt\fP.
