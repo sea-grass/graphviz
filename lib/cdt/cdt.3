@@ -39,7 +39,7 @@ Dt_t*       dtopen(const Dtdisc_t* disc, const Dtmethod_t* meth);
 int         dtclose(Dt_t* dt);
 void        dtclear(dt);
 Dtmethod_t* dtmethod(Dt_t* dt, const Dtmethod_t* meth);
-Dtdisc_t*   dtdisc(Dt_t* dt, const Dtdisc_t* disc, int type);
+Dtdisc_t*   dtdisc(Dt_t* dt, const Dtdisc_t* disc);
 Dt_t*       dtview(Dt_t* dt, Dt_t* view);
 .Ce
 .Ss "STORAGE METHODS"
@@ -141,15 +141,10 @@ Switching to and from \f5Dtset/Dtbag\fP and \f5Dtoset/Dtobag\fP may cause
 objects to be rehashed, reordered, or removed as the case requires.
 \f5dtmethod()\fP returns the previous method or \f5NULL\fP on error.
 .PP
-.Ss "  Dtdisc_t* dtdisc(Dt_t* dt, const Dtdisc_t* disc, int type)"
+.Ss "  Dtdisc_t* dtdisc(Dt_t* dt, const Dtdisc_t* disc)"
 If \f5disc\fP is \f5NULL\fP, \f5dtdisc()\fP returns the current discipline.
 Otherwise, it changes the discipline of \f5dt\fP to \f5disc\fP.
 Objects may be rehashed, reordered, or removed as appropriate.
-\f5type\fP can be any bit combination of \f5DT_SAMECMP\fP and \f5DT_SAMEHASH\fP.
-\f5DT_SAMECMP\fP means that objects will compare exactly the same as before
-thus obviating the need for reordering or removing new duplicates.
-\f5DT_SAMEHASH\fP means that hash values of objects remain the same
-thus obviating the need to rehash.
 \f5dtdisc()\fP returns the previous discipline on success
 and \f5NULL\fP on error.
 .PP
