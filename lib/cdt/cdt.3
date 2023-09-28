@@ -56,13 +56,12 @@ Dtmethod_t* Dtdeque;
 .Ss "DISCIPLINE"
 .Cs
 #define DTOFFSET(struct_s,member)
-#define DTDISC(disc,key,size,link,makef,freef,comparf,hashf,memoryf,eventf)
+#define DTDISC(disc,key,size,link,makef,freef,comparf,hashf,memoryf)
 typedef void*      (*Dtmake_f)(Dt_t*, void*, Dtdisc_t*);
 typedef void         (*Dtfree_f)(Dt_t*, void*, Dtdisc_t*);
 typedef int          (*Dtcompar_f)(Dt_t*, void*, void*, Dtdisc_t*);
 typedef unsigned int (*Dthash_f)(Dt_t*, void*, Dtdisc_t*);
 typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
-typedef int          (*Dtevent_f)(Dt_t*, int, void*, Dtdisc_t*);
 .Ce
 .Ss "OBJECT OPERATIONS"
 .Cs
@@ -125,14 +124,12 @@ This creates a new dictionary.
 \f5disc\fP is a discipline structure to describe object format.
 \f5meth\fP specifies a manipulation method.
 \f5dtopen()\fP returns the new dictionary or \f5NULL\fP on error.
-See also the events \f5DT_OPEN\fP and \f5DT_ENDOPEN\fP below.
 .PP
 .Ss "  int dtclose(Dt_t* dt)"
 This deletes \f5dt\fP and its objects.
 Note that \f5dtclose()\fP fails if \f5dt\fP is being viewed by
 some other dictionaries (see \f5dtview()\fP).
 \f5dtclose()\fP returns \f50\fP on success and \f5-1\fP on error.
-See also the events \f5DT_CLOSE\fP and \f5DT_ENDCLOSE\fP below.
 .PP
 .Ss "  void dtclear(Dt_t* dt)"
 This deletes all objects in \f5dt\fP without closing \f5dt\fP.
@@ -188,8 +185,6 @@ Objects are unordered.
 \f5Dtbag\fP allows repeatable objects and always keeps them together
 (note the effect on dictionary walking.)
 These methods use a hash table with chaining to manage the objects.
-See also the event \f5DT_HASHSIZE\fP below on how to manage hash table
-resizing when objects are inserted.
 .PP
 .Ss "  Dtlist"
 Objects are kept in a list.
@@ -228,7 +223,6 @@ defined in the type \f5Dtdisc_t\fP:
       Dtcompar_f comparf;
       Dthash_f   hashf;
       Dtmemory_f memoryf;
-      Dtevent_f  eventf;
     } Dtdisc_t;
 .Ce
 .Ss "  int key, size"
@@ -283,73 +277,12 @@ If \f5addr\fP is not \f5NULL\fP and \f5size\fP is positive,
 \f5addr\fP is to be resized to the given size.
 If \f5memoryf\fP is \f5NULL\fP, \fImalloc(3)\fP is used.
 .PP
-.Ss "  int (*eventf)(Dt_t* dt, int type, void* data, Dtdisc_t* disc)"
-If not \f5NULL\fP, \f5eventf\fP announces various events.
-Each event may have particular handling of the return values from \f5eventf\fP.
-But a negative return value typically means failure.
-Following are the events:
-.Tp
-\f5DT_OPEN\fP:
-\f5dt\fP is being opened.
-If \f5eventf\fP returns negative, the opening process terminates with failure.
-If \f5eventf\fP returns zero, the opening process proceeds in a default manner.
-A positive return value indicates special treatment of memory as follows.
-If \f5*(void**)data\fP is set to point to some memory segment
-as discussed in \f5memoryf\fP, that segment of memory is used to start
-the dictionary. If \f5*(void**)data\fP is \f5NULL\fP,
-all memory including that of the dictionary handle itself
-will be allocated via \f5memoryf\fP.
-.Tp
-\f5DT_ENDOPEN\fP:
-This event announces that \f5dtopen()\fP has successfully opened
-a dictionary and is about to return. The \f5data\fP argument of
-\f5eventf\fP should be the new dictionary handle itself.
-.Tp
-\f5DT_CLOSE\fP:
-\f5dt\fP is about to be closed. If \f5eventf\fP returns negative,
-the closing process stops immediately and \f5dtclose()\fP returns -1.
-Objects in the dictionary are deleted only if \f5eventf\fP returns zero.
-The dictionary handle itself is processed as follows.
-If it was allocated via \f5malloc()\fP, it will be freed.
-If it was allocated via \f5memoryf\fP (see \f5dtopen()\fP) and \f5eventf\fP
-returns 0, a call to \f5memoryf\fP will be issued to attempt freeing the handle.
-Otherwise, nothing will be done to its memory.
-
-As should be clear from their description,
-the events \f5DT_OPEN\fP and \f5DT_CLOSE\fP are designed to be used along
-with \f5memoryf\fP to manage the allocation and deallocation of dictionary and
-object memory across dictionaries. In fact, they can be used to manage
-dictionaries based on shared and/or persistent memory.
-.Tp
-\f5DT_ENDCLOSE\fP:
-This event announces that \f5dtclose()\fP has successfully closed
-a dictionary and is about to return.
-.Tp
-\f5DT_DISC\fP:
-The discipline of \f5dt\fP is being changed to a new one given in
-\f5(Dtdisc_t*)data\fP.
-.Tp
-\f5DT_METH\fP:
-The method of \f5dt\fP is being changed to a new one given in
-\f5(Dtmethod_t*)data\fP.
-.Tp
-\f5DT_HASHSIZE\fP:
-The hash table (for \f5Dtset\fP and \f5Dtbag\fP) is being resized.
-In this case, \f5*(int*)data\fP has the current size of the table.
-The application can set the new table size by first changing
-\f5*(int*)data\fP to the desired size, then return a positive value.
-The application can also fix the table size at the current value
-forever by setting \f5*(int*)data\fP to a negative value, then
-again return a positive value. A non-positive return value from
-the event handling function means that Cdt will be responsible
-for choosing the hash table size.
-.PP
 .Ss "#define DTOFFSET(struct_s,member)"
 This macro function computes the offset of \f5member\fP from the start
 of structure \f5struct_s\fP. It is useful for getting the offset of
 a \f5Dtlink_t\fP embedded inside an object.
 .PP
-.Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf,hashf,memoryf,eventf)"
+.Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf,hashf,memoryf)"
 This macro function initializes the discipline pointed to by \f5disc\fP
 with the given values.
 .PP
