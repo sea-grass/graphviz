@@ -498,11 +498,11 @@ finish :
 #else
     if (et != EDGETYPE_CURVED) {
 #endif
-	free(edges);
-	free(P.boxes);
 	free(sd.Rank_box);
 	routesplinesterm();
     } 
+    free(edges);
+    free(P.boxes);
     State = GVSPLINES;
     EdgeLabelsDone = 1;
 }
