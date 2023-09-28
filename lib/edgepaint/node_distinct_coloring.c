@@ -239,6 +239,7 @@ int node_distinct_coloring(char *color_scheme, char *lightness, bool weightedQ,
 
   n = A->m;
   if (n != A->n) {
+    QuadTree_delete(qt);
     return -1;
   }
  
@@ -264,6 +265,7 @@ int node_distinct_coloring(char *color_scheme, char *lightness, bool weightedQ,
     SparseMatrix_delete(B);
   }
   free(ctmp);
+  QuadTree_delete(qt);
 
   if (A != A0) SparseMatrix_delete(A);
   return 0;
