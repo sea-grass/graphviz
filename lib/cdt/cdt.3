@@ -76,7 +76,7 @@ void*   dtlast(Dt_t* dt);
 void*   dtprev(Dt_t* dt, void* obj);
 void*   dtfinger(Dt_t* dt);
 void*   dtrenew(Dt_t* dt, void* obj);
-int       dtwalk(Dt_t* dt, int (*userf)(Dt_t*, void*, void*), void*);
+int       dtwalk(Dt_t* dt, int (*userf)(void*, void*), void*);
 Dtlink_t* dtflatten(Dt_t* dt);
 Dtlink_t* dtlink(Dt_t*, Dtlink_t* link);
 void*   dtobj(Dt_t* dt, Dtlink_t* link);
@@ -356,10 +356,9 @@ This function repositions and perhaps rehashes
 an object \f5obj\fP after its key has been changed.
 \f5dtrenew()\fP only works if \f5obj\fP is the current object (see \f5dtfinger()\fP).
 .PP
-.Ss "  dtwalk(Dt_t* dt, int (*userf)(Dt_t*, void*, void*), void* data)"
-This function calls \f5(*userf)(walk,obj,data)\fP on each object in \f5dt\fP and
+.Ss "  dtwalk(Dt_t* dt, int (*userf)(void*, void*), void* data)"
+This function calls \f5(*userf)(obj,data)\fP on each object in \f5dt\fP and
 other dictionaries viewable from it.
-\f5walk\fP is the dictionary containing \f5obj\fP.
 If \f5userf()\fP returns a \f5<0\fP value,
 \f5dtwalk()\fP terminates and returns the same value.
 \f5dtwalk()\fP returns \f50\fP on completion.
