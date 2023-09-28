@@ -90,7 +90,7 @@ int       dtstat(Dt_t* dt, Dtstat_t*, int all);
 .Ce
 .Ss "HASH FUNCTIONS"
 .Cs
-unsigned int dtstrhash(unsigned int h, char* str, int n);
+unsigned int dtstrhash(void *str, int n);
 .Ce
 .SH DESCRIPTION
 .PP
@@ -446,9 +446,9 @@ For example, \f5dt_count[1]\fP is the size of level \f51\fP.
 .PP
 .Ss "HASH FUNCTIONS"
 .PP
-.Ss "  unsigned int dtstrhash(unsigned int h, char* str, int n)"
+.Ss "  unsigned int dtstrhash(void *str, int n)"
 This function computes hash values from bytes or strings.
-\f5dtstrhash()\fP computes a new hash value from string \f5str\fP and seed value \f5h\fP.
+\f5dtstrhash()\fP computes a new hash value from string \f5str\fP.
 If \f5n\fP is positive, \f5str\fP is a byte array of length \f5n\fP;
 otherwise, \f5str\fP is a null-terminated string.
 .PP
