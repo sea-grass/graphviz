@@ -7,6 +7,8 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
+
+#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sparse/QuadTree.h>
@@ -29,7 +31,6 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   double center[3];
   double width;
   double *a = NULL;
-  double *x;
   double dist_max;
   double color_diff = 0, color_diff_old;
   double color_diff_sum = 0, color_diff_sum_old, *cc;
@@ -38,7 +39,6 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   double cspace_size = 0.7;
   double red[3], black[3], min;
   int imin;
-  double *wgt = NULL;
 
   assert(accuracy > 0);
   max_level = MAX(1, -log(accuracy)/log(2.));
@@ -84,7 +84,7 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   ia = A->ia;
   ja = A->ja;
   if (A->type == MATRIX_TYPE_REAL && A->a){
-    a = (double*) A->a;
+    a = A->a;
   } 
 
   /* cube [0, cspace_size]^3: only uised if not LAB */
@@ -95,8 +95,8 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   srand(seed);
   for (i = 0; i < n*cdim; i++) colors[i] = cspace_size*drand();
 
-  x = MALLOC(sizeof(double)*cdim*n);
-  if (weightedQ) wgt = MALLOC(sizeof(double)*n);
+  double *x = gv_calloc(cdim * n, sizeof(double));
+  double *wgt = weightedQ ? gv_calloc(n, sizeof(double)) : NULL;
 
   color_diff = 0; color_diff_old = -1;
   color_diff_sum = 0; color_diff_sum_old = -1;
@@ -147,6 +147,7 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   *color_diff0 = color_diff;
   *color_diff_sum0 = color_diff_sum;
   free(x);
+  free(wgt);
 }
  
 static void node_distinct_coloring_internal(int scheme, QuadTree qt,

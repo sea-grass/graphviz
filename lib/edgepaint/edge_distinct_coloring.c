@@ -7,6 +7,8 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
+
+#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <math.h>
 #include <string.h>
@@ -17,38 +19,26 @@
 #include <edgepaint/intersection.h>
 #include <sparse/QuadTree.h>
 
-static int splines_intersect(int dim, int u1, int v1, int u2, int v2, 
+static int splines_intersect(size_t dim,
 			     double cos_critical, int check_edges_with_same_endpoint, 
 			     char *xsplines1, char *xsplines2){
-  /* u1, v2 an u2, v2: the node index of the two edn points of two edges.
-     cos_critical: cos of critical angle
+  /* cos_critical: cos of critical angle
      check_edges_with_same_endpoint: whether need to treat two splines from
      .     the same end point specially in ignoring splines that exit/enter the same end pont at around 180
      xsplines1,xsplines2: the first and second splines corresponding to two edges
 
   */
-  int itmp;
-  int len1 = 100, len2 = 100;
-  double *x1, *x2;
-  int ns1 = 0, ns2 = 0;
-  int i, j, iter1 = 0, iter2 = 0;
+  size_t len1 = 100, len2 = 100;
+  size_t ns1 = 0, ns2 = 0;
+  int iter1 = 0, iter2 = 0;
   double cos_a, tmp[2];
   int endp1 = 0, endp2 = 0;
 
   tmp[0] = tmp[1] = 0;
-  x1 = MALLOC(sizeof(double)*len1);
-  x2 = MALLOC(sizeof(double)*len2);
+  double *x1 = gv_calloc(len1, sizeof(double));
+  double *x2 = gv_calloc(len2, sizeof(double));
 
   assert(dim <= 3);
-  /* if two end points are the same, make sure they are the first in each edge */
-  if (u1 == v2){/* switch u2 and v2 */
-    itmp = u2; u2 = v2; v2 = itmp;
-  } else if (v1 == u2){/* switch u1 and v1 */
-    itmp = u1; u1 = v1; v1 = itmp;
-  } else if (v1 == v2){/* switch both */
-    itmp = u2; u2 = v2; v2 = itmp;
-    itmp = u1; u1 = v1; v1 = itmp;
-  }
 
   /* splines could be a list of 
      1. 3n points
@@ -74,15 +64,17 @@ static int splines_intersect(int dim, int u1, int v1, int u2, int v2,
     if (!xsplines1) break;
     xsplines1++;
     if (ns1*dim >= len1){
-      len1 = ns1*dim + (int)MAX(10, 0.2*ns1*dim);
-      x1 = REALLOC(x1, sizeof(double)*len1);
+      size_t new_len1 = ns1 * dim + MAX(10u, ns1 * dim / 5);
+      x1 = gv_recalloc(x1, len1, new_len1, sizeof(double));
+      len1 = new_len1;
     }
   }
   if (endp1){/* pad the end point at the last position */
     ns1++;
     if (ns1*dim >= len1){
-      len1 = ns1*dim + (int)MAX(10, 0.2*ns1*dim);
-      x1 = REALLOC(x1, sizeof(double)*len1);
+      size_t new_len1 = ns1 * dim + MAX(10u, ns1 * dim / 5);
+      x1 = gv_recalloc(x1, len1, new_len1, sizeof(double));
+      len1 = new_len1;
     }
     x1[(ns1-1)*dim] = tmp[0];  x1[(ns1-1)*dim + 1] = tmp[1]; 
   }
@@ -112,21 +104,23 @@ static int splines_intersect(int dim, int u1, int v1, int u2, int v2,
     if (!xsplines2) break;
     xsplines2++;
     if (ns2*dim >= len2){
-      len2 = ns2*dim + (int)MAX(10, 0.2*ns2*dim);
-      x2 = REALLOC(x2, sizeof(double)*len2);
+      size_t new_len2 = ns2 * dim + MAX(10u, ns2 * dim / 5);
+      x2 = gv_recalloc(x2, len2, new_len2, sizeof(double));
+      len2 = new_len2;
     }
   }
   if (endp2){/* pad the end point at the last position */
     ns2++;
     if (ns2*dim >= len2){
-      len2 = ns2*dim + (int)MAX(10, 0.2*ns2*dim);
-      x2 = REALLOC(x2, sizeof(double)*len2);
+      size_t new_len2 = ns2 * dim + MAX(10u, ns2 * dim / 5);
+      x2 = gv_recalloc(x2, len2, new_len2, sizeof(double));
+      len2 = new_len2;
     }
     x2[(ns2-1)*dim] = tmp[0];  x2[(ns2-1)*dim + 1] = tmp[1]; 
   }
 
-for (i = 0; i < ns1 - 1; i++){
-    for (j = 0; j < ns2 - 1; j++){
+  for (size_t i = 0; i < ns1 - 1; i++) {
+    for (size_t j = 0; j < ns2 - 1; j++) {
       cos_a = intersection_angle(&(x1[dim*i]), &(x1[dim*(i + 1)]), &(x2[dim*j]), &(x2[dim*(j+1)]));
       if (!check_edges_with_same_endpoint && cos_a >= -1) cos_a = fabs(cos_a);
       if (cos_a > cos_critical) {
@@ -196,10 +190,10 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
     assert(ne == nz2);
     cos_a = 1.;/* for splines we exit conflict check as soon as we find an conflict, so the anle may not be representitive, hence set to constant */
     for (i = 0; i < nz2; i++){
-      u1 = irn[i]; v1 = jcn[i];
       for (j = i+1; j < nz2; j++){
-	u2 = irn[j]; v2 = jcn[j];
-	if (splines_intersect(dim, u1, v1, u2, v2, cos_critical, check_edges_with_same_endpoint, xsplines[i], xsplines[j])){
+	if (splines_intersect((size_t)dim, cos_critical,
+	                      check_edges_with_same_endpoint, xsplines[i],
+	                      xsplines[j])) {
 	  B = SparseMatrix_coordinate_form_add_entry(B, i, j, &cos_a);
 	}
       }

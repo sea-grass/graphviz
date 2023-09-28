@@ -102,7 +102,7 @@ void improve_antibandwidth_by_swapping(SparseMatrix A, int *p){
   }
 }
   
-static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
+void country_graph_coloring(int seed, SparseMatrix A, int **p) {
   int n = A->m, i, j, jj;
   SparseMatrix L, A2;
   int *ia = A->ia, *ja = A->ja;
@@ -154,7 +154,4 @@ static void country_graph_coloring_internal(int seed, SparseMatrix A, int **p){
 
   if (A2 != A) SparseMatrix_delete(A2);
   SparseMatrix_delete(L);
-}
-void country_graph_coloring(int seed, SparseMatrix A, int **p){
-  country_graph_coloring_internal(seed, A, p);
 }
