@@ -66,7 +66,6 @@ typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
 void*   dtinsert(Dt_t* dt, void* obj);
 void*   dtappend(Dt_t* dt, void* obj);
 void*   dtdelete(Dt_t* dt, void* obj);
-void*   dtattach(Dt_t* dt, void* obj);
 void*   dtdetach(Dt_t* dt, void* obj);
 void*   dtsearch(Dt_t* dt, void* obj);
 void*   dtmatch(Dt_t* dt, void* key);
@@ -293,11 +292,6 @@ If \f5obj\fP is not in the dictionary, some object matching it will be deleted.
 See \f5Dtdisc_t.freef\fP for object destruction.
 \f5dtdelete()\fP returns the deleted object (even if it was deallocated)
 or \f5NULL\fP on error.
-.PP
-.Ss "  void* dtattach(Dt_t* dt, void* obj)"
-This function is similar to \f5dtinsert()\fP but \f5obj\fP itself
-will be inserted into \f5dt\fP even if a discipline
-function \f5makef\fP is defined.
 .PP
 .Ss "  void* dtdetach(Dt_t* dt, void* obj)"
 This function is similar to \f5dtdelete()\fP but the object to be deleted
