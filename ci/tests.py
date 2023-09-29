@@ -17,6 +17,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     freedesktop_os_release,
     is_cmake,
     is_mingw,
+    is_msbuild,
     which,
 )
 
@@ -102,7 +103,7 @@ def test_existence(binary: str):
 
     # FIXME: Remove skip when
     # https://gitlab.com/graphviz/graphviz/-/issues/1837 is fixed
-    if os.getenv("build_system") == "msbuild":
+    if is_msbuild():
         if binary in tools_not_built_with_msbuild:
             check_that_tool_does_not_exist(binary, os_id)
             pytest.skip(f"{binary} is not built with MSBuild (#1837)")
