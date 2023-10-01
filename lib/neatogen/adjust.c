@@ -934,10 +934,8 @@ setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
 
 /* getAdjustMode:
  * Convert string value to internal value of adjustment mode.
- * If s is NULL or empty, return NONE.
  */
-static adjust_data *getAdjustMode(Agraph_t* g, char *s, adjust_data* dp)
-{
+static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
     const lookup_t *ap = adjustMode + 1;
     if (s == NULL || *s == '\0') {
 	dp->mode = adjustMode[0].mode;
@@ -980,7 +978,6 @@ static adjust_data *getAdjustMode(Agraph_t* g, char *s, adjust_data* dp)
     if (Verbose) {
 	fprintf(stderr, "overlap: %s value %d scaling %.04f\n", dp->print, dp->value, dp->scaling);
     }
-    return dp;
 }
 
 void graphAdjustMode(graph_t *G, adjust_data *dp, char *dflt) {
