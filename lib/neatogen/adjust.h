@@ -48,7 +48,7 @@ typedef struct {
     extern int removeOverlapWith(graph_t*, adjust_data*);
     extern int cAdjust(graph_t *, int);
     extern int scAdjust(graph_t *, int);
-    extern adjust_data *graphAdjustMode(graph_t *G, adjust_data*, char* dflt);
+    extern void graphAdjustMode(graph_t *G, adjust_data*, char* dflt);
     extern double *getSizes(Agraph_t * g, pointf pad, int *n_elabels, int **elabels);
     extern SparseMatrix makeMatrix(Agraph_t *g);
 

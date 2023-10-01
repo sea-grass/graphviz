@@ -983,10 +983,9 @@ static adjust_data *getAdjustMode(Agraph_t* g, char *s, adjust_data* dp)
     return dp;
 }
 
-adjust_data *graphAdjustMode(graph_t *G, adjust_data* dp, char* dflt)
-{
+void graphAdjustMode(graph_t *G, adjust_data *dp, char *dflt) {
     char* am = agget(G, "overlap");
-    return getAdjustMode (G, am ? am : (dflt ? dflt : ""), dp);
+    getAdjustMode (G, am ? am : (dflt ? dflt : ""), dp);
 }
 
 #define ISZERO(d) (fabs(d) < 0.000000001)
