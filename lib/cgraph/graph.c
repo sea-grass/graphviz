@@ -241,7 +241,6 @@ static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
 Dtdisc_t Ag_subgraph_id_disc = {
     .link = offsetof(Agraph_t, link), // link offset
     .comparf = agraphidcmpf,
-    .memoryf = agdictobjmem,
 };
 
 Agdesc_t Agdirected = {.directed = true, .maingraph = true};

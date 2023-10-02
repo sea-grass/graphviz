@@ -73,7 +73,6 @@ static Dtdisc_t LookupByName = {
     NULL,
     NULL,
     namecmpf,
-    agdictobjmem,
 };
 
 static Dtdisc_t LookupById = {
@@ -83,7 +82,6 @@ static Dtdisc_t LookupById = {
     NULL,
     NULL,
     idcmpf,
-    agdictobjmem,
 };
 
 int aginternalmaplookup(Agraph_t * g, int objtype, char *str,

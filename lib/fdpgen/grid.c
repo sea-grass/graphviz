@@ -155,7 +155,6 @@ static Dtdisc_t gridDisc = {
     (Dtmake_f) newCell,
     NULL,
     (Dtcompar_f) ijcmpf,
-    NULL,
 };
 
 /* mkGrid:

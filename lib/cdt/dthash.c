@@ -1,5 +1,5 @@
 #include	<cdt/dthdr.h>
-#include	<stddef.h>
+#include	<stdlib.h>
 
 /*	Hash table.
 **	dt:	dictionary
@@ -25,7 +25,7 @@ static void dthtab(Dt_t* dt)
 
 	/* allocate new table */
 	olds = dt->data->ntab == 0 ? NULL : dt->data->htab;
-	if (!(s = dt->memoryf(dt, olds, n * sizeof(Dtlink_t*), dt->disc)))
+	if (!(s = realloc(olds, n * sizeof(Dtlink_t*))))
 		return;
 	olds = s + dt->data->ntab;
 	dt->data->htab = s;
@@ -85,7 +85,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 					if(disc->freef)
 						disc->freef(_DTOBJ(t, lk), disc);
 					if(disc->link < 0)
-						dt->memoryf(dt, t, 0, disc);
+						free(t);
 					t = r;
 				}
 			}
@@ -168,7 +168,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		if(lk >= 0)
 			r = _DTLNK(obj,lk);
 		else
-		{	r = dt->memoryf(dt, NULL, sizeof(Dthold_t), disc);
+		{	r = malloc(sizeof(Dthold_t));
 			if(r)
 				((Dthold_t*)r)->obj = obj;
 			else
@@ -188,7 +188,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 			if(disc->freef && (type&DT_INSERT))
 				disc->freef(obj, disc);
 			if(disc->link < 0)
-				disc->memoryf(dt, r, 0, disc);
+				free(r);
 			return NULL;
 		}
 		s = dt->data->htab + HINDEX(dt->data->ntab,hsh);
@@ -249,7 +249,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		{	if(disc->freef)
 				disc->freef(obj, disc);
 			if(disc->link < 0)
-				dt->memoryf(dt, r, 0, disc);
+				free(r);
 			return t ? _DTOBJ(t,lk) : NULL;
 		}
 	}
@@ -272,7 +272,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 		if(disc->freef && (type&DT_DELETE))
 			disc->freef(obj, disc);
 		if(disc->link < 0)
-			dt->memoryf(dt, t, 0, disc);
+			free(t);
 		return obj;
 	}
 }

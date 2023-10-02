@@ -75,7 +75,6 @@ static Dtdisc_t nameDisc = {
     (Dtmake_f) make_nitem,
     (Dtfree_f) free_nitem,
     NULL,
-    NULL,
 };
 
 typedef struct {
@@ -96,7 +95,6 @@ static Dtdisc_t idDisc = {
     offsetof(idv_t, link),
     NULL,
     (Dtfree_f) free_iditem,
-    NULL,
     NULL,
 };
 

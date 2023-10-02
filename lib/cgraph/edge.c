@@ -421,26 +421,22 @@ static int agedgeseqcmpf(Dict_t * d, void *arg_e0, void *arg_e1, Dtdisc_t * disc
 Dtdisc_t Ag_mainedge_seq_disc = {
     .link = offsetof(Agedge_t, seq_link), // use internal links
     .comparf = agedgeseqcmpf,
-    .memoryf = agdictobjmem,
 };
 
 Dtdisc_t Ag_subedge_seq_disc = {
     .link = -1, // use external holder objects
     .comparf = agedgeseqcmpf,
-    .memoryf = agdictobjmem,
 };
 
 /* indexing for random search */
 Dtdisc_t Ag_mainedge_id_disc = {
     .link = offsetof(Agedge_t, id_link), // use internal links
     .comparf = agedgeidcmpf,
-    .memoryf = agdictobjmem,
 };
 
 Dtdisc_t Ag_subedge_id_disc = {
     .link = -1, // use external holder objects
     .comparf = agedgeidcmpf,
-    .memoryf = agdictobjmem,
 };
 
 /* expose macros as functions for ease of debugging

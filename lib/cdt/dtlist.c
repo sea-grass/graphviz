@@ -1,5 +1,5 @@
 #include	<cdt/dthdr.h>
-#include	<stddef.h>
+#include	<stdlib.h>
 
 /*	List, Deque, Stack, Queue.
 **
@@ -39,7 +39,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 					if(disc->freef)
 						disc->freef(_DTOBJ(r, lk), disc);
 					if(disc->link < 0)
-						dt->memoryf(dt, r, 0, disc);
+						free(r);
 				}
 			}
 			dt->data->head = dt->data->here = NULL;
@@ -55,7 +55,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 		if(lk >= 0)
 			r = _DTLNK(obj,lk);
 		else
-		{	r = dt->memoryf(dt, NULL, sizeof(Dthold_t), disc);
+		{	r = malloc(sizeof(Dthold_t));
 			if(r)
 				((Dthold_t*)r)->obj = obj;
 			else
@@ -119,7 +119,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 		if(disc->freef && (type&DT_DELETE))
 			disc->freef(obj, disc);
 		if(disc->link < 0)
-			dt->memoryf(dt, r, 0, disc);
+			free(r);
 		return obj;
 	}
 	else if(type&DT_NEXT)

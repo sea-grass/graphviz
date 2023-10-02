@@ -8,20 +8,6 @@
 **	Written by Kiem-Phong Vo (5/26/96)
 */
 
-static void* dtmemory(Dt_t* dt,void* addr,size_t size,Dtdisc_t* disc)
-{
-	(void)dt; /* unused */
-	(void)disc; /* unused */
-	if(addr)
-	{	if(size == 0)
-		{	free(addr);
-			return NULL;
-		}
-		else	return realloc(addr,size);
-	}
-	else	return size > 0 ? malloc(size) : NULL;
-}
-
 Dtdisc_t *dtdisc(Dt_t *dt, Dtdisc_t *disc) {
 	Dtsearch_f	searchf;
 	Dtlink_t	*r, *t;
@@ -30,8 +16,6 @@ Dtdisc_t *dtdisc(Dt_t *dt, Dtdisc_t *disc) {
 
 	if(!(old = dt->disc) )	/* initialization call from dtopen() */
 	{	dt->disc = disc;
-		if(!(dt->memoryf = disc->memoryf) )
-			dt->memoryf = dtmemory;
 		return disc;
 	}
 
@@ -43,8 +27,6 @@ Dtdisc_t *dtdisc(Dt_t *dt, Dtdisc_t *disc) {
 	UNFLATTEN(dt);
 
 	dt->disc = disc;
-	if(!(dt->memoryf = disc->memoryf) )
-		dt->memoryf = dtmemory;
 
 	if(dt->data->type&DT_QUEUE)
 		goto done;

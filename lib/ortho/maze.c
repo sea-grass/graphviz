@@ -124,7 +124,6 @@ static Dtdisc_t vdictDisc = {
     0,
     0,
     (Dtcompar_f)vcmpid,
-    0,
 };
 static Dtdisc_t hdictDisc = {
     offsetof(snodeitem,p),
@@ -133,7 +132,6 @@ static Dtdisc_t hdictDisc = {
     0,
     0,
     (Dtcompar_f)hcmpid,
-    0,
 };
 
 #define delta 1        /* weight of length */

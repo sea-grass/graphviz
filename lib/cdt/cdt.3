@@ -51,11 +51,10 @@ Dtmethod_t* Dtqueue;
 .Ce
 .Ss "DISCIPLINE"
 .Cs
-#define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)
+#define DTDISC(disc,key,size,link,makef,freef,comparf)
 typedef void*      (*Dtmake_f)(void*, Dtdisc_t*);
 typedef void         (*Dtfree_f)(void*, Dtdisc_t*);
 typedef int          (*Dtcompar_f)(Dt_t*, void*, void*, Dtdisc_t*);
-typedef void*      (*Dtmemory_f)(Dt_t*, void*, size_t, Dtdisc_t*);
 .Ce
 .Ss "OBJECT OPERATIONS"
 .Cs
@@ -186,7 +185,6 @@ defined in the type \f5Dtdisc_t\fP:
       Dtmake_f   makef;
       Dtfree_f   freef;
       Dtcompar_f comparf;
-      Dtmemory_f memoryf;
     } Dtdisc_t;
 .Ce
 .Ss "  int key, size"
@@ -226,15 +224,7 @@ indicates equality and a non-zero value indicates inequality.
 If \f5(*comparf)()\fP is \f5NULL\fP, an internal function is used
 to compare the keys as defined by the \f5Dtdisc_t.size\fP field.
 .PP
-.Ss "  void* (*memoryf)(Dt_t* dt, void* addr, size_t size, Dtdisc_t* disc)"
-If not \f5NULL\fP, \f5memoryf\fP is used to allocate and free memory.
-When \f5addr\fP is \f5NULL\fP, a memory segment of size \f5size\fP is requested.
-If \f5addr\fP is not \f5NULL\fP and \f5size\fP is zero, \f5addr\fP is to be freed.
-If \f5addr\fP is not \f5NULL\fP and \f5size\fP is positive,
-\f5addr\fP is to be resized to the given size.
-If \f5memoryf\fP is \f5NULL\fP, \fImalloc(3)\fP is used.
-.PP
-.Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf,memoryf)"
+.Ss "#define DTDISC(disc,key,size,link,makef,freef,comparf)"
 This macro function initializes the discipline pointed to by \f5disc\fP
 with the given values.
 .PP

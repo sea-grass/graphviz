@@ -1,5 +1,5 @@
 #include	<cdt/dthdr.h>
-#include	<stddef.h>
+#include	<stdlib.h>
 
 /*	Ordered set/multiset
 **	dt:	dictionary being searched
@@ -36,7 +36,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 					if(disc->freef)
 						disc->freef(_DTOBJ(root, lk), disc);
 					if(disc->link < 0)
-						dt->memoryf(dt, root, 0, disc);
+						free(root);
 				} while((root = t) );
 			}
 
@@ -215,7 +215,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			if(disc->freef && (type&DT_DELETE))
 				disc->freef(obj, disc);
 			if(disc->link < 0)
-				dt->memoryf(dt, root, 0, disc);
+				free(root);
 			if((dt->data->size -= 1) < 0)
 				dt->data->size = -1;
 			goto no_root;
@@ -235,7 +235,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			{	if(disc->freef)
 					disc->freef(obj, disc);
 				if(disc->link < 0)
-					dt->memoryf(dt, me, 0, disc);
+					free(me);
 			}
 			else
 			{	me->left = NULL;
@@ -271,7 +271,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			{	if(lk >= 0)
 					root = _DTLNK(obj,lk);
 				else
-				{	root = dt->memoryf(dt, NULL, sizeof(Dthold_t), disc);
+				{	root = malloc(sizeof(Dthold_t));
 					if(root)
 						((Dthold_t*)root)->obj = obj;
 					else if(disc->makef && disc->freef &&
