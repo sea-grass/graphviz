@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stdlib.h>
 #include <string.h>
 #include "tcldot.h"
 
@@ -188,15 +189,13 @@ int Tcldot_Init(Tcl_Interp * interp)
     ictx->gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
 
 #ifndef TCLOBJ
-     Tcl_CreateCommand(interp, "dotnew", dotnew,
-                      (ClientData) ictx, (Tcl_CmdDeleteProc *) NULL);
+     Tcl_CreateCommand(interp, "dotnew", dotnew, ictx, free);
      Tcl_CreateCommand(interp, "dotread", dotread,
                       (ClientData) ictx, (Tcl_CmdDeleteProc *) NULL);
      Tcl_CreateCommand(interp, "dotstring", dotstring,
                       (ClientData) ictx, (Tcl_CmdDeleteProc *) NULL);
 #else                          /* TCLOBJ */
-     Tcl_CreateObjCommand(interp, "dotnew", dotnew,
-                         (ClientData) ictx, (Tcl_CmdDeleteProc *) NULL);
+     Tcl_CreateObjCommand(interp, "dotnew", dotnew, ictx, free);
      Tcl_CreateObjCommand(interp, "dotread", dotread,
                          (ClientData) ictx, (Tcl_CmdDeleteProc *) NULL);
      Tcl_CreateObjCommand(interp, "dotstring", dotstring,
