@@ -64,7 +64,7 @@ extern "C" {
     NEATOPROCS_API void neato_translate(Agraph_t * g);
     NEATOPROCS_API bool neato_set_aspect(graph_t * g);
     NEATOPROCS_API void toggle(int);
-    NEATOPROCS_API int user_pos(Agsym_t *, Agsym_t *, Agnode_t *, int);
+    NEATOPROCS_API bool user_pos(Agsym_t *, Agsym_t *, Agnode_t *, int);
     NEATOPROCS_API double **new_array(int i, int j, double val);
     NEATOPROCS_API void free_array(double **rv);
     NEATOPROCS_API int matinv(double **A, double **Ainv, int n);

@@ -3546,7 +3546,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	    emit_map_rect(job, GD_bb(sg));
 	    gvrender_begin_anchor(job, obj->url, obj->tooltip, obj->target, obj->id);
 	}
-	filled = FALSE;
+	filled = 0;
 	istyle = 0;
 	if ((style = checkClusterStyle(sg, &istyle))) {
 	    gvrender_set_style(job, style);
@@ -3558,22 +3558,22 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	if (GD_gui_state(sg) & GUI_STATE_ACTIVE) {
 	    pencolor = late_nnstring(sg, G_activepencolor, DEFAULT_ACTIVEPENCOLOR);
 	    fillcolor = late_nnstring(sg, G_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
-	    filled = TRUE;
+	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_SELECTED) {
 	    pencolor = late_nnstring(sg, G_activepencolor, DEFAULT_SELECTEDPENCOLOR);
 	    fillcolor = late_nnstring(sg, G_activefillcolor, DEFAULT_SELECTEDFILLCOLOR);
-	    filled = TRUE;
+	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_DELETED) {
 	    pencolor = late_nnstring(sg, G_deletedpencolor, DEFAULT_DELETEDPENCOLOR);
 	    fillcolor = late_nnstring(sg, G_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
-	    filled = TRUE;
+	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_VISITED) {
 	    pencolor = late_nnstring(sg, G_visitedpencolor, DEFAULT_VISITEDPENCOLOR);
 	    fillcolor = late_nnstring(sg, G_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
-	    filled = TRUE;
+	    filled = FILL;
 	}
 	else {
 	    if ((color = agget(sg, "color")) != 0 && color[0])
@@ -3587,7 +3587,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
                don't bother checking.
                if gradient is set fillcolor trumps bgcolor
              */
-	    if ((!filled || !fillcolor) && (color = agget(sg, "bgcolor")) != 0 && color[0]) {
+	    if ((filled == 0 || !fillcolor) && (color = agget(sg, "bgcolor")) != 0 && color[0]) {
 		fillcolor = color;
 	        filled = FILL;
             }
@@ -3596,7 +3596,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	if (!pencolor) pencolor = DEFAULT_COLOR;
 	if (!fillcolor) fillcolor = DEFAULT_FILL;
 	clrs[0] = NULL;
-	if (filled) {
+	if (filled != 0) {
 	    float frac;
 	    if (findStopColor (fillcolor, clrs, &frac)) {
         	gvrender_set_fillcolor(job, clrs[0]);
@@ -3619,7 +3619,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	}
 
 	if (istyle & ROUNDED) {
-	    if ((doPerim = late_int(sg, G_peripheries, 1, 0)) || filled) {
+	    if ((doPerim = late_int(sg, G_peripheries, 1, 0)) || filled != 0) {
 		AF[0] = GD_bb(sg).LL;
 		AF[2] = GD_bb(sg).UR;
 		AF[1].x = AF[2].x;
@@ -3655,7 +3655,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
     		gvrender_set_pencolor(job, pencolor);
 		gvrender_box(job, GD_bb(sg), filled);
 	    }
-	    else if (filled) {
+	    else if (filled != 0) {
         	gvrender_set_pencolor(job, "transparent");
 		gvrender_box(job, GD_bb(sg), filled);
 	    }

@@ -109,9 +109,9 @@ static void _min (pointf *yval, pointf *v0, pointf *v1)
 static bool _greater_than_equal_to (pointf *v0, pointf *v1)
 {
   if (v0->y > v1->y + C_EPS)
-    return TRUE;
+    return true;
   else if (v0->y < v1->y - C_EPS)
-    return FALSE;
+    return false;
   else
     return v0->x >= v1->x;
 }
@@ -404,13 +404,14 @@ merge_trapezoids(int segnum, int tfirst, int tlast, int side, traps_t *tr,
  * Q-structure. Then start from the topmost trapezoid and go down to
  * the  lower trapezoid dividing all the trapezoids in between .
  */
-static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
+static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   segment_t s;
   int tu, tl, sk, tfirst, tlast;
   int tfirstr = 0, tlastr = 0, tfirstl = 0, tlastl = 0;
   int i1, i2, t, tn;
   pointf tpt;
-  int tribot = 0, is_swapped;
+  int tribot = 0;
+  bool is_swapped;
   int tmptriseg;
 
   s = seg[segnum];
@@ -423,9 +424,9 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
       tmp = s.root0;
       s.root0 = s.root1;
       s.root1 = tmp;
-      is_swapped = TRUE;
+      is_swapped = true;
     }
-  else is_swapped = FALSE;
+  else is_swapped = false;
 
   if (!inserted(segnum, seg, is_swapped ? LASTPT : FIRSTPT))
     /* insert v0 in the tree */
@@ -962,7 +963,6 @@ static int add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   merge_trapezoids(segnum, tfirstr, tlastr, S_RIGHT, tr, qs);
 
   seg[segnum].is_inserted = true;
-  return 0;
 }
 
 /* Update the roots stored for each of the endpoints of the segment.

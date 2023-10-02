@@ -59,7 +59,7 @@ static int add_tree_edge(edge_t * e)
     if (!ND_mark(aghead(e)))
 	Tree_node.list[Tree_node.size++] = aghead(e);
     n = agtail(e);
-    ND_mark(n) = TRUE;
+    ND_mark(n) = true;
     ND_tree_out(n).list[ND_tree_out(n).size++] = e;
     ND_tree_out(n).list[ND_tree_out(n).size] = NULL;
     if (ND_out(n).list[ND_tree_out(n).size - 1] == 0) {
@@ -67,7 +67,7 @@ static int add_tree_edge(edge_t * e)
 	return -1;
     }
     n = aghead(e);
-    ND_mark(n) = TRUE;
+    ND_mark(n) = true;
     ND_tree_in(n).list[ND_tree_in(n).size++] = e;
     ND_tree_in(n).list[ND_tree_in(n).size] = NULL;
     if (ND_in(n).list[ND_tree_in(n).size - 1] == 0) {
@@ -690,7 +690,7 @@ freeTreeList (graph_t* g)
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	free_list(ND_tree_in(n));
 	free_list(ND_tree_out(n));
-	ND_mark(n) = FALSE;
+	ND_mark(n) = false;
     }
 }
 
@@ -812,7 +812,7 @@ static void TB_balance(void)
       }
       free_list(ND_tree_in(n));
       free_list(ND_tree_out(n));
-      ND_mark(n) = FALSE;
+      ND_mark(n) = false;
     }
     free(nrank);
 }
@@ -824,7 +824,7 @@ static bool init_graph(graph_t *g) {
     G = g;
     N_nodes = N_edges = S_i = 0;
     for (n = GD_nlist(g); n; n = ND_next(n)) {
-	ND_mark(n) = FALSE;
+	ND_mark(n) = false;
 	N_nodes++;
 	for (size_t i = 0; (e = ND_out(n).list[i]); i++)
 	    N_edges++;
@@ -1184,7 +1184,7 @@ static node_t *checkdfs(graph_t* g, node_t * n)
 
     if (ND_mark(n))
 	return 0;
-    ND_mark(n) = TRUE;
+    ND_mark(n) = true;
     ND_onstack(n) = true;
     for (i = 0; (e = ND_out(n).list[i]); i++) {
 	w = aghead(e);
@@ -1220,7 +1220,7 @@ void check_cycles(graph_t * g)
 {
     node_t *n;
     for (n = GD_nlist(g); n; n = ND_next(n)) {
-	ND_mark(n) = FALSE;
+	ND_mark(n) = false;
 	ND_onstack(n) = false;
     }
     for (n = GD_nlist(g); n; n = ND_next(n))

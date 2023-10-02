@@ -69,7 +69,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   int i, ii, j, *ia, *ja, m, n, *p = NULL;
   (void)n;
   double *a, amax = 0;
-  int first = TRUE, jamax = 0;
+  int jamax = 0;
   int *matched, nz, nz0;
   enum {MATCHED = -1};
   int  nsuper, *super = NULL, *superp = NULL;
@@ -114,7 +114,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   p = random_permutation(m);
   for (ii = 0; ii < m; ii++){
     i = p[ii];
-    first = TRUE;
+    bool first = true;
     if (matched[i] == MATCHED) continue;
     for (j = ia[i]; j < ia[i+1]; j++){
       if (i == ja[j]) continue;
@@ -122,7 +122,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
         if (first) {
           amax = a[j];
           jamax = ja[j];
-          first = FALSE;
+          first = false;
         } else {
           if (a[j] > amax){
             amax = a[j];
@@ -155,19 +155,18 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   free(matched);
 }
 
-static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD,
-					double *node_wgt, double **cnode_wgt,
-					SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
-  int *matching = NULL, nc, nzc, n, i;
+static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
+                                        double *node_wgt, double **cnode_wgt,
+                                        SparseMatrix *P, SparseMatrix *R,
+                                        Multilevel_control ctrl) {
+  int nc, nzc, n, i;
   int *irn = NULL, *jcn = NULL;
   double *val = NULL;
-  SparseMatrix B = NULL;
-  int *vset = NULL, j;
+  int j;
   int *cluster=NULL, *clusterp=NULL, ncluster;
 
   assert(A->m == A->n);
   *cA = NULL;
-  *cD = NULL;
   *P = NULL;
   *R = NULL;
   n = A->m;
@@ -199,15 +198,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
                                            MATRIX_TYPE_REAL, sizeof(double));
   *R = SparseMatrix_transpose(*P);
 
-  *cD = NULL;
-
   *cA = SparseMatrix_multiply3(*R, A, *P); 
-
-  /*
-    B = SparseMatrix_multiply(*R, A);
-    if (!B) goto RETURN;
-    *cA = SparseMatrix_multiply(B, *P); 
-    */
   if (!*cA) goto RETURN;
 
   SparseMatrix_multiply_vector(*R, node_wgt, cnode_wgt);
@@ -217,30 +208,27 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA, Sparse
   *cA = SparseMatrix_remove_diagonal(*cA);
 
  RETURN:
-  free(matching);
-  free(vset);
   free(irn);
   free(jcn);
   free(val);
-  if (B) SparseMatrix_delete(B);
 
   free(cluster);
   free(clusterp);
 }
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, double *node_wgt, double **cnode_wgt,
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double *node_wgt, double **cnode_wgt,
 			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
-  SparseMatrix cA0 = A,  cD0 = NULL, P0 = NULL, R0 = NULL, M;
+  SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
   double *cnode_wgt0 = NULL;
   int nc = 0, n;
   
-  *P = NULL; *R = NULL; *cA = NULL; *cnode_wgt = NULL, *cD = NULL;
+  *P = NULL; *R = NULL; *cA = NULL; *cnode_wgt = NULL;
 
   n = A->n;
 
   do {/* this loop force a sufficient reduction */
     node_wgt = cnode_wgt0;
-    Multilevel_coarsen_internal(A, &cA0, &cD0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl);
+    Multilevel_coarsen_internal(A, &cA0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl);
     if (!cA0) return;
     nc = cA0->n;
 #ifdef DEBUG_PRINT
@@ -263,8 +251,6 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *cD, doub
 
     if (*cA) SparseMatrix_delete(*cA);
     *cA = cA0;
-    if (*cD) SparseMatrix_delete(*cD);
-    *cD = cD0;
 
     if (*cnode_wgt) free(*cnode_wgt);
     *cnode_wgt = cnode_wgt0;
@@ -282,7 +268,7 @@ void print_padding(int n){
 static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
   Multilevel cgrid;
   double *cnode_weights = NULL;
-  SparseMatrix P, R, A, cA, cD;
+  SparseMatrix P, R, A, cA;
 
 #ifdef DEBUG_PRINT
   if (Verbose) {
@@ -300,15 +286,13 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
 #endif
     return grid;
   }
-  Multilevel_coarsen(A, &cA, &cD, grid->node_weights, &cnode_weights, &P, &R, ctrl);
+  Multilevel_coarsen(A, &cA, grid->node_weights, &cnode_weights, &P, &R, ctrl);
   if (!cA) return grid;
 
-  cgrid = Multilevel_init(cA, cD, cnode_weights);
+  cgrid = Multilevel_init(cA, NULL, cnode_weights);
   grid->next = cgrid;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;
-  cgrid->A = cA;
-  cgrid->D = cD;
   cgrid->P = P;
   grid->R = R;
   cgrid->prev = grid;

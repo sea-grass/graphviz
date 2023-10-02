@@ -64,14 +64,13 @@ static void neato_init_edge(edge_t * e)
     ED_factor(e) = late_double(e, E_weight, 1.0, 1.0);
 }
 
-int user_pos(attrsym_t * posptr, attrsym_t * pinptr, node_t * np, int nG)
-{
+bool user_pos(attrsym_t *posptr, attrsym_t *pinptr, node_t *np, int nG) {
     double *pvec;
     char *p, c;
     double z;
 
     if (posptr == NULL)
-	return FALSE;
+	return false;
     pvec = ND_pos(np);
     p = agxget(np, posptr);
     if (p[0]) {
@@ -87,7 +86,7 @@ int user_pos(attrsym_t * posptr, attrsym_t * pinptr, node_t * np, int nG)
 		jitter_d(np, nG, 3);
 	    if (c == '!' || (pinptr && mapbool(agxget(np, pinptr))))
 		ND_pinned(np) = P_PIN;
-	    return TRUE;
+	    return true;
 	}
 	else if (sscanf(p, "%lf,%lf%c", pvec, pvec + 1, &c) >= 2) {
 	    ND_pinned(np) = P_SET;
@@ -110,12 +109,12 @@ int user_pos(attrsym_t * posptr, attrsym_t * pinptr, node_t * np, int nG)
 	    }
 	    if (c == '!' || (pinptr && mapbool(agxget(np, pinptr))))
 		ND_pinned(np) = P_PIN;
-	    return TRUE;
+	    return true;
 	} else
 	    agerr(AGERR, "node %s, position %s, expected two doubles\n",
 		  agnameof(np), p);
     }
-    return FALSE;
+    return false;
 }
 
 static void neato_init_node_edge(graph_t * g)
@@ -716,7 +715,7 @@ dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
     double x = mode==MODE_IPSEP?-1.0:1.0;
 
     np = nodes[i];
-    ND_mark(np) = TRUE;
+    ND_mark(np) = true;
     ND_onstack(np) = true;
     for (e = 1; e < graph[i].nedges; e++) {
 	if (graph[i].edists[e] == 1.0) continue;  /* in edge */
@@ -745,7 +744,7 @@ acyclic (vtx_data* graph, int nv, int mode, node_t* nodes[])
 
     for (i = 0; i < nv; i++) {
 	np = nodes[i];
-	ND_mark(np) = FALSE;
+	ND_mark(np) = false;
 	ND_onstack(np) = false;
     }
     for (i = 0; i < nv; i++) {
