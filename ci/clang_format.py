@@ -669,7 +669,6 @@ EXCLUDE = (
     "tclpkg/tcldot/tcldot-io.c",
     "tclpkg/tcldot/tcldot-nodecmd.c",
     "tclpkg/tcldot/tcldot-util.c",
-    "tclpkg/tcldot/tcldot.c",
     "tclpkg/tcldot/tcldot.h",
     "tclpkg/tcldot/tcldot_builtins.c",
     "tclpkg/tclhandle/tclhandle.c",
