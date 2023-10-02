@@ -13,28 +13,6 @@
 
 static Agraph_t *Ag_dictop_G;
 
-/* only indirect call through dtopen() is expected */
-void *agdictobjmem(Dict_t * dict, void * p, size_t size, Dtdisc_t * disc)
-{
-    Agraph_t *g;
-
-    (void)dict;
-    (void)disc;
-    g = Ag_dictop_G;
-    if (g) {
-	if (p)
-	    agfree(g, p);
-	else
-	    return agalloc(g, size);
-    } else {
-	if (p)
-	    free(p);
-	else
-	    return malloc(size);
-    }
-    return NULL;
-}
-
 void agdictobjfree(void *p, Dtdisc_t *disc) {
     Agraph_t *g;
 
