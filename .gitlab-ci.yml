@@ -23,6 +23,8 @@ pages:
     artifacts:
         paths:
             - public
+    except:
+        - tags
 
 portable-source:
     # Doesn't have to wait for all the previous stages, only a docker image of
