@@ -1,5 +1,5 @@
 #include	<cdt/dthdr.h>
-#include	<stddef.h>
+#include	<stdlib.h>
 
 /* 	Make a new dictionary
 **
@@ -29,7 +29,7 @@ Dt_t* dtopen(Dtdisc_t* disc, Dtmethod_t* meth)
 	dt->user = NULL;
 
 	/* allocate sharable data */
-	if (!(data = dt->memoryf(dt, NULL, sizeof(Dtdata_t), disc)))
+	if (!(data = malloc(sizeof(Dtdata_t))))
 	{
 		free(dt);
 		return NULL;

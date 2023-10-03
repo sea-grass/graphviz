@@ -1,5 +1,5 @@
 #include	<cdt/dthdr.h>
-#include	<stddef.h>
+#include	<stdlib.h>
 
 /*	Change search method.
 **
@@ -22,7 +22,7 @@ Dtmethod_t* dtmethod(Dt_t* dt, Dtmethod_t* meth)
 		dt->data->head = NULL;
 	else if(dt->data->type&DT_SET)
 	{	if(dt->data->ntab > 0)
-			dt->memoryf(dt, dt->data->htab, 0, disc);
+			free(dt->data->htab);
 		dt->data->ntab = 0;
 		dt->data->htab = NULL;
 	}

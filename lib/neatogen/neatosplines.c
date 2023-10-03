@@ -163,7 +163,6 @@ Dtdisc_t edgeItemDisc = {
     (Dtmake_f) newitem,
     (Dtfree_f) freeitem,
     (Dtcompar_f) cmpitems,
-    0,
 };
 
 /* equivEdge:

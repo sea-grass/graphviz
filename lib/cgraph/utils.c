@@ -13,28 +13,6 @@
 
 static Agraph_t *Ag_dictop_G;
 
-/* only indirect call through dtopen() is expected */
-void *agdictobjmem(Dict_t * dict, void * p, size_t size, Dtdisc_t * disc)
-{
-    Agraph_t *g;
-
-    (void)dict;
-    (void)disc;
-    g = Ag_dictop_G;
-    if (g) {
-	if (p)
-	    agfree(g, p);
-	else
-	    return agalloc(g, size);
-    } else {
-	if (p)
-	    free(p);
-	else
-	    return malloc(size);
-    }
-    return NULL;
-}
-
 void agdictobjfree(void *p, Dtdisc_t *disc) {
     Agraph_t *g;
 
@@ -48,14 +26,10 @@ void agdictobjfree(void *p, Dtdisc_t *disc) {
 
 Dict_t *agdtopen(Agraph_t * g, Dtdisc_t * disc, Dtmethod_t * method)
 {
-    Dtmemory_f memf;
     Dict_t *d;
 
-    memf = disc->memoryf;
-    disc->memoryf = agdictobjmem;
     Ag_dictop_G = g;
     d = dtopen(disc, method);
-    disc->memoryf = memf;
     Ag_dictop_G = NULL;
     return d;
 }
@@ -68,16 +42,10 @@ int agdtdelete(Agraph_t * g, Dict_t * dict, void *obj)
 
 int agdtclose(Agraph_t * g, Dict_t * dict)
 {
-    Dtmemory_f memf;
-    Dtdisc_t *disc;
-
-    disc = dtdisc(dict, NULL);
-    memf = disc->memoryf;
-    disc->memoryf = agdictobjmem;
+    dtdisc(dict, NULL);
     Ag_dictop_G = g;
     if (dtclose(dict))
 	return 1;
-    disc->memoryf = memf;
     Ag_dictop_G = NULL;
     return 0;
 }

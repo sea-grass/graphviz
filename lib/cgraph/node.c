@@ -319,14 +319,12 @@ static void free_subnode(Agsubnode_t *sn, Dtdisc_t *disc) {
 Dtdisc_t Ag_subnode_id_disc = {
     .link = offsetof(Agsubnode_t, id_link), // link offset
     .comparf = agsubnodeidcmpf,
-    .memoryf = agdictobjmem,
 };
 
 Dtdisc_t Ag_subnode_seq_disc = {
     .link = offsetof(Agsubnode_t, seq_link), // link offset
     .freef = (Dtfree_f)free_subnode,
     .comparf = agsubnodeseqcmpf,
-    .memoryf = agdictobjmem,
 };
 
 static void agnodesetfinger(Agraph_t * g, Agnode_t * n, void *ignored)

@@ -1,5 +1,5 @@
 #include	<cdt/dthdr.h>
-#include	<stddef.h>
+#include	<stdlib.h>
 
 /*	Close a dictionary
 **
@@ -7,12 +7,8 @@
 */
 int dtclose(Dt_t* dt)
 {
-	Dtdisc_t	*disc;
-
 	if(!dt || dt->nview > 0 ) /* can't close if being viewed */
 		return -1;
-
-	disc = dt->disc;
 
 	if(dt->view)	/* turn off viewing */
 		dtview(dt,NULL);
@@ -23,13 +19,10 @@ int dtclose(Dt_t* dt)
 		return -1;
 
 	if(dt->data->ntab > 0)
-		dt->memoryf(dt, dt->data->htab, 0, disc);
-	dt->memoryf(dt, dt->data, 0, disc);
+		free(dt->data->htab);
+	free(dt->data);
 
-	if(dt->type == DT_MALLOC)
-		free(dt);
-	else if (dt->type == DT_MEMORYF)
-		dt->memoryf(dt, dt, 0, disc);
+	free(dt);
 
 	return 0;
 }

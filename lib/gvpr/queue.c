@@ -44,7 +44,6 @@ static Dtdisc_t ndisc = {
     (Dtmake_f) makef,
     (Dtfree_f) freef,
     0,
-    0,
 };
 
 queue *mkQ(Dtmethod_t * meth)

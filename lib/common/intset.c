@@ -45,7 +45,6 @@ static Dtdisc_t intSetDisc = {
     (Dtmake_f)mkIntItem,
     (Dtfree_f)freeIntItem,
     (Dtcompar_f)cmpid,
-    0,
 };
 
 Dt_t* 
