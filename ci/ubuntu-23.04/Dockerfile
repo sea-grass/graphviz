@@ -16,6 +16,7 @@ libtool \
 dh-python \
 flex \
 ksh \
+doxygen \
 # Debian build utilities
 quilt \
 d-shlibs \
