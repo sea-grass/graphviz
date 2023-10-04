@@ -67,7 +67,7 @@ extern "C" {
 
 /// @endcond
 
-/// @defgroup cgraph_other other
+/// @addtogroup cgraph_misc
 /// @{
 typedef uint64_t IDTYPE;
 
@@ -83,7 +83,7 @@ typedef struct Agnode_s Agnode_t;       ///< node (atom)
 typedef struct Agedge_s Agedge_t;       ///< node pair
 /// @ingroup cgraph_graph
 typedef struct Agdesc_s Agdesc_t;       ///< graph descriptor
-/// @addtogroup cgraph_other
+/// @addtogroup cgraph_misc
 /// @{
 typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
 typedef struct Agiodisc_s Agiodisc_t;   ///< IO services
@@ -273,6 +273,7 @@ struct Agdesc_s {		/* graph descriptor */
 /// @}
 
 /** @defgroup cgraph_disc disciplines
+ *  @ingroup cgraph_misc
  *  @brief disciplines for external resources needed by libgraph
  *  @{
  */
@@ -564,6 +565,11 @@ CGRAPH_API Agraph_t *agnxtsubg(Agraph_t * subg);
 CGRAPH_API Agraph_t *agparent(Agraph_t * g);
 /// @}
 
+/** @defgroup cgraph_misc miscellaneous
+ *  @ingroup cgraph_api
+ *  @{
+ */
+
 /// @defgroup card set cardinality
 /// @{
 CGRAPH_API int agnnodes(Agraph_t * g);
@@ -615,8 +621,6 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 
 #undef PRINTF_LIKE
 
-/// @addtogroup cgraph_other
-/// @{
 /* data access macros */
 /* this assumes that e[0] is out and e[1] is inedge, see @ref Agedgepair_s  */
 #define AGIN2OUT(inedge)		((inedge)-1) ///< Agedgepair_s.in -> Agedgepair_s.out
@@ -646,8 +650,10 @@ CGRAPH_API extern Agdesc_t Agundirected; ///< undirected
 CGRAPH_API extern Agdesc_t Agstrictundirected; ///< strict undirected
 /// @}
 
-/// @defgroup cgraph_fast fast graphs
-/// @{
+/** @defgroup cgraph_fast fast graphs
+ *  @ingroup cgraph_misc
+ *  @{
+ */
 
 /* this is expedient but a bit slimey because it "knows" that dict entries of both nodes
 and edges are embedded in main graph objects but allocated separately in subgraphs */
