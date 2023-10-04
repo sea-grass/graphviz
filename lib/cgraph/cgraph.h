@@ -466,8 +466,17 @@ CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *);
 /// @}
 
+CGRAPH_API char *agstrdup(Agraph_t *, const char *);
+CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
+CGRAPH_API int aghtmlstr(const char *);
+CGRAPH_API char *agstrbind(Agraph_t * g, const char *);
+CGRAPH_API int agstrfree(Agraph_t *, const char *);
+CGRAPH_API char *agcanon(char *, int);
+CGRAPH_API char *agstrcanon(char *, char *);
+CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
+
 /** @defgroup cgraph_attr attributes
- *  @brief strings, symbols, and @ref cgraph_rec
+ *  @brief symbols, and @ref cgraph_rec
  *  @ingroup cgraph_api
  *
  * Programmer-defined values may be dynamically
@@ -477,15 +486,6 @@ CGRAPH_API int agobjkind(void *);
  *
  * @{
  */
-
-CGRAPH_API char *agstrdup(Agraph_t *, const char *);
-CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
-CGRAPH_API int aghtmlstr(const char *);
-CGRAPH_API char *agstrbind(Agraph_t * g, const char *);
-CGRAPH_API int agstrfree(Agraph_t *, const char *);
-CGRAPH_API char *agcanon(char *, int);
-CGRAPH_API char *agstrcanon(char *, char *);
-CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
 
 /// definitions for dynamic string attributes
 
