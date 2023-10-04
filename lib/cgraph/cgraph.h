@@ -213,8 +213,10 @@ struct Agobj_s {
 #define AGATTRWF(obj)		(AGTAG(obj).attrwf)
 #define AGDATA(obj)		(((Agobj_t*)(obj))->data)
 /// @}
+/// @} cgraph_api
 
 /** @defgroup cgraph_node nodes
+ *  @ingroup cgraph_object
  *
  * A node is created by giving a unique string name or programmer
  * defined integer ID, and is represented by a unique internal object.
@@ -320,6 +322,7 @@ CGRAPH_API extern Agdisc_t AgDefaultDisc;
 /// @}
 
 /** @defgroup cgraph_graph graphs
+ *  @ingroup cgraph_object
  *  @{
  */
 struct Agdstate_s {
@@ -417,6 +420,7 @@ CGRAPH_API int agnodebefore(Agnode_t *u, Agnode_t *v); /* we have no shame */
 /// @}
 
 /** @defgroup cgraph_edge edges
+ *  @ingroup cgraph_object
  *
  * An abstract edge has two endpoint nodes called tail and head
  * where all outedges of the same node have it as the tail
@@ -566,7 +570,8 @@ CGRAPH_API int agsafeset(void* obj, char* name, const char* value,
                          const char* def);
 /// @}
 
-/// @defgroup cgraph_subgraph definitions for subgraphs
+/// @defgroup cgraph_subgraph subgraphs
+/// @ingroup cgraph_graph
 /// @{
 CGRAPH_API Agraph_t *agsubg(Agraph_t * g, char *name, int cflag);	/* constructor */
 CGRAPH_API Agraph_t *agidsubg(Agraph_t * g, IDTYPE id, int cflag);	/* constructor */
@@ -674,4 +679,3 @@ and edges are embedded in main graph objects but allocated separately in subgrap
 #ifdef __cplusplus
 }
 #endif
-/// @}
