@@ -374,7 +374,20 @@ CGRAPH_API int agpopdisc(Agraph_t * g, Agcbdisc_t * disc);
 
 /* graphs */
 CGRAPH_API Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * disc);
+/**<
+ * @brief creates a new graph with the given name and kind
+ *
+ * @param desc - graph kind, can be @ref Agdirected, @ref Agundirected,
+ * @ref Agstrictdirected or @ref Agstrictundirected.
+ * A strict graph cannot have multi-edges or self-arcs.
+ *
+ * @param disc - discipline structure which can be used
+ * to tailor I/O, memory allocation, and ID allocation. Typically, a NULL
+ * value will be used to indicate the default discipline @ref AgDefaultDisc.
+ */
+
 CGRAPH_API int agclose(Agraph_t * g);
+///< deletes a graph, freeing its associated storage
 CGRAPH_API Agraph_t *agread(void *chan, Agdisc_t * disc);
 CGRAPH_API Agraph_t *agmemread(const char *cp);
 CGRAPH_API Agraph_t *agmemconcat(Agraph_t *g, const char *cp);
@@ -510,12 +523,15 @@ CGRAPH_API int      agcopyattr(void *oldobj, void *newobj);
 /// @{
 CGRAPH_API void *agbindrec(void *obj, const char *name, unsigned int recsize,
 		       int move_to_front);
-///< attach a new record of the given size to the object.
+///< @brief attach a new record of the given size to the object
+/// @param recsize if 0, the call to @ref agbindrec is simply a lookup
 
 CGRAPH_API Agrec_t *aggetrec(void *obj, const char *name, int move_to_front);
 ///< find record in circular list and do optional move-to-front and lock
 
 CGRAPH_API int agdelrec(void *obj, const char *name);
+///<  deletes a named record from one object
+
 CGRAPH_API void aginit(Agraph_t * g, int kind, const char *rec_name,
                        int rec_size, int move_to_front);
 CGRAPH_API void agclean(Agraph_t * g, int kind, char *rec_name);
