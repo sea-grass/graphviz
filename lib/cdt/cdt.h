@@ -120,9 +120,6 @@ struct _dtstat_s
 	size_t* dt_count; // counts of chains or levels by size
 };
 
-/* flag set if the last search operation actually found the object */
-#define DT_FOUND	0100000
-
 /* supported storage methods */
 #define DT_SET		0000001	/* set with unique elements		*/
 #define DT_OSET		0000004	/* ordered set (self-adjusting tree)	*/
