@@ -52,6 +52,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the xlib plugin was added some time prior to Graphviz 2.38.0.
 - gvpr programs that attempt to close out of range file descriptors no longer
   cause out of bounds memory accesses.
+- When large edge weights are used that cause an integer overflow when summing
+  them up, Graphviz now gracefully exits with an error message instead of
+  crashing. #2450
 
 ## [9.0.0] - 2023-09-11
 
