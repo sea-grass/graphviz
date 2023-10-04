@@ -18,10 +18,6 @@
 #define DT_FLATTEN	010000	/* dictionary already flattened	*/
 #define DT_WALK		020000	/* hash table being walked	*/
 
-/* how the Dt_t handle was allocated */
-#define DT_MALLOC	0
-#define DT_MEMORYF	1
-
 /* hash start size and load factor */
 #define HSLOT		(256)
 #define HRESIZE(n)	((n) << 1)
