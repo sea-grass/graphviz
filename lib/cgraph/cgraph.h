@@ -534,7 +534,17 @@ CGRAPH_API int agdelrec(void *obj, const char *name);
 
 CGRAPH_API void aginit(Agraph_t * g, int kind, const char *rec_name,
                        int rec_size, int move_to_front);
+/**< @brief attach new records to objects of specified kind
+ *
+ * @param kind may be @ref AGRAPH, @ref AGNODE, or @ref AGEDGE
+ * @param rec_size if is negative (of the actual rec_size) for graphs,
+ * @ref aginit is applied recursively to the graph and its subgraphs
+ */
+
 CGRAPH_API void agclean(Agraph_t * g, int kind, char *rec_name);
+///< @brief calls @ref agdelrec for all objects
+/// of the same class in an entire graph
+
 /// @}
 
 CGRAPH_API char *agget(void *obj, char *name);
@@ -629,10 +639,11 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 
 /// @addtogroup cgraph_graph
 /// @{
-CGRAPH_API extern Agdesc_t Agdirected;
+CGRAPH_API extern Agdesc_t Agdirected; ///< directed
 CGRAPH_API extern Agdesc_t Agstrictdirected;
-CGRAPH_API extern Agdesc_t Agundirected;
-CGRAPH_API extern Agdesc_t Agstrictundirected;
+///< strict directed. A strict graph cannot have multi-edges or self-arcs.
+CGRAPH_API extern Agdesc_t Agundirected; ///< undirected
+CGRAPH_API extern Agdesc_t Agstrictundirected; ///< strict undirected
 /// @}
 
 /// @defgroup cgraph_fast fast graphs
