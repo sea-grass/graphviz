@@ -199,7 +199,6 @@ CDT_API unsigned int dtstrhash(void*, int);
 #define dtdelete(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DELETE)
 #define dtdetach(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_DETACH)
 #define dtclear(d)	(*(_DT(d)->searchf))((d),(void*)(0),DT_CLEAR)
-#define dtfound(d)	(_DT(d)->type & DT_FOUND)
 
 #define DT_PRIME	17109811 /* 2#00000001 00000101 00010011 00110011 */
 
