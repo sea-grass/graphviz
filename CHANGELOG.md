@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Criterion unit tests have been removed and migrated to Pytest. This is
   primarily relevant to downstream packagers of Graphviz. #2443
 - **Breaking**: `Dtdisc_t.memoryf` and its associated macros has been removed.
+- **Breaking**: The `Dt_t.type` field has been removed.
 
 ### Fixed
 

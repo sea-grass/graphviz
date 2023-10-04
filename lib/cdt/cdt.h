@@ -105,7 +105,6 @@ struct _dt_s
 	Dtdisc_t*	disc;	/* method to manipulate objs		*/
 	Dtdata_t*	data;	/* sharable data			*/
 	Dtmethod_t*	meth;	/* dictionary method			*/
-	int		type;	/* type information			*/
 	int		nview;	/* number of parent view dictionaries	*/
 	Dt_t*		view;	/* next on viewpath			*/
 	Dt_t*		walk;	/* dictionary being walked		*/

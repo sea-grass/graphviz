@@ -20,7 +20,6 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 
 	UNFLATTEN(dt);
 	disc = dt->disc; _DTDSC(disc,ky,sz,lk,cmpf);
-	dt->type &= ~DT_FOUND;
 
 	root = dt->data->here;
 	if(!obj)
@@ -156,7 +155,6 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 
 	if(root)
 	{	/* found it, now isolate it */
-		dt->type |= DT_FOUND;
 		l->right = root->left;
 		r->left = root->right;
 

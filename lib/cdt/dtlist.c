@@ -16,7 +16,6 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 
 	UNFLATTEN(dt);
 	disc = dt->disc; _DTDSC(disc,ky,sz,lk,cmpf);
-	dt->type &= ~DT_FOUND;
 
 	if(!obj)
 	{	if(type&(DT_LAST|DT_FIRST) )
@@ -95,7 +94,6 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 
 	if(!r)
 		return NULL;
-	dt->type |= DT_FOUND;
 
 	if(type&(DT_DELETE|DT_DETACH))
 	{ dt_delete:

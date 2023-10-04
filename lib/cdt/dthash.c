@@ -63,7 +63,6 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 
 	/* initialize discipline data */
 	disc = dt->disc; _DTDSC(disc,ky,sz,lk,cmpf);
-	dt->type &= ~DT_FOUND;
 
 	if(!obj)
 	{	if(type&(DT_NEXT|DT_PREV))
@@ -141,9 +140,6 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 			}
 		}
 	}
-
-	if(t) /* found matching object */
-		dt->type |= DT_FOUND;
 
 	if(type&(DT_MATCH|DT_SEARCH|DT_VSEARCH))
 	{	if(!t)
