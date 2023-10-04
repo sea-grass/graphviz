@@ -186,10 +186,8 @@ CDT_API unsigned int dtstrhash(void*, int);
 
 #define dtfirst(d)	(*(_DT(d)->searchf))((d),(void*)(0),DT_FIRST)
 #define dtnext(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_NEXT)
-#define dtleast(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_SEARCH|DT_NEXT)
 #define dtlast(d)	(*(_DT(d)->searchf))((d),(void*)(0),DT_LAST)
 #define dtprev(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_PREV)
-#define dtmost(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_SEARCH|DT_PREV)
 #define dtsearch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_SEARCH)
 #define dtmatch(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_MATCH)
 #define dtinsert(d,o)	(*(_DT(d)->searchf))((d),(void*)(o),DT_INSERT)
