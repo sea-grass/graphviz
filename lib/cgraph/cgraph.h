@@ -466,6 +466,15 @@ CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *);
 /// @}
 
+/** @defgroup cgraph_string string utilities
+ *  @brief reference-counted strings
+ *  @ingroup cgraph_misc
+ *
+ *  Storage management of strings as reference-counted strings.
+ *  The caller does not need to dynamically allocate storage.
+ *
+ * @{
+ */
 CGRAPH_API char *agstrdup(Agraph_t *, const char *);
 CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
 CGRAPH_API int aghtmlstr(const char *);
@@ -474,6 +483,7 @@ CGRAPH_API int agstrfree(Agraph_t *, const char *);
 CGRAPH_API char *agcanon(char *, int);
 CGRAPH_API char *agstrcanon(char *, char *);
 CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
+/// @}
 
 /** @defgroup cgraph_attr attributes
  *  @brief symbols, and @ref cgraph_rec
