@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `Dt_t.type` field has been removed.
 - **Breaking**: The `dtfound`, `DT_FOUND`, `dtleast`, and `dtmost` macros have
   been removed.
+- The nrtmain.c test program has been removed from the portable tarball.
 
 ### Fixed
 

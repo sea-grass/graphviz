@@ -363,7 +363,6 @@ EXCLUDE = (
     "lib/label/index.h",
     "lib/label/node.c",
     "lib/label/node.h",
-    "lib/label/nrtmain.c",
     "lib/label/rectangle.c",
     "lib/label/rectangle.h",
     "lib/label/split.q.c",
