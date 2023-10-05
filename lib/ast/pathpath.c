@@ -16,12 +16,11 @@
  * if a!=0 then it and $0 and $_ with $PWD are used for
  * related root searching
  * the related root must have a bin subdir
- * p==0 sets the cached relative dir to a
- * p==0 a=="" disables $0 $_ $PWD relative search
  * full path returned in path buffer
  * if path==0 then the space is malloc'd
  */
 
+#include <assert.h>
 #include <ast/ast.h>
 #include <stdlib.h>
 #include <string.h>
@@ -50,11 +49,7 @@ char *pathpath(char *path, const char *p)
 
     if (!path)
 	path = buf;
-    if (!p) {
-	free(cmd);
-	cmd = a ? strdup(a) : NULL;
-	return 0;
-    }
+    assert(p != NULL);
     if (strlen(p) < PATH_MAX) {
 	strcpy(path, p);
 	struct stat st;
