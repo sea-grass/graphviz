@@ -42,7 +42,7 @@ char *pathfind(const char *name, const char *lib, const char *type)
     Dir_t *dp;
     char *s;
     char tmp[PATH_MAX];
-    char buf[PATH_MAX];
+    char *buf;
 
     if (access(name, R_OK) >= 0)
 	return strdup(name);
@@ -56,26 +56,26 @@ char *pathfind(const char *name, const char *lib, const char *type)
 	    type = 0;
 	for (dp = state.head; dp; dp = dp->next) {
 	    snprintf(tmp, sizeof(tmp), "%s/%s", dp->dir, name);
-	    if (pathpath(buf, tmp))
-		return strdup(buf);
+	    if ((buf = pathpath(tmp)))
+		return buf;
 	    if (type) {
 		snprintf(tmp, sizeof(tmp), "%s/%s.%s", dp->dir, name,
 			  type);
-		if (pathpath(buf, tmp))
-		    return strdup(buf);
+		if ((buf = pathpath(tmp)))
+		    return buf;
 	    }
 	}
 	if (lib) {
 	    if ((s = strrchr(lib, ':')))
 		lib = s + 1;
 	    snprintf(tmp, sizeof(tmp), "lib/%s/%s", lib, name);
-	    if (pathpath(buf, tmp))
-		return strdup(buf);
+	    if ((buf = pathpath(tmp)))
+		return buf;
 	    if (type) {
 		snprintf(tmp, sizeof(tmp), "lib/%s/%s.%s", lib, name,
 			  type);
-		if (pathpath(buf, tmp))
-		    return strdup(buf);
+		if ((buf = pathpath(tmp)))
+		    return buf;
 	    }
 	}
     }

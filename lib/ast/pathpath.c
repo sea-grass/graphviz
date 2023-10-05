@@ -16,8 +16,6 @@
  * if a!=0 then it and $0 and $_ with $PWD are used for
  * related root searching
  * the related root must have a bin subdir
- * full path returned in path buffer
- * if path==0 then the space is malloc'd
  */
 
 #include <assert.h>
@@ -38,23 +36,20 @@ static const char *getenv_path(void) {
 
 char **opt_info_argv;
 
-char *pathpath(char *path, const char *p)
-{
+char *pathpath(const char *p) {
     const char *a = "";
     char *s;
     const char *x;
-    char buf[PATH_MAX];
+    char path[PATH_MAX];
 
     static char *cmd;
 
-    if (!path)
-	path = buf;
     assert(p != NULL);
     if (strlen(p) < PATH_MAX) {
 	strcpy(path, p);
 	struct stat st;
 	if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
-	    return (path == buf) ? strdup(path) : path;
+	    return strdup(path);
     }
     if (*p == '/')
 	a = 0;
@@ -77,7 +72,7 @@ char *pathpath(char *path, const char *p)
 	    ) {
 	    if (!cmd)
 		cmd = strdup(s);
-	    if (strlen(s) < (sizeof(buf) - 6)) {
+	    if (strlen(s) < sizeof(path) - 6) {
 		s = strcopy(path, s);
 		for (;;) {
 		    do
@@ -91,7 +86,7 @@ char *pathpath(char *path, const char *p)
 		    strcpy(s + 1, "bin");
 		    if (access(path, X_OK) == 0) {
 			if ((s = pathaccess(path, path, p, a)))
-			    return path == buf ? strdup(s) : s;
+			    return strdup(s);
 			goto normal;
 		    }
 		}
@@ -103,5 +98,5 @@ char *pathpath(char *path, const char *p)
     if (!(s = pathaccess(path, x, p, a)) && !*x
 	&& (x = getenv("FPATH")))
 	s = pathaccess(path, x, p, a);
-    return (s && path == buf) ? strdup(s) : s;
+    return s ? strdup(s) : s;
 }
