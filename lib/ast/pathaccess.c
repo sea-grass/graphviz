@@ -33,10 +33,10 @@ char *pathaccess(const char *dirs, const char *a, const char *b) {
 #endif
     do {
 	dirs = pathcat(path, dirs, sep, a, b);
-	pathcanon(path);
 	if (!access(path, m)) {
 	    if (stat(path, &st) || S_ISDIR(st.st_mode))
 		continue;
+	    pathcanon(path);
 	    return strdup(path);
 	}
     } while (dirs);
