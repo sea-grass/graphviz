@@ -67,7 +67,7 @@ extern "C" {
 
 /// @endcond
 
-/// @defgroup cgraph_other other
+/// @addtogroup cgraph_misc
 /// @{
 typedef uint64_t IDTYPE;
 
@@ -83,7 +83,7 @@ typedef struct Agnode_s Agnode_t;       ///< node (atom)
 typedef struct Agedge_s Agedge_t;       ///< node pair
 /// @ingroup cgraph_graph
 typedef struct Agdesc_s Agdesc_t;       ///< graph descriptor
-/// @addtogroup cgraph_other
+/// @addtogroup cgraph_misc
 /// @{
 typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
 typedef struct Agiodisc_s Agiodisc_t;   ///< IO services
@@ -213,8 +213,10 @@ struct Agobj_s {
 #define AGATTRWF(obj)		(AGTAG(obj).attrwf)
 #define AGDATA(obj)		(((Agobj_t*)(obj))->data)
 /// @}
+/// @} cgraph_api
 
 /** @defgroup cgraph_node nodes
+ *  @ingroup cgraph_object
  *
  * A node is created by giving a unique string name or programmer
  * defined integer ID, and is represented by a unique internal object.
@@ -273,6 +275,7 @@ struct Agdesc_s {		/* graph descriptor */
 /// @}
 
 /** @defgroup cgraph_disc disciplines
+ *  @ingroup cgraph_misc
  *  @brief disciplines for external resources needed by libgraph
  *  @{
  */
@@ -319,6 +322,7 @@ CGRAPH_API extern Agdisc_t AgDefaultDisc;
 /// @}
 
 /** @defgroup cgraph_graph graphs
+ *  @ingroup cgraph_object
  *  @{
  */
 struct Agdstate_s {
@@ -416,6 +420,7 @@ CGRAPH_API int agnodebefore(Agnode_t *u, Agnode_t *v); /* we have no shame */
 /// @}
 
 /** @defgroup cgraph_edge edges
+ *  @ingroup cgraph_object
  *
  * An abstract edge has two endpoint nodes called tail and head
  * where all outedges of the same node have it as the tail
@@ -465,8 +470,27 @@ CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *);
 /// @}
 
+/** @defgroup cgraph_string string utilities
+ *  @brief reference-counted strings
+ *  @ingroup cgraph_misc
+ *
+ *  Storage management of strings as reference-counted strings.
+ *  The caller does not need to dynamically allocate storage.
+ *
+ * @{
+ */
+CGRAPH_API char *agstrdup(Agraph_t *, const char *);
+CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
+CGRAPH_API int aghtmlstr(const char *);
+CGRAPH_API char *agstrbind(Agraph_t * g, const char *);
+CGRAPH_API int agstrfree(Agraph_t *, const char *);
+CGRAPH_API char *agcanon(char *, int);
+CGRAPH_API char *agstrcanon(char *, char *);
+CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
+/// @}
+
 /** @defgroup cgraph_attr attributes
- *  @brief strings, symbols, and @ref cgraph_rec
+ *  @brief symbols, and @ref cgraph_rec
  *  @ingroup cgraph_api
  *
  * Programmer-defined values may be dynamically
@@ -476,15 +500,6 @@ CGRAPH_API int agobjkind(void *);
  *
  * @{
  */
-
-CGRAPH_API char *agstrdup(Agraph_t *, const char *);
-CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
-CGRAPH_API int aghtmlstr(const char *);
-CGRAPH_API char *agstrbind(Agraph_t * g, const char *);
-CGRAPH_API int agstrfree(Agraph_t *, const char *);
-CGRAPH_API char *agcanon(char *, int);
-CGRAPH_API char *agstrcanon(char *, char *);
-CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
 
 /// definitions for dynamic string attributes
 
@@ -555,7 +570,8 @@ CGRAPH_API int agsafeset(void* obj, char* name, const char* value,
                          const char* def);
 /// @}
 
-/// @defgroup cgraph_subgraph definitions for subgraphs
+/// @defgroup cgraph_subgraph subgraphs
+/// @ingroup cgraph_graph
 /// @{
 CGRAPH_API Agraph_t *agsubg(Agraph_t * g, char *name, int cflag);	/* constructor */
 CGRAPH_API Agraph_t *agidsubg(Agraph_t * g, IDTYPE id, int cflag);	/* constructor */
@@ -563,6 +579,11 @@ CGRAPH_API Agraph_t *agfstsubg(Agraph_t * g);
 CGRAPH_API Agraph_t *agnxtsubg(Agraph_t * subg);
 CGRAPH_API Agraph_t *agparent(Agraph_t * g);
 /// @}
+
+/** @defgroup cgraph_misc miscellaneous
+ *  @ingroup cgraph_api
+ *  @{
+ */
 
 /// @defgroup card set cardinality
 /// @{
@@ -615,8 +636,6 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 
 #undef PRINTF_LIKE
 
-/// @addtogroup cgraph_other
-/// @{
 /* data access macros */
 /* this assumes that e[0] is out and e[1] is inedge, see @ref Agedgepair_s  */
 #define AGIN2OUT(inedge)		((inedge)-1) ///< Agedgepair_s.in -> Agedgepair_s.out
@@ -646,8 +665,10 @@ CGRAPH_API extern Agdesc_t Agundirected; ///< undirected
 CGRAPH_API extern Agdesc_t Agstrictundirected; ///< strict undirected
 /// @}
 
-/// @defgroup cgraph_fast fast graphs
-/// @{
+/** @defgroup cgraph_fast fast graphs
+ *  @ingroup cgraph_misc
+ *  @{
+ */
 
 /* this is expedient but a bit slimey because it "knows" that dict entries of both nodes
 and edges are embedded in main graph objects but allocated separately in subgraphs */
@@ -658,4 +679,3 @@ and edges are embedded in main graph objects but allocated separately in subgrap
 #ifdef __cplusplus
 }
 #endif
-/// @}
