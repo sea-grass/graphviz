@@ -17,6 +17,7 @@
 
 #include <ast/ast.h>
 #include <unistd.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -32,25 +33,25 @@ static struct {			/* directory list state           */
 
 /*
  * return path to name using pathinclude() list
- * path placed in <buf,size>
  * if lib!=0 then pathpath() attempted after include search
  * if type!=0 and name has no '.' then file.type also attempted
  * any *: prefix in lib is ignored (discipline library dictionary support)
  */
 
-char *pathfind(const char *name, const char *lib, const char *type,
-	       char *buf, size_t size)
+char *pathfind(const char *name, const char *lib, const char *type)
 {
     Dir_t *dp;
     char *s;
     char tmp[PATH_MAX];
+    char buf[PATH_MAX];
+    const size_t size = sizeof(buf);
 
     if (access(name, R_OK) >= 0)
-	return strncpy(buf, name, size);
+	return strdup(name);
     if (type) {
 	snprintf(buf, size, "%s.%s", name, type);
 	if (access(buf, R_OK) >= 0)
-	    return buf;
+	    return strdup(buf);
     }
     if (*name != '/') {
 	if (strchr(name, '.'))
@@ -58,12 +59,12 @@ char *pathfind(const char *name, const char *lib, const char *type,
 	for (dp = state.head; dp; dp = dp->next) {
 	    snprintf(tmp, sizeof(tmp), "%s/%s", dp->dir, name);
 	    if (pathpath(buf, tmp))
-		return buf;
+		return strdup(buf);
 	    if (type) {
 		snprintf(tmp, sizeof(tmp), "%s/%s.%s", dp->dir, name,
 			  type);
 		if (pathpath(buf, tmp))
-		    return buf;
+		    return strdup(buf);
 	    }
 	}
 	if (lib) {
@@ -71,12 +72,12 @@ char *pathfind(const char *name, const char *lib, const char *type,
 		lib = s + 1;
 	    snprintf(tmp, sizeof(tmp), "lib/%s/%s", lib, name);
 	    if (pathpath(buf, tmp))
-		return buf;
+		return strdup(buf);
 	    if (type) {
 		snprintf(tmp, sizeof(tmp), "lib/%s/%s.%s", lib, name,
 			  type);
 		if (pathpath(buf, tmp))
-		    return buf;
+		    return strdup(buf);
 	    }
 	}
     }
