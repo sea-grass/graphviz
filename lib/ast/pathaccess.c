@@ -22,10 +22,11 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-char *pathaccess(char *path, const char *dirs, const char *a, const char *b) {
+char *pathaccess(const char *dirs, const char *a, const char *b) {
     int m = 0;
     int sep = ':';
     struct stat st;
+    char path[PATH_MAX];
 
 #ifdef EFF_ONLY_OK
     m |= EFF_ONLY_OK;
@@ -36,7 +37,7 @@ char *pathaccess(char *path, const char *dirs, const char *a, const char *b) {
 	if (!access(path, m)) {
 	    if (stat(path, &st) || S_ISDIR(st.st_mode))
 		continue;
-	    return path;
+	    return strdup(path);
 	}
     } while (dirs);
     return (0);

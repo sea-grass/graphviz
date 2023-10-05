@@ -82,8 +82,8 @@ char *pathpath(const char *p) {
 		    while (*--s != '/');
 		    strcpy(s + 1, "bin");
 		    if (access(path, X_OK) == 0) {
-			if ((s = pathaccess(path, path, p, a)))
-			    return strdup(s);
+			if ((s = pathaccess(path, p, a)))
+			    return s;
 			goto normal;
 		    }
 		}
@@ -92,8 +92,8 @@ char *pathpath(const char *p) {
 	}
     }
     x = !a && strchr(p, '/') ? "" : getenv_path();
-    if (!(s = pathaccess(path, x, p, a)) && !*x
+    if (!(s = pathaccess(x, p, a)) && !*x
 	&& (x = getenv("FPATH")))
-	s = pathaccess(path, x, p, a);
-    return s ? strdup(s) : s;
+	s = pathaccess(x, p, a);
+    return s;
 }
