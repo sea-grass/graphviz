@@ -43,7 +43,7 @@ extern "C" {
     extern char *pathpath(const char *);
     extern char *pathfind(const char *, const char *, const char *);
     extern char *pathaccess(const char*, const char*, const char*);
-    extern const char *pathcat(char *, const char *, int, const char *,
+    extern const char *pathcat(char *, const char *, const char *,
 			 const char *);
 
     extern int chresc(const char *, char **);

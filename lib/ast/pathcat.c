@@ -17,10 +17,11 @@
 
 #include <ast/ast.h>
 
-const char *pathcat(char *path, const char *dirs, int sep,
+const char *pathcat(char *path, const char *dirs,
 	      const char *a, const char *b)
 {
     char *s;
+    const char sep = ':';
 
     s = path;
     while (*dirs && *dirs != sep)

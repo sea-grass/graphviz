@@ -25,7 +25,6 @@
 
 char *pathaccess(const char *dirs, const char *a, const char *b) {
     int m = 0;
-    int sep = ':';
     struct stat st;
     char path[PATH_MAX];
 
@@ -33,7 +32,7 @@ char *pathaccess(const char *dirs, const char *a, const char *b) {
     m |= EFF_ONLY_OK;
 #endif
     do {
-	dirs = pathcat(path, dirs, sep, a, b);
+	dirs = pathcat(path, dirs, a, b);
 	if (!access(path, m)) {
 	    if (stat(path, &st) || S_ISDIR(st.st_mode))
 		continue;
