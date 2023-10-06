@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+#include <cgraph/agxbuf.h>
 #include <sfio/sfio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -43,7 +44,7 @@ extern "C" {
     extern char *pathpath(const char *);
     extern char *pathfind(const char *, const char *, const char *);
     extern char *pathaccess(const char*, const char*, const char*);
-    extern const char *pathcat(char *, const char *, const char *,
+    extern const char *pathcat(agxbuf *, const char *, const char *,
 			 const char *);
 
     extern int chresc(const char *, char **);

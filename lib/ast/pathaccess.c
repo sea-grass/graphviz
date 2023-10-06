@@ -18,6 +18,7 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/agxbuf.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -26,22 +27,26 @@
 char *pathaccess(const char *dirs, const char *a, const char *b) {
     int m = 0;
     struct stat st;
-    char path[PATH_MAX];
+    agxbuf path = {0};
 
 #ifdef EFF_ONLY_OK
     m |= EFF_ONLY_OK;
 #endif
     do {
-	dirs = pathcat(path, dirs, a, b);
-	if (!access(path, m)) {
-	    if (stat(path, &st) || S_ISDIR(st.st_mode))
+	dirs = pathcat(&path, dirs, a, b);
+	const char *p = agxbuse(&path);
+	if (!access(p, m)) {
+	    if (stat(p, &st) || S_ISDIR(st.st_mode))
 		continue;
 #ifdef _WIN32
-	    return _fullpath(NULL, path, 0);
+	    char *resolved = _fullpath(NULL, p, 0);
 #else
-	    return realpath(path, NULL);
+	    char *resolved = realpath(p, NULL);
 #endif
+	    agxbfree(&path);
+	    return resolved;
 	}
     } while (dirs);
+    agxbfree(&path);
     return (0);
 }

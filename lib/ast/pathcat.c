@@ -16,26 +16,24 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/agxbuf.h>
 
-const char *pathcat(char *path, const char *dirs,
+const char *pathcat(agxbuf *path, const char *dirs,
 	      const char *a, const char *b)
 {
-    char *s;
     const char sep = ':';
 
-    s = path;
     while (*dirs && *dirs != sep)
-	*s++ = *dirs++;
-    if (s != path)
-	*s++ = '/';
+	agxbputc(path, *dirs++);
+    if (agxblen(path) > 0)
+	agxbputc(path, '/');
     if (a) {
-	while ((*s = *a++))
-	    s++;
+	agxbput(path, a);
 	if (b)
-	    *s++ = '/';
+	    agxbputc(path, '/');
     } else if (!b)
 	b = ".";
     if (b)
-	while ((*s++ = *b++));
+	agxbput(path, b);
     return *dirs ? ++dirs : 0;
 }
