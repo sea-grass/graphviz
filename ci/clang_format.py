@@ -18,7 +18,6 @@ EXCLUDE = (
     "cmd/dot/dot.c",
     "cmd/dot/dot_builtins.cpp",
     "cmd/edgepaint/edgepaintmain.c",
-    "cmd/gvedit/csettings.cpp",
     "cmd/gvedit/csettings.h",
     "cmd/gvedit/imageviewer.cpp",
     "cmd/gvedit/imageviewer.h",
