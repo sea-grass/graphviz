@@ -20,6 +20,7 @@
 
 #include <assert.h>
 #include <ast/ast.h>
+#include <cgraph/agxbuf.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/types.h>
@@ -40,7 +41,6 @@ char *pathpath(const char *p) {
     const char *a = "";
     char *s;
     const char *x;
-    char path[PATH_MAX];
 
     static char *cmd;
 
@@ -69,26 +69,30 @@ char *pathpath(const char *p) {
 	    ) {
 	    if (!cmd)
 		cmd = strdup(s);
-	    if (strlen(s) < sizeof(path) - 6) {
-		s = strcopy(path, s);
-		for (;;) {
-		    do
-			if (s <= path)
-			    goto normal;
-		    while (*--s == '/');
-		    do
-			if (s <= path)
-			    goto normal;
-		    while (*--s != '/');
-		    strcpy(s + 1, "bin");
-		    if (access(path, X_OK) == 0) {
-			if ((s = pathaccess(path, p, a)))
-			    return s;
+	    const char *end = s + strlen(s);
+	    for (;;) {
+		do
+		    if (end <= s)
 			goto normal;
+		while (*--end == '/');
+		do
+		    if (end <= s)
+			goto normal;
+		while (*--end != '/');
+		agxbuf path = {0};
+		agxbprint(&path, "%.*sbin", (int)(end - s + 1), s);
+		const char *path_str = agxbuse(&path);
+		if (access(path_str, X_OK) == 0) {
+		    if ((s = pathaccess(path_str, p, a))) {
+			agxbfree(&path);
+			return s;
 		    }
+		    agxbfree(&path);
+		    goto normal;
 		}
-	      normal:;
+		agxbfree(&path);
 	    }
+	    normal:;
 	}
     }
     x = !a && strchr(p, '/') ? "" : getenv_path();
