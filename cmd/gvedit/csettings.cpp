@@ -47,18 +47,31 @@ typedef struct {
 } rdr_t;
 
 #if !defined(__APPLE__) && !defined(_WIN32)
-/// read the given symlink in the /proc file system
-static std::string read_proc(const std::string &path) {
+/// `readlink`-alike but dynamically allocates
+static std::string readln(const std::string &path) {
 
-  std::vector<char> buf(PATH_MAX + 1, '\0');
-  if (readlink(path.c_str(), buf.data(), buf.size()) < 0)
-    return "";
+  std::vector<char> buf(512, '\0');
 
-  // was the path too long?
-  if (buf.back() != '\0')
-    return "";
+  while (true) {
 
-  return buf.data();
+    // expand target buffer
+    buf.resize(buf.size() * 2);
+
+    // attempt to resolve
+    {
+      ssize_t written = readlink(path.c_str(), buf.data(), buf.size());
+      if (written < 0)
+        break;
+      if (static_cast<size_t>(written) < buf.size()) {
+        // success
+        buf[written] = '\0';
+        return buf.data();
+      }
+    }
+  }
+
+  // failed
+  return "";
 }
 #endif
 
@@ -83,12 +96,12 @@ static std::string find_me(void) {
     }
 
     // try to resolve any levels of symlinks if possible
-    while (true) {
-      std::vector<char> buf(PATH_MAX + 1, '\0');
-      if (readlink(path.data(), buf.data(), buf.size()) < 0)
-        return path.data();
+    for (std::string p = path.data();;) {
+      const std::string buf = readln(p);
+      if (buf == "")
+        return p;
 
-      path = buf;
+      p = buf;
     }
   }
 #elif defined(_WIN32)
@@ -115,17 +128,17 @@ static std::string find_me(void) {
 #else
 
   // Linux
-  std::string path = read_proc("/proc/self/exe");
+  std::string path = readln("/proc/self/exe");
   if (path != "")
     return path;
 
   // DragonFly BSD, FreeBSD
-  path = read_proc("/proc/curproc/file");
+  path = readln("/proc/curproc/file");
   if (path != "")
     return path;
 
   // NetBSD
-  path = read_proc("/proc/curproc/exe");
+  path = readln("/proc/curproc/exe");
   if (path != "")
     return path;
 
@@ -134,10 +147,21 @@ static std::string find_me(void) {
   {
     int mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
     static const size_t MIB_LENGTH = sizeof(mib) / sizeof(mib[0]);
-    std::vector<char> buf(PATH_MAX + 1, '\0');
-    size_t buf_size = buf.size();
-    if (sysctl(mib, MIB_LENGTH, buf.data(), &buf_size, NULL, 0) == 0)
-      return buf.data();
+
+    do {
+      // determine how long the path is
+      size_t buf_size = 0;
+      if (sysctl(mib, MIB_LENGTH, NULL, &buf_size, NULL, 0) < 0)
+        break;
+      assert(buf_size > 0);
+
+      // make enough space for the target path
+      std::vector<char> buf(buf_size, '\0');
+
+      // resolve it
+      if (sysctl(mib, MIB_LENGTH, buf.data(), &buf_size, NULL, 0) == 0)
+        return buf.data();
+    } while (0);
   }
 #endif
 #endif
