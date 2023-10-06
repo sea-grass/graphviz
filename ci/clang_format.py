@@ -71,7 +71,6 @@ EXCLUDE = (
     "cmd/smyrna/hier.h",
     "cmd/smyrna/hotkeymap.c",
     "cmd/smyrna/hotkeymap.h",
-    "cmd/smyrna/main.c",
     "cmd/smyrna/polytess.c",
     "cmd/smyrna/polytess.h",
     "cmd/smyrna/selectionfuncs.c",
