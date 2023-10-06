@@ -18,6 +18,7 @@
  */
 
 #include <ast/ast.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -36,8 +37,11 @@ char *pathaccess(const char *dirs, const char *a, const char *b) {
 	if (!access(path, m)) {
 	    if (stat(path, &st) || S_ISDIR(st.st_mode))
 		continue;
-	    pathcanon(path);
-	    return strdup(path);
+#ifdef _WIN32
+	    return _fullpath(NULL, path, 0);
+#else
+	    return realpath(path, NULL);
+#endif
 	}
     } while (dirs);
     return (0);
