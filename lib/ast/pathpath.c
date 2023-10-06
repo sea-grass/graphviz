@@ -45,12 +45,9 @@ char *pathpath(const char *p) {
     static char *cmd;
 
     assert(p != NULL);
-    if (strlen(p) < PATH_MAX) {
-	strcpy(path, p);
-	struct stat st;
-	if (stat(path, &st) == 0 && !S_ISDIR(st.st_mode))
-	    return strdup(path);
-    }
+    struct stat st;
+    if (stat(p, &st) == 0 && !S_ISDIR(st.st_mode))
+	return strdup(p);
     if (*p == '/')
 	a = 0;
     else if ((s = (char *) a)) {
