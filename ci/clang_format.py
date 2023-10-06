@@ -132,7 +132,6 @@ EXCLUDE = (
     "lib/ast/pathcat.c",
     "lib/ast/pathfind.c",
     "lib/ast/pathpath.c",
-    "lib/ast/strcopy.c",
     "lib/ast/stresc.c",
     "lib/ast/strmatch.c",
     "lib/cdt/cdt.h",

@@ -13,7 +13,6 @@ add_library(ast STATIC
   pathaccess.c
   pathcat.c
   pathfind.c
-  strcopy.c
   stresc.c
   strmatch.c
 )

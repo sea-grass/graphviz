@@ -88,7 +88,6 @@
     <ClCompile Include="pathcat.c" />
     <ClCompile Include="pathfind.c" />
     <ClCompile Include="pathpath.c" />
-    <ClCompile Include="strcopy.c" />
     <ClCompile Include="stresc.c" />
     <ClCompile Include="strmatch.c" />
   </ItemGroup>

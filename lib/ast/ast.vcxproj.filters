@@ -50,9 +50,6 @@
     <ClCompile Include="pathpath.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="strcopy.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stresc.c">
       <Filter>Source Files</Filter>
     </ClCompile>

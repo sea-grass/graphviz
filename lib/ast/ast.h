@@ -57,7 +57,6 @@ extern "C" {
     extern int strmatch(const char *, const char *);
     extern int strgrpmatch(const char *, const char *, int *, int, int);
     extern void stresc(char *);
-    extern char *strcopy(char *s, const char *t);
 
 #ifdef __cplusplus
 }
