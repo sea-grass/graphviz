@@ -129,7 +129,6 @@ EXCLUDE = (
     "lib/ast/fmtbuf.c",
     "lib/ast/fmtesc.c",
     "lib/ast/pathaccess.c",
-    "lib/ast/pathcanon.c",
     "lib/ast/pathcat.c",
     "lib/ast/pathfind.c",
     "lib/ast/pathpath.c",
