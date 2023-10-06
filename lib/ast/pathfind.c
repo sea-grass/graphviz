@@ -17,7 +17,6 @@
 
 #include <ast/ast.h>
 #include <unistd.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -44,14 +43,13 @@ char *pathfind(const char *name, const char *lib, const char *type)
     char *s;
     char tmp[PATH_MAX];
     char buf[PATH_MAX];
-    const size_t size = sizeof(buf);
 
     if (access(name, R_OK) >= 0)
 	return strdup(name);
     if (type) {
-	snprintf(buf, size, "%s.%s", name, type);
-	if (access(buf, R_OK) >= 0)
-	    return strdup(buf);
+	snprintf(tmp, sizeof(tmp), "%s.%s", name, type);
+	if (access(tmp, R_OK) >= 0)
+	    return strdup(tmp);
     }
     if (*name != '/') {
 	if (strchr(name, '.'))
