@@ -16,6 +16,7 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/agxbuf.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
@@ -41,43 +42,52 @@ char *pathfind(const char *name, const char *lib, const char *type)
 {
     Dir_t *dp;
     char *s;
-    char tmp[PATH_MAX];
+    agxbuf tmp = {0};
     char *buf;
 
     if (access(name, R_OK) >= 0)
 	return strdup(name);
     if (type) {
-	snprintf(tmp, sizeof(tmp), "%s.%s", name, type);
-	if (access(tmp, R_OK) >= 0)
-	    return strdup(tmp);
+	agxbprint(&tmp, "%s.%s", name, type);
+	char *tmp_path = agxbdisown(&tmp);
+	if (access(tmp_path, R_OK) >= 0)
+	    return tmp_path;
+	free(tmp_path);
     }
     if (*name != '/') {
 	if (strchr(name, '.'))
 	    type = 0;
 	for (dp = state.head; dp; dp = dp->next) {
-	    snprintf(tmp, sizeof(tmp), "%s/%s", dp->dir, name);
-	    if ((buf = pathpath(tmp)))
+	    agxbprint(&tmp, "%s/%s", dp->dir, name);
+	    if ((buf = pathpath(agxbuse(&tmp)))) {
+		agxbfree(&tmp);
 		return buf;
+	    }
 	    if (type) {
-		snprintf(tmp, sizeof(tmp), "%s/%s.%s", dp->dir, name,
-			  type);
-		if ((buf = pathpath(tmp)))
+		agxbprint(&tmp, "%s/%s.%s", dp->dir, name, type);
+		if ((buf = pathpath(agxbuse(&tmp)))) {
+		    agxbfree(&tmp);
 		    return buf;
+		}
 	    }
 	}
 	if (lib) {
 	    if ((s = strrchr(lib, ':')))
 		lib = s + 1;
-	    snprintf(tmp, sizeof(tmp), "lib/%s/%s", lib, name);
-	    if ((buf = pathpath(tmp)))
+	    agxbprint(&tmp, "lib/%s/%s", lib, name);
+	    if ((buf = pathpath(agxbuse(&tmp)))) {
+		agxbfree(&tmp);
 		return buf;
+	    }
 	    if (type) {
-		snprintf(tmp, sizeof(tmp), "lib/%s/%s.%s", lib, name,
-			  type);
-		if ((buf = pathpath(tmp)))
+		agxbprint(&tmp, "lib/%s/%s.%s", lib, name, type);
+		if ((buf = pathpath(agxbuse(&tmp)))) {
+		    agxbfree(&tmp);
 		    return buf;
+		}
 	    }
 	}
     }
+    agxbfree(&tmp);
     return 0;
 }
