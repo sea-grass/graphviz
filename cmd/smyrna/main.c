@@ -185,18 +185,35 @@ static void windowedMode(int argc, char *argv[])
 }
 
 #if !defined(__APPLE__) && !defined(_WIN32)
-/// read the given symlink in the /proc file system
-static char *read_proc(const char *path) {
+/// `readlink`-alike but dynamically allocates
+static char *readln(const char *path) {
 
-  char buf[PATH_MAX + 1] = {0};
-  if (readlink(path, buf, sizeof(buf)) < 0)
-    return NULL;
+  char *resolved = NULL;
+  size_t size = 0;
 
-  // was the path too long?
-  if (buf[sizeof(buf) - 1] != '\0')
-    return NULL;
+  while (true) {
 
-  return gv_strdup(buf);
+    // expand target buffer
+    resolved = gv_realloc(resolved, size, size == 0 ? 1024 : (size * 2));
+    size = size == 0 ? 1024 : (size * 2);
+
+    // attempt to resolve
+    {
+      ssize_t written = readlink(path, resolved, size);
+      if (written < 0) {
+        break;
+      }
+      if ((size_t)written < size) {
+        // success
+        resolved[written] = '\0';
+        return resolved;
+      }
+    }
+  }
+
+  // failed
+  free(resolved);
+  return NULL;
 }
 #endif
 
@@ -222,12 +239,12 @@ static char *find_me(void) {
 
     // try to resolve any levels of symlinks if possible
     while (true) {
-      char buf[PATH_MAX + 1] = {0};
-      if (readlink(path, buf, sizeof(buf)) < 0)
+      char *buf = readln(path);
+      if (buf == NULL)
         return path;
 
       free(path);
-      path = gv_strdup(buf);
+      path = buf;
     }
   }
 #elif defined(_WIN32)
@@ -254,17 +271,17 @@ static char *find_me(void) {
 #else
 
   // Linux
-  char *path = read_proc("/proc/self/exe");
+  char *path = readln("/proc/self/exe");
   if (path != NULL)
     return path;
 
   // DragonFly BSD, FreeBSD
-  path = read_proc("/proc/curproc/file");
+  path = readln("/proc/curproc/file");
   if (path != NULL)
     return path;
 
   // NetBSD
-  path = read_proc("/proc/curproc/exe");
+  path = readln("/proc/curproc/exe");
   if (path != NULL)
     return path;
 
@@ -273,10 +290,24 @@ static char *find_me(void) {
   {
     int mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
     static const size_t MIB_LENGTH = sizeof(mib) / sizeof(mib[0]);
-    char buf[PATH_MAX + 1] = {0};
-    size_t buf_size = sizeof(buf);
-    if (sysctl(mib, MIB_LENGTH, buf, &buf_size, NULL, 0) == 0)
-      return gv_strdup(buf);
+
+    do {
+      // determine how long the path is
+      size_t buf_size = 0;
+      if (sysctl(mib, MIB_LENGTH, NULL, &buf_size, NULL, 0) < 0) {
+        break;
+      }
+      assert(buf_size > 0);
+
+      // make enough space for the target path
+      char *buf = gv_alloc(buf_size);
+
+      // resolve it
+      if (sysctl(mib, MIB_LENGTH, buf, &buf_size, NULL, 0) == 0) {
+        return buf;
+      }
+      free(buf);
+    } while (0);
   }
 #endif
 #endif
