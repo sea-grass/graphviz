@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was removed in Graphviz 2.40.0.
 - A number of further updates to the libcdt man page have been made to reflect
   other changes that happened in Graphviz 9.0.0.
+- Use of the non-portable `PATH_MAX` constant has been removed. This was a
+  regression in Graphviz 7.0.1. In addition to fixing the regression, code has
+  been adjusted to remove assumptions on the maximum path length and treat it as
+  unbounded. #2452
 
 ## [9.0.0] - 2023-09-11
 

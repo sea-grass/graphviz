@@ -19,10 +19,6 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef PATH_MAX
-#define PATH_MAX    1024
-#endif
-
 /*
  * strgrpmatch() flags
  */
