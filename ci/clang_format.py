@@ -128,7 +128,6 @@ EXCLUDE = (
     "lib/ast/error.h",
     "lib/ast/fmtbuf.c",
     "lib/ast/fmtesc.c",
-    "lib/ast/pathfind.c",
     "lib/ast/pathpath.c",
     "lib/ast/stresc.c",
     "lib/ast/strmatch.c",
