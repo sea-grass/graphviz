@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,32 +8,31 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
-#include "config.h"
 #include "builddate.h"
-//windows.h for win machines
+#include "config.h"
+// windows.h for win machines
 #if defined(_WIN32) && !defined(__CYGWIN__)
 #include <windows.h>
 #include <windowsx.h>
 #endif
-#include <gtk/gtk.h>
-#include <gtk/gtkgl.h>
-#include <glade/glade.h>
-#include "gui.h"
-#include "viewport.h"
-#include "support.h"
-#include "menucallbacks.h"
+#include "frmobjectui.h"
 #include "gltemplate.h"
+#include "gui.h"
+#include "gvprpipe.h"
+#include "menucallbacks.h"
+#include "support.h"
+#include "viewport.h"
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include "gvprpipe.h"
-#include "frmobjectui.h"
+#include <glade/glade.h>
+#include <gtk/gtk.h>
+#include <gtk/gtkgl.h>
 #ifdef ENABLE_NLS
 #include "libintl.h"
 #endif
-#include <assert.h>
 #include "glexpose.h"
 #include "glutrender.h"
+#include <assert.h>
 
 #include <getopt.h>
 #include <stdbool.h>
@@ -54,7 +53,7 @@
 #include <unistd.h>
 #endif
 
-static char *smyrnaDir;		/* path to directory containin smyrna data files */
+static char *smyrnaDir; /* path to directory containin smyrna data files */
 static char *smyrnaGlade;
 
 /* smyrnaPath:
@@ -66,23 +65,22 @@ static char *smyrnaGlade;
  * it later.
  * Returns NULL on error.
  */
-char *smyrnaPath(char *suffix)
-{
-    static size_t baselen;
+char *smyrnaPath(char *suffix) {
+  static size_t baselen;
 #ifdef _WIN32
-    char *pathSep = "\\";
+  char *pathSep = "\\";
 #else
-    char *pathSep = "/";
+  char *pathSep = "/";
 #endif
-    assert(smyrnaDir);
+  assert(smyrnaDir);
 
-    if (baselen == 0) {
-	baselen = strlen(smyrnaDir) + 2;
-    }
-    size_t len = baselen + strlen(suffix);
-    char *buf = gv_calloc(len, sizeof(char));
-    snprintf(buf, len, "%s%s%s", smyrnaDir, pathSep, suffix);
-    return buf;
+  if (baselen == 0) {
+    baselen = strlen(smyrnaDir) + 2;
+  }
+  size_t len = baselen + strlen(suffix);
+  char *buf = gv_calloc(len, sizeof(char));
+  snprintf(buf, len, "%s%s%s", smyrnaDir, pathSep, suffix);
+  return buf;
 }
 
 static char *useString = "Usage: smyrna [-v?] <file>\n\
@@ -91,112 +89,125 @@ static char *useString = "Usage: smyrna [-v?] <file>\n\
   -v         - verbose\n\
   -?         - print usage\n";
 
-static void usage(int v)
-{
-    fputs(useString, stdout);
-    graphviz_exit(v);
+static void usage(int v) {
+  fputs(useString, stdout);
+  graphviz_exit(v);
 }
 
 static char *Info[] = {
-    "smyrna",                   /* Program */
-    PACKAGE_VERSION,            /* Version */
-    BUILDDATE                   /* Build Date */
+    "smyrna",        /* Program */
+    PACKAGE_VERSION, /* Version */
+    BUILDDATE        /* Build Date */
 };
 
-
 static char *parseArgs(int argc, char *argv[], ViewInfo *viewinfo) {
-    int c;
+  int c;
 
-    while ((c = getopt(argc, argv, ":eKf:txvV?")) != -1) {
-	switch (c) {
-	case 'e':
-	    viewinfo->drawSplines = 1;
-	    break;
-	case 'v': // FIXME: deprecate and remove -v in future
-	    break;
-	case 'f':
-	    viewinfo->guiMode=GUI_FULLSCREEN;
-	    viewinfo->optArg=optarg;
-	    break;
+  while ((c = getopt(argc, argv, ":eKf:txvV?")) != -1) {
+    switch (c) {
+    case 'e':
+      viewinfo->drawSplines = 1;
+      break;
+    case 'v': // FIXME: deprecate and remove -v in future
+      break;
+    case 'f':
+      viewinfo->guiMode = GUI_FULLSCREEN;
+      viewinfo->optArg = optarg;
+      break;
 
-	case 'V':
-	    fprintf(stderr, "%s version %s (%s)\n",
-		    Info[0], Info[1], Info[2]);
-	    graphviz_exit(0);
-	    break;
-	case '?':
-	    if (optopt == '\0' || optopt == '?')
-		usage(0);
-	    else {
-		fprintf(stderr,
-			"smyrna: option -%c unrecognized\n",
-			optopt);
-		usage(1);
-	    }
-	    break;
-	}
+    case 'V':
+      fprintf(stderr, "%s version %s (%s)\n", Info[0], Info[1], Info[2]);
+      graphviz_exit(0);
+      break;
+    case '?':
+      if (optopt == '\0' || optopt == '?')
+        usage(0);
+      else {
+        fprintf(stderr, "smyrna: option -%c unrecognized\n", optopt);
+        usage(1);
+      }
+      break;
     }
+  }
 
-    if (optind < argc)
-	return argv[optind];
-    else
-	return NULL;
+  if (optind < argc)
+    return argv[optind];
+  else
+    return NULL;
 }
 
-static void windowedMode(int argc, char *argv[])
-{
-    GdkGLConfig *glconfig;
-    /*combo box to show loaded graphs */
-    GtkComboBox *graphComboBox;
+static void windowedMode(int argc, char *argv[]) {
+  GdkGLConfig *glconfig;
+  /*combo box to show loaded graphs */
+  GtkComboBox *graphComboBox;
 
-    gtk_set_locale();
-    gtk_init(&argc, &argv);
-    if (!(smyrnaGlade))
-	smyrnaGlade = smyrnaPath("smyrna.glade");
-    xml = glade_xml_new(smyrnaGlade, NULL, NULL);
+  gtk_set_locale();
+  gtk_init(&argc, &argv);
+  if (!(smyrnaGlade))
+    smyrnaGlade = smyrnaPath("smyrna.glade");
+  xml = glade_xml_new(smyrnaGlade, NULL, NULL);
 
-    gladewidget = glade_xml_get_widget(xml, "frmMain");
-    gtk_widget_show(gladewidget);
-    g_signal_connect(gladewidget, "destroy", G_CALLBACK(mQuitSlot), NULL);
-    glade_xml_signal_autoconnect(xml);
-    gtk_gl_init(0, 0);
-    /* Configure OpenGL framebuffer. */
-    glconfig = configure_gl();
-    gladewidget = glade_xml_get_widget(xml, "hbox11");
+  gladewidget = glade_xml_get_widget(xml, "frmMain");
+  gtk_widget_show(gladewidget);
+  g_signal_connect(gladewidget, "destroy", G_CALLBACK(mQuitSlot), NULL);
+  glade_xml_signal_autoconnect(xml);
+  gtk_gl_init(0, 0);
+  /* Configure OpenGL framebuffer. */
+  glconfig = configure_gl();
+  gladewidget = glade_xml_get_widget(xml, "hbox11");
 
-    gtk_widget_hide(glade_xml_get_widget(xml, "vbox13"));
-    gtk_window_set_deletable ((GtkWindow*)glade_xml_get_widget(xml, "dlgSettings"),0);
-    gtk_window_set_deletable ((GtkWindow*)glade_xml_get_widget(xml, "frmTVNodes"),0);
-    create_window(glconfig, gladewidget);
-    change_cursor(GDK_TOP_LEFT_ARROW);
+  gtk_widget_hide(glade_xml_get_widget(xml, "vbox13"));
+  gtk_window_set_deletable(
+      (GtkWindow *)glade_xml_get_widget(xml, "dlgSettings"), 0);
+  gtk_window_set_deletable((GtkWindow *)glade_xml_get_widget(xml, "frmTVNodes"),
+                           0);
+  create_window(glconfig, gladewidget);
+  change_cursor(GDK_TOP_LEFT_ARROW);
 
 #ifndef _WIN32
-    glutInit(&argc, argv);
+  glutInit(&argc, argv);
 #endif
 
-    gladewidget = glade_xml_get_widget(xml, "hbox13");
-    graphComboBox = (GtkComboBox *) gtk_combo_box_new_text();
-    gtk_box_pack_end((GtkBox*)gladewidget, (GtkWidget*)graphComboBox, 1, 1, 10);
-    gtk_widget_show((GtkWidget*)graphComboBox);
-    view->graphComboBox = graphComboBox;
+  gladewidget = glade_xml_get_widget(xml, "hbox13");
+  graphComboBox = (GtkComboBox *)gtk_combo_box_new_text();
+  gtk_box_pack_end((GtkBox *)gladewidget, (GtkWidget *)graphComboBox, 1, 1, 10);
+  gtk_widget_show((GtkWidget *)graphComboBox);
+  view->graphComboBox = graphComboBox;
 
-    if(view->guiMode!=GUI_FULLSCREEN)
-	gtk_main();
+  if (view->guiMode != GUI_FULLSCREEN)
+    gtk_main();
 }
 
 #if !defined(__APPLE__) && !defined(_WIN32)
-/// read the given symlink in the /proc file system
-static char *read_proc(const char *path) {
+/// `readlink`-alike but dynamically allocates
+static char *readln(const char *path) {
 
-  char buf[PATH_MAX + 1] = {0};
-  if (readlink(path, buf, sizeof(buf)) < 0)
-    return NULL;
+  char *resolved = NULL;
+  size_t size = 0;
 
-  // was the path too long?
-  if (buf[sizeof(buf) - 1] != '\0')
-    return NULL;
+  while (true) {
 
-  return gv_strdup(buf);
+    // expand target buffer
+    resolved = gv_realloc(resolved, size, size == 0 ? 1024 : (size * 2));
+    size = size == 0 ? 1024 : (size * 2);
+
+    // attempt to resolve
+    {
+      ssize_t written = readlink(path, resolved, size);
+      if (written < 0) {
+        break;
+      }
+      if ((size_t)written < size) {
+        // success
+        resolved[written] = '\0';
+        return resolved;
+      }
+    }
+  }
+
+  // failed
+  free(resolved);
+  return NULL;
 }
 #endif
 
@@ -222,12 +233,12 @@ static char *find_me(void) {
 
     // try to resolve any levels of symlinks if possible
     while (true) {
-      char buf[PATH_MAX + 1] = {0};
-      if (readlink(path, buf, sizeof(buf)) < 0)
+      char *buf = readln(path);
+      if (buf == NULL)
         return path;
 
       free(path);
-      path = gv_strdup(buf);
+      path = buf;
     }
   }
 #elif defined(_WIN32)
@@ -254,17 +265,17 @@ static char *find_me(void) {
 #else
 
   // Linux
-  char *path = read_proc("/proc/self/exe");
+  char *path = readln("/proc/self/exe");
   if (path != NULL)
     return path;
 
   // DragonFly BSD, FreeBSD
-  path = read_proc("/proc/curproc/file");
+  path = readln("/proc/curproc/file");
   if (path != NULL)
     return path;
 
   // NetBSD
-  path = read_proc("/proc/curproc/exe");
+  path = readln("/proc/curproc/exe");
   if (path != NULL)
     return path;
 
@@ -273,10 +284,24 @@ static char *find_me(void) {
   {
     int mib[] = {CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
     static const size_t MIB_LENGTH = sizeof(mib) / sizeof(mib[0]);
-    char buf[PATH_MAX + 1] = {0};
-    size_t buf_size = sizeof(buf);
-    if (sysctl(mib, MIB_LENGTH, buf, &buf_size, NULL, 0) == 0)
-      return gv_strdup(buf);
+
+    do {
+      // determine how long the path is
+      size_t buf_size = 0;
+      if (sysctl(mib, MIB_LENGTH, NULL, &buf_size, NULL, 0) < 0) {
+        break;
+      }
+      assert(buf_size > 0);
+
+      // make enough space for the target path
+      char *buf = gv_alloc(buf_size);
+
+      // resolve it
+      if (sysctl(mib, MIB_LENGTH, buf, &buf_size, NULL, 0) == 0) {
+        return buf;
+      }
+      free(buf);
+    } while (0);
   }
 #endif
 #endif
@@ -326,44 +351,43 @@ static char *find_share(void) {
   return share;
 }
 
-int main(int argc, char *argv[])
-{
-    smyrnaDir = getenv("SMYRNA_PATH");
-    if (!smyrnaDir) {
-	smyrnaDir = find_share();
-    }
+int main(int argc, char *argv[]) {
+  smyrnaDir = getenv("SMYRNA_PATH");
+  if (!smyrnaDir) {
+    smyrnaDir = find_share();
+  }
 
-    gchar *package_locale_dir;
+  gchar *package_locale_dir;
 #ifdef G_OS_WIN32
-    gchar *package_prefix =
-	g_win32_get_package_installation_directory(NULL, NULL);
-    gchar *package_data_dir = g_build_filename(package_prefix, "share", NULL);
-    package_locale_dir =
-	g_build_filename(package_prefix, "share", "locale", NULL);
+  gchar *package_prefix =
+      g_win32_get_package_installation_directory(NULL, NULL);
+  gchar *package_data_dir = g_build_filename(package_prefix, "share", NULL);
+  package_locale_dir =
+      g_build_filename(package_prefix, "share", "locale", NULL);
 #else
-    package_locale_dir = g_build_filename(smyrnaDir, "locale", NULL);
-#endif				/* # */
+  package_locale_dir = g_build_filename(smyrnaDir, "locale", NULL);
+#endif /* # */
 #ifdef ENABLE_NLS
-    bindtextdomain(GETTEXT_PACKAGE, package_locale_dir);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
+  bindtextdomain(GETTEXT_PACKAGE, package_locale_dir);
+  bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+  textdomain(GETTEXT_PACKAGE);
 #endif
-    view = gv_alloc(sizeof(ViewInfo));
-    init_viewport(view);
-    view->initFileName = parseArgs(argc, argv, view);
-    if(view->initFileName)
-	view->initFile=1;
+  view = gv_alloc(sizeof(ViewInfo));
+  init_viewport(view);
+  view->initFileName = parseArgs(argc, argv, view);
+  if (view->initFileName)
+    view->initFile = 1;
 
-    if(view->guiMode==GUI_FULLSCREEN)
-	cb_glutinit(800, 600, &argc, argv, view->optArg);
-    else
-	windowedMode(argc, argv);
+  if (view->guiMode == GUI_FULLSCREEN)
+    cb_glutinit(800, 600, &argc, argv, view->optArg);
+  else
+    windowedMode(argc, argv);
 #ifdef G_OS_WIN32
-    g_free(package_prefix);
-    g_free(package_data_dir);
+  g_free(package_prefix);
+  g_free(package_data_dir);
 #endif
-    g_free(package_locale_dir);
-    graphviz_exit(0);
+  g_free(package_locale_dir);
+  graphviz_exit(0);
 }
 
 /**
