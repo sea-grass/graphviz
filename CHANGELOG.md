@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (10.0.0)]
 
+### Added
+
+- Releases now include packages for [Rocky Linux](https://rockylinux.org/) 8.
+
 ### Changed
 
 - The Criterion unit tests have been removed and migrated to Pytest. This is
