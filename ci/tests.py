@@ -101,6 +101,10 @@ def test_existence(binary: str):
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip("smyrna is not built for Centos (#1834)")
 
+    if os_id == "rocky" and binary == "mingle":
+        check_that_tool_does_not_exist(binary, os_id)
+        pytest.skip("mingle is not built for Rocky due to lacking libANN")
+
     # FIXME: Remove skip when
     # https://gitlab.com/graphviz/graphviz/-/issues/1837 is fixed
     if os.getenv("build_system") == "msbuild":
