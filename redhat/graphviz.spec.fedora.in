@@ -50,6 +50,11 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global WEBP       0
 %endif
 
+# Overrides for Rocky
+%if 0%{?rhel} >= 8
+%global ANN        0
+%endif
+
 # Plugins version
 %global pluginsver 6
 
