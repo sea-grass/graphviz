@@ -18,6 +18,7 @@
 #include <ast/ast.h>
 #include <gvpr/compile.h>
 #include <limits.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 #include <stdio.h>
@@ -97,11 +98,12 @@ long rindexOf(char *s1, char *s2)
     if (len2 > len1)
 	return -1;
     p = s1 + (len1 - len2);
-    while (p >= s1) {
+    while (true) {
 	if (strncmp(p, s2, len2) == 0)
 	    return p - s1;
-	else
-	    p--;
+	if (p == s1)
+	    break;
+	p--;
     }
     return -1;
 }
