@@ -669,6 +669,11 @@ int closeFile(Expr_t *ex, int fd) {
     exerror("closeF: cannot close standard stream %d", fd);
     return -1;
   }
+  if (fd < 0 ||
+      (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))) {
+    exerror("closeG: %d: invalid descriptor", fd);
+    return -1;
+  }
   if (!ex->file[fd]) {
     exerror("closeF: stream %d not open", fd);
     return -1;
