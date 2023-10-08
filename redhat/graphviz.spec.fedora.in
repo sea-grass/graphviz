@@ -240,7 +240,9 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_mandir}/man1/gvpr.1*
 %{_mandir}/man1/gxl2dot.1*
 %{_mandir}/man1/gxl2gv.1*
+%if %{ANN}
 %{_mandir}/man1/mingle.1*
+%endif
 %{_mandir}/man1/edgepaint.1*
 %{_mandir}/man1/mm2gv.1*
 %{_mandir}/man1/neato.1*
