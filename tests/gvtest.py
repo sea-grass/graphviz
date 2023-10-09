@@ -149,6 +149,11 @@ def is_mingw() -> bool:
     return "mingw" in sysconfig.get_platform()
 
 
+def is_msbuild() -> bool:
+    """was the Graphviz under test built with MSBuild?"""
+    return os.getenv("build_system") == "msbuild"
+
+
 def remove_xtype_warnings(s: str) -> str:
     """
     Remove macOS XType warnings from a string. These appear to be harmless, but

@@ -14,17 +14,17 @@
     <ProjectGuid>{33E97266-F213-3639-BCAB-2F3F95E15B16}</ProjectGuid>
     <RootNamespace>gvedit</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -46,7 +46,7 @@
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>$(SolutionDir)Graphviz\bin\</OutDir>
+    <OutDir>$(SolutionDir)Release\Graphviz\bin\</OutDir>
     <IntDir>Release\</IntDir>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -58,16 +58,16 @@
       <EnableErrorChecks>None</EnableErrorChecks>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Zc:__cplusplus -Zm200 -permissive- -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Qt\4.8.3\include\QtCore;..\..\..\..\Qt\4.8.3\include\QtGui;..\..\..\..\Qt\4.8.3\include;$(SolutionDir)\lib;..\..\lib\gvc;..\..\lib\common;..\..\lib\pathplan;..\..\lib\cgraph;..\..\lib\cdt;..\..;..\..\..\..\Qt\4.8.3\include\ActiveQt;debug;..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtWidgets;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtPrintSupport;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)\lib;..\..\lib\gvc;..\..\lib\common;..\..\lib\pathplan;..\..\lib\cgraph;..\..\lib\cdt;..\..;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt;debug;..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;GVDLL;QT_LARGEFILE_SUPPORT;QT_DLL;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <ObjectFileName>debug\</ObjectFileName>
@@ -75,20 +75,44 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;GVDLL;QT_LARGEFILE_SUPPORT;QT_DLL;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>c:\Qt\4.8.3\lib\qtmaind.lib;C:/graphviz-ms/bin\gvc.lib;C:/graphviz-ms/bin\ingraphs.lib;C:/graphviz-ms/bin\cgraph.lib;C:/graphviz-ms/bin\cdt.lib;C:/gtk/lib\expat.lib;C:/gtk/lib\z.lib;C:/gtk/lib\ltdl.lib;c:\Qt\4.8.3\lib\QtGuid4.lib;c:\Qt\4.8.3\lib\QtCored4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6EntryPointd.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Guid.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Cored.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib\Qt6Widgetsd.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>c:\Qt\4.8.3\lib;C:/gtk/lib;C:\Qt\4.8.3\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile />
       <SubSystem>Windows</SubSystem>
       <LinkTimeCodeGeneration />
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\Qt6Guid.dll $(OutDir)Qt6Guid.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\Qt6Widgetsd.dll $(OutDir)Qt6Widgetsd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\Qt6Cored.dll $(OutDir)Qt6Cored.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\brotlicommon.dll $(OutDir)brotlicommon.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\brotlidec.dll $(OutDir)brotlidec.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\bz2d.dll $(OutDir)bz2d.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\double-conversion.dll $(OutDir)double-conversion.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\freetyped.dll $(OutDir)freetyped.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\harfbuzz.dll $(OutDir)harfbuzz.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icuind73.dll $(OutDir)icuind73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icudtd73.dll $(OutDir)icudtd73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\icuucd73.dll $(OutDir)icuucd73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libcrypto-3.dll $(OutDir)libcrypto-3.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libpng16d.dll $(OutDir)libpng16d.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\pcre2-16d.dll $(OutDir)pcre2-16d.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\turbojpeg.dll $(OutDir)turbojpeg.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\zlibd1.dll $(OutDir)zlibd1.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\zstd.dll $(OutDir)zstd.dll
+mkdir $(OutDir)platforms
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\Qt6\plugins\platforms\qwindowsd.dll $(OutDir)platforms\qwindowsd.dll</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -97,16 +121,16 @@
       <EnableErrorChecks>None</EnableErrorChecks>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>-Zm200 -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Zc:__cplusplus -Zm200 -permissive- -w34100 -w34189 %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>..\..\..\..\Qt\4.8.3\include\QtCore;..\..\..\..\Qt\4.8.3\include\QtGui;..\..\..\..\Qt\4.8.3\include;$(SolutionDir)\lib;..\..\lib\gvc;..\..\lib\common;..\..\lib\pathplan;..\..\lib\cgraph;..\..\lib\cdt;..\..;..\..\..\..\Qt\4.8.3\include\ActiveQt;release;..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtWidgets;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtPrintSupport;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)\lib;..\..\lib\gvc;..\..\lib\common;..\..\lib\pathplan;..\..\lib\cgraph;..\..\lib\cdt;..\..;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt;release;..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;GVDLL;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <ExceptionHandling>Sync</ExceptionHandling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <ObjectFileName>release\</ObjectFileName>
@@ -114,20 +138,44 @@
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat />
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;WIN32;GVDLL;QT_LARGEFILE_SUPPORT;QT_DLL;QT_NO_DEBUG;QT_GUI_LIB;QT_CORE_LIB;QT_HAVE_MMX;QT_HAVE_3DNOW;QT_HAVE_SSE;QT_HAVE_MMXEXT;QT_HAVE_SSE2;QT_THREAD_SUPPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ResourceCompile>
     <Link>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>c:\Qt\4.8.3\lib\qtmain.lib;C:/graphviz-ms/bin\gvc.lib;C:/graphviz-ms/bin\cgraph.lib;C:/graphviz-ms/bin\cdt.lib;C:/gtk/lib\expat.lib;C:/gtk/lib\z.lib;C:/gtk/lib\ltdl.lib;c:\Qt\4.8.3\lib\QtGui4.lib;c:\Qt\4.8.3\lib\QtCore4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6EntryPoint.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Gui.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Core.lib;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib\Qt6Widgets.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>c:\Qt\4.8.3\lib;C:/gtk/lib;C:/graphviz-ms/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <ProgramDatabaseFile />
       <SubSystem>Windows</SubSystem>
       <LinkTimeCodeGeneration />
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\Qt6Gui.dll $(OutDir)Qt6Gui.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\Qt6Widgets.dll $(OutDir)Qt6Widgets.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\Qt6Core.dll $(OutDir)Qt6Core.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\brotlicommon.dll $(OutDir)brotlicommon.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\brotlidec.dll $(OutDir)brotlidec.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\bz2.dll $(OutDir)bz2.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\double-conversion.dll $(OutDir)double-conversion.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\freetype.dll $(OutDir)freetype.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\harfbuzz.dll $(OutDir)harfbuzz.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icuin73.dll $(OutDir)icuin73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icudt73.dll $(OutDir)icudt73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\icuuc73.dll $(OutDir)icuuc73.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libcrypto-3.dll $(OutDir)libcrypto-3.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libpng16.dll $(OutDir)libpng16.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\pcre2-16.dll $(OutDir)pcre2-16.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\turbojpeg.dll $(OutDir)turbojpeg.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\zlib1.dll $(OutDir)zlib1.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\zstd.dll $(OutDir)zstd.dll
+mkdir $(OutDir)platforms
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\Qt6\plugins\platforms\qwindows.dll $(OutDir)platforms\qwindows.dll</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="csettings.cpp" />
@@ -169,50 +217,50 @@
   <ItemGroup>
     <CustomBuild Include="csettings.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MOC csettings.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 csettings.h -o debug\moc_csettings.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 csettings.h -o debug\moc_csettings.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe;csettings.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;csettings.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_csettings.cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MOC csettings.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 csettings.h -o release\moc_csettings.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 csettings.h -o release\moc_csettings.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe;csettings.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;csettings.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_csettings.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="imageviewer.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MOC imageviewer.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 imageviewer.h -o debug\moc_imageviewer.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 imageviewer.h -o debug\moc_imageviewer.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe;imageviewer.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;imageviewer.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_imageviewer.cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MOC imageviewer.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 imageviewer.h -o release\moc_imageviewer.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 imageviewer.h -o release\moc_imageviewer.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe;imageviewer.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;imageviewer.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_imageviewer.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="mainwindow.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MOC mainwindow.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o debug\moc_mainwindow.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o debug\moc_mainwindow.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe;mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_mainwindow.cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MOC mainwindow.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o release\moc_mainwindow.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mainwindow.h -o release\moc_mainwindow.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe;mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;mainwindow.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_mainwindow.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <CustomBuild Include="mdichild.h">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MOC mdichild.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mdichild.h -o debug\moc_mdichild.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"debug" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mdichild.h -o debug\moc_mdichild.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\moc.exe;mdichild.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;mdichild.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\moc_mdichild.cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MOC mdichild.h</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"..\..\..\..\Qt\4.8.3\include\QtCore" -I"..\..\..\..\Qt\4.8.3\include\QtGui" -I"..\..\..\..\Qt\4.8.3\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"..\..\..\..\Qt\4.8.3\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mdichild.h -o release\moc_mdichild.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">moc.exe  -DUNICODE -DWIN32 -DQT_LARGEFILE_SUPPORT -DQT_DLL -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_HAVE_MMX -DQT_HAVE_3DNOW -DQT_HAVE_SSE -DQT_HAVE_MMXEXT -DQT_HAVE_SSE2 -DQT_THREAD_SUPPORT -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtCore" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\Qt6\QtGui" -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include" -I"..\..\lib\gvc" -I"..\..\lib\common" -I"..\..\lib\pathplan" -I"..\..\lib\cgraph" -I"..\..\lib\cdt" -I"..\.." -I"$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\ActiveQt" -I"release" -I..\..\..\..\Qt\4.8.3\mkspecs\win32-msvc2008 -D_MSC_VER=1500 -DWIN32 mdichild.h -o release\moc_mdichild.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\moc.exe;mdichild.h;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\moc.exe;mdichild.h;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\moc_mdichild.cpp;%(Outputs)</Outputs>
     </CustomBuild>
     <ClInclude Include="ui_settings.h" />
@@ -231,21 +279,27 @@
   <ItemGroup>
     <CustomBuild Include="mdi.qrc">
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">RCC mdi.qrc</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\rcc.exe -name mdi mdi.qrc -o debug\qrc_mdi.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">rcc.exe -name mdi mdi.qrc -o debug\qrc_mdi.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Qt\4.8.3\bin\rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">debug\qrc_mdi.cpp;%(Outputs)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">RCC mdi.qrc</Message>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\rcc.exe -name mdi mdi.qrc -o release\qrc_mdi.cpp
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">rcc.exe -name mdi mdi.qrc -o release\qrc_mdi.cpp
 </Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Qt\4.8.3\bin\rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\tools\Qt6\bin\rcc.exe;images\copy.png;images\cut.png;images\icon.png;images\new.png;images\open.png;images\paste.png;images\run.png;images\save.png;images\settings.png;mdi.qrc;%(AdditionalInputs)</AdditionalInputs>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">release\qrc_mdi.cpp;%(Outputs)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\lib\cgraph\cgraph.vcxproj">
+      <Project>{c0663a08-f276-4dd6-b17c-e501ee066f7c}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\..\lib\gvc.vcxproj">
       <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+    <ProjectReference Include="..\..\lib\ingraphs\ingraphs.vcxproj">
+      <Project>{d6fd0de5-5305-458e-8ca5-fca4b8e05b04}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
