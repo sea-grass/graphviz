@@ -24,6 +24,12 @@ pages:
         IMAGE: ubuntu-23.04
     except:
         - tags
+    # GitLab Pages only allow one hosted root per repository.
+    # We don't want non-main branches overwriting this one hosted root.
+    # Contributors wanting to test pages changes should push to their own
+    # repo's main branch.
+    only:
+        - main
 
 portable-source:
     # Doesn't have to wait for all the previous stages, only a docker image of
