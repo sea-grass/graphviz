@@ -2554,6 +2554,26 @@ def test_2283():
     ), "nodes not placed evenly"
 
 
+@pytest.mark.xfail(strict=True)  # TODO
+def test_2285():
+    """
+    using the `svg_inline` output should result in SVG you can inline to HTML
+    https://gitlab.com/graphviz/graphviz/-/issues/2285
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2285.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # translate this to JSON
+    output = dot("svg_inline", input)
+
+    assert "<?xml" not in output, "<?xml in output"
+    assert "<!DOCTYPE" not in output, "<?xml in output"
+    assert "xmlns" not in output, "xmlns in output"
+    assert "<svg" in output, "<svg not in output"
+
+
 @pytest.mark.skipif(which("gxl2gv") is None, reason="gxl2gv not available")
 @pytest.mark.xfail()
 def test_2300_1():
