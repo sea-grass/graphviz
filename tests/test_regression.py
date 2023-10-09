@@ -2554,7 +2554,6 @@ def test_2283():
     ), "nodes not placed evenly"
 
 
-@pytest.mark.xfail(strict=True)  # TODO
 def test_2285():
     """
     using the `svg_inline` output should result in SVG you can inline to HTML

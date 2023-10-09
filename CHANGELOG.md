@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Releases now include packages for [Rocky Linux](https://rockylinux.org/) 8 and
   9.
+- A new output format, `-Tsvg_inline`, has been added to generate a header-less
+  SVG suitable for inlining into HTML. #2285
 
 ### Changed
 
