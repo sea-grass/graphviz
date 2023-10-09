@@ -467,7 +467,9 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   return edges;
 }
 
-static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* edges, double angle_param, double angle){
+static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
+                                    pedge *edges, double angle_param,
+                                    double angle) {
   int *assignment = NULL, nclusters;
   double modularity;
   int *clusterp, *clusters;
@@ -518,7 +520,6 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
     }
   }
   SparseMatrix_delete(D);
-  return edges;
 }
 
 static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, int compatibility_method, double tol){
@@ -596,7 +597,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
     /* go through the links and make sure edges are compatible */
     B = check_compatibility(A, ne, edges, compatibility_method, tol);
 
-    edges = modularity_ink_bundling(dim, ne, B, edges, angle_param, angle);
+    modularity_ink_bundling(dim, ne, B, edges, angle_param, angle);
 
   } else if (method == METHOD_INK_AGGLOMERATE){
 #ifdef HAVE_ANN
