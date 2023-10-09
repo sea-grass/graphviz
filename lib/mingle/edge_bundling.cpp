@@ -416,7 +416,8 @@ static void edge_attraction_force(double similarity, pedge e1, pedge e2,
 
 }
 
-static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int maxit, double step0, double K) {
+static void force_directed_edge_bundling(SparseMatrix A, pedge *edges,
+                                         int maxit, double step0, double K) {
   int i, j, ne = A->n, k;
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
@@ -463,8 +464,6 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   if (Verbose > 1)
     fprintf(stderr, "iter ==== %d cpu = %f npoints = %d\n",iter, ((double) (clock() - start))/CLOCKS_PER_SEC, np - 2);
   }
-
-  return edges;
 }
 
 static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
@@ -622,7 +621,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
 	edges[i] = pedge_double(edges[i]);
       }
       step0 /= 2;
-      edges = force_directed_edge_bundling(B, edges, maxit, step0, K);
+      force_directed_edge_bundling(B, edges, maxit, step0, K);
     }
     
   } else if (method == METHOD_NONE){
