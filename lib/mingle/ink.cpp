@@ -224,8 +224,8 @@ static double project_to_line(point_t pt, point_t left, point_t right, double an
  * Compute minimal ink used the input edges are bundled.
  * Assumes tails all occur on one side and heads on the other.
  */
-double ink(pedge* edges, int numEdges, int *pick, double *ink0, point_t *meet1, point_t *meet2, double angle_param, double angle)
-{
+double ink(const pedge *edges, int numEdges, int *pick, double *ink0,
+           point_t *meet1, point_t *meet2, double angle_param, double angle) {
   int i;
   point_t begin, end, mid, diff;
   pedge e;
