@@ -522,7 +522,9 @@ static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
   SparseMatrix_delete(D);
 }
 
-static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, int compatibility_method, double tol){
+static SparseMatrix check_compatibility(SparseMatrix A, int ne,
+                                        const pedge *edges,
+                                        int compatibility_method, double tol) {
   /* go through the links and make sure edges are compatible */
   SparseMatrix B, C;
   int *ia, *ja, i, j, jj;
