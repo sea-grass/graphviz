@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,25 +16,23 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/agxbuf.h>
 
-const char *pathcat(char *path, const char *dirs, int sep,
-	      const char *a, const char *b)
-{
-    char *s;
+const char *pathcat(agxbuf *path, const char *dirs, const char *a,
+                    const char *b) {
+  const char sep = ':';
 
-    s = path;
-    while (*dirs && *dirs != sep)
-	*s++ = *dirs++;
-    if (s != path)
-	*s++ = '/';
-    if (a) {
-	while ((*s = *a++))
-	    s++;
-	if (b)
-	    *s++ = '/';
-    } else if (!b)
-	b = ".";
+  while (*dirs && *dirs != sep)
+    agxbputc(path, *dirs++);
+  if (agxblen(path) > 0)
+    agxbputc(path, '/');
+  if (a) {
+    agxbput(path, a);
     if (b)
-	while ((*s++ = *b++));
-    return *dirs ? ++dirs : 0;
+      agxbputc(path, '/');
+  } else if (!b)
+    b = ".";
+  if (b)
+    agxbput(path, b);
+  return *dirs ? ++dirs : 0;
 }

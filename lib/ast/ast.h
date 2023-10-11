@@ -14,13 +14,10 @@
 extern "C" {
 #endif
 
+#include <cgraph/agxbuf.h>
 #include <sfio/sfio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifndef PATH_MAX
-#define PATH_MAX    1024
-#endif
 
 /*
  * strgrpmatch() flags
@@ -40,12 +37,10 @@ extern "C" {
 #define strneq(a,b,n)     (!strncmp(a,b,n))
 #define memzero(b,n)    memset(b,0,n)
 
-    extern char *pathpath(char *, const char *);
-    extern char *pathfind(const char *, const char *, const char *, char *,
-			  size_t);
-    extern char *pathaccess(char*, const char*, const char*, const char*);
-    extern char *pathcanon(char*);
-    extern const char *pathcat(char *, const char *, int, const char *,
+    extern char *pathpath(const char *);
+    extern char *pathfind(const char *, const char *, const char *);
+    extern char *pathaccess(const char*, const char*, const char*);
+    extern const char *pathcat(agxbuf *, const char *, const char *,
 			 const char *);
 
     extern int chresc(const char *, char **);
@@ -58,7 +53,6 @@ extern "C" {
     extern int strmatch(const char *, const char *);
     extern int strgrpmatch(const char *, const char *, int *, int, int);
     extern void stresc(char *);
-    extern char *strcopy(char *s, const char *t);
 
 #ifdef __cplusplus
 }

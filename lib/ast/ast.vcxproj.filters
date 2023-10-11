@@ -41,9 +41,6 @@
     <ClCompile Include="pathaccess.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pathcanon.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="pathcat.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,9 +48,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="pathpath.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="strcopy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="stresc.c">
