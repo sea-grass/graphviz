@@ -18,7 +18,6 @@
  */
 
 #include <assert.h>
-#include <cgraph/likely.h>
 #include <ctype.h>
 #include <common/render.h>
 #include <fdpgen/tlayout.h>
@@ -280,7 +279,7 @@ int gvParseArgs(GVC_t *gvc, int argc, char** argv)
 	return (1-argc);
     if ((rv = dotneato_args_initialize(gvc, argc, argv)))
 	return rv;
-    if (UNLIKELY(Verbose))
+    if (Verbose)
 	gvplugin_write_status(gvc);
     return 0;
 }

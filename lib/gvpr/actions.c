@@ -24,7 +24,6 @@
 #include <ctype.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
-#include <cgraph/likely.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/unused.h>
@@ -775,7 +774,7 @@ char *toLower(Expr_t *pgm, char *src) {
 
   const size_t len = strlen(src);
   char *dst = exstralloc(pgm, len + 1);
-  if (UNLIKELY(dst == NULL)) {
+  if (dst == NULL) {
     return NULL;
   }
 
@@ -794,7 +793,7 @@ char *toUpper(Expr_t *pgm, char *src) {
 
   const size_t len = strlen(src);
   char *dst = exstralloc(pgm, len + 1);
-  if (UNLIKELY(dst == NULL)) {
+  if (dst == NULL) {
     return NULL;
   }
 

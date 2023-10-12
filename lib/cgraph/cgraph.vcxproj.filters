@@ -36,9 +36,6 @@
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="likely.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="list.h">
       <Filter>Header Files</Filter>
     </ClInclude>

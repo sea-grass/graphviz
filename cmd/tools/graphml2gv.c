@@ -18,7 +18,6 @@
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
-#include    <cgraph/likely.h>
 #include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
@@ -60,7 +59,7 @@ static void pushString(gv_stack_t *stk, const char *s) {
 
 static void popString(gv_stack_t *stk) {
 
-  if (UNLIKELY(stack_is_empty(stk))) {
+  if (stack_is_empty(stk)) {
     fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
     graphviz_exit(EXIT_FAILURE);
   }
@@ -71,7 +70,7 @@ static void popString(gv_stack_t *stk) {
 
 static char *topString(gv_stack_t *stk) {
 
-  if (UNLIKELY(stack_is_empty(stk))) {
+  if (stack_is_empty(stk)) {
     fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
     graphviz_exit(EXIT_FAILURE);
   }

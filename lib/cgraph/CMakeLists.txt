@@ -18,7 +18,6 @@ add_library(cgraph SHARED
   cgraph.h
   clamp.h
   exit.h
-  likely.h
   list.h
   prisize_t.h
   sort.h

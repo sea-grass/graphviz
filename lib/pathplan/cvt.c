@@ -12,7 +12,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cgraph/alloc.h>
-#include <cgraph/likely.h>
 #include <limits.h>
 #include <pathplan/vis.h>
 
@@ -54,9 +53,9 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     rv->Npoly = n_obs;
 
     // bail out if any above allocations failed
-    if (UNLIKELY(rv->start == NULL || (n > 0 && (rv->P == NULL ||
-                                                 rv->next == NULL ||
-                                                 rv->prev == NULL)))) {
+    if (rv->start == NULL || (n > 0 && (rv->P == NULL ||
+                                        rv->next == NULL ||
+                                        rv->prev == NULL))) {
 	free(rv->prev);
 	free(rv->next);
 	free(rv->start);
