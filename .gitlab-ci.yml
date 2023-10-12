@@ -259,6 +259,18 @@ centos7-build:
     variables:
       IMAGE: centos7
 
+rocky8-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_rocky8
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky8
+
 fedora37-build:
     <<: *rpm_build_definition
     needs:
@@ -658,6 +670,21 @@ centos7-cmake-build:
     variables:
       IMAGE: centos7
 
+rocky8-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_rocky8
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky8
+
 fedora37-cmake-build:
     <<: *rpm_build_definition
     needs:
@@ -871,6 +898,18 @@ centos7-test:
     variables:
       IMAGE: centos7
 
+rocky8-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "rocky8-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky8
+
 fedora37-test:
     <<: *linux_test_definition
     before_script:
@@ -967,6 +1006,19 @@ centos7-cmake-test:
         - linux
     variables:
       IMAGE: centos7
+
+rocky8-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "rocky8-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky8
 
 fedora37-cmake-test:
     <<: *linux_test_definition
@@ -1104,6 +1156,11 @@ docker_build_centos7:
   variables:
     IMAGE: centos7
 
+docker_build_rocky8:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: rocky8
+
 docker_build_fedora37:
   <<: *docker_build_definition
   variables:
@@ -1135,6 +1192,13 @@ docker_push_centos7:
     IMAGE: centos7
   needs:
     - docker_build_centos7
+
+docker_push_rocky8:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: rocky8
+  needs:
+    - docker_build_rocky8
 
 docker_push_fedora37:
   <<: *docker_push_definition

@@ -19,6 +19,7 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 
 # Assuming Fedora
 %global LICENSE    1
+%global ANN        1
 %global ARRRR      1
 %global DEEEE      0
 %global DEVIL      1
@@ -49,6 +50,11 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global WEBP       0
 %endif
 
+# Overrides for Rocky
+%if 0%{?rhel} >= 8
+%global ANN        0
+%endif
+
 # Plugins version
 %global pluginsver 6
 
@@ -62,8 +68,10 @@ BuildRequires: gmp-devel gd gd-devel librsvg2-devel
 BuildRequires: ghostscript ghostscript-devel poppler-glib-devel libtool-ltdl libtool-ltdl-devel
 BuildRequires: ruby ruby-devel php-devel lua-devel
 BuildRequires: perl-devel perl-libs perl-ExtUtils-Embed tcl tcl-devel tk tk-devel
-BuildRequires: ann-devel
 
+%if %{ANN}
+BuildRequires: ann-devel
+%endif
 %if %{ARRRR}
 BuildRequires: R-devel
 %endif
@@ -200,7 +208,9 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_bindir}/gvpr
 %{_bindir}/gxl2dot
 %{_bindir}/gxl2gv
+%if %{ANN}
 %{_bindir}/mingle
+%endif
 %{_bindir}/edgepaint
 %{_bindir}/mm2gv
 %{_bindir}/neato
@@ -235,7 +245,9 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_mandir}/man1/gvpr.1*
 %{_mandir}/man1/gxl2dot.1*
 %{_mandir}/man1/gxl2gv.1*
+%if %{ANN}
 %{_mandir}/man1/mingle.1*
+%endif
 %{_mandir}/man1/edgepaint.1*
 %{_mandir}/man1/mm2gv.1*
 %{_mandir}/man1/neato.1*
@@ -904,6 +916,9 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --with-gdk \
         --with-ghostscript \
         --with-ipsepcola \
+%if ! %{ANN}
+        --without-ann \
+%endif
         --disable-python \
 %if ! %{PYTHON3}
         --disable-python3 \
