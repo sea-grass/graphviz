@@ -261,6 +261,14 @@ static void svg_begin_graph(GVJ_t * job)
     /* namespace of xlink */
                 " xmlns:xlink=\"http://www.w3.org/1999/xlink\""
                 ">\n");
+
+    // https://developer.mozilla.org/en-US/docs/Web/SVG/Element/desc
+    char *desc = agget(obj->u.g, "desc");
+    if (desc) {
+        gvputs(job, "<desc>");
+        gvputs_xml(job, desc);
+        gvputs(job, "</desc>\n");
+    }
 }
 
 static void svg_end_graph(GVJ_t * job)
@@ -326,6 +334,13 @@ static void svg_begin_cluster(GVJ_t * job)
                 "<title>");
     gvputs_xml(job, agnameof(obj->u.g));
     gvputs(job, "</title>\n");
+
+    char *desc = agget(obj->u.g, "desc");
+    if (desc) {
+        gvputs(job, "<desc>");
+        gvputs_xml(job, desc);
+        gvputs(job, "</desc>\n");
+    }
 }
 
 static void svg_end_cluster(GVJ_t * job)
@@ -347,6 +362,13 @@ static void svg_begin_node(GVJ_t * job)
                 "<title>");
     gvputs_xml(job, agnameof(obj->u.n));
     gvputs(job, "</title>\n");
+
+    char *desc = agget(obj->u.n, "desc");
+    if (desc) {
+        gvputs(job, "<desc>");
+        gvputs_xml(job, desc);
+        gvputs(job, "</desc>\n");
+    }
 }
 
 static void svg_end_node(GVJ_t * job)
@@ -367,6 +389,13 @@ static void svg_begin_edge(GVJ_t * job)
     gvputs_xml(job, ename);
     free(ename);
     gvputs(job, "</title>\n");
+
+    char *desc = agget(obj->u.e, "desc");
+    if (desc) {
+        gvputs(job, "<desc>");
+        gvputs_xml(job, desc);
+        gvputs(job, "</desc>\n");
+    }
 }
 
 static void svg_end_edge(GVJ_t * job)
