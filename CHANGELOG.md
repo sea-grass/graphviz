@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Releases now include packages for [Rocky Linux](https://rockylinux.org/) 8.
+- Releases now include packages for [Rocky Linux](https://rockylinux.org/) 8 and
+  9.
 
 ### Changed
 
