@@ -17,6 +17,7 @@ import pytest
 sys.path.append(os.path.dirname(__file__))
 from gvtest import (  # pylint: disable=wrong-import-position
     is_cmake,
+    is_mingw,
     remove_xtype_warnings,
     which,
 )
@@ -81,6 +82,10 @@ def test_tools(tool):
         pytest.skip(
             "smyrna fails to start because of missing DLLs in Windows MSBuild builds (#1829)"
         )
+
+    # exec-ing a POSIX shell script as-is does not work on Windows
+    if tool == "gvmap.sh" and platform.system() == "Windows" and not is_mingw():
+        pytest.skip("gvmap.sh cannot be run directly on Windows")
 
     # Ensure that X fails to open display
     environ_copy = os.environ.copy()
