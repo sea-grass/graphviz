@@ -2740,7 +2740,7 @@ def test_2370():
     response = subprocess.check_output(
         ["tclsh"],
         stderr=subprocess.STDOUT,
-        input="package require tcldot;",
+        input="package require Tcldot;",
         universal_newlines=True,
     )
 
