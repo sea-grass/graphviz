@@ -1274,7 +1274,16 @@ int Gdtclft_Init(Tcl_Interp * interp)
 	return TCL_ERROR;
     }
 #endif
-    if (Tcl_PkgProvide(interp, "Gdtclft", PACKAGE_VERSION) != TCL_OK) {
+    // inter-release Graphviz versions have a number including '~dev.' that does
+    // not comply with TCL version number rules, so replace this with 'b'
+    char adjusted_version[sizeof(PACKAGE_VERSION)] = PACKAGE_VERSION;
+    char *tilde_dev = strstr(adjusted_version, "~dev.");
+    if (tilde_dev != NULL) {
+	*tilde_dev = 'b';
+	memmove(tilde_dev + 1, tilde_dev + strlen("~dev."),
+	        strlen(tilde_dev + strlen("~dev.")) + 1);
+    }
+    if (Tcl_PkgProvide(interp, "Gdtclft", adjusted_version) != TCL_OK) {
 	return TCL_ERROR;
     }
     Tcl_CreateObjCommand(interp, "gd", gdCmd, NULL, (Tcl_CmdDeleteProc *)NULL);
