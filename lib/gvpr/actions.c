@@ -33,7 +33,9 @@
 #define KINDS(p) ((AGTYPE(p) == AGRAPH) ? "graph" : (AGTYPE(p) == AGNODE) ? "node" : "edge")
 
 static int iofread(void *chan, char *buf, int bufsize) {
-  return (int)read(fileno(chan), buf, bufsize);
+  FILE *fp = chan;
+
+  return (int)read(fileno(fp), buf, bufsize);
 }
 
 static int ioputstr(void *chan, const char *str) {

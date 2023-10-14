@@ -32,6 +32,9 @@
 #endif
 #ifdef HAVE_SYS_INOTIFY_H
 #include <sys/inotify.h>
+#ifdef __sun
+#include <sys/filio.h>
+#endif
 #endif
 #include <errno.h>
 #ifdef HAVE_FCNTL_H

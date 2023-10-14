@@ -56,7 +56,9 @@ static Sflong_t ptr2int(const void *p) {
 
 static int iofread(void *chan, char *buf, int bufsize)
 {
-  return (int)read(fileno(chan), buf, bufsize);
+  FILE *fp = chan;
+
+  return (int)read(fileno(fp), buf, bufsize);
 }
 
 static int ioputstr(void *chan, const char *str)
