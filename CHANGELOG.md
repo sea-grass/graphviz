@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `dtfound`, `DT_FOUND`, `dtleast`, and `dtmost` macros have
   been removed.
 - The nrtmain.c test program has been removed from the portable tarball.
+- The TCL Graphviz packages for inter-release versions/snapshots report
+  themselves as `<next release>b<internal number>` instead of
+  `<next release>~dev.<internal number>`. This fixes a problem wherein TCL would
+  see `~dev` as being invalid characters to appear in a version. #2370
 
 ### Fixed
 

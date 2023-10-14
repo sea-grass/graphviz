@@ -2729,7 +2729,6 @@ def test_2368():
 
 
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
-@pytest.mark.xfail()  # FIXME
 def test_2370():
     """
     tcldot should have a version number TCL accepts
@@ -2740,7 +2739,7 @@ def test_2370():
     response = subprocess.check_output(
         ["tclsh"],
         stderr=subprocess.STDOUT,
-        input="package require tcldot;",
+        input="package require Tcldot;",
         universal_newlines=True,
     )
 
