@@ -271,6 +271,18 @@ rocky8-build:
     variables:
       IMAGE: rocky8
 
+rocky9-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_rocky9
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky9
+
 fedora37-build:
     <<: *rpm_build_definition
     needs:
@@ -685,6 +697,21 @@ rocky8-cmake-build:
     variables:
       IMAGE: rocky8
 
+rocky9-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_rocky9
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky9
+
 fedora37-cmake-build:
     <<: *rpm_build_definition
     needs:
@@ -910,6 +937,18 @@ rocky8-test:
     variables:
       IMAGE: rocky8
 
+rocky9-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "rocky9-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky9
+
 fedora37-test:
     <<: *linux_test_definition
     before_script:
@@ -1019,6 +1058,19 @@ rocky8-cmake-test:
         - linux
     variables:
       IMAGE: rocky8
+
+rocky9-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "rocky9-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: rocky9
 
 fedora37-cmake-test:
     <<: *linux_test_definition
@@ -1161,6 +1213,11 @@ docker_build_rocky8:
   variables:
     IMAGE: rocky8
 
+docker_build_rocky9:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: rocky9
+
 docker_build_fedora37:
   <<: *docker_build_definition
   variables:
@@ -1199,6 +1256,13 @@ docker_push_rocky8:
     IMAGE: rocky8
   needs:
     - docker_build_rocky8
+
+docker_push_rocky9:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: rocky9
+  needs:
+    - docker_build_rocky9
 
 docker_push_fedora37:
   <<: *docker_push_definition
