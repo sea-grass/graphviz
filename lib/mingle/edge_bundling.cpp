@@ -416,7 +416,8 @@ static void edge_attraction_force(double similarity, pedge e1, pedge e2,
 
 }
 
-static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int maxit, double step0, double K) {
+static void force_directed_edge_bundling(SparseMatrix A, pedge *edges,
+                                         int maxit, double step0, double K) {
   int i, j, ne = A->n, k;
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
@@ -463,11 +464,11 @@ static pedge* force_directed_edge_bundling(SparseMatrix A, pedge* edges, int max
   if (Verbose > 1)
     fprintf(stderr, "iter ==== %d cpu = %f npoints = %d\n",iter, ((double) (clock() - start))/CLOCKS_PER_SEC, np - 2);
   }
-
-  return edges;
 }
 
-static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* edges, double angle_param, double angle){
+static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
+                                    pedge *edges, double angle_param,
+                                    double angle) {
   int *assignment = NULL, nclusters;
   double modularity;
   int *clusterp, *clusters;
@@ -518,10 +519,11 @@ static pedge* modularity_ink_bundling(int dim, int ne, SparseMatrix B, pedge* ed
     }
   }
   SparseMatrix_delete(D);
-  return edges;
 }
 
-static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, int compatibility_method, double tol){
+static SparseMatrix check_compatibility(SparseMatrix A, int ne,
+                                        const pedge *edges,
+                                        int compatibility_method, double tol) {
   /* go through the links and make sure edges are compatible */
   SparseMatrix B, C;
   int *ia, *ja, i, j, jj;
@@ -555,8 +557,11 @@ static SparseMatrix check_compatibility(SparseMatrix A, int ne, pedge *edges, in
   return B;
 }
 
-pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, double K, int method, int nneighbor, int compatibility_method,
-		     int max_recursion, double angle_param, double angle){
+std::vector<pedge> edge_bundling(SparseMatrix A0, int dim, double *x,
+                                 int maxit_outer, double K, int method,
+                                 int nneighbor, int compatibility_method,
+                                 int max_recursion, double angle_param,
+                                 double angle) {
   /* bundle edges. 
      A: edge graph
      x: edge i is at {p,q}, 
@@ -571,7 +576,6 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
 
   */
   int ne = A0->m;
-  pedge *edges;
   SparseMatrix A = A0, B = NULL;
   int i;
   double tol = 0.001;
@@ -580,10 +584,11 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   int maxit = 10;
 
   assert(A->n == ne);
-  edges = (pedge*)MALLOC(sizeof(pedge)*ne);
+  std::vector<pedge> edges;
+  edges.reserve(ne);
 
   for (i = 0; i < ne; i++){
-    edges[i] = pedge_new(2, dim, &x[dim*2*i]);
+    edges.emplace_back(pedge_new(2, dim, &x[dim*2*i]));
   }
 
   A = SparseMatrix_symmetrize(A0, true);
@@ -594,14 +599,15 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   if (method == METHOD_INK){
 
     /* go through the links and make sure edges are compatible */
-    B = check_compatibility(A, ne, edges, compatibility_method, tol);
+    B = check_compatibility(A, ne, edges.data(), compatibility_method, tol);
 
-    edges = modularity_ink_bundling(dim, ne, B, edges, angle_param, angle);
+    modularity_ink_bundling(dim, ne, B, edges.data(), angle_param, angle);
 
   } else if (method == METHOD_INK_AGGLOMERATE){
 #ifdef HAVE_ANN
     /* plan: merge a node with its neighbors if doing so improve. Form coarsening graph, repeat until no more ink saving */
-    edges = agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion, angle_param, angle);
+    agglomerative_ink_bundling(dim, A, edges.data(), nneighbor, max_recursion,
+                               angle_param, angle);
 #else
     (void)max_recursion;
     (void)nneighbor;
@@ -610,7 +616,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
   } else if (method == METHOD_FD){/* FD method */
     
     /* go through the links and make sure edges are compatible */
-    B = check_compatibility(A, ne, edges, compatibility_method, tol);
+    B = check_compatibility(A, ne, edges.data(), compatibility_method, tol);
 
 
     for (k = 0; k < maxit_outer; k++){
@@ -618,7 +624,7 @@ pedge* edge_bundling(SparseMatrix A0, int dim, double *x, int maxit_outer, doubl
 	edges[i] = pedge_double(edges[i]);
       }
       step0 /= 2;
-      edges = force_directed_edge_bundling(B, edges, maxit, step0, K);
+      force_directed_edge_bundling(B, edges.data(), maxit, step0, K);
     }
     
   } else if (method == METHOD_NONE){

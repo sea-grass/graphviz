@@ -364,7 +364,6 @@ EXCLUDE = (
     "lib/label/xlabels.c",
     "lib/label/xlabels.h",
     "lib/mingle/agglomerative_bundling.cpp",
-    "lib/mingle/agglomerative_bundling.h",
     "lib/mingle/edge_bundling.cpp",
     "lib/mingle/edge_bundling.h",
     "lib/mingle/ink.cpp",

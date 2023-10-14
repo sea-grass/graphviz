@@ -320,7 +320,10 @@ static aib_t Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges,
   return grid;
 }
 
-static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge* edges, int nneighbors, int *recurse_level, int MAX_RECURSE_LEVEL, double angle_param, double angle, double *current_ink, double *ink00) {
+static void agglomerative_ink_bundling_internal(
+    int dim, SparseMatrix A, pedge *edges, int nneighbors, int *recurse_level,
+    int MAX_RECURSE_LEVEL, double angle_param, double angle,
+    double *current_ink, double *ink00) {
 
   int i, j, jj, k;
   int *ia, *ja;
@@ -489,21 +492,19 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
   }
 
   Agglomerative_Ink_Bundling_delete(grid);
-
-  return edges;
 }
 
-
-pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nneighbor, int MAX_RECURSE_LEVEL, double angle_param, double angle) {
+void agglomerative_ink_bundling(int dim, SparseMatrix A, pedge *edges,
+                                int nneighbor, int MAX_RECURSE_LEVEL,
+                                double angle_param, double angle) {
   int recurse_level = 0;
   double current_ink = -1, ink0;
-  pedge *edges2;
 
   ink_count = 0;
-  edges2 = agglomerative_ink_bundling_internal(dim, A, edges, nneighbor, &recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, &current_ink, &ink0);
-
+  agglomerative_ink_bundling_internal(dim, A, edges, nneighbor, &recurse_level,
+                                      MAX_RECURSE_LEVEL, angle_param, angle,
+                                      &current_ink, &ink0);
 
   if (Verbose > 1)
     fprintf(stderr,"initial total ink = %f, final total ink = %f, inksaving = %f percent, total ink_calc = %f, avg ink_calc per edge = %f\n", ink0, current_ink, (ink0-current_ink)/ink0, ink_count,  ink_count/(double) A->m);
-  return edges2;
 }
