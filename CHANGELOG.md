@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regression in Graphviz 7.0.1. In addition to fixing the regression, code has
   been adjusted to remove assumptions on the maximum path length and treat it as
   unbounded. #2452
+- Compilation on NetBSD has been repaired. This was a regression in Graphviz
+  9.0.0.
 
 ## [9.0.0] - 2023-09-11
 
