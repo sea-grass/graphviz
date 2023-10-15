@@ -660,7 +660,6 @@ EXCLUDE = (
     "tclpkg/tcldot/tcldot-util.c",
     "tclpkg/tcldot/tcldot.h",
     "tclpkg/tcldot/tcldot_builtins.c",
-    "tclpkg/tclhandle/tclhandle.c",
     "tclpkg/tclpathplan/find_ints.c",
     "tclpkg/tclpathplan/intersect.c",
     "tclpkg/tclpathplan/makecw.c",

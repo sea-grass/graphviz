@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,26 +34,29 @@
  *-----------------------------------------------------------------------------
  */
 
+#include "tclhandle.h"
 #include <cgraph/agxbuf.h>
-#include <stdlib.h>
+#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <inttypes.h>
-#include "tclhandle.h"
+#include <stdlib.h>
 #include <string.h>
 
 /*
  * Alignment factor (in bytes) for this machine.
  */
-enum { tclhandleEntryAlignment =
-  sizeof(void*) > sizeof(uint64_t)
-    ? (sizeof(double) > sizeof(void*) ? sizeof(double) : sizeof(void*))
-    : (sizeof(double) > sizeof(uint64_t) ? sizeof(double) : sizeof(uint64_t)) };
+enum {
+  tclhandleEntryAlignment =
+      sizeof(void *) > sizeof(uint64_t)
+          ? (sizeof(double) > sizeof(void *) ? sizeof(double) : sizeof(void *))
+          : (sizeof(double) > sizeof(uint64_t) ? sizeof(double)
+                                               : sizeof(uint64_t))
+};
 
 /*=============================================================================
  * tclhandleLinkInNewEntries --
  *   Build free links through the newly allocated part of a table.
- *   
+ *
  * Parameters:
  *   o tblHdrPtr (I) - A pointer to the table header.
  *   o newIdx (I) - Index of the first new entry.
@@ -61,21 +64,19 @@ enum { tclhandleEntryAlignment =
  *-----------------------------------------------------------------------------
  */
 static void tclhandleLinkInNewEntries(tblHeader_pt tblHdrPtr, uint64_t newIdx,
-				      uint64_t numEntries)
-{
-    uint64_t entIdx, lastIdx;
-    entryHeader_pt entryPtr;
+                                      uint64_t numEntries) {
+  uint64_t entIdx, lastIdx;
+  entryHeader_pt entryPtr;
 
-    lastIdx = newIdx + numEntries - 1;
+  lastIdx = newIdx + numEntries - 1;
 
-    for (entIdx = newIdx; entIdx < lastIdx; entIdx++) {
-	entryPtr = TBL_INDEX(tblHdrPtr, entIdx);
-	entryPtr->freeLink = entIdx + 1;
-    }
-    entryPtr = TBL_INDEX(tblHdrPtr, lastIdx);
-    entryPtr->freeLink = tblHdrPtr->freeHeadIdx;
-    tblHdrPtr->freeHeadIdx = newIdx;
-
+  for (entIdx = newIdx; entIdx < lastIdx; entIdx++) {
+    entryPtr = TBL_INDEX(tblHdrPtr, entIdx);
+    entryPtr->freeLink = entIdx + 1;
+  }
+  entryPtr = TBL_INDEX(tblHdrPtr, lastIdx);
+  entryPtr->freeLink = tblHdrPtr->freeHeadIdx;
+  tblHdrPtr->freeHeadIdx = newIdx;
 }
 
 /*=============================================================================
@@ -84,30 +85,27 @@ static void tclhandleLinkInNewEntries(tblHeader_pt tblHdrPtr, uint64_t newIdx,
  * Parameters:
  *   o tblHdrPtr (I) - A pointer to the table header.
  *   o neededIdx (I) - If positive, then the table will be expanded so that
- *     this entry is available.  If -1, then just expand by the number of 
+ *     this entry is available.  If -1, then just expand by the number of
  *     entries specified on table creation.  MUST be smaller than this size.
  *-----------------------------------------------------------------------------
  */
-static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx)
-{
-    ubyte_pt oldbodyPtr = tblHdrPtr->bodyPtr;
-    uint64_t numNewEntries;
-    uint64_t newSize;
+static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx) {
+  ubyte_pt oldbodyPtr = tblHdrPtr->bodyPtr;
+  uint64_t numNewEntries;
+  uint64_t newSize;
 
-    if (neededIdx == NULL_IDX || neededIdx == ALLOCATED_IDX)
-	numNewEntries = tblHdrPtr->tableSize;
-    else
-	numNewEntries = neededIdx - tblHdrPtr->tableSize + 1;
-    newSize =
-	(tblHdrPtr->tableSize + numNewEntries) * tblHdrPtr->entrySize;
+  if (neededIdx == NULL_IDX || neededIdx == ALLOCATED_IDX)
+    numNewEntries = tblHdrPtr->tableSize;
+  else
+    numNewEntries = neededIdx - tblHdrPtr->tableSize + 1;
+  newSize = (tblHdrPtr->tableSize + numNewEntries) * tblHdrPtr->entrySize;
 
-    tblHdrPtr->bodyPtr = malloc(newSize);
-    memcpy(tblHdrPtr->bodyPtr, oldbodyPtr,
-	   tblHdrPtr->tableSize * tblHdrPtr->entrySize);
-    tclhandleLinkInNewEntries(tblHdrPtr, tblHdrPtr->tableSize,
-			      numNewEntries);
-    tblHdrPtr->tableSize += numNewEntries;
-    free(oldbodyPtr);
+  tblHdrPtr->bodyPtr = malloc(newSize);
+  memcpy(tblHdrPtr->bodyPtr, oldbodyPtr,
+         tblHdrPtr->tableSize * tblHdrPtr->entrySize);
+  tclhandleLinkInNewEntries(tblHdrPtr, tblHdrPtr->tableSize, numNewEntries);
+  tblHdrPtr->tableSize += numNewEntries;
+  free(oldbodyPtr);
 }
 
 /*=============================================================================
@@ -123,65 +121,62 @@ static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx)
  *-----------------------------------------------------------------------------
  */
 entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char **handle,
-			      uint64_t *entryIdxPtr)
-{
-    tblHeader_pt tblHdrPtr = headerPtr;
-    entryHeader_pt entryPtr;
-    uint64_t entryIdx;
+                              uint64_t *entryIdxPtr) {
+  tblHeader_pt tblHdrPtr = headerPtr;
+  entryHeader_pt entryPtr;
+  uint64_t entryIdx;
 
-    if (tblHdrPtr->freeHeadIdx == NULL_IDX)
-	tclhandleExpandTable(tblHdrPtr, NULL_IDX);
+  if (tblHdrPtr->freeHeadIdx == NULL_IDX)
+    tclhandleExpandTable(tblHdrPtr, NULL_IDX);
 
-    entryIdx = tblHdrPtr->freeHeadIdx;
-    entryPtr = TBL_INDEX(tblHdrPtr, entryIdx);
-    tblHdrPtr->freeHeadIdx = entryPtr->freeLink;
-    entryPtr->freeLink = ALLOCATED_IDX;
+  entryIdx = tblHdrPtr->freeHeadIdx;
+  entryPtr = TBL_INDEX(tblHdrPtr, entryIdx);
+  tblHdrPtr->freeHeadIdx = entryPtr->freeLink;
+  entryPtr->freeLink = ALLOCATED_IDX;
 
-    if (handle) {
-	agxbuf buf = {0};
-	agxbprint(&buf, tblHdrPtr->handleFormat, entryIdx);
-	*handle = agxbdisown(&buf);
-    }
-    if (entryIdxPtr)
-	*entryIdxPtr = entryIdx;
-    return USER_AREA(entryPtr);
-
+  if (handle) {
+    agxbuf buf = {0};
+    agxbprint(&buf, tblHdrPtr->handleFormat, entryIdx);
+    *handle = agxbdisown(&buf);
+  }
+  if (entryIdxPtr)
+    *entryIdxPtr = entryIdx;
+  return USER_AREA(entryPtr);
 }
 
 /*=============================================================================
  * tclhandleInit --
- *   Create and initialize a Tcl dynamic handle table. 
+ *   Create and initialize a Tcl dynamic handle table.
  * Parameters:
  *   o prefix (I) - The character string prefix to be used.
  *   o entrySize (I) - The size of an entry, in bytes.
  *   o initEntries (I) - Initial size of the table, in entries.
  * Returns:
- *   A pointer to the table header.  
+ *   A pointer to the table header.
  *-----------------------------------------------------------------------------
  */
 tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
-                           uint64_t initEntries)
-{
-    tblHeader_pt tblHdrPtr;
+                           uint64_t initEntries) {
+  tblHeader_pt tblHdrPtr;
 
-    /*
-     * Set up the table entry.
-     */
-    tblHdrPtr = malloc(sizeof(tblHeader_t));
+  /*
+   * Set up the table entry.
+   */
+  tblHdrPtr = malloc(sizeof(tblHeader_t));
 
-    /* 
-     * Calculate entry size, including header, rounded up to sizeof (void *). 
-     */
-    tblHdrPtr->entrySize = ENTRY_HEADER_SIZE + ROUND_ENTRY_SIZE(entrySize);
-    tblHdrPtr->freeHeadIdx = NULL_IDX;
-    tblHdrPtr->tableSize = initEntries;
-    tblHdrPtr->handleFormat = malloc(strlen(prefix) + strlen("%" PRIu64) + 1);
-    strcpy(tblHdrPtr->handleFormat, prefix);
-    strcat(tblHdrPtr->handleFormat, "%" PRIu64);
-    tblHdrPtr->bodyPtr = malloc(initEntries * tblHdrPtr->entrySize);
-    tclhandleLinkInNewEntries(tblHdrPtr, 0, initEntries);
+  /*
+   * Calculate entry size, including header, rounded up to sizeof (void *).
+   */
+  tblHdrPtr->entrySize = ENTRY_HEADER_SIZE + ROUND_ENTRY_SIZE(entrySize);
+  tblHdrPtr->freeHeadIdx = NULL_IDX;
+  tblHdrPtr->tableSize = initEntries;
+  tblHdrPtr->handleFormat = malloc(strlen(prefix) + strlen("%" PRIu64) + 1);
+  strcpy(tblHdrPtr->handleFormat, prefix);
+  strcat(tblHdrPtr->handleFormat, "%" PRIu64);
+  tblHdrPtr->bodyPtr = malloc(initEntries * tblHdrPtr->entrySize);
+  tclhandleLinkInNewEntries(tblHdrPtr, 0, initEntries);
 
-    return tblHdrPtr;
+  return tblHdrPtr;
 }
 
 /*=============================================================================
@@ -198,15 +193,14 @@ tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
  *-----------------------------------------------------------------------------
  */
 int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
-		   uint64_t *entryIdxPtr)
-{
-    uint64_t entryIdx;
+                   uint64_t *entryIdxPtr) {
+  uint64_t entryIdx;
 
-    if (sscanf(handle, tblHdrPtr->handleFormat, &entryIdx) != 1)
-	return TCL_ERROR;
-    if (entryIdxPtr)
-	*entryIdxPtr = entryIdx;
-    return TCL_OK;
+  if (sscanf(handle, tblHdrPtr->handleFormat, &entryIdx) != 1)
+    return TCL_ERROR;
+  if (entryIdxPtr)
+    *entryIdxPtr = entryIdx;
+  return TCL_OK;
 }
 
 /*=============================================================================
@@ -220,19 +214,17 @@ int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
  *   A pointer to the entry, or NULL if an error occurred.
  *-----------------------------------------------------------------------------
  */
-void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx)
-{
-    tblHeader_pt tblHdrPtr = headerPtr;
-    entryHeader_pt entryPtr;
+void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx) {
+  tblHeader_pt tblHdrPtr = headerPtr;
+  entryHeader_pt entryPtr;
 
-    entryPtr = TBL_INDEX(tblHdrPtr, entryIdx);
+  entryPtr = TBL_INDEX(tblHdrPtr, entryIdx);
 
-    if (entryIdx >= tblHdrPtr->tableSize ||
-	entryPtr->freeLink != ALLOCATED_IDX) {
-	return NULL;
-    }
+  if (entryIdx >= tblHdrPtr->tableSize || entryPtr->freeLink != ALLOCATED_IDX) {
+    return NULL;
+  }
 
-    return USER_AREA(entryPtr);
+  return USER_AREA(entryPtr);
 }
 
 /*=============================================================================
@@ -246,13 +238,12 @@ void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx)
  *   A pointer to the entry, or NULL if an error occurred.
  *-----------------------------------------------------------------------------
  */
-void *tclhandleXlate(tblHeader_pt tblHdrPtr, char *handle)
-{
-    uint64_t entryIdx;
+void *tclhandleXlate(tblHeader_pt tblHdrPtr, char *handle) {
+  uint64_t entryIdx;
 
-    if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)
-	return NULL;
-    return tclhandleXlateIndex(tblHdrPtr, entryIdx);
+  if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)
+    return NULL;
+  return tclhandleXlateIndex(tblHdrPtr, entryIdx);
 }
 
 /*============================================================================
@@ -267,26 +258,24 @@ void *tclhandleXlate(tblHeader_pt tblHdrPtr, char *handle)
  *   The contents of the entry, if success, or NULL if an error occurred.
  *----------------------------------------------------------------------------
  */
-void *tclhandleFreeIndex(tblHeader_pt headerPtr, uint64_t entryIdx)
-{
-    tblHeader_pt tblHdrPtr = headerPtr;
-    entryHeader_pt entryPtr, freeentryPtr;
+void *tclhandleFreeIndex(tblHeader_pt headerPtr, uint64_t entryIdx) {
+  tblHeader_pt tblHdrPtr = headerPtr;
+  entryHeader_pt entryPtr, freeentryPtr;
 
-    entryPtr = TBL_INDEX(tblHdrPtr, entryIdx);
+  entryPtr = TBL_INDEX(tblHdrPtr, entryIdx);
 
-    if (entryIdx >= tblHdrPtr->tableSize ||
-	entryPtr->freeLink != ALLOCATED_IDX) {
-	return NULL;
-    }
+  if (entryIdx >= tblHdrPtr->tableSize || entryPtr->freeLink != ALLOCATED_IDX) {
+    return NULL;
+  }
 
-    entryPtr = USER_AREA(entryPtr);
-    freeentryPtr = HEADER_AREA(entryPtr);
-    freeentryPtr->freeLink = tblHdrPtr->freeHeadIdx;
-    tblHdrPtr->freeHeadIdx =
-	((uint64_t)((uintptr_t)entryPtr - (uintptr_t)tblHdrPtr->bodyPtr)) /
-	tblHdrPtr->entrySize;
+  entryPtr = USER_AREA(entryPtr);
+  freeentryPtr = HEADER_AREA(entryPtr);
+  freeentryPtr->freeLink = tblHdrPtr->freeHeadIdx;
+  tblHdrPtr->freeHeadIdx =
+      ((uint64_t)((uintptr_t)entryPtr - (uintptr_t)tblHdrPtr->bodyPtr)) /
+      tblHdrPtr->entrySize;
 
-    return entryPtr;
+  return entryPtr;
 }
 
 /*============================================================================
@@ -301,11 +290,10 @@ void *tclhandleFreeIndex(tblHeader_pt headerPtr, uint64_t entryIdx)
  *   The contents of the entry, if success, or NULL if an error occurred.
  *----------------------------------------------------------------------------
  */
-void *tclhandleFree(tblHeader_pt tblHdrPtr, char *handle)
-{
-    uint64_t entryIdx;
+void *tclhandleFree(tblHeader_pt tblHdrPtr, char *handle) {
+  uint64_t entryIdx;
 
-    if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)
-	return NULL;
-    return tclhandleFreeIndex(tblHdrPtr, entryIdx);
+  if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)
+    return NULL;
+  return tclhandleFreeIndex(tblHdrPtr, entryIdx);
 }
