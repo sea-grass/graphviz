@@ -8,13 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <stdint.h>
 #include <tcl.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <stdint.h>
 
 /*
  * Macro to rounded up a size to be a multiple of (void *).  This is required
