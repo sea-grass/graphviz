@@ -69,7 +69,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 {
     int inp, shift, base, width;
     ssize_t size;
-    int fmt, flags, dot, n_assign, v, n;
+    int fmt, flags, dot, n_assign, v, n, n_input;
     char *sp;
     char accept[SF_MAXDIGITS];
 
@@ -85,15 +85,18 @@ int sfvscanf(FILE *f, const char *form, va_list args)
     const char *t_str;
     ssize_t n_str;
 
-#define SFGETC(f,c)	((c) = getc(f))
-#define SFUNGETC(f,c)	ungetc((c), (f))
+#define SFGETC(f,c)	(((c) = getc(f)) < 0 ? c : (++n_input, c))
+#define SFUNGETC(f,c)	do { \
+  ungetc((c), (f)); \
+  --n_input; \
+} while (0)
 
     assert(f != NULL);
 
     if (!form)
 	return -1;
 
-    n_assign = 0;
+    n_assign = n_input = 0;
 
     inp = -1;
 
@@ -340,6 +343,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		if ((ft->flags & SFFMT_VALUE) && !(ft->flags & SFFMT_SKIP))
 		    value = argv.vp;
 	    } else {		/* v > 0: number of input bytes consumed */
+		n_input += v;
 		if (!(ft->flags & SFFMT_SKIP))
 		    n_assign += 1;
 		continue;
@@ -383,6 +387,19 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	/* get the address to assign value */
 	if (!value && !(flags & SFFMT_SKIP))
 	    value = va_arg(args, void *);
+
+	if (fmt == 'n') {	/* return length of consumed input */
+	    if (sizeof(long) > sizeof(int) && FMTCMP(size, long, Sflong_t))
+		*((long *) value) = (long)n_input;
+	    else if (sizeof(short) < sizeof(int) &&
+		     FMTCMP(size, short, Sflong_t))
+		*((short *) value) = (short)n_input;
+	    else if (size == sizeof(char))
+		*((char *) value) = (char)n_input;
+	    else
+		*((int *) value) = (int)n_input;
+	    continue;
+	}
 
 	/* if get here, start scanning input */
 	if (width == 0)

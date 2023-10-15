@@ -3035,9 +3035,6 @@ def test_2416():
     assert abs(y_1 - y_2) > 1, "edge arrows appear to be drawn next to the same node"
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2454"
-)
 @pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
 def test_2454():
     """
