@@ -3035,6 +3035,31 @@ def test_2416():
     assert abs(y_1 - y_2) > 1, "edge arrows appear to be drawn next to the same node"
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2454"
+)
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
+def test_2454():
+    """
+    gvpr should support sscanf
+    https://gitlab.com/graphviz/graphviz/-/issues/2454
+    """
+
+    # an input graph that provokes the problem
+    input = "graph x{a -- {b c}}"
+
+    # run it through Graphviz
+    output = dot("dot", source=input)
+
+    # run it through gvpr
+    program = Path(__file__).parent / "2454.gvpr"
+    with subprocess.Popen(
+        ["gvpr", "-cf", program], stdin=subprocess.PIPE, universal_newlines=True
+    ) as p:
+        p.communicate(output)
+        assert p.returncode == 0, "gvpr failed"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
