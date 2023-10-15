@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-AM_CPPFLAGS = -I$(top_srcdir)/lib
+AM_CPPFLAGS = -I$(top_srcdir)/lib ${TCL_INCLUDES}
 
 noinst_HEADERS = tclhandle.h
 if WITH_TCL

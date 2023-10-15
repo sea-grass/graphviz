@@ -8,19 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <tcl.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <stdint.h>
-
-#ifndef TCL_ERROR
-#define TCL_ERROR (1)
-#endif
-
-#ifndef TCL_OK
-#define TCL_OK (0)
-#endif
 
 /*
  * Macro to rounded up a size to be a multiple of (void *).  This is required
