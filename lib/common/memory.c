@@ -11,7 +11,6 @@
 #include "config.h"
 
 #include <cgraph/exit.h>
-#include <cgraph/likely.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <common/memory.h>
@@ -19,7 +18,7 @@
 void *gcalloc(size_t nmemb, size_t size)
 {
     char *rv = calloc(nmemb, size);
-    if (UNLIKELY(nmemb > 0 && size > 0 && rv == NULL)) {
+    if (nmemb > 0 && size > 0 && rv == NULL) {
 	fprintf(stderr, "out of memory\n");
 	graphviz_exit(EXIT_FAILURE);
     }
@@ -32,7 +31,7 @@ void *gmalloc(size_t nbytes)
     if (nbytes == 0)
 	return NULL;
     rv = malloc(nbytes);
-    if (UNLIKELY(rv == NULL)) {
+    if (rv == NULL) {
 	fprintf(stderr, "out of memory\n");
 	graphviz_exit(EXIT_FAILURE);
     }
@@ -42,7 +41,7 @@ void *gmalloc(size_t nbytes)
 void *grealloc(void *ptr, size_t size)
 {
     void *p = realloc(ptr, size);
-    if (UNLIKELY(p == NULL && size)) {
+    if (p == NULL && size) {
 	fprintf(stderr, "out of memory\n");
 	graphviz_exit(EXIT_FAILURE);
     }

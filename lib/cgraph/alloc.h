@@ -15,7 +15,6 @@
 
 #include <assert.h>
 #include <cgraph/exit.h>
-#include <cgraph/likely.h>
 #include <cgraph/prisize_t.h>
 #include <limits.h>
 #include <stdint.h>
@@ -25,7 +24,7 @@
 
 static inline void *gv_calloc(size_t nmemb, size_t size) {
 
-  if (UNLIKELY(nmemb > 0 && SIZE_MAX / nmemb < size)) {
+  if (nmemb > 0 && SIZE_MAX / nmemb < size) {
     fprintf(stderr,
             "integer overflow when trying to allocate "
             "%" PRISIZE_T " * %" PRISIZE_T " bytes\n",
@@ -34,7 +33,7 @@ static inline void *gv_calloc(size_t nmemb, size_t size) {
   }
 
   void *p = calloc(nmemb, size);
-  if (UNLIKELY(nmemb > 0 && size > 0 && p == NULL)) {
+  if (nmemb > 0 && size > 0 && p == NULL) {
     fprintf(stderr,
             "out of memory when trying to allocate %" PRISIZE_T " bytes\n",
             nmemb * size);
@@ -55,7 +54,7 @@ static inline void *gv_realloc(void *ptr, size_t old_size, size_t new_size) {
   }
 
   void *p = realloc(ptr, new_size);
-  if (UNLIKELY(p == NULL)) {
+  if (p == NULL) {
     fprintf(stderr,
             "out of memory when trying to allocate %" PRISIZE_T " bytes\n",
             new_size);
@@ -77,7 +76,7 @@ static inline void *gv_recalloc(void *ptr, size_t old_nmemb, size_t new_nmemb,
   assert(old_nmemb < SIZE_MAX / size && "claimed previous extent is too large");
 
   // will multiplication overflow?
-  if (UNLIKELY(new_nmemb > SIZE_MAX / size)) {
+  if (new_nmemb > SIZE_MAX / size) {
     fprintf(stderr,
             "integer overflow when trying to allocate %" PRISIZE_T
             " * %" PRISIZE_T " bytes\n",
@@ -101,7 +100,7 @@ extern char *strndup(const char *s1, size_t n);
 static inline char *gv_strdup(const char *original) {
 
   char *copy = strdup(original);
-  if (UNLIKELY(copy == NULL)) {
+  if (copy == NULL) {
     fprintf(stderr,
             "out of memory when trying to allocate %" PRISIZE_T " bytes\n",
             strlen(original) + 1);
@@ -127,7 +126,7 @@ static inline char *gv_strndup(const char *original, size_t length) {
   }
 
   // will our calculation to include the NUL byte below overflow?
-  if (UNLIKELY(SIZE_MAX - length < 1)) {
+  if (SIZE_MAX - length < 1) {
     fprintf(stderr,
             "integer overflow when trying to allocate %" PRISIZE_T
             " + 1 bytes\n",
@@ -145,7 +144,7 @@ static inline char *gv_strndup(const char *original, size_t length) {
   copy = strndup(original, length);
 #endif
 
-  if (UNLIKELY(copy == NULL)) {
+  if (copy == NULL) {
     fprintf(stderr,
             "out of memory when trying to allocate %" PRISIZE_T " bytes\n",
             length + 1);

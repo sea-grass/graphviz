@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <cgraph/cghdr.h>
-#include <cgraph/likely.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -110,7 +109,7 @@ static char *agstrdup_internal(Agraph_t *g, const char *s, bool is_html) {
 	    r = agalloc(g, sz);
 	else {
 	    r = malloc(sz);
-	    if (UNLIKELY(sz > 0 && r == NULL)) {
+	    if (sz > 0 && r == NULL) {
 	        return NULL;
 	    }
 	}

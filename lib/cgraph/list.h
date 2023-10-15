@@ -3,7 +3,6 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
-#include <cgraph/likely.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -63,12 +62,12 @@
       const size_t c = list->capacity == 0 ? 1 : (list->capacity * 2);         \
                                                                                \
       /* will the calculation of the new size overflow? */                     \
-      if (UNLIKELY(SIZE_MAX / c < sizeof(type))) {                             \
+      if (SIZE_MAX / c < sizeof(type)) {                                       \
         return ERANGE;                                                         \
       }                                                                        \
                                                                                \
       type *data = (type *)realloc(list->data, c * sizeof(type));              \
-      if (UNLIKELY(data == NULL)) {                                            \
+      if (data == NULL) {                                                      \
         return ENOMEM;                                                         \
       }                                                                        \
                                                                                \
