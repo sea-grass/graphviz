@@ -40,7 +40,9 @@ static inline void gv_sort(void *base, size_t nmemb, size_t size,
   gv_sort_compar = compar;
   gv_sort_arg = arg;
 
-  qsort(base, nmemb, size, gv_sort_compar_wrapper);
+  if (nmemb > 1) {
+    qsort(base, nmemb, size, gv_sort_compar_wrapper);
+  }
 
   gv_sort_compar = NULL;
   gv_sort_arg = NULL;
