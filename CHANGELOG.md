@@ -28,6 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   see `~dev` as being invalid characters to appear in a version. #2370
 - Support for discovering Lua via `lua-config*` has been removed from the
   Autotools build system.
+- Lua discovery in the Autotools build system should now respect the location of
+  your Lua installation and not unconditionally attempt installation into
+  `/usr`. #2152
 
 ### Fixed
 

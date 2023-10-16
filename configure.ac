@@ -805,7 +805,7 @@ else
 	            if test "x$?" = "x0" ; then
                         LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lua$l`
                         LUA_LIBS="$LUA_LFLAGS "`$PKG_CONFIG --libs lua$l`
-		        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/`$PKG_CONFIG --variable=V lua`"
+		        LUA_INSTALL_DIR="`$PKG_CONFIG --variable=libdir lua$l`/lua"
 
 		        pkgconfig_lualib_found=`$PKG_CONFIG --exists lualib$l 2>/dev/null`
 		        if test  "x$?" = "x0"; then
