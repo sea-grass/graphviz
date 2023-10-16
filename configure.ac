@@ -819,18 +819,6 @@ else
         fi
 
         if test "x$LUA_INCLUDES" = "x" -o "x$LUA_LIBS" = "x" ; then
-            LUACONFIG=""
-            AC_CHECK_PROGS(LUACONFIG, lua-config lua-config52 lua-config5.2 lua-config51 lua-config5.1)
-            if test "x$LUACONFIG" != "x" ; then
-                AC_MSG_CHECKING(for Lua headers and libraries with lua-config)
-	        echo
-                LUA_INCLUDES=`$LUACONFIG --include`
-                LUA_LIBS=`$LUACONFIG --libs`
-	        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/5.0"
-            fi
-        fi
-
-        if test "x$LUA_INCLUDES" = "x" -o "x$LUA_LIBS" = "x" ; then
             AC_MSG_CHECKING(for Lua headers and libraries)
 	    echo
             AC_CHECK_HEADER(lua.h,ac_found_lua_header="yes",ac_found_lua_header="no")
