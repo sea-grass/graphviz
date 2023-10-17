@@ -15,6 +15,8 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/exit.h>
+#include <cgraph/overflow.h>
 #include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <limits.h>
@@ -996,9 +998,15 @@ static void x_cutval(edge_t * f)
 
     sum = 0;
     for (i = 0; (e = ND_out(v).list[i]); i++)
-	sum += x_val(e, v, dir);
+	if (sadd_overflow(sum, x_val(e, v, dir), &sum)) {
+	    agerr(AGERR, "overflow when computing edge weight sum\n");
+	    graphviz_exit(EXIT_FAILURE);
+	}
     for (i = 0; (e = ND_in(v).list[i]); i++)
-	sum += x_val(e, v, dir);
+	if (sadd_overflow(sum, x_val(e, v, dir), &sum)) {
+	    agerr(AGERR, "overflow when computing edge weight sum\n");
+	    graphviz_exit(EXIT_FAILURE);
+	}
     ED_cutvalue(f) = sum;
 }
 
