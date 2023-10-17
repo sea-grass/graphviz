@@ -805,7 +805,7 @@ else
 	            if test "x$?" = "x0" ; then
                         LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lua$l`
                         LUA_LIBS="$LUA_LFLAGS "`$PKG_CONFIG --libs lua$l`
-		        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/`$PKG_CONFIG --variable=V lua`"
+		        LUA_INSTALL_DIR="`$PKG_CONFIG --variable=libdir lua$l`/lua"
 
 		        pkgconfig_lualib_found=`$PKG_CONFIG --exists lualib$l 2>/dev/null`
 		        if test  "x$?" = "x0"; then
@@ -815,18 +815,6 @@ else
                         break
                     fi
                 done
-            fi
-        fi
-
-        if test "x$LUA_INCLUDES" = "x" -o "x$LUA_LIBS" = "x" ; then
-            LUACONFIG=""
-            AC_CHECK_PROGS(LUACONFIG, lua-config lua-config52 lua-config5.2 lua-config51 lua-config5.1)
-            if test "x$LUACONFIG" != "x" ; then
-                AC_MSG_CHECKING(for Lua headers and libraries with lua-config)
-	        echo
-                LUA_INCLUDES=`$LUACONFIG --include`
-                LUA_LIBS=`$LUACONFIG --libs`
-	        LUA_INSTALL_DIR="/usr/lib$LIBPOSTFIX/lua/5.0"
             fi
         fi
 
