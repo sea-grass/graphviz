@@ -403,7 +403,7 @@ Agedge_t *nextout(Agraph_t *g, Agedge_t *e) {
     return nullptr;
   Agedge_t *ne = agnxtout(g, e);
   if (ne)
-    return (ne);
+    return ne;
   for (Agnode_t *n = agnxtnode(g, agtail(e)); n; n = agnxtnode(g, n)) {
     ne = agfstout(g, n);
     if (ne)
@@ -478,7 +478,7 @@ Agedge_t *nextin(Agraph_t *g, Agedge_t *e) {
     return nullptr;
   Agedge_t *ne = agnxtin(g, e);
   if (ne)
-    return (ne);
+    return ne;
   Agnode_t *n = agnxtnode(g, aghead(e));
   if (!n)
     return nullptr;

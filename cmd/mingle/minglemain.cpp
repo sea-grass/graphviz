@@ -61,7 +61,7 @@ static FILE *openFile(const char *name, const char* cmd)
 		std::cerr << cmd << ": could not open file " << name << " for writing\n";
 		graphviz_exit(-1);
 	}
-	return (fp);
+	return fp;
 }
 
 static const char use_msg[] =
