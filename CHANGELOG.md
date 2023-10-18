@@ -55,6 +55,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When large edge weights are used that cause an integer overflow when summing
   them up, Graphviz now gracefully exits with an error message instead of
   crashing. #2450
+- Support for the `%n` specifier in `scanf` in gvpr has been restored. This was
+  a regression in Graphviz 9.0.0. #2454
 
 ## [9.0.0] - 2023-09-11
 
