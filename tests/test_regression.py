@@ -758,8 +758,8 @@ def test_1554():
     ), "computation exceeded bounds"
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1585"
+@pytest.mark.skipif(
+    is_centos() or is_rocky_8(), reason="insufficient XPath support on this platform"
 )
 def test_1585():
     """
@@ -886,7 +886,6 @@ def test_1622(test_case: str):
     dot("png:cairo:cairo", input)
 
 
-@pytest.mark.xfail(strict=True)
 def test_1624():
     """
     record shapes should be usable
