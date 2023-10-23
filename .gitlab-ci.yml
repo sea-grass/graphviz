@@ -556,6 +556,7 @@ ubuntu-20.04-cmake-build:
         - export CFLAGS="-Werror -Wno-deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -573,6 +574,7 @@ ubuntu-22.04-cmake-build:
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -590,6 +592,7 @@ ubuntu-23.04-cmake-build:
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -633,6 +636,7 @@ ubuntu-23.04-cmake-ASan-build-for-ctest:
         - export UBSAN_OPTIONS=print_stacktrace=1
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     # override the deb_build_definition artifacts since we need more
     # files from the build directory when running ctest in the test
     # stage.
@@ -677,6 +681,7 @@ centos7-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+        - export CMAKE_OPTIONS="-Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -692,6 +697,7 @@ rocky8-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+        - export CMAKE_OPTIONS="-Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -707,6 +713,7 @@ rocky9-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
+        - export CMAKE_OPTIONS="-Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -723,6 +730,7 @@ fedora37-cmake-build:
         - export CFLAGS="-Werror -Wno-deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     tags:
         - linux
     variables:
@@ -739,6 +747,7 @@ fedora38-cmake-build:
         - export CFLAGS="-Werror -Wno-deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     tags:
         - linux
     variables:
