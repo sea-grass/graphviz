@@ -19,10 +19,6 @@ extern "C" {
 
     extern void dijkstra(int, vtx_data *, int, DistType *);
     extern void dijkstra_f(int, vtx_data *, int, float *);
-
-    /* Dijkstra bounded to nodes in *unweighted* radius */
-    extern int dijkstra_bounded(int, vtx_data *, int, DistType *, int,
-				int *);
     extern int dijkstra_sgd(graph_sgd *, int, term_sgd *);
 
 #ifdef __cplusplus
