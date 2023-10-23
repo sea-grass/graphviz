@@ -1,12 +1,32 @@
-if(with_gvedit)
+if(NOT with_gvedit STREQUAL "OFF")
   find_package(Qt6 COMPONENTS Core PrintSupport Widgets)
   if(Qt6_FOUND)
     set(QT_LIBS Qt6::Core Qt6::PrintSupport Qt6::Widgets)
   else()
-    find_package(Qt5 COMPONENTS Core PrintSupport Widgets REQUIRED)
-    set(QT_LIBS Qt5::Core Qt5::PrintSupport Qt5::Widgets)
+    find_package(Qt5 COMPONENTS Core PrintSupport Widgets)
+    if(Qt5_FOUND)
+      set(QT_LIBS Qt5::Core Qt5::PrintSupport Qt5::Widgets)
+    endif()
   endif()
+  if(with_gvedit STREQUAL "AUTO")
+    # suppress complaints about `with_gvedit` casing
+    # cmake-lint: disable=C0103
+    if(Qt6_FOUND)
+      message(STATUS "setting -Dwith_gvedit=ON with Qt6")
+      set(with_gvedit ON)
+    elseif(Qt5_FOUND)
+      message(STATUS "setting -Dwith_gvedit=ON with Qt5")
+      set(with_gvedit ON)
+    else()
+      message(STATUS "setting -Dwith_gvedit=OFF")
+      set(with_gvedit OFF)
+    endif()
+  elseif(NOT Qt6_FOUND AND NOT Qt5_FOUND)
+    message(FATAL_ERROR "-Dwith_gvedit=ON and neither Qt5 nor Qt6 found")
+  endif()
+endif()
 
+if(with_gvedit)
   add_executable(gvedit
     csettings.cpp
     imageviewer.cpp
