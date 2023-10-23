@@ -650,9 +650,6 @@ static float *compute_weighted_apsp_packed(vtx_data * graph, int n)
     float *Dij = N_NEW(n * (n + 1) / 2, float);
 
     float *Di = N_NEW(n, float);
-    Queue Q;
-
-    mkQueue(&Q, n);
 
     count = 0;
     for (i = 0; i < n; i++) {
@@ -662,7 +659,6 @@ static float *compute_weighted_apsp_packed(vtx_data * graph, int n)
 	}
     }
     free(Di);
-    freeQueue(&Q);
     return Dij;
 }
 
