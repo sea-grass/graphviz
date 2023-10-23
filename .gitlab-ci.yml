@@ -606,6 +606,7 @@ ubuntu-20.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -626,6 +627,7 @@ ubuntu-22.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -646,6 +648,7 @@ ubuntu-23.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -693,6 +696,7 @@ ubuntu-23.04-cmake-ASan-build-for-ctest:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     # override the deb_build_definition artifacts since we need more
     # files from the build directory when running ctest in the test
     # stage.
@@ -740,6 +744,7 @@ centos7-cmake-build:
         - export CMAKE_OPTIONS="-Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -758,6 +763,7 @@ rocky8-cmake-build:
         - export CMAKE_OPTIONS="-Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -776,6 +782,7 @@ rocky9-cmake-build:
         - export CMAKE_OPTIONS="-Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -795,6 +802,7 @@ fedora37-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -814,6 +822,7 @@ fedora38-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - linux
     variables:
@@ -830,6 +839,7 @@ macos-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-macos-medium-m1
 
