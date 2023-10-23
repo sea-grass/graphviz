@@ -24,8 +24,6 @@ extern "C" {
 
     /* some possible values for 'num_pivots_stress' */
 #define num_pivots_stress 40
-#define num_pivots_smart_ini   0
-#define num_pivots_no_ini   50
 
     /* relevant when using sparse distance matrix
      * when optimizing within subspace it can be set to 0
