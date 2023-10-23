@@ -976,17 +976,8 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 
     /* compute constant term in stress sum */
     /* which is \sum_{i<j} w_{ij}d_{ij}^2 */
-    if (exp) {
-	constant_term = (float)n * (n - 1) / 2;
-    } else {
-	constant_term = 0;
-	for (count = 0, i = 0; i < n - 1; i++) {
-	    count++;		/* skip self distance */
-	    for (j = 1; j < n - i; j++, count++) {
-		constant_term += Dij[count];
-	    }
-	}
-    }
+    assert(exp == 1 || exp == 2);
+    constant_term = (float)n * (n - 1) / 2;
 
 	/**************************
 	** Laplacian computation **
