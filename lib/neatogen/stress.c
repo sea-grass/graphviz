@@ -233,7 +233,6 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 						  int exp,	/* scale exponent */
 						  int reweight_graph,	/* difference model */
 						  int n_iterations,	/* max #iterations */
-						  int dist_bound,	/* neighborhood size in sparse distance matrix    */
 						  int num_centers	/* #pivots in sparse distance matrix  */
     )
 {
@@ -420,32 +419,10 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 
 	/* a non pivot node */
 
-	if (dist_bound > 0) {
-	    if (reweight_graph) {
-		num_visited_nodes =
-		    dijkstra_bounded(i, graph, n, dist, dist_bound,
-				     visited_nodes);
-	    } else {
-		num_visited_nodes =
-		    bfs_bounded(i, graph, dist, dist_bound, visited_nodes, n);
-	    }
-	    /* filter the pivots out of the visited nodes list, and the self loop: */
-	    for (j = 0; j < num_visited_nodes;) {
-		if (CenterIndex[visited_nodes[j]] < 0
-		    && visited_nodes[j] != i) {
-		    /* not a pivot or self loop */
-		    j++;
-		} else {
-		    dist[visited_nodes[j]] = -1;
-		    visited_nodes[j] = visited_nodes[--num_visited_nodes];
-		}
-	    }
-	} else {
-	    num_visited_nodes = 0;
-	}
+	num_visited_nodes = 0;
 	num_neighbors = num_visited_nodes + num_centers;
 	if (num_neighbors > available_space) {
-	    available_space = (dist_bound + 1) * n;
+	    available_space = n;
 	    storage1 = N_GNEW(available_space, int);
 	    storage2 = N_GNEW(available_space, DistType);
 	    distances[i].free_mem = true;
@@ -929,7 +906,6 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	if (sparse_stress_subspace_majorization_kD(graph, n,
 					       d_coords, dim, smart_ini, exp,
 					       model == MODEL_SUBSET, 50,
-					       neighborhood_radius_subspace,
 					       num_pivots_stress) < 0) {
 	    iterations = -1;
 	    goto finish1;
