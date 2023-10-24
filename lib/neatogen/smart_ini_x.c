@@ -234,14 +234,12 @@ CMDS_orthog(int n, int dim, double** eigs, double tol,
 	float** Bij = compute_Bij(Dij, n);
 	double* evals= N_GNEW(dim, double);
 	
-	double * orthog_aux = NULL;
-	if (orthog!=NULL) {
-		orthog_aux = N_GNEW(n, double);
-		for (i=0; i<n; i++) {
-			orthog_aux[i]=orthog[i];
-		}
-		standardize(orthog_aux,n);
+	assert(orthog != NULL);
+	double *orthog_aux = N_GNEW(n, double);
+	for (i=0; i<n; i++) {
+		orthog_aux[i]=orthog[i];
 	}
+	standardize(orthog_aux,n);
     power_iteration_orthog(Bij, n, dim, eigs, evals, orthog_aux, tol);
 	
 	for (i=0; i<dim; i++) {
