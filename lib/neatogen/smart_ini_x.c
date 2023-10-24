@@ -56,10 +56,9 @@ mat_mult_vec_orthog(float** mat, int dim1, int dim2, double* vec,
 		}
 		result[i]=sum;
 	}
-	if (orthog!=NULL) {
-		double alpha=-dot(result,dim1-1,orthog);
-		scadd(result, dim1-1, alpha, orthog);	
-	}		
+	assert(orthog != NULL);
+	double alpha = -dot(result, dim1 - 1, orthog);
+	scadd(result, dim1 - 1, alpha, orthog);	
 }
 
 static void
