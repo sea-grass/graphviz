@@ -497,7 +497,7 @@ void right_mult_with_vector_ff
 }
 
 void
-vectors_substractionf(int n, float *vector1, float *vector2, float *result)
+vectors_subtractionf(int n, float *vector1, float *vector2, float *result)
 {
     int i;
     for (i = 0; i < n; i++) {

@@ -186,7 +186,7 @@ conjugate_gradient_mkernel(float *A, float *x, float *b, int n,
     orthog1f(n, Ax);
 
 
-    vectors_substractionf(n, b, Ax, r);
+    vectors_subtractionf(n, b, Ax, r);
     copy_vectorf(n, r, p);
 
     r_r = vectors_inner_productf(n, r, r);

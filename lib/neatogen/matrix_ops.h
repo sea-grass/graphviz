@@ -60,7 +60,7 @@ extern "C" {
 
     extern void orthog1f(int n, float *vec);
     extern void right_mult_with_vector_ff(float *, int, float *, float *);
-    extern void vectors_substractionf(int, float *, float *, float *);
+    extern void vectors_subtractionf(int, float *, float *, float *);
     extern void vectors_additionf(int n, float *vector1, float *vector2,
 				  float *result);
     extern void vectors_mult_additionf(int n, float *vector1, float alpha,
