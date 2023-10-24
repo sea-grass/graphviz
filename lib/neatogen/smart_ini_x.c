@@ -58,7 +58,7 @@ mat_mult_vec_orthog(float** mat, int dim1, int dim2, double* vec,
 	}
 	if (orthog!=NULL) {
 		double alpha=-dot(result,dim1-1,orthog);
-		scadd(result, 0, dim1-1, alpha, orthog);	
+		scadd(result, dim1-1, alpha, orthog);	
 	}		
 }
 
@@ -97,12 +97,12 @@ choose:
 
 		if (orthog!=NULL) {
 			alpha=-dot(orthog,n-1,curr_vector);
-			scadd(curr_vector, 0, n-1, alpha, orthog);	
+			scadd(curr_vector, n-1, alpha, orthog);	
 		}
 			// orthogonalize against higher eigenvectors
 		for (j=0; j<i; j++) {
 			alpha = -dot(eigs[j], n-1, curr_vector);
-			scadd(curr_vector, 0, n-1, alpha, eigs[j]);
+			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);
 		if (len<1e-10) {
@@ -121,7 +121,7 @@ choose:
 			/* orthogonalize against higher eigenvectors */
 			for (j=0; j<i; j++) {
 				alpha = -dot(eigs[j], n-1, curr_vector);
-				scadd(curr_vector, 0, n-1, alpha, eigs[j]);
+				scadd(curr_vector, n-1, alpha, eigs[j]);
 			}
 			len = norm(curr_vector, n-1);
 			if (len<1e-10) {
@@ -152,7 +152,7 @@ exit:
 		/* orthogonalize against higher eigenvectors */
 		for (j=0; j<i; j++) {
 			alpha = -dot(eigs[j], n-1, curr_vector);
-			scadd(curr_vector, 0, n-1, alpha, eigs[j]);
+			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);
 		vecscale(curr_vector, 0, n-1, 1.0 / len, curr_vector);

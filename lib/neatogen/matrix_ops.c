@@ -49,7 +49,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
 	    alpha = -dot(eigs[j], n - 1, curr_vector);
-	    scadd(curr_vector, 0, n - 1, alpha, eigs[j]);
+	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
 	if (len < 1e-10) {
@@ -69,7 +69,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    /* orthogonalize against higher eigenvectors */
 	    for (j = 0; j < i; j++) {
 		alpha = -dot(eigs[j], n - 1, curr_vector);
-		scadd(curr_vector, 0, n - 1, alpha, eigs[j]);
+		scadd(curr_vector, n - 1, alpha, eigs[j]);
 	    }
 	    len = norm(curr_vector, n - 1);
 	    if (len < 1e-10 || iteration > Max_iterations) {
@@ -96,7 +96,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
 	    alpha = -dot(eigs[j], n - 1, curr_vector);
-	    scadd(curr_vector, 0, n - 1, alpha, eigs[j]);
+	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
 	vecscale(curr_vector, 0, n - 1, 1.0 / len, curr_vector);
@@ -275,13 +275,10 @@ double dot(double *vec1, int end, double *vec2) {
 
 
 /* Scaled add - fills double vec1 with vec1 + alpha*vec2 over range*/
-void scadd(double *vec1, int beg, int end, double fac, double *vec2)
-{
+void scadd(double *vec1, int end, double fac, double *vec2) {
     int i;
 
-    vec1 += beg;
-    vec2 += beg;
-    for (i = end - beg + 1; i; i--) {
+    for (i = end + 1; i; i--) {
 	(*vec1++) += fac * (*vec2++);
     }
 }
