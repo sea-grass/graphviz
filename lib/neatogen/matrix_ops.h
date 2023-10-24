@@ -19,7 +19,7 @@ extern "C" {
 #include <neatogen/sparsegraph.h>
 
     extern void cpvec(double *, int, int, double *);
-    extern double dot(double *, int, int, double *);
+    extern double dot(double *, int, double *);
     extern void scadd(double *, int, int, double, double *);
     extern void vecscale(double *, int, int, double, double *);
     extern double norm(double *, int);
