@@ -56,7 +56,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    /* We have chosen a vector colinear with prvious ones */
 	    goto choose;
 	}
-	vecscale(curr_vector, n - 1, 1.0 / len, curr_vector);
+	vecscale(curr_vector, n - 1, 1.0 / len);
 	iteration = 0;
 	do {
 	    iteration++;
@@ -77,7 +77,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 		goto exit;
 	    }
 
-	    vecscale(curr_vector, n - 1, 1.0 / len, curr_vector);
+	    vecscale(curr_vector, n - 1, 1.0 / len);
 	    angle = dot(curr_vector, n - 1, last_vec);
 	} while (fabs(angle) < tol);
 	evals[i] = angle * len;	/* this is the Rayleigh quotient (up to errors due to orthogonalization):
@@ -99,7 +99,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
-	vecscale(curr_vector, n - 1, 1.0 / len, curr_vector);
+	vecscale(curr_vector, n - 1, 1.0 / len);
 	evals[i] = 0;
 
     }
@@ -280,13 +280,12 @@ void scadd(double *vec1, int end, double fac, double *vec2) {
     }
 }
 
-/* Scale - fills vec1 with alpha*vec2 over range, double version */
-void vecscale(double *vec1, int end, double alpha, double *vec2)
-{
+// Scale - fills vec with alpha × vec over range, double version
+void vecscale(double *vec, int end, double alpha) {
     int i;
 
     for (i = end + 1; i; i--) {
-	(*vec1++) = alpha * (*vec2++);
+	*vec++ *= alpha;
     }
 }
 
