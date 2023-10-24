@@ -73,7 +73,6 @@ extern "C" {
     extern double max_absf(int n, float *vector);
     extern void square_vec(int n, float *vec);
     extern void invert_vec(int n, float *vec);
-    extern void sqrt_vec(int n, float *vec);
     extern void sqrt_vecf(int n, float *source, float *target);
     extern void invert_sqrt_vec(int n, float *vec);
 

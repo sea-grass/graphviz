@@ -583,14 +583,6 @@ void invert_vec(int n, float *vec)
     }
 }
 
-void sqrt_vec(int n, float *vec)
-{
-    int i;
-    for (i = 0; i < n; i++) {
-	vec[i] = sqrtf(vec[i]);
-    }
-}
-
 void sqrt_vecf(int n, float *source, float *target)
 {
     int i;
