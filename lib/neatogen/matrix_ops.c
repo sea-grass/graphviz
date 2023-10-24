@@ -523,14 +523,6 @@ vectors_mult_additionf(int n, float *vector1, float alpha, float *vector2)
     }
 }
 
-void vectors_scalar_multf(int n, float *vector, float alpha, float *result)
-{
-    int i;
-    for (i = 0; i < n; i++) {
-	result[i] = vector[i] * alpha;
-    }
-}
-
 void copy_vectorf(int n, float *source, float *dest)
 {
     int i;

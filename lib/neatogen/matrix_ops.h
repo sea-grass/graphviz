@@ -65,8 +65,6 @@ extern "C" {
 				  float *result);
     extern void vectors_mult_additionf(int n, float *vector1, float alpha,
 				       float *vector2);
-    extern void vectors_scalar_multf(int n, float *vector, float alpha,
-				     float *result);
     extern void copy_vectorf(int n, float *source, float *dest);
     extern double vectors_inner_productf(int n, float *vector1,
 					 float *vector2);
