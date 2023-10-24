@@ -21,7 +21,7 @@ extern "C" {
     extern void cpvec(double *, int, double *);
     extern double dot(double *, int, double *);
     extern void scadd(double *, int, double, double *);
-    extern void vecscale(double *, int, int, double, double *);
+    extern void vecscale(double *, int, double, double *);
     extern double norm(double *, int);
 
     extern void orthog1(int n, double *vec);
