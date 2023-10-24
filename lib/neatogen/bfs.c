@@ -72,53 +72,6 @@ void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
     freeQueue(&Q);
 }
 
-int
-bfs_bounded(int vertex, vtx_data * graph, DistType * dist,
-	    int bound, int *visited_nodes, int queue_size)
- /* compute vector 'dist' of distances of all nodes  from 'vertex' */
- /* ignore nodes whose distance to 'vertex' is more than bound */
-{
-    /* we assume here, that all distances are initialized with -1 !!!! */
-
-    int i;
-    int num_visit;
-    int closestVertex, neighbor;
-    DistType closestDist;
-
-    dist[vertex] = 0;
-
-    Queue Q;
-    mkQueue(&Q, queue_size);
-    initQueue(&Q, vertex);
-
-    num_visit = 0;
-    while (deQueue(&Q, &closestVertex)) {
-	closestDist = dist[closestVertex];
-	if (closestDist > bound) {
-	    dist[closestVertex] = -1;
-	    break;
-	} else {
-	    visited_nodes[num_visit++] = closestVertex;
-	}
-	for (i = 1; i < graph[closestVertex].nedges; i++) {
-	    neighbor = graph[closestVertex].edges[i];
-	    if (dist[neighbor] < -0.5) {	/* first time to reach neighbor */
-		dist[neighbor] = closestDist + 1;
-		enQueue(&Q, neighbor);
-	    }
-	}
-    }
-    freeQueue(&Q);
-
-    /* set distances of all nodes in Queue to -1 */
-    /* for next run */
-    while (deQueue(&Q, &closestVertex)) {
-	dist[closestVertex] = -1;
-    }
-    dist[vertex] = -1;
-    return num_visit;
-}
-
 void mkQueue(Queue * qp, int size)
 {
     qp->data = gv_calloc(size, sizeof(int));

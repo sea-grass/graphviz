@@ -24,16 +24,6 @@ extern "C" {
 
     /* some possible values for 'num_pivots_stress' */
 #define num_pivots_stress 40
-#define num_pivots_smart_ini   0
-#define num_pivots_no_ini   50
-
-    /* relevant when using sparse distance matrix
-     * when optimizing within subspace it can be set to 0
-     * otherwise, recommended value is above zero (usually around 3-6)
-     * some possible values for 'neighborhood_radius'
-     */
-#define neighborhood_radius_unrestricted  4
-#define neighborhood_radius_subspace 0
 
 #define opt_smart_init 0x4
 #define opt_exp_flag   0x3

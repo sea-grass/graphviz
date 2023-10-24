@@ -175,66 +175,6 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     free(index);
 }
 
- /* Dijkstra bounded to nodes in *unweighted* radius */
-int
-dijkstra_bounded(int vertex, vtx_data * graph, int n, DistType * dist,
-		 int bound, int *visited_nodes)
- /* make dijkstra, but consider only nodes whose *unweighted* distance from 'vertex'  */
- /* is at most 'bound' */
- /* MON-EFFICIENT implementation, see below. */
-{
-    int num_visited_nodes;
-    int i;
-    heap H;
-    int closestVertex, neighbor;
-    DistType closestDist;
-    int num_found = 0;
-
-    /* first, perform BFS to find the nodes in the region */
-    /* remember that dist should be init. with -1's */
-    for (i = 0; i < n; i++) {
-	dist[i] = -1;		/* far, TOO COSTLY (O(n))! */
-    }
-    num_visited_nodes =
-	bfs_bounded(vertex, graph, dist, bound, visited_nodes, n);
-    bitarray_t node_in_neighborhood = bitarray_new(n);
-    for (i = 0; i < num_visited_nodes; i++) {
-	bitarray_set(&node_in_neighborhood, visited_nodes[i], true);
-    }
-
-    int *index = gcalloc(n, sizeof(int));
-
-    /* initial distances with edge weights: */
-    for (i = 0; i < n; i++)	/* far, TOO COSTLY (O(n))! */
-	dist[i] = MAX_DIST;
-    dist[vertex] = 0;
-    for (i = 1; i < graph[vertex].nedges; i++)
-	dist[graph[vertex].edges[i]] = (DistType) graph[vertex].ewgts[i];
-
-    /* again, TOO COSTLY (O(n)) to put all nodes in heap! */
-    initHeap(&H, vertex, index, dist, n); 
-
-    while (num_found < num_visited_nodes
-	   && extractMax(&H, &closestVertex, index, dist)) {
-	if (bitarray_get(node_in_neighborhood, closestVertex)) {
-	    num_found++;
-	}
-	closestDist = dist[closestVertex];
-	if (closestDist == MAX_DIST)
-	    break;
-	for (i = 1; i < graph[closestVertex].nedges; i++) {
-	    neighbor = graph[closestVertex].edges[i];
-	    increaseKey(&H, neighbor, closestDist +
-			(DistType)graph[closestVertex].ewgts[i], index, dist);
-	}
-    }
-
-    bitarray_reset(&node_in_neighborhood);
-    freeHeap(&H);
-    free(index);
-    return num_visited_nodes;
-}
-
 static void heapify_f(heap * h, int i, int index[], float dist[])
 {
     int l, r, largest;

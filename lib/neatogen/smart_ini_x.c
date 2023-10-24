@@ -264,7 +264,6 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	float* f_storage = NULL;	
 	double* x = given_coords;	
 	double uniLength;
-	double* orthog_aux = NULL;
 	double* y = new_coords;
 	float** lap = N_GNEW(n, float*);
 	float degree;
@@ -285,12 +284,6 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	assert(x!=NULL);
 	{
 		double sum1, sum2;
-		/* scale x (given axis) to minimize the stress */
-		orthog_aux = N_GNEW(n, double);
-		for (i=0; i<n; i++) {
-			orthog_aux[i]=x[i];
-		}
-		standardize(orthog_aux,n);
 	
 		for (sum1=sum2=0,i=1; i<n; i++) {
 			for (j=0; j<i; j++) {		
@@ -388,7 +381,7 @@ cleanup:
 
 	free (Dij[0]); free (Dij);	
 	free (lap[0]); free (lap);	
-	free (orthog_aux); free (balance);	
+	free (balance);	
 	return rv;
 }
 
