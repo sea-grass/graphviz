@@ -60,11 +60,11 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	iteration = 0;
 	do {
 	    iteration++;
-	    cpvec(last_vec, 0, n - 1, curr_vector);
+	    cpvec(last_vec, n - 1, curr_vector);
 
 	    right_mult_with_vector_d(square_mat, n, n, curr_vector,
 				     tmp_vec);
-	    cpvec(curr_vector, 0, n - 1, tmp_vec);
+	    cpvec(curr_vector, n - 1, tmp_vec);
 
 	    /* orthogonalize against higher eigenvectors */
 	    for (j = 0; j < i; j++) {
@@ -116,9 +116,9 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    }
 	}
 	if (largest_index != i) {	/* exchange eigenvectors: */
-	    cpvec(tmp_vec, 0, n - 1, eigs[i]);
-	    cpvec(eigs[i], 0, n - 1, eigs[largest_index]);
-	    cpvec(eigs[largest_index], 0, n - 1, tmp_vec);
+	    cpvec(tmp_vec, n - 1, eigs[i]);
+	    cpvec(eigs[i], n - 1, eigs[largest_index]);
+	    cpvec(eigs[largest_index], n - 1, tmp_vec);
 
 	    evals[largest_index] = evals[i];
 	    evals[i] = largest_eval;
@@ -250,13 +250,10 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
 
 
 /* Copy a range of a double vector to a double vector */
-void cpvec(double *copy, int beg, int end, double *vec)
-{
+void cpvec(double *copy, int end, double *vec) {
     int i;
 
-    copy = copy + beg;
-    vec = vec + beg;
-    for (i = end - beg + 1; i; i--) {
+    for (i = end + 1; i; i--) {
 	*copy++ = *vec++;
     }
 }

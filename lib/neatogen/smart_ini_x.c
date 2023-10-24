@@ -113,10 +113,10 @@ choose:
 		iteration=0;
 		do {
 			iteration++;
-			cpvec(last_vec,0,n-1,curr_vector);
+			cpvec(last_vec,n-1,curr_vector);
 			
 			mat_mult_vec_orthog(square_mat,n,n,curr_vector,tmp_vec,orthog);
-			cpvec(curr_vector,0,n-1,tmp_vec);
+			cpvec(curr_vector,n-1,tmp_vec);
 						
 			/* orthogonalize against higher eigenvectors */
 			for (j=0; j<i; j++) {
@@ -171,9 +171,9 @@ exit:
 			}
 		}
 		if (largest_index!=i) { // exchange eigenvectors:
-			cpvec(tmp_vec,0,n-1,eigs[i]);
-			cpvec(eigs[i],0,n-1,eigs[largest_index]);
-			cpvec(eigs[largest_index],0,n-1,tmp_vec);
+			cpvec(tmp_vec,n-1,eigs[i]);
+			cpvec(eigs[i],n-1,eigs[largest_index]);
+			cpvec(eigs[largest_index],n-1,tmp_vec);
 
 			evals[largest_index]=evals[i];
 			evals[i]=largest_eval;

@@ -123,7 +123,7 @@ static void rescale_layout_polarFocus(v_data *graph, size_t n, double *x_coords,
 		distances[i] = DIST(x_coords[i], y_coords[i], x_focus, y_focus);
     }
     assert(n <= INT_MAX);
-    cpvec(orig_distances, 0, (int)n - 1, distances);
+    cpvec(orig_distances, (int)n - 1, distances);
 
     int *ordering = gv_calloc(n, sizeof(int));
     for (size_t i = 0; i < n; i++)
@@ -235,15 +235,15 @@ rescale_layout_polar(double *x_coords, double *y_coords,
 	double *cp_y_coords = gv_calloc(n, sizeof(double));
 	assert(n <= INT_MAX);
 	for (int i = 0; i < num_foci; i++) {
-	    cpvec(cp_x_coords, 0, (int)n - 1, x_coords);
-	    cpvec(cp_y_coords, 0, (int)n - 1, y_coords);
+	    cpvec(cp_x_coords, (int)n - 1, x_coords);
+	    cpvec(cp_y_coords, (int)n - 1, y_coords);
 	    rescale_layout_polarFocus(graph, n, cp_x_coords, cp_y_coords,
 				      x_foci[i], y_foci[i], interval, distortion);
 	    scadd(final_x_coords, (int)n - 1, 1.0 / num_foci, cp_x_coords);
 	    scadd(final_y_coords, (int)n - 1, 1.0 / num_foci, cp_y_coords);
 	}
-	cpvec(x_coords, 0, (int)n - 1, final_x_coords);
-	cpvec(y_coords, 0, (int)n - 1, final_y_coords);
+	cpvec(x_coords, (int)n - 1, final_x_coords);
+	cpvec(y_coords, (int)n - 1, final_y_coords);
 	free(final_x_coords);
 	free(final_y_coords);
 	free(cp_x_coords);
