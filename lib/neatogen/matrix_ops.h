@@ -22,7 +22,7 @@ extern "C" {
     extern double dot(double *, int, int, double *);
     extern void scadd(double *, int, int, double, double *);
     extern void vecscale(double *, int, int, double, double *);
-    extern double norm(double *, int, int);
+    extern double norm(double *, int);
 
     extern void orthog1(int n, double *vec);
     extern void init_vec_orth1(int n, double *vec);

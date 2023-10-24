@@ -31,7 +31,7 @@ standardize(double* orthog, int nvtxs)
 		orthog[i]-=avg;
 	
 	/* normalize: */
-	len = norm(orthog, 0, nvtxs-1);
+	len = norm(orthog, nvtxs-1);
 
 	// if we have a degenerate length, do not attempt to scale by it
 	if (fabs(len) < DBL_EPSILON) {
@@ -104,7 +104,7 @@ choose:
 			alpha = -dot(eigs[j], 0, n-1, curr_vector);
 			scadd(curr_vector, 0, n-1, alpha, eigs[j]);
 	    }
-		len = norm(curr_vector, 0, n-1);
+		len = norm(curr_vector, n-1);
 		if (len<1e-10) {
 			/* We have chosen a vector colinear with prvious ones */
 			goto choose;
@@ -123,7 +123,7 @@ choose:
 				alpha = -dot(eigs[j], 0, n-1, curr_vector);
 				scadd(curr_vector, 0, n-1, alpha, eigs[j]);
 			}
-			len = norm(curr_vector, 0, n-1);
+			len = norm(curr_vector, n-1);
 			if (len<1e-10) {
 			    /* We have reached the null space (e.vec. associated 
                  * with e.val. 0)
@@ -154,7 +154,7 @@ exit:
 			alpha = -dot(eigs[j], 0, n-1, curr_vector);
 			scadd(curr_vector, 0, n-1, alpha, eigs[j]);
 	    }
-		len = norm(curr_vector, 0, n-1);
+		len = norm(curr_vector, n-1);
 		vecscale(curr_vector, 0, n-1, 1.0 / len, curr_vector);
 		evals[i]=0;
 		

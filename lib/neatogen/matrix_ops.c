@@ -51,7 +51,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    alpha = -dot(eigs[j], 0, n - 1, curr_vector);
 	    scadd(curr_vector, 0, n - 1, alpha, eigs[j]);
 	}
-	len = norm(curr_vector, 0, n - 1);
+	len = norm(curr_vector, n - 1);
 	if (len < 1e-10) {
 	    /* We have chosen a vector colinear with prvious ones */
 	    goto choose;
@@ -71,7 +71,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 		alpha = -dot(eigs[j], 0, n - 1, curr_vector);
 		scadd(curr_vector, 0, n - 1, alpha, eigs[j]);
 	    }
-	    len = norm(curr_vector, 0, n - 1);
+	    len = norm(curr_vector, n - 1);
 	    if (len < 1e-10 || iteration > Max_iterations) {
 		/* We have reached the null space (e.vec. associated with e.val. 0) */
 		goto exit;
@@ -98,7 +98,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    alpha = -dot(eigs[j], 0, n - 1, curr_vector);
 	    scadd(curr_vector, 0, n - 1, alpha, eigs[j]);
 	}
-	len = norm(curr_vector, 0, n - 1);
+	len = norm(curr_vector, n - 1);
 	vecscale(curr_vector, 0, n - 1, 1.0 / len, curr_vector);
 	evals[i] = 0;
 
@@ -302,9 +302,8 @@ void vecscale(double *vec1, int beg, int end, double alpha, double *vec2)
 }
 
 /* Returns 2-norm of a double n-vector over range. */
-double norm(double *vec, int beg, int end)
-{
-    return sqrt(dot(vec, beg, end, vec));
+double norm(double *vec, int end) {
+  return sqrt(dot(vec, 0, end, vec));
 }
 
 void orthog1(int n, double *vec	/* vector to be orthogonalized against 1 */
