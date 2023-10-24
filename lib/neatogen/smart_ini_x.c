@@ -95,10 +95,9 @@ choose:
 			curr_vector[j] = rand()%100;
 		}
 
-		if (orthog!=NULL) {
-			alpha=-dot(orthog,n-1,curr_vector);
-			scadd(curr_vector, n-1, alpha, orthog);	
-		}
+		assert(orthog != NULL);
+		alpha = -dot(orthog, n - 1, curr_vector);
+		scadd(curr_vector, n - 1, alpha, orthog);	
 			// orthogonalize against higher eigenvectors
 		for (j=0; j<i; j++) {
 			alpha = -dot(eigs[j], n-1, curr_vector);
