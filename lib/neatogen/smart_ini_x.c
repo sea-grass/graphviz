@@ -31,14 +31,14 @@ standardize(double* orthog, int nvtxs)
 		orthog[i]-=avg;
 	
 	/* normalize: */
-	len = norm(orthog, 0, nvtxs-1);
+	len = norm(orthog, nvtxs-1);
 
 	// if we have a degenerate length, do not attempt to scale by it
 	if (fabs(len) < DBL_EPSILON) {
 		return;
 	}
 
-	vecscale(orthog, 0, nvtxs-1, 1.0 / len, orthog);
+	vecscale(orthog, nvtxs-1, 1.0 / len);
 }
 
 static void
@@ -56,10 +56,9 @@ mat_mult_vec_orthog(float** mat, int dim1, int dim2, double* vec,
 		}
 		result[i]=sum;
 	}
-	if (orthog!=NULL) {
-		double alpha=-dot(result,0,dim1-1,orthog);
-		scadd(result, 0, dim1-1, alpha, orthog);	
-	}		
+	assert(orthog != NULL);
+	double alpha = -dot(result, dim1 - 1, orthog);
+	scadd(result, dim1 - 1, alpha, orthog);	
 }
 
 static void
@@ -95,35 +94,34 @@ choose:
 			curr_vector[j] = rand()%100;
 		}
 
-		if (orthog!=NULL) {
-			alpha=-dot(orthog,0,n-1,curr_vector);
-			scadd(curr_vector, 0, n-1, alpha, orthog);	
-		}
+		assert(orthog != NULL);
+		alpha = -dot(orthog, n - 1, curr_vector);
+		scadd(curr_vector, n - 1, alpha, orthog);	
 			// orthogonalize against higher eigenvectors
 		for (j=0; j<i; j++) {
-			alpha = -dot(eigs[j], 0, n-1, curr_vector);
-			scadd(curr_vector, 0, n-1, alpha, eigs[j]);
+			alpha = -dot(eigs[j], n-1, curr_vector);
+			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
-		len = norm(curr_vector, 0, n-1);
+		len = norm(curr_vector, n-1);
 		if (len<1e-10) {
 			/* We have chosen a vector colinear with prvious ones */
 			goto choose;
 		}
-		vecscale(curr_vector, 0, n-1, 1.0 / len, curr_vector);	
+		vecscale(curr_vector, n-1, 1.0 / len);	
 		iteration=0;
 		do {
 			iteration++;
-			cpvec(last_vec,0,n-1,curr_vector);
+			cpvec(last_vec,n-1,curr_vector);
 			
 			mat_mult_vec_orthog(square_mat,n,n,curr_vector,tmp_vec,orthog);
-			cpvec(curr_vector,0,n-1,tmp_vec);
+			cpvec(curr_vector,n-1,tmp_vec);
 						
 			/* orthogonalize against higher eigenvectors */
 			for (j=0; j<i; j++) {
-				alpha = -dot(eigs[j], 0, n-1, curr_vector);
-				scadd(curr_vector, 0, n-1, alpha, eigs[j]);
+				alpha = -dot(eigs[j], n-1, curr_vector);
+				scadd(curr_vector, n-1, alpha, eigs[j]);
 			}
-			len = norm(curr_vector, 0, n-1);
+			len = norm(curr_vector, n-1);
 			if (len<1e-10) {
 			    /* We have reached the null space (e.vec. associated 
                  * with e.val. 0)
@@ -131,8 +129,8 @@ choose:
 				goto exit;
 			}
 
-			vecscale(curr_vector, 0, n-1, 1.0 / len, curr_vector);
-			angle = dot(curr_vector, 0, n-1, last_vec);
+			vecscale(curr_vector, n-1, 1.0 / len);
+			angle = dot(curr_vector, n-1, last_vec);
 		} while (fabs(angle)<tol);
         /* the Rayleigh quotient (up to errors due to orthogonalization):
          * u*(A*u)/||A*u||)*||A*u||, where u=last_vec, and ||u||=1
@@ -151,11 +149,11 @@ exit:
 			curr_vector[j] = rand()%100;
 		/* orthogonalize against higher eigenvectors */
 		for (j=0; j<i; j++) {
-			alpha = -dot(eigs[j], 0, n-1, curr_vector);
-			scadd(curr_vector, 0, n-1, alpha, eigs[j]);
+			alpha = -dot(eigs[j], n-1, curr_vector);
+			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
-		len = norm(curr_vector, 0, n-1);
-		vecscale(curr_vector, 0, n-1, 1.0 / len, curr_vector);
+		len = norm(curr_vector, n-1);
+		vecscale(curr_vector, n-1, 1.0 / len);
 		evals[i]=0;
 		
 	}
@@ -171,9 +169,9 @@ exit:
 			}
 		}
 		if (largest_index!=i) { // exchange eigenvectors:
-			cpvec(tmp_vec,0,n-1,eigs[i]);
-			cpvec(eigs[i],0,n-1,eigs[largest_index]);
-			cpvec(eigs[largest_index],0,n-1,tmp_vec);
+			cpvec(tmp_vec,n-1,eigs[i]);
+			cpvec(eigs[i],n-1,eigs[largest_index]);
+			cpvec(eigs[largest_index],n-1,tmp_vec);
 
 			evals[largest_index]=evals[i];
 			evals[i]=largest_eval;
@@ -234,14 +232,12 @@ CMDS_orthog(int n, int dim, double** eigs, double tol,
 	float** Bij = compute_Bij(Dij, n);
 	double* evals= N_GNEW(dim, double);
 	
-	double * orthog_aux = NULL;
-	if (orthog!=NULL) {
-		orthog_aux = N_GNEW(n, double);
-		for (i=0; i<n; i++) {
-			orthog_aux[i]=orthog[i];
-		}
-		standardize(orthog_aux,n);
+	assert(orthog != NULL);
+	double *orthog_aux = N_GNEW(n, double);
+	for (i=0; i<n; i++) {
+		orthog_aux[i]=orthog[i];
 	}
+	standardize(orthog_aux,n);
     power_iteration_orthog(Bij, n, dim, eigs, evals, orthog_aux, tol);
 	
 	for (i=0; i<dim; i++) {

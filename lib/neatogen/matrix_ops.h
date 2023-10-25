@@ -18,11 +18,11 @@ extern "C" {
 
 #include <neatogen/sparsegraph.h>
 
-    extern void cpvec(double *, int, int, double *);
-    extern double dot(double *, int, int, double *);
-    extern void scadd(double *, int, int, double, double *);
-    extern void vecscale(double *, int, int, double, double *);
-    extern double norm(double *, int, int);
+    extern void cpvec(double *, int, double *);
+    extern double dot(double *, int, double *);
+    extern void scadd(double *, int, double, double *);
+    extern void vecscale(double *, int, double);
+    extern double norm(double *, int);
 
     extern void orthog1(int n, double *vec);
     extern void init_vec_orth1(int n, double *vec);
@@ -60,13 +60,11 @@ extern "C" {
 
     extern void orthog1f(int n, float *vec);
     extern void right_mult_with_vector_ff(float *, int, float *, float *);
-    extern void vectors_substractionf(int, float *, float *, float *);
+    extern void vectors_subtractionf(int, float *, float *, float *);
     extern void vectors_additionf(int n, float *vector1, float *vector2,
 				  float *result);
     extern void vectors_mult_additionf(int n, float *vector1, float alpha,
 				       float *vector2);
-    extern void vectors_scalar_multf(int n, float *vector, float alpha,
-				     float *result);
     extern void copy_vectorf(int n, float *source, float *dest);
     extern double vectors_inner_productf(int n, float *vector1,
 					 float *vector2);
@@ -75,7 +73,6 @@ extern "C" {
     extern double max_absf(int n, float *vector);
     extern void square_vec(int n, float *vec);
     extern void invert_vec(int n, float *vec);
-    extern void sqrt_vec(int n, float *vec);
     extern void sqrt_vecf(int n, float *source, float *target);
     extern void invert_sqrt_vec(int n, float *vec);
 
