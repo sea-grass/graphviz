@@ -33,7 +33,7 @@ extern "C" {
     extern void vectors_subtraction(int, double *, double *, double *);
     extern void vectors_addition(int, double *, double *, double *);
     extern void vectors_scalar_mult(int, double *, double, double *);
-    extern void copy_vector(int n, double *source, double *dest);
+    extern void copy_vector(int n, const double *source, double *dest);
     extern double vectors_inner_product(int n, double *vector1,
 					double *vector2);
     extern double max_abs(int n, double *vector);
