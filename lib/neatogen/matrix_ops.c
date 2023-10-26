@@ -381,8 +381,8 @@ void copy_vector(int n, const double *source, double *dest) {
 	dest[i] = source[i];
 }
 
-double vectors_inner_product(int n, double *vector1, double *vector2)
-{
+double vectors_inner_product(int n, const double *vector1,
+                             const double *vector2) {
     int i;
     double result = 0;
     for (i = 0; i < n; i++) {
