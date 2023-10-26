@@ -21,7 +21,6 @@ typedef struct {
 	int n;
 	int *iArray1;
 	int *iArray2;
-	int *iArray3;
 	int *iArray4;
 	float *fArray1;
 	float *fArray2;
