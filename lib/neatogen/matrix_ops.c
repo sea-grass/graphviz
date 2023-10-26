@@ -353,9 +353,8 @@ vectors_addition(int n, double *vector1, double *vector2, double *result)
     }
 }
 
-void
-vectors_scalar_mult(int n, double *vector, double alpha, double *result)
-{
+void vectors_scalar_mult(int n, const double *vector, double alpha,
+                         double *result) {
     int i;
     for (i = 0; i < n; i++) {
 	result[i] = vector[i] * alpha;
