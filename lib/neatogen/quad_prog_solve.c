@@ -429,7 +429,6 @@ CMajEnv *initConstrainedMajorization(float *packedMat, int n,
 				     int num_levels)
 {
     CMajEnv *e = gv_alloc(sizeof(CMajEnv));
-    e->A = NULL;
     e->n = n;
     e->ordering = ordering;
     e->levels = levels;
