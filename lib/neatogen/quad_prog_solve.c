@@ -419,7 +419,6 @@ void deleteCMajEnv(CMajEnv * e)
     free(e->fArray4);
     free(e->iArray1);
     free(e->iArray2);
-    free(e->iArray4);
     free(e);
 }
 
@@ -439,7 +438,6 @@ CMajEnv *initConstrainedMajorization(float *packedMat, int n,
     e->fArray4 = gv_calloc(n, sizeof(float));
     e->iArray1 = gv_calloc(n, sizeof(int));
     e->iArray2 = gv_calloc(n, sizeof(int));
-    e->iArray4 = gv_calloc(n, sizeof(int));
     return e;
 }
 #endif				/* DIGCOLA */
