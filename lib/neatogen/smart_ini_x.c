@@ -57,7 +57,7 @@ mat_mult_vec_orthog(float** mat, int dim1, int dim2, double* vec,
 		result[i]=sum;
 	}
 	assert(orthog != NULL);
-	double alpha = -dot(result, dim1 - 1, orthog);
+	double alpha = -vectors_inner_product(dim1, result, orthog);
 	scadd(result, dim1 - 1, alpha, orthog);	
 }
 
@@ -95,11 +95,11 @@ choose:
 		}
 
 		assert(orthog != NULL);
-		alpha = -dot(orthog, n - 1, curr_vector);
+		alpha = -vectors_inner_product(n, orthog, curr_vector);
 		scadd(curr_vector, n - 1, alpha, orthog);	
 			// orthogonalize against higher eigenvectors
 		for (j=0; j<i; j++) {
-			alpha = -dot(eigs[j], n-1, curr_vector);
+			alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);
@@ -118,7 +118,7 @@ choose:
 						
 			/* orthogonalize against higher eigenvectors */
 			for (j=0; j<i; j++) {
-				alpha = -dot(eigs[j], n-1, curr_vector);
+				alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 				scadd(curr_vector, n-1, alpha, eigs[j]);
 			}
 			len = norm(curr_vector, n-1);
@@ -130,7 +130,7 @@ choose:
 			}
 
 			vecscale(curr_vector, n-1, 1.0 / len);
-			angle = dot(curr_vector, n-1, last_vec);
+			angle = vectors_inner_product(n, curr_vector, last_vec);
 		} while (fabs(angle)<tol);
         /* the Rayleigh quotient (up to errors due to orthogonalization):
          * u*(A*u)/||A*u||)*||A*u||, where u=last_vec, and ||u||=1
@@ -149,7 +149,7 @@ exit:
 			curr_vector[j] = rand()%100;
 		/* orthogonalize against higher eigenvectors */
 		for (j=0; j<i; j++) {
-			alpha = -dot(eigs[j], n-1, curr_vector);
+			alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);

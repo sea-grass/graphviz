@@ -48,7 +48,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
             curr_vector[j] = rand() % 100;
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
-	    alpha = -dot(eigs[j], n - 1, curr_vector);
+	    alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
@@ -68,7 +68,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 
 	    /* orthogonalize against higher eigenvectors */
 	    for (j = 0; j < i; j++) {
-		alpha = -dot(eigs[j], n - 1, curr_vector);
+		alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 		scadd(curr_vector, n - 1, alpha, eigs[j]);
 	    }
 	    len = norm(curr_vector, n - 1);
@@ -78,7 +78,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    }
 
 	    vecscale(curr_vector, n - 1, 1.0 / len);
-	    angle = dot(curr_vector, n - 1, last_vec);
+	    angle = vectors_inner_product(n, curr_vector, last_vec);
 	} while (fabs(angle) < tol);
 	evals[i] = angle * len;	/* this is the Rayleigh quotient (up to errors due to orthogonalization):
 				   u*(A*u)/||A*u||)*||A*u||, where u=last_vec, and ||u||=1
@@ -95,7 +95,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    curr_vector[j] = rand() % 100;
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
-	    alpha = -dot(eigs[j], n - 1, curr_vector);
+	    alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
@@ -247,19 +247,6 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
     }
 }
 
-/* Returns scalar product of two double n-vectors. */
-double dot(double *vec1, int end, double *vec2) {
-    int i;
-    double sum;
-
-    sum = 0.0;
-    for (i = end + 1; i; i--) {
-	sum += (*vec1++) * (*vec2++);
-    }
-    return (sum);
-}
-
-
 /* Scaled add - fills double vec1 with vec1 + alpha*vec2 over range*/
 void scadd(double *vec1, int end, double fac, double *vec2) {
     int i;
@@ -280,7 +267,7 @@ void vecscale(double *vec, int end, double alpha) {
 
 /* Returns 2-norm of a double n-vector over range. */
 double norm(double *vec, int end) {
-  return sqrt(dot(vec, end, vec));
+  return sqrt(vectors_inner_product(end + 1, vec, vec));
 }
 
 void orthog1(int n, double *vec	/* vector to be orthogonalized against 1 */
