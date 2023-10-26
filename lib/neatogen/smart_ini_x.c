@@ -38,7 +38,7 @@ standardize(double* orthog, int nvtxs)
 		return;
 	}
 
-	vecscale(orthog, nvtxs-1, 1.0 / len);
+	vectors_scalar_mult(nvtxs, orthog, 1.0 / len, orthog);
 }
 
 static void
@@ -107,7 +107,7 @@ choose:
 			/* We have chosen a vector colinear with prvious ones */
 			goto choose;
 		}
-		vecscale(curr_vector, n-1, 1.0 / len);	
+		vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);	
 		iteration=0;
 		do {
 			iteration++;
@@ -129,7 +129,7 @@ choose:
 				goto exit;
 			}
 
-			vecscale(curr_vector, n-1, 1.0 / len);
+			vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
 			angle = vectors_inner_product(n, curr_vector, last_vec);
 		} while (fabs(angle)<tol);
         /* the Rayleigh quotient (up to errors due to orthogonalization):
@@ -153,7 +153,7 @@ exit:
 			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);
-		vecscale(curr_vector, n-1, 1.0 / len);
+		vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
 		evals[i]=0;
 		
 	}

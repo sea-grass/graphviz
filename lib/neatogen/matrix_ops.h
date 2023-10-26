@@ -19,7 +19,6 @@ extern "C" {
 #include <neatogen/sparsegraph.h>
 
     extern void scadd(double *, int, double, double *);
-    extern void vecscale(double *, int, double);
     extern double norm(double *, int);
 
     extern void orthog1(int n, double *vec);
