@@ -191,7 +191,6 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
     int nConCs;
     CMajEnvVPSC *e = gv_alloc(sizeof(CMajEnvVPSC));
     e->A = NULL;
-    e->packedMat = packedMat;
     /* if we have clusters then we'll need two constraints for each var in
      * a cluster */
     e->nldv = 2 * opt->clusters->nclusters;
