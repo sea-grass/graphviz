@@ -977,6 +977,7 @@ SparseMatrix SparseMatrix_multiply(SparseMatrix A, SparseMatrix B){
 #ifdef DEBUG_PRINT
 	    fprintf(stderr,"overflow in SparseMatrix_multiply !!!\n");
 #endif
+	    free(mask);
 	    return NULL;
 	  }
 	  nz++;
