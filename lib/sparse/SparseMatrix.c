@@ -1287,12 +1287,9 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A){
       }
     }
     break;
-  case MATRIX_TYPE_UNKNOWN:
-    return NULL;
-    break;
   default:
+    free(mask);
     return NULL;
-    break;
   }
   A->nz = nz;
   free(mask);
