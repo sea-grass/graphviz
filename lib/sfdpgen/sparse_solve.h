@@ -22,5 +22,3 @@ struct Operator_struct {
 double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs, double tol, int maxit);
 
 double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit);
-
-Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha);

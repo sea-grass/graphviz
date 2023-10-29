@@ -49,36 +49,6 @@ static double* Operator_diag_precon_apply(Operator o, double *x, double *y){
   return y;
 }
 
-
-Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha){
-  Operator o;
-  double *diag;
-  int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
-  double *a = A->a;
-
-  assert(A->type == MATRIX_TYPE_REAL);
-
-  assert(a);
-
-  o = MALLOC(sizeof(struct Operator_struct));
-  o->data = MALLOC(sizeof(double)*(m + 1));
-  diag = o->data;
-
-  diag[0] = m;
-  diag++;
-  for (i = 0; i < m; i++){
-    diag[i] = 1./(m-1);
-    for (j = ia[i]; j < ia[i+1]; j++){
-      if (i == ja[j] && fabs(a[j]) > 0) diag[i] = 1./((m-1)*alpha+a[j]);
-    }
-  }
-
-  o->Operator_apply = Operator_diag_precon_apply;
-
-  return o;
-}
-
-
 static Operator Operator_diag_precon_new(SparseMatrix A){
   Operator o;
   double *diag;
