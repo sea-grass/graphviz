@@ -282,6 +282,7 @@ fixLabelOrder (graph_t* g, rank_t* rk)
        }
        emptyComp(sg);
     }
+    free(indices);
     free (arr);
 }
 

@@ -224,11 +224,11 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
       goto RETURN;
     }
     cA = SparseMatrix_multiply(B, P); 
+    SparseMatrix_delete(B);
     if (!cA) {
       free(deg_new);
       goto RETURN;
     }
-    SparseMatrix_delete(B);
     grid->P = P;
     grid->R = R;
     level++;
