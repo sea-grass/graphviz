@@ -534,36 +534,10 @@ static UNUSED double get_stress(int m, int dim, int *iw, int *jw, double *w,
 
 }
 
-static void uniform_stress_augment_rhs(int m, int dim, double *x, double *y, double alpha, double M){
-  int i, j, k;
-  double dist, distij;
-  for (i = 0; i < m; i++){
-    for (j = i+1; j < m; j++){
-      dist = distance_cropped(x, dim, i, j);
-      for (k = 0; k < dim; k++){
-	distij = (x[i*dim+k] - x[j*dim+k])/dist;
-	y[i*dim+k] += alpha*M*distij;
-	y[j*dim+k] += alpha*M*(-distij);
-      }
-    }
-  }
-}
-
-static double uniform_stress_solve(SparseMatrix Lw, double alpha, int dim, double *x0, double *rhs, double tol, int maxit){
-  Operator Ax;
-  Operator Precon;
-
-  Ax = Operator_uniform_stress_matmul(Lw, alpha);
-  Precon = Operator_uniform_stress_diag_precon_new(Lw, alpha);
-
-  return cg(Ax, Precon, Lw->m, dim, x0, rhs, tol, maxit);
-
-}
-
 double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim, double *x, int maxit_sm) {
   SparseMatrix Lw = sm->Lw, Lwd = sm->Lwd, Lwdd = NULL;
   int i, j, k, m, *id, *jd, *iw, *jw, idiag, iter = 0;
-  double *w, *dd, *d, *y = NULL, *x0 = NULL, *x00 = NULL, diag, diff = 1, *lambda = sm->lambda, alpha = 0., M = 0.;
+  double *w, *dd, *d, *y = NULL, *x0 = NULL, *x00 = NULL, diag, diff = 1, *lambda = sm->lambda;
   SparseMatrix Lc = NULL;
   double dij, dist;
 
@@ -595,9 +569,6 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
   if (sm->scheme == SM_SCHEME_NORMAL_ELABEL){
     get_edge_label_matrix(sm->data, m, dim, x, &Lc, &x00);
     if (Lc) Lw = SparseMatrix_add(Lw, Lc);
-  } else if (sm->scheme == SM_SCHEME_UNIFORM_STRESS){
-    alpha = ((double*) (sm->data))[0];
-    M = ((double*) (sm->data))[1];
   }
 
   while (iter++ < maxit_sm && diff > tol){
@@ -650,10 +621,6 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
       }
       break;
     }
-    case SM_SCHEME_UNIFORM_STRESS:{/* this part can be done more efficiently using octree approximation */
-      uniform_stress_augment_rhs(m, dim, x, y, alpha, M);
-      break;
-    } 
     default:
       break;
   }
@@ -664,11 +631,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
     }
 #endif
 
-    if (sm->scheme == SM_SCHEME_UNIFORM_STRESS){
-      uniform_stress_solve(Lw, alpha, dim, x, y, sm->tol_cg, sm->maxit_cg);
-    } else {
-      SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg);
-    }
+    SparseMatrix_solve(Lw, dim, x, y,  sm->tol_cg, sm->maxit_cg);
 
 #ifdef DEBUG_PRINT
     if (Verbose) fprintf(stderr, "stress2 = %g\n",get_stress(m, dim, iw, jw, w, d, y, sm->scaling));

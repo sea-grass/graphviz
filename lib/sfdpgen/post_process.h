@@ -12,7 +12,7 @@
 
 #include <sfdpgen/spring_electrical.h>
 
-enum {SM_SCHEME_NORMAL, SM_SCHEME_NORMAL_ELABEL, SM_SCHEME_UNIFORM_STRESS, SM_SCHEME_STRESS};
+enum {SM_SCHEME_NORMAL, SM_SCHEME_NORMAL_ELABEL, SM_SCHEME_STRESS};
 
 struct StressMajorizationSmoother_struct {
   SparseMatrix D;/* distance matrix. The diagonal is removed hence the ia, ja structure is different from Lw and Lwd!! */
