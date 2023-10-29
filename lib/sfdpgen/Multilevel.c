@@ -255,7 +255,6 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double *node_wgt, doub
     if (*cnode_wgt) free(*cnode_wgt);
     *cnode_wgt = cnode_wgt0;
     A = cA0;
-    node_wgt = cnode_wgt0;
     cnode_wgt0 = NULL;
   } while (nc > ctrl->min_coarsen_factor*n);
 
