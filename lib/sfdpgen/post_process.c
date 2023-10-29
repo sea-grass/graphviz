@@ -602,44 +602,35 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
 
   while (iter++ < maxit_sm && diff > tol){
 
-    if (sm->scheme != SM_SCHEME_STRESS_APPROX){
-      for (i = 0; i < m; i++){
-	idiag = -1;
-	diag = 0.;
-	for (j = id[i]; j < id[i+1]; j++){
-	  if (i == jd[j]) {
-	    idiag = j;
-	    continue;
-	  }
-	  
-	  dist = distance(x, dim, i, jd[j]);
-	  if (d[j] == 0){
-	    dd[j] = 0;
-	  } else {
-	    if (dist == 0){
-	      dij = d[j]/w[j];/* the ideal distance */
-	      /* perturb so points do not sit at the same place */
-	      for (k = 0; k < dim; k++) x[jd[j]*dim+k] += 0.0001*(drand()+.0001)*dij;
-	      dist = distance(x, dim, i, jd[j]);	
-	    }
-	    dd[j] = d[j]/dist;
-	    
-	  }
-	diag += dd[j];
+    for (i = 0; i < m; i++){
+      idiag = -1;
+      diag = 0.;
+      for (j = id[i]; j < id[i+1]; j++){
+	if (i == jd[j]) {
+	  idiag = j;
+	  continue;
 	}
-	assert(idiag >= 0);
-	dd[idiag] = -diag;
-      }
-      /* solve (Lw+lambda*I) x = Lwdd y + lambda x0 */
 
-      SparseMatrix_multiply_dense(Lwdd, x, &y, dim);
-    } else {
-      for (i = 0; i < m; i++){
-	for (j = 0; j < dim; j++){
-	  y[i*dim+j] = 0;/* for stress_approx scheme, the whole rhs is calculated in stress_maxent_augment_rhs */
+	dist = distance(x, dim, i, jd[j]);
+	if (d[j] == 0){
+	  dd[j] = 0;
+	} else {
+	  if (dist == 0){
+	    dij = d[j]/w[j];/* the ideal distance */
+	    /* perturb so points do not sit at the same place */
+	    for (k = 0; k < dim; k++) x[jd[j]*dim+k] += 0.0001*(drand()+.0001)*dij;
+	    dist = distance(x, dim, i, jd[j]);	
+	  }
+	  dd[j] = d[j]/dist;
 	}
+	diag += dd[j];
       }
+      assert(idiag >= 0);
+      dd[idiag] = -diag;
     }
+    /* solve (Lw+lambda*I) x = Lwdd y + lambda x0 */
+
+    SparseMatrix_multiply_dense(Lwdd, x, &y, dim);
 
     if (lambda){/* is there a penalty term? */
       for (i = 0; i < m; i++){
