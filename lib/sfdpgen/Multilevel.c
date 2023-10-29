@@ -227,7 +227,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double *node_wgt, doub
   n = A->n;
 
   do {/* this loop force a sufficient reduction */
-    node_wgt = cnode_wgt0;
+    node_wgt = NULL;
     Multilevel_coarsen_internal(A, &cA0, node_wgt, &cnode_wgt0, &P0, &R0, ctrl);
     if (!cA0) return;
     nc = cA0->n;
