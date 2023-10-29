@@ -21,43 +21,6 @@
 
 /* #define DEBUG_PRINT */
 
-struct uniform_stress_matmul_data{
-  double alpha;
-  SparseMatrix A;
-};
-
-static double *Operator_uniform_stress_matmul_apply(Operator o, double *x, double *y){
-  struct uniform_stress_matmul_data *d = o->data;
-  SparseMatrix A = d->A;
-  double alpha = d->alpha;
-  double xsum = 0.;
-  int m = A->m, i;
-
-  SparseMatrix_multiply_vector(A, x, &y);
-
-  /* alpha*V*x */
-  for (i = 0; i < m; i++) xsum += x[i];
-
-  for (i = 0; i < m; i++) y[i] += alpha*(m*x[i] - xsum);
-
-  return y;
-}
-
-
-
-Operator Operator_uniform_stress_matmul(SparseMatrix A, double alpha){
-  Operator o;
-  struct uniform_stress_matmul_data *d;
-
-  o = MALLOC(sizeof(struct Operator_struct));
-  o->data = d = MALLOC(sizeof(struct uniform_stress_matmul_data));
-  d->alpha = alpha;
-  d->A = A;
-  o->Operator_apply = Operator_uniform_stress_matmul_apply;
-  return o;
-}
-
-
 static double *Operator_matmul_apply(Operator o, double *x, double *y){
   SparseMatrix A = o->data;
   SparseMatrix_multiply_vector(A, x, &y);
