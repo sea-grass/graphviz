@@ -35,7 +35,6 @@ static Multilevel Multilevel_init(SparseMatrix A) {
   grid->level = 0;
   grid->n = A->n;
   grid->A = A;
-  grid->D = NULL;
   grid->P = NULL;
   grid->R = NULL;
   grid->next = NULL;
@@ -50,11 +49,9 @@ void Multilevel_delete(Multilevel grid){
     if (grid->level == 0) {
       if (grid->delete_top_level_A) {
 	SparseMatrix_delete(grid->A);
-	if (grid->D) SparseMatrix_delete(grid->D);
       }
     } else {
       SparseMatrix_delete(grid->A);
-      if (grid->D) SparseMatrix_delete(grid->D);
     }
   }
   SparseMatrix_delete(grid->P);

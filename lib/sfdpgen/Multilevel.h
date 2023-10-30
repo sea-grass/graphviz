@@ -19,8 +19,6 @@ struct Multilevel_struct {
   int level;/* 0, 1, ... */
   int n;
   SparseMatrix A;/* the weighting matrix */
-  SparseMatrix D;/* the distance matrix. A and D should have same pattern, 
-		    but different entry values. For spring-electrical method, D = NULL. */
   SparseMatrix P; 
   SparseMatrix R; 
   Multilevel next;
