@@ -38,7 +38,7 @@ static Multilevel Multilevel_init(SparseMatrix A, SparseMatrix D, double *node_w
   grid->D = D;
   grid->P = NULL;
   grid->R = NULL;
-  grid->node_weights = node_weights;
+  (void)node_weights;
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = false;
@@ -60,7 +60,6 @@ void Multilevel_delete(Multilevel grid){
   }
   SparseMatrix_delete(grid->P);
   SparseMatrix_delete(grid->R);
-  if (grid->node_weights && grid->level > 0) free(grid->node_weights);
   Multilevel_delete(grid->next);
   free(grid);
 }
@@ -288,6 +287,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   if (!cA) return grid;
 
   cgrid = Multilevel_init(cA, NULL, cnode_weights);
+  free(cnode_weights);
   grid->next = cgrid;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;

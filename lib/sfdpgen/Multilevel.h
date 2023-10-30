@@ -23,7 +23,6 @@ struct Multilevel_struct {
 		    but different entry values. For spring-electrical method, D = NULL. */
   SparseMatrix P; 
   SparseMatrix R; 
-  double *node_weights;
   Multilevel next;
   Multilevel prev;
   bool delete_top_level_A;
