@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,17 +16,17 @@
 typedef struct Multilevel_struct *Multilevel;
 
 struct Multilevel_struct {
-  int level;/* 0, 1, ... */
+  int level; /* 0, 1, ... */
   int n;
-  SparseMatrix A;/* the weighting matrix */
-  SparseMatrix P; 
-  SparseMatrix R; 
+  SparseMatrix A; /* the weighting matrix */
+  SparseMatrix P;
+  SparseMatrix R;
   Multilevel next;
   Multilevel prev;
   bool delete_top_level_A;
 };
 
-enum {MAX_CLUSTER_SIZE = 4};
+enum { MAX_CLUSTER_SIZE = 4 };
 
 typedef struct {
   int minsize;
@@ -47,6 +47,5 @@ void print_padding(int n);
 #define Multilevel_is_finest(grid) (!((grid)->prev))
 #define Multilevel_is_coarsest(grid) (!((grid)->next))
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
-                        SparseMatrix *P, SparseMatrix *R,
-                        const Multilevel_control ctrl);
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *P,
+                        SparseMatrix *R, const Multilevel_control ctrl);
