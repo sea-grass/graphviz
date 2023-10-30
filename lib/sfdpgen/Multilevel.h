@@ -28,13 +28,11 @@ struct Multilevel_struct {
 
 enum {MAX_CLUSTER_SIZE = 4};
 
-struct Multilevel_control_struct {
+typedef struct {
   int minsize;
   double min_coarsen_factor;
   int maxlevel;
-};
-
-typedef struct Multilevel_control_struct Multilevel_control;
+} Multilevel_control;
 
 Multilevel_control Multilevel_control_new(void);
 
