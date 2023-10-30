@@ -1348,7 +1348,6 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
                                             int n_edge_label_nodes,
                                             int *edge_label_nodes, int *flag) {
 
-  Multilevel_control mctrl = NULL;
   int n, plg;
   SparseMatrix A = A0, P = NULL;
   Multilevel grid, grid0;
@@ -1395,8 +1394,8 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
     return;
   }
 
-  mctrl = Multilevel_control_new();
-  mctrl->maxlevel = ctrl->multilevels;
+  Multilevel_control mctrl = Multilevel_control_new();
+  mctrl.maxlevel = ctrl->multilevels;
   grid0 = Multilevel_new(A, mctrl);
 
   grid = Multilevel_get_coarsest(grid0);
@@ -1477,6 +1476,5 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
  RETURN:
   *ctrl = ctrl0;
   if (A != A0) SparseMatrix_delete(A);
-  Multilevel_control_delete(mctrl);
   Multilevel_delete(grid0);
  }

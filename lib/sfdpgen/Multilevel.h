@@ -34,15 +34,13 @@ struct Multilevel_control_struct {
   int maxlevel;
 };
 
-typedef struct Multilevel_control_struct *Multilevel_control;
+typedef struct Multilevel_control_struct Multilevel_control;
 
 Multilevel_control Multilevel_control_new(void);
 
-void Multilevel_control_delete(Multilevel_control ctrl);
-
 void Multilevel_delete(Multilevel grid);
 
-Multilevel Multilevel_new(SparseMatrix A, Multilevel_control ctrl);
+Multilevel Multilevel_new(SparseMatrix A, const Multilevel_control ctrl);
 
 Multilevel Multilevel_get_coarsest(Multilevel grid);
 
@@ -53,4 +51,4 @@ void print_padding(int n);
 
 void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
                         SparseMatrix *P, SparseMatrix *R,
-                        Multilevel_control ctrl);
+                        const Multilevel_control ctrl);

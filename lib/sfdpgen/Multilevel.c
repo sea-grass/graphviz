@@ -16,16 +16,13 @@
 #include <stdbool.h>
 
 Multilevel_control Multilevel_control_new(void) {
-  Multilevel_control ctrl = gv_alloc(sizeof(struct Multilevel_control_struct));
-  ctrl->minsize = 4;
-  ctrl->min_coarsen_factor = 0.75;
-  ctrl->maxlevel = 1<<30;
+  Multilevel_control ctrl = {
+    .minsize = 4,
+    .min_coarsen_factor = 0.75,
+    .maxlevel = 1<<30,
+  };
 
   return ctrl;
-}
-
-void Multilevel_control_delete(Multilevel_control ctrl){
-  free(ctrl);
 }
 
 static Multilevel Multilevel_init(SparseMatrix A) {
@@ -152,7 +149,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
 
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
                                         SparseMatrix *P, SparseMatrix *R,
-                                        Multilevel_control ctrl) {
+                                        const Multilevel_control ctrl) {
   int nc, nzc, n, i;
   int *irn = NULL, *jcn = NULL;
   double *val = NULL;
@@ -168,10 +165,10 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
   assert(ncluster <= n);
   nc = ncluster;
-  if (nc == n || nc < ctrl->minsize) {
+  if (nc == n || nc < ctrl.minsize) {
 #ifdef DEBUG_PRINT
     if (Verbose)
-      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
+      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl.minsize, ctrl.min_coarsen_factor);
 #endif
     goto RETURN;
   }
@@ -210,7 +207,8 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
 }
 
 void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
-			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
+                        SparseMatrix *P, SparseMatrix *R,
+                        const Multilevel_control ctrl) {
   SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
   int nc = 0, n;
   
@@ -244,7 +242,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
     *cA = cA0;
 
     A = cA0;
-  } while (nc > ctrl->min_coarsen_factor*n);
+  } while (nc > ctrl.min_coarsen_factor*n);
 
 }
 
@@ -252,7 +250,9 @@ void print_padding(int n){
   int i;
   for (i = 0; i < n; i++) fputs (" ", stderr);
 }
-static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
+
+static Multilevel Multilevel_establish(Multilevel grid,
+                                       const Multilevel_control ctrl) {
   Multilevel cgrid;
   SparseMatrix P, R, A, cA;
 
@@ -263,7 +263,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   }
 #endif
   A = grid->A;
-  if (grid->level >= ctrl->maxlevel - 1) {
+  if (grid->level >= ctrl.maxlevel - 1) {
 #ifdef DEBUG_PRINT
   if (Verbose) {
     print_padding(grid->level);
@@ -287,7 +287,8 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   
 }
 
-Multilevel Multilevel_new(SparseMatrix A0, Multilevel_control ctrl) {
+Multilevel Multilevel_new(SparseMatrix A0,
+                          const Multilevel_control ctrl) {
   /* A: the weighting matrix. D: the distance matrix, could be NULL. If not null, the two matrices must have the same sparsity pattern */
   Multilevel grid;
   SparseMatrix A = A0;
