@@ -45,7 +45,7 @@ void Multilevel_control_delete(Multilevel_control ctrl);
 
 void Multilevel_delete(Multilevel grid);
 
-Multilevel Multilevel_new(SparseMatrix A, SparseMatrix D, Multilevel_control ctrl);
+Multilevel Multilevel_new(SparseMatrix A, Multilevel_control ctrl);
 
 Multilevel Multilevel_get_coarsest(Multilevel grid);
 
