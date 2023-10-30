@@ -28,14 +28,14 @@ void Multilevel_control_delete(Multilevel_control ctrl){
   free(ctrl);
 }
 
-static Multilevel Multilevel_init(SparseMatrix A, SparseMatrix D) {
+static Multilevel Multilevel_init(SparseMatrix A) {
   if (!A) return NULL;
   assert(A->m == A->n);
   Multilevel grid = gv_alloc(sizeof(struct Multilevel_struct));
   grid->level = 0;
   grid->n = A->n;
   grid->A = A;
-  grid->D = D;
+  grid->D = NULL;
   grid->P = NULL;
   grid->R = NULL;
   grid->next = NULL;
@@ -285,7 +285,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   Multilevel_coarsen(A, &cA, &cnode_weights, &P, &R, ctrl);
   if (!cA) return grid;
 
-  cgrid = Multilevel_init(cA, NULL);
+  cgrid = Multilevel_init(cA);
   free(cnode_weights);
   grid->next = cgrid;
   cgrid->level = grid->level + 1;
@@ -306,7 +306,7 @@ Multilevel Multilevel_new(SparseMatrix A0, Multilevel_control ctrl) {
   if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
-  grid = Multilevel_init(A, NULL);
+  grid = Multilevel_init(A);
   grid = Multilevel_establish(grid, ctrl);
   if (A != A0) grid->delete_top_level_A = true; // be sure to clean up later
   return grid;
