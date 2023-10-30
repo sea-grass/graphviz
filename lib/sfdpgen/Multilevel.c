@@ -154,7 +154,6 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
 }
 
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
-                                        double **cnode_wgt,
                                         SparseMatrix *P, SparseMatrix *R,
                                         Multilevel_control ctrl) {
   int nc, nzc, n, i;
@@ -199,7 +198,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   *cA = SparseMatrix_multiply3(*R, A, *P); 
   if (!*cA) goto RETURN;
 
-  SparseMatrix_multiply_vector(*R, NULL, cnode_wgt);
   *R = SparseMatrix_divide_row_by_degree(*R);
   SparseMatrix_set_symmetric(*cA);
   SparseMatrix_set_pattern_symmetric(*cA);
@@ -217,7 +215,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
 void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
 			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
   SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
-  double *cnode_wgt0 = NULL;
   int nc = 0, n;
   
   *P = NULL; *R = NULL; *cA = NULL;
@@ -225,7 +222,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
   n = A->n;
 
   do {/* this loop force a sufficient reduction */
-    Multilevel_coarsen_internal(A, &cA0, &cnode_wgt0, &P0, &R0, ctrl);
+    Multilevel_coarsen_internal(A, &cA0, &P0, &R0, ctrl);
     if (!cA0) return;
     nc = cA0->n;
 #ifdef DEBUG_PRINT
@@ -249,9 +246,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
     if (*cA) SparseMatrix_delete(*cA);
     *cA = cA0;
 
-    free(cnode_wgt0);
     A = cA0;
-    cnode_wgt0 = NULL;
   } while (nc > ctrl->min_coarsen_factor*n);
 
 }
