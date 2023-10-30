@@ -155,21 +155,6 @@ SparseMatrix SparseMatrix_symmetrize(SparseMatrix A,
   return A;
 }
 
-SparseMatrix SparseMatrix_symmetrize_nodiag(SparseMatrix A){
-  SparseMatrix B;
-  if (SparseMatrix_is_symmetric(A, false)) {
-    B = SparseMatrix_copy(A);
-    return SparseMatrix_remove_diagonal(B);
-  }
-  B = SparseMatrix_transpose(A);
-  if (!B) return NULL;
-  A = SparseMatrix_add(A, B);
-  SparseMatrix_delete(B);
-  SparseMatrix_set_symmetric(A);
-  SparseMatrix_set_pattern_symmetric(A);
-  return SparseMatrix_remove_diagonal(A);
-}
-
 bool SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only) {
   if (!A) return false;
 
