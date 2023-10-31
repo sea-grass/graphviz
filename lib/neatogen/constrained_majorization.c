@@ -59,7 +59,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     float **coords = NULL;
 
     double conj_tol = tolerance_cg;	/* tolerance of Conjugate Gradient */
-    float **unpackedLap = NULL;
     CMajEnv *cMajEnv = NULL;
     double y_0;
     int length;
@@ -320,7 +319,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 
     old_stress = DBL_MAX;	/* at least one iteration */
 
-    unpackedLap = unpackMatrix(lap2, n);
     cMajEnv =
 	initConstrainedMajorization(lap2, n, ordering, levels, num_levels);
 
@@ -456,10 +454,6 @@ finish:
 
     free(levels);
 
-    if (unpackedLap) {
-	free(unpackedLap[0]);
-	free(unpackedLap);
-    }
     return iterations;
 }
 #endif				/* DIGCOLA */

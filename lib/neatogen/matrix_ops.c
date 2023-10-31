@@ -48,7 +48,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
             curr_vector[j] = rand() % 100;
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
-	    alpha = -dot(eigs[j], n - 1, curr_vector);
+	    alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
@@ -56,19 +56,19 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    /* We have chosen a vector colinear with prvious ones */
 	    goto choose;
 	}
-	vecscale(curr_vector, n - 1, 1.0 / len);
+	vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
 	iteration = 0;
 	do {
 	    iteration++;
-	    cpvec(last_vec, n - 1, curr_vector);
+	    copy_vector(n, curr_vector, last_vec);
 
 	    right_mult_with_vector_d(square_mat, n, n, curr_vector,
 				     tmp_vec);
-	    cpvec(curr_vector, n - 1, tmp_vec);
+	    copy_vector(n, tmp_vec, curr_vector);
 
 	    /* orthogonalize against higher eigenvectors */
 	    for (j = 0; j < i; j++) {
-		alpha = -dot(eigs[j], n - 1, curr_vector);
+		alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 		scadd(curr_vector, n - 1, alpha, eigs[j]);
 	    }
 	    len = norm(curr_vector, n - 1);
@@ -77,8 +77,8 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 		goto exit;
 	    }
 
-	    vecscale(curr_vector, n - 1, 1.0 / len);
-	    angle = dot(curr_vector, n - 1, last_vec);
+	    vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
+	    angle = vectors_inner_product(n, curr_vector, last_vec);
 	} while (fabs(angle) < tol);
 	evals[i] = angle * len;	/* this is the Rayleigh quotient (up to errors due to orthogonalization):
 				   u*(A*u)/||A*u||)*||A*u||, where u=last_vec, and ||u||=1
@@ -95,11 +95,11 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    curr_vector[j] = rand() % 100;
 	/* orthogonalize against higher eigenvectors */
 	for (j = 0; j < i; j++) {
-	    alpha = -dot(eigs[j], n - 1, curr_vector);
+	    alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 	    scadd(curr_vector, n - 1, alpha, eigs[j]);
 	}
 	len = norm(curr_vector, n - 1);
-	vecscale(curr_vector, n - 1, 1.0 / len);
+	vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
 	evals[i] = 0;
 
     }
@@ -116,9 +116,9 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	    }
 	}
 	if (largest_index != i) {	/* exchange eigenvectors: */
-	    cpvec(tmp_vec, n - 1, eigs[i]);
-	    cpvec(eigs[i], n - 1, eigs[largest_index]);
-	    cpvec(eigs[largest_index], n - 1, tmp_vec);
+	    copy_vector(n, eigs[i], tmp_vec);
+	    copy_vector(n, eigs[largest_index], eigs[i]);
+	    copy_vector(n, tmp_vec, eigs[largest_index]);
 
 	    evals[largest_index] = evals[i];
 	    evals[i] = largest_eval;
@@ -247,30 +247,6 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
     }
 }
 
-
-
-/* Copy a range of a double vector to a double vector */
-void cpvec(double *copy, int end, double *vec) {
-    int i;
-
-    for (i = end + 1; i; i--) {
-	*copy++ = *vec++;
-    }
-}
-
-/* Returns scalar product of two double n-vectors. */
-double dot(double *vec1, int end, double *vec2) {
-    int i;
-    double sum;
-
-    sum = 0.0;
-    for (i = end + 1; i; i--) {
-	sum += (*vec1++) * (*vec2++);
-    }
-    return (sum);
-}
-
-
 /* Scaled add - fills double vec1 with vec1 + alpha*vec2 over range*/
 void scadd(double *vec1, int end, double fac, double *vec2) {
     int i;
@@ -280,18 +256,9 @@ void scadd(double *vec1, int end, double fac, double *vec2) {
     }
 }
 
-// Scale - fills vec with alpha × vec over range, double version
-void vecscale(double *vec, int end, double alpha) {
-    int i;
-
-    for (i = end + 1; i; i--) {
-	*vec++ *= alpha;
-    }
-}
-
 /* Returns 2-norm of a double n-vector over range. */
 double norm(double *vec, int end) {
-  return sqrt(dot(vec, end, vec));
+  return sqrt(vectors_inner_product(end + 1, vec, vec));
 }
 
 void orthog1(int n, double *vec	/* vector to be orthogonalized against 1 */
@@ -377,24 +344,22 @@ vectors_addition(int n, double *vector1, double *vector2, double *result)
     }
 }
 
-void
-vectors_scalar_mult(int n, double *vector, double alpha, double *result)
-{
+void vectors_scalar_mult(int n, const double *vector, double alpha,
+                         double *result) {
     int i;
     for (i = 0; i < n; i++) {
 	result[i] = vector[i] * alpha;
     }
 }
 
-void copy_vector(int n, double *source, double *dest)
-{
+void copy_vector(int n, const double *source, double *dest) {
     int i;
     for (i = 0; i < n; i++)
 	dest[i] = source[i];
 }
 
-double vectors_inner_product(int n, double *vector1, double *vector2)
-{
+double vectors_inner_product(int n, const double *vector1,
+                             const double *vector2) {
     int i;
     double result = 0;
     for (i = 0; i < n; i++) {

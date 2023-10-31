@@ -38,7 +38,7 @@ standardize(double* orthog, int nvtxs)
 		return;
 	}
 
-	vecscale(orthog, nvtxs-1, 1.0 / len);
+	vectors_scalar_mult(nvtxs, orthog, 1.0 / len, orthog);
 }
 
 static void
@@ -57,7 +57,7 @@ mat_mult_vec_orthog(float** mat, int dim1, int dim2, double* vec,
 		result[i]=sum;
 	}
 	assert(orthog != NULL);
-	double alpha = -dot(result, dim1 - 1, orthog);
+	double alpha = -vectors_inner_product(dim1, result, orthog);
 	scadd(result, dim1 - 1, alpha, orthog);	
 }
 
@@ -95,11 +95,11 @@ choose:
 		}
 
 		assert(orthog != NULL);
-		alpha = -dot(orthog, n - 1, curr_vector);
+		alpha = -vectors_inner_product(n, orthog, curr_vector);
 		scadd(curr_vector, n - 1, alpha, orthog);	
 			// orthogonalize against higher eigenvectors
 		for (j=0; j<i; j++) {
-			alpha = -dot(eigs[j], n-1, curr_vector);
+			alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);
@@ -107,18 +107,18 @@ choose:
 			/* We have chosen a vector colinear with prvious ones */
 			goto choose;
 		}
-		vecscale(curr_vector, n-1, 1.0 / len);	
+		vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);	
 		iteration=0;
 		do {
 			iteration++;
-			cpvec(last_vec,n-1,curr_vector);
+			copy_vector(n, curr_vector, last_vec);
 			
 			mat_mult_vec_orthog(square_mat,n,n,curr_vector,tmp_vec,orthog);
-			cpvec(curr_vector,n-1,tmp_vec);
+			copy_vector(n, tmp_vec, curr_vector);
 						
 			/* orthogonalize against higher eigenvectors */
 			for (j=0; j<i; j++) {
-				alpha = -dot(eigs[j], n-1, curr_vector);
+				alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 				scadd(curr_vector, n-1, alpha, eigs[j]);
 			}
 			len = norm(curr_vector, n-1);
@@ -129,8 +129,8 @@ choose:
 				goto exit;
 			}
 
-			vecscale(curr_vector, n-1, 1.0 / len);
-			angle = dot(curr_vector, n-1, last_vec);
+			vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
+			angle = vectors_inner_product(n, curr_vector, last_vec);
 		} while (fabs(angle)<tol);
         /* the Rayleigh quotient (up to errors due to orthogonalization):
          * u*(A*u)/||A*u||)*||A*u||, where u=last_vec, and ||u||=1
@@ -149,11 +149,11 @@ exit:
 			curr_vector[j] = rand()%100;
 		/* orthogonalize against higher eigenvectors */
 		for (j=0; j<i; j++) {
-			alpha = -dot(eigs[j], n-1, curr_vector);
+			alpha = -vectors_inner_product(n, eigs[j], curr_vector);
 			scadd(curr_vector, n-1, alpha, eigs[j]);
 	    }
 		len = norm(curr_vector, n-1);
-		vecscale(curr_vector, n-1, 1.0 / len);
+		vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
 		evals[i]=0;
 		
 	}
@@ -169,9 +169,9 @@ exit:
 			}
 		}
 		if (largest_index!=i) { // exchange eigenvectors:
-			cpvec(tmp_vec,n-1,eigs[i]);
-			cpvec(eigs[i],n-1,eigs[largest_index]);
-			cpvec(eigs[largest_index],n-1,tmp_vec);
+			copy_vector(n, eigs[i], tmp_vec);
+			copy_vector(n, eigs[largest_index], eigs[i]);
+			copy_vector(n, tmp_vec, eigs[largest_index]);
 
 			evals[largest_index]=evals[i];
 			evals[i]=largest_eval;
