@@ -615,6 +615,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_digcola=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ipsepcola=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ortho=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_sfdp=OFF"
