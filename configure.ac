@@ -2282,7 +2282,6 @@ AC_CONFIG_FILES(Makefile
 	plugin/gdk/Makefile
 	plugin/gdiplus/Makefile
 	plugin/gs/Makefile
-	plugin/gtk/Makefile
 	plugin/kitty/Makefile
 	plugin/lasi/Makefile
 	plugin/pango/Makefile

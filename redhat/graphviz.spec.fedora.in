@@ -369,9 +369,6 @@ LD_LIBRARY_PATH=%{_libdir} %{_bindir}/dot -c
 %{_libdir}/graphviz/libgvplugin_gdk.so.*
 %{_libdir}/graphviz/libgvplugin_gs.so.*
 %{_libdir}/graphviz/libgvplugin_poppler.so.*
-%if %{GTK}
-%{_libdir}/graphviz/libgvplugin_gtk.so.*
-%endif
 %if %{LASI}
 %{_libdir}/graphviz/libgvplugin_lasi.so.*
 %endif
