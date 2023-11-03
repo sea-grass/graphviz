@@ -21,43 +21,6 @@
 
 /* #define DEBUG_PRINT */
 
-struct uniform_stress_matmul_data{
-  double alpha;
-  SparseMatrix A;
-};
-
-static double *Operator_uniform_stress_matmul_apply(Operator o, double *x, double *y){
-  struct uniform_stress_matmul_data *d = o->data;
-  SparseMatrix A = d->A;
-  double alpha = d->alpha;
-  double xsum = 0.;
-  int m = A->m, i;
-
-  SparseMatrix_multiply_vector(A, x, &y);
-
-  /* alpha*V*x */
-  for (i = 0; i < m; i++) xsum += x[i];
-
-  for (i = 0; i < m; i++) y[i] += alpha*(m*x[i] - xsum);
-
-  return y;
-}
-
-
-
-Operator Operator_uniform_stress_matmul(SparseMatrix A, double alpha){
-  Operator o;
-  struct uniform_stress_matmul_data *d;
-
-  o = MALLOC(sizeof(struct Operator_struct));
-  o->data = d = MALLOC(sizeof(struct uniform_stress_matmul_data));
-  d->alpha = alpha;
-  d->A = A;
-  o->Operator_apply = Operator_uniform_stress_matmul_apply;
-  return o;
-}
-
-
 static double *Operator_matmul_apply(Operator o, double *x, double *y){
   SparseMatrix A = o->data;
   SparseMatrix_multiply_vector(A, x, &y);
@@ -85,36 +48,6 @@ static double* Operator_diag_precon_apply(Operator o, double *x, double *y){
   for (i = 0; i < m; i++) y[i] = x[i]*diag[i];
   return y;
 }
-
-
-Operator Operator_uniform_stress_diag_precon_new(SparseMatrix A, double alpha){
-  Operator o;
-  double *diag;
-  int i, j, m = A->m, *ia = A->ia, *ja = A->ja;
-  double *a = A->a;
-
-  assert(A->type == MATRIX_TYPE_REAL);
-
-  assert(a);
-
-  o = MALLOC(sizeof(struct Operator_struct));
-  o->data = MALLOC(sizeof(double)*(m + 1));
-  diag = o->data;
-
-  diag[0] = m;
-  diag++;
-  for (i = 0; i < m; i++){
-    diag[i] = 1./(m-1);
-    for (j = ia[i]; j < ia[i+1]; j++){
-      if (i == ja[j] && fabs(a[j]) > 0) diag[i] = 1./((m-1)*alpha+a[j]);
-    }
-  }
-
-  o->Operator_apply = Operator_diag_precon_apply;
-
-  return o;
-}
-
 
 static Operator Operator_diag_precon_new(SparseMatrix A){
   Operator o;
