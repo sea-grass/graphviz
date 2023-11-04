@@ -177,6 +177,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim,
 	} else if (dim == 1){
 	  nitems = sscanf(pval, "%lf", &xx);
 	  if (nitems != 1){
+	    SparseMatrix_delete(A);
 	    A = NULL;
 	    goto done;
           }

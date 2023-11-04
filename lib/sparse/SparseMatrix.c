@@ -977,6 +977,7 @@ SparseMatrix SparseMatrix_multiply(SparseMatrix A, SparseMatrix B){
 #ifdef DEBUG_PRINT
 	    fprintf(stderr,"overflow in SparseMatrix_multiply !!!\n");
 #endif
+	    free(mask);
 	    return NULL;
 	  }
 	  nz++;
@@ -1287,12 +1288,9 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A){
       }
     }
     break;
-  case MATRIX_TYPE_UNKNOWN:
-    return NULL;
-    break;
   default:
+    free(mask);
     return NULL;
-    break;
   }
   A->nz = nz;
   free(mask);
