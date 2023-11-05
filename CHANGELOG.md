@@ -166,6 +166,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   penwidths &gt; 1. #2399
 - Small gap between `lcurve` or `rcurve` arrow shaft and node. #2426
 - Failure of arrowhead and arrowtail to respect penwidth #372 \
+  Fixed also for the `normal` and `inv`
+  [edge arrow shapes](https://graphviz.org/doc/info/arrows.html)
+  when using the `l` or `r`
+  [arrow shape modifiers](https://graphviz.org/doc/info/arrows.html#shape-modifiers). \
+  Slightly improved for the `normal` and `inv`
+  [edge arrow shapes](https://graphviz.org/doc/info/arrows.html)
+  when not using any
+  [arrow shape modifier](https://graphviz.org/doc/info/arrows.html#shape-modifiers). \
   Fixed also for the `crow` and `vee`
   [edge arrow shapes](https://graphviz.org/doc/info/arrows.html#primitive-shapes)
   and [record based nodes](https://graphviz.org/doc/info/shapes.html#record).
