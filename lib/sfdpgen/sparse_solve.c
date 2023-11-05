@@ -55,7 +55,7 @@ static double *diag_precon_new(SparseMatrix A) {
 static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
                                  double *x, double *rhs, double tol,
                                  int maxit) {
-  double *z, *r, *p, *q, res = 10*tol, alpha;
+  double *z, *r, *p, *q, res, alpha;
   double rho = 1.0e20, rho_old = 1, res0, beta;
   int iter = 0;
 
