@@ -21,6 +21,13 @@
 
 /* #define DEBUG_PRINT */
 
+typedef struct Operator_struct *Operator;
+
+struct Operator_struct {
+  void *data;
+  double *(*Operator_apply)(Operator o, double *in, double *out);
+};
+
 static double *Operator_matmul_apply(Operator o, double *x, double *y){
   SparseMatrix A = o->data;
   SparseMatrix_multiply_vector(A, x, &y);
@@ -147,7 +154,8 @@ static double conjugate_gradient(Operator A, Operator precon, int n, double *x, 
   return res;
 }
 
-double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs, double tol, int maxit){
+static double cg(Operator Ax, Operator precond, int n, int dim, double *x0,
+                 double *rhs, double tol, int maxit) {
   double *x, *b, res = 0;
   int k, i;
   x = N_GNEW(n, double);

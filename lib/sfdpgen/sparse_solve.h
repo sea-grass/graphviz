@@ -12,13 +12,4 @@
 
 #include <sparse/SparseMatrix.h>
 
-typedef struct Operator_struct *Operator;
-
-struct Operator_struct {
-  void *data;
-  double* (*Operator_apply)(Operator o, double *in, double *out);
-};
-
-double cg(Operator Ax, Operator precond, int n, int dim, double *x0, double *rhs, double tol, int maxit);
-
 double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit);
