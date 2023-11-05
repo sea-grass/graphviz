@@ -141,10 +141,9 @@ static double cg(SparseMatrix A, const double *precond, int n, int dim,
 
 double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit){
   int n = A->m;
-  double res = 0;
 
   double *precond = diag_precon_new(A);
-  res = cg(A, precond, n, dim, x0, rhs, tol, maxit);
+  double res = cg(A, precond, n, dim, x0, rhs, tol, maxit);
   free(precond);
   return res;
 }
