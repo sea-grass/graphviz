@@ -21,35 +21,28 @@
 
 /* #define DEBUG_PRINT */
 
-typedef struct Operator_struct *Operator;
+typedef struct Operator_struct Operator;
 
 struct Operator_struct {
   void *data;
-  double *(*Operator_apply)(Operator o, double *in, double *out);
+  double *(*Operator_apply)(const Operator o, double *in, double *out);
 };
 
-static double *Operator_matmul_apply(Operator o, double *x, double *y){
-  SparseMatrix A = o->data;
+static double *Operator_matmul_apply(const Operator o, double *x, double *y) {
+  SparseMatrix A = o.data;
   SparseMatrix_multiply_vector(A, x, &y);
   return y;
 }
 
 static Operator Operator_matmul_new(SparseMatrix A){
-  Operator o = gv_alloc(sizeof(struct Operator_struct));
-  o->data = A;
-  o->Operator_apply = Operator_matmul_apply;
+  Operator o = {.data = A, .Operator_apply = Operator_matmul_apply};
   return o;
 }
 
-
-static void Operator_matmul_delete(Operator o){
-  free(o);
-}
-
-
-static double* Operator_diag_precon_apply(Operator o, double *x, double *y){
+static double *Operator_diag_precon_apply(const Operator o, double *x,
+                                          double *y) {
   int i, m;
-  double *diag = o->data;
+  double *diag = o.data;
   m = (int) diag[0];
   diag++;
   for (i = 0; i < m; i++) y[i] = x[i]*diag[i];
@@ -66,9 +59,8 @@ static Operator Operator_diag_precon_new(SparseMatrix A){
 
   assert(a);
 
-  o = N_GNEW(1,struct Operator_struct);
-  o->data = N_GNEW((A->m + 1),double);
-  diag = o->data;
+  o.data = N_GNEW((A->m + 1),double);
+  diag = o.data;
 
   diag[0] = m;
   diag++;
@@ -79,21 +71,22 @@ static Operator Operator_diag_precon_new(SparseMatrix A){
     }
   }
 
-  o->Operator_apply = Operator_diag_precon_apply;
+  o.Operator_apply = Operator_diag_precon_apply;
 
   return o;
 }
 
 static void Operator_diag_precon_delete(Operator o){
-  free(o->data);
-  free(o);
+  free(o.data);
 }
 
-static double conjugate_gradient(Operator A, Operator precon, int n, double *x, double *rhs, double tol, int maxit){
+static double conjugate_gradient(const Operator A, const Operator precon, int n,
+                                 double *x, double *rhs, double tol,
+                                 int maxit) {
   double *z, *r, *p, *q, res = 10*tol, alpha;
   double rho = 1.0e20, rho_old = 1, res0, beta;
-  double* (*Ax)(Operator o, double *in, double *out) = A->Operator_apply;
-  double* (*Minvx)(Operator o, double *in, double *out) = precon->Operator_apply;
+  double* (*Ax)(const Operator o, double *in, double *out) = A.Operator_apply;
+  double* (*Minvx)(const Operator o, double *in, double *out) = precon.Operator_apply;
   int iter = 0;
 
   z = N_GNEW(n,double);
@@ -154,8 +147,8 @@ static double conjugate_gradient(Operator A, Operator precon, int n, double *x, 
   return res;
 }
 
-static double cg(Operator Ax, Operator precond, int n, int dim, double *x0,
-                 double *rhs, double tol, int maxit) {
+static double cg(const Operator Ax, const Operator precond, int n, int dim,
+                 double *x0, double *rhs, double tol, int maxit) {
   double *x, *b, res = 0;
   int k, i;
   x = N_GNEW(n, double);
@@ -184,7 +177,6 @@ double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, doub
   Ax =  Operator_matmul_new(A);
   precond = Operator_diag_precon_new(A);
   res = cg(Ax, precond, n, dim, x0, rhs, tol, maxit);
-  Operator_matmul_delete(Ax);
   Operator_diag_precon_delete(precond);
   return res;
 }
