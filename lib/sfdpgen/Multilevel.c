@@ -16,29 +16,24 @@
 #include <stdbool.h>
 
 Multilevel_control Multilevel_control_new(void) {
-  Multilevel_control ctrl = gv_alloc(sizeof(struct Multilevel_control_struct));
-  ctrl->minsize = 4;
-  ctrl->min_coarsen_factor = 0.75;
-  ctrl->maxlevel = 1<<30;
+  Multilevel_control ctrl = {
+    .minsize = 4,
+    .min_coarsen_factor = 0.75,
+    .maxlevel = 1<<30,
+  };
 
   return ctrl;
 }
 
-void Multilevel_control_delete(Multilevel_control ctrl){
-  free(ctrl);
-}
-
-static Multilevel Multilevel_init(SparseMatrix A, SparseMatrix D, double *node_weights){
+static Multilevel Multilevel_init(SparseMatrix A) {
   if (!A) return NULL;
   assert(A->m == A->n);
   Multilevel grid = gv_alloc(sizeof(struct Multilevel_struct));
   grid->level = 0;
   grid->n = A->n;
   grid->A = A;
-  grid->D = D;
   grid->P = NULL;
   grid->R = NULL;
-  grid->node_weights = node_weights;
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = false;
@@ -51,16 +46,13 @@ void Multilevel_delete(Multilevel grid){
     if (grid->level == 0) {
       if (grid->delete_top_level_A) {
 	SparseMatrix_delete(grid->A);
-	if (grid->D) SparseMatrix_delete(grid->D);
       }
     } else {
       SparseMatrix_delete(grid->A);
-      if (grid->D) SparseMatrix_delete(grid->D);
     }
   }
   SparseMatrix_delete(grid->P);
   SparseMatrix_delete(grid->R);
-  if (grid->node_weights && grid->level > 0) free(grid->node_weights);
   Multilevel_delete(grid->next);
   free(grid);
 }
@@ -156,9 +148,8 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
 }
 
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
-                                        double **cnode_wgt,
                                         SparseMatrix *P, SparseMatrix *R,
-                                        Multilevel_control ctrl) {
+                                        const Multilevel_control ctrl) {
   int nc, nzc, n, i;
   int *irn = NULL, *jcn = NULL;
   double *val = NULL;
@@ -174,10 +165,10 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
   assert(ncluster <= n);
   nc = ncluster;
-  if (nc == n || nc < ctrl->minsize) {
+  if (nc == n || nc < ctrl.minsize) {
 #ifdef DEBUG_PRINT
     if (Verbose)
-      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl->minsize, ctrl->min_coarsen_factor);
+      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl.minsize, ctrl.min_coarsen_factor);
 #endif
     goto RETURN;
   }
@@ -201,7 +192,6 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   *cA = SparseMatrix_multiply3(*R, A, *P); 
   if (!*cA) goto RETURN;
 
-  SparseMatrix_multiply_vector(*R, NULL, cnode_wgt);
   *R = SparseMatrix_divide_row_by_degree(*R);
   SparseMatrix_set_symmetric(*cA);
   SparseMatrix_set_pattern_symmetric(*cA);
@@ -216,18 +206,18 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   free(clusterp);
 }
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double **cnode_wgt,
-			       SparseMatrix *P, SparseMatrix *R, Multilevel_control ctrl){
+void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
+                        SparseMatrix *P, SparseMatrix *R,
+                        const Multilevel_control ctrl) {
   SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
-  double *cnode_wgt0 = NULL;
   int nc = 0, n;
   
-  *P = NULL; *R = NULL; *cA = NULL; *cnode_wgt = NULL;
+  *P = NULL; *R = NULL; *cA = NULL;
 
   n = A->n;
 
   do {/* this loop force a sufficient reduction */
-    Multilevel_coarsen_internal(A, &cA0, &cnode_wgt0, &P0, &R0, ctrl);
+    Multilevel_coarsen_internal(A, &cA0, &P0, &R0, ctrl);
     if (!cA0) return;
     nc = cA0->n;
 #ifdef DEBUG_PRINT
@@ -251,11 +241,8 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, double **cnode_wgt,
     if (*cA) SparseMatrix_delete(*cA);
     *cA = cA0;
 
-    if (*cnode_wgt) free(*cnode_wgt);
-    *cnode_wgt = cnode_wgt0;
     A = cA0;
-    cnode_wgt0 = NULL;
-  } while (nc > ctrl->min_coarsen_factor*n);
+  } while (nc > ctrl.min_coarsen_factor*n);
 
 }
 
@@ -263,9 +250,10 @@ void print_padding(int n){
   int i;
   for (i = 0; i < n; i++) fputs (" ", stderr);
 }
-static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl){
+
+static Multilevel Multilevel_establish(Multilevel grid,
+                                       const Multilevel_control ctrl) {
   Multilevel cgrid;
-  double *cnode_weights = NULL;
   SparseMatrix P, R, A, cA;
 
 #ifdef DEBUG_PRINT
@@ -275,7 +263,7 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   }
 #endif
   A = grid->A;
-  if (grid->level >= ctrl->maxlevel - 1) {
+  if (grid->level >= ctrl.maxlevel - 1) {
 #ifdef DEBUG_PRINT
   if (Verbose) {
     print_padding(grid->level);
@@ -284,10 +272,10 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
 #endif
     return grid;
   }
-  Multilevel_coarsen(A, &cA, &cnode_weights, &P, &R, ctrl);
+  Multilevel_coarsen(A, &cA, &P, &R, ctrl);
   if (!cA) return grid;
 
-  cgrid = Multilevel_init(cA, NULL, cnode_weights);
+  cgrid = Multilevel_init(cA);
   grid->next = cgrid;
   cgrid->level = grid->level + 1;
   cgrid->n = cA->m;
@@ -299,18 +287,16 @@ static Multilevel Multilevel_establish(Multilevel grid, Multilevel_control ctrl)
   
 }
 
-Multilevel Multilevel_new(SparseMatrix A0, SparseMatrix D0, Multilevel_control ctrl){
+Multilevel Multilevel_new(SparseMatrix A0,
+                          const Multilevel_control ctrl) {
   /* A: the weighting matrix. D: the distance matrix, could be NULL. If not null, the two matrices must have the same sparsity pattern */
   Multilevel grid;
-  SparseMatrix A = A0, D = D0;
+  SparseMatrix A = A0;
 
   if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
     A = SparseMatrix_get_real_adjacency_matrix_symmetrized(A);
   }
-  if (D && (!SparseMatrix_is_symmetric(D, false) || D->type != MATRIX_TYPE_REAL)){
-    D = SparseMatrix_symmetrize_nodiag(D);
-  }
-  grid = Multilevel_init(A, D, NULL);
+  grid = Multilevel_init(A);
   grid = Multilevel_establish(grid, ctrl);
   if (A != A0) grid->delete_top_level_A = true; // be sure to clean up later
   return grid;
