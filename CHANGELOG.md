@@ -61,6 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   crashing. #2450
 - Support for the `%n` specifier in `scanf` in gvpr has been restored. This was
   a regression in Graphviz 9.0.0. #2454
+- In the Autotools build system, `make dist` now processes cmd/gvedit correctly
+  when Qt is not installed. Generating Qt “mocables” is postponed from configure
+  time to build time. #2463
 
 ## [9.0.0] - 2023-09-11
 

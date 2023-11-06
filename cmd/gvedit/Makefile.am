@@ -41,7 +41,8 @@ noinst_HEADERS = csettings.h imageviewer.h mainwindow.h mdichild.h ui_settings.h
 
 MOCABLES = moc_csettings.cpp moc_imageviewer.cpp moc_mainwindow.cpp moc_mdichild.cpp qrc_mdi.cpp
 
-gvedit_SOURCES = main.cpp csettings.cpp imageviewer.cpp mainwindow.cpp mdichild.cpp $(MOCABLES)
+gvedit_SOURCES = main.cpp csettings.cpp imageviewer.cpp mainwindow.cpp mdichild.cpp
+nodist_gvedit_SOURCES = $(MOCABLES)
 
 $(MOCABLES): mocables
 
