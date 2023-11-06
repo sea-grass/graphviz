@@ -363,7 +363,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
-  QuadTree qt = NULL;
   double counts[4], *force = NULL;
 #ifdef TIME
   clock_t start, end, start0;
@@ -419,7 +418,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 #ifdef TIME
     start = clock();
 #endif
-    qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
+    QuadTree qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
 
 #ifdef TIME
     qtree_new_cpu += ((double) (clock() - start))/CLOCKS_PER_SEC;
@@ -690,7 +689,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
-  QuadTree qt = NULL;
   int USE_QT = FALSE;
   int nsuper = 0, nsupermax = 10;
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0, counts_avg = 0;
@@ -758,6 +756,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     nsuper_avg = 0;
     counts_avg = 0;
 
+    QuadTree qt = NULL;
     if (USE_QT) {
 
       max_qtree_level = oned_optimizer_get(qtree_level_optimizer);
@@ -899,7 +898,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   int adaptive_cooling = ctrl->adaptive_cooling;
-  QuadTree qt = NULL;
   int USE_QT = FALSE;
   int nsuper = 0, nsupermax = 10;
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0;
@@ -961,6 +959,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     Fnorm = 0.;
     nsuper_avg = 0;
 
+    QuadTree qt = NULL;
     if (USE_QT) {
       qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
