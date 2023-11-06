@@ -64,7 +64,7 @@ SUFFIXES = .1 .1.pdf
 
 EXTRA_DIST = gvedit.vcxproj* gvedit.pro.in mdi.qrc $(mans)
 
-CLEANFILES = moc_csettings.cpp moc_imageviewer.cpp moc_mainwindow.cpp moc_mdichild.cpp qrc_mdi.cpp
+CLEANFILES = $(MOCABLES)
 DISTCLEANFILES = attrs.txt qMakefile $(pdf_DATA)
 
 clean-local:
