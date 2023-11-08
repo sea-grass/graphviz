@@ -836,8 +836,10 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     stepSize = computeStep(ng, bbs, pinfo->margin);
     if (Verbose)
 	fprintf(stderr, "step size = %d\n", stepSize);
-    if (stepSize <= 0)
+    if (stepSize <= 0) {
+	free(bbs);
 	return 0;
+    }
 
     /* generate polyomino cover for the graphs */
     if (fixed) {
@@ -852,6 +854,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 	if (pinfo->mode == l_graph)
 	    genBox(GD_bb(g), info + i, stepSize, pinfo->margin, center, agnameof(g));
 	else if (genPoly(root, gs[i], info + i, stepSize, pinfo, center)) {
+	    free(bbs);
 	    return 0;
 	}
     }
