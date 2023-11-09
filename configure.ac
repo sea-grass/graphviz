@@ -1160,7 +1160,10 @@ else
           if test "x$RUBY" = "x"; then
 	    use_ruby="No (ruby not available)"
           else
-            RUBY_CFLAGS="-I`$RUBY $srcdir/config/config_ruby.rb archdir`"
+            RUBY_CFLAGS="-I`$RUBY $srcdir/config/config_ruby.rb rubyarchhdrdir`"
+            RUBY_CFLAGS="$RUBY_CFLAGS -I`$RUBY $srcdir/config/config_ruby.rb vendorhdrdir`"
+            RUBY_CFLAGS="$RUBY_CFLAGS -I`$RUBY $srcdir/config/config_ruby.rb sitehdrdir`"
+            RUBY_CFLAGS="$RUBY_CFLAGS -I`$RUBY $srcdir/config/config_ruby.rb rubyhdrdir`"
             RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb libdir` `$RUBY -rrbconfig -e \"puts RbConfig::CONFIG[['LIBRUBYARG_SHARED']]\"`"
             RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
 	    if test "x$RUBY_INSTALL_DIR" = "x"; then
