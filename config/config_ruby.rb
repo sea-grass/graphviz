@@ -12,7 +12,5 @@ when "vendorarchdir"
     puts RbConfig::expand(CONFIG["vendorarchdir"])
 when "sitearchdir"
     puts RbConfig::expand(CONFIG["sitearchdir"])
-when "sitelib"
-    puts RbConfig::expand(CONFIG["sitedir"])
 end
 
