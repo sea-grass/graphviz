@@ -1080,7 +1080,7 @@ void print_matrix(double *x, int n, int dim){
   printf("}\n");
 }
 
-void interpolate_coord(int dim, SparseMatrix A, double *x){
+static void interpolate_coord(int dim, SparseMatrix A, double *x) {
   int i, j, k, *ia = A->ia, *ja = A->ja, nz;
   double alpha = 0.5, beta;
 
