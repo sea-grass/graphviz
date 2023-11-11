@@ -95,7 +95,7 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
     }
   }
 
-
+  free(mask);
   return D;
 }
 

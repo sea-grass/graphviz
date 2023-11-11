@@ -929,8 +929,10 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
     }
     if (Verbose)
 	fprintf(stderr, ": %.2f sec", elapsed_sec());
-    if (n == 1 || maxi == 0)
+    if (n == 1 || maxi == 0) {
+	free(Dij);
 	return 0;
+    }
 
     if (Verbose) {
 	fprintf(stderr, ": %.2f sec\n", elapsed_sec());
