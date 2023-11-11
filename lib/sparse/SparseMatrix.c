@@ -832,8 +832,10 @@ SparseMatrix SparseMatrix_add(SparseMatrix A, SparseMatrix B){
   return C;
 }
 
-static void SparseMatrix_multiply_dense1(SparseMatrix A, double *v, double **res, int dim){
-  /* A v where v a dense matrix of second dimension dim. Real only for now. */
+void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res,
+                                 int dim) {
+  // A × V, with A dimension m × n, with V a dense matrix of dimension n × dim.
+  // v[i×dim×j] gives V[i,j]. Result of dimension m × dim. Real only for now.
   int i, j, k, *ia, *ja, m;
   double *a, *u;
 
@@ -855,13 +857,6 @@ static void SparseMatrix_multiply_dense1(SparseMatrix A, double *v, double **res
   }
 
   *res = u;
-}
-
-void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim){
-  /* A * V, with A dimension m x n, with V of dimension n x dim. v[i*dim+j] gives V[i,j]. Result of dimension m x dim
- */
-
-  SparseMatrix_multiply_dense1(A, v, res, dim);
 }
 
 void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {
