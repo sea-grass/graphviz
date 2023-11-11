@@ -35,6 +35,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and X11. If you use this plugin, please get contact the maintainers to let
   them know it is worthwhile re-enabling this and forward porting it to GTK 3/4
   and Wayland. #1848
+- In the Autotools build system, `LIBPOSTFIX=` can now be used to suppress `64`
+  being appended to the library installation path.
 
 ### Fixed
 

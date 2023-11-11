@@ -88,7 +88,7 @@ AC_ARG_VAR(INTGOSIZE, [integer size for go, 32 or 64])
 AC_ARG_VAR(RUBY_VER, [version number of the ruby package])
 
 INTGOSIZE=32
-if test -z "$LIBPOSTFIX"; then
+if test -z "${LIBPOSTFIX++}"; then
   case "${host_os}" in
     *linux* )
       case "${host_cpu}" in
