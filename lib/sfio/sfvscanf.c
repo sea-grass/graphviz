@@ -78,7 +78,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
     Fmt_t *fm, *fmstk;
 
     char *oform;
-    va_list oargs;
     int argp, argn;
 
     void *value;		/* location to assign scanned value */
@@ -105,7 +104,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 
     argn = -1;
     oform = (char *) form;
-    va_copy(oargs, args);
 
   loop_fmt:
     while ((fmt = *form++)) {
@@ -367,7 +365,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		    va_copy(fm->args, args);
 
 		    fm->oform = oform;
-		    va_copy(fm->oargs, oargs);
 		    fm->argn = argn;
 
 		    form = argv.ft->form;
@@ -650,7 +647,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	if ((form = fm->form)) {
 	    va_copy(args, fm->args);
 	    oform = fm->oform;
-	    va_copy(oargs, fm->oargs);
 	    argn = fm->argn;
 	}
 	ft = fm->ft;

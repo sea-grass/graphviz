@@ -95,7 +95,6 @@ extern "C" {
 	va_list args;		/* corresponding arglist        */
 
 	char *oform;		/* original format string       */
-	va_list oargs;		/* original arg list            */
 	int argn;		/* number of args already used  */
 	Fmtpos_t *fp;		/* position list                */
 
