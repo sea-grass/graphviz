@@ -601,7 +601,7 @@ double StressMajorizationSmoother_smooth(StressMajorizationSmoother sm, int dim,
     }
     /* solve (Lw+lambda*I) x = Lwdd y + lambda x0 */
 
-    SparseMatrix_multiply_dense(Lwdd, x, &y, dim);
+    SparseMatrix_multiply_dense(Lwdd, x, y, dim);
 
     if (lambda){/* is there a penalty term? */
       for (i = 0; i < m; i++){

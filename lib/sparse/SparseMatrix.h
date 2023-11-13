@@ -77,7 +77,8 @@ SparseMatrix SparseMatrix_remove_diagonal(SparseMatrix A);
 SparseMatrix SparseMatrix_remove_upper(SparseMatrix A);/* remove diag and upper diag */
 SparseMatrix SparseMatrix_divide_row_by_degree(SparseMatrix A);
 SparseMatrix SparseMatrix_get_real_adjacency_matrix_symmetrized(SparseMatrix A);  /* symmetric, all entries to 1, diaginal removed */
-void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim);
+void SparseMatrix_multiply_dense(SparseMatrix A, const double *v, double *res,
+                                 int dim);
 SparseMatrix SparseMatrix_apply_fun(SparseMatrix A, double (*fun)(double x));/* for real only! */
 SparseMatrix SparseMatrix_copy(SparseMatrix A);
 bool SparseMatrix_has_diagonal(SparseMatrix A);

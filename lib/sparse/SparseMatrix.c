@@ -832,10 +832,12 @@ SparseMatrix SparseMatrix_add(SparseMatrix A, SparseMatrix B){
   return C;
 }
 
-static void SparseMatrix_multiply_dense1(SparseMatrix A, double *v, double **res, int dim){
-  /* A v where v a dense matrix of second dimension dim. Real only for now. */
+void SparseMatrix_multiply_dense(SparseMatrix A, const double *v, double *res,
+                                 int dim) {
+  // A × V, with A dimension m × n, with V a dense matrix of dimension n × dim.
+  // v[i×dim×j] gives V[i,j]. Result of dimension m × dim. Real only for now.
   int i, j, k, *ia, *ja, m;
-  double *a, *u;
+  double *a;
 
   assert(A->format == FORMAT_CSR);
   assert(A->type == MATRIX_TYPE_REAL);
@@ -844,24 +846,13 @@ static void SparseMatrix_multiply_dense1(SparseMatrix A, double *v, double **res
   ia = A->ia;
   ja = A->ja;
   m = A->m;
-  u = *res;
 
-  if (!u) u = gv_calloc((size_t)m * (size_t)dim, sizeof(double));
   for (i = 0; i < m; i++){
-    for (k = 0; k < dim; k++) u[i*dim+k] = 0.;
+    for (k = 0; k < dim; k++) res[i * dim + k] = 0;
     for (j = ia[i]; j < ia[i+1]; j++){
-      for (k = 0; k < dim; k++) u[i*dim+k] += a[j]*v[ja[j]*dim+k];
+      for (k = 0; k < dim; k++) res[i * dim + k] += a[j] * v[ja[j] *dim + k];
     }
   }
-
-  *res = u;
-}
-
-void SparseMatrix_multiply_dense(SparseMatrix A, double *v, double **res, int dim){
-  /* A * V, with A dimension m x n, with V of dimension n x dim. v[i*dim+j] gives V[i,j]. Result of dimension m x dim
- */
-
-  SparseMatrix_multiply_dense1(A, v, res, dim);
 }
 
 void SparseMatrix_multiply_vector(SparseMatrix A, double *v, double **res) {

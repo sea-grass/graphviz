@@ -90,6 +90,5 @@ void oned_optimizer_delete(oned_optimizer opt);
 oned_optimizer oned_optimizer_new(int i);
 void oned_optimizer_train(oned_optimizer opt, double work);
 int oned_optimizer_get(oned_optimizer opt);
-void interpolate_coord(int dim, SparseMatrix A, double *x);
 int power_law_graph(SparseMatrix A);
 void pcp_rotate(int n, int dim, double *x);
