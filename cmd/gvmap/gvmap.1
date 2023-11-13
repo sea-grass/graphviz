@@ -35,15 +35,15 @@ in the interval [1,K] for some K. Nodes sharing the same \fIcluster\fP attribute
 be put into the same cluster. \fBN.B.\fP For the \fIcluster\fP attribute to be used,
 all nodes must have a valid value.
 .P
-If the \fI-D\fP flag is used, 
+If the \fI\-D\fP flag is used, 
 .B  gvmap
 will use the top-level cluster subgraphs to determine the clustering. Any nodes not in
 such a cluster will be put into a single catch-all cluster.
 .P
 If the input specifies the desired clustering as described above, it can also
 specify a desired coloring by having some node in each cluster provide a
-\fIclustercolor\fP attribute. \fBN.B.\fP Unless one specifies \fI-c0\fP, only the \fIclustercolor\fP
-of the last node in a cluster has an effect. In addition, unless one uses \fI-O\fP, \fBgvmap\fP may
+\fIclustercolor\fP attribute. \fBN.B.\fP Unless one specifies \fI\-c0\fP, only the \fIclustercolor\fP
+of the last node in a cluster has an effect. In addition, unless one uses \fI\-O\fP, \fBgvmap\fP may
 permute the given colors.
 .SH OPTIONS
 The following options are supported:
@@ -150,12 +150,12 @@ format. For example, the following pipeline
 creates a map with edges in semi-transparent light gray and nodes laid 
 out using sfdp:
 .PP
-sfdp -Goverlap=prism foo.gv | gvmap -e | neato -n2 -Ecolor=#55555522 -Tpng > foo.png
+sfdp \-Goverlap=prism foo.gv | gvmap \-e | neato \-n2 \-Ecolor=#55555522 \-Tpng > foo.png
 .PP
 The shell script gvmap.sh provides a shorthand for such pipelines. For example, the
 above pipeline can be achieved using
 .PP
-gvmap.sh -Ae -Ecolor=#55555522 -Tpng foo.gv > foo.png
+gvmap.sh \-Ae \-Ecolor=#55555522 \-Tpng foo.gv > foo.png
 
 
 .SH AUTHOR

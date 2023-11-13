@@ -39,15 +39,15 @@ standard \fIargc/argv\fP interface, along with a structure to support
 in-core graphs, application print functions, along with additional options.
 .P
 When called, \fIgvpr()\fP processes any flags provided in the \fIargv\fP array, and compiles
-the \fBgvpr\fP program to be run (provided either via the \fI-f\fP flag or as an item
-in \fIargv\fP). It then runs the program on each input graph. If \fIopt->ingraphs\fP is
+the \fBgvpr\fP program to be run (provided either via the \fI\-f\fP flag or as an item
+in \fIargv\fP). It then runs the program on each input graph. If \fIopt\->ingraphs\fP is
 non-NULL, this is taken as a NULL-terminated array of in-core graphs to be used as input.
 Otherwise, the unprocessed elements of \fIargv\fP are taken to be the names of files containing
 graphs to be processed. (If none remain, \fBgvpr\fP will read from stdin.)
 .P
 Normally, \fBgvpr\fP writes any output graph to stdout. However, if 
-the flag \fIGV_USE_OUTGRAPH\fP is set in \fIopts->flags\fP, the output graphs will be stored in
-an array pointed to be \fIopts->outgraphs\fP and the count will be stored in \fIopts->n_outgraphs\fP.
+the flag \fIGV_USE_OUTGRAPH\fP is set in \fIopts\->flags\fP, the output graphs will be stored in
+an array pointed to be \fIopts\->outgraphs\fP and the count will be stored in \fIopts\->n_outgraphs\fP.
 In this case, the application must call \fIagclose()\fP on each output graph when it is done with
 it.
 .P
@@ -57,8 +57,8 @@ will point to a buffer of characters to be written, while the third argument pro
 number of characters. The function should return the number of bytes actually written.
 .SH RETURN VALUES
 Normally, \fBgvpr\fP returns 0 on success and non-zero if an error occurs. Any relevant
-error message will have been written to stderr or the application's \fIopts->err\fP function will
-have been called. If, however, \fIGV_USE_EXIT\fP is set in \fIopts->flags\fP, \fBgvpr\fP will call
+error message will have been written to stderr or the application's \fIopts\->err\fP function will
+have been called. If, however, \fIGV_USE_EXIT\fP is set in \fIopts\->flags\fP, \fBgvpr\fP will call
 exit(3) in case of an error.
 .SH SEE ALSO
 .BR gvpr (1),

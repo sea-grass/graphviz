@@ -102,7 +102,7 @@ algorithm of Freivalds et al. This allows for a fairly tight packing, in
 which a convex part of one graph might be inserted into the concave part
 of another.
 The granularity of the polyominoes used depends on the value of
-\fIip->mode\fP. If this is \fIl_node\fP, a polyomino is constructed
+\fIip\->mode\fP. If this is \fIl_node\fP, a polyomino is constructed
 to approximate the nodes and edges. If this is \fIl_clust\fP, the
 polyomino treats top-level clusters as single rectangles, unioned
 with the polyominoes for the remaining nodes and edges. If the value
@@ -112,16 +112,16 @@ corresponding to the bounding box of the graph.
 The mode \fIl_node\fP specifies that the graphs should be packed as an
 array.
 .PP
-If \fIip->doSplines\fP is true, the function uses the spline information
+If \fIip\->doSplines\fP is true, the function uses the spline information
 in the \fIspl\fP field of an edge, if it exists. 
 Otherwise, the algorithm represents an edge as a 
 straight line segment connecting node centers.
 .PP
-The parameter \fIip->margin\fP specifies a boundary of \fImargin\fP points 
+The parameter \fIip\->margin\fP specifies a boundary of \fImargin\fP points 
 to be allowed around each node. It must be non-negative.
 .PP
-The parameter \fIip->fixed\fP, if non-null, should point to an array
-of \fIng\fP booleans. If \fIip->fixed[i]\fP is true, graph \fIgs[i]\fP
+The parameter \fIip\->fixed\fP, if non-null, should point to an array
+of \fIng\fP booleans. If \fIip\->fixed[i]\fP is true, graph \fIgs[i]\fP
 should be left at its original position. The packing will first first
 place all of the fixed graphs, then fill in the with the remaining
 graphs.
@@ -185,7 +185,7 @@ otherwise, it returns \fIdflt\fP.
 Related data is also stored in \fIpinfo\fP.
 .SS "  pack_mode getPackModeInfo(Agraph_t * g, pack_mode dflt, pack_info* pinfo)"
 This function processes the graph's \fI"packmode"\fP attribute, storing the
-information in \fIpinfo\fP. It returns \fIpinfo->mode\fP.
+information in \fIpinfo\fP. It returns \fIpinfo\->mode\fP.
 The attribute is processed using \fIparsePackModeInfo\fP with \fIdflt\fP passed
 as the default argument.
 .SS "  pack_mode getPackMode (Agraph_t* g, pack_mode dflt)"
@@ -198,8 +198,8 @@ the value \fInot_def\fP is returned.
 .SS "  pack_mode getPackInfo(Agraph_t * g, pack_mode dflt, int dfltMargin, pack_info* pinfo)"
 This function calls both \fIgetPackModeInfo\fP and \fIgetPack\fP, storing the
 information in \fIpinfo\fP. \fIdfltMargin\fP is used for both integer arguments 
-of \fIgetPack\fP, with the result saved as \fIpinfo->margin\fP.
-It returns \fIpinfo->mode\fP.
+of \fIgetPack\fP, with the result saved as \fIpinfo\->margin\fP.
+It returns \fIpinfo\->mode\fP.
 .SH SEE ALSO
 .BR dot (1),
 .BR neato (1),
