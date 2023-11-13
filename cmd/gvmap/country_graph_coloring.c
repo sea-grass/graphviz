@@ -129,7 +129,11 @@ void country_graph_coloring(int seed, SparseMatrix A, int **p) {
     }
     L = SparseMatrix_coordinate_form_add_entry(L, i, i, &nrow);
   }
-  L = SparseMatrix_from_coordinate_format(L);
+  {
+    SparseMatrix new = SparseMatrix_from_coordinate_format(L);
+    SparseMatrix_delete(L);
+    L = new;
+  }
 
   /* largest eigen vector */
   double *v = power_method(L, L->n, seed);
