@@ -37,7 +37,7 @@ spring_electrical_control spring_electrical_control_new(void){
   ctrl->random_start = TRUE;/* whether to apply SE from a random layout, or from exisiting layout */
   ctrl->K = -1;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   ctrl->C = 0.2;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
-  ctrl->multilevels = FALSE;/* if <=1, single level */
+  ctrl->multilevels = 0;/* if <=1, single level */
 
   ctrl->quadtree_size = 45;/* cut off size above which quadtree approximation is used */
   ctrl->max_qtree_level = 10;/* max level of quadtree */
