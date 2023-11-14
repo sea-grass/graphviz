@@ -159,15 +159,19 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    goto finish;
 	}
     }
-    if (n == 1)
+    if (n == 1) {
+	free(levels);
 	return 0;
+    }
 
 	/****************************************************
 	** Compute the all-pairs-shortest-distances matrix **
 	****************************************************/
 
-    if (maxi == 0)
+    if (maxi == 0) {
+	free(levels);
 	return iterations;
+    }
 
     if (Verbose)
 	start_timer();
