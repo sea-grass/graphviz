@@ -322,43 +322,6 @@ static void beautify_leaves(int dim, SparseMatrix A, double *x){
   bitarray_reset(&checked);
 }
 
-void force_print(FILE *fp, int n, int dim, double *x, double *force){
-  int i, k;
-
-  fprintf(fp,"Graphics[{");
-  for (i = 0; i < n; i++){
-    if (i > 0) fprintf(fp, ",");
-    fprintf(fp, "Arrow[{{");
-    for (k = 0; k < dim; k++){
-      if (k > 0) fprintf(fp, ",");
-      fprintf(fp, "%f",x[i*dim+k]);
-    }
-    fprintf(fp, "},{");
-    for (k = 0; k < dim; k++){
-      if (k > 0) fprintf(fp, ",");
-      fprintf(fp, "%f",x[i*dim+k]+0.5*force[i*dim+k]);
-    }
-    fprintf(fp, "}}]");
-  }
-  fprintf(fp,",");
-  for (i = 0; i < n; i++){
-    if (i > 0) fprintf(fp, ",");
-    fprintf(fp, "Tooltip[Point[{");
-    for (k = 0; k < dim; k++){
-      if (k > 0) fprintf(fp, ",");
-      fprintf(fp, "%f",x[i*dim+k]);
-    }
-    fprintf(fp, "}],%d]",i);
-  }
-
-
-
-
-  fprintf(fp,"}]\n");
-
-}
-
-
 void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrical_control ctrl, double *x, int *flag){
   /* x is a point to a 1D array, x[i*dim+j] gives the coordinate of the i-th node at dimension j.  */
   SparseMatrix A = A0;
