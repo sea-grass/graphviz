@@ -426,7 +426,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    }
 	}
     }
-    deleteCMajEnv(cMajEnv);
 
     if (coords != NULL) {
 	for (i = 0; i < dim; i++) {
@@ -450,6 +449,9 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     free(lap1);
 
 finish:
+    if (cMajEnv != NULL) {
+	deleteCMajEnv(cMajEnv);
+    }
     free(ordering);
 
     free(levels);
