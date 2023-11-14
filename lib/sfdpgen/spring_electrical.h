@@ -80,12 +80,11 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A, SparseMatrix D,
 void force_print(FILE *fp, int n, int dim, double *x, double *force);
 
 enum {MAX_I = 20, OPT_UP = 1, OPT_DOWN = -1, OPT_INIT = 0};
-struct oned_optimizer_struct{
+typedef struct {
   int i;
   double work[MAX_I+1];
   int direction;
-};
-typedef struct oned_optimizer_struct oned_optimizer;
+} oned_optimizer;
 oned_optimizer oned_optimizer_new(int i);
 void oned_optimizer_train(oned_optimizer *opt, double work);
 int oned_optimizer_get(const oned_optimizer opt);
