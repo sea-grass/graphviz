@@ -46,7 +46,7 @@ spring_electrical_control spring_electrical_control_new(void){
   ctrl->maxiter = 500;
   ctrl->cool = 0.90;/* default 0.9 */
   ctrl->step = 0.1;
-  ctrl->adaptive_cooling = TRUE;
+  ctrl->adaptive_cooling = true;
   ctrl->random_seed = 123;
   ctrl->beautify_leaves = false;
   ctrl->smoothing = SMOOTHING_NONE;
@@ -79,7 +79,8 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
-  fprintf (stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool, ctrl->step, ctrl->adaptive_cooling);
+  fprintf(stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool,
+          ctrl->step, (int)ctrl->adaptive_cooling);
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
            (int)ctrl->beautify_leaves, 0, ctrl->rotation);
   fprintf (stderr, "  smoothing %s overlap %d initial_scaling %.03f do_shrinking %d\n",
@@ -244,7 +245,8 @@ void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *widt
 
 }
 
-static double update_step(int adaptive_cooling, double step, double Fnorm, double Fnorm0, double cool){
+static double update_step(bool adaptive_cooling, double step, double Fnorm,
+                          double Fnorm0, double cool) {
 
   if (!adaptive_cooling) {
     return cool*step;
@@ -362,7 +364,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
-  int adaptive_cooling = ctrl->adaptive_cooling;
+  const bool adaptive_cooling = ctrl->adaptive_cooling;
   double counts[4], *force = NULL;
 #ifdef TIME
   clock_t start, end, start0;
@@ -531,7 +533,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
-  int adaptive_cooling = ctrl->adaptive_cooling;
+  const bool adaptive_cooling = ctrl->adaptive_cooling;
   double *force;
 #ifdef TIME
   clock_t start, end, start0, start2;
@@ -688,7 +690,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
-  int adaptive_cooling = ctrl->adaptive_cooling;
+  const bool adaptive_cooling = ctrl->adaptive_cooling;
   int USE_QT = FALSE;
   int nsuper = 0, nsupermax = 10;
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0, counts_avg = 0;
@@ -897,7 +899,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   double *xold = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
-  int adaptive_cooling = ctrl->adaptive_cooling;
+  const bool adaptive_cooling = ctrl->adaptive_cooling;
   int USE_QT = FALSE;
   int nsuper = 0, nsupermax = 10;
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0;
@@ -1448,7 +1450,7 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
     xc = xf;
     ctrl->random_start = FALSE;
     ctrl->K = ctrl->K * 0.75;
-    ctrl->adaptive_cooling = FALSE;
+    ctrl->adaptive_cooling = false;
     ctrl->step = .1;
   } while (grid);
 

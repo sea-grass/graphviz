@@ -38,8 +38,8 @@ struct spring_electrical_control_struct {
   int maxiter;
   double cool;/* default 0.9 */
   double step;/* initial step size */
-  int adaptive_cooling;
   int random_seed;
+  bool adaptive_cooling : 1;
   bool beautify_leaves : 1;
   int smoothing;
   int overlap;
