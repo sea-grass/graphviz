@@ -11,6 +11,7 @@
 #pragma once
 
 #include <sfdpgen/spring_electrical.h>
+#include <stdbool.h>
 
 enum {SM_SCHEME_NORMAL, SM_SCHEME_NORMAL_ELABEL, SM_SCHEME_STRESS};
 
@@ -45,7 +46,7 @@ typedef  StressMajorizationSmoother TriangleSmoother;
 void TriangleSmoother_delete(TriangleSmoother sm);
 
 TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
-                                      int use_triangularization);
+                                      bool use_triangularization);
 
 void TriangleSmoother_smooth(TriangleSmoother sm, int dim, double *x);
 
