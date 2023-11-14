@@ -1069,9 +1069,7 @@ static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, 
   }
 }
 
-
-
-int power_law_graph(SparseMatrix A){
+static int power_law_graph(SparseMatrix A) {
   int m, max = 0, i, *ia = A->ia, *ja = A->ja, j, deg;
   int res = FALSE;
   m = A->m;
