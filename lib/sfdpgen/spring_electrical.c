@@ -1066,24 +1066,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   free(distances);
 }
 
-
-
-
-void print_matrix(double *x, int n, int dim){
-  int i, k;
-  printf("{");
-  for (i = 0; i < n; i++){
-    if (i != 0) printf(",");
-    printf("{");
-    for (k = 0; k < dim; k++) {
-      if (k != 0) printf(",");
-      printf("%f",x[i*dim+k]);
-    }
-    printf("}");
-  }
-  printf("}\n");
-}
-
 static void interpolate_coord(int dim, SparseMatrix A, double *x) {
   int i, j, k, *ia = A->ia, *ja = A->ja, nz;
   double alpha = 0.5, beta;
