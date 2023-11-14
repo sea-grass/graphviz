@@ -27,7 +27,6 @@ enum {QUAD_TREE_NONE = 0, QUAD_TREE_NORMAL, QUAD_TREE_FAST, QUAD_TREE_HYBRID};
 struct spring_electrical_control_struct {
   double p;/*a negativve real number default to -1. repulsive force = dist^p */
   double q;/*a positive real number default to 2. attractive force = dist^q */
-  int random_start;/* whether to apply SE from a random layout, or from exisiting layout */
   double K;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   double C;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   int multilevels;/* if <=1, single level */
@@ -39,6 +38,7 @@ struct spring_electrical_control_struct {
   double cool;/* default 0.9 */
   double step;/* initial step size */
   int random_seed;
+  bool random_start : 1; ///< whether to apply SE from a random layout, or from exisiting layout
   bool adaptive_cooling : 1;
   bool beautify_leaves : 1;
   int smoothing;

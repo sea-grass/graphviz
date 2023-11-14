@@ -34,7 +34,7 @@ spring_electrical_control spring_electrical_control_new(void){
   ctrl->p = AUTOP;/*a negativve number default to -1. repulsive force = dist^p */
   ctrl->q = 1;/*a positive number default to 1. Only apply to maxent.
 		attractive force = dist^q. Stress energy = (||x_i-x_j||-d_ij)^{q+1} */
-  ctrl->random_start = TRUE;/* whether to apply SE from a random layout, or from exisiting layout */
+  ctrl->random_start = true; // whether to apply SE from a random layout, or from existing layout
   ctrl->K = -1;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   ctrl->C = 0.2;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   ctrl->multilevels = 0;/* if <=1, single level */
@@ -74,7 +74,8 @@ static char* tschemes[] = {
 void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "spring_electrical_control:\n");
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
-  fprintf (stderr, "  random start %d seed %d\n", ctrl->random_start, ctrl->random_seed);
+  fprintf(stderr, "  random start %d seed %d\n", (int)ctrl->random_start,
+          ctrl->random_seed);
   fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, ctrl->C);
   fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
@@ -1448,7 +1449,7 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
     prolongate(dim, grid->A, P, grid->R, xc, xf, (ctrl->K)*0.001);
     free(xc);
     xc = xf;
-    ctrl->random_start = FALSE;
+    ctrl->random_start = false;
     ctrl->K = ctrl->K * 0.75;
     ctrl->adaptive_cooling = false;
     ctrl->step = .1;
