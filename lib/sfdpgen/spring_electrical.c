@@ -1069,9 +1069,9 @@ static void prolongate(int dim, SparseMatrix A, SparseMatrix P, SparseMatrix R, 
   }
 }
 
-static int power_law_graph(SparseMatrix A) {
+static bool power_law_graph(SparseMatrix A) {
   int m, max = 0, i, *ia = A->ia, *ja = A->ja, j, deg;
-  int res = FALSE;
+  bool res = false;
   m = A->m;
   int *mask = gv_calloc(m + 1, sizeof(int));
 
@@ -1088,7 +1088,7 @@ static int power_law_graph(SparseMatrix A) {
     mask[deg]++;
     max = MAX(max, mask[deg]);
   }
-  if (mask[1] > 0.8*max && mask[1] > 0.3*m) res = TRUE;
+  if (mask[1] > 0.8*max && mask[1] > 0.3*m) res = true;
   free(mask);
   return res;
 }
@@ -1294,7 +1294,7 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
                                             int n_edge_label_nodes,
                                             int *edge_label_nodes, int *flag) {
 
-  int n, plg;
+  int n;
   SparseMatrix A = A0, P = NULL;
   Multilevel grid, grid0;
   double *xc = NULL, *xf = NULL;
@@ -1351,7 +1351,7 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
     xc = gv_calloc(grid->n * dim, sizeof(double));
   }
 
-  plg = power_law_graph(A);
+  const bool plg = power_law_graph(A);
   if (ctrl->p == AUTOP){
     ctrl->p = -1;
     if (plg) ctrl->p = -1.8;
