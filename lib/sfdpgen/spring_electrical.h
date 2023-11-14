@@ -85,10 +85,9 @@ struct oned_optimizer_struct{
   double work[MAX_I+1];
   int direction;
 };
-typedef struct oned_optimizer_struct *oned_optimizer;
-void oned_optimizer_delete(oned_optimizer opt);
+typedef struct oned_optimizer_struct oned_optimizer;
 oned_optimizer oned_optimizer_new(int i);
-void oned_optimizer_train(oned_optimizer opt, double work);
-int oned_optimizer_get(oned_optimizer opt);
+void oned_optimizer_train(oned_optimizer *opt, double work);
+int oned_optimizer_get(const oned_optimizer opt);
 int power_law_graph(SparseMatrix A);
 void pcp_rotate(int n, int dim, double *x);

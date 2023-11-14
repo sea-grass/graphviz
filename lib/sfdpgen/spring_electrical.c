@@ -90,19 +90,14 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  edge_labeling_scheme %d\n", ctrl->edge_labeling_scheme);
 }
 
-void oned_optimizer_delete(oned_optimizer opt){
-  free(opt);
-}
-
 oned_optimizer oned_optimizer_new(int i){
-  oned_optimizer opt;
-  opt = gv_alloc(sizeof(struct oned_optimizer_struct));
-  opt->i = i;
-  opt->direction = OPT_INIT;
+  oned_optimizer opt = {0};
+  opt.i = i;
+  opt.direction = OPT_INIT;
   return opt;
 }
 
-void oned_optimizer_train(oned_optimizer opt, double work){
+void oned_optimizer_train(oned_optimizer *opt, double work) {
   int i = opt->i;
 
   assert(i >= 0);
@@ -140,8 +135,8 @@ void oned_optimizer_train(oned_optimizer opt, double work){
   }
 }
 
-int oned_optimizer_get(oned_optimizer opt){
-  return opt->i;
+int oned_optimizer_get(const oned_optimizer opt) {
+  return opt.i;
 }
 
 
@@ -374,14 +369,13 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   start0 = clock();
 #endif
   int max_qtree_level = ctrl->max_qtree_level;
-  oned_optimizer qtree_level_optimizer = NULL;
 
   if (!A || maxiter <= 0) return;
 
   m = A->m, n = A->n;
   if (n <= 0 || dim <= 0) return;
 
-  qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
+  oned_optimizer qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
 
   *flag = 0;
   if (m != n) {
@@ -487,7 +481,8 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
       qtree_cpu0 = qtree_cpu;
       qtree_new_cpu0 = qtree_new_cpu;
 #endif
-      oned_optimizer_train(qtree_level_optimizer, counts[0]+0.85*counts[1]+3.3*counts[2]);
+      oned_optimizer_train(&qtree_level_optimizer,
+                           counts[0] + 0.85 * counts[1] + 3.3 * counts[2]);
     } else {
       if (Verbose) {
         fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nz = %d  K = %f                                  ",iter, step, Fnorm, A->nz,K);
@@ -517,7 +512,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 
 
  RETURN:
-  oned_optimizer_delete(qtree_level_optimizer);
   ctrl->max_qtree_level = max_qtree_level;
 
   if (A != A0) SparseMatrix_delete(A);
@@ -702,7 +696,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   start0 = clock();
 #endif
   int max_qtree_level = ctrl->max_qtree_level;
-  oned_optimizer qtree_level_optimizer = NULL;
+  oned_optimizer qtree_level_optimizer = {0};
 
   if (!A || maxiter <= 0) return;
 
@@ -834,7 +828,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
       qtree_cpu0 = qtree_cpu;
 #endif
       if (Verbose & 0) fprintf(stderr, "nsuper_avg=%f, counts_avg = %f 2*nsuper+counts=%f\n",nsuper_avg,counts_avg, 2*nsuper_avg+counts_avg);
-      oned_optimizer_train(qtree_level_optimizer, 5*nsuper_avg + counts_avg);
+      oned_optimizer_train(&qtree_level_optimizer, 5 * nsuper_avg + counts_avg);
     }
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
@@ -876,7 +870,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 
  RETURN:
   if (USE_QT) {
-    oned_optimizer_delete(qtree_level_optimizer);
     ctrl->max_qtree_level = max_qtree_level;
   }
   if (A != A0) SparseMatrix_delete(A);
