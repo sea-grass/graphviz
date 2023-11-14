@@ -165,6 +165,19 @@ def test_1786():
     dot("png:gd", source="digraph { a -> b; }")
 
 
+@pytest.mark.xfail(
+    is_cmake(), reason="https://gitlab.com/graphviz/graphviz/-/issues/2469", strict=True
+)
+def test_2469():
+    """
+    svgz format should be supported
+    https://gitlab.com/graphviz/graphviz/-/issues/2469
+    """
+
+    # run a trivial graph through Graphviz
+    dot("svgz", source="digraph { a -> b; }")
+
+
 def test_installation():
     """
     check that Graphviz reports the expected version number
