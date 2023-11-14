@@ -376,6 +376,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   }
   s = stop/sbot;
   if (s == 0) {
+    StressMajorizationSmoother_delete(sm);
     return NULL;
   }
   for (i = 0; i < nz; i++) d[i] *= s;
