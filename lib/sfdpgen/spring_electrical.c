@@ -90,14 +90,22 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  edge_labeling_scheme %d\n", ctrl->edge_labeling_scheme);
 }
 
-oned_optimizer oned_optimizer_new(int i){
+enum { MAX_I = 20, OPT_UP = 1, OPT_DOWN = -1, OPT_INIT = 0 };
+
+typedef struct {
+  int i;
+  double work[MAX_I + 1];
+  int direction;
+} oned_optimizer;
+
+static oned_optimizer oned_optimizer_new(int i){
   oned_optimizer opt = {0};
   opt.i = i;
   opt.direction = OPT_INIT;
   return opt;
 }
 
-void oned_optimizer_train(oned_optimizer *opt, double work) {
+static void oned_optimizer_train(oned_optimizer *opt, double work) {
   int i = opt->i;
 
   assert(i >= 0);
@@ -135,7 +143,7 @@ void oned_optimizer_train(oned_optimizer *opt, double work) {
   }
 }
 
-int oned_optimizer_get(const oned_optimizer opt) {
+static int oned_optimizer_get(const oned_optimizer opt) {
   return opt.i;
 }
 
