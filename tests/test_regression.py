@@ -3057,9 +3057,6 @@ def test_2454():
         assert p.returncode == 0, "gvpr failed"
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2460"
-)
 def test_2460():
     """
     labels involving back slashes should come out correctly in JSON

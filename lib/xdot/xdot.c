@@ -128,14 +128,26 @@ static char *parseString(char *s, char **sp)
 	return 0;
     }
 
-    char *c = gv_strndup(s, (size_t)i);
-    if (strlen(c) != (size_t)i) {
-	free (c);
-	return 0;
+    // The leading number we just read indicates the count of originating
+    // characters in the upcoming string. But the string may contain \-escaped
+    // characters. So the count alone does not tell us how many bytes we need to
+    // now read.
+    agxbuf c = {0};
+    int j = 0;
+    for (int accounted = 0; accounted < i; ++j) {
+	if (s[j] == '\0') {
+	    agxbfree(&c);
+	    return 0;
+	}
+	agxbputc(&c, s[j]);
+	// only count this character if it was not an escape prefix
+	if (s[j] != '\\' || (j > 0 && s[j - 1] == '\\')) {
+	    ++accounted;
+	}
     }
 
-    *sp = c;
-    return s + i;
+    *sp = agxbdisown(&c);
+    return s + j;
 }
 
 static char *parseAlign(char *s, xdot_align * ap)

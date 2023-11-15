@@ -70,6 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   time to build time. #2463
 - The Autotools build system correctly detects Ruby headers, even when
   pkg-config support is unavailable. #2464
+- Escaped characters in xdot fields no longer lead to the containing text being
+  truncated. #2460
 
 ## [9.0.0] - 2023-09-11
 
