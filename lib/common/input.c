@@ -58,11 +58,6 @@ static char *fdpItems = "\n\
  -LC<v>      - Set overlap expansion factor to v\n\
  -LT[*]<v>   - Set temperature (temperature factor) to v\n";
 
-static char *memtestFlags = "(additional options for memtest)  [-m<v>]\n";
-static char *memtestItems = "\n\
- -m          - Memory test (Observe no growth with top. Kill when done.)\n\
- -m[v]       - Memory test - v iterations.\n";
-
 static char *configFlags = "(additional options for config)  [-cv]\n";
 static char *configItems = "\n\
  -c          - Configure plugins (Writes $prefix/lib/graphviz/config \n\
@@ -85,12 +80,10 @@ int dotneato_usage(int exval)
     fprintf(outs, usageFmt, CmdName);
     fputs(neatoFlags, outs);
     fputs(fdpFlags, outs);
-    fputs(memtestFlags, outs);
     fputs(configFlags, outs);
     fputs(genericItems, outs);
     fputs(neatoItems, outs);
     fputs(fdpItems, outs);
-    fputs(memtestItems, outs);
     fputs(configItems, outs);
 
     if (GvExitOnUsage && exval >= 0)

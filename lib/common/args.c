@@ -69,49 +69,6 @@ static int neato_extra_args(int argc, char** argv) {
   return cnt;
 }
 
-/* memtest_extra_args:
- * Handle special memtest arguments.
- * Return number of unprocessed arguments; return < 0 on error.
- */
-static int memtest_extra_args(int argc, char** argv) {
-  char** p = argv+1;
-  int    i;
-  char*  arg;
-  int    cnt = 1;
-
-  for (i = 1; i < argc; i++) {
-    arg = argv[i];
-    assert(arg != NULL);
-    if (*arg == '-') {
-      switch (arg[1]) {
-      case 'm' :
-        if (arg[2]) {
-          MemTest = atoi(arg+2);
-          if (MemTest <= 0) {
-            agerr (AGERR, "Invalid parameter \"%s\" for -m flag\n", arg+2);
-            dotneato_usage (1);
-	    return -1;
-          }
-        }
-        else MemTest = -1;
-	break;
-      default :
-        cnt++;
-        if (*p != arg) *p = arg;
-        p++;
-        break;
-      }
-    }
-    else {
-      cnt++;
-      if (*p != arg) *p = arg;
-      p++;
-    }
-  }
-  *p = 0;
-  return cnt;
-}
-
 /* config_extra_args:
  * Handle special config arguments.
  * Return number of unprocessed arguments; return < 0 on error.
@@ -272,8 +229,6 @@ int gvParseArgs(GVC_t *gvc, int argc, char** argv)
     if ((argc = neato_extra_args(argc, argv)) < 0)
 	return (1-argc);
     if ((argc = fdp_extra_args(argc, argv)) < 0)
-	return (1-argc);
-    if ((argc = memtest_extra_args(argc, argv)) < 0)
 	return (1-argc);
     if ((argc = config_extra_args(gvc, argc, argv)) < 0)
 	return (1-argc);
