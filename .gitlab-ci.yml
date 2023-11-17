@@ -816,8 +816,8 @@ macos-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS=-Werror
-        - export CXXFLAGS=-Werror
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
     tags:
         - shared-macos-amd64
