@@ -821,6 +821,7 @@ macos-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
     tags:
         - shared-macos-amd64
 
