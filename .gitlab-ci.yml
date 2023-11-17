@@ -819,6 +819,7 @@ macos-cmake-build:
         - export CFLAGS="-Werror -Wno-deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     tags:
         - shared-macos-amd64
 
