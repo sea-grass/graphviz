@@ -43,7 +43,6 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 
     GLOBALS_API EXTERN unsigned char Verbose;
     GLOBALS_API EXTERN unsigned char Reduce;
-    GLOBALS_API EXTERN int MemTest;
     GLOBALS_API EXTERN char *HTTPServerEnVar;
     GLOBALS_API EXTERN int graphviz_errors;
     GLOBALS_API EXTERN int Nop;

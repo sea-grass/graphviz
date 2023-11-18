@@ -3232,7 +3232,6 @@ usage_info = """\
 Usage: dot [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>
 (additional options for neato)    [-x] [-n<v>]
 (additional options for fdp)      [-L(gO)] [-L(nUCT)<val>]
-(additional options for memtest)  [-m<v>]
 (additional options for config)  [-cv]
 
  -V          - Print version and exit
@@ -3259,9 +3258,6 @@ Usage: dot [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>
  -LU<i>      - Set unscaled factor to i
  -LC<v>      - Set overlap expansion factor to v
  -LT[*]<v>   - Set temperature (temperature factor) to v
-
- -m          - Memory test (Observe no growth with top. Kill when done.)
- -m[v]       - Memory test - v iterations.
 
  -c          - Configure plugins (Writes $prefix/lib/graphviz/config 
                with available plugin information.  Needs write privilege.)

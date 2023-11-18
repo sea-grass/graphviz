@@ -59,11 +59,7 @@ int main(int argc, char **argv)
 #endif
 #endif
 
-    if (MemTest) {
-        // TODO: fully remove `MemTest` and associated `-m` parsing in future
-        fprintf(stderr, "The -m command-line option is no longer supported.\n");
-    }
-    else if ((G = gvPluginsGraph(Gvc))) {
+    if ((G = gvPluginsGraph(Gvc))) {
 	    gvLayoutJobs(Gvc, G);  /* take layout engine from command line */
 	    gvRenderJobs(Gvc, G);
     }
