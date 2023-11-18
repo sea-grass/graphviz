@@ -80,7 +80,7 @@ set(SOURCES
 )
 
 if(with_ipsepcola)
-  list(APPEND ${SOURCES}
+  list(APPEND SOURCES
     constrained_majorization_ipsep.c
     quad_prog_vpsc.c
   )
