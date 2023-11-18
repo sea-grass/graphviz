@@ -11,7 +11,6 @@ brew install pango || brew upgrade pango
 brew install qt5 || brew upgrade qt5
 
 brew install freeglut || brew upgrade freeglut
-brew install libglade || brew upgrade libglade
 brew install gtk+ || brew upgrade gtk+
 brew install gtkglext || brew upgrade gtkglext
 brew install gts || brew upgrade gts
