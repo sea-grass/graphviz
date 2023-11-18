@@ -21,8 +21,8 @@ if(PANGOCAIRO_FOUND AND RSVG_FOUND)
 
   target_link_libraries(gvplugin_rsvg
     gvc
-    ${PANGOCAIRO_LIBRARIES}
-    ${RSVG_LIBRARIES}
+    ${PANGOCAIRO_LINK_LIBRARIES}
+    ${RSVG_LINK_LIBRARIES}
   )
 
   install(
