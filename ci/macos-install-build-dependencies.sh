@@ -12,9 +12,7 @@ brew install automake || brew upgrade automake
 brew install cmake || brew upgrade cmake
 brew install bison || brew upgrade bison
 
-brew install freeglut || brew upgrade freeglut
 brew install gtk+ || brew upgrade gtk+
-brew install gtkglext || brew upgrade gtkglext
 brew install gts || brew upgrade gts
 
 # quoting Homebrew:
