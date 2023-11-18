@@ -46,7 +46,7 @@ typedef struct {
   int cur;
 } rdr_t;
 
-#if !defined(__APPLE__) && !defined(_WIN32)
+#ifndef _WIN32
 /// `readlink`-alike but dynamically allocates
 static std::string readln(const std::string &path) {
 
