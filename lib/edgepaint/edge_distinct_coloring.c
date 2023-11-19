@@ -11,6 +11,7 @@
 #include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <math.h>
+#include <stdbool.h>
 #include <string.h>
 #include <time.h>
 #include <sparse/SparseMatrix.h>
@@ -231,7 +232,7 @@ Agraph_t *edge_distinct_coloring(char *color_scheme, int *lightness,
 #ifdef TIME
     clock_t start = clock();
 #endif
-    int weightedQ = FALSE;
+    const bool weightedQ = false;
     flag = node_distinct_coloring(color_scheme, lightness, weightedQ, C,
                                   accuracy, seed, &cdim, &colors);
     if (flag) goto RETURN;
