@@ -72,6 +72,8 @@ on a standards-conformant compiler with the following exceptions:
 * Static array dimensions (`void f(int x[static 42])`) cannot be used because
   MSVC does not support this syntax. Use the equivalent decayed-to-pointer type
   instead (`void f(int *x)`).
+* The ISO8601 Format specifiers to `strftime` like `"%F"` and `"%T"` cannot be
+  used. These are not implemented in MinGW’s runtime.
 
 POSIX and Linux-/Unix-specific extensions are generally not usable, with a few
 exceptions. E.g. lib/cgraph/strcasecmp.h provides a way to use `strcasecmp`
