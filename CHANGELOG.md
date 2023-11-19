@@ -77,6 +77,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   pkg-config support is unavailable. #2464
 - Escaped characters in xdot fields no longer lead to the containing text being
   truncated. #2460
+- When building against a libgd that is configured with `!gif && (jpeg || png)`,
+  the GD plugin is once again compilable. This was a regression in Graphviz
+  2.46.0.
 
 ## [9.0.0] - 2023-09-11
 

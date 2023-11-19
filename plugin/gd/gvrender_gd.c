@@ -582,14 +582,16 @@ static gvrender_features_t render_features_gd = {
     RGBA_BYTE,			/* color_type */
 };
 
-#ifdef HAVE_GD_GIF
+#if defined(HAVE_GD_GIF) || defined(HAVE_GD_JPEG)
 static gvdevice_features_t device_features_gd = {
     GVDEVICE_BINARY_FORMAT,	/* flags */
     {0.,0.},			/* default margin - points */
     {0.,0.},                    /* default page width, height - points */
     {96.,96.},			/* default dpi */
 };
+#endif
 
+#if defined(HAVE_GD_GIF) || defined(HAVE_GD_PNG)
 static gvdevice_features_t device_features_gd_tc = {
     GVDEVICE_BINARY_FORMAT
       | GVDEVICE_DOES_TRUECOLOR,/* flags */
