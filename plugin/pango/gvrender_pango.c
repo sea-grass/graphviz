@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <time.h>
 #include <common/const.h>
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
@@ -139,6 +139,24 @@ static void cairogen_begin_page(GVJ_t * job)
                                 source_date_epoch);
                         exit(EXIT_FAILURE);
                     }
+                    time_t tepoch = (time_t)epoch;
+                    struct tm *tm = gmtime(&tepoch);
+                    if (tm == NULL) {
+                        fprintf(stderr,
+                                "malformed value %s for $SOURCE_DATE_EPOCH\n",
+                                source_date_epoch);
+                        exit(EXIT_FAILURE);
+                    }
+#if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 16, 0)
+                    char iso8601[sizeof("YYYY-MM-DDThh:mm:ss")] = {0};
+                    (void)strftime(iso8601, sizeof(iso8601), "%Y-%m-%dT%H:%M:%SZ", tm);
+                    cairo_pdf_surface_set_metadata(surface,
+                                                   CAIRO_PDF_METADATA_CREATE_DATE,
+                                                   iso8601);
+                    cairo_pdf_surface_set_metadata(surface,
+                                                   CAIRO_PDF_METADATA_MOD_DATE,
+                                                   iso8601);
+#endif
                 }
 	    }
 #endif

@@ -30,7 +30,10 @@ from gvtest import (  # pylint: disable=wrong-import-position
     ROOT,
     dot,
     gvpr,
+    is_centos,
+    is_fedora_38,
     is_mingw,
+    is_rocky_8,
     remove_xtype_warnings,
     run_c,
     which,
@@ -3078,7 +3081,11 @@ def test_2460():
     ), "back slashes in labels handled incorrectly"
 
 
-@pytest.mark.xfail(strict=True)
+@pytest.mark.xfail(
+    is_centos() or is_fedora_38() or is_rocky_8(),
+    reason="Cairo is <v1.16 or malfunctions",
+    strict=True,
+)
 def test_2473_1():
     """
     `SOURCE_DATE_EPOCH` should be usable to suppress timestamps
