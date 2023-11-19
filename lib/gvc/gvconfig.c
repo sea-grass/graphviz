@@ -22,7 +22,7 @@
 
 #include <ctype.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdlib.h>
 #include	<string.h>
 #include <unistd.h>
 
@@ -658,11 +658,12 @@ glob (GVC_t* gvc, char* pattern, int flags, int (*errfunc)(const char *, int), g
     do {
       if (cnt >= arrsize-1) {
         arrsize += 512;
-        str = realloc (str, arrsize*sizeof(char*));
-        if (!str) return GLOB_NOSPACE;
+        char **new_str = realloc(str, arrsize * sizeof(char*));
+        if (!new_str) goto oom;
+        str = new_str;
       }
       str[cnt] = malloc (strlen(libdir)+1+strlen(wfd.cFileName)+1);
-      if (!str[cnt]) return GLOB_NOSPACE;
+      if (!str[cnt]) goto oom;
       strcpy(str[cnt],libdir);
       strcat(str[cnt],DIRSEP);
       strcat(str[cnt],wfd.cFileName);
@@ -674,6 +675,12 @@ glob (GVC_t* gvc, char* pattern, int flags, int (*errfunc)(const char *, int), g
     pglob->gl_pathv = realloc(str, (cnt+1)*sizeof(char*));
     
     return 0;
+
+oom:
+    for (int i = 0; i < cnt; ++i)
+      free(str[i]);
+    free(str);
+    return GLOB_NOSPACE;
 }
 
 static void
