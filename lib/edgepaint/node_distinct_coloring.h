@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2014 AT&T Intellectual Property 
+ * Copyright (c) 2014 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -12,8 +12,8 @@
 
 #include <stdbool.h>
 
-enum {COLOR_RGB, COLOR_GRAY, COLOR_LAB};
-enum {ERROR_BAD_COLOR_SCHEME = -9};
-int node_distinct_coloring(char *color_scheme, int *lightness,
-                           bool weightedQ, SparseMatrix A, double accuracy,
-                           int seed, int *cdim, double **colors);
+enum { COLOR_RGB, COLOR_GRAY, COLOR_LAB };
+enum { ERROR_BAD_COLOR_SCHEME = -9 };
+int node_distinct_coloring(char *color_scheme, int *lightness, bool weightedQ,
+                           SparseMatrix A, double accuracy, int seed, int *cdim,
+                           double **colors);
