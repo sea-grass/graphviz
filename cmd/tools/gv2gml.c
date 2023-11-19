@@ -109,10 +109,9 @@ isNumber (char* s)
     if (s != ep) {
 	while (*ep && isspace((int)*ep)) ep++;
 	if (*ep) return 0;
-	else return 1;
+	return 1;
     }
-    else
-	return 0;
+    return 0;
 }
 
 /* parseStyle:
