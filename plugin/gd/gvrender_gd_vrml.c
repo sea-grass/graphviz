@@ -11,6 +11,7 @@
 
 #include "config.h"
 #include "gdgen_text.h"
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -41,7 +42,7 @@ typedef enum { FORMAT_VRML, } format_type;
 typedef struct {
   double Scale;
   double MinZ;
-  int Saw_skycolor;
+  bool Saw_skycolor;
 
   gdImagePtr im;
   FILE *PNGfile;
@@ -194,7 +195,7 @@ static void vrml_begin_page(GVJ_t *job)
     state->Scale = (double) DEFAULT_DPI / POINTS_PER_INCH;
     gvputs(job,   "#VRML V2.0 utf8\n");
 
-    state->Saw_skycolor = FALSE;
+    state->Saw_skycolor = false;
     state->MinZ = MAXDOUBLE;
     gvputs(job,   "Group { children [\n"
                   "  Transform {\n");
@@ -587,7 +588,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	    obj->fillcolor.u.rgba[0] / 255.,
 	    obj->fillcolor.u.rgba[1] / 255.,
 	    obj->fillcolor.u.rgba[2] / 255.);
-	state->Saw_skycolor = TRUE;
+	state->Saw_skycolor = true;
 	break;
     case CLUSTER_OBJTYPE:
 	break;
