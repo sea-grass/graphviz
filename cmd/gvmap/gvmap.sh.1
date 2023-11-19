@@ -37,39 +37,39 @@ the graph size. By default k = -1.
 .TP
 .BI \-K " layout" 
 specifies which program should be use for the initial layout. By default,
-sfdp is run. Also by default, the layout is passed the flag -Goverlap=prism. This can be
-overridden using a -g flag.
+sfdp is run. Also by default, the layout is passed the flag \-Goverlap=prism. This can be
+overridden using a \-g flag.
 .TP
 .BI \-T " format" 
-specifies the final output format. This works the same way as the -T flag for any
+specifies the final output format. This works the same way as the \-T flag for any
 Graphviz layout program.
 .TP
 .BI \-N " attr=val"
 specifies the setting of a default node attribute during the rendering phase. This works the same way as 
-the -N flag for any Graphviz layout program.
+the \-N flag for any Graphviz layout program.
 .TP
 .BI \-G " attr=val"
 specifies the setting of a graph attribute during the rendering phase. This works the same way as 
-the -G flag for any Graphviz layout program.
+the \-G flag for any Graphviz layout program.
 .TP
 .BI \-E " attr=val"
 specifies the setting of a default edge attribute during the rendering phase. This works the same way as 
-the -E flag for any Graphviz layout program.
+the \-E flag for any Graphviz layout program.
 .TP
 .BI \-n " attr=val"
 specifies the setting of a default node attribute during the layout phase. This works the same way as 
-the -N flag for any Graphviz layout program.
+the \-N flag for any Graphviz layout program.
 .TP
 .BI \-g " attr=val"
 specifies the setting of a graph attribute during the layout phase. This works the same way as 
-the -G flag for any Graphviz layout program.
+the \-G flag for any Graphviz layout program.
 .TP
 .BI \-e " attr=val"
 specifies the setting of a default edge attribute during the layout phase. This works the same way as 
-the -E flag for any Graphviz layout program.
+the \-E flag for any Graphviz layout program.
 .TP
 .BI \-A " flag"
-specifies a flag to be passed to gvmap. For example, gvmap.sh -Ae -As3 causes gvmap -e -s3 to be run.
+specifies a flag to be passed to gvmap. For example, gvmap.sh \-Ae \-As3 causes gvmap \-e \-s3 to be run.
 .TP
 .BI \-v
 Set verbose mode.
@@ -86,11 +86,11 @@ The following invocation
 creates a map with edges in semi-transparent light gray and nodes laid 
 out using sfdp:
 .PP
-gvmap.sh -Ae -Ecolor=#55555522 -Tpng foo.gv > foo.png
+gvmap.sh \-Ae \-Ecolor=#55555522 \-Tpng foo.gv > foo.png
 .PP
 It is equivalent to running the pipeline
 .PP
-sfdp -Goverlap=prism foo.gv | gvmap -e | neato -n2 -Ecolor=#55555522 -Tpng > foo.png
+sfdp \-Goverlap=prism foo.gv | gvmap \-e | neato \-n2 \-Ecolor=#55555522 \-Tpng > foo.png
 
 .SH AUTHOR
 Emden R. Gansner <erg@research.att.com>

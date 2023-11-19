@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   being appended to the library installation path.
 - The `-m` command line option, whose functionality was disabled in Graphviz
   3.0.0, has been removed.
+- Man page typography has been slightly improved.
 
 ### Fixed
 

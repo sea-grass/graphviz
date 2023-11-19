@@ -19,7 +19,7 @@ attribute, and the default is 1.  The
 .I dist
 attribute of every node is set to its distance from
 .I sourcenode.
-If the \fB-p\fP flag is used, the
+If the \fB\-p\fP flag is used, the
 .I prev
 attribute of each node reachable from
 .I sourcenode
@@ -30,7 +30,7 @@ is set to the maximum
 .I dist
 of all nodes in the graph.
 .P
-If the \fB-d\fP flag is used, the graph is treated as directed and 
+If the \fB\-d\fP flag is used, the graph is treated as directed and 
 only forward edges are used.
 .P
 By default, if the graph is disconnected, the
@@ -41,7 +41,7 @@ are left untouched, and
 .I maxdist
 is set to the maximum of any previous value and the largest
 distance recorded in this run. On the other hand, if
-the \fB-a\fP flag is used, the
+the \fB\-a\fP flag is used, the
 .I dist
 attribute of an unreachable node is assigned a very large value,
 and
