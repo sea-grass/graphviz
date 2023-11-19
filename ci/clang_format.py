@@ -246,7 +246,6 @@ EXCLUDE = (
     "lib/dotgen/rank.c",
     "lib/dotgen/sameport.c",
     "lib/edgepaint/edge_distinct_coloring.c",
-    "lib/edgepaint/edge_distinct_coloring.h",
     "lib/edgepaint/furtherest_point.c",
     "lib/edgepaint/furtherest_point.h",
     "lib/edgepaint/intersection.c",
