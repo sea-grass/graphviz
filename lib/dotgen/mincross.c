@@ -864,7 +864,7 @@ static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
     if (cur_cross > best_cross)
 	restore_best(g);
     if (best_cross > 0) {
-	transpose(g, FALSE);
+	transpose(g, false);
 	best_cross = ncross(g);
     }
     if (doBalance) {
@@ -1406,7 +1406,7 @@ void build_ranks(graph_t * g, int pass)
     }
 
     if (g == dot_root(g) && ncross(g) > 0)
-	transpose(g, FALSE);
+	transpose(g, false);
     free_queue(q);
 }
 
