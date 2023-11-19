@@ -98,9 +98,7 @@ static void indent(int ix) {
 	fprintf (outFile, "  ");
 }
 
-/* isNumber:
- * Return true if input string is number
- */
+/// Return true if input string is number
 static bool isNumber(char* s) {
     char* ep = s;
     strtod(s, &ep);
@@ -112,9 +110,7 @@ static bool isNumber(char* s) {
     return false;
 }
 
-/* parseStyle:
- * Simple implementation for parsing style attribute
- */
+/// Simple implementation for parsing style attribute
 static int 
 parseStyle (char* s)
 {
