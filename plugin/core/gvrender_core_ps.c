@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include <assert.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,7 +34,7 @@
 typedef enum { FORMAT_PS, FORMAT_PS2, FORMAT_EPS } format_type;
 
 static int isLatin1;
-static char setupLatin1;
+static bool setupLatin1;
 
 static void psgen_begin_job(GVJ_t * job)
 {
@@ -64,7 +65,7 @@ static void psgen_begin_graph(GVJ_t * job)
 {
     obj_state_t *obj = job->obj;
 
-    setupLatin1 = FALSE;
+    setupLatin1 = false;
 
     if (job->common->viewNum == 0) {
         gvprintf(job, "%%%%Title: %s\n", agnameof(obj->u.g));
@@ -101,7 +102,7 @@ static void psgen_begin_graph(GVJ_t * job)
      */
     if (!setupLatin1) {
 	gvputs(job, "setupLatin1\n");	/* as defined in ps header */
-	setupLatin1 = TRUE;
+	setupLatin1 = true;
     }
     /*  Set base URL for relative links (for Distiller >= 3.0)  */
     if (obj->url)
