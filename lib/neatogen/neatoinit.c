@@ -141,8 +141,8 @@ static void neato_cleanup_graph(graph_t * g)
 {
     if (Nop || Pack < 0) {
 	free_scan_graph(g);
-	free(GD_clust(g));
     }
+    free(GD_clust(g));
 }
 
 void neato_cleanup(graph_t * g)
