@@ -90,7 +90,9 @@ checkG (Agraph_t* g)
 	return 0;
 }
 
-static void init(int argc, char *argv[], double *angle, double *accuracy, int *check_edges_with_same_endpoint, int *seed, char **color_scheme, char **lightness){
+static void init(int argc, char *argv[], double *angle, double *accuracy,
+                 int *check_edges_with_same_endpoint, int *seed,
+                 char **color_scheme, int *lightness) {
 
   char* cmd = argv[0];
   outfile = NULL;
@@ -101,7 +103,8 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
   *check_edges_with_same_endpoint = 0;
   *seed = 123;
   *color_scheme = "lab";
-  *lightness = NULL;
+  lightness[0] = 0;
+  lightness[1] = 70;
 
   while (true) {
 
@@ -217,7 +220,8 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
         fprintf(stderr, "invalid --lightness=%s option.\n", arg);
         usage(cmd, EXIT_FAILURE);
       }
-      *lightness = optarg;
+      lightness[0] = l1;
+      lightness[1] = l2;
       break;
     }
 
@@ -246,8 +250,9 @@ static void init(int argc, char *argv[], double *angle, double *accuracy, int *c
   }
 }
 
-
-static int clarify(Agraph_t* g, double angle, double accuracy, int check_edges_with_same_endpoint, int seed, char *color_scheme, char *lightness){
+static int clarify(Agraph_t *g, double angle, double accuracy,
+                   int check_edges_with_same_endpoint, int seed,
+                   char *color_scheme, int *lightness) {
 
   if (checkG(g)) {
     agerr (AGERR, "Graph %s contains loops or multiedges\n", agnameof(g));
@@ -268,13 +273,13 @@ int main(int argc, char *argv[])
   double angle;
   int check_edges_with_same_endpoint, seed;
   char *color_scheme = NULL;
-  char *lightness = NULL;
+  int lightness[] = {0, 70};
   Agraph_t *g;
   Agraph_t *prev = NULL;
   ingraph_state ig;
   int rv = EXIT_SUCCESS;
 
-	init(argc, argv, &angle, &accuracy, &check_edges_with_same_endpoint, &seed, &color_scheme, &lightness);
+	init(argc, argv, &angle, &accuracy, &check_edges_with_same_endpoint, &seed, &color_scheme, lightness);
 	newIngraph(&ig, Files);
 
 	while ((g = nextGraph(&ig)) != 0) {

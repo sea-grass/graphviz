@@ -59,7 +59,7 @@ void map_palette_optimal_coloring(char *color_scheme, SparseMatrix A0,
 
   // lightness: of the form 0,70, specifying the range of lightness of LAB
   // color. Ignored if scheme is not COLOR_LAB.
-  char *lightness = "0,100";
+  int lightness[] = {0, 100};
 
   // accuracy is the threshold given so that when finding the coloring for each
   // node, the optimal is with in "accuracy" of the true global optimal.
