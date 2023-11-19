@@ -140,7 +140,7 @@ static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) 
 	    snprintf(name, sizeof(name), "cluster_%u", st->Comp++);
 	    subg = agsubg(G, name, TRUE);
 	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), true);
-	    setrep(subg, agnode(map, name, TRUE));
+	    setrep(subg, agnode(map, name, 1));
 	    do {
 		t = stack_pop(sp);
 		agsubnode(subg, t, 1);

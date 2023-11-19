@@ -349,7 +349,7 @@ static void appendnode(char *name, char *port, char *sport)
 	if (sport) {
 		port = concatPort (port, sport);
 	}
-	elt = cons_node(agnode(S->g,name,TRUE),port);
+	elt = cons_node(agnode(S->g, name, 1), port);
 	listapp(&(S->nodelist),elt);
 	agstrfree(G,name);
 }
