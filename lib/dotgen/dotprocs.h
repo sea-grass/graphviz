@@ -52,7 +52,7 @@ extern "C" {
     extern void merge_oneway(Agedge_t *, Agedge_t *);
     extern int ncross(Agraph_t *);
     extern Agedge_t *new_virtual_edge(Agnode_t *, Agnode_t *, Agedge_t *);
-    extern int nonconstraint_edge(Agedge_t *);
+    extern bool nonconstraint_edge(Agedge_t *);
     extern void other_edge(Agedge_t *);
     extern void rank1(graph_t * g);
     extern int portcmp(port p0, port p1);
