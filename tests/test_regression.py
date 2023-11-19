@@ -3057,6 +3057,26 @@ def test_2454():
         assert p.returncode == 0, "gvpr failed"
 
 
+def test_2460():
+    """
+    labels involving back slashes should come out correctly in JSON
+    https://gitlab.com/graphviz/graphviz/-/issues/2460
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2460.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    output = dot("json", input)
+    data = json.loads(output)
+
+    assert (
+        data["objects"][0]["_ldraw_"][2]["text"]
+        == r"double back slash in label \\. End should be the last word - End"
+    ), "back slashes in labels handled incorrectly"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
