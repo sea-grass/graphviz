@@ -9,7 +9,9 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <errno.h>
+#include <limits.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -119,6 +121,26 @@ static void cairogen_begin_page(GVJ_t * job)
 #ifdef CAIRO_HAS_PDF_SURFACE
 	    surface = cairo_pdf_surface_create_for_stream (writer,
 			job, job->width, job->height);
+
+	    {
+                const char *source_date_epoch = getenv("SOURCE_DATE_EPOCH");
+                if (source_date_epoch != NULL) {
+                    char *end = NULL;
+                    errno = 0;
+                    long epoch = strtol(source_date_epoch, &end, 10);
+                    // from https://reproducible-builds.org/specs/source-date-epoch/
+                    //
+                    //   If the value is malformed, the build process SHOULD
+                    //   exit with a non-zero error code.
+                    if ((epoch == LONG_MAX && errno != 0) || epoch < 0
+                        || *end != '\0') {
+                        fprintf(stderr,
+                                "malformed value %s for $SOURCE_DATE_EPOCH\n",
+                                source_date_epoch);
+                        exit(EXIT_FAILURE);
+                    }
+                }
+	    }
 #endif
 	    break;
         case FORMAT_SVG:

@@ -3106,7 +3106,6 @@ def test_2473_1():
     ), "PDF output is dependent on current time even when $SOURCE_DATE_EPOCH is set"
 
 
-@pytest.mark.xfail(strict=True)
 def test_2473_2():
     """
     When handling `SOURCE_DATE_EPOCH`, from
