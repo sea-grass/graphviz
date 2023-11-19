@@ -69,6 +69,9 @@ on a standards-conformant compiler with the following exceptions:
   lib/cgraph/prisize_t.h for an explanation of why.
 * The `exit` function should not be called directly. See lib/cgraph/exit.h for
   an explanation of why and what to do instead.
+* Static array dimensions (`void f(int x[static 42])`) cannot be used because
+  MSVC does not support this syntax. Use the equivalent decayed-to-pointer type
+  instead (`void f(int *x)`).
 
 POSIX and Linux-/Unix-specific extensions are generally not usable, with a few
 exceptions. E.g. lib/cgraph/strcasecmp.h provides a way to use `strcasecmp`
