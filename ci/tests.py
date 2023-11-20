@@ -160,7 +160,7 @@ def check_that_tool_does_not_exist(tool, os_id):
 
 
 @pytest.mark.xfail(
-    is_cmake() and platform.system() == "Windows" and not is_mingw(),
+    is_cmake() and not is_mingw() and is_win64(),
     reason="png:gd unavailable when built with CMake",
     strict=True,
 )  # FIXME

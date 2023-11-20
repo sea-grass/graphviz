@@ -54,20 +54,27 @@ if(GD_LIBRARY)
     if("GD_GIF" IN_LIST GD_FEATURES_LIST)
       set(HAVE_GD_GIF 1)
     endif()
+  elseif(APPLE OR GDLIB_FOUND)
+    # At time of writing, Macports does not package libgd. So assume the user
+    # obtained this through Homebrew and hard code the options the Homebrew
+    # package enables.
+    set(HAVE_GD_PNG 1)
+    set(HAVE_GD_JPEG 1)
+    set(HAVE_GD_FONTCONFIG 1)
+    set(HAVE_GD_FREETYPE 1)
+    set(HAVE_GD_GIF 1)
+  elseif(WIN32)
+    # Windows has neither pkg-config nor gdlibg-config. If we have reached here
+    # and thus found gdlib, assume it was installed via vcpkg. That version of
+    # gdlib has enabled [core,fontconfig,freetype,jpeg,png,tiff,webp], so take
+    # the subset of that we use, [fontconfig,freetyp,jpeg,png].
+    set(HAVE_GD_PNG 1)
+    set(HAVE_GD_JPEG 1)
+    set(HAVE_GD_FONTCONFIG 1)
+    set(HAVE_GD_FREETYPE 1)
   else()
-    if(APPLE OR GDLIB_FOUND)
-      # At time of writing, Macports does not package libgd. So assume the user
-      # obtained this through Homebrew and hard code the options the Homebrew
-      # package enables.
-      set(HAVE_GD_PNG 1)
-      set(HAVE_GD_JPEG 1)
-      set(HAVE_GD_FONTCONFIG 1)
-      set(HAVE_GD_FREETYPE 1)
-      set(HAVE_GD_GIF 1)
-    else()
-      message(
-        WARNING
-        "gdlib-config/gdlib pkgconfig not found; skipping feature checks")
-    endif()
+    message(
+      WARNING
+      "gdlib-config/gdlib pkgconfig not found; skipping feature checks")
   endif()
 endif()
