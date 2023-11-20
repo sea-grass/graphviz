@@ -173,6 +173,7 @@ portable-source:
         - >-
             if($env:build_system -eq "cmake") {
                 mv "build\*.exe" $DIR;
+                mv "build\*.zip" $DIR;
             } else {
                 Compress-Archive -Path "$env:configuration\*" -DestinationPath "$DIR\graphviz-$Env:GV_VERSION-$API.zip";
             }
