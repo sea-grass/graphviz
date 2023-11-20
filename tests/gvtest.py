@@ -153,6 +153,11 @@ def is_cmake() -> bool:
     return os.getenv("build_system") == "cmake"
 
 
+def is_macos() -> bool:
+    """is the current platform macOS?"""
+    return platform.system() == "Darwin"
+
+
 def is_mingw() -> bool:
     """is the current platform MinGW?"""
     return "mingw" in sysconfig.get_platform()
@@ -165,7 +170,7 @@ def remove_xtype_warnings(s: str) -> str:
     """
 
     # avoid doing this anywhere except on macOS
-    if platform.system() != "Darwin":
+    if not is_macos():
         return s
 
     return re.sub(r"^.* XType: .*\.$\n", "", s, flags=re.MULTILINE)

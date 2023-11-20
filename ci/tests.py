@@ -16,6 +16,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     freedesktop_os_release,
     is_cmake,
+    is_macos,
     is_mingw,
     which,
 )
@@ -136,6 +137,14 @@ def test_existence(binary: str):
     if binary == "vimdot" and platform.system() == "Windows":
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not installed on Windows")
+
+    if binary == "smyrna" and not is_cmake() and is_macos():
+        check_that_tool_does_not_exist(binary, os_id)
+        pytest.skip("https://gitlab.com/graphviz/graphviz/-/issues/2422")
+
+    if binary == "vimdot" and not is_cmake() and is_macos():
+        check_that_tool_does_not_exist(binary, os_id)
+        pytest.skip("https://gitlab.com/graphviz/graphviz/-/issues/2423")
 
     assert which(binary) is not None
 
