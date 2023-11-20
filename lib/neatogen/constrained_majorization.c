@@ -124,6 +124,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	}
 	if (num_levels < 1) {
 	    /* no hierarchy found, use faster algorithm */
+	    free(levels);
 	    return stress_majorization_kD_mkernel(graph, n,
 						  d_coords, nodes, dim,
 						  opts, model, maxi);
@@ -159,15 +160,19 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    goto finish;
 	}
     }
-    if (n == 1)
+    if (n == 1) {
+	free(levels);
 	return 0;
+    }
 
 	/****************************************************
 	** Compute the all-pairs-shortest-distances matrix **
 	****************************************************/
 
-    if (maxi == 0)
+    if (maxi == 0) {
+	free(levels);
 	return iterations;
+    }
 
     if (Verbose)
 	start_timer();
@@ -426,7 +431,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	    }
 	}
     }
-    deleteCMajEnv(cMajEnv);
 
     if (coords != NULL) {
 	for (i = 0; i < dim; i++) {
@@ -438,10 +442,6 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	free(coords);
     }
 
-    if (b) {
-	free(b[0]);
-	free(b);
-    }
     free(tmp_coords);
     free(dist_accumulator);
     free(degrees);
@@ -450,6 +450,13 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
     free(lap1);
 
 finish:
+    if (cMajEnv != NULL) {
+	deleteCMajEnv(cMajEnv);
+    }
+    if (b) {
+	free(b[0]);
+	free(b);
+    }
     free(ordering);
 
     free(levels);

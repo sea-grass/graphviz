@@ -1200,7 +1200,10 @@ triPath(tgraph * g, int n, int v0, int v1, PQ * pq)
 		if (N_VAL(pq, adjn) == UNSEEN) {
 		    N_VAL(pq, adjn) = d;
 		    N_DAD(adjn) = i;
-		    if (PQinsert(pq, adjn)) return NULL;
+		    if (PQinsert(pq, adjn)) {
+		       free(dad);
+		       return NULL;
+		    }
 		} else if (N_VAL(pq, adjn) < d) {
 		    PQupdate(pq, adjn, d);
 		    N_DAD(adjn) = i;

@@ -376,6 +376,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   }
   s = stop/sbot;
   if (s == 0) {
+    StressMajorizationSmoother_delete(sm);
     return NULL;
   }
   for (i = 0; i < nz; i++) d[i] *= s;
@@ -678,7 +679,8 @@ void StressMajorizationSmoother_delete(StressMajorizationSmoother sm){
   free(sm);
 }
 
-TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x, int use_triangularization) {
+TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
+                                      bool use_triangularization) {
   TriangleSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, jdiag, nz;
   SparseMatrix B;
@@ -883,7 +885,7 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
   sm->D->nz = nz;
   sm->ctrl = spring_electrical_control_new();
   *(sm->ctrl) = *ctrl;
-  sm->ctrl->random_start = FALSE;
+  sm->ctrl->random_start = false;
   sm->ctrl->multilevels = 1;
   sm->ctrl->step /= 2;
   sm->ctrl->maxiter = 20;
@@ -931,9 +933,9 @@ void post_process_smoothing(int dim, SparseMatrix A, spring_electrical_control c
 
     if (A->m > 2) {  /* triangles need at least 3 nodes */
       if (ctrl->smoothing == SMOOTHING_RNG){
-        sm = TriangleSmoother_new(A, dim, x, FALSE);
+        sm = TriangleSmoother_new(A, dim, x, false);
       } else {
-        sm = TriangleSmoother_new(A, dim, x, TRUE);
+        sm = TriangleSmoother_new(A, dim, x, true);
       }
       TriangleSmoother_smooth(sm, dim, x);
       TriangleSmoother_delete(sm);

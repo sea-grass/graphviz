@@ -27,7 +27,6 @@ enum {QUAD_TREE_NONE = 0, QUAD_TREE_NORMAL, QUAD_TREE_FAST, QUAD_TREE_HYBRID};
 struct spring_electrical_control_struct {
   double p;/*a negativve real number default to -1. repulsive force = dist^p */
   double q;/*a positive real number default to 2. attractive force = dist^q */
-  int random_start;/* whether to apply SE from a random layout, or from exisiting layout */
   double K;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   double C;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   int multilevels;/* if <=1, single level */
@@ -38,8 +37,9 @@ struct spring_electrical_control_struct {
   int maxiter;
   double cool;/* default 0.9 */
   double step;/* initial step size */
-  int adaptive_cooling;
   int random_seed;
+  bool random_start : 1; ///< whether to apply SE from a random layout, or from exisiting layout
+  bool adaptive_cooling : 1;
   bool beautify_leaves : 1;
   int smoothing;
   int overlap;
@@ -72,23 +72,9 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
 
 void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *width);
 void spring_electrical_control_delete(spring_electrical_control ctrl);
-void print_matrix(double *x, int n, int dim);
 
 double average_edge_length(SparseMatrix A, int dim, double *coord);
 
 void spring_electrical_spring_embedding(int dim, SparseMatrix A, SparseMatrix D, spring_electrical_control ctrl, double *x, int *flag);
-void force_print(FILE *fp, int n, int dim, double *x, double *force);
 
-enum {MAX_I = 20, OPT_UP = 1, OPT_DOWN = -1, OPT_INIT = 0};
-struct oned_optimizer_struct{
-  int i;
-  double work[MAX_I+1];
-  int direction;
-};
-typedef struct oned_optimizer_struct *oned_optimizer;
-void oned_optimizer_delete(oned_optimizer opt);
-oned_optimizer oned_optimizer_new(int i);
-void oned_optimizer_train(oned_optimizer opt, double work);
-int oned_optimizer_get(oned_optimizer opt);
-int power_law_graph(SparseMatrix A);
 void pcp_rotate(int n, int dim, double *x);
