@@ -89,7 +89,11 @@ SparseMatrix call_tri2(int n, int dim, double * xx)
 	SparseMatrix_coordinate_form_add_entry(A, i, i, &one);
     }
     B = SparseMatrix_from_coordinate_format(A);
-    B = SparseMatrix_symmetrize(B, false);
+    {
+	SparseMatrix tmp = SparseMatrix_symmetrize(B, false);
+	SparseMatrix_delete(B);
+	B = tmp;
+    }
     SparseMatrix_delete(A);
 
     free (x);
