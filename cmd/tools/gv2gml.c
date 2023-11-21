@@ -101,17 +101,15 @@ static void indent(int ix) {
 /* isNumber:
  * Return true if input string is number
  */
-static int
-isNumber (char* s)
-{
+static bool isNumber(char* s) {
     char* ep = s;
     strtod(s, &ep);
     if (s != ep) {
 	while (*ep && isspace((int)*ep)) ep++;
-	if (*ep) return 0;
-	return 1;
+	if (*ep) return false;
+	return true;
     }
-    return 0;
+    return false;
 }
 
 /* parseStyle:
