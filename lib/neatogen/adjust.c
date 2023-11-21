@@ -48,9 +48,6 @@ static double margin = 0.05;	/* Create initial bounding box by adding
 static double incr = 0.05;	/* Increase bounding box by adding
 				 * incr * dimension around box.
 				 */
-static int iterations = -1;	/* Number of iterations */
-static int useIter = 0;		/* Use specified number of iterations */
-
 static bool doAll = false; // Move all nodes, regardless of overlap
 static Site **sites;		/* Array of pointers to sites; used in qsort */
 static Site **endSite;		/* Sentinel on sites array */
@@ -487,10 +484,9 @@ static int vAdjust(void)
     int increaseCnt = 0;
     int cnt;
 
-    if (!useIter || iterations > 0)
-	overlapCnt = countOverlap(iterCnt);
+    overlapCnt = countOverlap(iterCnt);
 
-    if (overlapCnt == 0 || iterations == 0)
+    if (overlapCnt == 0)
 	return 0;
 
     rmEquality();
@@ -500,8 +496,6 @@ static int vAdjust(void)
 	newPos();
 	iterCnt++;
 
-	if (useIter && iterCnt == iterations)
-	    break;
 	cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
@@ -553,10 +547,9 @@ static int sAdjust(void)
     int overlapCnt = 0;
     int cnt;
 
-    if (!useIter || iterations > 0)
-	overlapCnt = countOverlap(iterCnt);
+    overlapCnt = countOverlap(iterCnt);
 
-    if (overlapCnt == 0 || iterations == 0)
+    if (overlapCnt == 0)
 	return 0;
 
     rmEquality();
@@ -564,8 +557,6 @@ static int sAdjust(void)
 	rePos();
 	iterCnt++;
 
-	if (useIter && iterCnt == iterations)
-	    break;
 	cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
