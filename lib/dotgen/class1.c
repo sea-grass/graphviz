@@ -15,17 +15,16 @@
  */
 
 #include <dotgen/dot.h>
+#include <stdbool.h>
 
-
-int nonconstraint_edge(edge_t * e)
-{
+bool nonconstraint_edge(edge_t *e) {
     char *constr;
 
     if (E_constr && (constr = agxget(e, E_constr))) {
 	if (constr[0] && !mapbool(constr))
-	    return TRUE;
+	    return true;
     }
-    return FALSE;
+    return false;
 }
 
 static void 

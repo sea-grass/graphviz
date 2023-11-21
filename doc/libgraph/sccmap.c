@@ -137,9 +137,9 @@ static int visit(Agnode_t * n, Agraph_t * map, Stack * sp, sccstate * st)
 			char name[32];
 			Agraph_t *G = agraphof(n);;
 			snprintf(name, sizeof(name), "cluster_%d", (st->Comp)++);
-			subg = agsubg(G, name, TRUE);
+			subg = agsubg(G, name, 1);
 			agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), true);
-			setrep(subg, agnode(map, name, TRUE));
+			setrep(subg, agnode(map, name, 1));
 			do {
 				t = pop(sp);
 				agsubnode(subg, t, 1);

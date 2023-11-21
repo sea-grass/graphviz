@@ -140,23 +140,17 @@ color_rgb XYZ2RGB(color_xyz color){
   return color_rgb_init(r, g, b);
 }
 
-double *lab_gamut(const char *lightness, int *n){
+double *lab_gamut(const int *lightness, int *n) {
   /* give a list of n points  in the file defining the LAB color gamut.
-     lightness is a string of the form 0,70, or NULL.
    */
   double *xx, *x;
 
-  int l1 = 0, l2 = 70;
+  int l1 = lightness[0];
+  int l2 = lightness[1];
 
-
-  if (lightness && sscanf(lightness, "%d,%d", &l1, &l2) == 2){
-    if (l1 < 0) l1 = 0;
-    if (l2 > 100) l2 = 100;
-    if (l1 > l2) l1 = l2;
-  } else {
-    l1 = 0; l2 = 70;
-  }
-
+  if (l1 < 0) l1 = 0;
+  if (l2 > 100) l2 = 100;
+  if (l1 > l2) l1 = l2;
 
   if (Verbose)
     fprintf(stderr,"LAB color lightness range = %d,%d\n", l1, l2);
@@ -188,7 +182,8 @@ double *lab_gamut(const char *lightness, int *n){
   return x;
 }
 
-QuadTree lab_gamut_quadtree(const char *lightness, int max_qtree_level){
+QuadTree lab_gamut_quadtree(const int *lightness,
+                            int max_qtree_level) {
   /* read the color gamut points list in the form "x y z\n ..." and store in the octtree */
   int n;
   double *x = lab_gamut(lightness, &n);

@@ -157,7 +157,7 @@ static vararr_t pathtolines(bezier *bez) {
     return arr;
 }
 
-static void drawbevel(double x, double lineout, int forward, double dir,
+static void drawbevel(double x, double lineout, bool forward, double dir,
                       double dir2, stroke_t *p) {
     double a2;
 
@@ -281,7 +281,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
 	    lineto(&p, x+cos(direction)*lineout, y+sin(direction)*lineout);
 	}
 	if (bevel) {
-	    drawbevel(x, lineout, TRUE, direction, direction_2, &p);
+	    drawbevel(x, lineout, true, direction, direction_2, &p);
 	}
     }
 	 /* end circle as needed */
@@ -299,7 +299,7 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
 	direction_2 = cur_point.dir2 + D2R(180);
 	lineto(&p, x+cos(direction_2)*lineout, y+sin(direction_2)*lineout);
 	if (bevel) { 
-	    drawbevel(x, lineout, FALSE, direction, direction_2, &p);
+	    drawbevel(x, lineout, false, direction, direction_2, &p);
 	}
     }
     /* closepath(&p); */

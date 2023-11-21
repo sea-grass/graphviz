@@ -11,6 +11,7 @@
 #include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <math.h>
+#include <stdbool.h>
 #include <string.h>
 #include <time.h>
 #include <sparse/SparseMatrix.h>
@@ -135,12 +136,12 @@ static int splines_intersect(size_t dim,
   return 0;
 }
 
-
-Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* g, double angle, double accuracy, int check_edges_with_same_endpoint, int seed){
+Agraph_t *edge_distinct_coloring(char *color_scheme, int *lightness,
+                                 Agraph_t *g, double angle, double accuracy,
+                                 int check_edges_with_same_endpoint, int seed) {
   /* color the edges of a graph so that conflicting edges are as dinstrinct in color as possibl.
      color_scheme: rgb, lab, gray, or a list of comma separaterd RGB colors in hex, like #ff0000,#00ff00
      lightness: of the form 0,70, specifying the range of lightness of LAB color. Ignored if scheme is not COLOR_LAB.
-     .          if NULL, 0,70 is assumed
      g: the graph
      angle: if two edges cross at an angle < "angle", consider they as conflict
      accuracy: how accurate when finding  color of an edge to be as different from others
@@ -231,7 +232,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
 #ifdef TIME
     clock_t start = clock();
 #endif
-    int weightedQ = FALSE;
+    const bool weightedQ = false;
     flag = node_distinct_coloring(color_scheme, lightness, weightedQ, C,
                                   accuracy, seed, &cdim, &colors);
     if (flag) goto RETURN;

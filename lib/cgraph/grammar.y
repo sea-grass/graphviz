@@ -349,7 +349,7 @@ static void appendnode(char *name, char *port, char *sport)
 	if (sport) {
 		port = concatPort (port, sport);
 	}
-	elt = cons_node(agnode(S->g,name,TRUE),port);
+	elt = cons_node(agnode(S->g, name, 1), port);
 	listapp(&(S->nodelist),elt);
 	agstrfree(G,name);
 }
@@ -538,7 +538,7 @@ static void opensubg(char *name)
   if (++SubgraphDepth >= YYMAXDEPTH/2) {
     agerr(AGERR,"subgraphs nested more than %d deep",YYMAXDEPTH);
   }
-	S = push(S,agsubg(S->g,name,TRUE));
+	S = push(S, agsubg(S->g, name, 1));
 	agstrfree(G,name);
 }
 

@@ -261,15 +261,15 @@ static void dfs_enter_inedge(node_t * v)
 static edge_t *enter_edge(edge_t * e)
 {
     node_t *v;
-    int outsearch;
+    bool outsearch;
 
     /* v is the down node */
     if (ND_lim(agtail(e)) < ND_lim(aghead(e))) {
 	v = agtail(e);
-	outsearch = FALSE;
+	outsearch = false;
     } else {
 	v = aghead(e);
-	outsearch = TRUE;
+	outsearch = true;
     }
     Enter = NULL;
     Slack = INT_MAX;

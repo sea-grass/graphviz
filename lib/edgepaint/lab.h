@@ -33,8 +33,12 @@ color_rgb LAB2RGB(color_lab color);
 color_rgb color_rgb_init(double r, double g, double b);
 color_xyz color_xyz_init(double x, double y, double z);
 color_lab color_lab_init(double l, double a, double b);
-QuadTree lab_gamut_quadtree(const char *lightness, int max_qtree_level); /* construct a quadtree of the LAB gamut points */
-double *lab_gamut(const char *lightness, int *n);  /* give a list of n points  in the file defining the LAB color gamut */
+QuadTree lab_gamut_quadtree(
+    const int *lightness,
+    int max_qtree_level); ///< construct a quadtree of the LAB gamut points
+double *lab_gamut(const int *lightness,
+                  int *n); ///< give a list of n points  in the file defining
+                           ///< the LAB color gamut
 
 /** derive around maxpoints from a color list
  *
