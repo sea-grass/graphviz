@@ -44,6 +44,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   future. #2423
 - macOS release artifacts no longer include `smyrna`. This may be restored in
   future. #2422
+- The PDF output format, `-Tpdf`, respects the environment variable
+  `$SOURCE_DATE_EPOCH` for overriding `CreationDate` when built against Cairo
+  ≥ 1.16.0. #2473
 
 ### Fixed
 

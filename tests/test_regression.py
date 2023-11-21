@@ -18,6 +18,7 @@ import subprocess
 import sys
 import tempfile
 import textwrap
+import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import List
@@ -29,7 +30,10 @@ from gvtest import (  # pylint: disable=wrong-import-position
     ROOT,
     dot,
     gvpr,
+    is_centos,
+    is_fedora_38,
     is_mingw,
+    is_rocky_8,
     remove_xtype_warnings,
     run_c,
     which,
@@ -3075,6 +3079,65 @@ def test_2460():
         data["objects"][0]["_ldraw_"][2]["text"]
         == r"double back slash in label \\. End should be the last word - End"
     ), "back slashes in labels handled incorrectly"
+
+
+@pytest.mark.xfail(
+    is_centos() or is_fedora_38() or is_rocky_8(),
+    reason="Cairo is <v1.16 or malfunctions",
+    strict=True,
+)
+def test_2473_1():
+    """
+    `SOURCE_DATE_EPOCH` should be usable to suppress timestamps
+    https://gitlab.com/graphviz/graphviz/-/issues/2473
+    """
+
+    # a trivial graph
+    graph = "graph { a -- b }".encode("utf-8")
+
+    # set an epoch
+    env = os.environ.copy()
+    env["SOURCE_DATE_EPOCH"] = "60"
+
+    # generate a PDF
+    first_run = subprocess.check_output(["dot", "-Tpdf"], input=graph, env=env)
+
+    # wait long enough for the current time to change
+    time.sleep(2)
+
+    # generate another PDF
+    second_run = subprocess.check_output(["dot", "-Tpdf"], input=graph, env=env)
+
+    assert (
+        first_run == second_run
+    ), "PDF output is dependent on current time even when $SOURCE_DATE_EPOCH is set"
+
+
+def test_2473_2():
+    """
+    When handling `SOURCE_DATE_EPOCH`, from
+    https://reproducible-builds.org/specs/source-date-epoch/:
+
+       If the value is malformed, the build process SHOULD exit with a non-zero
+       error code.
+
+    https://gitlab.com/graphviz/graphviz/-/issues/2473
+    """
+
+    # set up an invalid epoch
+    env = os.environ.copy()
+    env["SOURCE_DATE_EPOCH"] = "foo"
+
+    # confirm Graphviz rejects this
+    with pytest.raises(subprocess.CalledProcessError):
+        subprocess.run(
+            ["dot", "-Tpdf", "-o", os.devnull],
+            input="graph { a -- b }",
+            env=env,
+            check=True,
+            encoding="utf-8",
+            universal_newlines=True,
+        )
 
 
 def test_changelog_dates():

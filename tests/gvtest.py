@@ -148,9 +148,26 @@ def gvpr(program: Path) -> str:
     )
 
 
+def is_centos() -> bool:
+    """
+    is the current environment CentOS?
+    """
+    return freedesktop_os_release().get("ID") == "centos"
+
+
 def is_cmake() -> bool:
     """was the Graphviz under test built with CMake?"""
     return os.getenv("build_system") == "cmake"
+
+
+def is_fedora_38() -> bool:
+    """
+    is the current environment Fedora 38?
+    """
+    return (
+        freedesktop_os_release().get("ID") == "fedora"
+        and freedesktop_os_release().get("VERSION_ID") == "38"
+    )
 
 
 def is_macos() -> bool:
@@ -174,6 +191,18 @@ def remove_xtype_warnings(s: str) -> str:
         return s
 
     return re.sub(r"^.* XType: .*\.$\n", "", s, flags=re.MULTILINE)
+
+
+def is_rocky_8() -> bool:
+    """
+    is the current environment Rocky Linux 8?
+    """
+    if freedesktop_os_release().get("ID") != "rocky":
+        return False
+    version_id = freedesktop_os_release().get("VERSION_ID")
+    if version_id is None:
+        return False
+    return re.match(r"8\b", version_id) is not None
 
 
 def run_c(
