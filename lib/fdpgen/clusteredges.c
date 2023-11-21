@@ -213,7 +213,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
     node_t *head;
     edge_t *e;
     edge_t *e0;
-    vconfig_t *vconfig;
+    vconfig_t *vconfig = NULL;
     int rv = 0;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -261,6 +261,9 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		objlist_free(&objl);
 	    }
 	}
+    }
+    if (vconfig != NULL) {
+	Pobsclose(vconfig);
     }
     return rv;
 }
