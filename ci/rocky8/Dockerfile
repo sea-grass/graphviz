@@ -21,7 +21,6 @@ freeglut-devel \
 # Option gts
 # Option swig
 swig \
-# Command lefty
 # Command smyra
 libglade2-devel \
 # Command gvedit
