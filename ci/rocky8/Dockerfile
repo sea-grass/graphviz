@@ -3,13 +3,13 @@ FROM rockylinux:8
 COPY requirements.txt ./requirements.txt
 
 # Development tools
-RUN yum -y groupinstall 'Development Tools' \
-&& yum install -y \
+RUN dnf -y groupinstall 'Development Tools' \
+&& dnf install -y \
 # Install epel-release rpm (Needed for libglade2-devel. Must be a separate step)
 https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm \
 && dnf config-manager --set-enabled powertools \
 # Centos build utilities
-&& yum -y install \
+&& dnf -y install \
 libtool-ltdl-devel \
 libedit-devel \
 ksh \
@@ -77,4 +77,4 @@ python3-setuptools \
 && python3 -m pip install --user --upgrade pip \
 && python3 -m pip install --user --requirement requirements.txt \
 # Clean up
-&& yum clean all && rm -rf /var/cache/yum
+&& dnf clean all && rm -rf /var/cache/dnf
