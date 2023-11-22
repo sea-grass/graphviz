@@ -14,6 +14,8 @@ libtool-ltdl-devel \
 libedit-devel \
 ksh \
 cmake \
+# security-hardened alternatives of packages
+rocky-release-security \
 # Option glut
 freeglut-devel \
 # Option gts
