@@ -76,7 +76,7 @@ if(ZLIB_FOUND)
   target_link_libraries(gvc PUBLIC ${ZLIB_LIBRARIES})
 endif()
 
-if(${with_ortho})
+if(with_ortho)
   target_link_libraries(gvc PRIVATE
     $<TARGET_OBJECTS:ortho_obj>
   )
