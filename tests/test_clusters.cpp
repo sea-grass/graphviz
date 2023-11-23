@@ -59,6 +59,9 @@ TEST_CASE(
   SVGAnalyzer svg_analyzer{result};
 
   const std::size_t num_clusters = engine == "dot" || engine == "fdp" ||
+#ifdef IPSEPCOLA
+                                           engine == "neato" ||
+#endif
                                            engine == "osage" ||
                                            engine == "patchwork"
                                        ? num_clusters_in_dot_source
