@@ -488,9 +488,7 @@ typedef struct {
     FILE* fp;
 } stream_t;
 
-static unsigned char
-nxtc (stream_t* str)
-{
+static char nxtc(stream_t *str) {
     if (fgets(str->buf, BUFSIZ, str->fp)) {
 	str->s = str->buf;
 	return *(str->s);
@@ -505,9 +503,9 @@ nxtc (stream_t* str)
 static void
 skipWS (stream_t* str)
 {
-    unsigned char c;
+    char c;
     while ((c = strc(str))) {
-	if (isspace(c)) stradv(str);
+	if (isspace((int)c)) stradv(str);
 	else return;
     }
 }
