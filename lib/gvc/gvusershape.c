@@ -26,6 +26,7 @@
 #endif
 
 #include <common/types.h>
+#include <common/usershape.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/strview.h>
@@ -44,7 +45,7 @@ static Dict_t *ImageDict;
 typedef struct {
     char *template;
     size_t size;
-    int type;
+    imagetype_t type;
     char *stringtype;
 } knowntype_t;
 
@@ -78,8 +79,7 @@ static knowntype_t knowntypes[] = {
 //    { TIFF_MAGIC, sizeof(TIFF_MAGIC)-1,  FT_TIFF, "tiff", },
 };
 
-static int imagetype (usershape_t *us)
-{
+static imagetype_t imagetype(usershape_t *us) {
     char header[HDRLEN] = {0};
 
     if (us->f && fread(header, 1, HDRLEN, us->f) == HDRLEN) {
