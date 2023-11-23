@@ -43,7 +43,7 @@ static Dict_t *ImageDict;
 
 typedef struct {
     char *template;
-    int size;
+    size_t size;
     int type;
     char *stringtype;
 } knowntype_t;
