@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 #include <sparse/SparseMatrix.h>
+#include <edgepaint/edge_distinct_coloring.h>
 #include <edgepaint/node_distinct_coloring.h>
 #include <sparse/DotIO.h>
 #include <edgepaint/intersection.h>
