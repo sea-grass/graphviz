@@ -268,5 +268,6 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
   QuadTree_delete(qt);
 
   if (A != A0) SparseMatrix_delete(A);
+  free(comps);
   return 0;
 }
