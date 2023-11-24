@@ -1643,7 +1643,8 @@ void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levels
   return SparseMatrix_level_sets_internal(A, root, nlevel, levelset_ptr, levelset, mask, reinitialize_mask);
 }
 
-void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int **comps, int **comps_ptr){
+int *SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp,
+                                              int **comps) {
   SparseMatrix A = A0;
   int *levelset_ptr = NULL, *levelset = NULL, *mask = NULL, nlevel;
   int m = A->m, i, nn;
@@ -1651,17 +1652,17 @@ void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int *
   if (!SparseMatrix_is_symmetric(A, true)){
     A = SparseMatrix_symmetrize(A, true);
   }
-  if (!(*comps_ptr)) *comps_ptr = gv_calloc((size_t)(m + 1), sizeof(int));
+  int *comps_ptr = gv_calloc((size_t)(m + 1), sizeof(int));
 
   *ncomp = 0;
-  (*comps_ptr)[0] = 0;
+  comps_ptr[0] = 0;
   for (i = 0; i < m; i++){
     if (i == 0 || mask[i] < 0) {
       SparseMatrix_level_sets(A, i, &nlevel, &levelset_ptr, &levelset, &mask, FALSE);
       if (i == 0) *comps = levelset;
       nn = levelset_ptr[nlevel];
       levelset += nn;
-      (*comps_ptr)[(*ncomp)+1] = (*comps_ptr)[(*ncomp)] + nn;
+      comps_ptr[(*ncomp)+1] = comps_ptr[(*ncomp)] + nn;
       (*ncomp)++;
     }
     
@@ -1670,6 +1671,7 @@ void SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp, int *
   free(levelset_ptr);
 
   free(mask);
+  return comps_ptr;
 }
 
 void SparseMatrix_decompose_to_supervariables(SparseMatrix A, int *ncluster, int **cluster, int **clusterp){
