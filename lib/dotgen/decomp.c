@@ -94,7 +94,7 @@ static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
 	vec[3] = ND_flat_in(n);
 
 	for (c = 3; c >= 0; c--) {
-	    if (vec[c].list) {
+	    if (vec[c].list && vec[c].size != 0) {
 		size_t i;
 		for (i = vec[c].size - 1, ep = vec[c].list + i; i != SIZE_MAX; i--, ep--) {
 		    e = *ep;
