@@ -1592,7 +1592,9 @@ bool SparseMatrix_has_diagonal(SparseMatrix A) {
   return false;
 }
 
-static void SparseMatrix_level_sets_internal(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
+void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel,
+                             int **levelset_ptr, int **levelset, int **mask,
+                             int reinitialize_mask) {
   /* mask is assumed to be initialized to negative if provided.
      . On exit, mask = levels for visited nodes (1 for root, 2 for its neighbors, etc), 
      . unless reinitialize_mask = TRUE, in which case mask = -1.
@@ -1637,10 +1639,6 @@ static void SparseMatrix_level_sets_internal(SparseMatrix A, int root, int *nlev
   }
   (*nlevel)--;
   if (reinitialize_mask) for (i = 0; i < (*levelset_ptr)[*nlevel]; i++) (*mask)[(*levelset)[i]] = UNMASKED;
-}
-
-void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel, int **levelset_ptr, int **levelset, int **mask, int reinitialize_mask){
-  return SparseMatrix_level_sets_internal(A, root, nlevel, levelset_ptr, levelset, mask, reinitialize_mask);
 }
 
 int *SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp,
