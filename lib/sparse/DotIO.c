@@ -238,7 +238,7 @@ int Import_dot_splines(Agraph_t* g, int *ne, char ***xsplines){
   sym = agattr(g, AGEDGE, "pos", 0); 
   if (!sym) return 0;
  
-  if (!(*xsplines)) *xsplines = malloc(sizeof(char*)*nedges);
+  *xsplines = malloc(sizeof(char*)*nedges);
 
   i = 0;
   for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
