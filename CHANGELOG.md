@@ -83,6 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - When building against a libgd that is configured with `!gif && (jpeg || png)`,
   the GD plugin is once again compilable. This was a regression in Graphviz
   2.46.0.
+- edgepaint spline intersection code would previously incorrectly use the second
+  spline in one instance where it should have used the first. #1464
 
 ## [9.0.0] - 2023-09-11
 

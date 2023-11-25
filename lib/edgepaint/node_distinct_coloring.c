@@ -194,7 +194,7 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
      color: On input an array of size n*cdim, if NULL, will be allocated. On exit the final color assignment for node i is [cdim*i,cdim*(i+1)), in RGB (between 0 to 1)
   */ 
   SparseMatrix B, A = A0;
-  int ncomps, *comps = NULL, *comps_ptr = NULL;
+  int ncomps, *comps = NULL;
   int nn, n;
   double *ctmp;
   int i, j, jj;
@@ -251,7 +251,7 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
   B = SparseMatrix_symmetrize(A, false);
   A = B;
 
-  SparseMatrix_weakly_connected_components(A, &ncomps, &comps, &comps_ptr); 
+  int *comps_ptr = SparseMatrix_weakly_connected_components(A, &ncomps, &comps);
   
   for (i = 0; i < ncomps; i++){
     nn = comps_ptr[i+1] - comps_ptr[i];
@@ -268,5 +268,6 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
   QuadTree_delete(qt);
 
   if (A != A0) SparseMatrix_delete(A);
+  free(comps);
   return 0;
 }

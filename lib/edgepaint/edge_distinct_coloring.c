@@ -15,6 +15,7 @@
 #include <string.h>
 #include <time.h>
 #include <sparse/SparseMatrix.h>
+#include <edgepaint/edge_distinct_coloring.h>
 #include <edgepaint/node_distinct_coloring.h>
 #include <sparse/DotIO.h>
 #include <edgepaint/intersection.h>
@@ -50,7 +51,7 @@ static int splines_intersect(size_t dim,
     if(strstr(xsplines1, "e,")){
       endp1 = 1;
       xsplines1 = strstr(xsplines1, "e,") + 2;
-    } else if (strstr(xsplines2, "s,")){
+    } else if (strstr(xsplines1, "s,")){
       xsplines1 = strstr(xsplines1, "s,") + 2;
     }
   }
@@ -125,6 +126,8 @@ static int splines_intersect(size_t dim,
       cos_a = intersection_angle(&(x1[dim*i]), &(x1[dim*(i + 1)]), &(x2[dim*j]), &(x2[dim*(j+1)]));
       if (!check_edges_with_same_endpoint && cos_a >= -1) cos_a = fabs(cos_a);
       if (cos_a > cos_critical) {
+	free(x1);
+	free(x2);
 	return 1;
       }
 
