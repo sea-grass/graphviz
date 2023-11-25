@@ -379,6 +379,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       SparseMatrix D = SparseMatrix_get_real_adjacency_matrix_symmetrized(graph);
       remove_overlap(dim, D, x, width, 1000, 5000.,
 		     ELSCHEME_NONE, 0, NULL, NULL, true);
+      SparseMatrix_delete(D);
       
       nart = nart0;
       make_map_from_rectangle_groups(pm->include_OK_points,
