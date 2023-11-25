@@ -126,6 +126,7 @@ static int splines_intersect(size_t dim,
       cos_a = intersection_angle(&(x1[dim*i]), &(x1[dim*(i + 1)]), &(x2[dim*j]), &(x2[dim*(j+1)]));
       if (!check_edges_with_same_endpoint && cos_a >= -1) cos_a = fabs(cos_a);
       if (cos_a > cos_critical) {
+	free(x2);
 	return 1;
       }
 
