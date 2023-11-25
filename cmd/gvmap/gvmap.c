@@ -376,8 +376,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
     }
     {
-      SparseMatrix D;
-      D = SparseMatrix_get_real_adjacency_matrix_symmetrized(graph);
+      SparseMatrix D = SparseMatrix_get_real_adjacency_matrix_symmetrized(graph);
       remove_overlap(dim, D, x, width, 1000, 5000.,
 		     ELSCHEME_NONE, 0, NULL, NULL, true);
       
