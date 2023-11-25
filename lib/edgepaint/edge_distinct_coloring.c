@@ -51,7 +51,7 @@ static int splines_intersect(size_t dim,
     if(strstr(xsplines1, "e,")){
       endp1 = 1;
       xsplines1 = strstr(xsplines1, "e,") + 2;
-    } else if (strstr(xsplines2, "s,")){
+    } else if (strstr(xsplines1, "s,")){
       xsplines1 = strstr(xsplines1, "s,") + 2;
     }
   }
