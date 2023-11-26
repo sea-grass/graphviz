@@ -57,7 +57,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <EnablePREfast>true</EnablePREfast>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4706;4996</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)lib;$(SolutionDir)lib\cdt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib />
@@ -68,7 +68,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <EnablePREfast>true</EnablePREfast>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4706;4996</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)lib;$(SolutionDir)lib\cdt;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib />

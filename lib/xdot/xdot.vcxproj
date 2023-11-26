@@ -59,7 +59,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <EnablePREfast>true</EnablePREfast>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4706;4996</DisableSpecificWarnings>
     </ClCompile>
     <Lib />
     <Link>
@@ -74,7 +74,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <EnablePREfast>true</EnablePREfast>
-      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4706;4996</DisableSpecificWarnings>
     </ClCompile>
     <Lib />
     <Link>
