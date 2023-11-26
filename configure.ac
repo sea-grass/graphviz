@@ -2355,11 +2355,7 @@ else
     use_gv_tcl="Yes"
   fi
   if test "$use_gd" != "Yes"; then
-    if test "$use_gd" = "Yes (internal)"; then
-        use_gdtclft="Yes"
-    else
-        use_gdtclft="No (gd not available)"
-    fi
+    use_gdtclft="No (gd not available)"
   else
     use_gdtclft="Yes"
   fi
