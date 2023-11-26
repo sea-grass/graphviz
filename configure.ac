@@ -946,21 +946,16 @@ else
       if test "$PERL" = ""; then
         use_perl="No (perl not available)"
       else
-        if test $PERL -e 'exit !($] <= 5.004)' > /dev/null 2>&1 ; then
-	  use_perl="No (perl is too old)"
-	  PERL=
-	else
-          PERL_INCLUDES="`$PERL $srcdir/config/config_perl.pl PERL_INCLUDES`"
-          PERL_LIBS="`$PERL $srcdir/config/config_perl.pl PERL_LIBS`"
-          PERL_INSTALL_DIR="`$PERL $srcdir/config/config_perl.pl PERL_INSTALL_DIR`"
-	  save_CPPFLAGS=$CPPFLAGS
-	  CPPFLAGS="$CPPFLAGS $PERL_INCLUDES"
-          AC_CHECK_HEADER(EXTERN.h,,[
-            use_perl="No (missing header)"
-  	    PERL=
-          ])
-	  CPPFLAGS=$save_CPPFLAGS
-	fi
+        PERL_INCLUDES="`$PERL $srcdir/config/config_perl.pl PERL_INCLUDES`"
+        PERL_LIBS="`$PERL $srcdir/config/config_perl.pl PERL_LIBS`"
+        PERL_INSTALL_DIR="`$PERL $srcdir/config/config_perl.pl PERL_INSTALL_DIR`"
+        save_CPPFLAGS=$CPPFLAGS
+        CPPFLAGS="$CPPFLAGS $PERL_INCLUDES"
+        AC_CHECK_HEADER(EXTERN.h,,[
+          use_perl="No (missing header)"
+          PERL=
+        ])
+        CPPFLAGS=$save_CPPFLAGS
         if test "$PERL" != ""; then
           use_perl="Yes"
 	  AC_SUBST([PERL_INCLUDES])
