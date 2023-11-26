@@ -1548,32 +1548,8 @@ else
     AC_SUBST([FREETYPE2_CFLAGS])
     AC_SUBST([FREETYPE2_LIBS])
   ],[
-    AC_MSG_WARN(pkg-config did not find a freetype2.pc.  Looking for freetype-config.)
+    use_freetype="No (missing freetype-config)"
   ])
-fi
-
-# pkgconfig for freetype2 did not exist in redhat[78]
-if test "$use_freetype" = ""; then
-    if test "$FREETYPE_DIR" = "yes"; then
-	AC_PATH_PROG(FREETYPE_CONFIG,freetype-config)
-    else
-	AC_PATH_PROG(FREETYPE_CONFIG,freetype-config,,[$FREETYPE_DIR/bin:$PATH])
-    fi
-
-    if test -n "$FREETYPE_CONFIG"; then
-        if test "$FREETYPE_DIR" != "yes"; then
-	    FREETYPE2_CFLAGS="`$FREETYPE_CONFIG --cflags` -I$FREETYPE_DIR/include"
-	else
-	    FREETYPE2_CFLAGS=`$FREETYPE_CONFIG --cflags`
-	fi
-	FREETYPE2_LIBS=`$FREETYPE_CONFIG --libs`
-	use_freetype="Yes"
-	AC_SUBST([FREETYPE2_CFLAGS])
-	AC_SUBST([FREETYPE2_LIBS])
-    else
-        AC_MSG_WARN(freetype library not available)
-	use_freetype="No (missing freetype-config)"
-    fi
 fi
 
 dnl -----------------------------------
