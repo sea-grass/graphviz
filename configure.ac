@@ -252,7 +252,7 @@ AC_ARG_WITH([demos],
   [AS_HELP_STRING([--with-demos=DIR], [Install demos (default: $(pkgdatadir)/demo)])])
 
 demodir='$(pkgdatadir)/demo'
-AS_IF([test "$with_demos" != "xyes" && test -n "$with_demos"], [
+AS_IF([test "$with_demos" != "yes" && test -n "$with_demos"], [
   dnl user provided --with-demos=/my/demo/dir
   demodir="$with_demos"
 ])
