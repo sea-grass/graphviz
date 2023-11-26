@@ -451,8 +451,6 @@ if test "x$no_x" = "xyes"; then
   X_SUBDIRS=""
 else
   use_xlib="Yes"
-#no x11.pc on centos4
-#  PKG_CHECK_MODULES(X11, [x11])
   PKG_CHECK_MODULES(XRENDER, [xrender],HAVE_XRENDER="yes" ,HAVE_XRENDER="no")
 fi
 AM_CONDITIONAL(WITH_X, [test "x$use_xlib" = "xYes"])
