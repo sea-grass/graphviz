@@ -114,9 +114,6 @@
 /* Define to 1 if you have the `pango_fc_font_unlock_face' function. */
 /* #undef HAVE_PANGO_FC_FONT_UNLOCK_FACE */
 
-/* Define if you have the Quartz framework for Mac OS X */
-/* #undef HAVE_QUARTZ */
-
 /* Define if you have the rsvg library */
 #define HAVE_RSVG 1
 
