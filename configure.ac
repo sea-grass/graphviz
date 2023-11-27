@@ -165,10 +165,10 @@ JNI_EXTRA_LDFLAGS="-shrext .$JSHEXT"
 AC_SUBST([JNI_EXTRA_LDFLAGS])
 AC_SUBST([JSHEXT])
 AC_DEFINE_UNQUOTED(PATHSEPARATOR,"$PATHSEPARATOR",[Path separator character.])
-AM_CONDITIONAL(WITH_WIN32, [test "x$UWIN" = "xyes" -o "x$CYGWIN" = "xyes" -o "x$MINGW32" = "xyes"])
-AM_CONDITIONAL(WITH_DARWIN9, [test "x$DARWIN9" = "xyes"])
-AM_CONDITIONAL(WITH_CYGWIN, [test "x$CYGWIN" = "xyes"])
-AM_CONDITIONAL(WITH_MINGW, [test "x$MINGW32" = "xyes"])
+AM_CONDITIONAL(WITH_WIN32, [test "$UWIN" = "yes" -o "$CYGWIN" = "yes" -o "$MINGW32" = "yes"])
+AM_CONDITIONAL(WITH_DARWIN9, [test "$DARWIN9" = "yes"])
+AM_CONDITIONAL(WITH_CYGWIN, [test "$CYGWIN" = "yes"])
+AM_CONDITIONAL(WITH_MINGW, [test "$MINGW32" = "yes"])
 
 DEFAULT_DPI=96
 AC_DEFINE_UNQUOTED(DEFAULT_DPI,$DEFAULT_DPI,Default DPI.)
@@ -185,7 +185,7 @@ AC_CONFIG_HEADERS([config.h])
 echo "#define BUILDDATE \"$GRAPHVIZ_VERSION_DATE\"" > builddate.h
 
 AC_PREFIX_DEFAULT([/usr/local])
-if test "x${prefix}" = "xNONE"; then
+if test "${prefix}" = "NONE"; then
 	prefix=${ac_default_prefix}
 	AC_SUBST([prefix])
 fi
@@ -195,18 +195,18 @@ dnl -----------------------------------
 
 AC_ARG_ENABLE(static,
         [AS_HELP_STRING([--enable-static],[build static executable])])
-if test "x$enable_static" = "xyes"; then
+if test "$enable_static" = "yes"; then
 	AC_ENABLE_STATIC
         use_static="Yes"
 else
 	AC_DISABLE_STATIC
         use_static="No (disabled by default)"
 fi
-AM_CONDITIONAL(ENABLE_STATIC, [test "x$enable_static" = "xyes"])
+AM_CONDITIONAL(ENABLE_STATIC, [test "$enable_static" = "yes"])
 
 AC_ARG_ENABLE(shared,
         [AS_HELP_STRING([--enable-shared],[build shared executable])])
-if test "x$enable_shared" != "xno"; then
+if test "$enable_shared" != "no"; then
 	AC_ENABLE_SHARED
         use_shared="Yes"
 	case "${host_os}" in
@@ -219,7 +219,7 @@ else
         use_shared="No (disabled)"
 	AC_DISABLE_SHARED
 fi
-AM_CONDITIONAL(ENABLE_SHARED, [test "x$enable_shared" = "xyes"])
+AM_CONDITIONAL(ENABLE_SHARED, [test "$enable_shared" = "yes"])
 
 dnl -----------------------------------
 dnl checks for various programs
@@ -234,29 +234,29 @@ LT_INIT
 AC_ARG_ENABLE([man-pdfs],
   [AS_HELP_STRING([--enable-man-pdfs], [Generate PDFs of man pages (default: auto)])])
 
-AS_IF([test "x$enable_man_pdfs" != "xno"], [
+AS_IF([test "$enable_man_pdfs" != "no"], [
   AC_CHECK_PROGS([GROFF], [groff])
-  AS_IF([test "x$enable_man_pdfs" = "xyes" && test -z "$GROFF"], [
+  AS_IF([test "$enable_man_pdfs" = "yes" && test -z "$GROFF"], [
     AC_MSG_ERROR([You requested PDF generation from man pages, but 'groff' could not be found])
   ])
 
   AC_CHECK_PROGS([PS2PDF], [ps2pdf pstopdf])
-  AS_IF([test "x$enable_man_pdfs" = "xyes" && test -z "$PS2PDF"], [
+  AS_IF([test "$enable_man_pdfs" = "yes" && test -z "$PS2PDF"], [
     AC_MSG_ERROR([You requested PDF generation from man pages, but neither 'ps2pdf' nor 'pstopdf' could be found])
   ])
 ])
-AM_CONDITIONAL([ENABLE_MAN_PDFS], [test "x$enable_man_pdfs" != "xno" && test -n "$GROFF" && test -n "$PS2PDF"])
+AM_CONDITIONAL([ENABLE_MAN_PDFS], [test "$enable_man_pdfs" != "no" && test -n "$GROFF" && test -n "$PS2PDF"])
 
 # allow disabling of demos installation
 AC_ARG_WITH([demos],
   [AS_HELP_STRING([--with-demos=DIR], [Install demos (default: $(pkgdatadir)/demo)])])
 
 demodir='$(pkgdatadir)/demo'
-AS_IF([test "$with_demos" != "xyes" && test -n "$with_demos"], [
+AS_IF([test "$with_demos" != "yes" && test -n "$with_demos"], [
   dnl user provided --with-demos=/my/demo/dir
   demodir="$with_demos"
 ])
-AM_CONDITIONAL([INSTALL_DEMOS], [test "x$with_demos" != "xno"])
+AM_CONDITIONAL([INSTALL_DEMOS], [test "$with_demos" != "no"])
 AC_SUBST([demodir])
 
 PKG_INSTALLDIR
@@ -266,7 +266,7 @@ AC_ARG_WITH(tclsh,
   [AS_HELP_STRING([--with-tclsh=PROG],[use a specific tclsh])],
   TCLSH=$withval,)
 
-if test "x$TCLSH" = "x"; then
+if test "$TCLSH" = ""; then
   AC_PATH_PROGS(TCLSH,[tclsh8.6 tclsh8.5 tclsh8.4 tclsh8.3 tclsh],[],[/usr/bin])
 fi
 
@@ -276,7 +276,7 @@ dnl checks for compilers
 
 AM_PROG_CC_C_O
 AC_PROG_CC_C99
-if test "x$ac_cv_prog_cc_c99" = "xno"; then
+if test "$ac_cv_prog_cc_c99" = "no"; then
   AC_MSG_ERROR([C compiler does not support C99])
 fi
 AC_PROG_CXX
@@ -359,7 +359,7 @@ AC_ARG_ENABLE([debug],
 	[enable_debug=$enableval],
 	[enable_debug=no])
 AM_CONDITIONAL([DEBUG], [test $enable_debug = "yes"])
-if test "x$enable_debug" = "xyes"; then
+if test "$enable_debug" = "yes"; then
   dnl add -O0 only if GCC is used
   if test "$GCC" = "yes"; then
     CFLAGS="$CFLAGS -g -O0"
@@ -414,11 +414,11 @@ LTDL_INIT
 
 AC_ARG_ENABLE(ltdl,
   [AS_HELP_STRING([--enable-ltdl],[support on-demand plugin loading])])
-if test "x$enable_ltdl" != "xno"; then
+if test "$enable_ltdl" != "no"; then
   AC_DEFINE(ENABLE_LTDL,1,[Define if you want on-demand plugin loading])
   use_ltdl="Yes"
   # The lt_dladvise_init symbol was added with libtool-2.2
-  if test "x$with_included_ltdl" != "xyes"; then
+  if test "$with_included_ltdl" != "yes"; then
     save_CFLAGS="$CFLAGS"
     save_LDFLAGS="$LDFLAGS"
     CFLAGS="$CFLAGS $LTDLINCL"
@@ -428,14 +428,14 @@ if test "x$enable_ltdl" != "xno"; then
     LDFLAGS="$save_LDFLAGS"
     CFLAGS="$save_CFLAGS"
   else
-    if test "x$DARWIN9" = "xyes"; then
+    if test "$DARWIN9" = "yes"; then
       LIBLTDL_LDFLAGS="-Wl,-unexported_symbol,_lt_*"
     fi
   fi
 else
   use_ltdl="No (disabled)"
 fi
-AM_CONDITIONAL(ENABLE_LTDL, [test "x$enable_ltdl" != "xno"])
+AM_CONDITIONAL(ENABLE_LTDL, [test "$enable_ltdl" != "no"])
 AC_SUBST([INCLTDL])
 AC_SUBST([LIBLTDL])
 AC_SUBST([LIBLTDL_LDFLAGS])
@@ -445,17 +445,15 @@ dnl -----------------------------------
 dnl Checks for X header files.
 
 AC_PATH_XTRA
-if test "x$no_x" = "xyes"; then
+if test "$no_x" = "yes"; then
   use_xlib="No (disabled or unavailable)"
   AC_MSG_WARN([X11 not available.])
   X_SUBDIRS=""
 else
   use_xlib="Yes"
-#no x11.pc on centos4
-#  PKG_CHECK_MODULES(X11, [x11])
   PKG_CHECK_MODULES(XRENDER, [xrender],HAVE_XRENDER="yes" ,HAVE_XRENDER="no")
 fi
-AM_CONDITIONAL(WITH_X, [test "x$use_xlib" = "xYes"])
+AM_CONDITIONAL(WITH_X, [test "$use_xlib" = "Yes"])
 
 dnl -----------------------------------
 dnl check for SWIG - needed for script-language bindings
@@ -464,11 +462,11 @@ AC_ARG_ENABLE(swig,
   [AS_HELP_STRING([--enable-swig=yes],[swig-generated language bindings])],
   [],[enable_swig=yes])
 
-if test "x$enable_swig" != "xyes"; then
+if test "$enable_swig" != "yes"; then
   use_swig="No (disabled)"
 else
   AC_CHECK_PROG(SWIG,swig,swig)
-  if test "x$SWIG" = "x"; then
+  if test "$SWIG" = ""; then
     use_swig="No (swig not available)"
   else
     SWIG_VERSION=`$SWIG -version 2>&1 | $EGREP Version | cut -d ' ' -f 3`
@@ -489,7 +487,7 @@ else
     ])
     AC_SUBST([SWIG_PHP_DATA])
     AC_SUBST([SWIG_PHP_DATA_TO_PACKAGE])
-    if test "x$SWIG" = "x"; then
+    if test "$SWIG" = ""; then
       AC_MSG_WARN([The version of swig is too old.])
       use_swig="No (swig too old)"
     else
@@ -497,9 +495,9 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_SWIG, [test "x$SWIG" != "x"])
+AM_CONDITIONAL(WITH_SWIG, [test "$SWIG" != ""])
 AM_CONDITIONAL(WITH_SWIG_PHP_DATA,
-               [test "x$SWIG" != "x" -a "x$SWIG_PHP_DATA" != "x"])
+               [test "$SWIG" != "" -a "$SWIG_PHP_DATA" != ""])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for C#
@@ -508,17 +506,17 @@ AC_ARG_ENABLE(sharp,
   [AS_HELP_STRING([--enable-sharp=yes],[C# language bindings])],
   [],[enable_sharp=yes])
 
-if test "x$enable_sharp" != "xyes"; then
+if test "$enable_sharp" != "yes"; then
   use_sharp="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_sharp="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-csharp *- Generate'` = 0; then
       use_sharp="No (swig does not support -csharp option)"
     else
       AC_CHECK_PROG(MCS,mcs,mcs)
-      if test "x$MCS" = "x"; then
+      if test "$MCS" = ""; then
         use_sharp="No (mcs not available)"
       else
         use_sharp="Yes"
@@ -530,7 +528,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_SHARP, [test "x$use_sharp" = "xYes"])
+AM_CONDITIONAL(WITH_SHARP, [test "$use_sharp" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for D (disabled by default - incomplete)
@@ -539,22 +537,22 @@ AC_ARG_ENABLE(d,
   [AS_HELP_STRING([--enable-d=no],[d language bindings])],
   [], [enable_d=no])
 
-if test "x$enable_d" != "xyes"; then
+if test "$enable_d" != "yes"; then
   use_d="No (disabled by default - incomplete)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_d="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-d* *- Generate'` = 0 ; then
       use_d="No (swig does not support -d option)"
     else
       AC_CHECK_PROG(D,gdc,ldc)
-      if test "x$D" = "x"; then
+      if test "$D" = ""; then
         use_d="No (D compiler not available)"
       else
         D_INCLUDES=
         D_LIBS=
-	if test "x$D" != "x"; then
+	if test "$D" != ""; then
 	  use_d="Yes"
           AC_SUBST([D_INCLUDES])
           AC_SUBST([D_LIBS])
@@ -564,7 +562,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_D, [test "x$use_d" = "xYes"])
+AM_CONDITIONAL(WITH_D, [test "$use_d" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GO
@@ -573,22 +571,22 @@ AC_ARG_ENABLE(go,
   [AS_HELP_STRING([--enable-go=yes],[go language bindings])],
   [], [enable_go=yes])
 
-if test "x$enable_go" != "xyes"; then
+if test "$enable_go" != "yes"; then
   use_go="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_go="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-go* *- Generate'` = 0 ; then
       use_go="No (swig does not support -go option)"
     else
       AC_CHECK_PROG(GO,go,go)
-      if test "x$GO" = "x"; then
+      if test "$GO" = ""; then
         use_go="No (GO compiler not available)"
       else
         GO_INCLUDES=
         GO_LIBS=
-	if test "x$GO" != "x"; then
+	if test "$GO" != ""; then
 	  use_go="Yes"
           AC_SUBST([GO_INCLUDES])
           AC_SUBST([GO_LIBS])
@@ -598,7 +596,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_GO, [test "x$use_go" = "xYes"])
+AM_CONDITIONAL(WITH_GO, [test "$use_go" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GUILE
@@ -607,17 +605,17 @@ AC_ARG_ENABLE(guile,
   [AS_HELP_STRING([--enable-guile=yes],[guile language bindings])],
   [],[enable_guile=yes])
 
-if test "x$enable_guile" != "xyes"; then
+if test "$enable_guile" != "yes"; then
   use_guile="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_guile="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-guile *- Generate'` = 0; then
       use_guile="No (swig does not support -guile option)"
     else
       AC_CHECK_PROGS(GUILE_CONFIG,guile-config3.0 guile-config2.2 guile-config)
-      if test "x$GUILE_CONFIG" = "x"; then
+      if test "$GUILE_CONFIG" = ""; then
         use_guile="No (guile not available)"
       else
         [GUILE_VERSION=`$GUILE_CONFIG --version 2>&1 | sed -n '1 s/^.* \+\([0-9\.]\+\)$/\1/ p'`]
@@ -626,7 +624,7 @@ else
         AC_CHECK_PROGS(GUILE,guile$GUILE_VERSION_MAJOR.$GUILE_VERSION_MINOR guile$GUILE_VERSION_MAJOR guile)
         AX_COMPARE_VERSION([0$GUILE_VERSION_MAJOR.0$GUILE_VERSION_MINOR], [lt],
                            [1.4], [GUILE_CONFIG=])
-        if test "x$GUILE_CONFIG" = "x"; then
+        if test "$GUILE_CONFIG" = ""; then
 	  use_guile="No (guile is too old)"
         else
 	  GUILE_INCLUDES=$($GUILE_CONFIG compile)
@@ -651,7 +649,7 @@ else
           ])
           CFLAGS="$ac_save_CFLAGS"
           CPPFLAGS="$ac_save_CPPFLAGS"
-          if test "x$GUILE" != "x"; then
+          if test "$GUILE" != ""; then
 	    use_guile="Yes"
             AC_SUBST([GUILE_INCLUDES])
             AC_SUBST([GUILE_LIBS])
@@ -661,7 +659,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_GUILE, [test "x$use_guile" = "xYes"])
+AM_CONDITIONAL(WITH_GUILE, [test "$use_guile" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for JAVA
@@ -670,17 +668,17 @@ AC_ARG_ENABLE(java,
   [AS_HELP_STRING([--enable-java=yes],[java language bindings])],
   [], [enable_java=yes])
 
-if test "x$enable_java" != "xyes"; then
+if test "$enable_java" != "yes"; then
   use_java="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_java="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-java *- Generate'` = 0; then
       use_java="No (swig does not support -java option)"
     else
       AC_CHECK_PROG(JAVA,java,java)
-      if test "x$JAVA" = "x"; then
+      if test "$JAVA" = ""; then
         use_java="No (java not available)"
       else
         for try_java_include in \
@@ -715,7 +713,7 @@ else
   	    JAVA=
         ])
         CPPFLAGS="$save_CPPFLAGS"
-        if test "x$JAVA" != "x"; then
+        if test "$JAVA" != ""; then
           use_java="Yes"
 	  AC_SUBST([JAVA_INCLUDES])
           AC_SUBST([JAVA_LIBS])
@@ -724,7 +722,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_JAVA, [test "x$use_java" = "xYes"])
+AM_CONDITIONAL(WITH_JAVA, [test "$use_java" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for JAVASCRIPT (disabled by default - incomplete)
@@ -733,17 +731,17 @@ AC_ARG_ENABLE(javascript,
   [AS_HELP_STRING([--enable-javascript=no],[Javascript language bindings])],
   [], [enable_javascript=no])
 
-if test "x$enable_javascript" != "xyes"; then
+if test "$enable_javascript" != "yes"; then
   use_javascript="No (disabled by default - incomplete)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_javascript="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-javascript* *- Generate'` = 0 ; then
       use_javascript="No (swig does not support -javascript option)"
     else
       AC_CHECK_PROG(JAVASCRIPT,js,js)
-      if test "x$JAVASCRIPT" = "x"; then
+      if test "$JAVASCRIPT" = ""; then
         use_javascript="No (JAVASCRIPT compiler not available)"
       else
         JAVASCRIPT_INCLUDES=
@@ -756,7 +754,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_JAVASCRIPT, [test "x$use_javascript" = "xYes"])
+AM_CONDITIONAL(WITH_JAVASCRIPT, [test "$use_javascript" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for LUA
@@ -765,17 +763,17 @@ AC_ARG_ENABLE(lua,
   [AS_HELP_STRING([--enable-lua=yes],[lua language bindings])],
   [], [enable_lua=yes])
 
-if test "x$enable_lua" != "xyes"; then
+if test "$enable_lua" != "yes"; then
   use_lua="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_lua="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-lua *- Generate'` = 0; then
       use_lua="No (swig does not support -lua option)"
     else
       AC_CHECK_PROG(LUA,lua,lua)
-      if test "x$LUA" = "x"; then
+      if test "$LUA" = ""; then
         use_lua="No (lua not available)"
       else
         ac_save_CPPFLAGS="$CPPFLAGS"
@@ -796,19 +794,19 @@ else
            LDFLAGS="$LDFLAGS -L$lua_lib"
         fi
 
-        if test "x$LUA_INCLUDES" = "x" -a "x$LUA_LIBS" = "x" ; then
-            if test "x$PKG_CONFIG" != "x"; then
+        if test "$LUA_INCLUDES" = "" -a "$LUA_LIBS" = "" ; then
+            if test "$PKG_CONFIG" != ""; then
 	        AC_MSG_CHECKING(for Lua headers and libraries with pkg-config)
 	        echo
 	        for l in "$lua_suffix" "" "53" "5.3" "52" "5.2" "51" "5.1" ; do
 	            pkgconfig_lua_found=`$PKG_CONFIG --exists lua$l 2>/dev/null`
-	            if test "x$?" = "x0" ; then
+	            if test "$?" = "0" ; then
                         LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lua$l`
                         LUA_LIBS="$LUA_LFLAGS "`$PKG_CONFIG --libs lua$l`
 		        LUA_INSTALL_DIR="`$PKG_CONFIG --variable=libdir lua$l`/lua"
 
 		        pkgconfig_lualib_found=`$PKG_CONFIG --exists lualib$l 2>/dev/null`
-		        if test  "x$?" = "x0"; then
+		        if test  "$?" = "0"; then
 		           LUA_INCLUDES="$LUA_CFLAGS "`$PKG_CONFIG --cflags lualib$l`
 		           LUA_LIBS="$LUA_LFLAGS "`$PKG_CONFIG --libs lualib$l`
 		        fi
@@ -818,17 +816,17 @@ else
             fi
         fi
 
-        if test "x$LUA_INCLUDES" = "x" -o "x$LUA_LIBS" = "x" ; then
+        if test "$LUA_INCLUDES" = "" -o "$LUA_LIBS" = "" ; then
             AC_MSG_CHECKING(for Lua headers and libraries)
 	    echo
             AC_CHECK_HEADER(lua.h,ac_found_lua_header="yes",ac_found_lua_header="no")
             AC_CHECK_HEADER(lualib.h,ac_found_liblua_header="yes",ac_found_liblua_header="no")
-            if test "x$ac_found_lua_header" = "xyes" -a "x$ac_found_liblua_header" = "xyes"; then
+            if test "$ac_found_lua_header" = "yes" -a "$ac_found_liblua_header" = "yes"; then
                 LUA_INCLUDES="$CFLAGS"
             fi
             for l in "$lua_suffix" "" "52" "5.2" "51" "5.1" ; do
                 AC_CHECK_LIB(lua$l,lua_call,ac_found_lua_lib="yes",ac_found_lua_lib="no")
-                if test "x$ac_found_lua_lib" = "xyes" ; then
+                if test "$ac_found_lua_lib" = "yes" ; then
 	            LUA_LIBS="$LDFLAGS -llua$l -lm"
 
 		    ac2_save_LDFLAGS="$LDFLAGS"
@@ -839,7 +837,7 @@ else
 		    fi
 
 		    AC_CHECK_LIB(lualib$l,luaL_openlib,ac_found_liblua_lib="yes",ac_found_liblua_lib="no")
-		    if test "x$ac_found_liblua_lib" = "xyes" ; then
+		    if test "$ac_found_liblua_lib" = "yes" ; then
 		       LUA_LIBS="$LUA_LFLAGS -llualib$l"
 
 		       if echo "$host_os" | grep "^linux" 1>/dev/null 2>&1 ; then
@@ -855,7 +853,7 @@ else
 
         AC_MSG_CHECKING(for Lua compiling and linking)
         LUA_TEST=`LT=luatest.c ; echo "#include <lua.h>" > $LT;  echo "#include <lualib.h>" >> $LT; echo "int main() { return 0; }" >> $LT ; $CC -Wall $LT -o $LT.out $LUA_INCLUDES $LUA_LIBS $CFLAGS $LDFLAGS 1>/dev/null 2>&1 ; echo $?; rm -f $LT $LT.out 1>/dev/null 2>&1`
-        if test "x$LUA_TEST" != "x0" ; then
+        if test "$LUA_TEST" != "0" ; then
           AC_MSG_RESULT(no)
           AC_MSG_WARN([
 *** Lua (>=5.1) headers and/or libraries could not be found in your system.
@@ -876,7 +874,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_LUA, [test "x$use_lua" = "xYes"])
+AM_CONDITIONAL(WITH_LUA, [test "$use_lua" = "Yes"])
 
 
 dnl -----------------------------------
@@ -886,22 +884,22 @@ AC_ARG_ENABLE(ocaml,
   [AS_HELP_STRING([--enable-ocaml=yes],[ocaml language bindings])],
   [], [enable_ocaml=yes])
 
-if test "x$enable_ocaml" != "xyes"; then
+if test "$enable_ocaml" != "yes"; then
   use_ocaml="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_ocaml="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-ocaml *- Generate'` = 0; then
       use_ocaml="No (swig does not support -ocaml option)"
     else
       AC_CHECK_PROG(OCAML,ocaml,ocaml)
-      if test "x$OCAML" = "x"; then
+      if test "$OCAML" = ""; then
         use_ocaml="No (ocaml not available)"
       else
         AC_CHECK_PROG(OCAML_OPT,ocamlopt,ocamlopt)
         AC_CHECK_PROG(OCAML_C,ocamlc,ocamlc)
-        if test "x$OCAML_C" != "x"; then
+        if test "$OCAML_C" != ""; then
           OCAML_INCLUDES=-I`$OCAML_C -where`
           OCAML_LIBS=-L`$OCAML_C -where`
         fi
@@ -920,8 +918,8 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_OCAML, [test "x$use_ocaml" = "xYes"])
-AM_CONDITIONAL(WITH_OCAMLOPT, [test "x$OCAML_OPT" != "x" -a "x$OCAML_C" != "x"])
+AM_CONDITIONAL(WITH_OCAML, [test "$use_ocaml" = "Yes"])
+AM_CONDITIONAL(WITH_OCAMLOPT, [test "$OCAML_OPT" != "" -a "$OCAML_C" != ""])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PERL
@@ -930,10 +928,10 @@ AC_ARG_ENABLE(perl,
   [AS_HELP_STRING([--enable-perl=yes],[perl language bindings])],
   [], [enable_perl=yes])
 
-if test "x$enable_perl" != "xyes"; then
+if test "$enable_perl" != "yes"; then
   use_perl="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_perl="No (swig not available)"
   else
     if test `$SWIG -perl5 2>&1 | $EGREP -c '(Unable|No target)'` -eq 1; then
@@ -945,25 +943,20 @@ else
       use_perl="No (swig does not support -perl or -perl5 option)"
     else
       AC_CHECK_PROG(PERL,perl,perl)
-      if test "x$PERL" = "x"; then
+      if test "$PERL" = ""; then
         use_perl="No (perl not available)"
       else
-        if test $PERL -e 'exit !($] <= 5.004)' > /dev/null 2>&1 ; then
-	  use_perl="No (perl is too old)"
-	  PERL=
-	else
-          PERL_INCLUDES="`$PERL $srcdir/config/config_perl.pl PERL_INCLUDES`"
-          PERL_LIBS="`$PERL $srcdir/config/config_perl.pl PERL_LIBS`"
-          PERL_INSTALL_DIR="`$PERL $srcdir/config/config_perl.pl PERL_INSTALL_DIR`"
-	  save_CPPFLAGS=$CPPFLAGS
-	  CPPFLAGS="$CPPFLAGS $PERL_INCLUDES"
-          AC_CHECK_HEADER(EXTERN.h,,[
-            use_perl="No (missing header)"
-  	    PERL=
-          ])
-	  CPPFLAGS=$save_CPPFLAGS
-	fi
-        if test "x$PERL" != "x"; then
+        PERL_INCLUDES="`$PERL $srcdir/config/config_perl.pl PERL_INCLUDES`"
+        PERL_LIBS="`$PERL $srcdir/config/config_perl.pl PERL_LIBS`"
+        PERL_INSTALL_DIR="`$PERL $srcdir/config/config_perl.pl PERL_INSTALL_DIR`"
+        save_CPPFLAGS=$CPPFLAGS
+        CPPFLAGS="$CPPFLAGS $PERL_INCLUDES"
+        AC_CHECK_HEADER(EXTERN.h,,[
+          use_perl="No (missing header)"
+          PERL=
+        ])
+        CPPFLAGS=$save_CPPFLAGS
+        if test "$PERL" != ""; then
           use_perl="Yes"
 	  AC_SUBST([PERL_INCLUDES])
           AC_SUBST([PERL_LIBS])
@@ -974,7 +967,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_PERL, [test "x$use_perl" = "xYes"])
+AM_CONDITIONAL(WITH_PERL, [test "$use_perl" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PHP
@@ -983,10 +976,10 @@ AC_ARG_ENABLE(php,
   [AS_HELP_STRING([--enable-php=yes],[php language bindings])],
   [], [enable_php=yes])
 
-if test "x$enable_php" != "xyes"; then
+if test "$enable_php" != "yes"; then
   use_php="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_php="No (swig not available)"
   else
     if test `$SWIG -php7 2>&1 | $EGREP -c '(Unable|No target)'` -eq 1; then
@@ -998,11 +991,11 @@ else
       use_php="No (swig does not support -php or -php7 option)"
     else
       AC_CHECK_PROGS(PHP,php7.2,php7,php)
-      if test "x$PHP" = "x"; then
+      if test "$PHP" = ""; then
         use_php="No (php not available)"
       else
         AC_CHECK_PROGS(PHPCONFIG,${PHP}-config,php-config)
-        if test "x$PHPCONFIG" = "x"; then
+        if test "$PHPCONFIG" = ""; then
           use_php="No (php-config not available)"
         else
           PHP_INCLUDES="`$PHPCONFIG --includes`"
@@ -1018,7 +1011,7 @@ else
           CPPFLAGS=$save_CPPFLAGS
         fi
       fi
-      if test "x$PHP" != "x"; then
+      if test "$PHP" != ""; then
 	    use_php="Yes"
         AC_SUBST([PHP_INCLUDES])
         AC_SUBST([PHP_INSTALL_DIR])
@@ -1029,7 +1022,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_PHP, [test "x$use_php" = "xYes"])
+AM_CONDITIONAL(WITH_PHP, [test "$use_php" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PYTHON
@@ -1043,33 +1036,33 @@ AC_ARG_ENABLE(python3,
   [AS_HELP_STRING([--enable-python3=yes],[python3 language bindings])],
   [], [enable_python3=yes])
 
-if test "x$enable_python3" != "xyes"; then
+if test "$enable_python3" != "yes"; then
   use_python3="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_python3="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-python *- Generate'` = 0; then
       use_python="No (swig does not support -python option)"
     else
       AC_CHECK_PROG(PYTHON3,python3,python3)
-      if test "x$PYTHON3" = "x"; then
+      if test "$PYTHON3" = ""; then
         use_python3="No (python3 not available)"
       else
         PYTHON3_VERSION=`$PYTHON3 -c "import sys; print('%d.%d' % sys.version_info[[0:2]])"`
-        if test "x$PYTHON3_VERSION" = "x"; then
+        if test "$PYTHON3_VERSION" = ""; then
           PYTHON3=
         fi
       fi
-      if test "x$PYTHON3" = "x"; then
+      if test "$PYTHON3" = ""; then
 	use_python3="No (python3 is too old)"
 	PYTHON3=
       else
-        if test "x$PKG_CONFIG" != "x"; then
+        if test "$PKG_CONFIG" != ""; then
           AC_MSG_CHECKING(for Python3 headers and libraries with pkg-config)
           echo
           pkgconfig_python3_found=`$PKG_CONFIG --exists python-$PYTHON3_VERSION 2>/dev/null`
-          if test "x$?" = "x0" ; then
+          if test "$?" = "0" ; then
                PYTHON3_INCLUDES="$PYTHON3_CFLAGS "`$PKG_CONFIG --cflags python-$PYTHON3_VERSION`
                PYTHON3_LIBS="$PYTHON3_LFLAGS "`$PKG_CONFIG --libs python-$PYTHON3_VERSION`
           else
@@ -1084,7 +1077,7 @@ else
           PYTHON3=
         ])
         CPPFLAGS=$save_CPPFLAGS
-	if test "x$PYTHON3" != "x"; then
+	if test "$PYTHON3" != ""; then
 	  use_python3="Yes"
           AC_SUBST([PYTHON3_INSTALL_DIR])
           AC_SUBST([PYTHON3_INCLUDES])
@@ -1094,7 +1087,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_PYTHON3, [test "x$use_python3" = "xYes"])
+AM_CONDITIONAL(WITH_PYTHON3, [test "$use_python3" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for R
@@ -1103,10 +1096,10 @@ AC_ARG_ENABLE(r,
   [AS_HELP_STRING([--enable-r=yes],[R language bindings])],
   [], [enable_r=yes])
 
-if test "x$enable_r" != "xyes"; then
+if test "$enable_r" != "yes"; then
   use_r="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_r="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-r *- Generate'` = 0; then
@@ -1122,7 +1115,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_R, [test "x$use_r" = "xYes"])
+AM_CONDITIONAL(WITH_R, [test "$use_r" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for RUBY
@@ -1131,10 +1124,10 @@ AC_ARG_ENABLE(ruby,
   [AS_HELP_STRING([--enable-ruby=yes],[ruby language bindings])],
   [], [enable_ruby=yes])
 
-if test "x$enable_ruby" != "xyes"; then
+if test "$enable_ruby" != "yes"; then
   use_ruby="No (disabled)"
 else
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_ruby="No (swig not available)"
   else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-ruby *- Generate'` = 0; then
@@ -1142,7 +1135,7 @@ else
     else
       PKG_CHECK_MODULES([RUBY], [ruby],[
 	AC_CHECK_PROG(RUBY,ruby,ruby)
-        if test "x$RUBY" = "x"; then
+        if test "$RUBY" = ""; then
           use_ruby="No (ruby not available)"
         else
           RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
@@ -1150,14 +1143,14 @@ else
       ],[
         PKG_CHECK_MODULES([RUBY], [ruby-${RUBY_VER}],[
 	  AC_CHECK_PROG(RUBY,ruby,ruby)
-          if test "x$RUBY" = "x"; then
+          if test "$RUBY" = ""; then
             use_ruby="No (ruby not available)"
           else
             RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
 	  fi
         ],[
           AC_CHECK_PROG(RUBY,ruby,ruby)
-          if test "x$RUBY" = "x"; then
+          if test "$RUBY" = ""; then
 	    use_ruby="No (ruby not available)"
           else
             RUBY_CFLAGS="-I`$RUBY $srcdir/config/config_ruby.rb rubyarchhdrdir`"
@@ -1166,7 +1159,7 @@ else
             RUBY_CFLAGS="$RUBY_CFLAGS -I`$RUBY $srcdir/config/config_ruby.rb rubyhdrdir`"
             RUBY_LIBS="-L`$RUBY $srcdir/config/config_ruby.rb libdir` `$RUBY -rrbconfig -e \"puts RbConfig::CONFIG[['LIBRUBYARG_SHARED']]\"`"
             RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb vendorarchdir`"
-	    if test "x$RUBY_INSTALL_DIR" = "x"; then
+	    if test "$RUBY_INSTALL_DIR" = ""; then
 	  	  RUBY_INSTALL_DIR="`$RUBY $srcdir/config/config_ruby.rb sitearchdir`"
 	    fi
             save_CPPFLAGS=$CPPFLAGS
@@ -1179,7 +1172,7 @@ else
           fi
         ])
       ])
-      if test "x$RUBY" != "x"; then
+      if test "$RUBY" != ""; then
 	use_ruby="Yes"
         AC_SUBST([RUBY_CFLAGS])
         AC_SUBST([RUBY_LIBS])
@@ -1188,7 +1181,7 @@ else
     fi
   fi
 fi
-AM_CONDITIONAL(WITH_RUBY, [test "x$use_ruby" = "xYes"])
+AM_CONDITIONAL(WITH_RUBY, [test "$use_ruby" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for TCL
@@ -1197,11 +1190,11 @@ AC_ARG_ENABLE(tcl,
   [AS_HELP_STRING([--enable-tcl=yes],[tcl language bindings])],
   [], [enable_tcl=yes])
 
-if test "x$enable_tcl" != "xyes"; then
+if test "$enable_tcl" != "yes"; then
   use_tcl="No (disabled)"
 fi
 
-if test "x$use_tcl" = "x"; then
+if test "$use_tcl" = ""; then
   TCL_VERSION_FOUND=`echo 'puts [[info tclversion]]' | $TCLSH`
 
   # can't assume ksh on all architectures
@@ -1215,11 +1208,11 @@ if test "x$use_tcl" = "x"; then
       TCL_INCLUDES="${TCL_INCLUDES} -I${TCLSH_EXEC_PREFIX}/include/tcl${TCL_VERSION_FOUND}/generic"
     fi
   else
-    if test "x${TCLSH_EXEC_PREFIX}" != "x/usr" -a -f ${TCLSH_EXEC_PREFIX}/include/tcl.h; then
+    if test "${TCLSH_EXEC_PREFIX}" != "/usr" -a -f ${TCLSH_EXEC_PREFIX}/include/tcl.h; then
       TCL_INCLUDES=-I${TCLSH_EXEC_PREFIX}/include
     fi
   fi
-  if test "x$TCL_INCLUDES" != "x" ; then
+  if test "$TCL_INCLUDES" != "" ; then
     AC_MSG_RESULT([using tcl headers from $TCL_INCLUDES])
   fi
   AC_SUBST([TCL_INCLUDES])
@@ -1233,7 +1226,7 @@ if test "x$use_tcl" = "x"; then
 fi
 AC_SUBST([TCLSH_EXEC_PREFIX])
 
-if test "x$use_tcl" = "x"; then
+if test "$use_tcl" = ""; then
   # Some systems don't have Tcl.  Don't build
   # the Tcl products if we don't have the library.
   if test -f ${TCLSH_EXEC_PREFIX}/lib${LIBPOSTFIX}/tcl${TCL_VERSION_FOUND}/tclConfig.sh; then
@@ -1247,7 +1240,7 @@ if test "x$use_tcl" = "x"; then
       fi
     fi
   fi
-  if test "x$TCLCONFIG" != "x"; then
+  if test "$TCLCONFIG" != ""; then
     AC_MSG_RESULT([using $TCLCONFIG])
     file=${TCLCONFIG}
       . $file
@@ -1258,9 +1251,9 @@ if test "x$use_tcl" = "x"; then
   TCL_INSTALL_DIR=${TCLSH_EXEC_PREFIX}/lib${LIBPOSTFIX}/tcl${TCL_VERSION_FOUND}
 fi
 
-if test "x$use_tcl" = "x"; then
+if test "$use_tcl" = ""; then
   # TCL STUBS support is required
-  if test "x${TCL_SUPPORTS_STUBS}" = "x1"; then
+  if test "${TCL_SUPPORTS_STUBS}" = "1"; then
     use_tcl="Yes"
     TCL_CFLAGS="${TCL_CFLAGS} -DUSE_TCL_STUBS"
     AC_DEFINE_UNQUOTED(HAVE_TCL,1,
@@ -1274,7 +1267,7 @@ fi
 AC_SUBST([TCLCONFIG])
 AC_SUBST([TCL_INSTALL_DIR])
 
-AM_CONDITIONAL(WITH_TCL, [test "x$use_tcl" = "xYes"])
+AM_CONDITIONAL(WITH_TCL, [test "$use_tcl" = "Yes"])
 
 AC_SUBST([TCL_VERSION])
 AC_SUBST([TCL_MAJOR_VERSION])
@@ -1309,7 +1302,7 @@ AC_ARG_WITH(expat,
   [AS_HELP_STRING([--with-expat=yes],[use expat])],
   [],[with_expat=yes])
 
-if test "x$with_expat" != "xyes"; then
+if test "$with_expat" != "yes"; then
   use_expat="No (disabled)"
 else
   use_expat="Yes"
@@ -1325,7 +1318,7 @@ AC_ARG_WITH(devil,
   [AS_HELP_STRING([--with-devil=yes],[DevIL plugin])],
   [],[with_devil=yes])
 
-if test "x$with_devil" != "xyes"; then
+if test "$with_devil" != "yes"; then
   use_devil="No (disabled)"
 else
 
@@ -1353,7 +1346,7 @@ else
   LDFLAGS=$save_LDFLAGS
   CPPFLAGS=$save_CPPFLAGS
 fi
-if test "x$use_devil" = "x"; then
+if test "$use_devil" = ""; then
   use_devil="Yes"
   AC_DEFINE_UNQUOTED(HAVE_DEVIL,1,
     [Define if you have the DevIL library])
@@ -1361,7 +1354,7 @@ if test "x$use_devil" = "x"; then
   AC_SUBST([DEVIL_LIBS])
 fi
 
-AM_CONDITIONAL(WITH_DEVIL, [test "x$use_devil" = "xYes"])
+AM_CONDITIONAL(WITH_DEVIL, [test "$use_devil" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for Z
@@ -1396,7 +1389,7 @@ AC_ARG_WITH(webp,
   [AS_HELP_STRING([--with-webp=yes],[webp library])],
   [], [with_webp=yes])
 
-if test "x$with_webp" != "xyes"; then
+if test "$with_webp" != "yes"; then
   use_webp="No (disabled)"
 else
   PKG_CHECK_MODULES(WEBP, [libwebp],[
@@ -1409,7 +1402,7 @@ else
     use_webp="No (webp library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_WEBP, [test "x$use_webp" = "xYes"])
+AM_CONDITIONAL(WITH_WEBP, [test "$use_webp" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for POPPLER
@@ -1418,7 +1411,7 @@ AC_ARG_WITH(poppler,
   [AS_HELP_STRING([--with-poppler=yes],[poppler library])],
   [], [with_poppler=yes])
 
-if test "x$with_poppler" != "xyes"; then
+if test "$with_poppler" != "yes"; then
   use_poppler="No (disabled)"
 else
   PKG_CHECK_MODULES(POPPLER, [poppler-glib],[
@@ -1431,7 +1424,7 @@ else
     use_poppler="No (poppler library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_POPPLER, [test "x$use_poppler" = "xYes"])
+AM_CONDITIONAL(WITH_POPPLER, [test "$use_poppler" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for RSVG
@@ -1440,7 +1433,7 @@ AC_ARG_WITH(rsvg,
   [AS_HELP_STRING([--with-rsvg=yes],[rsvg library])],
   [], [with_rsvg=yes])
 
-if test "x$with_rsvg" != "xyes"; then
+if test "$with_rsvg" != "yes"; then
   use_rsvg="No (disabled)"
 else
   PKG_CHECK_MODULES(RSVG, [librsvg-2.0],[
@@ -1453,7 +1446,7 @@ else
     use_rsvg="No (rsvg library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_RSVG, [test "x$use_rsvg" = "xYes"])
+AM_CONDITIONAL(WITH_RSVG, [test "$use_rsvg" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GHOSTSCRIPT
@@ -1462,16 +1455,16 @@ AC_ARG_WITH(ghostscript,
   [AS_HELP_STRING([--with-ghostscript=yes],[ghostscript library])],
   [], [with_ghostscript=yes])
 
-if test "x$with_ghostscript" != "xyes"; then
+if test "$with_ghostscript" != "yes"; then
   use_ghostscript="No (disabled)"
 else
-  if test "x$HAVE_XRENDER" != "xyes" -a "x$MINGW32" != "xyes"; then
+  if test "$HAVE_XRENDER" != "yes" -a "$MINGW32" != "yes"; then
     use_ghostscript="No (missing Xrender)"
   else
       AC_CHECK_HEADER(ghostscript/iapi.h, GS_CFLAGS="",use_ghostscript="No (missing headers)")
-      if test "x$use_ghostscript" = "x"; then
+      if test "$use_ghostscript" = ""; then
         AC_CHECK_LIB(gs, main, GS_LIBS="-lgs", use_ghostscript="No (missing lib)")
-        if test "x$use_ghostscript" = "x"; then
+        if test "$use_ghostscript" = ""; then
           use_ghostscript="Yes"
           AC_DEFINE_UNQUOTED(HAVE_GS,1,
             [Define if you have the gs library])
@@ -1481,7 +1474,7 @@ else
      fi
   fi
 fi
-AM_CONDITIONAL(WITH_GS, [test "x$use_ghostscript" = "xYes"])
+AM_CONDITIONAL(WITH_GS, [test "$use_ghostscript" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PANGOCAIRO
@@ -1490,7 +1483,7 @@ AC_ARG_WITH(pangocairo,
   [AS_HELP_STRING([--with-pangocairo=yes],[pangocairo library])],
   [], [with_pangocairo=yes])
 
-if test "x$with_pangocairo" != "xyes"; then
+if test "$with_pangocairo" != "yes"; then
   use_pangocairo="No (disabled)"
 else
   PKG_CHECK_MODULES(PANGOCAIRO, [pangocairo >= 1.22.0],[
@@ -1503,10 +1496,10 @@ else
     use_pangocairo="No (pangocairo library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_PANGOCAIRO, [test "x$use_pangocairo" = "xYes"])
+AM_CONDITIONAL(WITH_PANGOCAIRO, [test "$use_pangocairo" = "Yes"])
 
 # see if pango uses a fontconfig/freetype2 backend
-if test "x$use_pangocairo" = "xYes"; then
+if test "$use_pangocairo" = "Yes"; then
     save_LIBS=$LIBS
     PKG_CHECK_MODULES(PANGOFT2, [pangoft2])
     LIBS="$LIBS $PANGOCAIRO_LIBS $PANGOFT2_LIBS"
@@ -1521,10 +1514,10 @@ AC_ARG_WITH(lasi,
   [AS_HELP_STRING([--with-lasi=yes],[lasi library])],
   [], [with_lasi=yes])
 
-if test "x$with_lasi" != "xyes"; then
+if test "$with_lasi" != "yes"; then
   use_lasi="No (disabled)"
 else
-  if test "x$use_pangocairo" != "xYes"; then
+  if test "$use_pangocairo" != "Yes"; then
     use_lasi="No (missing pangocairo support)"
   else
     PKG_CHECK_MODULES(LASI, [lasi],[
@@ -1538,7 +1531,7 @@ else
     ])
   fi
 fi
-AM_CONDITIONAL(WITH_LASI, [test "x$use_lasi" = "xYes"])
+AM_CONDITIONAL(WITH_LASI, [test "$use_lasi" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for FREETYPE2
@@ -1547,7 +1540,7 @@ AC_ARG_WITH(freetype2,
   [AS_HELP_STRING([--with-freetype2=yes],[freetype2 library])],
   [], [with_freetype2=yes])
 
-if test "x$with_freetype2" != "xyes"; then
+if test "$with_freetype2" != "yes"; then
   use_freetype="No (disabled)"
 else
   PKG_CHECK_MODULES(FREETYPE2, [freetype2],[
@@ -1555,32 +1548,8 @@ else
     AC_SUBST([FREETYPE2_CFLAGS])
     AC_SUBST([FREETYPE2_LIBS])
   ],[
-    AC_MSG_WARN(pkg-config did not find a freetype2.pc.  Looking for freetype-config.)
+    use_freetype="No (missing freetype-config)"
   ])
-fi
-
-# pkgconfig for freetype2 did not exist in redhat[78]
-if test "x$use_freetype" = "x"; then
-    if test "x$FREETYPE_DIR" = "xyes"; then
-	AC_PATH_PROG(FREETYPE_CONFIG,freetype-config)
-    else
-	AC_PATH_PROG(FREETYPE_CONFIG,freetype-config,,[$FREETYPE_DIR/bin:$PATH])
-    fi
-
-    if test -n "$FREETYPE_CONFIG"; then
-        if test "x$FREETYPE_DIR" != "xyes"; then
-	    FREETYPE2_CFLAGS="`$FREETYPE_CONFIG --cflags` -I$FREETYPE_DIR/include"
-	else
-	    FREETYPE2_CFLAGS=`$FREETYPE_CONFIG --cflags`
-	fi
-	FREETYPE2_LIBS=`$FREETYPE_CONFIG --libs`
-	use_freetype="Yes"
-	AC_SUBST([FREETYPE2_CFLAGS])
-	AC_SUBST([FREETYPE2_LIBS])
-    else
-        AC_MSG_WARN(freetype library not available)
-	use_freetype="No (missing freetype-config)"
-    fi
 fi
 
 dnl -----------------------------------
@@ -1590,7 +1559,7 @@ AC_ARG_WITH(gdk,
   [AS_HELP_STRING([--with-gdk=yes],[gdklibrary])],
   [], [with_gdk=yes])
 
-if test "x$with_gdk" != "xyes"; then
+if test "$with_gdk" != "yes"; then
   use_gdk="No (disabled)"
 else
   PKG_CHECK_MODULES(GDK, [gdk-2.0],[
@@ -1601,7 +1570,7 @@ else
     use_gdk="No (gdk library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GDK, [test "x$use_gdk" = "xYes"])
+AM_CONDITIONAL(WITH_GDK, [test "$use_gdk" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GDK_PIXBUF.
@@ -1610,7 +1579,7 @@ AC_ARG_WITH(gdk-pixbuf,
   [AS_HELP_STRING([--with-gdk-pixbuf=yes],[gdk-pixbuf library])],
   [], [with_gdk_pixbuf=yes])
 
-if test "x$with_gdk_pixbuf" != "xyes"; then
+if test "$with_gdk_pixbuf" != "yes"; then
   use_gdk_pixbuf="No (disabled)"
 else
   PKG_CHECK_MODULES(GDK_PIXBUF, [gdk-pixbuf-2.0],[
@@ -1621,7 +1590,7 @@ else
     use_gdk_pixbuf="No (gdk_pixbuf library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GDK_PIXBUF, [test "x$use_gdk_pixbuf" = "xYes"])
+AM_CONDITIONAL(WITH_GDK_PIXBUF, [test "$use_gdk_pixbuf" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GTK.
@@ -1630,7 +1599,7 @@ AC_ARG_WITH(gtk,
   [AS_HELP_STRING([--with-gtk=yes],[gtk+ library])],
   [], [with_gtk=yes])
 
-if test "x$with_gtk" != "xyes"; then
+if test "$with_gtk" != "yes"; then
   use_gtk="No (disabled)"
 else
   PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.7.0],[
@@ -1643,7 +1612,7 @@ else
     use_gtk="No (gtk library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GTK, [test "x$use_gtk" = "xYes"])
+AM_CONDITIONAL(WITH_GTK, [test "$use_gtk" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GTKGL.
@@ -1652,7 +1621,7 @@ AC_ARG_WITH(gtkgl,
   [AS_HELP_STRING([--with-gtkgl=yes],[gtkgl library])],
   [], [with_gtkgl=yes])
 
-if test "x$with_gtkgl" != "xyes"; then
+if test "$with_gtkgl" != "yes"; then
   use_gtkgl="No (disabled)"
 else
   PKG_CHECK_MODULES(GTKGL, [gtkgl-2.0],[
@@ -1665,7 +1634,7 @@ else
     use_gtkgl="No (gtkgl library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GTKGL, [test "x$use_gtkgl" = "xYes"])
+AM_CONDITIONAL(WITH_GTKGL, [test "$use_gtkgl" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GTKGLEXT.
@@ -1674,7 +1643,7 @@ AC_ARG_WITH(gtkglext,
   [AS_HELP_STRING([--with-gtkglext=yes],[gtkglext library])],
   [], [with_gtkglext=yes])
 
-if test "x$with_gtkglext" != "xyes"; then
+if test "$with_gtkglext" != "yes"; then
   use_gtkglext="No (disabled)"
 else
   PKG_CHECK_MODULES(GTKGLEXT, [gtkglext-1.0],[
@@ -1685,7 +1654,7 @@ else
     use_gtkglext="No (gtkglext library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GTKGLEXT, [test "x$use_gtkglext" = "xYes"])
+AM_CONDITIONAL(WITH_GTKGLEXT, [test "$use_gtkglext" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GTS.
@@ -1694,7 +1663,7 @@ AC_ARG_WITH(gts,
   [AS_HELP_STRING([--with-gts=yes],[gts library])],
   [], [with_gts=yes])
 
-if test "x$with_gts" != "xyes"; then
+if test "$with_gts" != "yes"; then
   use_gts="No (disabled)"
 else
   PKG_CHECK_MODULES(GTS, [gts],[
@@ -1707,7 +1676,7 @@ else
     use_gts="No (gts library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GTS, [test "x$use_gts" = "xYes"])
+AM_CONDITIONAL(WITH_GTS, [test "$use_gts" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for ANN.
@@ -1716,7 +1685,7 @@ AC_ARG_WITH(ann,
   [AS_HELP_STRING([--with-ann=yes],[ANN library])],
   [], [with_ann=yes])
 
-if test "x$with_ann" != "xyes"; then
+if test "$with_ann" != "yes"; then
   use_ann="No (disabled)"
 else
   PKG_CHECK_MODULES(ANN, [ann],[
@@ -1747,7 +1716,7 @@ else
     ])
   ])
 fi
-AM_CONDITIONAL(WITH_ANN, [test x"${use_ann%% *}" = "xYes"])
+AM_CONDITIONAL(WITH_ANN, [test "${use_ann%% *}" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GLADE.
@@ -1756,7 +1725,7 @@ AC_ARG_WITH(glade,
   [AS_HELP_STRING([--with-glade=yes],[glade library])],
   [], [with_glade=yes])
 
-if test "x$with_glade" != "xyes"; then
+if test "$with_glade" != "yes"; then
   use_glade="No (disabled)"
 else
   PKG_CHECK_MODULES(GLADE, [libglade-2.0],[
@@ -1769,7 +1738,7 @@ else
     use_glade="No (glade library not available)"
   ])
 fi
-AM_CONDITIONAL(WITH_GLADE, [test "x$use_glade" = "xYes"])
+AM_CONDITIONAL(WITH_GLADE, [test "$use_glade" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for QT
@@ -1777,7 +1746,7 @@ dnl INCLUDES and LIBS for QT
 AC_ARG_WITH([qt],
   [AS_HELP_STRING([--with-qt=yes], [Qt features])])
 
-AS_IF([test "x$with_qt" != "xno"], [
+AS_IF([test "$with_qt" != "no"], [
   # required for linking with QT
   CXXFLAGS="${CXXFLAGS} -fPIE -fPIC"
   AC_CHECK_PROGS([QMAKE], [qmake6 qmake-qt5 qmake5 qmake], [false])
@@ -1830,13 +1799,13 @@ AS_IF([test "x$with_qt" != "xno"], [
     ])
   ])
 
-  AS_IF([test "x$with_qt" = "xyes" && test "x$use_qt" != "xYes"], [
+  AS_IF([test "$with_qt" = "yes" && test "$use_qt" != "Yes"], [
     AC_MSG_ERROR([You requested Qt, but dependencies could not be found: ${use_qt}])
   ])
 ], [
   use_qt="No (disabled)"
 ])
-AM_CONDITIONAL([WITH_QT], [test "x$use_qt" = "xYes"])
+AM_CONDITIONAL([WITH_QT], [test "$use_qt" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for QUARTZ
@@ -1845,7 +1814,7 @@ AC_ARG_WITH(quartz,
   [AS_HELP_STRING([--with-quartz=no],[Quartz framework (Mac OS X)])],
   [], [with_quartz=no])
 
-if test "x$with_quartz" != "xyes"; then
+if test "$with_quartz" != "yes"; then
   use_quartz="No (disabled by default - Mac only)"
 else
   if test -d "/System/Library/Frameworks/ApplicationServices.framework"; then
@@ -1859,7 +1828,7 @@ else
     use_quartz="No (missing ApplicationServices.framework)"
   fi
 fi
-AM_CONDITIONAL(WITH_QUARTZ, [test "x$use_quartz" = "xYes"])
+AM_CONDITIONAL(WITH_QUARTZ, [test "$use_quartz" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PLATFORMSDK
@@ -1882,7 +1851,7 @@ AC_ARG_WITH(gdiplus,
   [AS_HELP_STRING([--with-gdiplus=no],[GDI+ framework (Windows)])],
   [], [with_gdiplus=no])
 
-if test "x$with_gdiplus" != "xyes"; then
+if test "$with_gdiplus" != "yes"; then
   use_gdiplus="No (disabled by default - Windows only)"
 else
   if test -f "$PLATFORMSDKINCLUDE\GdiPlus.h" -a -f "$PLATFORMSDKLIB\GdiPlus.lib"; then
@@ -1899,7 +1868,7 @@ else
     AC_MSG_WARN(--with-gdiplus requires valid --with-platformsdkincludedir and --with-platformsdklibdir.)
   fi
 fi
-AM_CONDITIONAL(WITH_GDIPLUS, [test "x$use_gdiplus" = "xYes"])
+AM_CONDITIONAL(WITH_GDIPLUS, [test "$use_gdiplus" = "Yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GD
@@ -1908,11 +1877,11 @@ AC_ARG_WITH(libgd,
   [AS_HELP_STRING([--with-libgd=yes],[use gd library])],
   [], [with_libgd=yes])
 
-if test "x$with_libgd" != "xyes"; then
+if test "$with_libgd" != "yes"; then
   use_gd="No (disabled)"
 fi
 
-if test "x$use_gd" = "x"; then
+if test "$use_gd" = ""; then
    PKG_CHECK_MODULES([GDLIB], [gdlib >= 2.0.33],[
       have_gdlib=1
 # FIXME - why no features in the gdlib.pc?
@@ -1931,14 +1900,14 @@ if test "x$use_gd" = "x"; then
          AX_COMPARE_VERSION([$GDLIB_VERSION], [lt], [2.0.33], [
            use_gd="No (version too old)"
          ])
-        if test "x$use_gd" != "x"; then
+        if test "$use_gd" != ""; then
             AC_MSG_WARN(GD library version $GDLIB_VERSION < 2.0.33)
         fi
      else
         AC_MSG_WARN(GD neither gdlib pkgconfig nor gdlib-config was found)
      fi
   ])
-  if test "x$have_gdlib" != "x"; then
+  if test "$have_gdlib" != ""; then
       AC_DEFINE_UNQUOTED(HAVE_GDLIB,1,[Define if you have the gdlib library])
       for f in $GD_FEATURES ; do
 	    if test "$f" = "GD_PNG"; then
@@ -1963,27 +1932,27 @@ if test "x$use_gd" = "x"; then
 	    fi
       done
 
-	if test "x$have_gd_fontconfig" = "x"; then
+	if test "$have_gd_fontconfig" = ""; then
         AC_MSG_WARN(Your libgd was not built with fontconfig support. This may result in problems displaying fonts.)
 	fi
-	if test "x$have_gd_freetype" = "x"; then
+	if test "$have_gd_freetype" = ""; then
 	    AC_MSG_WARN(Your libgd was not built with freetype support. This may result in problems resolving fonts.)
     fi
   fi
 
   # prevent explicit use of -I/usr/include as it breaks mingw cross-compiles
-  if test "x$GDLIB_CFLAGS" = "x-I/usr/include"; then
+  if test "$GDLIB_CFLAGS" = "-I/usr/include"; then
      GDLIB_CFLAGS="";
   fi
   # prevent explicit use of -L/usr/lib or -L/usr/lib64, unnecessary clutter
-  if test "x$GD_LDFLAGS" = "x-L/usr/lib"; then
+  if test "$GD_LDFLAGS" = "-L/usr/lib"; then
      GD_LDFLAGS="";
   fi
-  if test "x$GD_LDFLAGS" = "x-L/usr/lib64"; then
+  if test "$GD_LDFLAGS" = "-L/usr/lib64"; then
      GD_LDFLAGS="";
   fi
 
-  if test "x$use_gd" = "x"; then
+  if test "$use_gd" = ""; then
     # see if we can use the external gd lib
     save_CPPFLAGS=$CPPFLAGS
     save_LDFLAGS=$LDFLAGS
@@ -2000,7 +1969,7 @@ if test "x$use_gd" = "x"; then
       AC_MSG_WARN(Optional GD library not available - no gd.h)
       use_gd="No (gd headers not found)"
     ])
-    if test "x$use_gd" = "x"; then
+    if test "$use_gd" = ""; then
       AC_CHECK_LIB(gd,main,[
           AC_DEFINE_UNQUOTED(HAVE_LIBGD,1,[Define if you have the GD library])
           use_gd="Yes"
@@ -2015,10 +1984,10 @@ if test "x$use_gd" = "x"; then
   AC_SUBST([GDLIB_CFLAGS])
   AC_SUBST([GDLIB_LIBS])
 fi
-if test "x$use_gd" != "xYes"; then
+if test "$use_gd" != "Yes"; then
   with_libgd="no"
 fi
-AM_CONDITIONAL(WITH_LIBGD, [test "x$with_libgd" = "xyes"])
+AM_CONDITIONAL(WITH_LIBGD, [test "$with_libgd" = "yes"])
 
 dnl -----------------------------------
 dnl INCLUDES and LIBS for GLUT
@@ -2027,7 +1996,7 @@ AC_ARG_WITH(glut,
   [AS_HELP_STRING([--with-glut=yes],[GLUT library])],
   [], [with_glut=yes])
 
-if test "x$with_glut" != "xyes"; then
+if test "$with_glut" != "yes"; then
   use_glut="No (disabled)"
 else
   save_CPPFLAGS=$CPPFLAGS
@@ -2093,10 +2062,10 @@ TCL_PKGINDEX_SWIG=""
 #TK_PKGINDEX=""
 if test "$use_tcl" = "Yes"; then
     TCL_PKGINDEX="tcldot/pkgIndex.tcl tclpathplan/pkgIndex.tcl"
-    if test "x$with_libgd" = "xyes"; then
+    if test "$with_libgd" = "yes"; then
 	TCL_PKGINDEX_GD="gdtclft/pkgIndex.tcl"
     fi
-    if test "x$SWIG" != "x"; then
+    if test "$SWIG" != ""; then
 	TCL_PKGINDEX_SWIG="gv/pkgIndex.tcl"
     fi
 fi
@@ -2111,13 +2080,13 @@ AC_ARG_WITH(sfdp,
   [AS_HELP_STRING([--with-sfdp=yes],[sfdp layout engine])],
   [], [with_sfdp=yes])
 
-if test "x$with_sfdp" != "xyes"; then
+if test "$with_sfdp" != "yes"; then
   use_sfdp="No (disabled)"
 else
   use_sfdp="Yes"
   AC_DEFINE_UNQUOTED(SFDP,1,[Define if you want SFDP])
 fi
-AM_CONDITIONAL(WITH_SFDP, [test "x$use_sfdp" = "xYes"])
+AM_CONDITIONAL(WITH_SFDP, [test "$use_sfdp" = "Yes"])
 
 dnl -----------------------------------
 dnl SMYRNA
@@ -2126,36 +2095,36 @@ AC_ARG_WITH(smyrna,
   [AS_HELP_STRING([--with-smyrna=yes],[SMYRNA large graph viewer])],
   [], [with_smyrna=yes])
 
-if test "x$with_smyrna" != "xyes"; then
+if test "$with_smyrna" != "yes"; then
   use_smyrna="No (disabled)"
 else
-  if test "x$use_gtk" != "xYes"; then
+  if test "$use_gtk" != "Yes"; then
      AC_MSG_WARN(SMYRNA requires GTK)
      requires=" gtk+"
   fi
-  if test "x$use_gtkglext" != "xYes"; then
+  if test "$use_gtkglext" != "Yes"; then
      AC_MSG_WARN(SMYRNA requires GTKGLEXT)
      requires="$requires gtkglext"
   fi
-  if test "x$use_glade" != "xYes"; then
+  if test "$use_glade" != "Yes"; then
      AC_MSG_WARN(SMYRNA requires GLADE)
      requires="$requires glade"
   fi
-  if test "x$use_gts" != "xYes"; then
+  if test "$use_gts" != "Yes"; then
      AC_MSG_WARN(SMYRNA requires GTS)
      requires="$requires gts"
   fi
-  if test "x$use_glut" != "xYes"; then
+  if test "$use_glut" != "Yes"; then
      AC_MSG_WARN(SMYRNA requires GLUT)
      requires="$requires glut"
   fi
-  if test "x$requires" != "x"; then
+  if test "$requires" != ""; then
      use_smyrna="No (requires:$requires)"
   else
      use_smyrna="Yes"
   fi
 fi
-AM_CONDITIONAL(WITH_SMYRNA, [test "x$use_smyrna" = "xYes"])
+AM_CONDITIONAL(WITH_SMYRNA, [test "$use_smyrna" = "Yes"])
 
 dnl -----------------------------------
 dnl ORTHO
@@ -2164,13 +2133,13 @@ AC_ARG_WITH(ortho,
   [AS_HELP_STRING([--with-ortho=yes],[ORTHO features in neato layout engine])],
   [], [with_ortho=yes])
 
-if test "x$with_ortho" != "xyes"; then
+if test "$with_ortho" != "yes"; then
   use_ortho="No (disabled)"
 else
   use_ortho="Yes"
   AC_DEFINE_UNQUOTED(ORTHO,1,[Define if you want ORTHO])
 fi
-AM_CONDITIONAL(WITH_ORTHO, [test "x$use_ortho" = "xYes"])
+AM_CONDITIONAL(WITH_ORTHO, [test "$use_ortho" = "Yes"])
 
 dnl -----------------------------------
 dnl DIGCOLA
@@ -2179,7 +2148,7 @@ AC_ARG_WITH(digcola,
   [AS_HELP_STRING([--with-digcola=yes],[DIGCOLA features in neato layout engine])],
   [], [with_digcola=yes])
 
-if test "x$with_digcola" != "xyes"; then
+if test "$with_digcola" != "yes"; then
   use_digcola="No (disabled)"
 else
   use_digcola="Yes"
@@ -2192,10 +2161,10 @@ AC_ARG_WITH(ipsepcola,
   [AS_HELP_STRING([--with-ipsepcola=yes],[IPSEPCOLA features in neato layout engine])],
   [], [with_ipsepcola=yes])
 
-if test "x$with_ipsepcola" != "xyes"; then
+if test "$with_ipsepcola" != "yes"; then
   use_ipsepcola="No (disabled)"
 else
-  if test "x$use_digcola" != "xYes"; then
+  if test "$use_digcola" != "Yes"; then
     use_ipsepcola="No (requires: digcola)"
   else
     use_ipsepcola="Yes"
@@ -2206,7 +2175,7 @@ else
     AC_SUBST([IPSEPCOLA_LIBS])
   fi
 fi
-AM_CONDITIONAL(WITH_IPSEPCOLA, [test "x$use_ipsepcola" = "xYes"])
+AM_CONDITIONAL(WITH_IPSEPCOLA, [test "$use_ipsepcola" = "Yes"])
 
 # -----------------------------------------------------------------------
 
@@ -2343,7 +2312,7 @@ AC_OUTPUT
 
 dnl ===========================================================================
 
-if test "x$use_tcl" != "xYes"; then
+if test "$use_tcl" != "Yes"; then
   use_tcldot="No (tcl not available)"
   use_gdtclft="No (tcl not available)"
   use_tclpathplan="No (tcl not available)"
@@ -2351,17 +2320,13 @@ if test "x$use_tcl" != "xYes"; then
 else
   use_tcldot="Yes"
   use_tclpathplan="Yes"
-  if test "x$use_swig" != "xYes"; then
+  if test "$use_swig" != "Yes"; then
     use_gv_tcl="No (swig not available)"
   else
     use_gv_tcl="Yes"
   fi
-  if test "x$use_gd" != "xYes"; then
-    if test "x$use_gd" = "xYes (internal)"; then
-        use_gdtclft="Yes"
-    else
-        use_gdtclft="No (gd not available)"
-    fi
+  if test "$use_gd" != "Yes"; then
+    use_gdtclft="No (gd not available)"
   else
     use_gdtclft="Yes"
   fi
