@@ -238,18 +238,14 @@ int Import_dot_splines(Agraph_t* g, int *ne, char ***xsplines){
   sym = agattr(g, AGEDGE, "pos", 0); 
   if (!sym) return 0;
  
-  if (!(*xsplines)) *xsplines = malloc(sizeof(char*)*nedges);
+  *xsplines = gv_calloc(nedges, sizeof(char*));
 
   i = 0;
   for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
     for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
       /* edge weight */
-      if (sym) {
-	char *pos = agxget (e, sym);
-	(*xsplines)[i] = strdup(pos);
-      } else {
-	(*xsplines)[i] = NULL;
-      }
+      char *pos = agxget (e, sym);
+      (*xsplines)[i] = strdup(pos);
       i++;
     }
   }
