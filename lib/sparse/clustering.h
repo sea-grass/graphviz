@@ -34,7 +34,7 @@ struct Multilevel_Modularity_Clustering_struct {
   bool agglomerate_regardless; ///< whether to agglomerate nodes even if this
                                ///< causes modularity reduction. This is used if
                                ///< we want to force agglomeration so as to get
-                               ///< less clusters
+                               ///< fewer clusters
 };
 
 enum {CLUSTERING_MODULARITY = 0, CLUSTERING_MQ};
