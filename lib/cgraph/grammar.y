@@ -495,7 +495,7 @@ static void newedge(Agnode_t *t, char *tport, Agnode_t *h, char *hport, char *ke
 {
 	Agedge_t 	*e;
 
-	e = agedge(S->g,t,h,key,TRUE);
+	e = agedge(S->g, t, h, key, 1);
 	if (e) {		/* can fail if graph is strict and t==h */
 		char    *tp = tport;
 		char    *hp = hport;
