@@ -58,7 +58,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
     GLOBALS_API EXTERN int EdgeLabelsDone;	/* true if edge labels have been positioned */
     GLOBALS_API EXTERN double Initial_dist;
     GLOBALS_API EXTERN double Damping;
-    GLOBALS_API EXTERN int Y_invert;	/* invert y in dot & plain output */
+    GLOBALS_API EXTERN bool Y_invert; ///< invert y in dot & plain output
     GLOBALS_API EXTERN int GvExitOnUsage;   /* gvParseArgs() should exit on usage or error */
 
     GLOBALS_API EXTERN Agsym_t

@@ -398,7 +398,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		Reduce = true;
 		break;
 	    case 'y':
-		Y_invert = TRUE;
+		Y_invert = true;
 		break;
 	    default:
 		agerr(AGERR, "%s: option -%c unrecognized\n\n", gvc->common.cmdname,
