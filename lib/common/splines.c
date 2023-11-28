@@ -877,7 +877,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     	}
     	ED_label(e)->pos.y = ND_coord(n).y - dy - height / 2.0;
     	ED_label(e)->pos.x = ND_coord(n).x;
-    	ED_label(e)->set = TRUE;
+    	ED_label(e)->set = true;
     	if (height > stepy)
     	    dy += height - stepy;
         }
@@ -987,7 +987,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
 	    }
 	    ED_label(e)->pos.y = ND_coord(n).y + dy + height / 2.0;
 	    ED_label(e)->pos.x = ND_coord(n).x;
-	    ED_label(e)->set = TRUE;
+	    ED_label(e)->set = true;
 	    if (height > stepy)
 		dy += height - stepy;
         }
@@ -1060,7 +1060,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
 	    }
 	    ED_label(e)->pos.x = ND_coord(n).x + dx + width / 2.0;
 	    ED_label(e)->pos.y = ND_coord(n).y;
-	    ED_label(e)->set = TRUE;
+	    ED_label(e)->set = true;
 	    if (width > stepx)
 		dx += width - stepx;
         }
@@ -1137,7 +1137,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     	}
     	ED_label(e)->pos.x = ND_coord(n).x - dx - width / 2.0;
     	ED_label(e)->pos.y = ND_coord(n).y;
-    	ED_label(e)->set = TRUE;
+    	ED_label(e)->set = true;
     	if (width > stepx)
     	    dx += width - stepx;
         }
