@@ -657,7 +657,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   const bool adaptive_cooling = ctrl->adaptive_cooling;
-  int USE_QT = FALSE;
+  bool USE_QT = false;
   int nsuper = 0, nsupermax = 10;
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0, counts_avg = 0;
 #ifdef TIME
@@ -675,7 +675,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   if (n <= 0 || dim <= 0) return;
 
   if (n >= ctrl->quadtree_size) {
-    USE_QT = TRUE;
+    USE_QT = true;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
     center = gv_calloc(nsupermax * dim, sizeof(double));
     supernode_wgts = gv_calloc(nsupermax, sizeof(double));
@@ -865,7 +865,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
   const bool adaptive_cooling = ctrl->adaptive_cooling;
-  int USE_QT = FALSE;
+  bool USE_QT = false;
   int nsuper = 0, nsupermax = 10;
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0;
   int max_qtree_level = 10;
@@ -875,7 +875,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   if (n <= 0 || dim <= 0) return;
 
   if (n >= ctrl->quadtree_size) {
-    USE_QT = TRUE;
+    USE_QT = true;
     center = gv_calloc(nsupermax * dim, sizeof(double));
     supernode_wgts = gv_calloc(nsupermax, sizeof(double));
     distances = gv_calloc(nsupermax, sizeof(double));
