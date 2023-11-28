@@ -335,7 +335,7 @@ static void attrstmt(int tkind, char *macroname)
 		else
 			sym = aptr->u.asym;
 		if (S->g == G)
-			sym->print = TRUE;
+			sym->print = true;
 	}
 	deletelist(&(S->attrlist));
 }
