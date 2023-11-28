@@ -1592,9 +1592,9 @@ bool SparseMatrix_has_diagonal(SparseMatrix A) {
   return false;
 }
 
-void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel,
-                             int **levelset_ptr, int **levelset, int **mask,
-                             bool reinitialize_mask) {
+static void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel,
+                                    int **levelset_ptr, int **levelset,
+                                    int **mask, bool reinitialize_mask) {
   /* mask is assumed to be initialized to negative if provided.
      . On exit, mask = levels for visited nodes (1 for root, 2 for its neighbors, etc), 
      . unless reinitialize_mask is true, in which case mask = -1.
