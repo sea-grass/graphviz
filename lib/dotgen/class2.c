@@ -150,12 +150,9 @@ void merge_chain(graph_t *g, edge_t *e, edge_t *f, bool update_count) {
     } while (rep);
 }
 
-int mergeable(edge_t * e, edge_t * f)
-{
-    if (e && f && agtail(e) == agtail(f) && aghead(e) == aghead(f) &&
-	ED_label(e) == ED_label(f) && ports_eq(e, f))
-	return TRUE;
-    return FALSE;
+bool mergeable(edge_t *e, edge_t *f) {
+  return e && f && agtail(e) == agtail(f) && aghead(e) == aghead(f) &&
+         ED_label(e) == ED_label(f) && ports_eq(e, f);
 }
 
 void class2(graph_t * g)
