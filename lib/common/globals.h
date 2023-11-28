@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cgraph/list.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #ifdef __cplusplus
@@ -42,7 +43,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
     GLOBALS_API EXTERN char *Gvimagepath; /* Per-graph path of files allowed in image attributes  (also ps libs) */
 
     GLOBALS_API EXTERN unsigned char Verbose;
-    GLOBALS_API EXTERN unsigned char Reduce;
+    GLOBALS_API EXTERN bool Reduce;
     GLOBALS_API EXTERN char *HTTPServerEnVar;
     GLOBALS_API EXTERN int graphviz_errors;
     GLOBALS_API EXTERN int Nop;
