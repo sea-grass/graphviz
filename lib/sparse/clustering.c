@@ -36,7 +36,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
   grid->delete_top_level_A = false;
   grid->matching = MALLOC(sizeof(double) * n);
   grid->deg = NULL;
-  grid->agglomerate_regardless = FALSE;
+  grid->agglomerate_regardless = false;
 
   if (level == 0){
     double modularity = 0;
@@ -243,7 +243,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   } else {
     /* if we want a small number of cluster but right now we have too many, we will force agglomeration */
     if (ncluster_target > 0 && nc > ncluster_target && !(grid->agglomerate_regardless)){
-      grid->agglomerate_regardless = TRUE;
+      grid->agglomerate_regardless = true;
       free(deg_inter);
       free(mask);
       free(deg_new);

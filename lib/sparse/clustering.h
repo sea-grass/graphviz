@@ -31,11 +31,10 @@ struct Multilevel_Modularity_Clustering_struct {
   double modularity;
   double deg_total; /* total edge weights, including self-edges */
   double *deg;/* dimension n. deg[i] equal to the sum of edge weights connected to vertex i. I.e., sum of  row i */
-  int agglomerate_regardless;/* whether to agglomerate nodes even if this causes modularity reduction. This is used if we want to force
-				agglomeration so as to get less clusters
-			      */
-
-
+  bool agglomerate_regardless; ///< whether to agglomerate nodes even if this
+                               ///< causes modularity reduction. This is used if
+                               ///< we want to force agglomeration so as to get
+                               ///< less clusters
 };
 
 enum {CLUSTERING_MODULARITY = 0, CLUSTERING_MQ};
