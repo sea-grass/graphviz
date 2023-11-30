@@ -1,10 +1,3 @@
-find_package(PANGOCAIRO)
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(GDK gdk-2.0)
-  pkg_check_modules(GDK_PIXBUF gdk-pixbuf-2.0)
-endif()
-
 if(GDK_FOUND AND GDK_PIXBUF_FOUND AND PANGOCAIRO_FOUND)
 
   add_library(gvplugin_gdk SHARED
