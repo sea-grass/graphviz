@@ -1,10 +1,3 @@
-find_package(Freetype)
-find_package(PANGOCAIRO)
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(LASI lasi)
-endif()
-
 if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
 
   add_library(gvplugin_lasi SHARED
