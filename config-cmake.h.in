@@ -29,6 +29,7 @@ typedef SSIZE_T ssize_t;
 
 // Libraries
 #cmakedefine HAVE_ANN
+#cmakedefine HAVE_DEVIL
 #cmakedefine HAVE_EXPAT
 #cmakedefine HAVE_LIBGD
 #cmakedefine HAVE_GD_PNG

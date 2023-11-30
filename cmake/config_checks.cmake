@@ -27,6 +27,7 @@ check_function_exists( srand48          HAVE_SRAND48         )
 
 # Library checks
 set( HAVE_ANN       ${ANN_FOUND}        )
+set( HAVE_DEVIL     ${DevIL_FOUND}      )
 if(with_expat)
   set(HAVE_EXPAT 1)
 endif()

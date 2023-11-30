@@ -177,6 +177,7 @@ if(enable_ltdl)
   add_definitions(-DENABLE_LTDL)
 endif()
 
+find_package(DevIL)
 find_package(PANGOCAIRO)
 find_package(PkgConfig)
 if(PkgConfig_FOUND)

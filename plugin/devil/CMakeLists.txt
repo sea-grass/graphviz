@@ -1,6 +1,3 @@
-find_package(PANGOCAIRO)
-find_package(DevIL)
-
 if(PANGOCAIRO_FOUND AND DevIL_FOUND)
 
   add_library(gvplugin_devil SHARED
