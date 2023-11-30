@@ -16,7 +16,7 @@ add_executable(dot
   no_builtins.c
 )
 
-target_link_libraries(dot
+target_link_libraries(dot PRIVATE
   cgraph
   gvc
 )
