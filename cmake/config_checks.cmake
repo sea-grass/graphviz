@@ -45,6 +45,8 @@ set(HAVE_PANGOCAIRO ${PANGOCAIRO_FOUND})
 set(HAVE_POPPLER    ${POPPLER_FOUND}   )
 set(HAVE_RSVG       ${RSVG_FOUND}      )
 set(HAVE_WEBP       ${WEBP_FOUND}      )
+set(HAVE_X11        ${X11_FOUND}       )
+set(HAVE_XRENDER    ${XRENDER_FOUND}   )
 
 # Values
 if(WIN32)
