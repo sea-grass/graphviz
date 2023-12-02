@@ -6,9 +6,6 @@ $ErrorActionPreference = "Stop"
 # Disable progress bar to speed up download
 $ProgressPreference = "SilentlyContinue"
 
-# Disable Windows Defender
-Add-MpPreference -ExclusionPath 'C:\'
-
 # Install msys2
 $msys2_installer = "msys2-x86_64-latest.sfx.exe"
 Invoke-WebRequest https://repo.msys2.org/distrib/$msys2_installer -OutFile $env:TEMP\$msys2_installer

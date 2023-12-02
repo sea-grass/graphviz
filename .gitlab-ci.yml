@@ -446,6 +446,8 @@ windows-mingw32-build:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
@@ -466,6 +468,8 @@ windows-mingw64-build:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
@@ -486,6 +490,8 @@ windows-mingw64-static-build:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
@@ -507,6 +513,8 @@ windows-mingw32-static-build:
         - job: portable-source
           artifacts: true
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "autotools"
         - $Env:CONFIGURE_OPTIONS = "--disable-shared --enable-static"
@@ -875,6 +883,8 @@ windows-mingw32-cmake-build:
     stage: build
     needs: []
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
@@ -896,6 +906,8 @@ windows-mingw64-cmake-build:
     stage: build
     needs: []
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
@@ -1222,6 +1234,8 @@ macos-cmake-test:
 
 windows-mingw32-cmake-test:
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
@@ -1243,6 +1257,8 @@ windows-mingw32-cmake-test:
 
 windows-mingw64-cmake-test:
     script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
