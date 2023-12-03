@@ -1592,12 +1592,12 @@ bool SparseMatrix_has_diagonal(SparseMatrix A) {
   return false;
 }
 
-void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel,
-                             int **levelset_ptr, int **levelset, int **mask,
-                             int reinitialize_mask) {
+static void SparseMatrix_level_sets(SparseMatrix A, int root, int *nlevel,
+                                    int **levelset_ptr, int **levelset,
+                                    int **mask, bool reinitialize_mask) {
   /* mask is assumed to be initialized to negative if provided.
      . On exit, mask = levels for visited nodes (1 for root, 2 for its neighbors, etc), 
-     . unless reinitialize_mask = TRUE, in which case mask = -1.
+     . unless reinitialize_mask is true, in which case mask = -1.
      A: the graph, undirected
      root: starting node
      nlevel: max distance to root from any node (in the connected comp)
@@ -1656,7 +1656,7 @@ int *SparseMatrix_weakly_connected_components(SparseMatrix A0, int *ncomp,
   comps_ptr[0] = 0;
   for (i = 0; i < m; i++){
     if (i == 0 || mask[i] < 0) {
-      SparseMatrix_level_sets(A, i, &nlevel, &levelset_ptr, &levelset, &mask, FALSE);
+      SparseMatrix_level_sets(A, i, &nlevel, &levelset_ptr, &levelset, &mask, false);
       if (i == 0) *comps = levelset;
       nn = levelset_ptr[nlevel];
       levelset += nn;
@@ -2050,7 +2050,7 @@ void SparseMatrix_distance_matrix(SparseMatrix D0, double **dist0) {
   for (i = 0; i < n*n; i++) (*dist0)[i] = -1;
 
   for (k = 0; k < n; k++) {
-    SparseMatrix_level_sets(D, k, &nlevel, &levelset_ptr, &levelset, &mask, TRUE);
+    SparseMatrix_level_sets(D, k, &nlevel, &levelset_ptr, &levelset, &mask, true);
     assert(levelset_ptr[nlevel] == n);
     for (i = 0; i < nlevel; i++) {
       for (j = levelset_ptr[i]; j < levelset_ptr[i+1]; j++) {

@@ -43,9 +43,9 @@ extern "C" {
  * if the endpoint location is not known, pass POLYID_UNKNOWN
  */
 
-    VISPATH_API int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0,
-			Ppoint_t p1, int poly1,
-			Ppolyline_t * output_route);
+    VISPATH_API void Pobspath(vconfig_t *config, Ppoint_t p0, int poly0,
+                              Ppoint_t p1, int poly1,
+                              Ppolyline_t *output_route);
 
 #define POLYID_NONE		-1111
 #define POLYID_UNKNOWN	-2222

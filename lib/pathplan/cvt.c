@@ -97,9 +97,8 @@ void Pobsclose(vconfig_t * config)
     free(config);
 }
 
-int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0, Ppoint_t p1,
-	     int poly1, Ppolyline_t * output_route)
-{
+void Pobspath(vconfig_t *config, Ppoint_t p0, int poly0, Ppoint_t p1, int poly1,
+              Ppolyline_t *output_route) {
     int i, *dad;
     size_t opn;
     Ppoint_t *ops;
@@ -137,7 +136,6 @@ int Pobspath(vconfig_t * config, Ppoint_t p0, int poly0, Ppoint_t p1,
     output_route->pn = (int)opn;
     output_route->ps = ops;
     free(dad);
-    return TRUE;
 }
 
 #ifdef DEBUG

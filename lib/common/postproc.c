@@ -189,7 +189,7 @@ static void place_root_label(graph_t * g, pointf d)
     }
 
     GD_label(g)->pos = p;
-    GD_label(g)->set = TRUE;
+    GD_label(g)->set = true;
 }
 
 /* centerPt:
@@ -719,7 +719,7 @@ static void place_flip_graph_label(graph_t * g)
 	    p.y = (GD_bb(g).LL.y + GD_bb(g).UR.y) / 2;
 	}
 	GD_label(g)->pos = p;
-	GD_label(g)->set = TRUE;
+	GD_label(g)->set = true;
     }
 
     for (c = 1; c <= GD_n_cluster(g); c++)

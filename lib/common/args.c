@@ -40,7 +40,7 @@ static int neato_extra_args(int argc, char** argv) {
     assert(arg != NULL);
     if (arg[0] == '-') {
       switch (arg[1]) {
-      case 'x' : Reduce = TRUE; break;
+      case 'x' : Reduce = true; break;
       case 'n':
         if (arg[2]) {
           Nop = atoi(arg+2);

@@ -25,6 +25,7 @@
 #define _GNU_SOURCE 1
 
 #include                <sys/types.h>
+#include                <stdbool.h>
 #include                <stdint.h>
 #include                <stdlib.h>
 #include                <string.h>
@@ -299,8 +300,7 @@ static point scale(point c, point p, double gain)
     return q;
 }
 
-static int remove_poly(vgpane_t * vgp, int id)
-{
+static bool remove_poly(vgpane_t *vgp, int id) {
     for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	if (polys_get(&vgp->poly, i).id == id) {
 	    free(polys_get(&vgp->poly, i).boundary.ps);
@@ -309,10 +309,10 @@ static int remove_poly(vgpane_t * vgp, int id)
 	    }
 	    polys_resize(&vgp->poly, polys_size(&vgp->poly) - 1, (poly){0});
 	    vc_stale(vgp);
-	    return TRUE;
+	    return true;
 	}
     }
-    return FALSE;
+    return false;
 }
 
 static int

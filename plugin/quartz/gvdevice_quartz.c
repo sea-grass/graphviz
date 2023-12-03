@@ -13,6 +13,7 @@
 #include <gvc/gvplugin_device.h>
 
 #include "gvplugin_quartz.h"
+#include <stdbool.h>
 
 #if __ENVIRONMENT_MAC_OS_X_VERSION_MIN_REQUIRED__ >= 1040 && defined(HAVE_PANGOCAIRO)
 
@@ -51,7 +52,7 @@ static void quartz_format(GVJ_t *job)
 		kCGImageAlphaPremultipliedFirst|kCGBitmapByteOrder32Little,	/* bitmap info: corresponds to CAIRO_FORMAT_ARGB32 */
 		data_provider,						/* data provider: from imagedata */
 		NULL,								/* decode: don't remap colors */
-		FALSE,								/* don't interpolate */
+		false, // don't interpolate
 		kCGRenderingIntentDefault			/* rendering intent (what to do with out-of-gamut colors): default */
 	);
 	CGImageDestinationAddImage(image_destination, image, NULL);

@@ -103,8 +103,7 @@ static void nodeInduce(Agraph_t * g, Agraph_t* map)
 		Agraph_t* tscc = getscc(agtail(e));
 		Agraph_t* hscc = getscc(aghead(e));
 		if (tscc && hscc)
-		    agedge(map, getrep(tscc),
-			   getrep(hscc), NULL, TRUE);
+		    agedge(map, getrep(tscc), getrep(hscc), NULL, 1);
 	    }
 	}
     }
