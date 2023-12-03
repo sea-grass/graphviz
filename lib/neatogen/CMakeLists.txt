@@ -108,6 +108,10 @@ target_link_libraries(neatogen PRIVATE
   rbtree
 )
 
+if(with_ipsepcola)
+  target_link_libraries(neatogen PRIVATE vpsc)
+endif()
+
 if(GTS_FOUND)
   target_include_directories(neatogen PRIVATE
     ${GTS_INCLUDE_DIRS}
