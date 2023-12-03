@@ -1,5 +1,3 @@
-cmake_minimum_required (VERSION 3.12 FATAL_ERROR)
-
 find_package(Boost REQUIRED)
 find_package(Catch2 REQUIRED)
 find_package(FMT REQUIRED)

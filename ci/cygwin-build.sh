@@ -33,5 +33,6 @@ export CCACHE_DIR=ccache-cache
 export CMAKE_OPTIONS="-Duse_win_pre_inst_libs=OFF -Dwith_gvedit=OFF"
 export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
 export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
 
 ci/build.sh

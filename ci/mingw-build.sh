@@ -16,6 +16,7 @@ if [ "${build_system}" = "cmake" ]; then
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+    export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
 fi
 
 ci/build.sh
