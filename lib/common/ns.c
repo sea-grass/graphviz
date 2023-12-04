@@ -685,6 +685,15 @@ static void scan_and_normalize(void)
     Maxrank -= Minrank;
 }
 
+static void reset_lists(void) {
+
+  free(Tree_node.list);
+  Tree_node = (nlist_t){0};
+
+  free(Tree_edge.list);
+  Tree_edge = (elist){0};
+}
+
 static void
 freeTreeList (graph_t* g)
 {
@@ -694,6 +703,7 @@ freeTreeList (graph_t* g)
 	free_list(ND_tree_out(n));
 	ND_mark(n) = false;
     }
+    reset_lists();
 }
 
 static void LR_balance(void)
@@ -832,10 +842,8 @@ static bool init_graph(graph_t *g) {
 	    N_edges++;
     }
 
-    Tree_node.list = ALLOC(N_nodes, Tree_node.list, node_t *);
-    Tree_node.size = 0;
-    Tree_edge.list = ALLOC(N_nodes, Tree_edge.list, edge_t *);
-    Tree_edge.size = 0;
+    Tree_node.list = gv_calloc(N_nodes, sizeof(node_t *));
+    Tree_edge.list = gv_calloc(N_nodes, sizeof(edge_t *));
 
     bool feasible = true;
     for (n = GD_nlist(g); n; n = ND_next(n)) {
@@ -949,6 +957,7 @@ int rank2(graph_t * g, int balance, int maxiter, int search_size)
     switch (balance) {
     case 1:
 	TB_balance();
+	reset_lists();
 	break;
     case 2:
 	LR_balance();

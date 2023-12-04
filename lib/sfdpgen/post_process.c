@@ -452,9 +452,9 @@ static void get_edge_label_matrix(relative_position_constraints data, int m, int
 	nz += (int)((k+1)*(k+1));
 	
       }
-      irn = data->irn = MALLOC(sizeof(int)*nz);
-      jcn = data->jcn = MALLOC(sizeof(int)*nz);
-      val = data->val = MALLOC(sizeof(double)*nz);
+      irn = data->irn = gv_calloc(nz, sizeof(int));
+      jcn = data->jcn = gv_calloc(nz, sizeof(int));
+      val = data->val = gv_calloc(nz, sizeof(double));
     }
     nz = 0;
     for (i = 0; i < n_constr_nodes; i++){
@@ -488,12 +488,11 @@ static void get_edge_label_matrix(relative_position_constraints data, int m, int
     if (!irn){
       assert((!jcn) && (!val));
       nz = n_constr_nodes;
-      irn = data->irn = MALLOC(sizeof(int)*nz);
-      jcn = data->jcn = MALLOC(sizeof(int)*nz);
-      val = data->val = MALLOC(sizeof(double)*nz);
+      irn = data->irn = gv_calloc(nz, sizeof(int));
+      jcn = data->jcn = gv_calloc(nz, sizeof(int));
+      val = data->val = gv_calloc(nz, sizeof(double));
     }
-    x00 = MALLOC(sizeof(double)*m*dim);
-    for (i = 0; i < m*dim; i++) x00[i] = 0;
+    x00 = gv_calloc(m * dim, sizeof(double));
     nz = 0;
     for (i = 0; i < n_constr_nodes; i++){
       ii = constr_nodes[i];
