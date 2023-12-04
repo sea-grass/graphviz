@@ -21,7 +21,7 @@ import textwrap
 import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import List
+from typing import Iterator, List
 
 import pytest
 
@@ -756,6 +756,66 @@ def test_1554():
     assert (
         re.search(r"\bnan\b", output, flags=re.IGNORECASE) is None
     ), "computation exceeded bounds"
+
+
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1585"
+)
+def test_1585():
+    """
+    clustering nodes should not reverse their horizontal layout
+    https://gitlab.com/graphviz/graphviz/-/issues/1585
+    """
+
+    # locate our associated test cases in this directory
+    no_cluster = Path(__file__).parent / "1585_0.dot"
+    assert no_cluster.exists(), "unexpectedly missing test case"
+    cluster = Path(__file__).parent / "1585_1.dot"
+    assert cluster.exists(), "unexpectedly missing test case"
+
+    def find_node_xs(svg_output: str) -> Iterator[float]:
+        """
+        yield 3 floats representing the X positions of nodes b, c, d in the
+        given graph
+        """
+
+        # parse the SVG
+        root = ET.fromstring(svg_output)
+
+        # find `b`
+        b = root.findall(
+            ".//{http://www.w3.org/2000/svg}title[.='b']../{http://www.w3.org/2000/svg}ellipse"
+        )
+        assert len(b) == 1, "could not find node 'b'"
+        yield float(b[0].attrib["cx"])
+
+        # find `c`
+        c = root.findall(
+            ".//{http://www.w3.org/2000/svg}title[.='c']../{http://www.w3.org/2000/svg}ellipse"
+        )
+        assert len(c) == 1, "could not find node 'c'"
+        yield float(c[0].attrib["cx"])
+
+        # find `d`
+        d = root.findall(
+            ".//{http://www.w3.org/2000/svg}title[.='d']../{http://www.w3.org/2000/svg}ellipse"
+        )
+        assert len(d) == 1, "could not find node 'd'"
+        yield float(d[0].attrib["cx"])
+
+    # render the one without clusters and get its nodes’ X positions
+    no_cluster_out = dot("svg", no_cluster)
+    b, c, d = list(find_node_xs(no_cluster_out))
+
+    # confirm we got a left → right ordering
+    assert b < c, "unexpected horizontal node ordering"
+    assert c < d, "unexpected horizontal node ordering"
+
+    # now try the same thing with the clustered graph
+    cluster_out = dot("svg", cluster)
+    b, c, d = list(find_node_xs(cluster_out))
+    assert b < c, "clustering altered nodes’ horizontal ordering"
+    assert c < d, "clustering altered nodes’ horizontal ordering"
 
 
 @pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
