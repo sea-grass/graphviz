@@ -29,7 +29,9 @@ typedef SSIZE_T ssize_t;
 
 // Libraries
 #cmakedefine HAVE_ANN
+#cmakedefine HAVE_DEVIL
 #cmakedefine HAVE_EXPAT
+#cmakedefine HAVE_FREETYPE
 #cmakedefine HAVE_LIBGD
 #cmakedefine HAVE_GD_PNG
 #cmakedefine HAVE_GD_JPEG
@@ -37,6 +39,9 @@ typedef SSIZE_T ssize_t;
 #cmakedefine HAVE_GD_FONTCONFIG
 #cmakedefine HAVE_GD_FREETYPE
 #cmakedefine HAVE_GD_GIF
+#cmakedefine HAVE_GDK
+#cmakedefine HAVE_GDK_PIXBUF
+#cmakedefine HAVE_LASI
 #cmakedefine HAVE_LIBZ
 #cmakedefine HAVE_GS
 #cmakedefine HAVE_GTS
@@ -44,6 +49,8 @@ typedef SSIZE_T ssize_t;
 #cmakedefine HAVE_POPPLER
 #cmakedefine HAVE_RSVG
 #cmakedefine HAVE_WEBP
+#cmakedefine HAVE_X11
+#cmakedefine HAVE_XRENDER
 
 // Values
 #define BROWSER "@BROWSER@"

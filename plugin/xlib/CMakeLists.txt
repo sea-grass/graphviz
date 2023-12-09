@@ -1,10 +1,3 @@
-find_package(PANGOCAIRO)
-find_package(PkgConfig)
-if(PkgConfig_FOUND)
-  pkg_check_modules(X11 x11)
-  pkg_check_modules(XRENDER xrender)
-endif()
-
 if(PANGOCAIRO_FOUND AND X11_FOUND AND XRENDER_FOUND)
 
   add_library(gvplugin_xlib SHARED
