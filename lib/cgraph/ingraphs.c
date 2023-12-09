@@ -14,11 +14,11 @@
  */
 
 #include <cgraph/cgraph.h>
+#include <cgraph/ingraphs.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <ingraphs/ingraphs.h>
 
 /* nextFile:
  * Set next available file.

@@ -36,6 +36,9 @@
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ingraphs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -93,6 +96,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="imap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ingraphs.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="io.c">

@@ -63,7 +63,7 @@
       <DisableSpecificWarnings>4706;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lab_gamut.lib;getopt.lib;cdt.lib;cgraph.lib;gvc.lib;ingraphs.lib;sfdp.lib;sparse.lib;edgepaintlib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lab_gamut.lib;getopt.lib;cdt.lib;cgraph.lib;gvc.lib;sfdp.lib;sparse.lib;edgepaintlib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
@@ -86,7 +86,7 @@
       <DisableSpecificWarnings>4706;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>lab_gamut.lib;getopt.lib;cdt.lib;cgraph.lib;gvc.lib;ingraphs.lib;sfdp.lib;sparse.lib;edgepaintlib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>lab_gamut.lib;getopt.lib;cdt.lib;cgraph.lib;gvc.lib;sfdp.lib;sparse.lib;edgepaintlib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -120,10 +120,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\lib\gvc.vcxproj">
       <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\lib\ingraphs\ingraphs.vcxproj">
-      <Project>{d6fd0de5-5305-458e-8ca5-fca4b8e05b04}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\..\lib\pathplan\Pathplan.vcxproj">

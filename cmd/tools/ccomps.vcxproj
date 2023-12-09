@@ -69,7 +69,7 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ingraphs.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cgraph.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
@@ -92,7 +92,7 @@
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ingraphs.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cgraph.lib;getopt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>

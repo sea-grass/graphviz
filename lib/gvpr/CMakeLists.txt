@@ -47,7 +47,6 @@ endif()
 target_link_libraries(gvpr
   ast
   cgraph
-  ingraphs
   gvc
   expr
   sfio

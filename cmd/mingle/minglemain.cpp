@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
-#include <ingraphs/ingraphs.h>
+#include <cgraph/ingraphs.h>
 #include <common/pointset.h>
 #include <getopt.h>
 #include <iomanip>

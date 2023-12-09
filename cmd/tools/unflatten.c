@@ -25,8 +25,8 @@
 #include    <string.h>
 #include    <cgraph/cgraph.h>
 #include    <cgraph/exit.h>
+#include    <cgraph/ingraphs.h>
 #include    <cgraph/unreachable.h>
-#include    <ingraphs/ingraphs.h>
 
 #include <getopt.h>
 #include "openFile.h"

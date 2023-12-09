@@ -27,7 +27,6 @@ gvmap_LDADD = \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
 	$(top_builddir)/lib/rbtree/librbtree_C.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/edgepaint/liblab_gamut.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
@@ -39,7 +38,6 @@ cluster_LDADD = \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
 	$(top_builddir)/lib/rbtree/librbtree_C.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/edgepaint/liblab_gamut.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/gvc/libgvc.la \

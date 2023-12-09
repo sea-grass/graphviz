@@ -27,7 +27,7 @@
 
 #include "convert.h"
 #include <cgraph/exit.h>
-#include <ingraphs/ingraphs.h>
+#include <cgraph/ingraphs.h>
 
 typedef enum { Unset, ToGV, ToGXL } mode;
 

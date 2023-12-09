@@ -26,6 +26,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
@@ -51,7 +52,6 @@ typedef struct {
 #include <getopt.h>
 
 #include <string.h>
-#include <ingraphs/ingraphs.h>
 
   /* internals of libgraph */
 #define TAG_NODE            1

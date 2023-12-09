@@ -12,7 +12,7 @@ endif
 
 prune_SOURCES = prune.c
 
-prune_LDADD = $(top_builddir)/lib/ingraphs/libingraphs_C.la \
+prune_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la
 

@@ -23,7 +23,6 @@ if(with_sfdp AND ANN_FOUND)
     cdt
     cgraph
     common
-    ingraphs
     libmingle
     neatogen
     rbtree

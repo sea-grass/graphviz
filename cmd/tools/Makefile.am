@@ -65,7 +65,6 @@ gxl2gv_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 
 gxl2gv_LDADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la $(EXPAT_LIBS)
 
@@ -78,14 +77,12 @@ SUFFIXES = .1 .1.pdf
 sccmap_SOURCES = sccmap.c
 
 sccmap_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la $(EXPAT_LIBS)
 
 
 ccomps_SOURCES = ccomps.c
 
 ccomps_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
@@ -93,49 +90,42 @@ tred_SOURCES = tred.c
 
 tred_LDADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
 unflatten_SOURCES = unflatten.c
 
 unflatten_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
 acyclic_SOURCES = acyclic.c
 
 acyclic_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
 nop_SOURCES = nop.c
 
 nop_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
 gvcolor_SOURCES = gvcolor.c colxlate.c colortbl.h colorxlate.h
 
 gvcolor_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(MATH_LIBS)
 
 bcomps_SOURCES = bcomps.c
 
 bcomps_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
 gc_SOURCES = gc.c
 
 gc_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 
@@ -144,7 +134,6 @@ gvpack_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
 
 gvpack_LDADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout.la
@@ -154,7 +143,6 @@ gvpack_static_SOURCES = gvpack.cpp
 gvpack_static_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
 gvpack_static_LDADD = \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/gvc/libgvc_C.la \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
@@ -177,7 +165,6 @@ gv2gml_SOURCES = gv2gml.c
 
 gv2gml_LDADD = \
 	$(top_builddir)/lib/gvc/libgvc.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la
 
 gml2gv_SOURCES = gml2gv.c gmlparse.y gmlscan.l
@@ -199,7 +186,6 @@ graphml2gv_SOURCES = graphml2gv.c
 graphml2gv_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 
 graphml2gv_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la $(EXPAT_LIBS)
 
@@ -207,7 +193,6 @@ graphml2gv_LDADD = \
 dijkstra_SOURCES = dijkstra.c
 
 dijkstra_LDADD = \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la
 

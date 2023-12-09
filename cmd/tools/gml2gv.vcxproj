@@ -68,7 +68,7 @@
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;ingraphs.lib;gvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;gvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
@@ -94,7 +94,7 @@ win_bison -dy -Wno-yacc gmlparse.y -o gmlparse.c</Command>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;ingraphs.lib;gvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;gvc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>

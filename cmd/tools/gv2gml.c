@@ -26,13 +26,13 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <ctype.h>
-#include <ingraphs/ingraphs.h>
 #include "openFile.h"
 
 static FILE *outFile;

@@ -102,7 +102,6 @@ if(with_smyrna)
     glcomp
     gvc
     gvpr
-    ingraphs
     neatogen
     pathplan
     topfish
