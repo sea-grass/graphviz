@@ -85,6 +85,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   2.46.0.
 - edgepaint spline intersection code would previously incorrectly use the second
   spline in one instance where it should have used the first. #1464
+- In the Autotools build, libexpat discovery on macOS has been improved. #2477
 
 ## [9.0.0] - 2023-09-11
 
