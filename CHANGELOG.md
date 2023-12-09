@@ -47,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The PDF output format, `-Tpdf`, respects the environment variable
   `$SOURCE_DATE_EPOCH` for overriding `CreationDate` when built against Cairo
   ≥ 1.16.0. #2473
+- The legacy C# viewer app is no longer distributed in the portable source
+  tarball.
 
 ### Fixed
 
