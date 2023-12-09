@@ -1306,9 +1306,22 @@ if test "$with_expat" != "yes"; then
   use_expat="No (disabled)"
 else
   use_expat="Yes"
-  PKG_CHECK_MODULES([EXPAT], [expat])
-  AC_DEFINE_UNQUOTED(HAVE_EXPAT,1,
-    [Define if you have the expat library])
+  PKG_CHECK_MODULES([EXPAT],[expat],[],[
+    AC_CHECK_HEADERS([expat.h],[
+      AC_CHECK_LIB([expat],[main],[
+         EXPAT_LIBS="$EXPAT_LIBS -lexpat"
+        ],[
+         use_expat="No (expat library not available)"
+        ],[])
+      ],[
+       use_expat="No (expat.h missing header)"
+       AC_MSG_WARN(expat.h missing header)
+    ],[])
+  ],[])
+
+  if test "$use_expat" = "Yes"; then
+    AC_DEFINE_UNQUOTED([HAVE_EXPAT],[1],[Define if you have the expat library])
+  fi
 fi
 
 dnl -----------------------------------
