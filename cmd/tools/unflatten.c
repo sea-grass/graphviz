@@ -31,9 +31,14 @@
 #include <getopt.h>
 #include "openFile.h"
 
-static bool Do_fans = false;
-static int MaxMinlen = 0;
-static int ChainLimit = 0;
+typedef struct {
+  bool Do_fans;
+  int MaxMinlen;
+  int ChainLimit;
+} graphviz_unflatten_options_t;
+
+typedef graphviz_unflatten_options_t opts_t;
+
 static int ChainSize = 0;
 static Agnode_t *ChainNode;
 static FILE *outFile;
@@ -79,8 +84,7 @@ static Agsym_t *bindedgeattr(Agraph_t * g, char *str)
     return agattr(g, AGEDGE, str, "");
 }
 
-static void transform(Agraph_t * g)
-{
+static void transform(Agraph_t *g, const opts_t *opts) {
     Agnode_t *n;
     Agedge_t *e;
     char *str;
@@ -93,13 +97,13 @@ static void transform(Agraph_t * g)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	d = myindegree(n) + myoutdegree(n);
 	if (d == 0) {
-	    if (ChainLimit < 1)
+	    if (opts->ChainLimit < 1)
 		continue;
 	    if (ChainNode) {
 		e = agedge(g, ChainNode, n, "", 1);
 		agxset(e, s_ix, "invis");
 		ChainSize++;
-		if (ChainSize < ChainLimit)
+		if (ChainSize < opts->ChainLimit)
 		    ChainNode = n;
 		else {
 		    ChainNode = NULL;
@@ -108,14 +112,14 @@ static void transform(Agraph_t * g)
 	    } else
 		ChainNode = n;
 	} else if (d > 1) {
-	    if (MaxMinlen < 1)
+	    if (opts->MaxMinlen < 1)
 		continue;
 	    cnt = 0;
 	    for (e = agfstin(g, n); e; e = agnxtin(g, e)) {
 		if (isleaf(agtail(e))) {
 		    str = agxget(e, m_ix);
 		    if (str[0] == 0) {
-			adjustlen(e, m_ix, cnt % MaxMinlen + 1);
+			adjustlen(e, m_ix, cnt % opts->MaxMinlen + 1);
 			cnt++;
 		    }
 		}
@@ -123,10 +127,10 @@ static void transform(Agraph_t * g)
 
 	    cnt = 0;
 	    for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-		if (isleaf(e->node) || (Do_fans && ischainnode(e->node))) {
+		if (isleaf(e->node) || (opts->Do_fans && ischainnode(e->node))) {
 		    str = agxget(e, m_ix);
 		    if (str[0] == 0)
-			adjustlen(e, m_ix, cnt % MaxMinlen + 1);
+			adjustlen(e, m_ix, cnt % opts->MaxMinlen + 1);
 		    cnt++;
 		}
 	    }
@@ -149,8 +153,7 @@ static void usage(int v)
     graphviz_exit(v);
 }
 
-static char **scanargs(int argc, char **argv)
-{
+static char **scanargs(opts_t *opts, int argc, char **argv) {
     int c, ival;
 
     cmd = argv[0];
@@ -158,17 +161,17 @@ static char **scanargs(int argc, char **argv)
     while ((c = getopt(argc, argv, ":fl:c:o:")) != -1) {
 	switch (c) {
 	case 'f':
-	    Do_fans = true;
+	    opts->Do_fans = true;
 	    break;
 	case 'l':
 	    ival = atoi(optarg);
 	    if (ival > 0)
-		MaxMinlen = ival;
+		opts->MaxMinlen = ival;
 	    break;
 	case 'c':
 	    ival = atoi(optarg);
 	    if (ival > 0)
-		ChainLimit = ival;
+		opts->ChainLimit = ival;
 	    break;
 	case 'o':
 	    if (outFile != NULL)
@@ -193,7 +196,7 @@ static char **scanargs(int argc, char **argv)
 	    UNREACHABLE();
 	}
     }
-    if (Do_fans && MaxMinlen < 1)
+    if (opts->Do_fans && opts->MaxMinlen < 1)
 	fprintf(stderr, "%s: Warning: -f requires -l flag\n", cmd);
     argv += optind;
     argc -= optind;
@@ -211,11 +214,12 @@ int main(int argc, char **argv)
     Agraph_t *g;
     ingraph_state ig;
     char **files;
+    opts_t opts = {0};
 
-    files = scanargs(argc, argv);
+    files = scanargs(&opts, argc, argv);
     newIngraph(&ig, files);
     while ((g = nextGraph(&ig))) {
-	transform(g);
+	transform(g, &opts);
 	agwrite(g, outFile);
     }
     graphviz_exit(0);
