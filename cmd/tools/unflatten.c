@@ -39,8 +39,6 @@ typedef struct {
 
 typedef graphviz_unflatten_options_t opts_t;
 
-static int ChainSize = 0;
-static Agnode_t *ChainNode;
 static FILE *outFile;
 static char *cmd;
 
@@ -90,6 +88,8 @@ static void transform(Agraph_t *g, const opts_t *opts) {
     char *str;
     Agsym_t *m_ix, *s_ix;
     int cnt, d;
+    int ChainSize = 0;
+    Agnode_t *ChainNode = NULL;
 
     m_ix = bindedgeattr(g, "minlen");
     s_ix = bindedgeattr(g, "style");

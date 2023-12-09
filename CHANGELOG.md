@@ -91,6 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the Autotools build, libexpat discovery on macOS has been improved. #2477
 - A bug that caused compound edges to sometimes be drawn in the wrong direction
   has been corrected. This was a regression in Graphviz 8.0.3. #2478
+- When operating on multiple graphs, `unflatten` no longer retains chain node
+  and size internal state across graphs.
 
 ## [9.0.0] - 2023-09-11
 
