@@ -22,7 +22,6 @@
 #include    <stdbool.h>
 #include    <stdio.h>
 #include    <stdlib.h>
-#include    <string.h>
 #include    <cgraph/cgraph.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/ingraphs.h>
@@ -31,113 +30,10 @@
 #include <getopt.h>
 #include "openFile.h"
 
-typedef struct {
-  bool Do_fans;
-  int MaxMinlen;
-  int ChainLimit;
-} graphviz_unflatten_options_t;
-
 typedef graphviz_unflatten_options_t opts_t;
 
 static FILE *outFile;
 static char *cmd;
-
-static int myindegree(Agnode_t *n)
-{
-	return agdegree(n->root, n, 1, 0);
-}
-
-/* need outdegree without selfarcs */
-static int myoutdegree(Agnode_t *n)
-{
-	Agedge_t 	*e;
-	int rv = 0;
-
-	for (e = agfstout(n->root, n); e; e = agnxtout(n->root, e)) {
-		if (agtail(e) != aghead(e)) rv++;
-	}
-	return rv;
-}
-
-static bool isleaf(Agnode_t * n)
-{
-    return myindegree(n) + myoutdegree(n) == 1;
-}
-
-static bool ischainnode(Agnode_t * n)
-{
-    return myindegree(n) == 1 && myoutdegree(n) == 1;
-}
-
-static void adjustlen(Agedge_t * e, Agsym_t * sym, int newlen)
-{
-    char buf[12];
-
-    snprintf(buf, sizeof(buf), "%d", newlen);
-    agxset(e, sym, buf);
-}
-
-static Agsym_t *bindedgeattr(Agraph_t * g, char *str)
-{
-    return agattr(g, AGEDGE, str, "");
-}
-
-static void transform(Agraph_t *g, const opts_t *opts) {
-    Agnode_t *n;
-    Agedge_t *e;
-    char *str;
-    Agsym_t *m_ix, *s_ix;
-    int cnt, d;
-    int ChainSize = 0;
-    Agnode_t *ChainNode = NULL;
-
-    m_ix = bindedgeattr(g, "minlen");
-    s_ix = bindedgeattr(g, "style");
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	d = myindegree(n) + myoutdegree(n);
-	if (d == 0) {
-	    if (opts->ChainLimit < 1)
-		continue;
-	    if (ChainNode) {
-		e = agedge(g, ChainNode, n, "", 1);
-		agxset(e, s_ix, "invis");
-		ChainSize++;
-		if (ChainSize < opts->ChainLimit)
-		    ChainNode = n;
-		else {
-		    ChainNode = NULL;
-		    ChainSize = 0;
-		}
-	    } else
-		ChainNode = n;
-	} else if (d > 1) {
-	    if (opts->MaxMinlen < 1)
-		continue;
-	    cnt = 0;
-	    for (e = agfstin(g, n); e; e = agnxtin(g, e)) {
-		if (isleaf(agtail(e))) {
-		    str = agxget(e, m_ix);
-		    if (str[0] == 0) {
-			adjustlen(e, m_ix, cnt % opts->MaxMinlen + 1);
-			cnt++;
-		    }
-		}
-	    }
-
-	    cnt = 0;
-	    for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-		if (isleaf(e->node) || (opts->Do_fans && ischainnode(e->node))) {
-		    str = agxget(e, m_ix);
-		    if (str[0] == 0)
-			adjustlen(e, m_ix, cnt % opts->MaxMinlen + 1);
-		    cnt++;
-		}
-	    }
-	}
-    }
-}
-
 
 static char *useString =
     "Usage: %s [-f?] [-l l] [-c l] [-o outfile] <files>\n\
@@ -219,7 +115,7 @@ int main(int argc, char **argv)
     files = scanargs(&opts, argc, argv);
     newIngraph(&ig, files);
     while ((g = nextGraph(&ig))) {
-	transform(g, &opts);
+	graphviz_unflatten(g, &opts);
 	agwrite(g, outFile);
     }
     graphviz_exit(0);

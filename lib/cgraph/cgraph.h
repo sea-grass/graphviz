@@ -38,6 +38,7 @@
 #pragma once
 
 #include <inttypes.h>
+#include <stdbool.h>
 #include "cdt.h"
 
 #ifdef __cplusplus
@@ -668,6 +669,22 @@ and edges are embedded in main graph objects but allocated separately in subgrap
 #define AGSNMAIN(sn)        ((sn)==(&((sn)->node->mainsub)))
 #define EDGEOF(sn,rep)		(AGSNMAIN(sn)?((Agedge_t*)((unsigned char*)(rep) - offsetof(Agedge_t,seq_link))) : ((Dthold_t*)(rep))->obj)
 /// @}
+
+/// options for passing to `graphviz_unflatten`
+typedef struct {
+  bool Do_fans;
+  int MaxMinlen;
+  int ChainLimit;
+} graphviz_unflatten_options_t;
+
+/// programmatic access to `unflatten`
+///
+/// See `man unflatten` for an explanation of the `unflatten` tool.
+///
+/// \param g Graph to operate on
+/// \param opts Options to control unflattening
+CGRAPH_API void graphviz_unflatten(Agraph_t *g,
+                                   const graphviz_unflatten_options_t *opts);
 
 #ifdef __cplusplus
 }

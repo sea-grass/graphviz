@@ -51,6 +51,7 @@ Agraph_t	*agconcat(Agraph_t *g, void *channel, Agdisc_t *disc)
 int		agwrite(Agraph_t *g, void *channel);
 int		agnnodes(Agraph_t *g),agnedges(Agraph_t *g), agnsubg(Agraph_t * g);
 int		agisdirected(Agraph_t * g),agisundirected(Agraph_t * g),agisstrict(Agraph_t * g), agissimple(Agraph_t * g); 
+void graphviz_unflatten(Agraph_t *g, const graphviz_unflatten_options_t *opts);
 .SS "SUBGRAPHS"
 .P0
 Agraph_t	*agsubg(Agraph_t *g, char *name, int createflag);
