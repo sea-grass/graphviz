@@ -39,14 +39,14 @@ static long myiddisc_map(void *state, int objtype, char *str, uint64_t *id, int 
 		ids are unique across all graphs in the interp */
         ictx->ctr += 2;
     }
-    return TRUE;
+    return 1;
 }
 /* we don't allow users to explicitly set IDs, either */
 static long myiddisc_alloc(void *state, int objtype, uint64_t request_id) {
     (void)state;
     (void)objtype;
     (void)request_id;
-    return FALSE;
+    return 0;
 }
 static void myiddisc_free(void *state, int objtype, uint64_t id) {
     (void)objtype;
