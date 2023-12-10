@@ -166,9 +166,9 @@ int aginternalmapdelete(Agraph_t * g, int objtype, IDTYPE id)
 	dtdelete(g->clos->lookup_by_id[objtype], isym);
 	agstrfree(g, isym->str);
 	agfree(g, isym);
-	return TRUE;
+	return true;
     }
-    return FALSE;
+    return false;
 }
 
 void aginternalmapclearlocalnames(Agraph_t * g)
