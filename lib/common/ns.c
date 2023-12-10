@@ -534,7 +534,7 @@ int feasible_tree(void)
 {
   Agnode_t *n;
   Agedge_t *ee;
-  subtree_t **tree, *tree0, *tree1;
+  subtree_t *tree0, *tree1;
   int i, subtree_count = 0;
   STheap_t *heap = NULL;
   int error = 0;
@@ -544,7 +544,7 @@ int feasible_tree(void)
       ND_subtree_set(n,0);
   }
 
-  tree = N_NEW(N_nodes,subtree_t*);
+  subtree_t **tree = gv_calloc(N_nodes, sizeof(subtree_t *));
   /* given init_rank, find all tight subtrees */
   for (n = GD_nlist(G); n; n = ND_next(n)) {
         if (ND_subtree(n) == 0) {
@@ -753,7 +753,7 @@ static void TB_balance(void)
 {
     node_t *n;
     edge_t *e;
-    int low, high, choice, *nrank;
+    int low, high, choice;
     int inweight, outweight;
     int adj = 0;
     char *s;
@@ -761,7 +761,7 @@ static void TB_balance(void)
     scan_and_normalize();
 
     /* find nodes that are not tight and move to less populated ranks */
-    nrank = N_NEW(Maxrank + 1, int);
+    int *nrank = gv_calloc(Maxrank + 1, sizeof(int));
     for (int i = 0; i <= Maxrank; i++)
 	nrank[i] = 0;
     if ( (s = agget(G,"TBbalance")) ) {
@@ -856,10 +856,10 @@ static bool init_graph(graph_t *g) {
 	    if (ND_rank(aghead(e)) - ND_rank(agtail(e)) < ED_minlen(e))
 		feasible = false;
 	}
-	ND_tree_in(n).list = N_NEW(i + 1, edge_t *);
+	ND_tree_in(n).list = gv_calloc(i + 1, sizeof(edge_t *));
 	ND_tree_in(n).size = 0;
 	for (i = 0; (e = ND_out(n).list[i]); i++);
-	ND_tree_out(n).list = N_NEW(i + 1, edge_t *);
+	ND_tree_out(n).list = gv_calloc(i + 1, sizeof(edge_t *));
 	ND_tree_out(n).size = 0;
     }
     return feasible;

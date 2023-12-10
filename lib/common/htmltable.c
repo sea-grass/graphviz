@@ -1226,7 +1226,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	r++;
     }
 
-    cells = tbl->u.n.cells = N_NEW(cnt + 1, htmlcell_t *);
+    cells = tbl->u.n.cells = gv_calloc(cnt + 1, sizeof(htmlcell_t *));
     rp = (pitem *) dtflatten(rows);
     r = 0;
     while (rp) {
@@ -1276,8 +1276,8 @@ static void sizeLinearArray(htmltbl_t * tbl)
     htmlcell_t **cells;
     int i;
 
-    tbl->heights = N_NEW(tbl->row_count + 1, double);
-    tbl->widths = N_NEW(tbl->column_count + 1, double);
+    tbl->heights = gv_calloc(tbl->row_count + 1, sizeof(double));
+    tbl->widths = gv_calloc(tbl->column_count + 1, sizeof(double));
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
@@ -1476,8 +1476,8 @@ static void sizeArray(htmltbl_t * tbl)
 	return;
     }
 
-    tbl->heights = N_NEW(tbl->row_count + 1, double);
-    tbl->widths = N_NEW(tbl->column_count + 1, double);
+    tbl->heights = gv_calloc(tbl->row_count + 1, sizeof(double));
+    tbl->widths = gv_calloc(tbl->column_count + 1, sizeof(double));
 
     rowg = agopen("rowg", dir, NULL);
     colg = agopen("colg", dir, NULL);

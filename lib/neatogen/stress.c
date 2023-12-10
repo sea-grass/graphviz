@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <float.h>
 #include <neatogen/neato.h>
 #include <neatogen/dijkstra.h>
@@ -939,8 +940,8 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	fprintf(stderr, "Setting up stress function");
 	start_timer();
     }
-    coords = N_NEW(dim, float *);
-    f_storage = N_NEW(dim * n, float);
+    coords = gv_calloc(dim, sizeof(float *));
+    f_storage = gv_calloc(dim * n, sizeof(float));
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
@@ -967,9 +968,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 
     /* compute diagonal entries */
     count = 0;
-    degrees = N_NEW(n, DegType);
-    /* set_vector_val(n, 0, degrees); */
-    memset(degrees, 0, n * sizeof(DegType));
+    degrees = gv_calloc(n, sizeof(DegType));
     for (i = 0; i < n - 1; i++) {
 	degree = 0;
 	count++;		/* skip main diag entry */
@@ -988,15 +987,15 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	** Layout optimization  **
 	*************************/
 
-    b = N_NEW(dim, float *);
-    b[0] = N_NEW(dim * n, float);
+    b = gv_calloc(dim, sizeof(float *));
+    b[0] = gv_calloc(dim * n, sizeof(float));
     for (k = 1; k < dim; k++) {
 	b[k] = b[0] + k * n;
     }
 
-    tmp_coords = N_NEW(n, float);
-    dist_accumulator = N_NEW(n, float);
-    lap1 = N_NEW(lap_length, float);
+    tmp_coords = gv_calloc(n, sizeof(float));
+    dist_accumulator = gv_calloc(n, sizeof(float));
+    lap1 = gv_calloc(lap_length, sizeof(float));
 
 
     old_stress = MAXDOUBLE;	/* at least one iteration */
