@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/cghdr.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 typedef struct IMapEntry_s {
@@ -99,11 +100,11 @@ int aginternalmaplookup(Agraph_t * g, int objtype, char *str,
 	    sym = dtsearch(d, &template);
 	    if (sym) {
 		*result = sym->id;
-		return TRUE;
+		return true;
 	    }
 	}
     }
-    return FALSE;
+    return false;
 }
 
 /* caller GUARANTEES that this is a new entry */
