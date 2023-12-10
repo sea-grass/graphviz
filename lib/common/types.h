@@ -25,18 +25,6 @@
 #include <stdint.h>
 #include <assert.h>
 #include <signal.h>
-
-/// @cond
-
-#ifndef FALSE
-#define FALSE 0
-#endif
-#ifndef TRUE
-#define TRUE (!FALSE)
-#endif
-
-/// @endcond
-
 #include "geom.h"
 #include "gvcext.h"
 #include "pathgeom.h"

@@ -17,11 +17,6 @@
 extern "C" {
 #endif
 
-#ifndef FALSE
-#define FALSE	0
-#define TRUE	(!FALSE)
-#endif
-
 #ifdef GVDLL
 #ifdef PATHPLAN_EXPORTS
 #define PATHUTIL_API __declspec(dllexport)

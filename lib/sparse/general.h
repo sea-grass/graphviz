@@ -43,16 +43,6 @@ extern "C" {
 #define MAX(a,b) ((a)>(b)?(a):b)
 #define MIN(a,b) ((a)<(b)?(a):b)
 
-#ifdef TRUE
-#undef TRUE
-#endif
-#define TRUE 1
-
-#ifdef FALSE
-#undef FALSE
-#endif
-#define FALSE 0
-
 #define POINTS(inch) 72*(inch)
 
 #ifdef GVDLL

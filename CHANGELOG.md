@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ≥ 1.16.0. #2473
 - The legacy C# viewer app is no longer distributed in the portable source
   tarball.
+- Graphviz headers no longer define the `FALSE` and `TRUE` constants.
 
 ### Fixed
 
