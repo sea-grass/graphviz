@@ -540,8 +540,7 @@ int common_init_edge(edge_t * e)
 	ED_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
 				fi.fontsize, fi.fontname, fi.fontcolor);
 	GD_has_labels(sg) |= EDGE_LABEL;
-	ED_label_ontop(e) =
-	    mapbool(late_string(e, E_label_float, "false")) ? TRUE : FALSE;
+	ED_label_ontop(e) = mapbool(late_string(e, E_label_float, "false"));
     }
 
     if (E_xlabel && (str = agxget(e, E_xlabel)) && str[0]) {
