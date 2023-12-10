@@ -843,7 +843,7 @@ static edge_t *cloneEdge(edge_t * e, node_t * ct, node_t * ch)
     edge_t *ce = agedge(g, ct, ch,NULL,1);
     agbindrec(ce, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
     agcopyattr(e, ce);
-    ED_compound(ce) = TRUE;
+    ED_compound(ce) = true;
 
     return ce;
 }
