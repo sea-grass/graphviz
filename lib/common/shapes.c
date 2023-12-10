@@ -3498,8 +3498,7 @@ static pointf size_reclbl(node_t * n, field_t * f)
     return d;
 }
 
-static void resize_reclbl(field_t * f, pointf sz, int nojustify_p)
-{
+static void resize_reclbl(field_t *f, pointf sz, bool nojustify_p) {
     int i, amt;
     double inc;
     pointf d;
@@ -3653,8 +3652,7 @@ static void record_init(node_t * n)
 	sz.x = MAX(info->size.x, sz.x);
 	sz.y = MAX(info->size.y, sz.y);
     }
-    resize_reclbl(info, sz,
-                  mapbool(late_string(n, N_nojustify, "false")) ? TRUE : FALSE);
+    resize_reclbl(info, sz, mapbool(late_string(n, N_nojustify, "false")));
     pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);
