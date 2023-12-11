@@ -35,10 +35,7 @@ void setAspect(Agraph_t *g, aspect_t *adata) {
     p = agget (g, "aspect");
 
     if (!p || ((r = sscanf (p, "%lf,%d", &rv, &passes)) <= 0)) {
-	adata->nPasses = 0;
 	return;
     }
     agerr (AGWARN, "the aspect attribute has been disabled due to implementation flaws - attribute ignored.\n");
-    adata->nPasses = 0;
-    return;
 }

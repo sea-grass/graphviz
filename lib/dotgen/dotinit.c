@@ -308,7 +308,6 @@ static void dotLayout(Agraph_t * g)
         attach_phase_attrs (g, 2);  /* positions will be attached on output */
         return;
     }
-    aspect.nPasses--;
     if (GD_flags(g) & NEW_RANK)
 	removeFill (g);
     dot_sameports(g);
