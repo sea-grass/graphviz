@@ -47,22 +47,6 @@ int countDummyNodes(graph_t * g)
     return count;
 }
 
-/****************************************************************
- * Initialize all the edge types to NORMAL 
- ****************************************************************/
-void initEdgeTypes(graph_t * g)
-{
-    edge_t *e;
-    node_t *n;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (size_t lc = 0; lc < ND_in(n).size; lc++) {
-	    e = ND_in(n).list[lc];
-	    ED_edge_type(e) = NORMAL;
-	}
-    }
-}
-
 void setAspect(Agraph_t *g, aspect_t *adata) {
     double rv;
     char *p;
