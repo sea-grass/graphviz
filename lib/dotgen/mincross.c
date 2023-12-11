@@ -50,7 +50,7 @@ static void merge2(graph_t * g);
 static void init_mccomp(graph_t *g, size_t c);
 static void cleanup2(graph_t * g, int nc);
 static int mincross_clust(graph_t *g);
-static int mincross(graph_t * g, int startpass, int endpass, int);
+static int mincross(graph_t *g, int startpass, int endpass);
 static void mincross_step(graph_t * g, int pass);
 static void mincross_options(graph_t * g);
 static void save_best(graph_t * g);
@@ -368,7 +368,7 @@ void dot_mincross(graph_t *g) {
     size_t comp;
     for (nc = 0, comp = 0; comp < GD_comp(g).size; comp++) {
 	init_mccomp(g, comp);
-	nc += mincross(g, 0, 2, 0);
+	nc += mincross(g, 0, 2);
     }
 
     merge2(g);
@@ -385,7 +385,7 @@ void dot_mincross(graph_t *g) {
     if (GD_n_cluster(g) > 0 && (!(s = agget(g, "remincross")) || mapbool(s))) {
 	mark_lowclusters(g);
 	ReMincross = true;
-	nc = mincross(g, 2, 2, 0);
+	nc = mincross(g, 2, 2);
 #ifdef DEBUG
 	for (int c = 1; c <= GD_n_cluster(g); c++)
 	    check_vlists(GD_clust(g)[c]);
@@ -539,7 +539,7 @@ static int mincross_clust(graph_t * g) {
     ordered_edges(g);
     flat_breakcycles(g);
     flat_reorder(g);
-    nc = mincross(g, 2, 2, 0);
+    nc = mincross(g, 2, 2);
 
     for (c = 1; c <= GD_n_cluster(g); c++)
 	nc += mincross_clust(GD_clust(g)[c]);
@@ -627,131 +627,6 @@ static void exchange(node_t * v, node_t * w)
     GD_rank(Root)[r].v[vi] = w;
 }
 
-static void balanceNodes(graph_t * g, int r, node_t * v, node_t * w)
-{
-    node_t *s;			/* separator node */
-    int sepIndex = 0;
-    int nullType;		/* type of null nodes */
-    int cntDummy = 0, cntOri = 0;
-    int k = 0, m = 0, k1 = 0, m1 = 0, i = 0;
-
-    /* we only consider v and w of different types */
-    if (ND_node_type(v) == ND_node_type(w))
-	return;
-
-    /* count the number of dummy and original nodes */
-    for (i = 0; i < GD_rank(g)[r].n; i++) {
-	if (ND_node_type(GD_rank(g)[r].v[i]) == NORMAL)
-	    cntOri++;
-	else
-	    cntDummy++;
-    }
-
-    if (cntOri < cntDummy) {
-	if (ND_node_type(v) == NORMAL)
-	    s = v;
-	else
-	    s = w;
-    } else {
-	if (ND_node_type(v) == NORMAL)
-	    s = w;
-	else
-	    s = v;
-    }
-
-    /* get the separator node index */
-    for (i = 0; i < GD_rank(g)[r].n; i++) {
-	if (GD_rank(g)[r].v[i] == s)
-	    sepIndex = i;
-    }
-
-    nullType = ND_node_type(s) == NORMAL ? VIRTUAL : NORMAL;
-
-    /* count the number of null nodes to the left and 
-     * right of the separator node 
-     */
-    for (i = sepIndex - 1; i >= 0; i--) {
-	if (ND_node_type(GD_rank(g)[r].v[i]) == nullType)
-	    k++;
-	else
-	    break;
-    }
-
-    for (i = sepIndex + 1; i < GD_rank(g)[r].n; i++) {
-	if (ND_node_type(GD_rank(g)[r].v[i]) == nullType)
-	    m++;
-	else
-	    break;
-    }
-
-    /* now exchange v,w and calculate the same counts */
-
-    exchange(v, w);
-
-    /* get the separator node index */
-    for (i = 0; i < GD_rank(g)[r].n; i++) {
-	if (GD_rank(g)[r].v[i] == s)
-	    sepIndex = i;
-    }
-
-    /* count the number of null nodes to the left and 
-     * right of the separator node 
-     */
-    for (i = sepIndex - 1; i >= 0; i--) {
-	if (ND_node_type(GD_rank(g)[r].v[i]) == nullType)
-	    k1++;
-	else
-	    break;
-    }
-
-    for (i = sepIndex + 1; i < GD_rank(g)[r].n; i++) {
-	if (ND_node_type(GD_rank(g)[r].v[i]) == nullType)
-	    m1++;
-	else
-	    break;
-    }
-
-    if (abs(k1 - m1) > abs(k - m)) {
-	exchange(v, w);		//revert to the original ordering
-    }
-}
-
-static int balance(graph_t * g)
-{
-    int i, c0, c1, rv;
-    node_t *v, *w;
-    int r;
-
-    rv = 0;
-
-    for (r = GD_maxrank(g); r >= GD_minrank(g); r--) {
-
-	GD_rank(g)[r].candidate = false;
-	for (i = 0; i < GD_rank(g)[r].n - 1; i++) {
-	    v = GD_rank(g)[r].v[i];
-	    w = GD_rank(g)[r].v[i + 1];
-	    assert(ND_order(v) < ND_order(w));
-	    if (left2right(g, v, w))
-		continue;
-	    c0 = c1 = 0;
-	    if (r > 0) {
-		c0 += in_cross(v, w);
-		c1 += in_cross(w, v);
-	    }
-
-	    if (GD_rank(g)[r + 1].n > 0) {
-		c0 += out_cross(v, w);
-		c1 += out_cross(w, v);
-	    }
-
-	    if (c1 <= c0) {
-		balanceNodes(g, r, v, w);
-	    }
-	}
-    }
-    return rv;
-}
-
 static int transpose_step(graph_t * g, int r, bool reverse)
 {
     int i, c0, c1, rv;
@@ -809,8 +684,7 @@ static void transpose(graph_t * g, bool reverse)
     } while (delta >= 1);
 }
 
-static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
-{
+static int mincross(graph_t *g, int startpass, int endpass) {
     int maxthispass = 0, iter, trying, pass;
     int cur_cross, best_cross;
 
@@ -864,10 +738,6 @@ static int mincross(graph_t * g, int startpass, int endpass, int doBalance)
     if (best_cross > 0) {
 	transpose(g, false);
 	best_cross = ncross(g);
-    }
-    if (doBalance) {
-	for (iter = 0; iter < maxthispass; iter++)
-	    balance(g);
     }
 
     return best_cross;
