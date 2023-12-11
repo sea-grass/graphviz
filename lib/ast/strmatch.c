@@ -77,11 +77,7 @@ typedef struct {
     char *next_p;
 } Match_t;
 
-#if defined(_lib_mbtowc) && _lib_mbtowc && MB_LEN_MAX > 1
-#define mbgetchar(p)	((ast.locale.set&AST_LC_multibyte)?((ast.tmp_int=mbtowc(&ast.tmp_wchar,p,MB_CUR_MAX))>=0?((p+=ast.tmp_int),ast.tmp_wchar):0):(*p++))
-#else
 #define mbgetchar(p)	(*p++)
-#endif
 
 #define getsource(s,e)	(((s)>=(e))?0:mbgetchar(s))
 
@@ -453,30 +449,6 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		    else if (range)
 		    {
 		      getrange:
-#if defined(_lib_mbtowc) && _lib_mbtowc
-			if (ast.locale.set & AST_LC_multibyte) {
-			    wchar_t sw;
-			    wchar_t bw;
-			    wchar_t ew;
-			    int sz;
-			    int bz;
-			    int ez;
-
-			    sz = mbtowc(&sw, olds, MB_CUR_MAX);
-			    bz = mbtowc(&bw, range, MB_CUR_MAX);
-			    ez = mbtowc(&ew, oldp, MB_CUR_MAX);
-			    if (sw == bw || sw == ew)
-				ok = 1;
-			    else if (sz > 1 || bz > 1 || ez > 1) {
-				if (sz == bz && sz == ez && sw > bw
-				    && sw < ew)
-				    ok = 1;
-				else
-				    RETURN(0);
-			    }
-			}
-			if (!ok)
-#endif
 			    if (icase && isupper(pc))
 				pc = tolower(pc);
 			x = mbgetchar(range);
