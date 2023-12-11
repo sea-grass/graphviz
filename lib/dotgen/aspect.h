@@ -20,4 +20,3 @@ typedef struct aspect_t {
 } aspect_t;
 
 extern void setAspect(Agraph_t *g, aspect_t*adata);
-extern int countDummyNodes(graph_t * g);

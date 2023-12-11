@@ -27,26 +27,6 @@
 
 #define DEF_PASSES 5
 
-/* countDummyNodes:
- *  Count the number of dummy nodes
- */
-int countDummyNodes(graph_t * g)
-{
-    int count = 0;
-    node_t *n;
-    edge_t *e;
-
-    /* Count dummy nodes */
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-		/* flat edges do not have dummy nodes */
-	    if (ND_rank(aghead(e)) != ND_rank(agtail(e)))	
-		count += abs(ND_rank(aghead(e)) - ND_rank(agtail(e))) - 1;
-	}
-    }
-    return count;
-}
-
 void setAspect(Agraph_t *g, aspect_t *adata) {
     double rv;
     char *p;
