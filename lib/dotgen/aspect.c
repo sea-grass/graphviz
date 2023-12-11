@@ -27,7 +27,7 @@
 
 #define DEF_PASSES 5
 
-void setAspect(Agraph_t *g, aspect_t *adata) {
+void setAspect(Agraph_t *g) {
     double rv;
     char *p;
     int r, passes = DEF_PASSES;

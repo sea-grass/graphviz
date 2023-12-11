@@ -10,11 +10,4 @@
 
 #pragma once
 
-typedef struct aspect_t {
-    double targetAR;      /* target aspect ratio */
-    double combiAR;
-    int prevIterations;   /* no. of iterations in previous pass */
-    int curIterations;    /* no. of iterations in current pass */
-} aspect_t;
-
-extern void setAspect(Agraph_t *g, aspect_t*adata);
+extern void setAspect(Agraph_t *g);
