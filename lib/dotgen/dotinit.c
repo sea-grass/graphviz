@@ -285,7 +285,6 @@ attach_phase_attrs (Agraph_t * g, int maxphase)
 static void dotLayout(Agraph_t * g)
 {
     aspect_t aspect;
-    aspect_t *asp = NULL;
     int maxphase = late_int(g, agfindgraphattr(g,"phase"), -1, 1);
 
     setEdgeType (g, EDGETYPE_SPLINE);
@@ -295,22 +294,21 @@ static void dotLayout(Agraph_t * g)
     dot_init_node_edge(g);
 
     do {
-        dot_rank(g, asp);
+        dot_rank(g, NULL);
 	if (maxphase == 1) {
 	    attach_phase_attrs (g, 1);
 	    return;
 	}
 	if (aspect.badGraph) {
 	    agerr(AGWARN, "dot does not support the aspect attribute for disconnected graphs or graphs with clusters\n");
-	    asp = NULL;
 	    aspect.nextIter = 0;
 	}
-        dot_mincross(g, (asp != NULL));
+        dot_mincross(g, false);
 	if (maxphase == 2) {
 	    attach_phase_attrs (g, 2);
 	    return;
 	}
-        dot_position(g, asp);
+        dot_position(g, NULL);
 	if (maxphase == 3) {
 	    attach_phase_attrs (g, 2);  /* positions will be attached on output */
 	    return;
