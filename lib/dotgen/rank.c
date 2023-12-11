@@ -32,7 +32,7 @@
 #include	<stdint.h>
 
 static void dot1_rank(graph_t *g);
-static void dot2_rank(graph_t * g, aspect_t* asp);
+static void dot2_rank(graph_t *g);
 
 static void 
 renewlist(elist * L)
@@ -449,7 +449,7 @@ static void dot1_rank(graph_t *g)
 void dot_rank(graph_t *g) {
     if (agget (g, "newrank")) {
 	GD_flags(g) |= NEW_RANK;
-	dot2_rank(g, NULL);
+	dot2_rank(g);
     }
     else
 	dot1_rank(g);
@@ -1003,8 +1003,7 @@ int infosizes[] = {
     sizeof(Agedgeinfo_t)
 };
 
-void dot2_rank(graph_t * g, aspect_t* asp)
-{
+void dot2_rank(graph_t *g) {
     int ssize;
     int ncc, maxiter = INT_MAX;
     char *s;
@@ -1029,11 +1028,6 @@ void dot2_rank(graph_t * g, aspect_t* asp)
     break_cycles(Xg);
     ncc = connect_components(Xg);
     add_fast_edges (Xg);
-
-    if (asp) {
-	init_UF_size(Xg);
-	initEdgeTypes(Xg);
-    }
 
     if ((s = agget(g, "searchsize")))
 	ssize = atoi(s);
