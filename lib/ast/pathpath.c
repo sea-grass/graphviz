@@ -35,8 +35,6 @@ static const char *getenv_path(void) {
   return "";
 }
 
-char **opt_info_argv;
-
 char *pathpath(const char *p) {
   const char *a = "";
   char *s;
@@ -59,8 +57,8 @@ char *pathpath(const char *p) {
       a = 0;
     if ((!cmd || *cmd) &&
         (strchr(s, '/') ||
-         (((s = cmd) || (opt_info_argv && (s = *opt_info_argv))) &&
-          strchr(s, '/') && !strchr(s, '\n') && !access(s, F_OK)) ||
+         ((s = cmd) && strchr(s, '/') && !strchr(s, '\n') &&
+          !access(s, F_OK)) ||
          ((s = getenv("_")) && strchr(s, '/') && !strneq(s, "/bin/", 5) &&
           !strneq(s, "/usr/bin/", 9)) ||
          (*x && !access(x, F_OK) && (s = getenv("PWD")) && *s == '/'))) {
