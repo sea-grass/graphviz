@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <ast/ast.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/startswith.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -59,8 +60,8 @@ char *pathpath(const char *p) {
         (strchr(s, '/') ||
          ((s = cmd) && strchr(s, '/') && !strchr(s, '\n') &&
           !access(s, F_OK)) ||
-         ((s = getenv("_")) && strchr(s, '/') && !strneq(s, "/bin/", 5) &&
-          !strneq(s, "/usr/bin/", 9)) ||
+         ((s = getenv("_")) && strchr(s, '/') && !startswith(s, "/bin/") &&
+          !startswith(s, "/usr/bin/")) ||
          (*x && !access(x, F_OK) && (s = getenv("PWD")) && *s == '/'))) {
       if (!cmd)
         cmd = strdup(s);

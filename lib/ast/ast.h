@@ -34,7 +34,6 @@ extern "C" {
 
 #define elementsof(x)   (sizeof(x)/sizeof(x[0]))
 #define streq(a,b)  (!strcmp(a,b))
-#define strneq(a,b,n)     (!strncmp(a,b,n))
 #define memzero(b,n)    memset(b,0,n)
 
     extern char *pathpath(const char *);
