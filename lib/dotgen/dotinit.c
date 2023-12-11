@@ -285,11 +285,11 @@ attach_phase_attrs (Agraph_t * g, int maxphase)
 static void dotLayout(Agraph_t * g)
 {
     aspect_t aspect;
-    aspect_t* asp;
+    aspect_t *asp = NULL;
     int maxphase = late_int(g, agfindgraphattr(g,"phase"), -1, 1);
 
     setEdgeType (g, EDGETYPE_SPLINE);
-    asp = setAspect (g, &aspect);
+    setAspect(g, &aspect);
 
     dot_init_subg(g,g);
     dot_init_node_edge(g);

@@ -586,9 +586,7 @@ void init_UF_size(graph_t * g)
 	ND_UF_size(n) = 0;
 }
 
-aspect_t*
-setAspect (Agraph_t * g, aspect_t* adata)
-{
+void setAspect(Agraph_t *g, aspect_t *adata) {
     double rv;
     char *p;
     int r, passes = DEF_PASSES;
@@ -599,11 +597,11 @@ setAspect (Agraph_t * g, aspect_t* adata)
 	adata->nextIter = 0;
 	adata->badGraph = 0;
 	adata->nPasses = 0;
-	return NULL;
+	return;
     }
     agerr (AGWARN, "the aspect attribute has been disabled due to implementation flaws - attribute ignored.\n");
     adata->nextIter = 0;
     adata->badGraph = 0;
     adata->nPasses = 0;
-    return NULL;
+    return;
 }
