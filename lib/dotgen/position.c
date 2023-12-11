@@ -30,7 +30,7 @@ static void create_aux_edges(graph_t * g);
 static void remove_aux_edges(graph_t * g);
 static void set_xcoords(graph_t * g);
 static void set_ycoords(graph_t * g);
-static void set_aspect(graph_t * g, aspect_t* );
+static void set_aspect(graph_t *g);
 static void expand_leaves(graph_t * g);
 static void make_lrvn(graph_t * g);
 static void contain_nodes(graph_t * g);
@@ -140,7 +140,7 @@ void dot_position(graph_t *g) {
 	(void)rank_result;
     }
     set_xcoords(g);
-    set_aspect(g, NULL);
+    set_aspect(g);
     remove_aux_edges(g);	/* must come after set_aspect since we now
 				 * use GD_ln and GD_rn for bbox width.
 				 */
@@ -915,37 +915,12 @@ static void scale_bb(graph_t * g, graph_t * root, double xf, double yf)
     GD_bb(g).UR.y *= yf;
 }
 
-/* adjustAspectRatio:
- */
-static void adjustAspectRatio (graph_t* g, aspect_t* asp)
-{
-    double AR = (GD_bb(g).UR.x - GD_bb(g).LL.x)/(GD_bb(g).UR.y - GD_bb(g).LL.y);
-    if (Verbose) {
-        fprintf(stderr, "AR=%0.4lf\t Area= %0.4lf\t", AR, (double)(GD_bb(g).UR.x - GD_bb(g).LL.x)*(GD_bb(g).UR.y - GD_bb(g).LL.y)/10000.0);
-        fprintf(stderr, "Dummy=%d\n", countDummyNodes(g));
-    }
-    if (AR > 1.1*asp->targetAR) {
-      asp->nextIter = (int)(asp->targetAR * (double)(asp->curIterations - asp->prevIterations)/(AR));
-    }
-    else if (AR <= 0.8 * asp->targetAR) {
-      asp->nextIter = -1;
-      if (Verbose)
-        fprintf(stderr, "Going to apply another expansion.\n");
-    }
-    else {
-	asp->nextIter = 0;
-    }
-    if (Verbose)
-        fprintf(stderr, "next#iter=%d\n", asp->nextIter);
-}
-
 /* set_aspect:
  * Set bounding boxes and, if ratio is set, rescale graph.
  * Note that if some dimension shrinks, there may be problems
  * with labels.
  */
-static void set_aspect(graph_t * g, aspect_t* asp)
-{
+static void set_aspect(graph_t *g) {
     double xf = 0.0, yf = 0.0, actual, desired;
     node_t *n;
     bool filled;
@@ -1021,8 +996,6 @@ static void set_aspect(graph_t * g, aspect_t* asp)
 	    scale_bb(g, g, xf, yf);
 	}
     }
-
-    if (asp) adjustAspectRatio (g, asp);
 }
 
 /* make space for the leaf nodes of each rank */
