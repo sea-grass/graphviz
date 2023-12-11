@@ -304,7 +304,7 @@ static void dotLayout(Agraph_t * g)
 	    attach_phase_attrs (g, 2);
 	    return;
 	}
-        dot_position(g, NULL);
+        dot_position(g);
 	if (maxphase == 3) {
 	    attach_phase_attrs (g, 2);  /* positions will be attached on output */
 	    return;

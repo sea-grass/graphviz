@@ -122,8 +122,7 @@ connectGraph (graph_t* g)
     }
 }
 
-void dot_position(graph_t * g, aspect_t* asp)
-{
+void dot_position(graph_t *g) {
     if (GD_nlist(g) == NULL)
 	return;			/* ignore empty graph */
     mark_lowclusters(g);	/* we could remove from splines.c now */
@@ -141,7 +140,7 @@ void dot_position(graph_t * g, aspect_t* asp)
 	(void)rank_result;
     }
     set_xcoords(g);
-    set_aspect(g, asp);
+    set_aspect(g, NULL);
     remove_aux_edges(g);	/* must come after set_aspect since we now
 				 * use GD_ln and GD_rn for bbox width.
 				 */
