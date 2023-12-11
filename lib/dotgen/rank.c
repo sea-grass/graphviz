@@ -31,7 +31,7 @@
 #include	<stddef.h>
 #include	<stdint.h>
 
-static void dot1_rank(graph_t * g, aspect_t* asp);
+static void dot1_rank(graph_t *g);
 static void dot2_rank(graph_t * g, aspect_t* asp);
 
 static void 
@@ -262,7 +262,7 @@ collapse_cluster(graph_t * g, graph_t * subg)
 	return;
     make_new_cluster(g, subg);
     if (CL_type == LOCAL) {
-	dot1_rank(subg, 0);
+	dot1_rank(subg);
 	cluster_leader(subg);
     } else
 	dot_scan_ranks(subg);
@@ -427,38 +427,23 @@ static void expand_ranksets(graph_t * g, aspect_t* asp)
     }
 }
 
-/* dot1_rank:
- * asp != NULL => g is root
- */
-static void dot1_rank(graph_t * g, aspect_t* asp)
+static void dot1_rank(graph_t *g)
 {
     point p;
     edgelabel_ranks(g);
-
-    if (asp) {
-	init_UF_size(g);
-	initEdgeTypes(g);
-    }
 
     collapse_sets(g,g);
     /*collapse_leaves(g); */
     class1(g);
     p = minmax_edges(g);
     decompose(g, 0);
-    if (asp && ((GD_comp(g).size > 1)||(GD_n_cluster(g) > 0))) {
-	asp->badGraph = 1;
-	asp = NULL;
-    }
     acyclic(g);
     if (minmax_edges2(g, p))
 	decompose(g, 0);
 
-    if (asp)
-	rank3(g, asp);
-    else
-	rank1(g);
+    rank1(g);
 
-    expand_ranksets(g, asp);
+    expand_ranksets(g, NULL);
     cleanup1(g);
 }
 
@@ -468,7 +453,7 @@ void dot_rank(graph_t *g) {
 	dot2_rank(g, NULL);
     }
     else
-	dot1_rank(g, NULL);
+	dot1_rank(g);
     if (Verbose)
 	fprintf (stderr, "Maxrank = %d, minrank = %d\n", GD_maxrank(g), GD_minrank(g));
 }
