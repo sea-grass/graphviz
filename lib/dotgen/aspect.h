@@ -22,7 +22,6 @@ typedef struct aspect_t {
 } aspect_t;
 
 extern void setAspect(Agraph_t *g, aspect_t*adata);
-extern void rank3(graph_t * g, aspect_t * asp);
 extern void initEdgeTypes(graph_t * g);
 extern void init_UF_size(graph_t * g);
 extern int countDummyNodes(graph_t * g);
