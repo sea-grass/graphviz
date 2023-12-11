@@ -389,8 +389,7 @@ void rank1(graph_t * g)
  * Leaf sets and clusters remain merged.
  * Sets minrank and maxrank appropriately.
  */
-static void expand_ranksets(graph_t * g, aspect_t* asp)
-{
+static void expand_ranksets(graph_t *g) {
     int c;
     node_t *n, *leader;
 
@@ -402,7 +401,7 @@ static void expand_ranksets(graph_t * g, aspect_t* asp)
 	    /* The following works because ND_rank(n) == 0 if n is not in a
 	     * cluster, and ND_rank(n) = the local rank offset if n is in
 	     * a cluster. */
-	    if ((leader != n) && (!asp || (ND_rank(n) == 0)))
+	    if (leader != n)
 		ND_rank(n) += ND_rank(leader);
 
 	    if (GD_maxrank(g) < ND_rank(n))
@@ -443,7 +442,7 @@ static void dot1_rank(graph_t *g)
 
     rank1(g);
 
-    expand_ranksets(g, NULL);
+    expand_ranksets(g);
     cleanup1(g);
 }
 
