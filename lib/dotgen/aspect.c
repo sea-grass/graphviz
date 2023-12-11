@@ -63,17 +63,6 @@ void initEdgeTypes(graph_t * g)
     }
 }
 
-/* init_UF_size:
- * Initialize the Union Find data structure
- */
-void init_UF_size(graph_t * g)
-{
-    node_t *n;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	ND_UF_size(n) = 0;
-}
-
 void setAspect(Agraph_t *g, aspect_t *adata) {
     double rv;
     char *p;
