@@ -53,6 +53,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   tarball.
 - Graphviz headers no longer define the `FALSE` and `TRUE` constants.
 - The Autotools build system no longer supports Darwin 9 (Mac OSX Leopard).
+- **Breaking**: `Agraph_t.link` has been split into `Agraph_t.id_link` and
+  `Agraph_t.seq_link`. `Agraph_t.g_dict` has been split into `Agraph_t.g_id`
+  and `Agraph_t.g_seq`.
 
 ### Fixed
 
@@ -96,6 +99,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   has been corrected. This was a regression in Graphviz 8.0.3. #2478
 - When operating on multiple graphs, `unflatten` no longer retains chain node
   and size internal state across graphs.
+- Repeated runs of a graph with subgraphs now produce a stable subgraph
+  ordering. #2242
 
 ## [9.0.0] - 2023-09-11
 
