@@ -342,8 +342,7 @@ checkLabelOrder (graph_t* g)
  * Note that nodes are not placed into GD_rank(g) until mincross()
  * is called.
  */
-void dot_mincross(graph_t * g, int doBalance)
-{
+void dot_mincross(graph_t *g) {
     int nc;
     char *s;
 
@@ -369,14 +368,14 @@ void dot_mincross(graph_t * g, int doBalance)
     size_t comp;
     for (nc = 0, comp = 0; comp < GD_comp(g).size; comp++) {
 	init_mccomp(g, comp);
-	nc += mincross(g, 0, 2, doBalance);
+	nc += mincross(g, 0, 2, 0);
     }
 
     merge2(g);
 
     /* run mincross on contents of each cluster */
     for (int c = 1; c <= GD_n_cluster(g); c++) {
-	nc += mincross_clust(GD_clust(g)[c], doBalance);
+	nc += mincross_clust(GD_clust(g)[c], 0);
 #ifdef DEBUG
 	check_vlists(GD_clust(g)[c]);
 	check_order();
@@ -386,7 +385,7 @@ void dot_mincross(graph_t * g, int doBalance)
     if (GD_n_cluster(g) > 0 && (!(s = agget(g, "remincross")) || mapbool(s))) {
 	mark_lowclusters(g);
 	ReMincross = true;
-	nc = mincross(g, 2, 2, doBalance);
+	nc = mincross(g, 2, 2, 0);
 #ifdef DEBUG
 	for (int c = 1; c <= GD_n_cluster(g); c++)
 	    check_vlists(GD_clust(g)[c]);

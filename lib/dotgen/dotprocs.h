@@ -69,7 +69,7 @@ extern "C" {
 
     extern Agraph_t* dot_root(void *);
     extern void dot_concentrate(Agraph_t *);
-    extern void dot_mincross(Agraph_t *, int);
+    extern void dot_mincross(Agraph_t *);
     extern void dot_position(Agraph_t *, aspect_t*);
     extern void dot_rank(Agraph_t *);
     extern void dot_sameports(Agraph_t *);

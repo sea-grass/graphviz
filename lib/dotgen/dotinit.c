@@ -299,7 +299,7 @@ static void dotLayout(Agraph_t * g)
 	    attach_phase_attrs (g, 1);
 	    return;
 	}
-        dot_mincross(g, false);
+        dot_mincross(g);
 	if (maxphase == 2) {
 	    attach_phase_attrs (g, 2);
 	    return;
