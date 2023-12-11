@@ -293,24 +293,22 @@ static void dotLayout(Agraph_t * g)
     dot_init_subg(g,g);
     dot_init_node_edge(g);
 
-    do {
-        dot_rank(g);
-	if (maxphase == 1) {
-	    attach_phase_attrs (g, 1);
-	    return;
-	}
-        dot_mincross(g);
-	if (maxphase == 2) {
-	    attach_phase_attrs (g, 2);
-	    return;
-	}
-        dot_position(g);
-	if (maxphase == 3) {
-	    attach_phase_attrs (g, 2);  /* positions will be attached on output */
-	    return;
-	}
-	aspect.nPasses--;
-    } while (aspect.nextIter && aspect.nPasses);
+    dot_rank(g);
+    if (maxphase == 1) {
+        attach_phase_attrs (g, 1);
+        return;
+    }
+    dot_mincross(g);
+    if (maxphase == 2) {
+        attach_phase_attrs (g, 2);
+        return;
+    }
+    dot_position(g);
+    if (maxphase == 3) {
+        attach_phase_attrs (g, 2);  /* positions will be attached on output */
+        return;
+    }
+    aspect.nPasses--;
     if (GD_flags(g) & NEW_RANK)
 	removeFill (g);
     dot_sameports(g);

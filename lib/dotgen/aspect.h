@@ -15,7 +15,6 @@ typedef struct aspect_t {
     double combiAR;
     int prevIterations;   /* no. of iterations in previous pass */
     int curIterations;    /* no. of iterations in current pass */
-    int nextIter;         /* dynamically adjusted no. of iterations */
     int nPasses;          /* bound on no. of top-level passes */
 } aspect_t;
 
