@@ -462,14 +462,13 @@ static void dot1_rank(graph_t * g, aspect_t* asp)
     cleanup1(g);
 }
 
-void dot_rank(graph_t * g, aspect_t* asp)
-{
+void dot_rank(graph_t *g) {
     if (agget (g, "newrank")) {
 	GD_flags(g) |= NEW_RANK;
-	dot2_rank (g, asp);
+	dot2_rank(g, NULL);
     }
     else
-	dot1_rank (g, asp);
+	dot1_rank(g, NULL);
     if (Verbose)
 	fprintf (stderr, "Maxrank = %d, minrank = %d\n", GD_maxrank(g), GD_minrank(g));
 }

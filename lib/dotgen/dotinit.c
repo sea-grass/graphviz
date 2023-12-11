@@ -294,7 +294,7 @@ static void dotLayout(Agraph_t * g)
     dot_init_node_edge(g);
 
     do {
-        dot_rank(g, NULL);
+        dot_rank(g);
 	if (maxphase == 1) {
 	    attach_phase_attrs (g, 1);
 	    return;
