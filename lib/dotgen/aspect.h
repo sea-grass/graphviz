@@ -17,8 +17,6 @@ typedef struct aspect_t {
     int curIterations;    /* no. of iterations in current pass */
     int nextIter;         /* dynamically adjusted no. of iterations */
     int nPasses;          /* bound on no. of top-level passes */
-    int badGraph;         /* hack: set if graph is disconnected or has
-                           * clusters. If so, turn off aspect */
 } aspect_t;
 
 extern void setAspect(Agraph_t *g, aspect_t*adata);

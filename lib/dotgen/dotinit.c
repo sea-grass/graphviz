@@ -299,10 +299,6 @@ static void dotLayout(Agraph_t * g)
 	    attach_phase_attrs (g, 1);
 	    return;
 	}
-	if (aspect.badGraph) {
-	    agerr(AGWARN, "dot does not support the aspect attribute for disconnected graphs or graphs with clusters\n");
-	    aspect.nextIter = 0;
-	}
         dot_mincross(g, false);
 	if (maxphase == 2) {
 	    attach_phase_attrs (g, 2);

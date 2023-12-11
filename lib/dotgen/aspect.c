@@ -56,13 +56,11 @@ void setAspect(Agraph_t *g, aspect_t *adata) {
 
     if (!p || ((r = sscanf (p, "%lf,%d", &rv, &passes)) <= 0)) {
 	adata->nextIter = 0;
-	adata->badGraph = 0;
 	adata->nPasses = 0;
 	return;
     }
     agerr (AGWARN, "the aspect attribute has been disabled due to implementation flaws - attribute ignored.\n");
     adata->nextIter = 0;
-    adata->badGraph = 0;
     adata->nPasses = 0;
     return;
 }
