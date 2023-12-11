@@ -2273,7 +2273,13 @@ for repo_root, _, files in os.walk(ROOT):
         VCXPROJS.append(full_path)
 
 
-@pytest.mark.parametrize("vcxproj", VCXPROJS)
+@pytest.mark.parametrize(
+    "vcxproj",
+    (
+        pytest.param(p, id=str(p.relative_to(Path(__file__).parents[1])))
+        for p in VCXPROJS
+    ),
+)
 def test_vcxproj_inclusive(vcxproj: Path):
     """check .vcxproj files correspond to .vcxproj.filters files"""
 
