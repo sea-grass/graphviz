@@ -38,7 +38,6 @@ typedef struct Exinput_s		/* input stack			*/
 	int		peek;		/* 1 char peek			*/
 	int		unit;		/* first frame in parse unit	*/
 	char*		pushback;	/* pushback buffer		*/
-	char*		bp;		/* expression string base	*/
 	char*		pp;		/* pushback pointer		*/
 } Exinput_t;
 
