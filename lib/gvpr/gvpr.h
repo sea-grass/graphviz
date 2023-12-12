@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -60,7 +62,7 @@ typedef struct {
 
 typedef struct {
     Agraph_t** ingraphs;      /* NULL-terminated array of input graphs */
-    int n_outgraphs;          /* if GV_USE_OUTGRAPH set, output graphs */
+    size_t n_outgraphs; ///< if GV_USE_OUTGRAPH set, output graphs
     Agraph_t** outgraphs;
     gvprwr out;               /* write function for stdout */
     gvprwr err;               /* write function for stderr */
