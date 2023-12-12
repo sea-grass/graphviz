@@ -51,7 +51,6 @@ extern "C" {
 #define EX_QUALIFY	(1<<5)		/* '.' refs qualified in id tab	*/
 #define EX_RETAIN	(1<<6)		/* retain expressions on redef	*/
 #define EX_SIZED	(1<<7)		/* strings are sized buffers	*/
-#define EX_STRICT	(1<<8)		/* don't override null label	*/
 #define EX_UNDECLARED	(1<<9)		/* allow undeclared identifiers	*/
 
 #define EX_ARRAY	(-3)		/* getval() array elt   */
