@@ -899,7 +899,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
                      gvpr_state_t *gs) {
     gpr_info info;
     int rv = 0;
-    int cleanup, i, incoreGraphs;
+    int cleanup, incoreGraphs;
 
     setErrorErrors (0);
 
@@ -979,7 +979,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 		nextg = gs->state->nextgraph = nextGraph(gs->ing);
 	    cleanup = 0;
 
-	    for (i = 0; i < gs->xprog->n_blocks; i++) {
+	    for (size_t i = 0; i < gs->xprog->n_blocks; i++) {
 		comp_block* bp = gs->xprog->blocks + i;
 
 		/* begin graph */

@@ -453,7 +453,7 @@ parse_prog *parseProg(char *input, int isFile)
     parse_block *blockl = NULL;
     case_info *edgel = NULL;
     case_info *nodel = NULL;
-    int n_blocks = 0;
+    size_t n_blocks = 0;
     size_t n_nstmts = 0;
     size_t n_estmts = 0;
     int line = 0, gline = 0;

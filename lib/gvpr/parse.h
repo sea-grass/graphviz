@@ -41,7 +41,7 @@ extern "C" {
 	char *source;
 	int l_begin, l_end, l_endg;
 	char *begin_stmt;
-	int n_blocks;
+	size_t n_blocks;
 	parse_block *blocks;
 	char *endg_stmt;
 	char *end_stmt;

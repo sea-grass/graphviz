@@ -2347,17 +2347,15 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
     return cs;
 }
 
-/* mkBlocks:
- */
-static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, int i)
-{
+static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
+                   size_t i) {
     int rv = 0;
 
     codePhase = 1;
     if (inp->begg_stmt) {
 	static const char PREFIX[] = "_begin_g_";
 	agxbuf label = {0};
-	agxbprint(&label, "%s%d", PREFIX, i);
+	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
 	symbols[0].type = T_graph;
 	tchk[V_this][1] = Y(G);
 	bp->begg_stmt = compile(prog, src, inp->begg_stmt,
@@ -2375,7 +2373,7 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
 	symbols[0].type = T_node;
 	tchk[V_this][1] = Y(V);
 	bp->n_nstmts = inp->n_nstmts;
-	agxbprint(&label, "%s%d", PREFIX, i);
+	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
 	bp->node_stmts = mkStmts(prog, src, inp->node_stmts, inp->n_nstmts,
 	                         agxbuse(&label));
 	agxbfree(&label);
@@ -2391,7 +2389,7 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
 	symbols[0].type = T_edge;
 	tchk[V_this][1] = Y(E);
 	bp->n_estmts = inp->n_estmts;
-	agxbprint(&label, "%s%d", PREFIX, i);
+	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
 	bp->edge_stmts = mkStmts(prog, src, inp->edge_stmts, inp->n_estmts,
 	                         agxbuse(&label));
 	agxbfree(&label);
@@ -2433,7 +2431,7 @@ static const char *doFlags(int flags) {
 comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 {
     const char *endg_sfx = NULL;
-    int i, useflags = 0;
+    int useflags = 0;
 
     /* Make sure we have enough bits for types */
     assert(BITS_PER_BYTE * sizeof(tctype) >= (1 << TBITS));
@@ -2470,7 +2468,7 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 
 	p->blocks = bp = gv_calloc(inp->n_blocks, sizeof(comp_block));
 
-	for (i = 0; i < inp->n_blocks; bp++, i++) {
+	for (size_t i = 0; i < inp->n_blocks; bp++, i++) {
 	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);
 	    if (getErrorErrors())
 		goto finish;
@@ -2518,12 +2516,11 @@ void
 freeCompileProg (comp_prog *p)
 {
     comp_block* bp;
-    int i;
 
     if (!p) return;
 
     exclose (p->prog, 1);
-    for (i = 0; i < p->n_blocks; i++) {
+    for (size_t i = 0; i < p->n_blocks; i++) {
 	bp = p->blocks + i;
 	free (bp->node_stmts);
 	free (bp->edge_stmts);

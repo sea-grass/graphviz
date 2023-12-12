@@ -73,7 +73,7 @@ extern "C" {
 	int flags;
 	Expr_t *prog;
 	Exnode_t *begin_stmt;
-	int n_blocks;
+	size_t n_blocks;
 	comp_block  *blocks;
 	Exnode_t *endg_stmt;
 	Exnode_t *end_stmt;
