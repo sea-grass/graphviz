@@ -44,7 +44,6 @@ extern "C" {
  */
 
 #define EX_CHARSTRING	(1<<0)		/* '...' same as "..."		*/
-#define EX_CONSTANT	(1<<1)		/* compile to constant expr	*/
 #define EX_UNDECLARED	(1<<9)		/* allow undeclared identifiers	*/
 
 #define EX_ARRAY	(-3)		/* getval() array elt   */
