@@ -293,13 +293,6 @@ lex(Expr_t* ex)
 				else trace(ex, -1, "expop fp FAIL", 0);
 				c = 0;
 			}
-			else if ((ex->disc->flags & EX_INTERACTIVE) && c == '\n' && ex->input->next && !ex->input->next->next && ex->input->nesting <= 0)
-			{
-				error_info.line++;
-				expop(ex);
-				trace(ex, -1, "expop sp FORCE", 0);
-				c = 0;
-			}
 		}
 		else c = 0;
 		if (c == '\n')

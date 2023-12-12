@@ -812,13 +812,8 @@ int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 	if (!(in->next = p->input)->next)
 	{
 		p->errors = 0;
-		if (!(p->disc->flags & EX_INTERACTIVE))
-		{
-			if (line >= 0)
-				error_info.line = line;
-		}
-		else if (!error_info.line)
-			error_info.line = 1;
+		if (line >= 0)
+			error_info.line = line;
 	}
 	else if (line >= 0)
 		error_info.line = line;
@@ -862,8 +857,7 @@ expop(Expr_t* p)
 					error_info.line++;
 					break;
 				}
-		if (!(p->disc->flags & EX_INTERACTIVE))
-			error_info.line = in->line;
+		error_info.line = in->line;
 	}
 	if (in->fp && in->close)
 		fclose(in->fp);
