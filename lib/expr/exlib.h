@@ -40,7 +40,6 @@ typedef struct Exinput_s		/* input stack			*/
 	char*		pushback;	/* pushback buffer		*/
 	char*		bp;		/* expression string base	*/
 	char*		pp;		/* pushback pointer		*/
-	char*		sp;		/* expression string pointer	*/
 } Exinput_t;
 
 typedef struct Print_s			/* compiled printf arg node	*/

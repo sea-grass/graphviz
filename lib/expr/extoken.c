@@ -274,16 +274,6 @@ lex(Expr_t* ex)
 				continue;
 			}
 		}
-		else if (ex->input->sp)
-		{
-			if (!(c = *ex->input->sp++))
-			{
-				if (!expop(ex))
-					continue;
-				else trace(ex, -1, "expop sp FAIL", 0);
-				ex->input->sp--;
-			}
-		}
 		else if (ex->input->fp)
 		{
 			if ((c = getc(ex->input->fp)) == EOF)
