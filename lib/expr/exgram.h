@@ -36,7 +36,6 @@ extern "C" {
 #define ex_lex()		extoken_fn(expr.program)
 
 #define ALLOCATE(p,x)	exalloc(p,sizeof(x))
-#define QUALIFY(r,s)	((r)&&(expr.program->disc->flags&EX_QUALIFY)?qualify(r,s):(s))
 
 static int		a2t[] = { 0, FLOATING, INTEGER, STRING };
 static Switch_t		swstate;
@@ -587,7 +586,7 @@ call(Exref_t* ref, Exid_t* fun, Exnode_t* args)
 
 	x = exnewnode(expr.program, ID, 0, 0, NULL, NULL);
 	t = fun->type;
-	x->data.variable.symbol = fun = QUALIFY(ref, fun);
+	x->data.variable.symbol = fun;
 	x->data.variable.reference = ref;
 	num = 0;
 	N(t);
