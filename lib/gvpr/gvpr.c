@@ -898,7 +898,6 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
                      gvpr_state_t *gs) {
     gpr_info info;
     int rv = 0;
-    int incoreGraphs;
 
     setErrorErrors (0);
 
@@ -950,10 +949,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	}
     }
 
-    if (uopts && uopts->ingraphs)
-	incoreGraphs = 1;
-    else
-	incoreGraphs = 0;
+    bool incoreGraphs = uopts && uopts->ingraphs;
 
     if (gs->opts.verbose)
 	fprintf(stderr, "Parse/compile/init: %.2f secs.\n", gvelapsed_sec());
