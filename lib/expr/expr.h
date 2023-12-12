@@ -49,7 +49,6 @@ extern "C" {
 #define EX_INTERACTIVE	(1<<3)		/* interactive input		*/
 #define EX_PURE		(1<<4)		/* no default symbols/keywords	*/
 #define EX_QUALIFY	(1<<5)		/* '.' refs qualified in id tab	*/
-#define EX_RETAIN	(1<<6)		/* retain expressions on redef	*/
 #define EX_UNDECLARED	(1<<9)		/* allow undeclared identifiers	*/
 
 #define EX_ARRAY	(-3)		/* getval() array elt   */

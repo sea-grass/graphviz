@@ -179,7 +179,7 @@ void ex_error(const char *message);
 program		:	statement_list action_list
 		{
 			if ($1)	{
-				if (expr.program->main.value && !(expr.program->disc->flags & EX_RETAIN))
+				if (expr.program->main.value)
 					exfreenode(expr.program, expr.program->main.value);
 				if ($1->op == S2B)
 				{
