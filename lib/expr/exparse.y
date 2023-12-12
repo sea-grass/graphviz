@@ -1159,7 +1159,7 @@ formal_item	:	DECLARE {expr.declare=$1->type;} name
 
 members	:	/* empty */
 		{
-			$$ = expr.refs = expr.lastref = 0;
+			$$ = expr.refs = 0;
 		}
 		|	member
 		{
@@ -1169,7 +1169,6 @@ members	:	/* empty */
 			memzero(r, sizeof(*r));
 			r->symbol = $1;
 			expr.refs = r;
-			expr.lastref = r;
 			r->next = 0;
 			r->index = 0;
 			$$ = expr.refs;
@@ -1190,7 +1189,6 @@ members	:	/* empty */
 			l->index = 0;
 			l->next = r;
 			expr.refs = l;
-			expr.lastref = r;
 			$$ = expr.refs;
 		}
 		;

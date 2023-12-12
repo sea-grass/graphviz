@@ -154,7 +154,6 @@ typedef struct Exstate_s		/* ex global state		*/
 {
 	Exid_t*		id;		/* current declaration id	*/
 	int		declare;	/* current declaration type	*/
-	Exref_t*	lastref;	/* last in . reference list	*/
 	int		nolabel;	/* <id>':' not a label		*/
 	Exinput_t	null;		/* null input			*/
 	Expr_t*		program;	/* current program		*/
