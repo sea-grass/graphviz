@@ -23,6 +23,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
@@ -2310,23 +2311,22 @@ static void checkGuard(Exnode_t * gp, char *src, int line)
 /* mkStmts:
  */
 static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
-                          int cnt, const char *lbl)
+                          size_t cnt, const char *lbl)
 {
-    int i;
     agxbuf tmp = {0};
 
     case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
 
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	if (sp->guard) {
-	    agxbprint(&tmp, "%s_g%d", lbl, i);
+	    agxbprint(&tmp, "%s_g%" PRISIZE_T, lbl, i);
 	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, agxbuse(&tmp), 0,
 	                          INTEGER);
 	    if (getErrorErrors()) break;
 	    checkGuard(cs[i].guard, src, sp->gstart);
 	}
 	if (sp->action) {
-	    agxbprint(&tmp, "%s_a%d", lbl, i);
+	    agxbprint(&tmp, "%s_a%" PRISIZE_T, lbl, i);
 	    cs[i].action = compile(prog, src, sp->action, sp->astart, agxbuse(&tmp),
 	                           0, INTEGER);
 	    if (getErrorErrors()) break;
@@ -2336,7 +2336,7 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
 	     * trivial block.
 	     */
 	    if (!cs[i].action) {
-		agxbprint(&tmp, "%s__a%d", lbl, i);
+		agxbprint(&tmp, "%s__a%" PRISIZE_T, lbl, i);
 		cs[i].action = compile(prog, src, "1", sp->astart, agxbuse(&tmp), 0,
 		                       INTEGER);
 	    }

@@ -436,12 +436,11 @@ static options scanArgs(int argc, char **argv) {
 
 static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge_t * e)
 {
-    int i;
     case_stmt *cs;
     bool okay;
 
     state->curobj = (Agobj_t *) e;
-    for (i = 0; i < xprog->n_estmts; i++) {
+    for (size_t i = 0; i < xprog->n_estmts; i++) {
 	cs = xprog->edge_stmts + i;
 	if (cs->guard)
 	    okay = exeval(prog, cs->guard, state).integer != 0;
@@ -459,12 +458,11 @@ static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge
 
 static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode_t * n)
 {
-    int i;
     case_stmt *cs;
     bool okay;
 
     state->curobj = (Agobj_t *) n;
-    for (i = 0; i < xprog->n_nstmts; i++) {
+    for (size_t i = 0; i < xprog->n_nstmts; i++) {
 	cs = xprog->node_stmts + i;
 	if (cs->guard)
 	    okay = exeval(prog, cs->guard, state).integer != 0;
