@@ -536,42 +536,6 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 }
 
 /*
- * force ref . sym qualification
- */
-
-static Exid_t*
-qualify(Exref_t* ref, Exid_t* sym)
-{
-	Exid_t*	x;
-
-	while (ref->next)
-		ref = ref->next;
-	size_t len = strlen(ref->symbol->name) + strlen(sym->name) + 2;
-	char *s = malloc(sizeof(char) * len);
-	if (s == NULL) {
-		exnospace();
-		return NULL;
-	}
-	snprintf(s, len, "%s.%s", ref->symbol->name, sym->name);
-	if (!(x = dtmatch(expr.program->symbols, s)))
-	{
-		if ((x = calloc(1, sizeof(Exid_t) + strlen(s) - EX_NAMELEN + 1)))
-		{
-			memcpy(x, sym, sizeof(Exid_t) - EX_NAMELEN);
-			strcpy(x->name, s);
-			dtinsert(expr.program->symbols, x);
-		}
-		else
-		{
-			exnospace();
-			x = sym;
-		}
-	}
-	free(s);
-	return x;
-}
-
-/*
  * check function call arg types and count
  * return function identifier node
  */
