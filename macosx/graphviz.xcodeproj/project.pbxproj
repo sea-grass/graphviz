@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		587305CB2B41F7FB0094DFDE /* License.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 587305CD2B41F7FB0094DFDE /* License.rtf */; };
 		5BCDD0AD141A8E6400E812BC /* graphviz.help in Resources */ = {isa = PBXBuildFile; fileRef = 5BCDD0AA141A8E6400E812BC /* graphviz.help */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC310486D014006FF6A4 /* GVDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A37F4ACFDCFA73011CA2CEA /* GVDocument.m */; settings = {ATTRIBUTES = (); }; };
@@ -33,7 +34,7 @@
 		D885841B0D54866C00D35701 /* Graphviz.icns in Resources */ = {isa = PBXBuildFile; fileRef = D88584190D54866C00D35701 /* Graphviz.icns */; };
 		D88585CD0D56D2B700D35701 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */; };
 		D88585CE0D56D2B700D35701 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
-		D88585F80D56D3D700D35701 /* libgraph.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D88585F70D56D3D700D35701 /* libgraph.dylib */; };
+		D88585F80D56D3D700D35701 /* libcgraph.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D88585F70D56D3D700D35701 /* libcgraph.dylib */; };
 		D88585FA0D56D3FB00D35701 /* libgvc.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D88585F90D56D3FB00D35701 /* libgvc.dylib */; };
 		D885863D0D56DC2C00D35701 /* GVWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = D885863C0D56DC2C00D35701 /* GVWindowController.m */; };
 		D88586500D56EE6000D35701 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D885864F0D56EE6000D35701 /* Quartz.framework */; };
@@ -53,6 +54,7 @@
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32DBCF750370BD2300C91783 /* graphviz_prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graphviz_prefix.pch; sourceTree = "<group>"; };
+		587305CC2B41F7FB0094DFDE /* English */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = English; path = English.lproj/License.rtf; sourceTree = "<group>"; };
 		5BCDD0AA141A8E6400E812BC /* graphviz.help */ = {isa = PBXFileReference; lastKnownFileType = folder; path = graphviz.help; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* Graphviz.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Graphviz.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,7 +85,7 @@
 		D8798BDD0D5D5BD700CCC6E3 /* GVAttributeSchema.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GVAttributeSchema.h; sourceTree = "<group>"; };
 		D8798BDE0D5D5BD700CCC6E3 /* GVAttributeSchema.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GVAttributeSchema.m; sourceTree = "<group>"; };
 		D88584190D54866C00D35701 /* Graphviz.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Graphviz.icns; sourceTree = "<group>"; };
-		D88585F70D56D3D700D35701 /* libgraph.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgraph.dylib; path = ../lib/cgraph/.libs/libcgraph.dylib; sourceTree = SOURCE_ROOT; };
+		D88585F70D56D3D700D35701 /* libcgraph.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcgraph.dylib; path = ../lib/cgraph/.libs/libcgraph.dylib; sourceTree = SOURCE_ROOT; };
 		D88585F90D56D3FB00D35701 /* libgvc.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libgvc.dylib; path = ../lib/gvc/.libs/libgvc.dylib; sourceTree = SOURCE_ROOT; };
 		D885863B0D56DC2C00D35701 /* GVWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GVWindowController.h; sourceTree = "<group>"; };
 		D885863C0D56DC2C00D35701 /* GVWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GVWindowController.m; sourceTree = "<group>"; };
@@ -106,7 +108,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D87989560D5C8C0B00CCC6E3 /* libcdt.dylib in Frameworks */,
-				D88585F80D56D3D700D35701 /* libgraph.dylib in Frameworks */,
+				D88585F80D56D3D700D35701 /* libcgraph.dylib in Frameworks */,
 				D88585FA0D56D3FB00D35701 /* libgvc.dylib in Frameworks */,
 				D88585CD0D56D2B700D35701 /* AppKit.framework in Frameworks */,
 				D88585CE0D56D2B700D35701 /* Foundation.framework in Frameworks */,
@@ -197,6 +199,7 @@
 				D8C09DB60D60427200134D03 /* NodeAttributesTemplate.png */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
+				587305CD2B41F7FB0094DFDE /* License.rtf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -205,7 +208,7 @@
 			isa = PBXGroup;
 			children = (
 				D87989550D5C8C0B00CCC6E3 /* libcdt.dylib */,
-				D88585F70D56D3D700D35701 /* libgraph.dylib */,
+				D88585F70D56D3D700D35701 /* libcgraph.dylib */,
 				D88585F90D56D3FB00D35701 /* libgvc.dylib */,
 				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
 				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
@@ -251,8 +254,10 @@
 /* Begin PBXProject section */
 		2A37F4A9FDCFA73011CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+			};
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "graphviz" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
@@ -283,6 +288,7 @@
 				D8969EA80E30DF93002D1876 /* GraphDot.icns in Resources */,
 				D8969EA90E30DF93002D1876 /* GraphGv.icns in Resources */,
 				8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */,
+				587305CB2B41F7FB0094DFDE /* License.rtf in Resources */,
 				D87989F50D5D287600CCC6E3 /* Attributes.xib in Resources */,
 				D8C09DB90D60427200134D03 /* NodeAttributesTemplate.png in Resources */,
 				D8C09DBA0D60427200134D03 /* GraphAttributesTemplate.png in Resources */,
@@ -328,6 +334,14 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
+		587305CD2B41F7FB0094DFDE /* License.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				587305CC2B41F7FB0094DFDE /* English */,
+			);
+			name = License.rtf;
+			sourceTree = "<group>";
+		};
 		D8264B0B0DE81133009D6A44 /* Export.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -366,6 +380,8 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -378,8 +394,16 @@
 					../lib/cgraph/.libs,
 					../lib/gvc/.libs,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Graphviz;
-				USER_HEADER_SEARCH_PATHS = "../lib/common ../lib/cdt ../lib/pathplan ../lib/cgraph ../lib/gvc";
+				USER_HEADER_SEARCH_PATHS = (
+					../lib/common,
+					../lib/cdt,
+					../lib/pathplan,
+					../lib/cgraph,
+					../lib/gvc,
+				);
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -388,7 +412,8 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS_STANDARD_32_64_BIT_PRE_XCODE_3_1 = x86_64;
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = graphviz_prefix.pch;
@@ -399,9 +424,16 @@
 					../lib/cgraph/.libs,
 					../lib/gvc/.libs,
 				);
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = Graphviz;
-				USER_HEADER_SEARCH_PATHS = "../lib/common ../lib/cdt ../lib/pathplan ../lib/cgraph ../lib/gvc";
-				VALID_ARCHS = "i386 x86_64";
+				USER_HEADER_SEARCH_PATHS = (
+					../lib/common,
+					../lib/cdt,
+					../lib/pathplan,
+					../lib/cgraph,
+					../lib/gvc,
+				);
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -409,7 +441,7 @@
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -435,7 +467,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -443,7 +476,7 @@
 		C05733CD08A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -469,7 +502,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 13.5;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
 			name = Release;
