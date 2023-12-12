@@ -707,10 +707,9 @@ static void doCleanup (Agraph_t* g)
 }
 
 /* traverse:
- * return 1 if traversal requires cleanup
+ * return true if traversal requires cleanup
  */
-static int traverse(Gpr_t * state, Expr_t* prog, comp_block * bp, int cleanup)
-{
+static bool traverse(Gpr_t *state, Expr_t *prog, comp_block *bp, bool cleanup) {
     if (!state->target) {
 	char *target;
 	agxbuf tmp = {0};
@@ -740,61 +739,61 @@ static int traverse(Gpr_t * state, Expr_t* prog, comp_block * bp, int cleanup)
     case TV_bfs:
 	if (cleanup) doCleanup (state->curgraph);
 	travBFS(state, prog, bp);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_dfs:
 	if (cleanup) doCleanup (state->curgraph);
 	DFSfns.visit = PRE_VISIT;
 	travDFS(state, prog, bp, &DFSfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_fwd:
 	if (cleanup) doCleanup (state->curgraph);
 	FWDfns.visit = PRE_VISIT;
 	travDFS(state, prog, bp, &FWDfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_rev:
 	if (cleanup) doCleanup (state->curgraph);
 	REVfns.visit = PRE_VISIT;
 	travDFS(state, prog, bp, &REVfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_postdfs:
 	if (cleanup) doCleanup (state->curgraph);
 	DFSfns.visit = POST_VISIT;
 	travDFS(state, prog, bp, &DFSfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_postfwd:
 	if (cleanup) doCleanup (state->curgraph);
 	FWDfns.visit = POST_VISIT;
 	travDFS(state, prog, bp, &FWDfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_postrev:
 	if (cleanup) doCleanup (state->curgraph);
 	REVfns.visit = POST_VISIT;
 	travDFS(state, prog, bp, &REVfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_prepostdfs:
 	if (cleanup) doCleanup (state->curgraph);
 	DFSfns.visit = POST_VISIT | PRE_VISIT;
 	travDFS(state, prog, bp, &DFSfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_prepostfwd:
 	if (cleanup) doCleanup (state->curgraph);
 	FWDfns.visit = POST_VISIT | PRE_VISIT;
 	travDFS(state, prog, bp, &FWDfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_prepostrev:
 	if (cleanup) doCleanup (state->curgraph);
 	REVfns.visit = POST_VISIT | PRE_VISIT;
 	travDFS(state, prog, bp, &REVfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_ne:
 	travNodes(state, prog, bp);
@@ -899,7 +898,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
                      gvpr_state_t *gs) {
     gpr_info info;
     int rv = 0;
-    int cleanup, incoreGraphs;
+    int incoreGraphs;
 
     setErrorErrors (0);
 
@@ -977,7 +976,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	    gs->state->infname = fileName(gs->ing);
 	    if (gs->opts.readAhead)
 		nextg = gs->state->nextgraph = nextGraph(gs->ing);
-	    cleanup = 0;
+	    bool cleanup = false;
 
 	    for (size_t i = 0; i < gs->xprog->n_blocks; i++) {
 		comp_block* bp = gs->xprog->blocks + i;
