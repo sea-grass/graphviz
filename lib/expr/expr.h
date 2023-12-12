@@ -89,7 +89,7 @@ typedef struct Exnode_s Exnode_t;
 typedef struct Expr_s Expr_t;
 typedef struct Exref_s Exref_t;
 
-typedef int (*Exerror_f) (Expr_t *, Exdisc_t *, int, const char *, ...);
+typedef void (*Exerror_f) (Expr_t *, Exdisc_t *, int, const char *, ...);
 typedef void (*Exexit_f) (Expr_t *, Exdisc_t *, int);
 
 typedef struct Exlocal_s		/* user defined member type	*/

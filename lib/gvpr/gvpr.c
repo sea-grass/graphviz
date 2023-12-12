@@ -858,9 +858,8 @@ gvexitf (Expr_t *handle, Exdisc_t *discipline, int v)
     longjmp (jbuf, v);
 }
 
-static int 
-gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
-{
+static void gverrorf(Expr_t *handle, Exdisc_t *discipline, int level,
+                     const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
@@ -875,8 +874,6 @@ gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
 	else if (state->flags & GV_USE_JUMP)
 	    longjmp (jbuf, 1);
     }
-
-    return 0;
 }
 
 /// collective managed state used in \p gvpr_core
