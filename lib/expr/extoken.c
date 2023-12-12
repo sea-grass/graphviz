@@ -453,8 +453,7 @@ extoken_fn(Expr_t* ex)
 			else exunlex(ex, q);
 			return ex_lval.op = c;
 		case '#':
-			if (!ex->linewrap && !(ex->disc->flags & EX_PURE))
-			{
+			if (!ex->linewrap) {
 				s = ex->linep - 1;
 				while (s > ex->line && isspace((int)*(s - 1)))
 					s--;
