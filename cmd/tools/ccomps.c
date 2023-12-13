@@ -271,27 +271,6 @@ static int dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out)
     return cnt;
 }
 
-/* nodeInduce:
- * Using the edge set of eg, add to g any edges
- * with both endpoints in g.
- */
-static int nodeInduce(Agraph_t * g, Agraph_t * eg)
-{
-    Agnode_t *n;
-    Agedge_t *e;
-    int e_cnt = 0;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (e = agfstout(eg, n); e; e = agnxtout(eg, e)) {
-	    if (agsubnode(g, aghead(e), 0)) {
-		agsubedge(g, e, 1);
-		e_cnt++;
-	    }
-	}
-    }
-    return e_cnt;
-}
-
 static char *getName(void)
 {
     agxbuf name = {0};
@@ -355,7 +334,7 @@ static Agraph_t *projectG(Agraph_t * subg, Agraph_t * g, int inCluster)
 	proj = agsubg(g, agnameof(subg), 1);
     }
     if (proj) {
-	if (doEdges) nodeInduce(proj, subg);
+	if (doEdges) (void)graphviz_node_induce(proj, subg);
 	agcopyattr(subg, proj);
     }
 
@@ -587,7 +566,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
+	    e_cnt = (long)graphviz_node_induce(out, out->root);
 	else
 	    e_cnt = 0;
 	if (doAll)
@@ -615,7 +594,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
+	    e_cnt = (long)graphviz_node_induce(out, out->root);
 	else
 	    e_cnt = 0;
 	if (printMode == EXTERNAL) {
@@ -717,7 +696,7 @@ static int process(Agraph_t * g, char* graphName)
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
+	    e_cnt = (long)graphviz_node_induce(out, out->root);
 	else
 	    e_cnt = 0;
 	if (doAll)
@@ -742,7 +721,7 @@ static int process(Agraph_t * g, char* graphName)
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
+	    e_cnt = (long)graphviz_node_induce(out, out->root);
 	else
 	    e_cnt = 0;
 	if (printMode == EXTERNAL) {
