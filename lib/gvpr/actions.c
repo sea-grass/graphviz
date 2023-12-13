@@ -111,28 +111,6 @@ int match(char *str, char *pat) {
     return -1;
 }
 
-/* nodeInduce:
- * Add all edges in root graph connecting two nodes in
- * selected to selected.
- */
-void nodeInduce(Agraph_t *selected) {
-  Agnode_t *n;
-  Agedge_t *e;
-  Agraph_t *base;
-
-  if (!selected)
-    return;
-  base = agroot(selected);
-  if (base == selected)
-    return;
-  for (n = agfstnode(selected); n; n = agnxtnode(selected, n)) {
-    for (e = agfstout(base, n); e; e = agnxtout(base, e)) {
-      if (agsubnode(selected, aghead(e), 0))
-        agsubedge(selected, e, 1);
-    }
-  }
-}
-
 /* copyAttr:
  * Copy attributes from src to tgt. Overrides currently
  * defined values.
