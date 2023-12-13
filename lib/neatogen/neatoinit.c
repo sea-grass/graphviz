@@ -35,9 +35,11 @@
 #include <neatogen/sgd.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
+#include <cgraph/cgraph.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifndef HAVE_SRAND48
 #define srand48 srand
@@ -1442,7 +1444,7 @@ void neato_layout(Agraph_t * g)
 		bool *bp;
 		for (i = 0; i < n_cc; i++) {
 		    gc = cc[i];
-		    nodeInduce(gc);
+		    (void)graphviz_node_induce(gc, NULL);
 		    neatoLayout(g, gc, layoutMode, model, &am);
 		    removeOverlapWith(gc, &am);
 		    setEdgeType (gc, EDGETYPE_LINE);
