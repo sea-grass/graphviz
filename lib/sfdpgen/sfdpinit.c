@@ -20,8 +20,10 @@
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/overlap.h>
 #include <sfdpgen/stress_model.h>
+#include <cgraph/cgraph.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static void sfdp_init_edge(edge_t * e)
 {
@@ -277,7 +279,7 @@ void sfdp_layout(graph_t * g)
 
 	    for (i = 0; i < ncc; i++) {
 		sg = ccs[i];
-		nodeInduce(sg);
+		(void)graphviz_node_induce(sg, NULL);
 		sfdpLayout(sg, ctrl, pad);
 		if (doAdjust) removeOverlapWith(sg, &am);
 		setEdgeType(sg, EDGETYPE_LINE);
