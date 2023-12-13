@@ -130,6 +130,7 @@ win_flex -oscan.c scan.l</Command>
     <ClCompile Include="io.c" />
     <ClCompile Include="mem.c" />
     <ClCompile Include="node.c" />
+    <ClCompile Include="node_induce.c" />
     <ClCompile Include="obj.c" />
     <ClCompile Include="rec.c" />
     <ClCompile Include="refstr.c" />

@@ -40,6 +40,7 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include "cdt.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -686,6 +687,21 @@ typedef struct {
 /// \param opts Options to control unflattening
 CGRAPH_API void graphviz_unflatten(Agraph_t *g,
                                    const graphviz_unflatten_options_t *opts);
+
+/** add to a graph any edges with both endpoints within that graph
+ *
+ * If `edgeset` is given as `NULL`, edges from the root graph of `g` will be
+ * considered. In this case if `g` itself is the root graph, this call is a
+ * no-op.
+ *
+ * If `g` is a connected component, the edges added will be all edges attached
+ * to any node in `g`.
+ *
+ * \param g Graph to add edges to
+ * \param edgeset Graph whose edges to consider
+ * \return Number of edges added
+ */
+CGRAPH_API size_t graphviz_node_induce(Agraph_t *g, Agraph_t *edgeset);
 
 #ifdef __cplusplus
 }

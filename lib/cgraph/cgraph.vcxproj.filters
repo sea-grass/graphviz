@@ -110,6 +110,9 @@
     <ClCompile Include="node.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="node_induce.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="obj.c">
       <Filter>Source Files</Filter>
     </ClCompile>

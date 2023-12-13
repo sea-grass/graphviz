@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   SVG suitable for inlining into HTML. #2285
 - The functionality of the `unflatten` command line tool is now exposed via the
   `graphviz_unflatten` API function in libcgraph. #2194
+- `graphviz_node_induce` is available as a new API function in cgraph.h.
 
 ### Changed
 
