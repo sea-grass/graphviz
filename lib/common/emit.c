@@ -2288,7 +2288,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    bz = ED_spl(e)->list[0];
 	    stroke_t stp = taper(&bz, taperfun (e), penwidth);
 	    assert(stp.nvertices <= INT_MAX);
-	    gvrender_polygon(job, stp.vertices, (int)stp.nvertices, TRUE);
+	    gvrender_polygon(job, stp.vertices, (int)stp.nvertices, 1);
 	    free_stroke(stp);
     	    gvrender_set_pencolor(job, color);
 	    if (fillcolor != color)

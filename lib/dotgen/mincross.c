@@ -1358,7 +1358,7 @@ void build_ranks(graph_t * g, int pass)
 
     q = new_queue(GD_n_nodes(g));
     for (n = GD_nlist(g); n; n = ND_next(n))
-	MARK(n) = FALSE;
+	MARK(n) = false;
 
 #ifdef DEBUG
     {
@@ -1380,7 +1380,7 @@ void build_ranks(graph_t * g, int pass)
 	if (otheredges[0] != NULL)
 	    continue;
 	if (!MARK(n)) {
-	    MARK(n) = TRUE;
+	    MARK(n) = true;
 	    enqueue(q, n);
 	    while ((n0 = dequeue(q))) {
 		if (ND_ranktype(n0) != CLUSTER) {
@@ -1418,7 +1418,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
 	for (size_t i = 0; i < ND_out(n0).size; i++) {
 	    e = ND_out(n0).list[i];
 	    if (!MARK(aghead(e))) {
-		MARK(aghead(e)) = TRUE;
+		MARK(aghead(e)) = true;
 		enqueue(q, aghead(e));
 	    }
 	}
@@ -1426,7 +1426,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
 	for (size_t i = 0; i < ND_in(n0).size; i++) {
 	    e = ND_in(n0).list[i];
 	    if (!MARK(agtail(e))) {
-		MARK(agtail(e)) = TRUE;
+		MARK(agtail(e)) = true;
 		enqueue(q, agtail(e));
 	    }
 	}
@@ -1451,7 +1451,7 @@ static int postorder(graph_t * g, node_t * v, node_t ** list, int r)
     edge_t *e;
     int i, cnt = 0;
 
-    MARK(v) = TRUE;
+    MARK(v) = true;
     if (ND_flat_out(v).size > 0) {
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
 	    if (!constraining_flat_edge(g, e)) continue;
@@ -1477,7 +1477,7 @@ static void flat_reorder(graph_t * g)
 	if (GD_rank(g)[r].n == 0) continue;
 	base_order = ND_order(GD_rank(g)[r].v[0]);
 	for (i = 0; i < GD_rank(g)[r].n; i++)
-	    MARK(GD_rank(g)[r].v[i]) = FALSE;
+	    MARK(GD_rank(g)[r].v[i]) = false;
 	temprank = ALLOC(i + 1, temprank, node_t *);
 	pos = 0;
 

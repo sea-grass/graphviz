@@ -699,7 +699,7 @@ void graph_init(graph_t * g, bool use_rankdir)
     p = agget(g, "clusterrank");
     CL_type = maptoken(p, rankname, rankcode);
     p = agget(g, "concentrate");
-    Concentrate = mapbool(p) ? TRUE : FALSE;
+    Concentrate = mapbool(p);
     State = GVBEGIN;
     EdgeLabelsDone = 0;
 

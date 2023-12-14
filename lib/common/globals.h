@@ -50,7 +50,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
     GLOBALS_API EXTERN double PSinputscale;
     GLOBALS_API EXTERN show_boxes_t Show_boxes; // emit code for correct box coordinates
     GLOBALS_API EXTERN int CL_type;		/* NONE, LOCAL, GLOBAL */
-    GLOBALS_API EXTERN unsigned char Concentrate;	/* if parallel edges should be merged */
+    GLOBALS_API EXTERN bool Concentrate; /// if parallel edges should be merged
     GLOBALS_API EXTERN double Epsilon;	/* defined in input_graph */
     GLOBALS_API EXTERN int MaxIter;
     GLOBALS_API EXTERN int Ndim;

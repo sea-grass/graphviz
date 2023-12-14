@@ -434,7 +434,7 @@ static void quartzgen_polyline(GVJ_t * job, pointf * A, int n)
 	CGContextAddLineToPoint(context, A[i].x, A[i].y);
 
     /* draw the ellipse */
-    quartzgen_path(job, FALSE);
+    quartzgen_path(job, 0);
 }
 
 static gvrender_engine_t quartzgen_engine = {

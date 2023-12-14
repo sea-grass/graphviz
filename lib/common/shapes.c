@@ -1853,18 +1853,18 @@ static void poly_init(node_t * n)
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
     double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
-    int regular, peripheries, sides;
+    int peripheries, sides;
     int i, j, isBox, outp;
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
-    regular = ND_shape(n)->polygon->regular;
+    bool regular = !!ND_shape(n)->polygon->regular;
     peripheries = ND_shape(n)->polygon->peripheries;
     sides = ND_shape(n)->polygon->sides;
     orientation = ND_shape(n)->polygon->orientation;
     skew = ND_shape(n)->polygon->skew;
     distortion = ND_shape(n)->polygon->distortion;
-    regular |= mapbool(agget(n, "regular")) ? TRUE : FALSE;
+    regular |= mapbool(agget(n, "regular"));
 
     /* all calculations in floating point POINTS */
 
@@ -3123,7 +3123,7 @@ static void point_init(node_t * n)
     }
     const double sz_outline = 2. * P.x;
 
-    poly->regular = 1;
+    poly->regular = true;
     poly->peripheries = peripheries;
     poly->sides = 2;
     poly->orientation = 0;
@@ -3498,8 +3498,7 @@ static pointf size_reclbl(node_t * n, field_t * f)
     return d;
 }
 
-static void resize_reclbl(field_t * f, pointf sz, int nojustify_p)
-{
+static void resize_reclbl(field_t *f, pointf sz, bool nojustify_p) {
     int i, amt;
     double inc;
     pointf d;
@@ -3653,8 +3652,7 @@ static void record_init(node_t * n)
 	sz.x = MAX(info->size.x, sz.x);
 	sz.y = MAX(info->size.y, sz.y);
     }
-    resize_reclbl(info, sz,
-                  mapbool(late_string(n, N_nojustify, "false")) ? TRUE : FALSE);
+    resize_reclbl(info, sz, mapbool(late_string(n, N_nojustify, "false")));
     pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);

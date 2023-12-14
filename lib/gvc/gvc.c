@@ -26,7 +26,7 @@ GVC_t *gvContext(void)
 
     agattr(NULL, AGNODE, "label", NODENAME_ESC);
     /* default to no builtins, demand loading enabled */
-    gvc = gvNEWcontext(NULL, TRUE);
+    gvc = gvNEWcontext(NULL, true);
     gvconfig(gvc, false); /* configure for available plugins */
     return gvc;
 }

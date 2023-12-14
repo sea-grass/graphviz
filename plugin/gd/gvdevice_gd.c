@@ -15,6 +15,7 @@
 #include <gvc/gvio.h>
 
 #include <gd.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len)
@@ -76,7 +77,7 @@ static void gd_format(GVJ_t * job)
 #define TRANSPARENT 0x7ffffffe
 
         gdImageColorTransparent(im, TRANSPARENT);
-        gdImageAlphaBlending(im, FALSE);
+        gdImageAlphaBlending(im, false);
         for (y = 0; y < height; y++) {
             for (x = 0; x < width; x++) {
                 color = *data++;

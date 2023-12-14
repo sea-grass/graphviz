@@ -133,11 +133,11 @@ static void gdgen_begin_page(GVJ_t * job)
 
     /* Blending must be off to lay a transparent basecolor.
        Nothing to blend with anyway. */
-    gdImageAlphaBlending(im, FALSE);
+    gdImageAlphaBlending(im, false);
     gdImageFill(im, im->sx / 2, im->sy / 2, transparent);
     /* Blend everything else together,
        especially fonts over non-transparent backgrounds */
-    gdImageAlphaBlending(im, TRUE);
+    gdImageAlphaBlending(im, true);
 }
 
 extern int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len);

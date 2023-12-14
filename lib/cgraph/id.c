@@ -42,7 +42,7 @@ static long idmap(void *state, int objtype, char *str, IDTYPE *id,
         *id = ctr;
         ctr += 2;
     }
-    return TRUE;
+    return 1;
 }
 
 	/* we don't allow users to explicitly set IDs, either */
@@ -51,7 +51,7 @@ static long idalloc(void *state, int objtype, IDTYPE request)
     (void)state;
     (void)objtype;
     (void)request;
-    return FALSE;
+    return 0;
 }
 
 static void idfree(void *state, int objtype, IDTYPE id)
