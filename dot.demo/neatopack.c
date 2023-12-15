@@ -12,6 +12,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <graphviz/cgraph.h>
 #include <graphviz/gvc.h>
 #include <graphviz/pack.h>
 #include <stdbool.h>
@@ -37,7 +38,7 @@ int main(int argc, char *argv[]) {
 
   for (int i = 0; i < ncc; i++) {
     graph_t *sg = cc[i];
-    nodeInduce(sg);
+    (void)graphviz_node_induce(sg, NULL);
     gvLayout(gvc, sg, "neato");
   }
   pack_graph(ncc, cc, g, 0);
