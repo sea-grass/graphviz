@@ -112,7 +112,7 @@
 
     void gvrender_set_style(GVJ_t * job, char **s);
     void gvrender_ellipse(GVJ_t * job, pointf * AF, int filled);
-    void gvrender_polygon(GVJ_t* job, pointf* af, int n, int filled);
+    void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled);
     void gvrender_box(GVJ_t * job, boxf BF, int filled);
     void gvrender_beziercurve(GVJ_t * job, pointf * AF, int n, int filled);
     void gvrender_polyline(GVJ_t * job, pointf * AF, int n);

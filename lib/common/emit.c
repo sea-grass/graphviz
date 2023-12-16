@@ -1472,7 +1472,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 		pointf *pts = copyPts(op->op.u.polygon.pts, op->op.u.polygon.cnt);
 		assert(op->op.u.polygon.cnt <= INT_MAX &&
 		       "polygon count exceeds gvrender_polygon support");
-		gvrender_polygon(job, pts, (int)op->op.u.polygon.cnt,
+		gvrender_polygon(job, pts, op->op.u.polygon.cnt,
 		                 op->op.kind == xd_filled_polygon ? filled : 0);
 		free(pts);
 	    }
@@ -2282,7 +2282,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    bz = ED_spl(e)->list[0];
 	    stroke_t stp = taper(&bz, taperfun (e), penwidth);
 	    assert(stp.nvertices <= INT_MAX);
-	    gvrender_polygon(job, stp.vertices, (int)stp.nvertices, 1);
+	    gvrender_polygon(job, stp.vertices, stp.nvertices, 1);
 	    free_stroke(stp);
     	    gvrender_set_pencolor(job, color);
 	    if (fillcolor != color)
