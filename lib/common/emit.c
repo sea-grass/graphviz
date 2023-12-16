@@ -1791,7 +1791,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
         if (poly && !is_rect && (flags & GVRENDER_DOES_MAP_POLYGON)) {
 
             const size_t sides = poly->sides < 3 ? 1 : poly->sides;
-            int peripheries = poly->peripheries < 2 ? 1 : poly->peripheries;
+            const size_t peripheries = poly->peripheries < 2 ? 1 : poly->peripheries;
 
             vertices = poly->vertices;
 
@@ -1838,7 +1838,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             /* all other polygonal shape */
             else {
                 assert(peripheries >= 1);
-                size_t offset = (size_t)(peripheries - 1) * poly->sides;
+                size_t offset = (peripheries - 1) * poly->sides;
                 obj->url_map_shape = MAP_POLYGON;
                 /* distorted or skewed ellipses and circles are polygons with 120
                  * sides. For mapping we convert them into polygon with sample sides

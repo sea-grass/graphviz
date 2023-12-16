@@ -1853,13 +1853,12 @@ static void poly_init(node_t * n)
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
     double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
-    int peripheries;
-    int isBox, outp;
+    int isBox;
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
     bool regular = !!ND_shape(n)->polygon->regular;
-    peripheries = ND_shape(n)->polygon->peripheries;
+    size_t peripheries = ND_shape(n)->polygon->peripheries;
     size_t sides = ND_shape(n)->polygon->sides;
     orientation = ND_shape(n)->polygon->orientation;
     skew = ND_shape(n)->polygon->skew;
@@ -1890,7 +1889,7 @@ static void poly_init(node_t * n)
 	height = INCH2PS(ND_height(n));
     }
 
-    peripheries = late_int(n, N_peripheries, peripheries, 0);
+    peripheries = (size_t)late_int(n, N_peripheries, (int)peripheries, 0);
     orientation += late_double(n, N_orientation, 0.0, -360.0);
     if (sides == 0) {		/* not for builtins */
 	skew = late_double(n, N_skew, 0.0, -100.0);
@@ -2068,7 +2067,7 @@ static void poly_init(node_t * n)
 
     const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 
-    outp = peripheries;
+    size_t outp = peripheries;
     if (peripheries < 1)
 	outp = 1;
 
@@ -2088,7 +2087,7 @@ static void poly_init(node_t * n)
 	vertices[0].y = -P.y;
 	vertices[1] = P;
 	if (peripheries > 1) {
-	    for (int j = 1, i = 2; j < peripheries; j++) {
+	    for (size_t j = 1, i = 2; j < peripheries; j++) {
 		P.x += GAP;
 		P.y += GAP;
 		vertices[i].x = -P.x;
@@ -2106,7 +2105,7 @@ static void poly_init(node_t * n)
 	  // add an outline at half the penwidth outside the outermost periphery
 	  P.x += penwidth / 2;
 	  P.y += penwidth / 2;
-	  size_t i = sides * (size_t)peripheries;
+	  size_t i = sides * peripheries;
 	  vertices[i].x = -P.x;
 	  vertices[i].y = -P.y;
 	  i++;
@@ -2260,23 +2259,23 @@ static void poly_init(node_t * n)
 
 		/*save the vertices of all the */
 		/*peripheries at this base vertex */
-		for (int j = 1; j < peripheries; j++) {
+		for (size_t j = 1; j < peripheries; j++) {
 		    Q.x += cosx;
 		    Q.y += sinx;
-		    vertices[i + (size_t)j * sides] = Q;
+		    vertices[i + j * sides] = Q;
 		}
 		if (outp > peripheries) {
 		    // add an outline at half the penwidth outside the outermost periphery
 		    Q.x += cosx * penwidth / 2 / GAP;
 		    Q.y += sinx * penwidth / 2 / GAP;
-		    vertices[i + (size_t)peripheries * sides] = Q;
+		    vertices[i + peripheries * sides] = Q;
 		}
 	    }
 	    for (i = 0; i < sides; i++) {
-		pointf P = vertices[i + ((size_t)peripheries - 1) * sides];
+		pointf P = vertices[i + (peripheries - 1) * sides];
 		bb.x = MAX(2. * fabs(P.x), bb.x);
 		bb.y = MAX(2. * fabs(P.y), bb.y);
-		Q = vertices[i + ((size_t)outp - 1) * sides];
+		Q = vertices[i + (outp - 1) * sides];
 		outline_bb.x = MAX(2. * fabs(Q.x), outline_bb.x);
 		outline_bb.y = MAX(2. * fabs(Q.y), outline_bb.y);
 	    }
@@ -2325,8 +2324,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 {
     static node_t *lastn;	/* last node argument */
     static polygon_t *poly;
-    static int outp;
-    static size_t last, sides;
+    static size_t last, outp, sides;
     static pointf O;		/* point (0,0) */
     static pointf *vertex;
     static double xsize, ysize, scalex, scaley, box_URx, box_URy;
@@ -2401,12 +2399,12 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 	if (poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
-	    outp = (poly->peripheries + 1 - 1) * (int)sides;
+	    outp = (poly->peripheries + 1 - 1) * sides;
 	} else if (poly->peripheries < 1) {
 	    outp = 0;
 	} else {
 	    /* index to outer-periphery */
-	    outp = (poly->peripheries - 1) * (int)sides;
+	    outp = (poly->peripheries - 1) * sides;
 	}
 	lastn = n;
     }
@@ -2426,8 +2424,8 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     /* use fast test in case we are converging on a segment */
     size_t i = last % sides; // in case last left over from larger polygon
     size_t i1 = (i + 1) % sides;
-    Q = vertex[i + (size_t)outp];
-    R = vertex[i1 + (size_t)outp];
+    Q = vertex[i + outp];
+    R = vertex[i1 + outp];
     if (!same_side(P, O, Q, R))   /* false if outside the segment's face */
 	return false;
     /* else inside the segment face... */
@@ -2442,7 +2440,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    i1 = i;
 	    i = (i + sides - 1) % sides;
 	}
-	if (!same_side(P, O, vertex[i + (size_t)outp], vertex[i1 + (size_t)outp])) { // false if outside any other segment’s face
+	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { // false if outside any other segment’s face
 	    last = i;
 	    return false;
 	}
@@ -2836,7 +2834,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     obj_state_t *obj = job->obj;
     polygon_t *poly;
     double xsize, ysize;
-    int j, peripheries, style;
+    int style;
     pointf P, *vertices;
     static pointf *AF;
     static size_t A_size;
@@ -2857,7 +2855,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     poly = ND_shape_info(n);
     vertices = poly->vertices;
     const size_t sides = poly->sides;
-    peripheries = poly->peripheries;
+    size_t peripheries = poly->peripheries;
     if (A_size < sides) {
 	A_size = sides + 5;
 	AF = ALLOC(A_size, AF, pointf);
@@ -2944,9 +2942,10 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     }
 
     /* draw peripheries first */
+    size_t j;
     for (j = 0; j < peripheries; j++) {
 	for (size_t i = 0; i < sides; i++) {
-	    P = vertices[i + (size_t)j * sides];
+	    P = vertices[i + j * sides];
 	    AF[i].x = P.x * xsize + ND_coord(n).x;
 	    AF[i].y = P.y * ysize + ND_coord(n).y;
 	}
@@ -3052,10 +3051,10 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 static void point_init(node_t * n)
 {
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
-    int sides, outp, peripheries = ND_shape(n)->polygon->peripheries;
+    size_t sides, outp, peripheries = ND_shape(n)->polygon->peripheries;
     double sz;
     pointf P, *vertices;
-    int i, j;
+    size_t i, j;
     double w, h;
 
     /* set width and height, and make them equal
@@ -3079,7 +3078,7 @@ static void point_init(node_t * n)
     }
 
     sz = ND_width(n) * POINTS_PER_INCH;
-    peripheries = late_int(n, N_peripheries, peripheries, 0);
+    peripheries = (size_t)late_int(n, N_peripheries, (int)peripheries, 0);
     if (peripheries < 1)
 	outp = 1;
     else
@@ -3154,19 +3153,19 @@ static bool point_inside(inside_t * inside_context, pointf p)
     P = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
 
     if (n != lastn) {
-	int outp;
+	size_t outp;
 	polygon_t *poly = ND_shape_info(n);
-	const int sides = 2;
+	const size_t sides = 2;
 	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 
 	if (poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
 	    outp = sides * (poly->peripheries + 1 - 1);
+	} else if (poly->peripheries < 1) {
+	    outp = 0;
 	} else {
 	    /* index to outer-periphery */
 	    outp = sides * (poly->peripheries - 1);
-	    if (outp < 0)
-		outp = 0;
 	}
 
 	radius = poly->vertices[outp + 1].x;
@@ -3184,7 +3183,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj = job->obj;
     polygon_t *poly;
-    int j, peripheries, style;
+    int style;
     pointf P, *vertices;
     bool filled;
     char *color;
@@ -3198,7 +3197,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
     poly = ND_shape_info(n);
     vertices = poly->vertices;
     const size_t sides = poly->sides;
-    peripheries = poly->peripheries;
+    size_t peripheries = poly->peripheries;
 
     checkStyle(n, &style);
     if (style & INVISIBLE)
@@ -3250,11 +3249,11 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	    gvrender_set_pencolor(job, color);
     }
 
-    for (j = 0; j < peripheries; j++) {
+    for (size_t j = 0; j < peripheries; j++) {
 	enum {A_size = 2};
 	pointf AF[A_size] = {{0}};
 	for (size_t i = 0; i < sides; i++) {
-	    P = vertices[i + (size_t)j * sides];
+	    P = vertices[i + j * sides];
 	    if (i < A_size) {
 	      AF[i].x = P.x + ND_coord(n).x;
 	      AF[i].y = P.y + ND_coord(n).y;
@@ -4076,12 +4075,12 @@ static bool star_inside(inside_t * inside_context, pointf p)
 	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 	if (poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
-	    outp = ((size_t)poly->peripheries + 1 - 1) * sides;
+	    outp = (poly->peripheries + 1 - 1) * sides;
 	} else if (poly->peripheries < 1) {
 	    outp = 0;
 	} else {
 	    /* index to outer-periphery */
-	    outp = ((size_t)poly->peripheries - 1) * sides;
+	    outp = (poly->peripheries - 1) * sides;
 	}
 	lastn = n;
     }

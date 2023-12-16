@@ -630,7 +630,7 @@ boxf
 polyBB (polygon_t* poly)
 {
     const size_t sides = poly->sides;
-    const size_t peris = (size_t)MAX(poly->peripheries, 1);
+    const size_t peris = MAX(poly->peripheries, 1ul);
     pointf* verts = poly->vertices + (peris-1)*sides;
     boxf bb;
 
