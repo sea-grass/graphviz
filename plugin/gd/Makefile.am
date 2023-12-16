@@ -42,10 +42,6 @@ if WITH_WIN32
 libgvplugin_gd_la_LDFLAGS += -no-undefined
 libgvplugin_gd_la_LIBADD += $(top_builddir)/lib/cgraph/libcgraph.la $(top_builddir)/lib/pathplan/libpathplan.la
 endif
-
-if WITH_DARWIN9
-libgvplugin_gd_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_gd_LTX_library
-endif
 endif
 
 EXTRA_DIST = gvplugin_gd.vcxproj*

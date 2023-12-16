@@ -36,8 +36,4 @@ if WITH_WIN32
 libgvplugin_gtk_la_LDFLAGS += -no-undefined
 endif
 
-if WITH_DARWIN9
-libgvplugin_gtk_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_gtk_LTX_library
-endif
-
 EXTRA_DIST = gtk.glade gtk.gladep

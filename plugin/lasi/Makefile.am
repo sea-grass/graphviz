@@ -33,7 +33,3 @@ libgvplugin_lasi_la_LIBADD = \
 if WITH_WIN32
 libgvplugin_lasi_la_LDFLAGS += -no-undefined
 endif
-
-if WITH_DARWIN9
-libgvplugin_lasi_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_lasi_LTX_library
-endif

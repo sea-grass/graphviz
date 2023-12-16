@@ -52,6 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The legacy C# viewer app is no longer distributed in the portable source
   tarball.
 - Graphviz headers no longer define the `FALSE` and `TRUE` constants.
+- The Autotools build system no longer supports Darwin 9 (Mac OSX Leopard).
 
 ### Fixed
 

@@ -43,10 +43,6 @@ if WITH_WIN32
 libgvplugin_xlib_la_LDFLAGS += -no-undefined
 endif
 
-if WITH_DARWIN9
-libgvplugin_xlib_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_xlib_LTX_library
-endif
-
 vimdot: $(top_srcdir)/plugin/xlib/vimdot.sh
 	cp $(top_srcdir)/plugin/xlib/vimdot.sh vimdot
 	chmod +x vimdot
