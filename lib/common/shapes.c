@@ -75,7 +75,7 @@ static poly_desc_t star_gen = {
 
 static pointf cylinder_size (pointf);
 static void cylinder_vertices (pointf*, pointf*);
-static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled);
+static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled);
 /* static boolean cylinder_inside(inside_t * inside_context, pointf p); */
 static poly_desc_t cylinder_gen = {
     cylinder_size,
@@ -542,7 +542,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
     else
 	mode = ROUNDED;
     if (mode == CYLINDER) {
-	cylinder_draw(job, AF, (int)sides, filled);
+	cylinder_draw(job, AF, sides, filled);
 	return;
     } 
     B = gv_calloc(4 * sides + 4, sizeof(pointf));
@@ -4150,8 +4150,7 @@ static void cylinder_vertices (pointf* vertices, pointf* bb)
     vertices[18] = vertices[17] = vertices[0];
 }
 
-static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled)
-{
+static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled) {
     pointf vertices[7];
     double y0 = AF[0].y;
     double y02 = y0+y0;
@@ -4169,7 +4168,7 @@ static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled)
     vertices[5].y = y02 - AF[5].y;
     vertices[6] = AF[6];
 
-    gvrender_beziercurve(job, AF, sides, filled);
+    gvrender_beziercurve(job, AF, (int)sides, filled);
     gvrender_beziercurve(job, vertices, 7, 0);
 }
 
