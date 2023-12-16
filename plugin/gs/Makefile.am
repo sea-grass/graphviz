@@ -32,7 +32,3 @@ libgvplugin_gs_la_LIBADD = \
 if WITH_WIN32
 libgvplugin_gs_la_LDFLAGS += -no-undefined
 endif
-
-if WITH_DARWIN9
-libgvplugin_gs_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_gs_LTX_library
-endif

@@ -112,7 +112,6 @@ fi
 UWIN=no
 CYGWIN=no
 MINGW32=no
-DARWIN9=no
 case "${host_os}" in
   *uwin* )
 	UWIN=yes
@@ -139,16 +138,6 @@ case "${host_os}" in
 	BROWSER="open"
 	JSHEXT=jnilib
 	AC_DEFINE_UNQUOTED(DARWIN_DYLIB,"$DARWIN_DYLIB",[Define for Darwin-style shared library names.])
-	case "${host_os}" in
-	*darwin9*)
-		DARWIN9=yes
-		;;
-        esac
-	case "${host_os}" in
-	*darwin9.4* | *darwin9.5* )
-		EXTRA_SMYRNA_LDFLAGS="-dylib_file /System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib:/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib"
-		;;
-        esac
 	;;
   * )
 	PATHSEPARATOR=":"
@@ -159,14 +148,11 @@ esac
 AC_SUBST([CYGWIN])
 AC_SUBST([MINGW32])
 AC_SUBST([DARWIN])
-AC_SUBST([DARWIN9])
-AC_SUBST([EXTRA_SMYRNA_LDFLAGS])
 JNI_EXTRA_LDFLAGS="-shrext .$JSHEXT"
 AC_SUBST([JNI_EXTRA_LDFLAGS])
 AC_SUBST([JSHEXT])
 AC_DEFINE_UNQUOTED(PATHSEPARATOR,"$PATHSEPARATOR",[Path separator character.])
 AM_CONDITIONAL(WITH_WIN32, [test "$UWIN" = "yes" -o "$CYGWIN" = "yes" -o "$MINGW32" = "yes"])
-AM_CONDITIONAL(WITH_DARWIN9, [test "$DARWIN9" = "yes"])
 AM_CONDITIONAL(WITH_CYGWIN, [test "$CYGWIN" = "yes"])
 AM_CONDITIONAL(WITH_MINGW, [test "$MINGW32" = "yes"])
 
@@ -427,10 +413,6 @@ if test "$enable_ltdl" != "no"; then
 	[AC_MSG_ERROR([installed libltdl is too old])])
     LDFLAGS="$save_LDFLAGS"
     CFLAGS="$save_CFLAGS"
-  else
-    if test "$DARWIN9" = "yes"; then
-      LIBLTDL_LDFLAGS="-Wl,-unexported_symbol,_lt_*"
-    fi
   fi
 else
   use_ltdl="No (disabled)"
@@ -438,7 +420,6 @@ fi
 AM_CONDITIONAL(ENABLE_LTDL, [test "$enable_ltdl" != "no"])
 AC_SUBST([INCLTDL])
 AC_SUBST([LIBLTDL])
-AC_SUBST([LIBLTDL_LDFLAGS])
 LIBS="$save_LIBS"
 
 dnl -----------------------------------

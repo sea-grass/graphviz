@@ -31,7 +31,3 @@ libgvplugin_webp_la_LIBADD = $(WEBP_LIBS) $(PANGOCAIRO_LIBS) \
 if WITH_WIN32
 libgvplugin_webp_la_LDFLAGS += -no-undefined
 endif
-
-if WITH_DARWIN9
-libgvplugin_webp_la_LDFLAGS += -Wl,-exported_symbol,_gvplugin_webp_LTX_library
-endif
