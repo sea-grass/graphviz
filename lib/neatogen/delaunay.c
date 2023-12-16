@@ -145,8 +145,8 @@ tri(double *x, double *y, int npt, int *segs, int nsegs, int sepArr)
 {
     int i;
     GtsSurface *surface;
-    GVertex **vertices = N_GNEW(npt, GVertex *);
-    GtsEdge **edges = N_GNEW(nsegs, GtsEdge*);
+    GVertex **vertices = gv_calloc(npt, sizeof(GVertex *));
+    GtsEdge **edges = gv_calloc(nsegs, sizeof(GtsEdge *));
     GSList *list = NULL;
     GtsVertex *v1, *v2, *v3;
     GtsTriangle *t;
@@ -263,15 +263,13 @@ static gint add_edge(void *edge, void *data) {
 }
 
 static v_data *delaunay_triangulation(double *x, double *y, int n) {
-    v_data *delaunay;
     GtsSurface* s = tri(x, y, n, NULL, 0, 1);
     int i, nedges;
-    int* edges;
     estats stats;
 
     if (!s) return NULL;
 
-    delaunay = N_GNEW(n, v_data);
+    v_data *delaunay = gv_calloc(n, sizeof(v_data));
 
     for (i = 0; i < n; i++) {
 	delaunay[i].ewgts = NULL;
@@ -282,7 +280,7 @@ static v_data *delaunay_triangulation(double *x, double *y, int n) {
     stats.delaunay = delaunay;
     edgeStats (s, &stats);
     nedges = stats.n;
-    edges = N_GNEW(2 * nedges + n, int);
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
 
     for (i = 0; i < n; i++) {
 	delaunay[i].edges = edges;
@@ -360,18 +358,18 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
     *pnedges = nedges = stats.n;
 
     if (nedges) {
-	edges = N_GNEW(2 * nedges, int);
+	edges = gv_calloc(2 * nedges, sizeof(int));
 	state.n = 0;
 	state.edges = edges;
 	gts_surface_foreach_edge(s, addEdge, &state);
     }
     else {
-	int* vs = N_GNEW(n, int);
+	int* vs = gv_calloc(n, sizeof(int));
 	int* ip;
 	int i, hd, tl;
 
 	*pnedges = nedges = n-1;
-	ip = edges = N_GNEW(2 * nedges, int);
+	ip = edges = gv_calloc(2 * nedges, sizeof(int));
 
 	for (i = 0; i < n; i++)
 	    vs[i] = i;
@@ -538,7 +536,7 @@ get_triangles (double *x, int n, int* tris)
     if (!s) return NULL;
 
     gts_surface_foreach_face(s, cntFace, &nfaces);
-    statf.faces = N_GNEW(3 * nfaces, int);
+    statf.faces = gv_calloc(3 * nfaces, sizeof(int));
     gts_surface_foreach_face(s, addTri, &statf);
 
     gts_object_destroy (GTS_OBJECT (s));
@@ -570,7 +568,7 @@ get_triangles (double *x, int n, int* tris)
 
     in.numberofpoints = n;
     in.numberofpointattributes = 0;
-    in.pointlist = N_GNEW(in.numberofpoints * 2, REAL);
+    in.pointlist = gv_calloc(in.numberofpoints * 2, sizeof(REAL));
 
     for (i = 0; i < n; i++){
 	in.pointlist[i*2] = x[i*2];
@@ -636,7 +634,7 @@ delaunay_tri (double *x, double *y, int n, int* nedges)
     struct triangulateio in, out;
     int i;
 
-    in.pointlist = N_GNEW(2 * n, REAL);
+    in.pointlist = gv_calloc(2 * n, sizeof(REAL));
     for (i = 0; i < n; i++) {
 	in.pointlist[2 * i] = x[i];
 	in.pointlist[2 * i + 1] = y[i];
@@ -706,15 +704,13 @@ delaunay_tri (double *x, double *y, int n, int* nedges)
 }
 
 static v_data *delaunay_triangulation(double *x, double *y, int n) {
-    v_data *delaunay;
     int nedges;
-    int *edges;
     int source, dest;
     int* edgelist = delaunay_tri (x, y, n, &nedges);
     int i;
 
-    delaunay = N_GNEW(n, v_data);
-    edges = N_GNEW(2 * nedges + n, int);
+    v_data *delaunay = gv_calloc(n, sizeof(v_data));
+    int *edges = gv_calloc(2 * nedges + n, sizeof(int));
 
     for (i = 0; i < n; i++) {
 	delaunay[i].ewgts = NULL;
@@ -801,8 +797,8 @@ v_data *UG_graph(double *x, double *y, int n) {
     int j, k, neighbor_j, neighbor_k;
 
     if (n == 2) {
-	int *edges = N_GNEW(4, int);
-	delaunay = N_GNEW(n, v_data);
+	int *edges = gv_calloc(4, sizeof(int));
+	delaunay = gv_calloc(n, sizeof(v_data));
 	delaunay[0].ewgts = NULL;
 	delaunay[0].edges = edges;
 	delaunay[0].nedges = 2;
@@ -815,8 +811,8 @@ v_data *UG_graph(double *x, double *y, int n) {
 	delaunay[1].edges[1] = 0;
 	return delaunay;
     } else if (n == 1) {
-	int *edges = N_GNEW(1, int);
-	delaunay = N_GNEW(n, v_data);
+	int *edges = gv_calloc(1, sizeof(int));
+	delaunay = gv_calloc(n, sizeof(v_data));
 	delaunay[0].ewgts = NULL;
 	delaunay[0].edges = edges;
 	delaunay[0].nedges = 1;

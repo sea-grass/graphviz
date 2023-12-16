@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <math.h>
@@ -263,8 +264,8 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	d_coords[1][i] -= y_0;
     }
 
-    coords = N_GNEW(dim, float *);
-    f_storage = N_GNEW(dim * n, float);
+    coords = gv_calloc(dim, sizeof(float *));
+    f_storage = gv_calloc(dim * n, sizeof(float));
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
 	for (j = 0; j < n; j++) {
@@ -292,7 +293,7 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 
     /* compute diagonal entries */
     int count = 0;
-    degrees = N_GNEW(n, double);
+    degrees = gv_calloc(n, sizeof(double));
     set_vector_val(n, 0, degrees);
     for (i = 0; i < n - 1; i++) {
 	degree = 0;
@@ -312,15 +313,15 @@ int stress_majorization_with_hierarchy(vtx_data * graph,	/* Input graph in spars
 	** Layout optimization  **
 	*************************/
 
-    b = N_GNEW(dim, float *);
-    b[0] = N_GNEW(dim * n, float);
+    b = gv_calloc(dim, sizeof(float *));
+    b[0] = gv_calloc(dim * n, sizeof(float));
     for (k = 1; k < dim; k++) {
 	b[k] = b[0] + k * n;
     }
 
-    tmp_coords = N_GNEW(n, float);
-    dist_accumulator = N_GNEW(n, float);
-    lap1 = N_GNEW(lap_length, float);
+    tmp_coords = gv_calloc(n, sizeof(float));
+    dist_accumulator = gv_calloc(n, sizeof(float));
+    lap1 = gv_calloc(lap_length, sizeof(float));
 
     old_stress = DBL_MAX;	/* at least one iteration */
 

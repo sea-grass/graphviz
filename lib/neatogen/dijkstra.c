@@ -86,7 +86,7 @@ initHeap(heap * h, int startVertex, int index[], Word dist[], int n)
     int i, count;
     int j;    /* We cannot use an unsigned value in this loop */
     if (n == 1) h->data = NULL;
-    else h->data = N_GNEW(n - 1, int);
+    else h->data = gv_calloc(n - 1, sizeof(int));
     h->heapSize = n - 1;
 
     for (count = 0, i = 0; i < n; i++)
@@ -201,7 +201,7 @@ initHeap_f(heap * h, int startVertex, int index[], float dist[], int n)
 {
     int i, count;
     int j;			/* We cannot use an unsigned value in this loop */
-    h->data = N_GNEW(n - 1, int);
+    h->data = gv_calloc(n - 1, sizeof(int));
     h->heapSize = n - 1;
 
     for (count = 0, i = 0; i < n; i++)
@@ -262,9 +262,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
     heap H;
     int closestVertex = 0, neighbor;
     float closestDist;
-    int *index;
-
-    index = N_GNEW(n, int);
+    int *index = gv_calloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
@@ -295,8 +293,8 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 // returns the number of terms built
 int dijkstra_sgd(graph_sgd *graph, int source, term_sgd *terms) {
     heap h;
-    int *indices = N_GNEW(graph->n, int);
-    float *dists = N_GNEW(graph->n, float);
+    int *indices = gv_calloc(graph->n, sizeof(int));
+    float *dists = gv_calloc(graph->n, sizeof(float));
     for (size_t i= 0; i < graph->n; i++) {
         dists[i] = FLT_MAX;
     }

@@ -254,18 +254,16 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	*************************************************/
 
     int subspace_dim = MIN(stress_pca_dim, n);	/* overall dimensionality of subspace */
-    double **subspace = N_GNEW(subspace_dim, double *);
-    double *d_storage = N_GNEW(subspace_dim * n, double);
+    double **subspace = gv_calloc(subspace_dim, sizeof(double *));
+    double *d_storage = gv_calloc(subspace_dim * n, sizeof(double));
     int num_centers_local;
     DistType **full_coords;
     /* if i is a pivot than CenterIndex[i] is its index, otherwise CenterIndex[i]= -1 */
-    int *CenterIndex;
     int *invCenterIndex;	/* list the pivot nodes  */
     float *old_weights;
     /* this matrix stores the distance between  each node and each "center" */
     DistType **Dij;
     /* this vector stores the distances of each node to the selected "centers" */
-    DistType *dist;
     DistType max_dist;
     DistType *storage;
     int *visited_nodes;
@@ -313,7 +311,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	** Compute the sparse-shortest-distances matrix 'distances' **
 	*************************************************/
 
-    CenterIndex = N_GNEW(n, int);
+    int *CenterIndex = gv_calloc(n, sizeof(int));
     for (i = 0; i < n; i++) {
 	CenterIndex[i] = -1;
     }
@@ -332,15 +330,15 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     /* to all other nodes */
 
     Dij = NULL;
-    dist = N_GNEW(n, DistType);
+    DistType *dist = gv_calloc(n, sizeof(DistType));
     if (num_centers == 0) {	/* no pivots, skip pivots-to-nodes distance calculation */
 	goto after_pivots_selection;
     }
 
-    invCenterIndex = N_GNEW(num_centers, int);
+    invCenterIndex = gv_calloc(num_centers, sizeof(int));
 
-    storage = N_GNEW(n * num_centers, DistType);
-    Dij = N_GNEW(num_centers, DistType *);
+    storage = gv_calloc(n * num_centers, sizeof(DistType));
+    Dij = gv_calloc(num_centers, sizeof(DistType *));
     for (i = 0; i < num_centers; i++)
 	Dij[i] = storage + i * n;
 
@@ -395,14 +393,14 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	dist[i] = -1;
     }
 
-    visited_nodes = N_GNEW(n, int);
-    distances = N_GNEW(n, dist_data);
+    visited_nodes = gv_calloc(n, sizeof(int));
+    distances = gv_calloc(n, sizeof(dist_data));
     available_space = 0;
     nedges = 0;
     for (i = 0; i < n; i++) {
 	if (CenterIndex[i] >= 0) {	/* a pivot node */
-	    distances[i].edges = N_GNEW(n - 1, int);
-	    distances[i].edist = N_GNEW(n - 1, DistType);
+	    distances[i].edges = gv_calloc(n - 1, sizeof(int));
+	    distances[i].edist = gv_calloc(n - 1, sizeof(DistType));
 	    distances[i].nedges = n - 1;
 	    nedges += n - 1;
 	    distances[i].free_mem = true;
@@ -424,8 +422,8 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	num_neighbors = num_visited_nodes + num_centers;
 	if (num_neighbors > available_space) {
 	    available_space = n;
-	    storage1 = N_GNEW(available_space, int);
-	    storage2 = N_GNEW(available_space, DistType);
+	    storage1 = gv_calloc(available_space, sizeof(int));
+	    storage2 = gv_calloc(available_space, sizeof(DistType));
 	    distances[i].free_mem = true;
 	} else {
 	    distances[i].free_mem = false;
@@ -463,9 +461,9 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	** Laplacian computation **
 	*************************************************/
 
-    lap = N_GNEW(n, vtx_data);
-    edges = N_GNEW(nedges + n, int);
-    ewgts = N_GNEW(nedges + n, float);
+    lap = gv_calloc(n, sizeof(vtx_data));
+    edges = gv_calloc(nedges + n, sizeof(int));
+    ewgts = gv_calloc(nedges + n, sizeof(float));
     for (i = 0; i < n; i++) {
 	lap[i].edges = edges;
 	lap[i].ewgts = ewgts;
@@ -497,8 +495,8 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	*************************************************/
 
     /* the layout is subspace*directions */
-    directions = N_GNEW(dim, double *);
-    directions[0] = N_GNEW(dim * subspace_dim, double);
+    directions = gv_calloc(dim, sizeof(double *));
+    directions[0] = gv_calloc(dim * subspace_dim, sizeof(double));
     for (i = 1; i < dim; i++) {
 	directions[i] = directions[0] + i * subspace_dim;
     }
@@ -563,8 +561,8 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	** Layout optimization  **
 	*************************************************/
 
-    b = N_GNEW(n, double);
-    b_restricted = N_GNEW(subspace_dim, double);
+    b = gv_calloc(n, sizeof(double));
+    b_restricted = gv_calloc(subspace_dim, sizeof(double));
     old_stress = compute_stress1(coords, distances, dim, n, exp);
     for (converged = false, iterations = 0;
 	 iterations < n_iterations && !converged; iterations++) {
