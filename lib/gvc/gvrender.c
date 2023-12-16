@@ -678,15 +678,13 @@ static imagepos_t get_imagepos(char *s)
  * Scale image to fill polygon bounding box according to "imagescale",
  * positioned at "imagepos"
  */
-void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
-			bool filled, char *imagescale, char *imagepos)
-{
+void gvrender_usershape(GVJ_t *job, char *name, pointf *a, size_t n,
+                        bool filled, char *imagescale, char *imagepos) {
     gvrender_engine_t *gvre = job->render.engine;
     usershape_t *us;
     double iw, ih, pw, ph;
     double scalex, scaley;	/* scale factors */
     boxf b;			/* target box */
-    int i;
     point isz;
     imagepos_t position;
 
@@ -697,7 +695,7 @@ void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
     if (!(us = gvusershape_find(name))) {
 	if (find_user_shape(name)) {
 	    if (gvre && gvre->library_shape)
-		gvre->library_shape(job, name, a, n, filled);
+		gvre->library_shape(job, name, a, (int)n, filled);
 	}
 	return;
     }
@@ -708,7 +706,7 @@ void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
 
     /* compute bb of polygon */
     b.LL = b.UR = a[0];
-    for (i = 1; i < n; i++) {
+    for (size_t i = 1; i < n; i++) {
 	EXPANDBP(b, a[i]);
     }
 

@@ -117,7 +117,8 @@
     void gvrender_beziercurve(GVJ_t * job, pointf * AF, int n, int filled);
     void gvrender_polyline(GVJ_t * job, pointf * AF, int n);
     void gvrender_comment(GVJ_t * job, char *str);
-    void gvrender_usershape(GVJ_t * job, char *name, pointf * AF, int n, bool filled, char *imagescale, char *imagepos);
+    void gvrender_usershape(GVJ_t *job, char *name, pointf *AF, size_t n,
+                            bool filled, char *imagescale, char *imagepos);
 
 /* layout */
 
