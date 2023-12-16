@@ -2113,11 +2113,6 @@ def test_2215():
     subprocess.run(["dot", "-v"], input=input, check=True, universal_newlines=True)
 
 
-@pytest.mark.xfail(
-    platform.system() == "Windows",
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2242",
-    strict=True,
-)
 def test_2242():
     """
     repeated runs of a graph with subgraphs should yield a stable result
