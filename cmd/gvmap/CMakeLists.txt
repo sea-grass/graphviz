@@ -24,7 +24,6 @@ if(with_sfdp)
     cgraph
     edgepaintlib
     gvc
-    ingraphs
     neatogen
     rbtree
     sfdpgen
@@ -90,7 +89,6 @@ if(with_sfdp)
     cgraph
     edgepaintlib
     gvc
-    ingraphs
     neatogen
     rbtree
     sfdpgen

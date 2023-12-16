@@ -18,9 +18,9 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
-#include <ingraphs/ingraphs.h>
 #include <common/pointset.h>
 #include <getopt.h>
 

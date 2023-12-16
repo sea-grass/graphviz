@@ -62,7 +62,6 @@ function(add_simple_tool name)
 
   target_link_libraries(${name}
     cgraph
-    ingraphs
   )
 
   tool_defaults(${name})
@@ -107,7 +106,6 @@ endif()
 
 target_link_libraries(dijkstra
   cgraph
-  ingraphs
 )
 
 tool_defaults(dijkstra)
@@ -170,7 +168,7 @@ if(GETOPT_FOUND)
     ${GETOPT_INCLUDE_DIRS}
   )
 endif()
-target_link_libraries(gv2gml cgraph gvc ingraphs)
+target_link_libraries(gv2gml cgraph gvc)
 if(NOT HAVE_GETOPT_H)
   target_link_libraries(gv2gml ${GETOPT_LINK_LIBRARIES})
 endif()
@@ -245,7 +243,6 @@ endif()
 
 target_link_libraries(gvcolor
   cgraph
-  ingraphs
 )
 
 tool_defaults(gvcolor)
@@ -320,7 +317,6 @@ target_link_libraries(gvpack
   cgraph
   gvc
   gvplugin_neato_layout
-  ingraphs
 )
 
 tool_defaults(gvpack)
@@ -359,7 +355,6 @@ if(EXPAT_FOUND)
   target_link_libraries(gxl2gv
     cgraph
     gvc
-    ingraphs
     ${EXPAT_LIBRARIES}
   )
 
@@ -458,7 +453,6 @@ endif()
 
 target_link_libraries(sccmap
   cgraph
-  ingraphs
 )
 
 tool_defaults(sccmap)

@@ -68,7 +68,7 @@
     </Lib>
     <Link>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ast.lib;cdt.lib;cgraph.lib;expr.lib;ingraphs.lib;getopt.lib;gvc.lib;sfio.lib;vmalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ast.lib;cdt.lib;cgraph.lib;expr.lib;getopt.lib;gvc.lib;sfio.lib;vmalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
@@ -91,7 +91,7 @@
     <Link>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ast.lib;cdt.lib;cgraph.lib;expr.lib;ingraphs.lib;getopt.lib;gvc.lib;sfio.lib;vmalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ast.lib;cdt.lib;cgraph.lib;expr.lib;getopt.lib;gvc.lib;sfio.lib;vmalloc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>

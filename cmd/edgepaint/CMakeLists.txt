@@ -20,7 +20,6 @@ if(with_sfdp)
     cgraph
     edgepaintlib
     gvc
-    ingraphs
     neatogen
     rbtree
     sfdpgen

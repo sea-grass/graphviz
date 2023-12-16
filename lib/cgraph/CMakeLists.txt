@@ -18,6 +18,7 @@ add_library(cgraph SHARED
   cgraph.h
   clamp.h
   exit.h
+  ingraphs.h
   list.h
   overflow.h
   prisize_t.h
@@ -38,6 +39,7 @@ add_library(cgraph SHARED
   graph.c
   id.c
   imap.c
+  ingraphs.c
   io.c
   mem.c
   node.c
@@ -45,6 +47,7 @@ add_library(cgraph SHARED
   rec.c
   refstr.c
   subg.c
+  unflatten.c
   utils.c
   write.c
 

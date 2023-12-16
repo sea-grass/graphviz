@@ -28,9 +28,9 @@
 #include <gvc/gvc.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include <common/render.h>
 #include <neatogen/neatoprocs.h>
-#include <ingraphs/ingraphs.h>
 #include <iostream>
 #include <limits>
 #include <map>

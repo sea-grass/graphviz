@@ -125,10 +125,6 @@
       <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\..\lib\ingraphs\ingraphs.vcxproj">
-      <Project>{d6fd0de5-5305-458e-8ca5-fca4b8e05b04}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\..\lib\neatogen\gvneatogen.vcxproj">
       <Project>{c5ceb09e-79af-4091-accf-d28ec3d7d90f}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

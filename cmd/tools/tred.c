@@ -26,6 +26,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/stack.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/unreachable.h>
 #include <common/arith.h>
 #include <common/types.h>
@@ -41,8 +42,6 @@ typedef struct {
 #define ON_STACK(ninfo,n) (ninfo[AGSEQ(n)].on_stack)
 #define DISTANCE(ninfo,n) (ninfo[AGSEQ(n)].dist)
 #define agrootof(n) ((n)->root)
-
-#include <ingraphs/ingraphs.h>
 
 #include <getopt.h>
 

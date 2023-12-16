@@ -27,6 +27,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include "colorxlate.h"
 #include <math.h>
 #include <stdbool.h>
@@ -40,7 +41,6 @@ typedef struct {
 #define ND_relrank(n) (((Agnodeinfo_t*)((n)->base.data))->relrank)
 #define ND_x(n) (((Agnodeinfo_t*)((n)->base.data))->x)
 
-#include <ingraphs/ingraphs.h>
 #include <stdio.h>
 
 #include <getopt.h>

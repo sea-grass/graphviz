@@ -67,7 +67,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;gvc.lib;ingraphs.lib;sparse.lib;sfdp.lib;minglelib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;gvc.lib;sparse.lib;sfdp.lib;minglelib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
@@ -92,7 +92,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;gvc.lib;ingraphs.lib;sparse.lib;sfdp.lib;minglelib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>getopt.lib;cdt.lib;cgraph.lib;gvc.lib;sparse.lib;sfdp.lib;minglelib.lib;neatogen.lib;rbtree.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
@@ -108,10 +108,6 @@
     </ProjectReference>
     <ProjectReference Include="..\..\lib\gvc.vcxproj">
       <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\lib\ingraphs\ingraphs.vcxproj">
-      <Project>{d6fd0de5-5305-458e-8ca5-fca4b8e05b04}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\..\lib\mingle\minglelib.vcxproj">

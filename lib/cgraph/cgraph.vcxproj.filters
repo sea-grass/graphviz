@@ -36,6 +36,9 @@
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ingraphs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -95,6 +98,9 @@
     <ClCompile Include="imap.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ingraphs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="io.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -117,6 +123,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="subg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="unflatten.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utils.c">

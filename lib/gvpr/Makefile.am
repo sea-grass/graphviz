@@ -36,8 +36,7 @@ endif
 libgvpr_C_la_SOURCES = actions.c compile.c gvpr.c gprstate.c parse.c queue.c
 libgvpr_C_la_DEPENDENCIES = \
 	$(top_builddir)/lib/expr/libexpr_C.la \
-	$(top_builddir)/lib/common/libcommon_C.la \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la
+	$(top_builddir)/lib/common/libcommon_C.la
 
 .3.3.pdf:
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
@@ -48,7 +47,6 @@ SUFFIXES = .3 .3.pdf
 libgvpr_la_LDFLAGS = -version-info $(GVPR_VERSION) -no-undefined
 libgvpr_la_SOURCES = $(libgvpr_C_la_SOURCES)
 libgvpr_la_LIBADD = $(libgvpr_C_la_LIBADD) \
-	$(top_builddir)/lib/ingraphs/libingraphs_C.la \
 	$(top_builddir)/lib/expr/libexpr_C.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \

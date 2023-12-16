@@ -15,7 +15,7 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
-#include <ingraphs/ingraphs.h>
+#include <cgraph/ingraphs.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

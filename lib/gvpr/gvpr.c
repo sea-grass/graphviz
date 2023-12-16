@@ -22,10 +22,10 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
 #include <common/globals.h>
-#include <ingraphs/ingraphs.h>
 #include <gvpr/compile.h>
 #include <gvpr/queue.h>
 #include <gvpr/gvpr.h>

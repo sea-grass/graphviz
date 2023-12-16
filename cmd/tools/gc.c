@@ -26,6 +26,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/stack.h>
 
 typedef struct {
@@ -34,8 +35,6 @@ typedef struct {
 } Agnodeinfo_t;
 
 #define ND_dfs_mark(n) (((Agnodeinfo_t*)(n->base.data))->dfs_mark)
-
-#include <ingraphs/ingraphs.h>
 
 #include <getopt.h>
 

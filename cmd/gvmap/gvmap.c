@@ -30,7 +30,7 @@
 #include <sfdpgen/post_process.h>
 #include <neatogen/overlap.h>
 #include <sparse/clustering.h>
-#include <ingraphs/ingraphs.h>
+#include <cgraph/ingraphs.h>
 #include <sparse/DotIO.h>
 #include <sparse/colorutil.h>
 #include <sparse/color_palette.h>

@@ -21,9 +21,9 @@
 #include <math.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/exit.h>
 #include <cgraph/unreachable.h>
-#include <ingraphs/ingraphs.h>
 #include <getopt.h>
 
 static char *CmdName;

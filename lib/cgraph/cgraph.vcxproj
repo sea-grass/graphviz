@@ -104,6 +104,7 @@ win_flex -oscan.c scan.l</Command>
     <ClInclude Include="cgraph.h" />
     <ClInclude Include="clamp.h" />
     <ClInclude Include="exit.h" />
+    <ClInclude Include="ingraphs.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="overflow.h" />
     <ClInclude Include="prisize_t.h" />
@@ -125,6 +126,7 @@ win_flex -oscan.c scan.l</Command>
     <ClCompile Include="graph.c" />
     <ClCompile Include="id.c" />
     <ClCompile Include="imap.c" />
+    <ClCompile Include="ingraphs.c" />
     <ClCompile Include="io.c" />
     <ClCompile Include="mem.c" />
     <ClCompile Include="node.c" />
@@ -133,6 +135,7 @@ win_flex -oscan.c scan.l</Command>
     <ClCompile Include="refstr.c" />
     <ClCompile Include="scan.c" />
     <ClCompile Include="subg.c" />
+    <ClCompile Include="unflatten.c" />
     <ClCompile Include="utils.c" />
     <ClCompile Include="write.c" />
   </ItemGroup>

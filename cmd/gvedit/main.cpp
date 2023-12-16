@@ -32,8 +32,6 @@
 #ifdef _MSC_VER
 #pragma comment( lib, "cgraph.lib" )
 #pragma comment( lib, "gvc.lib" )
-#pragma comment( lib, "ingraphs.lib" )
-
 #endif
 
 QTextStream errout(stderr, QIODevice::WriteOnly);

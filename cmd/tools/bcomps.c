@@ -32,6 +32,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/ingraphs.h>
 #include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 
@@ -55,8 +56,6 @@ typedef struct {
 #define Cut(n)  (((Agnodeinfo_t*)(n->base.data))->isCut)
 #define N(n)  (((Agnodeinfo_t*)(n->base.data))->val)
 #define NEXTBLK(g)  (((Agraphinfo_t*)(g->base.data))->next)
-
-#include <ingraphs/ingraphs.h>
 
 #define min(a,b) ((a) < (b) ? (a) :  (b))
 

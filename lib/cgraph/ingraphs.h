@@ -15,11 +15,24 @@
  * of Agraph_t.
  */
 
+#include "config.h"
 #include <stdbool.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef GVDLL
+#ifdef EXPORT_CGHDR
+#define CGHDR_API __declspec(dllexport)
+#else
+#define CGHDR_API __declspec(dllimport)
+#endif
+#endif
+
+#ifndef CGHDR_API
+#define CGHDR_API /* nothing */
 #endif
 
     typedef struct {
@@ -35,12 +48,12 @@ extern "C" {
 	unsigned errors;
     } ingraph_state;
 
-    extern ingraph_state *newIngraph(ingraph_state *, char **);
-    extern ingraph_state *newIng(ingraph_state *, char **, Agraph_t *(*readf)(void*));
-    extern ingraph_state *newIngGraphs(ingraph_state *, Agraph_t**, Agraph_t *(*readf)(void*));
-    extern void closeIngraph(ingraph_state * sp);
-    extern Agraph_t *nextGraph(ingraph_state *);
-    extern char *fileName(ingraph_state *);
+CGHDR_API ingraph_state *newIngraph(ingraph_state *, char **);
+CGHDR_API ingraph_state *newIng(ingraph_state *, char **, Agraph_t *(*readf)(void*));
+CGHDR_API ingraph_state *newIngGraphs(ingraph_state *, Agraph_t**, Agraph_t *(*readf)(void*));
+CGHDR_API void closeIngraph(ingraph_state * sp);
+CGHDR_API Agraph_t *nextGraph(ingraph_state *);
+CGHDR_API char *fileName(ingraph_state *);
 
 #ifdef __cplusplus
 }

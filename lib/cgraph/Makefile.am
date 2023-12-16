@@ -9,7 +9,7 @@ AM_CFLAGS = -DEXPORT_CGRAPH -DEXPORT_CGHDR
 endif
 
 pkginclude_HEADERS = cgraph.h
-noinst_HEADERS = agxbuf.h alloc.h bitarray.h cghdr.h clamp.h exit.h \
+noinst_HEADERS = agxbuf.h alloc.h bitarray.h cghdr.h clamp.h exit.h ingraphs.h \
 	list.h overflow.h prisize_t.h sort.h stack.h startswith.h strcasecmp.h \
 	strview.h tokenize.h unreachable.h unused.h
 noinst_LTLIBRARIES = libcgraph_C.la
@@ -21,8 +21,8 @@ pdf_DATA = cgraph.3.pdf
 endif
 
 libcgraph_C_la_SOURCES = agerror.c apply.c attr.c edge.c \
-	graph.c grammar.y id.c imap.c io.c mem.c node.c \
-	obj.c rec.c refstr.c scan.l subg.c utils.c write.c
+	graph.c grammar.y id.c imap.c ingraphs.c io.c mem.c node.c \
+	obj.c rec.c refstr.c scan.l subg.c unflatten.c utils.c write.c
 
 libcgraph_la_LDFLAGS = -version-info $(CGRAPH_VERSION) -no-undefined
 libcgraph_la_SOURCES = $(libcgraph_C_la_SOURCES)
