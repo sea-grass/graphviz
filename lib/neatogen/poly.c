@@ -75,8 +75,7 @@ static void inflatePts(Point *verts, size_t cnt, float xmargin, float ymargin) {
     }
 }
 
-static int isBox(Point * verts, int cnt)
-{
+static int isBox(Point *verts, size_t cnt) {
     if (cnt != 4)
 	return 0;
 
@@ -153,7 +152,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    if (streq(ND_shape(n)->name, "box"))
 		pp->kind = BOX;
 	    else if (streq(ND_shape(n)->name, "polygon")
-		     && isBox(poly->vertices, (int)sides))
+		     && isBox(poly->vertices, sides))
 		pp->kind = BOX;
 	    else if ((poly->sides < 3) && poly->regular)
 		pp->kind = CIRCLE;
@@ -252,7 +251,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    if (streq(ND_shape(n)->name, "box"))
 		pp->kind = BOX;
 	    else if (streq(ND_shape(n)->name, "polygon")
-		     && isBox(verts, (int)sides))
+		     && isBox(verts, sides))
 		pp->kind = BOX;
 	    else if ((poly->sides < 3) && poly->regular)
 		pp->kind = CIRCLE;
