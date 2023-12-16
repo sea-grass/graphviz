@@ -227,7 +227,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 {
     int e_arrows;		/* graph has edges with end arrows */
     int s_arrows;		/* graph has edges with start arrows */
-    int j, sides;
+    int j;
     char buf[BUFSIZ];		/* Used only for small strings */
     char xbuffer[BUFSIZ];	/* Initial buffer for xb */
     agxbuf xb;
@@ -296,17 +296,17 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 	    polygon_t *poly;
 	    if (N_vertices && isPolygon(n)) {
 		poly = ND_shape_info(n);
-		sides = poly->sides;
+		size_t sides = poly->sides;
 		if (sides < 3) {
 		    char *p = agget(n, "samplepoints");
 		    if (p)
-			sides = atoi(p);
+			sides = strtoul(p, NULL, 0);
 		    else
 			sides = 8;
 		    if (sides < 3)
 			sides = 8;
 		}
-		for (int i = 0; i < sides; i++) {
+		for (size_t i = 0; i < sides; i++) {
 		    if (i > 0)
 			agxbputc(&xb, ' ');
 		    if (poly->sides >= 3)
@@ -315,8 +315,8 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 				YFDIR(PS2INCH(poly->vertices[i].y)));
 		    else
 			agxbprint(&xb, "%.5g %.5g",
-				ND_width(n) / 2.0 * cos(i / (double) sides * M_PI * 2.0),
-				YFDIR(ND_height(n) / 2.0 * sin(i / (double) sides * M_PI * 2.0)));
+				ND_width(n) / 2.0 * cos((double)i / (double)sides * M_PI * 2.0),
+				YFDIR(ND_height(n) / 2.0 * sin((double)i / (double)sides * M_PI * 2.0)));
 		}
 		agxset(n, N_vertices, agxbuse(&xb));
 	    }

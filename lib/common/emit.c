@@ -1745,7 +1745,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj;
     int flags = job->flags;
-    int sides, shape;
+    int shape;
     size_t nump = 0;
     polygon_t *poly = NULL;
     pointf *vertices, *p = NULL;
@@ -1790,11 +1790,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
          */
         if (poly && !is_rect && (flags & GVRENDER_DOES_MAP_POLYGON)) {
 
-            if (poly->sides < 3)
-                sides = 1;
-            else
-                sides = poly->sides;
-
+            const size_t sides = poly->sides < 3 ? 1 : poly->sides;
             int peripheries = poly->peripheries < 2 ? 1 : poly->peripheries;
 
             vertices = poly->vertices;
@@ -1842,22 +1838,20 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             /* all other polygonal shape */
             else {
                 assert(peripheries >= 1);
-                size_t offset = (size_t)((peripheries - 1) * poly->sides);
+                size_t offset = (size_t)(peripheries - 1) * poly->sides;
                 obj->url_map_shape = MAP_POLYGON;
                 /* distorted or skewed ellipses and circles are polygons with 120
                  * sides. For mapping we convert them into polygon with sample sides
                  */
-                if (poly->sides >= 0 && (size_t)poly->sides >= nump) {
-                    assert(poly->sides >= 0);
-                    size_t delta = (size_t)poly->sides / nump;
+                if (poly->sides >= nump) {
+                    size_t delta = poly->sides / nump;
                     p = gv_calloc(nump, sizeof(pointf));
                     for (size_t i = 0, j = 0; j < nump; i += delta, j++) {
                         p[j].x = coord.x + vertices[i + offset].x;
                         p[j].y = coord.y + vertices[i + offset].y;
                     }
                 } else {
-                    assert(sides >= 0);
-                    nump = (size_t)sides;
+                    nump = sides;
                     p = gv_calloc(nump, sizeof(pointf));
                     for (size_t i = 0; i < nump; i++) {
                         p[i].x = coord.x + vertices[i + offset].x;

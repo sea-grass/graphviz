@@ -139,7 +139,7 @@ extern "C" {
     typedef struct polygon_t {	/* mutable shape information for a node */
 	int regular;		/* true for symmetric shapes */
 	int peripheries;	/* number of periphery lines */
-	int sides;		/* number of sides */
+	size_t sides; ///< number of sides
 	double orientation;	/* orientation of shape (+ve degrees) */
 	double distortion;	/* distortion factor - as in trapezium */
 	double skew;		/* skew factor - as in parallelogram */
