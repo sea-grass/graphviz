@@ -46,14 +46,12 @@ void breakPoly(Poly * pp)
     free(pp->verts);
 }
 
-static void bbox(Point * verts, int cnt, Point * o, Point * c)
-{
+static void bbox(Point *verts, size_t cnt, Point *o, Point *c) {
     double x_min, y_min, x_max, y_max;
-    int i;
 
     x_min = x_max = verts->x;
     y_min = y_max = verts->y;
-    for (i = 1; i < cnt; i++) {
+    for (size_t i = 1; i < cnt; i++) {
 	verts++;
 	x_min = fmin(x_min, verts->x);
 	y_min = fmin(y_min, verts->y);
@@ -215,7 +213,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 
     pp->verts = verts;
     pp->nverts = (int)sides;
-    bbox(verts, (int)sides, &pp->origin, &pp->corner);
+    bbox(verts, sides, &pp->origin, &pp->corner);
 
     if (sides > maxcnt)
 	maxcnt = sides;
@@ -290,7 +288,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 
     pp->verts = verts;
     pp->nverts = (int)sides;
-    bbox(verts, (int)sides, &pp->origin, &pp->corner);
+    bbox(verts, sides, &pp->origin, &pp->corner);
 
     if (sides > maxcnt)
 	maxcnt = sides;
