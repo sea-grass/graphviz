@@ -27,6 +27,11 @@
 
 #define FPRECIS		6	/* default precision for floats         */
 
+static int imin(int a, int b) {
+  if (a < b)
+    return a;
+  return b;
+}
 
 /**
  * @param f file to print to
@@ -688,14 +693,14 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    if (fmt == 'e' || fmt == 'E') {
 		n = (precis = precis < 0 ? FPRECIS : precis) + 1;
 		{
-		    ep = _sfcvt(&dval, min(n, SF_FDIGITS),
+		    ep = _sfcvt(&dval, imin(n, SF_FDIGITS),
 				&decpt, &sign, SFFMT_EFORMAT);
 		}
 		goto e_format;
 	    } else if (fmt == 'f' || fmt == 'F') {
 		precis = precis < 0 ? FPRECIS : precis;
 		{
-		    ep = _sfcvt(&dval, min(precis, SF_FDIGITS),
+		    ep = _sfcvt(&dval, imin(precis, SF_FDIGITS),
 				&decpt, &sign, 0);
 		}
 		goto f_format;
@@ -704,7 +709,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    /* 'g' or 'G' format */
 	    precis = precis < 0 ? FPRECIS : precis == 0 ? 1 : precis;
 	    {
-		ep = _sfcvt(&dval, min(precis, SF_FDIGITS),
+		ep = _sfcvt(&dval, imin(precis, SF_FDIGITS),
 			    &decpt, &sign, SFFMT_EFORMAT);
 		if (dval == 0.)
 		    decpt = 1;
@@ -795,7 +800,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		*endsp++ = decimal;
 
 	    if ((n = -decpt) > 0) {	/* output zeros for negative exponent */
-		ssp = endsp + min(n, precis);
+		ssp = endsp + imin(n, precis);
 		precis -= n;
 		while (endsp < ssp)
 		    *endsp++ = '0';

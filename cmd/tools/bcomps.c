@@ -57,7 +57,11 @@ typedef struct {
 #define N(n)  (((Agnodeinfo_t*)(n->base.data))->val)
 #define NEXTBLK(g)  (((Agraphinfo_t*)(g->base.data))->next)
 
-#define min(a,b) ((a) < (b) ? (a) :  (b))
+static int imin(int a, int b) {
+  if (a < b)
+    return a;
+  return b;
+}
 
 char **Files;
 int verbose;
@@ -168,7 +172,7 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	if (N(v) == 0) {
 	    stack_push(&stp->stk, e);
 	    dfs(g, v, stp, u);
-	    Low(u) = min(Low(u), Low(v));
+	    Low(u) = imin(Low(u), Low(v));
 	    if (Low(v) >= N(u)) {	/* u is an articulation point */
 		Cut(u) = 1;
 		sg = mkBlock(g, stp);
@@ -179,7 +183,7 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 		} while (ep != e);
 	    }
 	} else if (parent != v) {
-	    Low(u) = min(Low(u), N(v));
+	    Low(u) = imin(Low(u), N(v));
 	    if (N(v) < N(u))
 		stack_push(&stp->stk, e);
 	}
