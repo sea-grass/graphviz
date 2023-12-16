@@ -218,10 +218,6 @@ extern "C" {
 	  } \
 	}
 
-// handy function
-#undef min
-#define min(x,y)	((x) < (y) ? (x) : (y))
-
     extern Sftab_t _Sftable;
 
     extern char *_sfcvt(void *, int, int *, int *, int);
