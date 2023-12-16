@@ -64,13 +64,11 @@ static void bbox(Point *verts, size_t cnt, Point *o, Point *c) {
     c->y = y_max;
 }
 
-static void inflatePts(Point * verts, int cnt, float xmargin, float ymargin)
-{
-    int i;
+static void inflatePts(Point *verts, size_t cnt, float xmargin, float ymargin) {
     Point *cur;
 
     cur = &verts[0];
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	cur->x *= xmargin;
 	cur->y *= ymargin;
 	cur++;
@@ -284,7 +282,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	}
 
     if ((xmargin != 1.0) || (ymargin != 1.0))
-	inflatePts(verts, (int)sides, xmargin, ymargin);
+	inflatePts(verts, sides, xmargin, ymargin);
 
     pp->verts = verts;
     pp->nverts = (int)sides;
