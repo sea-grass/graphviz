@@ -39,7 +39,7 @@ static ssize_t outfn(void *sp, const char *buf, size_t nbyte, void *dp)
 }
 
 int run_gvpr(Agraph_t * srcGraph, size_t argc, char *argv[]) {
-    int i, rv = 1;
+    int rv = 1;
     gvpropts opts;
     Agraph_t *gs[2];
     static int count;
@@ -66,7 +66,7 @@ int run_gvpr(Agraph_t * srcGraph, size_t argc, char *argv[]) {
 	    add_graph_to_viewport(opts.outgraphs[0], agxbuse(&buf));
 	if (opts.n_outgraphs > 1)
 	    fprintf(stderr, "Warning: multiple output graphs-discarded\n");
-	for (i = 1; i < opts.n_outgraphs; i++) {
+	for (size_t i = 1; i < opts.n_outgraphs; i++) {
 	    agclose(opts.outgraphs[i]);
 	}
     } else 

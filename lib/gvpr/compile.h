@@ -18,6 +18,7 @@ extern "C" {
 #include <parse.h>
 #include <gprstate.h>
 #include <expr/expr.h>
+#include <stddef.h>
 #include <stdio.h>
 
     typedef struct {
@@ -62,8 +63,8 @@ extern "C" {
     typedef struct {
 	Exnode_t *begg_stmt;
 	int walks;
-	int n_nstmts;
-	int n_estmts;
+	size_t n_nstmts;
+	size_t n_estmts;
 	case_stmt *node_stmts;
 	case_stmt *edge_stmts;
     } comp_block; 
@@ -72,7 +73,7 @@ extern "C" {
 	int flags;
 	Expr_t *prog;
 	Exnode_t *begin_stmt;
-	int n_blocks;
+	size_t n_blocks;
 	comp_block  *blocks;
 	Exnode_t *endg_stmt;
 	Exnode_t *end_stmt;

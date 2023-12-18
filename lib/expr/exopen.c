@@ -50,9 +50,8 @@ exopen(Exdisc_t* disc)
 	program->main.lex = PROCEDURE;
 	program->main.index = PROCEDURE;
 	dtinsert(program->symbols, &program->main);
-	if (!(disc->flags & EX_PURE))
-		for (sym = exbuiltin; *sym->name; sym++)
-			dtinsert(program->symbols, sym);
+	for (sym = exbuiltin; *sym->name; sym++)
+		dtinsert(program->symbols, sym);
 	if ((sym = disc->symbols))
 		for (; *sym->name; sym++)
 			dtinsert(program->symbols, sym);

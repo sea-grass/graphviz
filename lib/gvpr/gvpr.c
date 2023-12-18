@@ -436,12 +436,11 @@ static options scanArgs(int argc, char **argv) {
 
 static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge_t * e)
 {
-    int i;
     case_stmt *cs;
     bool okay;
 
     state->curobj = (Agobj_t *) e;
-    for (i = 0; i < xprog->n_estmts; i++) {
+    for (size_t i = 0; i < xprog->n_estmts; i++) {
 	cs = xprog->edge_stmts + i;
 	if (cs->guard)
 	    okay = exeval(prog, cs->guard, state).integer != 0;
@@ -459,12 +458,11 @@ static Agobj_t* evalEdge(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agedge
 
 static Agobj_t* evalNode(Gpr_t * state, Expr_t* prog, comp_block * xprog, Agnode_t * n)
 {
-    int i;
     case_stmt *cs;
     bool okay;
 
     state->curobj = (Agobj_t *) n;
-    for (i = 0; i < xprog->n_nstmts; i++) {
+    for (size_t i = 0; i < xprog->n_nstmts; i++) {
 	cs = xprog->node_stmts + i;
 	if (cs->guard)
 	    okay = exeval(prog, cs->guard, state).integer != 0;
@@ -709,10 +707,9 @@ static void doCleanup (Agraph_t* g)
 }
 
 /* traverse:
- * return 1 if traversal requires cleanup
+ * return true if traversal requires cleanup
  */
-static int traverse(Gpr_t * state, Expr_t* prog, comp_block * bp, int cleanup)
-{
+static bool traverse(Gpr_t *state, Expr_t *prog, comp_block *bp, bool cleanup) {
     if (!state->target) {
 	char *target;
 	agxbuf tmp = {0};
@@ -742,61 +739,61 @@ static int traverse(Gpr_t * state, Expr_t* prog, comp_block * bp, int cleanup)
     case TV_bfs:
 	if (cleanup) doCleanup (state->curgraph);
 	travBFS(state, prog, bp);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_dfs:
 	if (cleanup) doCleanup (state->curgraph);
 	DFSfns.visit = PRE_VISIT;
 	travDFS(state, prog, bp, &DFSfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_fwd:
 	if (cleanup) doCleanup (state->curgraph);
 	FWDfns.visit = PRE_VISIT;
 	travDFS(state, prog, bp, &FWDfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_rev:
 	if (cleanup) doCleanup (state->curgraph);
 	REVfns.visit = PRE_VISIT;
 	travDFS(state, prog, bp, &REVfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_postdfs:
 	if (cleanup) doCleanup (state->curgraph);
 	DFSfns.visit = POST_VISIT;
 	travDFS(state, prog, bp, &DFSfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_postfwd:
 	if (cleanup) doCleanup (state->curgraph);
 	FWDfns.visit = POST_VISIT;
 	travDFS(state, prog, bp, &FWDfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_postrev:
 	if (cleanup) doCleanup (state->curgraph);
 	REVfns.visit = POST_VISIT;
 	travDFS(state, prog, bp, &REVfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_prepostdfs:
 	if (cleanup) doCleanup (state->curgraph);
 	DFSfns.visit = POST_VISIT | PRE_VISIT;
 	travDFS(state, prog, bp, &DFSfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_prepostfwd:
 	if (cleanup) doCleanup (state->curgraph);
 	FWDfns.visit = POST_VISIT | PRE_VISIT;
 	travDFS(state, prog, bp, &FWDfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_prepostrev:
 	if (cleanup) doCleanup (state->curgraph);
 	REVfns.visit = POST_VISIT | PRE_VISIT;
 	travDFS(state, prog, bp, &REVfns);
-	cleanup = 1;
+	cleanup = true;
 	break;
     case TV_ne:
 	travNodes(state, prog, bp);
@@ -822,8 +819,8 @@ addOutputGraph (Gpr_t* state, gvpropts* uopts)
     if ((agroot(g) == state->curgraph) && !uopts->ingraphs)
 	g = (Agraph_t*)cloneO (0, (Agobj_t *)g);
 
-    uopts->outgraphs = gv_recalloc(uopts->outgraphs, (size_t)uopts->n_outgraphs,
-                                   (size_t)uopts->n_outgraphs + 1,
+    uopts->outgraphs = gv_recalloc(uopts->outgraphs, uopts->n_outgraphs,
+                                   uopts->n_outgraphs + 1,
                                    sizeof(Agraph_t*));
     uopts->n_outgraphs++;
     uopts->outgraphs[uopts->n_outgraphs-1] = g;
@@ -860,9 +857,8 @@ gvexitf (Expr_t *handle, Exdisc_t *discipline, int v)
     longjmp (jbuf, v);
 }
 
-static int 
-gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
-{
+static void gverrorf(Expr_t *handle, Exdisc_t *discipline, int level,
+                     const char *fmt, ...) {
     va_list ap;
 
     va_start(ap, fmt);
@@ -877,8 +873,6 @@ gverrorf (Expr_t *handle, Exdisc_t *discipline, int level, const char *fmt, ...)
 	else if (state->flags & GV_USE_JUMP)
 	    longjmp (jbuf, 1);
     }
-
-    return 0;
 }
 
 /// collective managed state used in \p gvpr_core
@@ -904,7 +898,6 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
                      gvpr_state_t *gs) {
     gpr_info info;
     int rv = 0;
-    int cleanup, i, incoreGraphs;
 
     setErrorErrors (0);
 
@@ -956,10 +949,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	}
     }
 
-    if (uopts && uopts->ingraphs)
-	incoreGraphs = 1;
-    else
-	incoreGraphs = 0;
+    bool incoreGraphs = uopts && uopts->ingraphs;
 
     if (gs->opts.verbose)
 	fprintf(stderr, "Parse/compile/init: %.2f secs.\n", gvelapsed_sec());
@@ -982,9 +972,9 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	    gs->state->infname = fileName(gs->ing);
 	    if (gs->opts.readAhead)
 		nextg = gs->state->nextgraph = nextGraph(gs->ing);
-	    cleanup = 0;
+	    bool cleanup = false;
 
-	    for (i = 0; i < gs->xprog->n_blocks; i++) {
+	    for (size_t i = 0; i < gs->xprog->n_blocks; i++) {
 		comp_block* bp = gs->xprog->blocks + i;
 
 		/* begin graph */

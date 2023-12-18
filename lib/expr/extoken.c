@@ -274,16 +274,6 @@ lex(Expr_t* ex)
 				continue;
 			}
 		}
-		else if (ex->input->sp)
-		{
-			if (!(c = *ex->input->sp++))
-			{
-				if (!expop(ex))
-					continue;
-				else trace(ex, -1, "expop sp FAIL", 0);
-				ex->input->sp--;
-			}
-		}
 		else if (ex->input->fp)
 		{
 			if ((c = getc(ex->input->fp)) == EOF)
@@ -291,13 +281,6 @@ lex(Expr_t* ex)
 				if (!expop(ex))
 					continue;
 				else trace(ex, -1, "expop fp FAIL", 0);
-				c = 0;
-			}
-			else if ((ex->disc->flags & EX_INTERACTIVE) && c == '\n' && ex->input->next && !ex->input->next->next && ex->input->nesting <= 0)
-			{
-				error_info.line++;
-				expop(ex);
-				trace(ex, -1, "expop sp FORCE", 0);
 				c = 0;
 			}
 		}
@@ -453,8 +436,7 @@ extoken_fn(Expr_t* ex)
 			else exunlex(ex, q);
 			return ex_lval.op = c;
 		case '#':
-			if (!ex->linewrap && !(ex->disc->flags & EX_PURE))
-			{
+			if (!ex->linewrap) {
 				s = ex->linep - 1;
 				while (s > ex->line && isspace((int)*(s - 1)))
 					s--;

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,8 +30,8 @@ extern "C" {
     typedef struct _parse_block {
 	int l_beging;
 	char *begg_stmt;
-	int n_nstmts;
-	int n_estmts;
+	size_t n_nstmts;
+	size_t n_estmts;
 	case_info *node_stmts;
 	case_info *edge_stmts;
 	struct _parse_block *next;
@@ -39,7 +41,7 @@ extern "C" {
 	char *source;
 	int l_begin, l_end, l_endg;
 	char *begin_stmt;
-	int n_blocks;
+	size_t n_blocks;
 	parse_block *blocks;
 	char *endg_stmt;
 	char *end_stmt;

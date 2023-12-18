@@ -31,14 +31,6 @@ extern "C" {
                    TV_prepostdfs, TV_prepostfwd, TV_prepostrev,
     } trav_type;
 
-/* Bits for flags variable. 
- */
-  /* If set, gvpr calls exit() on errors */
-#define GV_USE_EXIT 1    
-  /* If set, gvpr stores output graphs in gvpropts */
-#define GV_USE_OUTGRAPH 2
-#define GV_USE_JUMP 4
-
     typedef struct {
 	Agraph_t *curgraph;
 	Agraph_t *nextgraph;

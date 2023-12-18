@@ -23,6 +23,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
@@ -2310,23 +2311,22 @@ static void checkGuard(Exnode_t * gp, char *src, int line)
 /* mkStmts:
  */
 static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
-                          int cnt, const char *lbl)
+                          size_t cnt, const char *lbl)
 {
-    int i;
     agxbuf tmp = {0};
 
     case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
 
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	if (sp->guard) {
-	    agxbprint(&tmp, "%s_g%d", lbl, i);
+	    agxbprint(&tmp, "%s_g%" PRISIZE_T, lbl, i);
 	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, agxbuse(&tmp), 0,
 	                          INTEGER);
 	    if (getErrorErrors()) break;
 	    checkGuard(cs[i].guard, src, sp->gstart);
 	}
 	if (sp->action) {
-	    agxbprint(&tmp, "%s_a%d", lbl, i);
+	    agxbprint(&tmp, "%s_a%" PRISIZE_T, lbl, i);
 	    cs[i].action = compile(prog, src, sp->action, sp->astart, agxbuse(&tmp),
 	                           0, INTEGER);
 	    if (getErrorErrors()) break;
@@ -2336,7 +2336,7 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
 	     * trivial block.
 	     */
 	    if (!cs[i].action) {
-		agxbprint(&tmp, "%s__a%d", lbl, i);
+		agxbprint(&tmp, "%s__a%" PRISIZE_T, lbl, i);
 		cs[i].action = compile(prog, src, "1", sp->astart, agxbuse(&tmp), 0,
 		                       INTEGER);
 	    }
@@ -2347,17 +2347,15 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
     return cs;
 }
 
-/* mkBlocks:
- */
-static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, int i)
-{
+static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
+                   size_t i) {
     int rv = 0;
 
     codePhase = 1;
     if (inp->begg_stmt) {
 	static const char PREFIX[] = "_begin_g_";
 	agxbuf label = {0};
-	agxbprint(&label, "%s%d", PREFIX, i);
+	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
 	symbols[0].type = T_graph;
 	tchk[V_this][1] = Y(G);
 	bp->begg_stmt = compile(prog, src, inp->begg_stmt,
@@ -2375,7 +2373,7 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
 	symbols[0].type = T_node;
 	tchk[V_this][1] = Y(V);
 	bp->n_nstmts = inp->n_nstmts;
-	agxbprint(&label, "%s%d", PREFIX, i);
+	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
 	bp->node_stmts = mkStmts(prog, src, inp->node_stmts, inp->n_nstmts,
 	                         agxbuse(&label));
 	agxbfree(&label);
@@ -2391,7 +2389,7 @@ static int mkBlock(comp_block* bp, Expr_t * prog, char *src, parse_block *inp, i
 	symbols[0].type = T_edge;
 	tchk[V_this][1] = Y(E);
 	bp->n_estmts = inp->n_estmts;
-	agxbprint(&label, "%s%d", PREFIX, i);
+	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
 	bp->edge_stmts = mkStmts(prog, src, inp->edge_stmts, inp->n_estmts,
 	                         agxbuse(&label));
 	agxbfree(&label);
@@ -2433,7 +2431,7 @@ static const char *doFlags(int flags) {
 comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 {
     const char *endg_sfx = NULL;
-    int i, useflags = 0;
+    int useflags = 0;
 
     /* Make sure we have enough bits for types */
     assert(BITS_PER_BYTE * sizeof(tctype) >= (1 << TBITS));
@@ -2470,7 +2468,7 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 
 	p->blocks = bp = gv_calloc(inp->n_blocks, sizeof(comp_block));
 
-	for (i = 0; i < inp->n_blocks; bp++, i++) {
+	for (size_t i = 0; i < inp->n_blocks; bp++, i++) {
 	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);
 	    if (getErrorErrors())
 		goto finish;
@@ -2518,12 +2516,11 @@ void
 freeCompileProg (comp_prog *p)
 {
     comp_block* bp;
-    int i;
 
     if (!p) return;
 
     exclose (p->prog, 1);
-    for (i = 0; i < p->n_blocks; i++) {
+    for (size_t i = 0; i < p->n_blocks; i++) {
 	bp = p->blocks + i;
 	free (bp->node_stmts);
 	free (bp->edge_stmts);

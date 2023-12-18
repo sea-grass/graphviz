@@ -38,9 +38,7 @@ typedef struct Exinput_s		/* input stack			*/
 	int		peek;		/* 1 char peek			*/
 	int		unit;		/* first frame in parse unit	*/
 	char*		pushback;	/* pushback buffer		*/
-	char*		bp;		/* expression string base	*/
 	char*		pp;		/* pushback pointer		*/
-	char*		sp;		/* expression string pointer	*/
 } Exinput_t;
 
 typedef struct Print_s			/* compiled printf arg node	*/
@@ -154,7 +152,6 @@ typedef struct Exstate_s		/* ex global state		*/
 {
 	Exid_t*		id;		/* current declaration id	*/
 	int		declare;	/* current declaration type	*/
-	Exref_t*	lastref;	/* last in . reference list	*/
 	int		nolabel;	/* <id>':' not a label		*/
 	Exinput_t	null;		/* null input			*/
 	Expr_t*		program;	/* current program		*/

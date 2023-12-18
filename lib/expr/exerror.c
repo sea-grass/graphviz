@@ -69,13 +69,10 @@ exerror(const char* format, ...)
 		va_start(ap, format);
 		char *s = make_msg(format, ap);
 		va_end(ap);
-		(*expr.program->disc->errorf)(expr.program, expr.program->disc,
-		  (expr.program->disc->flags & EX_FATAL) ? 3 : 2, "%s",
+		(*expr.program->disc->errorf)(expr.program, expr.program->disc, 2, "%s",
 		  s ? s : "out of space");
     free(s);
 	}
-	else if (expr.program->disc->flags & EX_FATAL)
-		graphviz_exit(1);
 }
 
 void 

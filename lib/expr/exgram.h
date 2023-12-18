@@ -36,7 +36,6 @@ extern "C" {
 #define ex_lex()		extoken_fn(expr.program)
 
 #define ALLOCATE(p,x)	exalloc(p,sizeof(x))
-#define QUALIFY(r,s)	((r)&&(expr.program->disc->flags&EX_QUALIFY)?qualify(r,s):(s))
 
 static int		a2t[] = { 0, FLOATING, INTEGER, STRING };
 static Switch_t		swstate;
@@ -537,42 +536,6 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 }
 
 /*
- * force ref . sym qualification
- */
-
-static Exid_t*
-qualify(Exref_t* ref, Exid_t* sym)
-{
-	Exid_t*	x;
-
-	while (ref->next)
-		ref = ref->next;
-	size_t len = strlen(ref->symbol->name) + strlen(sym->name) + 2;
-	char *s = malloc(sizeof(char) * len);
-	if (s == NULL) {
-		exnospace();
-		return NULL;
-	}
-	snprintf(s, len, "%s.%s", ref->symbol->name, sym->name);
-	if (!(x = dtmatch(expr.program->symbols, s)))
-	{
-		if ((x = calloc(1, sizeof(Exid_t) + strlen(s) - EX_NAMELEN + 1)))
-		{
-			memcpy(x, sym, sizeof(Exid_t) - EX_NAMELEN);
-			strcpy(x->name, s);
-			dtinsert(expr.program->symbols, x);
-		}
-		else
-		{
-			exnospace();
-			x = sym;
-		}
-	}
-	free(s);
-	return x;
-}
-
-/*
  * check function call arg types and count
  * return function identifier node
  */
@@ -587,7 +550,7 @@ call(Exref_t* ref, Exid_t* fun, Exnode_t* args)
 
 	x = exnewnode(expr.program, ID, 0, 0, NULL, NULL);
 	t = fun->type;
-	x->data.variable.symbol = fun = QUALIFY(ref, fun);
+	x->data.variable.symbol = fun;
 	x->data.variable.reference = ref;
 	num = 0;
 	N(t);
@@ -829,7 +792,6 @@ int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 	}
 	if (!p->input)
 		p->input = &expr.null;
-	in->bp = in->sp = NULL;
 	if ((in->fp = fp))
 		in->close = 0;
 	else if (name)
@@ -837,7 +799,6 @@ int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 		if (!(s = pathfind(name, p->disc->lib, p->disc->type)) || !(in->fp = fopen(s, "r")))
 		{
 			exerror("%s: file not found", name);
-			in->bp = in->sp = "";
 		}
 		else
 		{
@@ -849,13 +810,8 @@ int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 	if (!(in->next = p->input)->next)
 	{
 		p->errors = 0;
-		if (!(p->disc->flags & EX_INTERACTIVE))
-		{
-			if (line >= 0)
-				error_info.line = line;
-		}
-		else if (!error_info.line)
-			error_info.line = 1;
+		if (line >= 0)
+			error_info.line = line;
 	}
 	else if (line >= 0)
 		error_info.line = line;
@@ -899,8 +855,7 @@ expop(Expr_t* p)
 					error_info.line++;
 					break;
 				}
-		if (!(p->disc->flags & EX_INTERACTIVE))
-			error_info.line = in->line;
+		error_info.line = in->line;
 	}
 	if (in->fp && in->close)
 		fclose(in->fp);

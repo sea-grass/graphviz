@@ -44,14 +44,6 @@ extern "C" {
  */
 
 #define EX_CHARSTRING	(1<<0)		/* '...' same as "..."		*/
-#define EX_CONSTANT	(1<<1)		/* compile to constant expr	*/
-#define EX_FATAL	(1<<2)		/* errors are fatal		*/
-#define EX_INTERACTIVE	(1<<3)		/* interactive input		*/
-#define EX_PURE		(1<<4)		/* no default symbols/keywords	*/
-#define EX_QUALIFY	(1<<5)		/* '.' refs qualified in id tab	*/
-#define EX_RETAIN	(1<<6)		/* retain expressions on redef	*/
-#define EX_SIZED	(1<<7)		/* strings are sized buffers	*/
-#define EX_STRICT	(1<<8)		/* don't override null label	*/
 #define EX_UNDECLARED	(1<<9)		/* allow undeclared identifiers	*/
 
 #define EX_ARRAY	(-3)		/* getval() array elt   */
@@ -59,8 +51,6 @@ extern "C" {
 #define EX_SCALAR	(-1)		/* getval() scalar elt		*/
 
 #define EX_NAMELEN	32		/* default Exid_t.name length	*/
-
-#define EX_INTARRAY  1		/* integer-index array */
 
 /* previously known as EXID, but EXID is also defined by bison in y.tab.h */
 #define EX_ID(n,l,i,t,f)	{{0},(l),(i),(t),0,(f),0,{0},0,n}
@@ -99,7 +89,7 @@ typedef struct Exnode_s Exnode_t;
 typedef struct Expr_s Expr_t;
 typedef struct Exref_s Exref_t;
 
-typedef int (*Exerror_f) (Expr_t *, Exdisc_t *, int, const char *, ...);
+typedef void (*Exerror_f) (Expr_t *, Exdisc_t *, int, const char *, ...);
 typedef void (*Exexit_f) (Expr_t *, Exdisc_t *, int);
 
 typedef struct Exlocal_s		/* user defined member type	*/

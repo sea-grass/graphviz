@@ -178,9 +178,8 @@ void ex_error(const char *message);
 
 program		:	statement_list action_list
 		{
-			if ($1 && !(expr.program->disc->flags & EX_STRICT))
-			{
-				if (expr.program->main.value && !(expr.program->disc->flags & EX_RETAIN))
+			if ($1)	{
+				if (expr.program->main.value)
 					exfreenode(expr.program, expr.program->main.value);
 				if ($1->op == S2B)
 				{
@@ -1160,7 +1159,7 @@ formal_item	:	DECLARE {expr.declare=$1->type;} name
 
 members	:	/* empty */
 		{
-			$$ = expr.refs = expr.lastref = 0;
+			$$ = expr.refs = 0;
 		}
 		|	member
 		{
@@ -1170,7 +1169,6 @@ members	:	/* empty */
 			memzero(r, sizeof(*r));
 			r->symbol = $1;
 			expr.refs = r;
-			expr.lastref = r;
 			r->next = 0;
 			r->index = 0;
 			$$ = expr.refs;
@@ -1191,7 +1189,6 @@ members	:	/* empty */
 			l->index = 0;
 			l->next = r;
 			expr.refs = l;
-			expr.lastref = r;
 			$$ = expr.refs;
 		}
 		;

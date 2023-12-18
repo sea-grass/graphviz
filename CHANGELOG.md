@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: `Agraph_t.link` has been split into `Agraph_t.id_link` and
   `Agraph_t.seq_link`. `Agraph_t.g_dict` has been split into `Agraph_t.g_id`
   and `Agraph_t.g_seq`.
+- **Breaking**: `gvpropts.n_outgraphs` is now a `size_t`.
 
 ### Fixed
 

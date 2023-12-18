@@ -375,9 +375,9 @@ static case_t parseCase(FILE *str, char **guard, int *gline, char **action,
  * create new block and append to list;
  * return new item as tail
  */
-static parse_block *addBlock (parse_block * last, char *stmt, int line,
-	int n_nstmts, case_info *nodelist, int n_estmts, case_info *edgelist)
-{
+static parse_block *addBlock(parse_block *last, char *stmt, int line,
+                             size_t n_nstmts, case_info *nodelist,
+                             size_t n_estmts, case_info *edgelist) {
     parse_block* item = gv_alloc(sizeof(parse_block));
 
     item->l_beging = line;
@@ -397,8 +397,7 @@ static parse_block *addBlock (parse_block * last, char *stmt, int line,
  * return new item as tail
  */
 static case_info *addCase(case_info * last, char *guard, int gline,
-			  char *action, int line, int *cnt)
-{
+                          char *action, int line, size_t *cnt) {
     if (!guard && !action) {
 	error(ERROR_WARNING,
 	      "Case with neither guard nor action, line %d - ignored", kwLine);
@@ -454,9 +453,9 @@ parse_prog *parseProg(char *input, int isFile)
     parse_block *blockl = NULL;
     case_info *edgel = NULL;
     case_info *nodel = NULL;
-    int n_blocks = 0;
-    int n_nstmts = 0;
-    int n_estmts = 0;
+    size_t n_blocks = 0;
+    size_t n_nstmts = 0;
+    size_t n_estmts = 0;
     int line = 0, gline = 0;
     int l_beging = 0;
     char *begg_stmt;
