@@ -857,51 +857,6 @@ else
 fi
 AM_CONDITIONAL(WITH_LUA, [test "$use_lua" = "Yes"])
 
-
-dnl -----------------------------------
-dnl INCLUDES and LIBS for OCAML
-
-AC_ARG_ENABLE(ocaml,
-  [AS_HELP_STRING([--enable-ocaml=yes],[ocaml language bindings])],
-  [], [enable_ocaml=yes])
-
-if test "$enable_ocaml" != "yes"; then
-  use_ocaml="No (disabled)"
-else
-  if test "$use_swig" != "Yes"; then
-    use_ocaml="No (swig not available)"
-  else
-    if test `$SWIG -help 2>&1 | $EGREP -c '\-ocaml *- Generate'` = 0; then
-      use_ocaml="No (swig does not support -ocaml option)"
-    else
-      AC_CHECK_PROG(OCAML,ocaml,ocaml)
-      if test "$OCAML" = ""; then
-        use_ocaml="No (ocaml not available)"
-      else
-        AC_CHECK_PROG(OCAML_OPT,ocamlopt,ocamlopt)
-        AC_CHECK_PROG(OCAML_C,ocamlc,ocamlc)
-        if test "$OCAML_C" != ""; then
-          OCAML_INCLUDES=-I`$OCAML_C -where`
-          OCAML_LIBS=-L`$OCAML_C -where`
-        fi
-        save_CPPFLAGS=$CPPFLAGS
-        CPPFLAGS="$CPPFLAGS $OCAML_INCLUDES"
-        AC_CHECK_HEADER(caml/mlvalues.h,[
-	  use_ocaml="Yes"
-          AC_SUBST([OCAML_INCLUDES])
-          AC_SUBST([OCAML_LIBS])
-	],[
-	  use_ocaml="No (missing header)"
-          AC_MSG_WARN([Unable to find header caml/mlvalues.h. The OCAML packages will not be built])
-        ])
-        CPPFLAGS=$save_CPPFLAGS
-      fi
-    fi
-  fi
-fi
-AM_CONDITIONAL(WITH_OCAML, [test "$use_ocaml" = "Yes"])
-AM_CONDITIONAL(WITH_OCAMLOPT, [test "$OCAML_OPT" != "" -a "$OCAML_C" != ""])
-
 dnl -----------------------------------
 dnl INCLUDES and LIBS for PERL
 
@@ -2383,7 +2338,6 @@ echo "  gv_guile:      $use_guile"
 echo "  gv_java:       $use_java"
 echo "  gv_javascript: $use_javascript"
 echo "  gv_lua:        $use_lua"
-echo "  gv_ocaml:      $use_ocaml"
 echo "  gv_perl:       $use_perl"
 echo "  gv_php:        $use_php"
 echo "  gv_python3:    $use_python3"

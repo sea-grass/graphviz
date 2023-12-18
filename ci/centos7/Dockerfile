@@ -53,8 +53,6 @@ guile-devel \
 java-devel \
 # Language extension gv_lua
 lua-devel \
-# Language extension gv_ocaml
-ocaml \
 # Language extension gv_perl
 perl-ExtUtils-Embed \
 # Language extension gv_php

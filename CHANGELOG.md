@@ -57,6 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `Agraph_t.seq_link`. `Agraph_t.g_dict` has been split into `Agraph_t.g_id`
   and `Agraph_t.g_seq`.
 - **Breaking**: `gvpropts.n_outgraphs` is now a `size_t`.
+- The OCaml bindings have been removed. If you use these bindings, please contact
+  the maintainers to notify them of the existence of users.
 
 ### Fixed
 

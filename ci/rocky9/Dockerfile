@@ -49,8 +49,6 @@ guile30-devel \
 java-devel \
 # Language extension gv_lua
 lua-devel \
-# Language extension gv_ocaml
-ocaml \
 # Language extension gv_perl
 perl \
 perl-ExtUtils-Embed \
