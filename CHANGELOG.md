@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   your Lua installation and not unconditionally attempt installation into
   `/usr`. #2152
 - The GTK plugin is no longer built or distributed. This plugin relies on GTK 2
-  and X11. If you use this plugin, please get contact the maintainers to let
+  and X11. If you use this plugin, please contact the maintainers to let
   them know it is worthwhile re-enabling this and forward porting it to GTK 3/4
   and Wayland. #1848
 - In the Autotools build system, `LIBPOSTFIX=` can now be used to suppress `64`
