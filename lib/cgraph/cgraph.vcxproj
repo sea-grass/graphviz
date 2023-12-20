@@ -70,7 +70,7 @@
     </Link>
     <PreBuildEvent>
       <Command>win_bison -dy -Wno-yacc grammar.y -o grammar.c
-win_flex -oscan.c scan.l</Command>
+win_flex --case-insensitive --outfile=scan.c scan.l</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -93,7 +93,7 @@ win_flex -oscan.c scan.l</Command>
     </Link>
     <PreBuildEvent>
       <Command>win_bison -dy -Wno-yacc grammar.y -o grammar.c
-win_flex -oscan.c scan.l</Command>
+win_flex --case-insensitive --outfile=scan.c scan.l</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

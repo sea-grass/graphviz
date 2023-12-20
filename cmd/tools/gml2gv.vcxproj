@@ -74,7 +74,7 @@
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>win_flex --outfile=gmlscan.c -i gmlscan.l
+      <Command>win_flex --case-insensitive --outfile=gmlscan.c gmlscan.l
 win_bison -dy -Wno-yacc gmlparse.y -o gmlparse.c</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -100,7 +100,7 @@ win_bison -dy -Wno-yacc gmlparse.y -o gmlparse.c</Command>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\getopt.dll $(OutDir)getopt.dll</Command>
     </PostBuildEvent>
     <PreBuildEvent>
-      <Command>win_flex --outfile=gmlscan.c -i gmlscan.l
+      <Command>win_flex --case-insensitive --outfile=gmlscan.c gmlscan.l
 win_bison -dy -Wno-yacc gmlparse.y -o gmlparse.c</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>

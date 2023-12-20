@@ -31,7 +31,7 @@ libcgraph_la_LIBADD = $(top_builddir)/lib/cdt/libcdt.la
 scan.o scan.lo: scan.c grammar.h
 
 scan.c: $(top_srcdir)/lib/cgraph/scan.l
-	$(LEX) --outfile=$@ -i $(top_srcdir)/lib/cgraph/scan.l
+	$(LEX) --case-insensitive --outfile=$@ $(top_srcdir)/lib/cgraph/scan.l
 
 grammar.c grammar.h: $(top_srcdir)/lib/cgraph/grammar.y
 	$(YACC) -Wno-yacc -dv --output=grammar.c $(top_srcdir)/lib/cgraph/grammar.y

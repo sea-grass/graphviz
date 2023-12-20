@@ -1,7 +1,10 @@
 BISON_TARGET(Grammar ${CMAKE_CURRENT_SOURCE_DIR}/grammar.y
                      ${CMAKE_CURRENT_BINARY_DIR}/grammar.c)
-FLEX_TARGET(Scan ${CMAKE_CURRENT_SOURCE_DIR}/scan.l
-                 ${CMAKE_CURRENT_BINARY_DIR}/scan.c)
+FLEX_TARGET(Scan
+  ${CMAKE_CURRENT_SOURCE_DIR}/scan.l
+  ${CMAKE_CURRENT_BINARY_DIR}/scan.c
+  COMPILE_FLAGS --case-insensitive
+)
 ADD_FLEX_BISON_DEPENDENCY(Scan Grammar)
 
 add_definitions(-DEXPORT_CGRAPH -DEXPORT_CGHDR)

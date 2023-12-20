@@ -175,7 +175,7 @@ gmlparse.c gmlparse.h: $(top_srcdir)/cmd/tools/gmlparse.y
 gmlparse.o gmlparse.lo gmlscan.o gmlscan.lo : gmlscan.c gmlparse.h
 
 gmlscan.c: $(top_srcdir)/cmd/tools/gmlscan.l
-	$(LEX) --outfile=$@ -i $(top_srcdir)/cmd/tools/gmlscan.l
+	$(LEX) --case-insensitive --outfile=$@ $(top_srcdir)/cmd/tools/gmlscan.l
 
 gml2gv_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la \

@@ -113,8 +113,11 @@ tool_defaults(dijkstra)
 # =================================== gml2gv ===================================
 BISON_TARGET(Gmlparse ${CMAKE_CURRENT_SOURCE_DIR}/gmlparse.y
                       ${CMAKE_CURRENT_BINARY_DIR}/gmlparse.c)
-FLEX_TARGET(Gmlscan ${CMAKE_CURRENT_SOURCE_DIR}/gmlscan.l
-                    ${CMAKE_CURRENT_BINARY_DIR}/gmlscan.c)
+FLEX_TARGET(Gmlscan
+  ${CMAKE_CURRENT_SOURCE_DIR}/gmlscan.l
+  ${CMAKE_CURRENT_BINARY_DIR}/gmlscan.c
+  COMPILE_FLAGS --case-insensitive
+)
 ADD_FLEX_BISON_DEPENDENCY(Gmlscan Gmlparse)
 
 add_executable(gml2gv
