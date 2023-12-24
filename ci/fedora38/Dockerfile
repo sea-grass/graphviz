@@ -3,8 +3,8 @@ FROM fedora:38
 COPY requirements.txt ./requirements.txt
 
 # Development tools
-RUN yum -y groupinstall 'Development Tools' \
-&& yum -y install rpm-build \
+RUN dnf -y --setopt install_weak_deps=false groupinstall 'Development Tools' \
+&& dnf -y --setopt install_weak_deps=false install rpm-build \
 bison \
 byacc \
 flex \
@@ -75,4 +75,4 @@ python3-setuptools \
 && python3 -m pip install --user --upgrade pip \
 && python3 -m pip install --user --requirement requirements.txt \
 # Clean up
-&& yum clean all && rm -rf /var/cache/yum
+&& dnf clean all && rm -rf /var/cache/dnf
