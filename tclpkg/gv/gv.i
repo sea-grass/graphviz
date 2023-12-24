@@ -53,10 +53,6 @@
 #undef PACKAGE_VERSION
 #undef PACKAGE_NAME
 
-#ifdef SWIGOCAML
-#include <stdint.h>
-#endif
-
 #include "config.h"
 #include <gvc/gvc.h>
 

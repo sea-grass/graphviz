@@ -5,7 +5,6 @@ demoguiledir = $(demodir)
 demoiodir = $(demodir)
 demojavadir = $(demodir)
 demoluadir = $(demodir)
-demoocamldir = $(demodir)
 demoperldir = $(demodir)
 demophpdir = $(demodir)
 demopython3dir = $(demodir)
@@ -25,9 +24,6 @@ demojava_SCRIPTS =
 endif
 if WITH_LUA
 demolua_SCRIPTS = modgraph.lua
-endif
-if WITH_OCAML
-demoocaml_SCRIPTS =
 endif
 if WITH_PERL
 demoperl_SCRIPTS = modgraph.pl

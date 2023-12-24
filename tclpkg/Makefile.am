@@ -6,7 +6,6 @@ pkgguiledir = $(pkglibdir)/guile
 pkgiodir = $(pkglibdir)/io
 pkgjavadir = $(pkglibdir)/java
 pkgluadir = $(pkglibdir)/lua
-pkgocamldir = $(pkglibdir)/ocaml
 pkgperldir = $(pkglibdir)/perl
 pkgphpdir = $(pkglibdir)/php
 pkgpython3dir = $(pkglibdir)/python3
@@ -116,7 +115,6 @@ uninstall-hook:
 	-rm -rf $(DESTDIR)$(pkgjavadir);
 	-rm -rf $(DESTDIR)$(pkgluadir);
 	-rm -rf $(DESTDIR)$(LUA_INSTALL_DIR)/gv.so;
-	-rm -rf $(DESTDIR)$(pkgocamldir);
 	-rm -rf $(DESTDIR)$(pkgperldir);
 	-rm -rf $(DESTDIR)$(PERL_INSTALL_DIR)/gv.so $(DESTDIR)$(PERL_INSTALL_DIR)/gv.pm;
 	-rm -rf $(DESTDIR)$(pkgphpdir);

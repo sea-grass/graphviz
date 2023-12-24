@@ -30,7 +30,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global JAVA       1
 %global JAVASCRIPT 0
 %global LASI       1
-%global OCAML      1
 %global WEBP       1
 %global PYTHON3    1
 %global QT5        1
@@ -102,9 +101,6 @@ BuildRequires: java-devel
 %endif
 %if %{LASI}
 BuildRequires: lasi-devel
-%endif
-%if %{OCAML}
-BuildRequires: ocaml
 %endif
 %if %{PYTHON3}
 BuildRequires: python3 python3-devel
@@ -661,25 +657,6 @@ Lua extension for graphviz.
 %{_mandir}/man3/*.3lua.*
 %exclude %{_libdir}/graphviz/lua/*.so
 
-#-- graphviz-lang-ocaml rpm --------------------------------------------
-%if %{OCAML}
-%package lang-ocaml
-Group:          Applications/Multimedia
-Summary:        Ocaml extension for graphviz
-Requires:       %{name} = %{version}-%{release}, ocaml
-Obsoletes:      %{name}-ocaml <= 2.41
-Provides:       %{name}-ocaml = %{version}-%{release}
-
-%description lang-ocaml
-Ocaml extension for graphviz.
-
-%files lang-ocaml
-%defattr(-,root,root,-)
-%dir %{_libdir}/graphviz/ocaml
-%{_libdir}/graphviz/ocaml/*
-%{_mandir}/man3/*.3ocaml.*
-%endif
-
 #-- graphviz-lang-perl rpm ---------------------------------------------
 %package lang-perl
 Group:          Applications/Multimedia
@@ -940,9 +917,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
 %endif
 %if ! %{SHARP}
         --disable-sharp \
-%endif
-%if ! %{OCAML}
-        --disable-ocaml \
 %endif
 %if ! %{ARRRR}
         --disable-r \

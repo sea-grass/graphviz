@@ -3,7 +3,7 @@ Section: graphics
 Priority: optional
 Maintainer: John Ellson <ellson@graphviz.org>
 Standards-Version: 3.7.3
-Build-Depends: tcl-dev, debhelper (>= 8), libfreetype6-dev, zlib1g-dev, libjpeg-dev, libxaw7-dev, bison, flex, autotools-dev, ksh, libexpat1-dev, libfontconfig1-dev, libltdl3-dev, swig, libperl-dev, libgd-dev (>= 2.0.35), quilt (>= 0.40), groff-base, ghostscript, ruby, ruby-dev (>= 1.8), php-dev (>= 5), ocaml-nox, python-dev, python-minimal, libcairo2-dev, libpango1.0-dev, guile-2.2-dev, d-shlibs, librsvg2-dev, libgtkglext1-dev, libglade2-dev, libgts-dev, freeglut3-dev, liblua5.3-dev
+Build-Depends: tcl-dev, debhelper (>= 8), libfreetype6-dev, zlib1g-dev, libjpeg-dev, libxaw7-dev, bison, flex, autotools-dev, ksh, libexpat1-dev, libfontconfig1-dev, libltdl3-dev, swig, libperl-dev, libgd-dev (>= 2.0.35), quilt (>= 0.40), groff-base, ghostscript, ruby, ruby-dev (>= 1.8), php-dev (>= 5), python-dev, python-minimal, libcairo2-dev, libpango1.0-dev, guile-2.2-dev, d-shlibs, librsvg2-dev, libgtkglext1-dev, libglade2-dev, libgts-dev, freeglut3-dev, liblua5.3-dev
 Homepage: http://www.graphviz.org/
 
 Package: graphviz
@@ -53,18 +53,6 @@ Description: Lua bindings for graphviz
  package for a full description.
  .
  This package contains the lua5.1 bindings.
-
-Package: libgv-ocaml
-Architecture: any
-Section: libs
-Depends: ocaml-base-nox-${F:OCamlABI}, ${shlibs:Depends}, ${misc:Depends}
-Description: OCaml bindings for graphviz
- Graphviz is a set of graph drawing tools. See the description of the graphviz
- package for a full description.
- .
- This package contains the OCaml bindings. The associated development files
- are in the libgraphviz-dev package so as to limit the number of binary
- packages.
 
 Package: libgv-perl
 Architecture: any
@@ -133,7 +121,6 @@ Package: libgraphviz-dev
 Architecture: any
 Section: libdevel
 Depends: libgraphviz4 (= ${binary:Version}), ${devlibs:Depends}, ${misc:Depends}
-Suggests: ocaml-base-nox-${F:OCamlABI}, ocaml-findlib
 Conflicts: graphviz-dev (<< 2.12-1), libgraphviz3-dev, libgraphviz4-dev (<< 2.16.3)
 Replaces: libgraphviz3-dev, libgraphviz4-dev (<< 2.16.3)
 Provides: graphviz-dev
@@ -143,8 +130,6 @@ Description: graphviz libs and headers against which to build applications
  .
  This package installs the libraries and headers necessary to link graphviz
  library routines into an application. It also installs additional man pages.
- .
- This package also contains the OCaml development files.
  .
  Note: A graphviz user doesn't need to install this package.
 

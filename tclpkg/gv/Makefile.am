@@ -101,48 +101,6 @@ libgv_lua_la_CPPFLAGS = $(BASECPPFLAGS) $(LUA_INCLUDES)
 gv_lua.cpp: gv.i
 	$(SWIG) -c++ -lua -o $@ $(srcdir)/gv.i
 
-pkgocamldir = $(pkglibdir)/ocaml
-OCAML_data = gv.cmo gv.cma gv.cmi META.gv
-#OCAML_data += gv.mli
-if WITH_OCAMLOPT
-#OCAML_data += gv.a gv.cmx gv.cmxa
-endif
-nodist_libgv_ocaml_la_SOURCES = gv_ocaml.cpp $(OCAML_data)
-libgv_ocaml_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-libgv_ocaml_la_LIBADD = $(BASELIBS) $(OCAML_LIBS)
-libgv_ocaml_la_LDFLAGS = -module -avoid-version
-libgv_ocaml_la_CPPFLAGS = \
-	$(BASECPPFLAGS) \
-	$(OCAML_INCLUDES) \
-	-Dint64=int64_t
-libgv_ocaml_la_CXXFLAGS = $(AM_CXXFLAGS) -fpermissive -Wno-unused-function \
-	-Wno-unused-variable
-gv.ml gv.mli: gv_ocaml.cpp
-gv_ocaml.cpp: gv.i
-	$(SWIG) -c++ -ocaml -o $@ $(srcdir)/gv.i
-	mv $@ $@.orig
-	$(SED) '/int caml_array_length/d' $@.orig > $@
-	rm $@.orig
-swig.mli:
-	$(SWIG) -ocaml -co $@
-swig.ml:
-	$(SWIG) -ocaml -co $@
-swig.cmi: swig.mli
-	ocamlc -c swig.mli
-swig.cmo: swig.ml swig.cmi
-	ocamlc -c swig.ml
-gv.cmi: gv.mli swig.cmi
-	ocamlc -c gv.mli
-gv.cmo: gv.ml gv.cmi
-	ocamlc -c gv.ml
-gv.cma: swig.cmo gv.cmo
-	ocamlc -a -dllib dllgv.so -custom -o $@ swig.cmo gv.cmo
-gv.cmx: gv.ml gv.cma
-	ocamlopt -c gv.ml
-gv.cmxa: gv.cmx
-	ocamlopt -a -o $@ gv.cmx
-gv.a:	gv.cmxa
-
 pkgperldir = $(pkglibdir)/perl
 PERL ?= perl
 PERL_CC = `$(PERL) -MExtUtils::Embed -e ccopts`
@@ -282,15 +240,6 @@ endif
 pkglua_LTLIBRARIES = libgv_lua.la
 DEVTSTS += test_lua
 endif
-if WITH_OCAML
-pkgocaml_DATA = $(OCAML_data)
-man_MANS += gv.3ocaml
-if ENABLE_MAN_PDFS
-pdf_DATA += gv.3ocaml.pdf
-endif
-pkgocaml_LTLIBRARIES = libgv_ocaml.la
-DEVTSTS += test_ocaml
-endif
 if WITH_PERL
 pkgperl_DATA = $(PERL_data)
 man_MANS += gv.3perl
@@ -352,7 +301,7 @@ pkgIndex.tcl: libgv_tcl.la
 endif
 endif
 
-man = gv.3sharp gv.3go gv.3guile gv.3java gv.3lua gv.3ocaml \
+man = gv.3sharp gv.3go gv.3guile gv.3java gv.3lua \
 	gv.3perl gv.3php gv.3python gv.3r gv.3ruby gv.3tcl
 
 # this rule has a trailing semi-colon for the Make cache to work correctly
@@ -383,10 +332,6 @@ gv_doc_writer.intermediate: gv.i gv_doc_writer.tcl gv_doc_template.tcl gv_doc_la
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
-.3ocaml.3ocaml.pdf:
-	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
-	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
-	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 .3perl.3perl.pdf:
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
@@ -411,7 +356,7 @@ gv_doc_writer.intermediate: gv.i gv_doc_writer.tcl gv_doc_template.tcl gv_doc_la
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
 	$(GROFF) -Tps -man $< > $$psfile || { rm -f $$psfile; exit 1; }; \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
-SUFFIXES = .3sharp .3sharp.pdf .3go .3go.pdf .3guile .3guile.pdf .3java .3java.pdf .3lua .3lua.pdf .3ocaml .3ocaml.pdf .3perl .3perl.pdf .3php .3php.pdf .3python .3python.pdf .3r .3r.pdf .3ruby .3ruby.pdf .3tcl .3tcl.pdf
+SUFFIXES = .3sharp .3sharp.pdf .3go .3go.pdf .3guile .3guile.pdf .3java .3java.pdf .3lua .3lua.pdf .3perl .3perl.pdf .3php .3php.pdf .3python .3python.pdf .3r .3r.pdf .3ruby .3ruby.pdf .3tcl .3tcl.pdf
 
 install-data-hook:
 if WITH_JAVA
@@ -479,14 +424,6 @@ test_lua: libgv_lua.la
 		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.lua .; \
 		$(LUA) test.lua)
 
-.PHONY: test_ocaml
-test_ocaml: libgv_ocaml.la
-	-(mkdir -p test_ocaml; cd test_ocaml; \
-		ln -fs ../.libs/libgv_ocaml.so libgv.so; \
-		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.ml ../$(srcdir)/*.mli .; \
-		ocamlc *.ocaml; \
-		LD_LIBRARY_PATH=. ocaml test)
-
 .PHONY: test_perl
 test_perl: libgv_perl.la
 	-(mkdir -p test_perl; cd test_perl; \
@@ -538,7 +475,6 @@ CLEANFILES = test_*/* pkgIndex.tcl \
 	gv_java.cpp $(JAVA_data) \
 	gv_javascript.cpp \
 	gv_lua.cpp $(LUA_data) \
-	gv_ocaml.cpp gv.cma gv.cmi gv.mli swig.mli swig.ml swig.cmi swig.cmo gv.ml gv.cmo gv.cmx gv.cmxa gv.a gv.o \
 	gv_perl.cpp $(PERL_data) \
 	gv_php.cpp $(PHP_data) \
 	gv_python.cpp $(PYTHON_data) gv.pyc \
