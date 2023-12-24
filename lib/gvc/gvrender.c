@@ -539,8 +539,7 @@ void gvrender_ellipse(GVJ_t *job, pointf *pf, int filled) {
     }
 }
 
-void gvrender_polygon(GVJ_t * job, pointf * af, int n, int filled)
-{
+void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled) {
     int noPoly = 0;
     gvcolor_t save_pencolor;
 
@@ -554,13 +553,12 @@ void gvrender_polygon(GVJ_t * job, pointf * af, int n, int filled)
 		job->obj->pencolor = job->obj->fillcolor;
 	    }
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->polygon(job, af, n, filled);
+		gvre->polygon(job, af, (int)n, filled);
 	    else {
 		pointf *AF;
-		assert(n >= 0);
-		AF = gcalloc((size_t)n, sizeof(pointf));
-		gvrender_ptf_A(job, af, AF, (size_t)n);
-		gvre->polygon(job, AF, n, filled);
+		AF = gcalloc(n, sizeof(pointf));
+		gvrender_ptf_A(job, af, AF, n);
+		gvre->polygon(job, AF, (int)n, filled);
 		free(AF);
 	    }
 	    if (noPoly)
@@ -680,15 +678,13 @@ static imagepos_t get_imagepos(char *s)
  * Scale image to fill polygon bounding box according to "imagescale",
  * positioned at "imagepos"
  */
-void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
-			bool filled, char *imagescale, char *imagepos)
-{
+void gvrender_usershape(GVJ_t *job, char *name, pointf *a, size_t n,
+                        bool filled, char *imagescale, char *imagepos) {
     gvrender_engine_t *gvre = job->render.engine;
     usershape_t *us;
     double iw, ih, pw, ph;
     double scalex, scaley;	/* scale factors */
     boxf b;			/* target box */
-    int i;
     point isz;
     imagepos_t position;
 
@@ -699,7 +695,7 @@ void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
     if (!(us = gvusershape_find(name))) {
 	if (find_user_shape(name)) {
 	    if (gvre && gvre->library_shape)
-		gvre->library_shape(job, name, a, n, filled);
+		gvre->library_shape(job, name, a, (int)n, filled);
 	}
 	return;
     }
@@ -710,7 +706,7 @@ void gvrender_usershape(GVJ_t * job, char *name, pointf * a, int n,
 
     /* compute bb of polygon */
     b.LL = b.UR = a[0];
-    for (i = 1; i < n; i++) {
+    for (size_t i = 1; i < n; i++) {
 	EXPANDBP(b, a[i]);
     }
 

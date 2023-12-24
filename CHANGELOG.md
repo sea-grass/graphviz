@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: `gvpropts.n_outgraphs` is now a `size_t`.
 - The OCaml bindings have been removed. If you use these bindings, please contact
   the maintainers to notify them of the existence of users.
+- **Breaking**: `polygon_t.sides` and `polygon_t.peripheries` are now `size_t`s.
 
 ### Fixed
 

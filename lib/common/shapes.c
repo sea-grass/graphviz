@@ -75,7 +75,7 @@ static poly_desc_t star_gen = {
 
 static pointf cylinder_size (pointf);
 static void cylinder_vertices (pointf*, pointf*);
-static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled);
+static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled);
 /* static boolean cylinder_inside(inside_t * inside_context, pointf p); */
 static poly_desc_t cylinder_gen = {
     cylinder_size,
@@ -527,11 +527,11 @@ static void Mcircle_hack(GVJ_t * job, node_t * n)
  * consist of a region, filled or unfilled, followed by additional line
  * segments. A single fill is necessary for gradient colors to work.
  */
-void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
+void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 {
     pointf *B, C[5], *D, p0, p1;
     double rbconst, d, dx, dy, t;
-    int i, seg, mode, shape;
+    int i, mode, shape;
     pointf* pts;
 
     shape = style & SHAPE_MASK;
@@ -542,7 +542,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
     else
 	mode = ROUNDED;
     if (mode == CYLINDER) {
-	cylinder_draw (job, AF, sides, filled);
+	cylinder_draw(job, AF, sides, filled);
 	return;
     } 
     B = gv_calloc(4 * sides + 4, sizeof(pointf));
@@ -552,9 +552,9 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
      * bigger than one-third the length of a side.
      */
     rbconst = RBCONST;
-    for (seg = 0; seg < sides; seg++) {
+    for (size_t seg = 0; seg < sides; seg++) {
 	p0 = AF[seg];
-	if (seg < sides - 1)
+	if (seg + 1 < sides)
 	    p1 = AF[seg + 1];
 	else
 	    p1 = AF[0];
@@ -563,9 +563,9 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	d = hypot(dx, dy);
 	rbconst = MIN(rbconst, d / 3.0);
     }
-    for (seg = 0; seg < sides; seg++) {
+    for (size_t seg = 0; seg < sides; seg++) {
 	p0 = AF[seg];
-	if (seg < sides - 1)
+	if (seg + 1 < sides)
 	    p1 = AF[seg + 1];
 	else
 	    p1 = AF[0];
@@ -594,7 +594,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
     case ROUNDED:
 	pts = N_GNEW(6 * sides + 2, pointf);
 	i = 0;
-	for (seg = 0; seg < sides; seg++) {
+	for (size_t seg = 0; seg < sides; seg++) {
 	    pts[i++] = B[4 * seg];
 	    pts[i++] = B[4 * seg+1];
 	    pts[i++] = B[4 * seg+1];
@@ -612,7 +612,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	/* diagonals are weird.  rewrite someday. */
 	gvrender_polygon(job, AF, sides, filled);
 
-	for (seg = 0; seg < sides; seg++) {
+	for (size_t seg = 0; seg < sides; seg++) {
 	    C[0] = B[3 * seg + 2];
 	    C[1] = B[3 * seg + 4];
 	    gvrender_polyline(job, C, 2);
@@ -621,7 +621,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
     case DOGEAR:
 	/* Add the cutoff edge. */
 	D = gv_calloc(sides + 1, sizeof(pointf));
-	for (seg = 1; seg < sides; seg++)
+	for (size_t seg = 1; seg < sides; seg++)
 	    D[seg] = AF[seg];
 	D[0] = B[3 * (sides - 1) + 4];
 	D[sides] = B[3 * (sides - 1) + 2];
@@ -629,11 +629,11 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	free(D);
 
 	/* Draw the inner edge. */
-	seg = sides - 1;
-	C[0] = B[3 * seg + 2];
-	C[1] = B[3 * seg + 4];
-	C[2].x = C[1].x + (C[0].x - B[3 * seg + 3].x);
-	C[2].y = C[1].y + (C[0].y - B[3 * seg + 3].y);
+	const size_t sseg = sides - 1;
+	C[0] = B[3 * sseg + 2];
+	C[1] = B[3 * sseg + 4];
+	C[2].x = C[1].x + (C[0].x - B[3 * sseg + 3].x);
+	C[2].y = C[1].y + (C[0].y - B[3 * sseg + 3].y);
 	gvrender_polyline(job, C + 1, 2);
 	C[1] = C[2];
 	gvrender_polyline(job, C, 2);
@@ -660,7 +660,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[2].y = B[2].y + (B[3].y - B[4].y) / 3;
 	D[3].x = B[3].x + (B[3].x - B[4].x) / 3;
 	D[3].y = B[3].y + (B[3].y - B[4].y) / 3;
-	for (seg = 4; seg < sides + 2; seg++)
+	for (size_t seg = 4; seg < sides + 2; seg++)
 	    D[seg] = AF[seg - 2];
 	gvrender_polygon(job, D, sides + 2, filled);
 	free(D);
@@ -696,7 +696,7 @@ void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled)
 	D[3].y = B[3].y;
 	D[4].x = B[3].x;
 	D[4].y = B[3].y;
-	for (seg = 4; seg < sides + 3; seg++)
+	for (size_t seg = 4; seg < sides + 3; seg++)
 	    D[seg] = AF[seg - 3];
 	gvrender_polygon(job, D, sides + 3, filled);
 	free(D);
@@ -1853,14 +1853,13 @@ static void poly_init(node_t * n)
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
     double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
-    int peripheries, sides;
-    int i, j, isBox, outp;
+    int isBox;
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
     bool regular = !!ND_shape(n)->polygon->regular;
-    peripheries = ND_shape(n)->polygon->peripheries;
-    sides = ND_shape(n)->polygon->sides;
+    size_t peripheries = ND_shape(n)->polygon->peripheries;
+    size_t sides = ND_shape(n)->polygon->sides;
     orientation = ND_shape(n)->polygon->orientation;
     skew = ND_shape(n)->polygon->skew;
     distortion = ND_shape(n)->polygon->distortion;
@@ -1890,11 +1889,11 @@ static void poly_init(node_t * n)
 	height = INCH2PS(ND_height(n));
     }
 
-    peripheries = late_int(n, N_peripheries, peripheries, 0);
+    peripheries = (size_t)late_int(n, N_peripheries, (int)peripheries, 0);
     orientation += late_double(n, N_orientation, 0.0, -360.0);
     if (sides == 0) {		/* not for builtins */
 	skew = late_double(n, N_skew, 0.0, -100.0);
-	sides = late_int(n, N_sides, 4, 0);
+	sides = (size_t)late_int(n, N_sides, 4, 0);
 	distortion = late_double(n, N_distortion, 0.0, -100.0);
     }
 
@@ -1907,7 +1906,7 @@ static void poly_init(node_t * n)
 	if (!isPlain) {
 	    if ((p = agget(n, "margin"))) {
 		marginx = marginy = 0;
-		i = sscanf(p, "%lf,%lf", &marginx, &marginy);
+		const int i = sscanf(p, "%lf,%lf", &marginx, &marginy);
 		marginx = fmax(marginx, 0);
 		marginy = fmax(marginy, 0);
 		if (i > 0) {
@@ -2006,7 +2005,7 @@ static void poly_init(node_t * n)
 	}
 #if 1
 	if (sides > 2) {
-	    temp = cos(M_PI / sides);
+	    temp = cos(M_PI / (double)sides);
 	    bb.x /= temp;
 	    bb.y /= temp;
 	    /* FIXME - for odd-sided polygons, e.g. triangles, there
@@ -2068,7 +2067,7 @@ static void poly_init(node_t * n)
 
     const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 
-    outp = peripheries;
+    size_t outp = peripheries;
     if (peripheries < 1)
 	outp = 1;
 
@@ -2088,7 +2087,7 @@ static void poly_init(node_t * n)
 	vertices[0].y = -P.y;
 	vertices[1] = P;
 	if (peripheries > 1) {
-	    for (j = 1, i = 2; j < peripheries; j++) {
+	    for (size_t j = 1, i = 2; j < peripheries; j++) {
 		P.x += GAP;
 		P.y += GAP;
 		vertices[i].x = -P.x;
@@ -2106,7 +2105,7 @@ static void poly_init(node_t * n)
 	  // add an outline at half the penwidth outside the outermost periphery
 	  P.x += penwidth / 2;
 	  P.y += penwidth / 2;
-	  i = sides * peripheries;
+	  size_t i = sides * peripheries;
 	  vertices[i].x = -P.x;
 	  vertices[i].y = -P.y;
 	  i++;
@@ -2138,7 +2137,7 @@ static void poly_init(node_t * n)
 	    xmax = bb.x/2;
 	    ymax = bb.y/2;
 	} else {
-	    sectorangle = 2. * M_PI / sides;
+	    sectorangle = 2. * M_PI / (double)sides;
 	    sidelength = sin(sectorangle / 2.);
 	    skewdist = hypot(fabs(distortion) + fabs(skew), 1.);
 	    gdistortion = distortion * SQRT2 / cos(sectorangle / 2.);
@@ -2150,7 +2149,7 @@ static void poly_init(node_t * n)
 	    R.y = .5 * sinx;
 	    xmax = ymax = 0.;
 	    angle += (M_PI - sectorangle) / 2.;
-	    for (i = 0; i < sides; i++) {
+	    for (size_t i = 0; i < sides; i++) {
 
 	    /*next regular vertex */
 		angle += sectorangle;
@@ -2202,6 +2201,7 @@ static void poly_init(node_t * n)
 	scalex = bb.x / xmax;
 	scaley = bb.y / ymax;
 
+	size_t i;
 	for (i = 0; i < sides; i++) {
 	    pointf P = vertices[i];
 	    P.x *= scalex;
@@ -2212,7 +2212,7 @@ static void poly_init(node_t * n)
 	if (outp > 1) {
 	    pointf R = vertices[0];
 	    pointf Q;
-	    for (j = 1; j < sides; j++) {
+	    for (size_t j = 1; j < sides; j++) {
 		Q = vertices[(i - j) % sides];
 		if (Q.x != R.x || Q.y != R.y) {
 		    break;
@@ -2234,7 +2234,7 @@ static void poly_init(node_t * n)
 		    // layout, but are drawn using bezier curves during
 		    // rendering, e.g. for the `cylinder` shape.
 		} else {
-		    for (j = 1; j < sides; j++) {
+		    for (size_t j = 1; j < sides; j++) {
 			R = vertices[(i + j) % sides];
 			if (R.x != Q.x || R.y != Q.y) {
 			    break;
@@ -2259,7 +2259,7 @@ static void poly_init(node_t * n)
 
 		/*save the vertices of all the */
 		/*peripheries at this base vertex */
-		for (j = 1; j < peripheries; j++) {
+		for (size_t j = 1; j < peripheries; j++) {
 		    Q.x += cosx;
 		    Q.y += sinx;
 		    vertices[i + j * sides] = Q;
@@ -2324,12 +2324,12 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 {
     static node_t *lastn;	/* last node argument */
     static polygon_t *poly;
-    static int last, outp, sides;
+    static size_t last, outp, sides;
     static pointf O;		/* point (0,0) */
     static pointf *vertex;
     static double xsize, ysize, scalex, scaley, box_URx, box_URy;
 
-    int i, i1, j, s;
+    int s;
     pointf P, Q, R;
     boxf *bp;
     node_t *n;
@@ -2400,11 +2400,11 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	if (poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
 	    outp = (poly->peripheries + 1 - 1) * sides;
+	} else if (poly->peripheries < 1) {
+	    outp = 0;
 	} else {
 	    /* index to outer-periphery */
 	    outp = (poly->peripheries - 1) * sides;
-	    if (outp < 0)
-		outp = 0;
 	}
 	lastn = n;
     }
@@ -2422,8 +2422,8 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	return hypot(P.x / box_URx, P.y / box_URy) < 1.;
 
     /* use fast test in case we are converging on a segment */
-    i = last % sides;		/* in case last left over from larger polygon */
-    i1 = (i + 1) % sides;
+    size_t i = last % sides; // in case last left over from larger polygon
+    size_t i1 = (i + 1) % sides;
     Q = vertex[i + outp];
     R = vertex[i1 + outp];
     if (!same_side(P, O, Q, R))   /* false if outside the segment's face */
@@ -2432,7 +2432,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     if ((s = same_side(P, Q, R, O)) && same_side(P, R, O, Q)) /* true if between the segment's sides */
 	return true;
     /* else maybe in another segment */
-    for (j = 1; j < sides; j++) { /* iterate over remaining segments */
+    for (size_t j = 1; j < sides; j++) { // iterate over remaining segments
 	if (s) { /* clockwise */
 	    i = i1;
 	    i1 = (i + 1) % sides;
@@ -2440,7 +2440,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    i1 = i;
 	    i = (i + sides - 1) % sides;
 	}
-	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { /* false if outside any other segment's face */
+	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { // false if outside any other segment’s face
 	    last = i;
 	    return false;
 	}
@@ -2834,10 +2834,10 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     obj_state_t *obj = job->obj;
     polygon_t *poly;
     double xsize, ysize;
-    int i, j, peripheries, sides, style;
+    int style;
     pointf P, *vertices;
     static pointf *AF;
-    static int A_size;
+    static size_t A_size;
     int filled;
     bool usershape_p;
     bool pfilled;		/* true if fill not handled by user shape */
@@ -2854,8 +2854,8 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 
     poly = ND_shape_info(n);
     vertices = poly->vertices;
-    sides = poly->sides;
-    peripheries = poly->peripheries;
+    const size_t sides = poly->sides;
+    size_t peripheries = poly->peripheries;
     if (A_size < sides) {
 	A_size = sides + 5;
 	AF = ALLOC(A_size, AF, pointf);
@@ -2942,8 +2942,9 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     }
 
     /* draw peripheries first */
+    size_t j;
     for (j = 0; j < peripheries; j++) {
-	for (i = 0; i < sides; i++) {
+	for (size_t i = 0; i < sides; i++) {
 	    P = vertices[i + j * sides];
 	    AF[i].x = P.x * xsize + ND_coord(n).x;
 	    AF[i].y = P.y * ysize + ND_coord(n).y;
@@ -2993,7 +2994,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     }
     if (usershape_p) {
 	/* get coords of innermost periphery */
-	for (i = 0; i < sides; i++) {
+	for (size_t i = 0; i < sides; i++) {
 	    P = vertices[i];
 	    AF[i].x = P.x * xsize + ND_coord(n).x;
 	    AF[i].y = P.y * ysize + ND_coord(n).y;
@@ -3050,10 +3051,10 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 static void point_init(node_t * n)
 {
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
-    int sides, outp, peripheries = ND_shape(n)->polygon->peripheries;
+    size_t sides, outp, peripheries = ND_shape(n)->polygon->peripheries;
     double sz;
     pointf P, *vertices;
-    int i, j;
+    size_t i, j;
     double w, h;
 
     /* set width and height, and make them equal
@@ -3077,7 +3078,7 @@ static void point_init(node_t * n)
     }
 
     sz = ND_width(n) * POINTS_PER_INCH;
-    peripheries = late_int(n, N_peripheries, peripheries, 0);
+    peripheries = (size_t)late_int(n, N_peripheries, (int)peripheries, 0);
     if (peripheries < 1)
 	outp = 1;
     else
@@ -3152,19 +3153,19 @@ static bool point_inside(inside_t * inside_context, pointf p)
     P = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
 
     if (n != lastn) {
-	int outp;
+	size_t outp;
 	polygon_t *poly = ND_shape_info(n);
-	const int sides = 2;
+	const size_t sides = 2;
 	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
 
 	if (poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
 	    outp = sides * (poly->peripheries + 1 - 1);
+	} else if (poly->peripheries < 1) {
+	    outp = 0;
 	} else {
 	    /* index to outer-periphery */
 	    outp = sides * (poly->peripheries - 1);
-	    if (outp < 0)
-		outp = 0;
 	}
 
 	radius = poly->vertices[outp + 1].x;
@@ -3182,7 +3183,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj = job->obj;
     polygon_t *poly;
-    int i, j, sides, peripheries, style;
+    int style;
     pointf P, *vertices;
     bool filled;
     char *color;
@@ -3195,8 +3196,8 @@ static void point_gencode(GVJ_t * job, node_t * n)
 
     poly = ND_shape_info(n);
     vertices = poly->vertices;
-    sides = poly->sides;
-    peripheries = poly->peripheries;
+    const size_t sides = poly->sides;
+    size_t peripheries = poly->peripheries;
 
     checkStyle(n, &style);
     if (style & INVISIBLE)
@@ -3248,10 +3249,10 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	    gvrender_set_pencolor(job, color);
     }
 
-    for (j = 0; j < peripheries; j++) {
+    for (size_t j = 0; j < peripheries; j++) {
 	enum {A_size = 2};
 	pointf AF[A_size] = {{0}};
-	for (i = 0; i < sides; i++) {
+	for (size_t i = 0; i < sides; i++) {
 	    P = vertices[i + j * sides];
 	    if (i < A_size) {
 	      AF[i].x = P.x + ND_coord(n).x;
@@ -4045,7 +4046,7 @@ static bool star_inside(inside_t * inside_context, pointf p)
 {
     static node_t *lastn;	/* last node argument */
     static polygon_t *poly;
-    static int outp, sides;
+    static size_t outp, sides;
     static pointf *vertex;
     static pointf O;		/* point (0,0) */
 
@@ -4056,7 +4057,7 @@ static bool star_inside(inside_t * inside_context, pointf p)
     boxf *bp = inside_context->s.bp;
     node_t *n = inside_context->s.n;
     pointf P, Q, R;
-    int i, outcnt;
+    int outcnt;
 
     P = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
 
@@ -4075,17 +4076,17 @@ static bool star_inside(inside_t * inside_context, pointf p)
 	if (poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
 	    outp = (poly->peripheries + 1 - 1) * sides;
+	} else if (poly->peripheries < 1) {
+	    outp = 0;
 	} else {
 	    /* index to outer-periphery */
 	    outp = (poly->peripheries - 1) * sides;
-	    if (outp < 0)
-		outp = 0;
 	}
 	lastn = n;
     }
 
     outcnt = 0;
-    for (i = 0; i < sides; i += 2) {
+    for (size_t i = 0; i < sides; i += 2) {
 	Q = vertex[i + outp];
 	R = vertex[((i+4) % sides) + outp];
 	if (!(same_side(P, O, Q, R))) {
@@ -4148,8 +4149,7 @@ static void cylinder_vertices (pointf* vertices, pointf* bb)
     vertices[18] = vertices[17] = vertices[0];
 }
 
-static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled)
-{
+static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled) {
     pointf vertices[7];
     double y0 = AF[0].y;
     double y02 = y0+y0;
@@ -4167,7 +4167,7 @@ static void cylinder_draw(GVJ_t * job, pointf * AF, int sides, int filled)
     vertices[5].y = y02 - AF[5].y;
     vertices[6] = AF[6];
 
-    gvrender_beziercurve(job, AF, sides, filled);
+    gvrender_beziercurve(job, AF, (int)sides, filled);
     gvrender_beziercurve(job, vertices, 7, 0);
 }
 

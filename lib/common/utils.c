@@ -629,13 +629,13 @@ static boxf addLabelBB(boxf bb, textlabel_t * lp, bool flipxy)
 boxf
 polyBB (polygon_t* poly)
 {
-    int i, sides = poly->sides;
-    int peris = MAX(poly->peripheries,1);
+    const size_t sides = poly->sides;
+    const size_t peris = MAX(poly->peripheries, 1ul);
     pointf* verts = poly->vertices + (peris-1)*sides;
     boxf bb;
 
     bb.LL = bb.UR = verts[0];
-    for (i = 1; i < sides; i++) {
+    for (size_t i = 1; i < sides; i++) {
 	bb.LL.x = MIN(bb.LL.x,verts[i].x);
 	bb.LL.y = MIN(bb.LL.y,verts[i].y);
 	bb.UR.x = MAX(bb.UR.x,verts[i].x);

@@ -267,7 +267,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
     Ppoly_t *obs;
     polygon_t *poly;
     double adj = 0.0;
-    int j, sides;
+    size_t sides;
     pointf polyp;
     boxf b;
     pointf pt;
@@ -321,10 +321,10 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	    sides = 8;
 	    adj = drand48() * .01;
 	}
-	obs->pn = sides;
+	obs->pn = (int)sides;
 	obs->ps = gv_calloc(sides, sizeof(Ppoint_t));
 	/* assuming polys are in CCW order, and pathplan needs CW */
-	for (j = 0; j < sides; j++) {
+	for (size_t j = 0; j < sides; j++) {
 	    double xmargin = 0.0, ymargin = 0.0;
 	    if (isPoly) {
 		if (pmargin->doAdd) {
@@ -364,8 +364,8 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 		}
 	    } else {
 		double c, s;
-		c = cos(2.0 * M_PI * j / sides + adj);
-		s = sin(2.0 * M_PI * j / sides + adj);
+		c = cos(2.0 * M_PI * (double)j / (double)sides + adj);
+		s = sin(2.0 * M_PI * (double)j / (double)sides + adj);
 		if (pmargin->doAdd) {
 		    polyp.x =  c*(ND_lw(n)+ND_rw(n)+pmargin->x) / 2.0;
 		    polyp.y =  s*(ND_ht(n)+pmargin->y) / 2.0;

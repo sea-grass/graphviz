@@ -25,7 +25,7 @@
 #define CIRCLE 2
 #define ISCIRCLE(p) ((p)->kind & CIRCLE)
 
-static int maxcnt = 0;
+static size_t maxcnt = 0;
 static Point *tp1 = NULL;
 static Point *tp2 = NULL;
 static Point *tp3 = NULL;
@@ -46,14 +46,12 @@ void breakPoly(Poly * pp)
     free(pp->verts);
 }
 
-static void bbox(Point * verts, int cnt, Point * o, Point * c)
-{
+static void bbox(Point *verts, size_t cnt, Point *o, Point *c) {
     double x_min, y_min, x_max, y_max;
-    int i;
 
     x_min = x_max = verts->x;
     y_min = y_max = verts->y;
-    for (i = 1; i < cnt; i++) {
+    for (size_t i = 1; i < cnt; i++) {
 	verts++;
 	x_min = fmin(x_min, verts->x);
 	y_min = fmin(y_min, verts->y);
@@ -66,21 +64,18 @@ static void bbox(Point * verts, int cnt, Point * o, Point * c)
     c->y = y_max;
 }
 
-static void inflatePts(Point * verts, int cnt, float xmargin, float ymargin)
-{
-    int i;
+static void inflatePts(Point *verts, size_t cnt, float xmargin, float ymargin) {
     Point *cur;
 
     cur = &verts[0];
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	cur->x *= xmargin;
 	cur->y *= ymargin;
 	cur++;
     }
 }
 
-static int isBox(Point * verts, int cnt)
-{
+static int isBox(Point *verts, size_t cnt) {
     if (cnt != 4)
 	return 0;
 
@@ -109,23 +104,21 @@ static Point makeScaledPoint(double x, double y)
     return rv;
 }
 
-static Point *genRound(Agnode_t * n, int *sidep, float xm, float ym)
-{
-    int sides = 0;
+static Point *genRound(Agnode_t *n, size_t *sidep, float xm, float ym) {
+    size_t sides = 0;
     Point *verts;
     char *p = agget(n, "samplepoints");
-    int i;
 
+    int isides = 0;
     if (p)
-	sides = atoi(p);
-    if (sides < 3)
-	sides = DFLT_SAMPLE;
+	isides = atoi(p);
+    sides = isides < 3 ? DFLT_SAMPLE : (size_t)isides;
     verts = N_GNEW(sides, Point);
-    for (i = 0; i < sides; i++) {
+    for (size_t i = 0; i < sides; i++) {
 	verts[i].x =
-	    (ND_width(n) / 2.0 + xm) * cos(i / (double) sides * M_PI * 2.0);
+	    (ND_width(n) / 2.0 + xm) * cos((double)i / (double)sides * M_PI * 2.0);
 	verts[i].y =
-	    (ND_height(n) / 2.0 + ym) * sin(i / (double) sides * M_PI * 2.0);
+	    (ND_height(n) / 2.0 + ym) * sin((double)i / (double)sides * M_PI * 2.0);
     }
     *sidep = sides;
     return verts;
@@ -135,8 +128,7 @@ static Point *genRound(Agnode_t * n, int *sidep, float xm, float ym)
 
 int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 {
-    int i;
-    int sides;
+    size_t sides;
     Point *verts;
     polygon_t *poly;
 
@@ -184,7 +176,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
  
 		}
 		else {
-		    for (i = 0; i < sides; i++) {
+		    for (size_t i = 0; i < sides; i++) {
                         double h = LEN(poly->vertices[i].x,poly->vertices[i].y);
 		        verts[i].x = poly->vertices[i].x * (1.0 + xmargin/h);
 		        verts[i].y = poly->vertices[i].y * (1.0 + ymargin/h);
@@ -217,7 +209,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	}
 
     pp->verts = verts;
-    pp->nverts = sides;
+    pp->nverts = (int)sides;
     bbox(verts, sides, &pp->origin, &pp->corner);
 
     if (sides > maxcnt)
@@ -227,8 +219,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 
 int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 {
-    int i;
-    int sides;
+    size_t sides;
     Point *verts;
     polygon_t *poly;
 
@@ -250,7 +241,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    sides = poly->sides;
 	    if (sides >= 3) {	/* real polygon */
 		verts = N_GNEW(sides, Point);
-		for (i = 0; i < sides; i++) {
+		for (size_t i = 0; i < sides; i++) {
 		    verts[i].x = PS2INCH(poly->vertices[i].x);
 		    verts[i].y = PS2INCH(poly->vertices[i].y);
 		}
@@ -293,7 +284,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	inflatePts(verts, sides, xmargin, ymargin);
 
     pp->verts = verts;
-    pp->nverts = sides;
+    pp->nverts = (int)sides;
     bbox(verts, sides, &pp->origin, &pp->corner);
 
     if (sides > maxcnt)

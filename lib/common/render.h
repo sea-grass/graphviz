@@ -123,7 +123,8 @@ extern "C" {
     RENDER_API int rank2(graph_t * g, int balance, int maxiter, int search_size);
     RENDER_API port resolvePort(node_t*  n, node_t* other, port* oldport);
     RENDER_API void resolvePorts (edge_t* e);
-    RENDER_API void round_corners(GVJ_t * job, pointf * AF, int sides, int style, int filled);
+    RENDER_API void round_corners(GVJ_t *job, pointf *AF, size_t sides,
+                                  int style, int filled);
     RENDER_API int routesplinesinit(void);
     RENDER_API pointf *routesplines(path *, int *);
     RENDER_API void routesplinesterm(void);
