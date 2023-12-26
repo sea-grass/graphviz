@@ -21,6 +21,7 @@
 #include <assert.h>
 #include <ast/ast.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/startswith.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -34,8 +35,6 @@ static const char *getenv_path(void) {
   }
   return "";
 }
-
-char **opt_info_argv;
 
 char *pathpath(const char *p) {
   const char *a = "";
@@ -59,10 +58,10 @@ char *pathpath(const char *p) {
       a = 0;
     if ((!cmd || *cmd) &&
         (strchr(s, '/') ||
-         (((s = cmd) || (opt_info_argv && (s = *opt_info_argv))) &&
-          strchr(s, '/') && !strchr(s, '\n') && !access(s, F_OK)) ||
-         ((s = getenv("_")) && strchr(s, '/') && !strneq(s, "/bin/", 5) &&
-          !strneq(s, "/usr/bin/", 9)) ||
+         ((s = cmd) && strchr(s, '/') && !strchr(s, '\n') &&
+          !access(s, F_OK)) ||
+         ((s = getenv("_")) && strchr(s, '/') && !startswith(s, "/bin/") &&
+          !startswith(s, "/usr/bin/")) ||
          (*x && !access(x, F_OK) && (s = getenv("PWD")) && *s == '/'))) {
       if (!cmd)
         cmd = strdup(s);

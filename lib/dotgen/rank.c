@@ -31,8 +31,8 @@
 #include	<stddef.h>
 #include	<stdint.h>
 
-static void dot1_rank(graph_t * g, aspect_t* asp);
-static void dot2_rank(graph_t * g, aspect_t* asp);
+static void dot1_rank(graph_t *g);
+static void dot2_rank(graph_t *g);
 
 static void 
 renewlist(elist * L)
@@ -262,7 +262,7 @@ collapse_cluster(graph_t * g, graph_t * subg)
 	return;
     make_new_cluster(g, subg);
     if (CL_type == LOCAL) {
-	dot1_rank(subg, 0);
+	dot1_rank(subg);
 	cluster_leader(subg);
     } else
 	dot_scan_ranks(subg);
@@ -389,8 +389,7 @@ void rank1(graph_t * g)
  * Leaf sets and clusters remain merged.
  * Sets minrank and maxrank appropriately.
  */
-static void expand_ranksets(graph_t * g, aspect_t* asp)
-{
+static void expand_ranksets(graph_t *g) {
     int c;
     node_t *n, *leader;
 
@@ -402,7 +401,7 @@ static void expand_ranksets(graph_t * g, aspect_t* asp)
 	    /* The following works because ND_rank(n) == 0 if n is not in a
 	     * cluster, and ND_rank(n) = the local rank offset if n is in
 	     * a cluster. */
-	    if ((leader != n) && (!asp || (ND_rank(n) == 0)))
+	    if (leader != n)
 		ND_rank(n) += ND_rank(leader);
 
 	    if (GD_maxrank(g) < ND_rank(n))
@@ -427,49 +426,33 @@ static void expand_ranksets(graph_t * g, aspect_t* asp)
     }
 }
 
-/* dot1_rank:
- * asp != NULL => g is root
- */
-static void dot1_rank(graph_t * g, aspect_t* asp)
+static void dot1_rank(graph_t *g)
 {
     point p;
     edgelabel_ranks(g);
-
-    if (asp) {
-	init_UF_size(g);
-	initEdgeTypes(g);
-    }
 
     collapse_sets(g,g);
     /*collapse_leaves(g); */
     class1(g);
     p = minmax_edges(g);
     decompose(g, 0);
-    if (asp && ((GD_comp(g).size > 1)||(GD_n_cluster(g) > 0))) {
-	asp->badGraph = 1;
-	asp = NULL;
-    }
     acyclic(g);
     if (minmax_edges2(g, p))
 	decompose(g, 0);
 
-    if (asp)
-	rank3(g, asp);
-    else
-	rank1(g);
+    rank1(g);
 
-    expand_ranksets(g, asp);
+    expand_ranksets(g);
     cleanup1(g);
 }
 
-void dot_rank(graph_t * g, aspect_t* asp)
-{
+void dot_rank(graph_t *g) {
     if (agget (g, "newrank")) {
 	GD_flags(g) |= NEW_RANK;
-	dot2_rank (g, asp);
+	dot2_rank(g);
     }
     else
-	dot1_rank (g, asp);
+	dot1_rank(g);
     if (Verbose)
 	fprintf (stderr, "Maxrank = %d, minrank = %d\n", GD_maxrank(g), GD_minrank(g));
 }
@@ -1020,8 +1003,7 @@ int infosizes[] = {
     sizeof(Agedgeinfo_t)
 };
 
-void dot2_rank(graph_t * g, aspect_t* asp)
-{
+void dot2_rank(graph_t *g) {
     int ssize;
     int ncc, maxiter = INT_MAX;
     char *s;
@@ -1046,11 +1028,6 @@ void dot2_rank(graph_t * g, aspect_t* asp)
     break_cycles(Xg);
     ncc = connect_components(Xg);
     add_fast_edges (Xg);
-
-    if (asp) {
-	init_UF_size(Xg);
-	initEdgeTypes(Xg);
-    }
 
     if ((s = agget(g, "searchsize")))
 	ssize = atoi(s);

@@ -1273,9 +1273,9 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     setEdgeType (auxg, et);
     dot_init_node_edge(auxg);
 
-    dot_rank(auxg, 0);
-    dot_mincross(auxg, 0);
-    dot_position(auxg, 0);
+    dot_rank(auxg);
+    dot_mincross(auxg);
+    dot_position(auxg);
     
     /* reposition */
     midx = (ND_coord(tn).x - ND_rw(tn) + ND_coord(hn).x + ND_lw(hn))/2;

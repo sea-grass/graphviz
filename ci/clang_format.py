@@ -230,7 +230,6 @@ EXCLUDE = (
     "lib/common/utils.c",
     "lib/dotgen/acyclic.c",
     "lib/dotgen/aspect.c",
-    "lib/dotgen/aspect.h",
     "lib/dotgen/class1.c",
     "lib/dotgen/class2.c",
     "lib/dotgen/cluster.c",
