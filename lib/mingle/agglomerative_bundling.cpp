@@ -78,7 +78,7 @@ static aib_t Agglomerative_Ink_Bundling_init(SparseMatrix A, pedge *edges,
     grid->total_ink = total_ink;
   }
   return aib_t{grid};
-} 
+}
 
 static void Agglomerative_Ink_Bundling_delete(aib_t &grid) {
   for (Agglomerative_Ink_Bundling &a : grid) {
@@ -163,7 +163,7 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
 	  ni = (ip[i+1] - ip[i]);/* number of edges represented by i */
 	  memcpy(pick, &(jp[ip[i]]), sizeof(int)*ni);
 	} else {
-	  ni = 1; pick[0] = i; 
+	  ni = 1; pick[0] = i;
 	}
 	nj = cedges[jc].size();
 	npicks = ni;
@@ -190,10 +190,10 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
 	minink = ink1;
 	jmax = jj;
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr, "maxgain=%f", maxgain);
-      } 
+      }
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr, "\n");
 
-      
+
 
     }
 
@@ -271,14 +271,14 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
     P = SparseMatrix_transpose(R);
     B = SparseMatrix_multiply(R, A);
     if (!B) return;
-    cA = SparseMatrix_multiply(B, P); 
+    cA = SparseMatrix_multiply(B, P);
     if (!cA) return;
     SparseMatrix_delete(B);
     grid.front()->P = P;
     grid.front()->R = R;
 
     level++;
-    aib_t cgrid = Agglomerative_Ink_Bundling_init(cA, edges, level); 
+    aib_t cgrid = Agglomerative_Ink_Bundling_init(cA, edges, level);
 
     if (grid.front()->R0) {
       R0 = SparseMatrix_multiply(R, grid.front()->R0);
@@ -300,7 +300,7 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
               grid.front()->total_ink,
               grand_total_ink,
               grid.front()->total_ink - grand_total_ink,
-              grand_total_gain);	 
+              grand_total_gain);	
     assert(fabs(grid.front()->total_ink - cgrid.front()->total_ink - grand_total_gain)
            <= 0.0001 * grid.front()->total_ink);
 
@@ -324,7 +324,7 @@ static aib_t Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges,
   aib_t grid = Agglomerative_Ink_Bundling_init(A, edges, 0);
 
   std::vector<int> pick(A0->m);
-  
+
   Agglomerative_Ink_Bundling_establish(grid, pick.data(), angle_param, angle);
 
   if (A != A0) grid.front()->delete_top_level_A = true; // be sure to clean up later
@@ -343,7 +343,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
   pedge e;
   double TOL = 0.0001, wgt_all;
   clock_t start;
-  
+
   (*recurse_level)++;
   if (Verbose > 1) fprintf(stderr, "agglomerative_ink_bundling_internal, recurse level ------- %d\n",*recurse_level);
 
@@ -362,7 +362,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     *current_ink = *ink00 = ink0;
     if (Verbose > 1)
       fprintf(stderr,"initial total ink = %f\n",*current_ink);
-  } 
+  }
   if (ink1 < ink0){
     *current_ink -= ink0 - ink1;
   }
@@ -412,7 +412,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 	    e->npoints = 4;
 	    for (k = 0; k < 3; k++) e->wgts[k] = e->wgt;
 	    wgt_all += e->wgt;
-	    
+	
 	  }
 	  for (j = ia[i]; j < ia[i+1]; j++){
 	    e = edges[ja[j]];
@@ -420,7 +420,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 	  }
 	}
 	
-      } 
+      }
     }
   } else {
     pedge midedge;/* middle section of edges that will be bundled again */
@@ -429,9 +429,9 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
     double wgt;
 
    /* make new edges using meet1 and meet2.
-       
+
        call Agglomerative_Ink_Bundling_new
-       
+
        inherit new edges to old edges
     */
 
@@ -462,7 +462,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 
     agglomerative_ink_bundling_internal(dim, A_mid, mid_edges.data(), nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
     SparseMatrix_delete(A_mid);
-    
+
     /* patching edges with the new mid-section */
     for (i = 0; i < R->m; i++){
       pick = &(ja[ia[i]]);
@@ -514,7 +514,7 @@ pedge* agglomerative_ink_bundling(int dim, SparseMatrix A, pedge* edges, int nne
   ink_count = 0;
   edges2 = agglomerative_ink_bundling_internal(dim, A, edges, nneighbor, &recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, &current_ink, &ink0);
 
-  
+
   if (Verbose > 1)
     fprintf(stderr,"initial total ink = %f, final total ink = %f, inksaving = %f percent, total ink_calc = %f, avg ink_calc per edge = %f\n", ink0, current_ink, (ink0-current_ink)/ink0, ink_count,  ink_count/(double) A->m);
   return edges2;
