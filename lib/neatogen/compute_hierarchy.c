@@ -12,7 +12,6 @@
 #ifdef DIGCOLA
 #include <neatogen/kkutils.h>
 
-static int *given_levels = NULL;
 /*
  * This function partitions the graph nodes into levels
  * according to the minimizer of the hierarchy energy.
@@ -50,7 +49,6 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
 {
     double *y;
     int i, rv=0;
-    int use_given_levels = FALSE;
     int *ordering;
     int *levels;
     double tol;			/* node 'i' precedes 'j' in hierarchy iff y[i]-y[j]>tol */
@@ -74,21 +72,6 @@ compute_hierarchy(vtx_data * graph, int n, double abs_tol,
 	ordering[i] = i;
     }
     quicksort_place(y, ordering, n);
-
-    /* take the y-coords as the given levels */
-    if (given_levels) {
-	use_given_levels = TRUE;
-	for (i = 0; i < n; i++) {
-	    use_given_levels = use_given_levels && given_levels[i] >= 0;
-	}
-    }
-    if (use_given_levels) {
-	for (i = 0; i < n; i++) {
-	    y[i] = given_levels[i];
-	    ordering[i] = i;
-	}
-	quicksort_place(y, ordering, n);
-    }
 
     /* compute tolerance
      * take the maximum between 'abs_tol' and a fraction of the average gap
