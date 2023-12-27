@@ -275,26 +275,25 @@ static int gt(const void *a, const void *b) {
  * Check for pairwise intersection of polygon sides
  * Return 1 if intersection found, 0 for not found, -1 for error.
  */
-static int find_ints(vertex vertex_list[], data *input) {
+static int find_ints(vertex vertex_list[], int nvertices) {
     int i, j, k, found = 0;
     active_edge_list all;
     active_edge *new, *tempa;
     vertex *pt1, *pt2, *templ;
 
-    input->ninters = 0;
     all.first = all.final = 0;
     all.number = 0;
 
-    vertex **pvertex = gv_calloc(input->nvertices, sizeof(vertex*));
+    vertex **pvertex = gv_calloc(nvertices, sizeof(vertex*));
 
-    for (i = 0; i < input->nvertices; i++)
+    for (i = 0; i < nvertices; i++)
 	pvertex[i] = vertex_list + i;
 
 /* sort vertices by x coordinate	*/
-    qsort(pvertex, input->nvertices, sizeof(vertex *), gt);
+    qsort(pvertex, nvertices, sizeof(vertex *), gt);
 
 /* walk through the vertices in order of increasing x coordinate	*/
-    for (i = 0; i < input->nvertices; i++) {
+    for (i = 0; i < nvertices; i++) {
 	pt1 = pvertex[i];
 	templ = pt2 = prior(pvertex[i]);
 	for (k = 0; k < 2; k++) {	/* each vertex has 2 edges */
@@ -412,7 +411,6 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
     int i, j, vno, nverts, found;
     vertex *vertex_list;
     polygon *polygon_list;
-    data input;
     boxf bb;
     double x, y;
 
@@ -444,9 +442,7 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 	polygon_list[i].bb = bb;
     }
 
-    input.nvertices = nverts;
-
-    found = find_ints(vertex_list, &input);
+    found = find_ints(vertex_list, nverts);
     if (found < 0) {
 	free(polygon_list);
 	free(vertex_list);
