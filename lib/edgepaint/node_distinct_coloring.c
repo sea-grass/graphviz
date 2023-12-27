@@ -147,6 +147,7 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   *color_diff0 = color_diff;
   *color_diff_sum0 = color_diff_sum;
   free(x);
+  free(wgt);
 }
  
 static void node_distinct_coloring_internal(int scheme, QuadTree qt,
