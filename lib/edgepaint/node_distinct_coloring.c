@@ -84,7 +84,7 @@ static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
   ia = A->ia;
   ja = A->ja;
   if (A->type == MATRIX_TYPE_REAL && A->a){
-    a = (double*) A->a;
+    a = A->a;
   } 
 
   /* cube [0, cspace_size]^3: only uised if not LAB */
