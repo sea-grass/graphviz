@@ -14,9 +14,6 @@
 #include <neatogen/neato.h>
 #include <pathplan/pathutil.h>
 
-#define MAXINTS  10000		/* modify this line to reflect the max no. of 
-				   intersections you want reported -- 50000 seems to break the program */
-
 #define SLOPE(p,q) ( ( ( p.y ) - ( q.y ) ) / ( ( p.x ) - ( q.x ) ) )
 
 #define EQ_PT(v,w) (((v).x == (w).x) && ((v).y == (w).y))
@@ -37,11 +34,6 @@ typedef struct polygon polygon;
 	vertex *start, *finish;
 	boxf bb;
     };
-
-    typedef struct {
-	vertex *firstv, *secondv;
-	double x, y;
-    } intersection ;
 
     struct active_edge {
 	vertex *name;
@@ -283,8 +275,7 @@ static int gt(const void *a, const void *b) {
  * Check for pairwise intersection of polygon sides
  * Return 1 if intersection found, 0 for not found, -1 for error.
  */
-static int
-find_ints(vertex vertex_list[], data *input, intersection ilist[]) {
+static int find_ints(vertex vertex_list[], data *input) {
     int i, j, k, found = 0;
     active_edge_list all;
     active_edge *new, *tempa;
@@ -422,7 +413,6 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
     vertex *vertex_list;
     polygon *polygon_list;
     data input;
-    intersection ilist[MAXINTS];
     boxf bb;
     double x, y;
 
@@ -456,7 +446,7 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 
     input.nvertices = nverts;
 
-    found = find_ints(vertex_list, &input, ilist);
+    found = find_ints(vertex_list, &input);
     if (found < 0) {
 	free(polygon_list);
 	free(vertex_list);
