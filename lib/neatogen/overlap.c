@@ -574,12 +574,6 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
   }
 #endif
 
-#ifdef ANIMATE
-  {FILE*fp;
-    fp = fopen("/tmp/m","wa");
-    fprintf(fp,"{");
-#endif
-
   has_penalty_terms = (edge_labeling_scheme != ELSCHEME_NONE && n_constr_nodes > 0);
   for (i = 0; i < ntry; i++){
     if (Verbose) print_bounding_box(A->m, dim, x);
@@ -600,19 +594,9 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
     
     res = OverlapSmoother_smooth(sm, dim, x);
     if (Verbose) fprintf(stderr,"res = %f\n",res);
-#ifdef ANIMATE
-    if (i != 0) fprintf(fp,",");
-    export_embedding(fp, dim, A, x, label_sizes);
-#endif
     OverlapSmoother_delete(sm);
   }
   if (Verbose) fprintf(stderr, "overlap removal neighbors only?= %d iter -- %d, overlap factor = %g underlap factor = %g\n", neighborhood_only, i, max_overlap - 1, min_overlap);
-
-#ifdef ANIMATE
-  fprintf(fp,"}");
-    fclose(fp);
-  }
-#endif
 
   if (has_penalty_terms){
     /* now do without penalty */
