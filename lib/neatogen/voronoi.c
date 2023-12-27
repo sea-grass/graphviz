@@ -28,9 +28,6 @@ void voronoi(Site * (*nextsite) (void)) {
     siteinit();
     PQinitialize();
     bottomsite = nextsite();
-#ifdef STANDALONE
-    out_site(bottomsite);
-#endif
     ELinitialize();
 
     newsite = nextsite();
@@ -42,9 +39,6 @@ void voronoi(Site * (*nextsite) (void)) {
       (PQempty() || newsite->coord.y < newintstar.y ||
        (newsite->coord.y ==newintstar.y && newsite->coord.x < newintstar.x))) {
 	    /* new site is smallest */
-#ifdef STANDALONE
-	    out_site(newsite);
-#endif
 	    lbnd = ELleftbnd(&newsite->coord);
 	    rbnd = ELright(lbnd);
 	    bot = rightreg(lbnd);
@@ -69,9 +63,6 @@ void voronoi(Site * (*nextsite) (void)) {
 	    rrbnd = ELright(rbnd);
 	    bot = leftreg(lbnd);
 	    top = rightreg(rbnd);
-#ifdef STANDALONE
-	    out_triple(bot, top, rightreg(lbnd));
-#endif
 	    v = lbnd->vertex;
 	    makevertex(v);
 	    endpoint(lbnd->ELedge, lbnd->ELpm, v);
@@ -105,8 +96,5 @@ void voronoi(Site * (*nextsite) (void)) {
     for (lbnd = ELright(ELleftend); lbnd != ELrightend; lbnd = ELright(lbnd)) {
 	e = lbnd->ELedge;
 	clip_line(e);
-#ifdef STANDALONE
-	out_ep(e);
-#endif
     }
 }

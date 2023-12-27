@@ -57,9 +57,6 @@ Edge *gvbisect(Site * s1, Site * s2)
     };
 
     newedge->edgenbr = nedges;
-#ifdef STANDALONE
-    out_bisector(newedge);
-#endif
     nedges += 1;
     return (newedge);
 }
@@ -187,10 +184,6 @@ void clip_line(Edge * e)
     }
 
     doSeg(e, x1, y1, x2, y2);
-#ifdef STANDALONE
-    if (doPS)
-	line(x1, y1, x2, y2);
-#endif
 }
 
 void endpoint(Edge * e, int lr, Site * s)
@@ -200,9 +193,6 @@ void endpoint(Edge * e, int lr, Site * s)
     if (e->ep[re - lr] == NULL)
 	return;
     clip_line(e);
-#ifdef STANDALONE
-    out_ep(e);
-#endif
     deref(e->reg[le]);
     deref(e->reg[re]);
     makefree(e, &efl);
