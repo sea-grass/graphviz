@@ -49,24 +49,8 @@
 #include <cgraph/alloc.h>
 #include <math.h>
 #include <stdbool.h>
-#ifdef STANDALONE
-#include <limits.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-typedef struct {
-    double x, y;
-} pointf;
-typedef struct {
-    pointf *ps;
-    int pn;
-} Ppoly_t;
-
-typedef Ppoly_t Ppolyline_t;
-#else
 #include <common/render.h>
 #include <pathplan/pathplan.h>
-#endif
 
 #define TWOPI (2*M_PI)
 
@@ -539,25 +523,3 @@ Ppolyline_t *ellipticWedge(pointf ctr, double xsemi, double ysemi,
     pp = genEllipticPath(&ell);
     return pp;
 }
-
-#ifdef STANDALONE
-main()
-{
-    ellipse_t ell;
-    Ppolyline_t *pp;
-    int i;
-
-    initEllipse(&ell, 200, 200, 100, 50, 0, M_PI / 4, 3 * M_PI / 2);
-    pp = genEllipticPath(&ell);
-
-    printf("newpath %.02lf %.02lf moveto\n", pp->ps[0].x, pp->ps[0].y);
-    for (i = 1; i < pp->pn; i += 3) {
-	printf("%.02lf %.02lf %.02lf %.02lf %.02lf %.02lf curveto\n",
-	       pp->ps[i].x, pp->ps[i].y,
-	       pp->ps[i + 1].x, pp->ps[i + 1].y,
-	       pp->ps[i + 2].x, pp->ps[i + 2].y);
-    }
-    printf("stroke showpage\n");
-
-}
-#endif
