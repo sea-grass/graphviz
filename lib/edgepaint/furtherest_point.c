@@ -14,6 +14,7 @@
 #include <sparse/general.h>
 #include <sparse/QuadTree.h>
 #include <edgepaint/furtherest_point.h>
+#include <stdbool.h>
 #include <string.h>
 
 static double dist(int dim, double *x, double *y){
@@ -75,7 +76,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
   QuadTree qt, qt0;
   double distance;
   int level = 0;
-  int ii, j, pruned;
+  int ii, j;
   double wmax = 0;
 
   if (wgt){
@@ -120,7 +121,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
       for (ii = 0; ii < 1<<dim; ii++) {
 	qt->qts[ii] = QuadTree_new_in_quadrant(qt->dim, qt->center, (qt->width)/2, max_level, ii);
 	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->center);/* store distance in total_weight */
-	pruned = FALSE;
+	bool pruned = false;
 	if (distance > *dist_max){
 	  *dist_max = distance;
 	  if (Verbose > 10) {
@@ -130,7 +131,7 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
  	  }
 	  memcpy(*argmax, qt->qts[ii]->center, sizeof(double)*dim);
 	} else if (distance + wmax*sqrt(((double) dim))*(qt->width)/2 < *dist_max){
-	  pruned = TRUE;
+	  pruned = true;
 	}
 	if (!pruned){
 	  qt_list_append(&candidates2, qt->qts[ii]);
