@@ -40,9 +40,6 @@ typedef struct polygon polygon;
 
     typedef struct {
 	vertex *firstv, *secondv;
-#ifdef RECORD_INTERSECTS
-	polygon *firstp, *secondp;
-#endif
 	double x, y;
     } intersection ;
 
@@ -262,23 +259,8 @@ static int find_intersection(vertex *l,
 			       online(l, m, 1)) : online(l, m, abs(i[0]))))
 	return 0;
 
-#ifdef RECORD_INTERSECTS
-    if (input->ninters >= MAXINTS) {
-	agerr(AGERR, "using too many intersections\n");
-	graphviz_exit(1);
-    }
-
-    ilist[input->ninters].firstv = l;
-    ilist[input->ninters].secondv = m;
-    ilist[input->ninters].firstp = l->poly;
-    ilist[input->ninters].secondp = m->poly;
-    ilist[input->ninters].x = x;
-    ilist[input->ninters].y = y;
-    input->ninters++;
-#else
     (void)ilist;
     (void)input;
-#endif
     p.x = x;
     p.y = y;
     return realIntersect(l, m, p);
