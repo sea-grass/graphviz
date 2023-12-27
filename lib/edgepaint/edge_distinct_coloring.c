@@ -17,17 +17,15 @@
 #include <edgepaint/intersection.h>
 #include <sparse/QuadTree.h>
 
-static int splines_intersect(int dim, int u1, int v1, int u2, int v2, 
+static int splines_intersect(int dim,
 			     double cos_critical, int check_edges_with_same_endpoint, 
 			     char *xsplines1, char *xsplines2){
-  /* u1, v2 an u2, v2: the node index of the two edn points of two edges.
-     cos_critical: cos of critical angle
+  /* cos_critical: cos of critical angle
      check_edges_with_same_endpoint: whether need to treat two splines from
      .     the same end point specially in ignoring splines that exit/enter the same end pont at around 180
      xsplines1,xsplines2: the first and second splines corresponding to two edges
 
   */
-  int itmp;
   int len1 = 100, len2 = 100;
   double *x1, *x2;
   int ns1 = 0, ns2 = 0;
@@ -40,15 +38,6 @@ static int splines_intersect(int dim, int u1, int v1, int u2, int v2,
   x2 = MALLOC(sizeof(double)*len2);
 
   assert(dim <= 3);
-  /* if two end points are the same, make sure they are the first in each edge */
-  if (u1 == v2){/* switch u2 and v2 */
-    itmp = u2; u2 = v2; v2 = itmp;
-  } else if (v1 == u2){/* switch u1 and v1 */
-    itmp = u1; u1 = v1; v1 = itmp;
-  } else if (v1 == v2){/* switch both */
-    itmp = u2; u2 = v2; v2 = itmp;
-    itmp = u1; u1 = v1; v1 = itmp;
-  }
 
   /* splines could be a list of 
      1. 3n points
@@ -199,7 +188,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
       u1 = irn[i]; v1 = jcn[i];
       for (j = i+1; j < nz2; j++){
 	u2 = irn[j]; v2 = jcn[j];
-	if (splines_intersect(dim, u1, v1, u2, v2, cos_critical, check_edges_with_same_endpoint, xsplines[i], xsplines[j])){
+	if (splines_intersect(dim, cos_critical, check_edges_with_same_endpoint, xsplines[i], xsplines[j])){
 	  B = SparseMatrix_coordinate_form_add_entry(B, i, j, &cos_a);
 	}
       }
