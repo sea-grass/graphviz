@@ -32,7 +32,6 @@ struct Agglomerative_Ink_Bundling {
   int n;
   SparseMatrix A;  /* n x n matrix, where n is the number of edges/bundles in
                       this level */
-  SparseMatrix P = nullptr; ///< prolongation matrix from level + 1 to level
   SparseMatrix R0 = nullptr; /* this is basically R[level - 1].R[level - 2]...R[0], which
                       gives the map of bundling i to the original edges: first
                       row of R0 gives the nodes on the finest grid corresponding
@@ -81,7 +80,6 @@ static void Agglomerative_Ink_Bundling_delete(aib_t &grid) {
         SparseMatrix_delete(a.A);
       }
     }
-    SparseMatrix_delete(a.P);
     /* on level 0, R0 = NULL, on level 1, R0 = R */
     if (a.level > 1) SparseMatrix_delete(a.R0);
     SparseMatrix_delete(a.R);
@@ -264,7 +262,7 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
     cA = SparseMatrix_multiply(B, P);
     if (!cA) return;
     SparseMatrix_delete(B);
-    grid.front().P = P;
+    SparseMatrix_delete(P);
     grid.front().R = R;
 
     level++;
