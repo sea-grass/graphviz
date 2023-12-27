@@ -185,9 +185,7 @@ Agraph_t* edge_distinct_coloring(char *color_scheme, char *lightness, Agraph_t* 
     assert(ne == nz2);
     cos_a = 1.;/* for splines we exit conflict check as soon as we find an conflict, so the anle may not be representitive, hence set to constant */
     for (i = 0; i < nz2; i++){
-      u1 = irn[i]; v1 = jcn[i];
       for (j = i+1; j < nz2; j++){
-	u2 = irn[j]; v2 = jcn[j];
 	if (splines_intersect(dim, cos_critical, check_edges_with_same_endpoint, xsplines[i], xsplines[j])){
 	  B = SparseMatrix_coordinate_form_add_entry(B, i, j, &cos_a);
 	}
