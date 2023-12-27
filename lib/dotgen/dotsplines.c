@@ -1949,8 +1949,6 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 
 /* regular edges */
 
-#define DONT_WANT_ANY_ENDPOINT_PATH_REFINEMENT
-#ifdef DONT_WANT_ANY_ENDPOINT_PATH_REFINEMENT
 static void
 completeregularpath(path * P, edge_t * first, edge_t * last,
 		    pathend_t * tendp, pathend_t * hendp, boxf * boxes,
@@ -1990,74 +1988,6 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
 	add_box(P, hendp->boxes[i]);
     adjustregularpath(P, fb, lb);
 }
-#else
-void refineregularends(edge_t * left, edge_t * right, pathend_t * endp,
-		       int dir, boxf b, boxf * boxes, int *boxnp);
-
-/* box subdivision is obsolete, I think... ek */
-static void
-completeregularpath(path * P, edge_t * first, edge_t * last,
-		    pathend_t * tendp, pathend_t * hendp, boxf * boxes,
-		    int boxn, int flag)
-{
-    edge_t *uleft, *uright, *lleft, *lright;
-    boxf uboxes[NSUB], lboxes[NSUB];
-    boxf b;
-    int uboxn, lboxn, i, y, fb, lb;
-
-    fb = lb = -1;
-    uleft = uright = NULL;
-    if (flag || ND_rank(agtail(first)) + 1 != ND_rank(aghead(last)))
-	uleft = top_bound(first, -1), uright = top_bound(first, 1);
-    refineregularends(uleft, uright, tendp, 1, boxes[0], uboxes, &uboxn);
-    lleft = lright = NULL;
-    if (flag || ND_rank(agtail(first)) + 1 != ND_rank(aghead(last)))
-	lleft = bot_bound(last, -1), lright = bot_bound(last, 1);
-    refineregularends(lleft, lright, hendp, -1, boxes[boxn - 1], lboxes,
-		      &lboxn);
-    for (i = 0; i < tendp->boxn; i++)
-	add_box(P, tendp->boxes[i]);
-    if (ND_rank(agtail(first)) + 1 == ND_rank(aghead(last))) {
-	if ((!uleft && !uright) && (lleft || lright)) {
-	    b = boxes[0];
-	    y = b.UR.y - b.LL.y;
-	    for (i = 0; i < NSUB; i++) {
-		uboxes[i] = b;
-		uboxes[i].UR.y = b.UR.y - y * i / NSUB;
-		uboxes[i].LL.y = b.UR.y - y * (i + 1) / NSUB;
-	    }
-	    uboxn = NSUB;
-	} else if ((uleft || uright) && (!lleft && !lright)) {
-	    b = boxes[boxn - 1];
-	    y = b.UR.y - b.LL.y;
-	    for (i = 0; i < NSUB; i++) {
-		lboxes[i] = b;
-		lboxes[i].UR.y = b.UR.y - y * i / NSUB;
-		lboxes[i].LL.y = b.UR.y - y * (i + 1) / NSUB;
-	    }
-	    lboxn = NSUB;
-	}
-	for (i = 0; i < uboxn; i++) {
-	    uboxes[i].LL.x = MAX(uboxes[i].LL.x, lboxes[i].LL.x);
-	    uboxes[i].UR.x = MIN(uboxes[i].UR.x, lboxes[i].UR.x);
-	}
-	for (i = 0; i < uboxn; i++)
-	    add_box(P, uboxes[i]);
-    } else {
-	for (i = 0; i < uboxn; i++)
-	    add_box(P, uboxes[i]);
-	fb = P->nbox;
-	lb = fb + boxn - 3;
-	for (i = 1; i < boxn - 1; i++)
-	    add_box(P, boxes[i]);
-	for (i = 0; i < lboxn; i++)
-	    add_box(P, lboxes[i]);
-    }
-    for (i = hendp->boxn - 1; i >= 0; i--)
-	add_box(P, hendp->boxes[i]);
-    adjustregularpath(P, fb, lb);
-}
-#endif
 
 /* makeregularend:
  * Add box to fill between node and interrank space. Needed because
@@ -2072,96 +2002,6 @@ static boxf makeregularend(boxf b, int side, double y)
   }
   return (boxf){{b.LL.x, b.UR.y}, {b.UR.x, y}};
 }
-
-#ifndef DONT_WANT_ANY_ENDPOINT_PATH_REFINEMENT
-void refineregularends(edge_t *left, edge_t *right, pathend_t *endp, int dir,
-  box b, box *boxes, int *boxnp)
-{
-    splines *lspls, *rspls;
-    point pp, cp;
-    box eb;
-    box *bp;
-    int y, i, j, k;
-    int nsub;
-
-    y = b.UR.y - b.LL.y;
-    if ((y == 1) || (!left && !right)) {
-	boxes[0] = b;
-	*boxnp = 1;
-	return;
-    }
-    nsub = MIN(NSUB, y);
-    for (i = 0; i < nsub; i++) {
-	boxes[i] = b;
-	boxes[i].UR.y = b.UR.y - y * i / nsub;
-	boxes[i].LL.y = b.UR.y - y * (i + 1) / nsub;
-	if (boxes[i].UR.y == boxes[i].LL.y)
-	    abort();
-    }
-    *boxnp = nsub;
-    /* only break big boxes */
-    for (j = 0; j < endp->boxn; j++) {
-	eb = endp->boxes[j];
-	y = eb.UR.y - eb.LL.y;
-#ifdef STEVE_AND_LEFTY_GRASPING_AT_STRAWS
-	if (y < 15)
-	    continue;
-#else
-	if (y < nsub)
-	    continue;
-#endif
-	for (k = endp->boxn - 1; k > j; k--)
-	    endp->boxes[k + (nsub - 1)] = endp->boxes[k];
-	for (i = 0; i < nsub; i++) {
-	    bp = &endp->boxes[j + (dir == 1 ? i : (nsub - i - 1))];
-	    *bp = eb;
-	    bp->UR.y = eb.UR.y - y * i / nsub;
-	    bp->LL.y = eb.UR.y - y * (i + 1) / nsub;
-	    if (bp->UR.y == bp->LL.y)
-		abort();
-	}
-	endp->boxn += nsub - 1;
-	j += nsub - 1;
-    }
-    if (left) {
-	if (!(lspls = getsplinepoints(left))) return;
-	pp = spline_at_y(lspls, boxes[0].UR.y);
-	for (i = 0; i < nsub; i++) {
-	    cp = spline_at_y(lspls, boxes[i].LL.y);
-	    /*boxes[i].LL.x = AVG (pp.x, cp.x); */
-	    boxes[i].LL.x = MAX(pp.x, cp.x);
-	    pp = cp;
-	}
-	pp = spline_at_y(lspls, dir == 1 ? endp->boxes[1].UR.y : endp->boxes[1].LL.y);
-	for (i = 1; i < endp->boxn; i++) {
-	    cp = spline_at_y(lspls, dir == 1 ?
-			     endp->boxes[i].LL.y : endp->boxes[i].UR.y);
-	    endp->boxes[i].LL.x = MIN(endp->nb.UR.x, MAX(pp.x, cp.x));
-	    pp = cp;
-	}
-	i = dir == 1 ? 0 : *boxnp - 1;
-	boxes[i].LL.x = fmin(boxes[i].LL.x, endp->boxes[endp->boxn - 1].UR.x - MINW);
-    }
-    if (right) {
-	if (!(rspls = getsplinepoints(right))) return;
-	pp = spline_at_y(rspls, boxes[0].UR.y);
-	for (i = 0; i < nsub; i++) {
-	    cp = spline_at_y(rspls, boxes[i].LL.y);
-	    boxes[i].UR.x = AVG(pp.x, cp.x);
-	    pp = cp;
-	}
-	pp = spline_at_y(rspls, dir == 1 ? endp->boxes[1].UR.y : endp->boxes[1].LL.y);
-	for (i = 1; i < endp->boxn; i++) {
-	    cp = spline_at_y(rspls, dir == 1 ?
-			     endp->boxes[i].LL.y : endp->boxes[i].UR.y);
-	    endp->boxes[i].UR.x = MAX(endp->nb.LL.x, AVG(pp.x, cp.x));
-	    pp = cp;
-	}
-	i = dir == 1 ? 0 : *boxnp - 1;
-	boxes[i].UR.x = fmax(boxes[i].UR.x, endp->boxes[endp->boxn - 1].LL.x + MINW);
-    }
-}
-#endif
 
 /* adjustregularpath:
  * make sure the path is wide enough.
