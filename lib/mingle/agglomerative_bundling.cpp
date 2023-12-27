@@ -24,77 +24,67 @@
 enum {MINGLE_DEBUG=0};
 
 namespace {
-struct Agglomerative_Ink_Bundling_struct {
+struct Agglomerative_Ink_Bundling {
+  Agglomerative_Ink_Bundling(int level, int n, SparseMatrix A, pedge *edges)
+      : level(level), n(n), A(A), edges(edges) {}
+
   int level; /* 0, 1, ... */
   int n;
   SparseMatrix A;  /* n x n matrix, where n is the number of edges/bundles in
                       this level */
-  SparseMatrix P;  /* prolongation matrix from level + 1 to level */
-  SparseMatrix R0; /* this is basically R[level - 1].R[level - 2]...R[0], which
+  SparseMatrix P = nullptr; ///< prolongation matrix from level + 1 to level
+  SparseMatrix R0 = nullptr; /* this is basically R[level - 1].R[level - 2]...R[0], which
                       gives the map of bundling i to the original edges: first
                       row of R0 gives the nodes on the finest grid corresponding
                       to the coarsest node 1, etc */
-  SparseMatrix R;  /* striction mtrix from level to level + 1*/
+  SparseMatrix R = nullptr; ///< striction mtrix from level to level + 1
   std::vector<double>
       inks; /* amount of ink needed to draw this edge/bundle. Dimension n. */
-  double total_ink; /* amount of ink needed to draw this edge/bundle. Dimension
+  double total_ink = -1; /* amount of ink needed to draw this edge/bundle. Dimension
                        n. */
   pedge
       *edges; /* the original edge info. This does not vary level to level and
                  is of dimenion n0, where n0 is the number of original edges */
-  bool delete_top_level_A; /*whether the top level matrix should be deleted on
+  bool delete_top_level_A = false; /*whether the top level matrix should be deleted on
                               garbage collecting the grid */
 };
 } // namespace
 
-using Agglomerative_Ink_Bundling = Agglomerative_Ink_Bundling_struct *;
 using aib_t = std::vector<Agglomerative_Ink_Bundling>;
 
 static aib_t Agglomerative_Ink_Bundling_init(SparseMatrix A, pedge *edges,
                                              int level) {
-  Agglomerative_Ink_Bundling grid;
   int n = A->n, i;
 
   assert(SparseMatrix_is_symmetric(A, true));
 
   if (!A) return {};
   assert(A->m == n);
-  grid = (Agglomerative_Ink_Bundling)MALLOC(sizeof(struct Agglomerative_Ink_Bundling_struct));
-  grid->level = level;
-  grid->n = n;
-  grid->A = A;
-  grid->P = NULL;
-  grid->R0 = NULL;
-  grid->R = NULL;
-  grid->edges = edges;
-  grid->delete_top_level_A = false;
-  grid->total_ink = -1;
+  Agglomerative_Ink_Bundling grid(level, n, A, edges);
   if (level == 0){
     double total_ink = 0;
     for (i = 0; i < n; i++) {
-      grid->inks.push_back(ink1(edges[i]));
-      total_ink += grid->inks[i];
+      grid.inks.push_back(ink1(edges[i]));
+      total_ink += grid.inks[i];
     }
-    grid->total_ink = total_ink;
+    grid.total_ink = total_ink;
   }
   return aib_t{grid};
 }
 
 static void Agglomerative_Ink_Bundling_delete(aib_t &grid) {
   for (Agglomerative_Ink_Bundling &a : grid) {
-    if (a->A) {
-      if (a->level == 0) {
-        if (a->delete_top_level_A) SparseMatrix_delete(a->A);
+    if (a.A) {
+      if (a.level == 0) {
+        if (a.delete_top_level_A) SparseMatrix_delete(a.A);
       } else {
-        SparseMatrix_delete(a->A);
+        SparseMatrix_delete(a.A);
       }
     }
-    SparseMatrix_delete(a->P);
+    SparseMatrix_delete(a.P);
     /* on level 0, R0 = NULL, on level 1, R0 = R */
-    if (a->level > 1) SparseMatrix_delete(a->R0);
-    SparseMatrix_delete(a->R);
-
-    free(a);
+    if (a.level > 1) SparseMatrix_delete(a.R0);
+    SparseMatrix_delete(a.R);
   }
 }
 
@@ -102,12 +92,12 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
                                                  double angle_param,
                                                  double angle) {
   /* pick is a work array of dimension n, with n the total number of original edges */
-  SparseMatrix A = grid.front()->A;
-  int n = grid.front()->n, level = grid.front()->level, nc = 0;
+  SparseMatrix A = grid.front().A;
+  int n = grid.front().n, level = grid.front().level, nc = 0;
   int *ia = A->ia, *ja = A->ja;
   int i, j, k, jj, jc, jmax, ni, nj, npicks;
-  pedge *edges = grid.front()->edges;
-  const std::vector<double> &inks = grid.front()->inks;
+  pedge *edges = grid.front().edges;
+  const std::vector<double> &inks = grid.front().inks;
   double inki, inkj;
   double gain, maxgain, minink, total_gain = 0;
   int *ip = NULL, *jp = NULL, ie;
@@ -118,13 +108,13 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
 
   if (Verbose > 1)
     fprintf(stderr, "level ===================== %d, n = %d\n",
-            grid.front()->level, n);
+            grid.front().level, n);
   cedges.resize(n);
   std::vector<double> cinks(n, 0.0);
 
-  if (grid.front()->level > 0) {
-    ip = grid.front()->R0->ia;
-    jp = grid.front()->R0->ja;
+  if (grid.front().level > 0) {
+    ip = grid.front().R0->ia;
+    jp = grid.front().R0->ja;
   }
 
   assert(n == A->n);
@@ -274,35 +264,35 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
     cA = SparseMatrix_multiply(B, P);
     if (!cA) return;
     SparseMatrix_delete(B);
-    grid.front()->P = P;
-    grid.front()->R = R;
+    grid.front().P = P;
+    grid.front().R = R;
 
     level++;
     aib_t cgrid = Agglomerative_Ink_Bundling_init(cA, edges, level);
 
-    if (grid.front()->R0) {
-      R0 = SparseMatrix_multiply(R, grid.front()->R0);
+    if (grid.front().R0) {
+      R0 = SparseMatrix_multiply(R, grid.front().R0);
     } else {
-      assert(grid.front()->level == 0);
+      assert(grid.front().level == 0);
       R0 = R;
     }
-    cgrid.front()->R0 = R0;
-    cgrid.front()->inks = cinks;
-    cgrid.front()->total_ink = grand_total_ink;
+    cgrid.front().R0 = R0;
+    cgrid.front().inks = cinks;
+    cgrid.front().total_ink = grand_total_ink;
 
     if (Verbose > 1)
       fprintf(stderr,
               "level %d->%d, edges %d -> %d, ink %f->%f , gain = %f, or %f\n",
-              grid.front()->level,
-              cgrid.front()->level,
-              grid.front()->n,
-              cgrid.front()->n,
-              grid.front()->total_ink,
+              grid.front().level,
+              cgrid.front().level,
+              grid.front().n,
+              cgrid.front().n,
+              grid.front().total_ink,
               grand_total_ink,
-              grid.front()->total_ink - grand_total_ink,
+              grid.front().total_ink - grand_total_ink,
               grand_total_gain);	
-    assert(fabs(grid.front()->total_ink - cgrid.front()->total_ink - grand_total_gain)
-           <= 0.0001 * grid.front()->total_ink);
+    assert(fabs(grid.front().total_ink - cgrid.front().total_ink - grand_total_gain)
+           <= 0.0001 * grid.front().total_ink);
 
     Agglomerative_Ink_Bundling_establish(cgrid, pick, angle_param, angle);
     grid.insert(grid.end(), cgrid.begin(), cgrid.end());
@@ -327,7 +317,7 @@ static aib_t Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges,
 
   Agglomerative_Ink_Bundling_establish(grid, pick.data(), angle_param, angle);
 
-  if (A != A0) grid.front()->delete_top_level_A = true; // be sure to clean up later
+  if (A != A0) grid.front().delete_top_level_A = true; // be sure to clean up later
 
   return grid;
 }
@@ -353,10 +343,10 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
   aib_t grid = Agglomerative_Ink_Bundling_new(A, edges, angle_param, angle);
   if (Verbose > 1)
     fprintf(stderr, "CPU for agglomerative bundling %f\n", ((double) (clock() - start))/CLOCKS_PER_SEC);
-  ink0 = grid.front()->total_ink;
+  ink0 = grid.front().total_ink;
 
   /* find coarsest */
-  ink1 = grid.back()->total_ink;
+  ink1 = grid.back().total_ink;
 
   if (*current_ink < 0){
     *current_ink = *ink00 = ink0;
@@ -372,15 +362,15 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
             "ink: %f->%f, edges: %d->%d, current ink = %f, percentage gain over original = %f\n",
             ink0,
             ink1,
-            grid.front()->n,
-            grid.back()->n,
+            grid.front().n,
+            grid.back().n,
             *current_ink,
             (ink0 -ink1) / (*ink00));
 
   /* if no meaningful improvement (0.0001%), out, else rebundle the middle section */
   if ((ink0-ink1)/(*ink00) < 0.000001 || *recurse_level > MAX_RECURSE_LEVEL) {
     /* project bundles up */
-    R = grid.back()->R0;
+    R = grid.back().R0;
     if (R){
       ia = R->ia;
       ja = R->ja;
@@ -390,7 +380,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"calling ink2...\n");
 	ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"finish calling ink2...\n");
-	assert(fabs(ink1 - grid.back()->inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
+	assert(fabs(ink1 - grid.back().inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
 	(void)TOL;
 	assert(ink1 < 1000 * ink0); /* assert that points were found */
 	wgt_all = 0.;
@@ -435,7 +425,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
        inherit new edges to old edges
     */
 
-    R = grid.back()->R0;
+    R = grid.back().R0;
     assert(R && grid.size() > 1);/* if ink improved, we should have gone at leat 1 level down! */
     ia = R->ia;
     ja = R->ja;
@@ -449,7 +439,7 @@ static pedge* agglomerative_ink_bundling_internal(int dim, SparseMatrix A, pedge
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"calling ink3...\n");
       ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"done calling ink3...\n");
-      assert(fabs(ink1 - grid.back()->inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
+      assert(fabs(ink1 - grid.back().inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
       assert(ink1 < 1000 * ink0); /* assert that points were found */
       xx[i*4 + 0] = meet1.x;
       xx[i*4 + 1] = meet1.y;
