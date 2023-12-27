@@ -127,7 +127,7 @@ void bezier_clip(inside_t * inside_context,
     do {
 	opt = pt;
 	t = (high + low) / 2.0;
-	pt = Bezier(sp, 3, t, left, right);
+	pt = Bezier(sp, t, left, right);
 	if (inside(inside_context, pt)) {
 	    *idir = t;
 	    for (i = 0; i < 4; i++)
@@ -1385,7 +1385,7 @@ int place_portlabel(edge_t * e, bool head_p)
 	    pe = bez->list[0];
 	    for (i = 0; i < 4; i++)
 		c[i] = bez->list[i];
-	    pf = Bezier(c, 3, 0.1, NULL, NULL);
+	    pf = Bezier(c, 0.1, NULL, NULL);
 	}
     } else {
 	bez = &spl->list[spl->size - 1];
@@ -1396,7 +1396,7 @@ int place_portlabel(edge_t * e, bool head_p)
 	    pe = bez->list[bez->size - 1];
 	    for (i = 0; i < 4; i++)
 		c[i] = bez->list[bez->size - 4 + i];
-	    pf = Bezier(c, 3, 0.9, NULL, NULL);
+	    pf = Bezier(c, 0.9, NULL, NULL);
 	}
     }
     angle = atan2(pf.y - pe.y, pf.x - pe.x) +

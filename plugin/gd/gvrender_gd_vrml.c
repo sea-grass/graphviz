@@ -499,7 +499,7 @@ vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	for (j = 1; j <= 3; j++)
 	    V[j] = A[i + j];
 	for (step = 0; step <= BEZIERSUBDIVISION; step++) {
-	    p1 = Bezier(V, 3, (double) step / BEZIERSUBDIVISION, NULL, NULL);
+	    p1 = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);
 	    gvprintf(job, " %.3f %.3f %.3f", p1.x, p1.y,
 		    interpolate_zcoord(job, p1, A[0], fstz, A[n - 1], sndz));
 	}

@@ -360,7 +360,7 @@ static void pic_bezier(GVJ_t *job, pointf *A, int n, int filled) {
             V[j].y = A[i + j].y;
         }
         for (int step = 1; step <= BEZIERSUBDIVISION; step++) {
-            pointf pf = Bezier(V, 3, (double)step / BEZIERSUBDIVISION, NULL, NULL);
+            pointf pf = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);
 	    PF2P(pf, p);
             gvprintf(job, "; spline to (%d, %d)", p.x, p.y);
         }

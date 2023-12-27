@@ -202,8 +202,8 @@ pointf coord(node_t * n)
  *	"Right" are non-null.
  *
  */
-pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right)
-{
+pointf Bezier(pointf *V, double t, pointf *Left, pointf *Right) {
+    const int degree = 3;
     int i, j;			/* Index variables      */
     pointf Vtemp[W_DEGREE + 1][W_DEGREE + 1];
 
@@ -402,7 +402,7 @@ pointf dotneato_closest(splines * spl, pointf pt)
     dhigh2 = DIST2(c[3], pt);
     do {
 	t = (low + high) / 2.0;
-	pt2 = Bezier(c, 3, t, NULL, NULL);
+	pt2 = Bezier(c, t, NULL, NULL);
 	if (fabs(dlow2 - dhigh2) < 1.0)
 	    break;
 	if (fabs(high - low) < .00001)

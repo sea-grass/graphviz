@@ -35,7 +35,7 @@ typedef enum {
 } format_type;
 
 extern bool mapbool(const char *);
-extern pointf Bezier(pointf * V, int degree, double t, pointf * Left, pointf * Right);
+extern pointf Bezier(pointf *V, double t, pointf *Left, pointf *Right);
 
 #define BEZIERSUBDIVISION 10
 
@@ -430,7 +430,7 @@ gdgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	        V[j] = A[i + j];
 	    p0 = V[0];
 	    for (step = 1; step <= BEZIERSUBDIVISION; step++) {
-	        p1 = Bezier(V, 3, (double) step / BEZIERSUBDIVISION, NULL, NULL);
+	        p1 = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);
 	        PF2P(p0, F[1]);
 	        PF2P(p1, F[2]);
 	        if (pen_ok)

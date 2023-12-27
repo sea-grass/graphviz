@@ -178,7 +178,7 @@ findVertical(pointf * pts, double tmin, double tmax,
     }
 
     /* split the Bezier into halves, trying the first half first. */
-    Bezier(pts, 3, 0.5, Left, Right);
+    Bezier(pts, 0.5, Left, Right);
     t = findVertical(Left, tmin, (tmin + tmax) / 2.0, xcoord, ymin, ymax);
     if (t >= 0.0)
 	return t;
@@ -220,7 +220,7 @@ findHorizontal(pointf * pts, double tmin, double tmax,
     }
 
     /* split the Bezier into halves, trying the first half first. */
-    Bezier(pts, 3, 0.5, Left, Right);
+    Bezier(pts, 0.5, Left, Right);
     t = findHorizontal(Left, tmin, (tmin + tmax) / 2.0, ycoord, xmin,
 		       xmax);
     if (t >= 0.0)
@@ -250,25 +250,25 @@ static int splineIntersectf(pointf * pts, boxf * bb)
 
     t = findVertical(pts, 0.0, 1.0, bb->LL.x, bb->LL.y, bb->UR.y);
     if (t >= 0 && t < tmin) {
-	Bezier(origpts, 3, t, pts, NULL);
+	Bezier(origpts, t, pts, NULL);
 	tmin = t;
     }
     t = findVertical(pts, 0.0, MIN(1.0, tmin), bb->UR.x, bb->LL.y,
 		     bb->UR.y);
     if (t >= 0 && t < tmin) {
-	Bezier(origpts, 3, t, pts, NULL);
+	Bezier(origpts, t, pts, NULL);
 	tmin = t;
     }
     t = findHorizontal(pts, 0.0, MIN(1.0, tmin), bb->LL.y, bb->LL.x,
 		       bb->UR.x);
     if (t >= 0 && t < tmin) {
-	Bezier(origpts, 3, t, pts, NULL);
+	Bezier(origpts, t, pts, NULL);
 	tmin = t;
     }
     t = findHorizontal(pts, 0.0, MIN(1.0, tmin), bb->UR.y, bb->LL.x,
 		       bb->UR.x);
     if (t >= 0 && t < tmin) {
-	Bezier(origpts, 3, t, pts, NULL);
+	Bezier(origpts, t, pts, NULL);
 	tmin = t;
     }
 

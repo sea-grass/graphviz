@@ -342,7 +342,7 @@ static void mp_bezier(GVJ_t *job, pointf *A, int n, int filled) {
         }
         for (step = 1; step <= BEZIERSUBDIVISION; step++) {
             count++;
-            pf = Bezier (V, 3, (double) step / BEZIERSUBDIVISION, NULL, NULL);
+            pf = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);
 	    PF2P(pf, p);
             agxbprint(&buf, " %d %d", p.x, p.y);
         }
