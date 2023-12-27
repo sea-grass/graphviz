@@ -234,10 +234,7 @@ realIntersect (vertex *firstv, vertex *secondv, pointf p)
  * detect whether segments l and m intersect      
  * Return 1 if found; 0 otherwise;
  */
-static int find_intersection(vertex *l,
-		  vertex *m,
-		  intersection* ilist, data *input)
-{
+static int find_intersection(vertex *l, vertex *m) {
     double x, y;
     pointf p;
 	int i[3];
@@ -259,8 +256,6 @@ static int find_intersection(vertex *l,
 			       online(l, m, 1)) : online(l, m, abs(i[0]))))
 	return 0;
 
-    (void)ilist;
-    (void)input;
     p.x = x;
     p.y = y;
     return realIntersect(l, m, p);
@@ -319,7 +314,7 @@ find_ints(vertex vertex_list[], data *input, intersection ilist[]) {
                  /* test */
 		for (tempa = all.first, j = 0; j < all.number;
 		     j++, tempa = tempa->next) {
-		    found = find_intersection(tempa->name, templ, ilist, input);
+		    found = find_intersection(tempa->name, templ);
 		    if (found)
 			goto finish;
 		}
