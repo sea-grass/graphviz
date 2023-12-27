@@ -59,7 +59,7 @@ typedef struct {
     double a, b;		/* semi-major and -minor axes */
 
   /* Orientation of the major axis with respect to the x axis. */
-    double theta, cosTheta, sinTheta;
+    double cosTheta, sinTheta;
 
   /* Start and end angles of the arc. */
     double eta1, eta2;
@@ -177,7 +177,6 @@ initEllipse(ellipse_t * ep, double cx, double cy, double a, double b,
     ep->cy = cy;
     ep->a = a;
     ep->b = b;
-    ep->theta = theta;
 
     ep->eta1 = atan2(sin(lambda1) / b, cos(lambda1) / a);
     ep->eta2 = atan2(sin(lambda2) / b, cos(lambda2) / a);
