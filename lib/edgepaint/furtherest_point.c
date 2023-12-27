@@ -186,7 +186,7 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
 
   double distance;
   int level = 0;
-  int ii, j, pruned;
+  int ii, j;
   double *average;
   double wmax = 0.;
 
@@ -231,7 +231,7 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
       for (ii = 0; ii < 1<<dim; ii++) {
 	if (!(qt->qts[ii])) continue;
 	qt->qts[ii]->total_weight = distance = distance_to_group(k, dim, wgt, pts, qt->qts[ii]->average);/* store distance in total_weight */
-	pruned = FALSE;
+	bool pruned = false;
 	if (distance > *dist_max){
 	  *dist_max = distance;
 	  if (Verbose > 10) {
@@ -241,7 +241,7 @@ void furtherest_point_in_list(int k, int dim, double *wgt, double *pts, QuadTree
  	  }
 	  memcpy(*argmax, qt->qts[ii]->average, sizeof(double)*dim);
 	} else if (distance + wmax*sqrt(((double) dim))*(qt->width) < *dist_max){/* average feasible point in this square is too close to the point set */
-	  pruned = TRUE;
+	  pruned = true;
 	}
 	if (!pruned){
 	  qt_list_append(&candidates2, qt->qts[ii]);
