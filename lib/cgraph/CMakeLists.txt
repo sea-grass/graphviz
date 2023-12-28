@@ -43,6 +43,7 @@ add_library(cgraph SHARED
   io.c
   mem.c
   node.c
+  node_induce.c
   obj.c
   rec.c
   refstr.c

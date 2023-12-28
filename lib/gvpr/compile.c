@@ -1171,7 +1171,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 		error(ERROR_WARNING, "NULL graph passed to induce()");
 		v.integer = 1;
 	    } else {
-		nodeInduce(gp);
+		(void)graphviz_node_induce(gp, NULL);
 		v.integer = 0;
 	    }
 	    break;

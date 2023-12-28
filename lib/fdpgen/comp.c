@@ -21,11 +21,13 @@
 #define FDP_PRIVATE 1
 
 #include <cgraph/alloc.h>
+#include <cgraph/cgraph.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/comp.h>
 #include <pack/pack.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #define MARK(n) (marks[ND_id(n)])
 
@@ -103,7 +105,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	dfs(g, n, subg, marks);
     }
     if (subg)
-	nodeInduce(subg);
+	(void)graphviz_node_induce(subg, NULL);
 
     /* Pick up remaining components */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -114,7 +116,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	GD_alg(subg) = gv_alloc(sizeof(gdata));
 	dfs(g, n, subg, marks);
-	nodeInduce(subg);
+	(void)graphviz_node_induce(subg, NULL);
     }
     free(marks);
     C_cnt += c_cnt;

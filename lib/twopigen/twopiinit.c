@@ -15,11 +15,13 @@
  */
 
 #include    <cgraph/alloc.h>
+#include    <cgraph/cgraph.h>
 #include    <twopigen/circle.h>
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
 #include    <neatogen/neatoprocs.h>
 #include    <stdbool.h>
+#include    <stddef.h>
 
 static void twopi_init_edge(edge_t * e)
 {
@@ -142,7 +144,7 @@ void twopi_layout(Agraph_t * g)
 		    lctr = ctr;
 		else if (!rootattr || !(lctr = findRootNode(sg, rootattr)))
 		    lctr = 0;
-		nodeInduce(sg);
+		(void)graphviz_node_induce(sg, NULL);
 		c = circleLayout(sg, lctr);
 	        if (setRoot && !ctr)
 		    ctr = c;

@@ -40,7 +40,7 @@ TEST_CASE("take an input graph, compute its connected components, lay out each "
 
   for (int i = 0; i < ncc; i++) {
     graph_t *sg = cc[i];
-    const auto nedges = nodeInduce(sg);
+    const auto nedges = graphviz_node_induce(sg, NULL);
     REQUIRE(nedges == 1);
     gvLayout(gvc, sg, "neato");
   }

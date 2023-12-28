@@ -190,20 +190,6 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
     }
 }
 
-static void nodeInduce(Agraph_t * g, Agraph_t * eg)
-{
-    Agnode_t *n;
-    Agedge_t *e;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (e = agfstout(eg, n); e; e = agnxtout(eg, e)) {
-	    if (agsubnode(g, aghead(e), 0)) {
-		agsubedge(g, e, 1);
-	    }
-	}
-    }
-}
-
 static void addCutPts(Agraph_t * tree, Agraph_t * blk)
 {
     Agnode_t *n;
@@ -241,7 +227,7 @@ static int process(Agraph_t * g, int gcnt)
 	    dfs(g, n, &state, 0);
     }
     for (blk = state.blks; blk; blk = NEXTBLK(blk)) {
-	nodeInduce(blk, g);
+	(void)graphviz_node_induce(blk, g);
     }
     if (external) {
 	bcnt = 0;

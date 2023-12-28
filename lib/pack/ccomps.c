@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/cgraph.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
 #include <common/render.h>
@@ -389,29 +390,6 @@ static int clMarkFn (Agnode_t* n, int v)
     return ret;
 }
 
-/* node_induce:
- * Using the edge set of eg, add to g any edges
- * with both endpoints in g.
- * Returns the number of edges added.
- */
-static int node_induce(Agraph_t * g, Agraph_t* eg)
-{
-    Agnode_t *n;
-    Agedge_t *e;
-    int e_cnt = 0;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (e = agfstout(eg, n); e; e = agnxtout(eg, e)) {
-	    if (agsubnode(g, aghead(e),0)) {
-		agsubedge(g,e,1);
-		e_cnt++;
-	    }
-	}
-    }
-    return e_cnt;
-}
-
-
 typedef struct {
     Agrec_t h;
     Agraph_t* orig;
@@ -454,7 +432,7 @@ static Agraph_t *projectG(Agraph_t * subg, Agraph_t * g, int inCluster)
 	proj = agsubg(g, agnameof(subg), 1);
     }
     if (proj) {
-	node_induce(proj, subg);
+	(void)graphviz_node_induce(proj, subg);
 	agcopyattr(subg, proj);
 	if (isCluster(proj)) {
 	    op = agbindrec(proj,ORIG_REC, sizeof(orig_t), false);
@@ -553,7 +531,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 	    return NULL;
 	}
 	unionNodes(dout, out);
-	e_cnt = (size_t) nodeInduce(out);
+	e_cnt = graphviz_node_induce(out, NULL);
 	subGInduce(g, out);
 	ccs[c_cnt] = out;
 	agdelete(dg, dout);
@@ -605,16 +583,4 @@ int isConnected(Agraph_t * g)
     if (cnt != (size_t) agnnodes(g))
 	ret = 0;
     return ret;
-}
-
-/* nodeInduce:
- * Given a subgraph, adds all edges in the root graph both of whose
- * endpoints are in the subgraph.
- * If g is a connected component, this will be all edges attached to
- * any node in g.
- * Returns the number of edges added.
- */
-int nodeInduce(Agraph_t * g)
-{
-    return node_induce (g, g->root);
 }

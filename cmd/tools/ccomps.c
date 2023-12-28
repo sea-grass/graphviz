@@ -27,6 +27,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/ingraphs.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
@@ -271,27 +272,6 @@ static int dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out)
     return cnt;
 }
 
-/* nodeInduce:
- * Using the edge set of eg, add to g any edges
- * with both endpoints in g.
- */
-static int nodeInduce(Agraph_t * g, Agraph_t * eg)
-{
-    Agnode_t *n;
-    Agedge_t *e;
-    int e_cnt = 0;
-
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	for (e = agfstout(eg, n); e; e = agnxtout(eg, e)) {
-	    if (agsubnode(g, aghead(e), 0)) {
-		agsubedge(g, e, 1);
-		e_cnt++;
-	    }
-	}
-    }
-    return e_cnt;
-}
-
 static char *getName(void)
 {
     agxbuf name = {0};
@@ -355,7 +335,7 @@ static Agraph_t *projectG(Agraph_t * subg, Agraph_t * g, int inCluster)
 	proj = agsubg(g, agnameof(subg), 1);
     }
     if (proj) {
-	if (doEdges) nodeInduce(proj, subg);
+	if (doEdges) (void)graphviz_node_induce(proj, subg);
 	agcopyattr(subg, proj);
     }
 
@@ -557,7 +537,7 @@ printSorted (Agraph_t* root, int c_cnt)
 static int processClusters(Agraph_t * g, char* graphName)
 {
     Agraph_t *dg;
-    long n_cnt, c_cnt, e_cnt;
+    long n_cnt, c_cnt;
     Agraph_t *out;
     Agnode_t *n;
     Agraph_t *dout;
@@ -586,15 +566,15 @@ static int processClusters(Agraph_t * g, char* graphName)
 	dn = ND_dn(n);
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
+	size_t e_cnt = 0;
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
-	else
-	    e_cnt = 0;
+	    e_cnt = graphviz_node_induce(out, out->root);
 	if (doAll)
 	    subGInduce(g, out);
 	gwrite(out);
 	if (verbose)
-	    fprintf(stderr, " %7ld nodes %7ld edges\n", n_cnt, e_cnt);
+	    fprintf(stderr, " %7ld nodes %7" PRISIZE_T " edges\n", n_cnt,
+	            e_cnt);
 	return 0;
     }
 
@@ -614,10 +594,9 @@ static int processClusters(Agraph_t * g, char* graphName)
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
+	size_t e_cnt = 0;
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
-	else
-	    e_cnt = 0;
+	    e_cnt = graphviz_node_induce(out, out->root);
 	if (printMode == EXTERNAL) {
 	    if (doAll)
 		subGInduce(g, out);
@@ -647,7 +626,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    agdelete(g, out);
 	agdelete(dg, dout);
 	if (verbose)
-	    fprintf(stderr, "(%4ld) %7ld nodes %7ld edges\n",
+	    fprintf(stderr, "(%4ld) %7ld nodes %7" PRISIZE_T " edges\n",
 		    c_cnt, n_cnt, e_cnt);
 	c_cnt++;
     }
@@ -688,7 +667,7 @@ bindGraphinfo (Agraph_t * g)
  */
 static int process(Agraph_t * g, char* graphName)
 {
-    long n_cnt, c_cnt, e_cnt;
+    long n_cnt, c_cnt;
     Agraph_t *out;
     Agnode_t *n;
     int extracted = 0;
@@ -716,15 +695,15 @@ static int process(Agraph_t * g, char* graphName)
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
+	size_t e_cnt = 0;
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
-	else
-	    e_cnt = 0;
+	    e_cnt = graphviz_node_induce(out, out->root);
 	if (doAll)
 	    subGInduce(g, out);
 	gwrite(out);
 	if (verbose)
-	    fprintf(stderr, " %7ld nodes %7ld edges\n", n_cnt, e_cnt);
+	    fprintf(stderr, " %7ld nodes %7" PRISIZE_T " edges\n", n_cnt,
+	            e_cnt);
 	return 0;
     }
 
@@ -741,10 +720,9 @@ static int process(Agraph_t * g, char* graphName)
 	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
+	size_t e_cnt = 0;
 	if (doEdges)
-	    e_cnt = nodeInduce(out, out->root);
-	else
-	    e_cnt = 0;
+	    e_cnt = graphviz_node_induce(out, out->root);
 	if (printMode == EXTERNAL) {
 	    if (doAll)
 		subGInduce(g, out);
@@ -773,7 +751,7 @@ static int process(Agraph_t * g, char* graphName)
 	if (printMode != INTERNAL)
 	    agdelete(g, out);
 	if (verbose)
-	    fprintf(stderr, "(%4ld) %7ld nodes %7ld edges\n",
+	    fprintf(stderr, "(%4ld) %7ld nodes %7" PRISIZE_T " edges\n",
 		    c_cnt, n_cnt, e_cnt);
 	c_cnt++;
     }
