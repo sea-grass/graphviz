@@ -7,5 +7,5 @@ Name: libgvpr
 Description: The GVPR library
 Version: @VERSION@
 Libs: -L${libdir} -lgvpr -lcgraph -lcdt
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/@PACKAGE@
 

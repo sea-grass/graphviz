@@ -8,5 +8,5 @@ Name: libgvc
 Description: The GraphVizContext library 
 Version: @VERSION@
 Libs: -L${libdir} -lgvc -lcgraph -lcdt
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/@PACKAGE@
 

@@ -7,4 +7,4 @@ Name: libcdt
 Description: Container DataType library
 Version: @VERSION@
 Libs: -L${libdir} -lcdt
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/@PACKAGE@

@@ -7,4 +7,4 @@ Name: libcgraph
 Description: Graph library (file i/o, dot language parsing, graph, subgraph, node, edge, attribute, data structure manipulation)
 Version: @VERSION@
 Libs: -L${libdir} -lcgraph -lcdt
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/@PACKAGE@

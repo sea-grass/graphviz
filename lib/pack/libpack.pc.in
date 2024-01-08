@@ -7,4 +7,4 @@ Name: libpack
 Description: Graph packer
 Version: @VERSION@
 Libs: -L${libdir} -lpack
-Cflags: -I${includedir}
+Cflags: -I${includedir} -I${includedir}/@PACKAGE@
