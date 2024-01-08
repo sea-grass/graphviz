@@ -494,6 +494,7 @@ struct Agiodisc_s {
     int        (*flush)(void *chan);    /* sync */
 } ;
 .P1
+.PP
 Normally, the \fBFILE\fP structure and its related functions are used for I/O. At times, though,
 an application may need to use a totally different type of character source. The associated
 state or stream information is provided by the \fIchan\fP argument to \fBagread\fP or \fBagwrite\fP.
@@ -511,6 +512,7 @@ struct Agmemdisc_s {    /* memory allocator */
     void    (*close)(void *state);
 } ;
 .P1
+.PP
 The \fBopen\fP function is used to initialize the memory subsystem,
 returning state information that is passed to the calls to  
 \fBalloc\fP, \fBresize\fP, and \fBfree\fP.
@@ -662,7 +664,8 @@ strict graph H {
 }
 .P1
 .SH "SEE ALSO"
-Libcdt(3)
+.BR cdt (3)
+.br
 
 .SH "BUGS"
 It is difficult to change endpoints of edges, delete string attributes or
