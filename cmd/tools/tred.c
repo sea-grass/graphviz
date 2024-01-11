@@ -52,6 +52,7 @@ static char *CmdName;
 typedef struct {
   bool Verbose;
   bool PrintRemovedEdges;
+  FILE *out; ///< stream to write result(s) to
   FILE *err; ///< stream to print warnings to
 } graphviz_tred_options_t;
 
@@ -266,8 +267,8 @@ static void process(Agraph_t *g, gv_stack_t *sp, const opts_t *opts) {
     if (opts->Verbose && opts->err != NULL)
 	fprintf(opts->err, "Finished graph %s: %.02f secs.\n", agnameof(g), total_secs);
     free (ninfo);
-    agwrite(g, stdout);
-    fflush(stdout);
+    agwrite(g, opts->out);
+    fflush(opts->out);
 }
 
 int main(int argc, char **argv)
@@ -275,7 +276,7 @@ int main(int argc, char **argv)
     Agraph_t *g;
     ingraph_state ig;
     gv_stack_t estk = {0};
-    opts_t opts = {.err = stderr};
+    opts_t opts = {.out = stdout, .err = stderr};
 
     init(&opts, argc, argv);
     newIngraph(&ig, Files);
