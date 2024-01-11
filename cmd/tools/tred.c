@@ -19,7 +19,7 @@
 
 /*
  * reads a sequence of graphs on stdin, and writes their
- * transitive reduction on stdout
+ * transitive reduction
  */
 
 #include <cgraph/alloc.h>
@@ -189,6 +189,7 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
 }
 
 static char *useString = "Usage: %s [-vr?] <files>\n\
+  -o FILE - redirect output (default to stdout)\n\
   -v - verbose (to stderr)\n\
   -r - print removed edges to stderr\n\
   -? - print usage\n\
@@ -205,8 +206,17 @@ static void init(opts_t *opts, int argc, char *argv[]) {
 
     CmdName = argv[0];
     opterr = 0;
-    while ((c = getopt(argc, argv, "vr?")) != -1) {
+    while ((c = getopt(argc, argv, "o:vr?")) != -1) {
 	switch (c) {
+	case 'o':
+	    (void)fclose(opts->out);
+	    opts->out = fopen(optarg, "w");
+	    if (opts->out == NULL) {
+		fprintf(stderr, "cannot open %s for writing\n",
+			optarg);
+		usage(1);
+	    }
+	    break;
 	case 'v':
 	    opts->Verbose = true;
 	    break;
