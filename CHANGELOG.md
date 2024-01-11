@@ -108,6 +108,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and size internal state across graphs.
 - Repeated runs of a graph with subgraphs now produce a stable subgraph
   ordering. #2242
+- The `dot` and `gml2gv` tools are now built with case-insensitive parsing
+  by the CMake and MSBuild systems, as they always were by autotools, and
+  in accordance with the graphviz specification. #2481
 
 ## [9.0.0] - 2023-09-11
 

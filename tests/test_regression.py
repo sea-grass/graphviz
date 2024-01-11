@@ -2175,6 +2175,28 @@ def test_2361():
     dot("png", input)
 
 
+def test_2481():
+    """
+    `dot` should not exit with a syntax error if keywords are mixed-case
+    https://gitlab.com/graphviz/graphviz/-/issues/2481
+    """
+
+    # try a simple graph with uppercase characters in 'digraph'
+    input = "diGraph { }"
+
+    # ensure this does not trigger warnings
+    with subprocess.Popen(
+        ["dot"],
+        stdin=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    ) as p:
+        _, stderr = p.communicate(input)
+        assert p.returncode == 0, "mixed-case keyword was rejected"
+
+    assert "syntax error" not in stderr, "dot displayed a syntax error message"
+
+
 def test_package_version():
     """
     The graphviz_version.h header should define a non-empty PACKAGE_VERSION
