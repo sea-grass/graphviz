@@ -108,7 +108,7 @@ static Agedge_t *top(gv_stack_t *sp) {
  * distance 2 we delete. We also delete all but one copy of any edges with the
  * same head.
  */
-static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
+static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn,
                const opts_t *opts) {
     Agraph_t *g = agrootof(n);
     Agedgepair_t dummy;
@@ -127,10 +127,11 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
     dummy.in.base.tag.objtype = AGINEDGE;
     dummy.in.node = NULL;
 
-    push(sp, &dummy.out, ninfo);
+    gv_stack_t estk = {0};
+    push(&estk, &dummy.out, ninfo);
     prev = 0;
 
-    while ((link = top(sp))) {
+    while ((link = top(&estk))) {
 	v = aghead(link);
 	if (prev)
 	    next = agnxtout(g, prev);
@@ -160,11 +161,11 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
 	    }
 	}
 	if (next) {
-	    push(sp, next, ninfo);
+	    push(&estk, next, ninfo);
             prev = 0;
 	}
 	else {
-	    prev = pop(sp, ninfo);
+	    prev = pop(&estk, ninfo);
 	}
     }
     oldhd = NULL;
@@ -185,6 +186,7 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
             agdelete(g, e);
         }
     }
+    stack_reset(&estk);
     return warn;
 }
 
@@ -247,7 +249,7 @@ static void init(opts_t *opts, int argc, char *argv[]) {
  * Do a DFS for each vertex in graph g, so the time
  * complexity is O(|V||E|).
  */
-static void process(Agraph_t *g, gv_stack_t *sp, const opts_t *opts) {
+static void process(Agraph_t *g, const opts_t *opts) {
     Agnode_t *n;
     int cnt = 0;
     int warn = 0;
@@ -264,7 +266,7 @@ static void process(Agraph_t *g, gv_stack_t *sp, const opts_t *opts) {
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	memset(ninfo, 0, infosize);
 	if (opts->Verbose) start_timer();
-	warn = dfs(n, ninfo, warn, sp, opts);
+	warn = dfs(n, ninfo, warn, opts);
 	if (opts->Verbose) {
 	    secs = elapsed_sec();
             total_secs += secs;
@@ -285,7 +287,6 @@ int main(int argc, char **argv)
 {
     Agraph_t *g;
     ingraph_state ig;
-    gv_stack_t estk = {0};
     opts_t opts = {.out = stdout, .err = stderr};
 
     init(&opts, argc, argv);
@@ -293,11 +294,9 @@ int main(int argc, char **argv)
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (agisdirected(g))
-	    process(g, &estk, &opts);
+	    process(g, &opts);
 	agclose(g);
     }
-
-    stack_reset(&estk);
 
     graphviz_exit(0);
 }
