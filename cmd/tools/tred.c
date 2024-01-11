@@ -32,6 +32,7 @@
 #include <common/types.h>
 #include <common/utils.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct {
@@ -51,6 +52,7 @@ static char *CmdName;
 typedef struct {
   bool Verbose;
   bool PrintRemovedEdges;
+  FILE *err; ///< stream to print warnings to
 } graphviz_tred_options_t;
 
 typedef graphviz_tred_options_t opts_t;
@@ -139,11 +141,13 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
 	    if (ON_STACK(ninfo,hd)) {
 		if (!warn) {
 		    warn++;
-		    fprintf(stderr,
-			"warning: %s has cycle(s), transitive reduction not unique\n",
-			agnameof(g));
-		    fprintf(stderr, "cycle involves edge %s -> %s\n",
-			agnameof(v), agnameof(hd));
+		    if (opts->err != NULL) {
+		        fprintf(opts->err,
+		    	"warning: %s has cycle(s), transitive reduction not unique\n",
+		    	agnameof(g));
+		        fprintf(opts->err, "cycle involves edge %s -> %s\n",
+		    	agnameof(v), agnameof(hd));
+		    }
 		}
 	    }
 	    else if (DISTANCE(ninfo,hd) == 0) {
@@ -174,8 +178,8 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
             if (DISTANCE(ninfo, hd)>1) do_delete = 1;
         }
         if(do_delete) {
-            if (opts->PrintRemovedEdges)
-                fprintf(stderr,"removed edge: %s: \"%s\" -> \"%s\"\n"
+            if (opts->PrintRemovedEdges && opts->err != NULL)
+                fprintf(opts->err, "removed edge: %s: \"%s\" -> \"%s\"\n"
                           , agnameof(g), agnameof(aghead(e)), agnameof(agtail(e)));
             agdelete(g, e);
         }
@@ -244,7 +248,7 @@ static void process(Agraph_t *g, gv_stack_t *sp, const opts_t *opts) {
     infosize = (agnnodes(g)+1)*sizeof(nodeinfo_t);
     ninfo = gv_alloc(infosize);
 
-    if (opts->Verbose)
+    if (opts->Verbose && opts->err != NULL)
 	fprintf(stderr, "Processing graph %s\n", agnameof(g));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	memset(ninfo, 0, infosize);
@@ -254,11 +258,13 @@ static void process(Agraph_t *g, gv_stack_t *sp, const opts_t *opts) {
 	    secs = elapsed_sec();
             total_secs += secs;
 	    cnt++;
-	    if ((cnt%1000) == 0) fprintf (stderr, "[%d]\n", cnt);
+	    if (cnt % 1000 == 0 && opts->err != NULL) {
+	        fprintf(opts->err, "[%d]\n", cnt);
+	    }
 	}
     }
-    if (opts->Verbose)
-	fprintf(stderr, "Finished graph %s: %.02f secs.\n", agnameof(g), total_secs);
+    if (opts->Verbose && opts->err != NULL)
+	fprintf(opts->err, "Finished graph %s: %.02f secs.\n", agnameof(g), total_secs);
     free (ninfo);
     agwrite(g, stdout);
     fflush(stdout);
@@ -269,7 +275,7 @@ int main(int argc, char **argv)
     Agraph_t *g;
     ingraph_state ig;
     gv_stack_t estk = {0};
-    opts_t opts = {0};
+    opts_t opts = {.err = stderr};
 
     init(&opts, argc, argv);
     newIngraph(&ig, Files);
