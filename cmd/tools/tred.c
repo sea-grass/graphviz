@@ -34,6 +34,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 typedef struct {
     bool on_stack: 1;
@@ -259,8 +260,8 @@ static void process(Agraph_t *g, const opts_t *opts) {
     Agnode_t *n;
     int cnt = 0;
     int warn = 0;
-    double secs;
-    double total_secs = 0;
+    time_t secs;
+    time_t total_secs = 0;
     nodeinfo_t* ninfo;
     size_t infosize;
 
@@ -271,10 +272,10 @@ static void process(Agraph_t *g, const opts_t *opts) {
 	fprintf(stderr, "Processing graph %s\n", agnameof(g));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	memset(ninfo, 0, infosize);
-	if (opts->Verbose) start_timer();
+	const time_t start = time(NULL);
 	warn = dfs(n, ninfo, warn, opts);
 	if (opts->Verbose) {
-	    secs = elapsed_sec();
+	    secs = time(NULL) - start;
             total_secs += secs;
 	    cnt++;
 	    if (cnt % 1000 == 0 && opts->err != NULL) {
@@ -283,7 +284,8 @@ static void process(Agraph_t *g, const opts_t *opts) {
 	}
     }
     if (opts->Verbose && opts->err != NULL)
-	fprintf(opts->err, "Finished graph %s: %.02f secs.\n", agnameof(g), total_secs);
+	fprintf(opts->err, "Finished graph %s: %lld.00 secs.\n", agnameof(g),
+	        (long long)total_secs);
     free (ninfo);
     agwrite(g, opts->out);
     fflush(opts->out);
