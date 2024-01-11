@@ -47,7 +47,7 @@ typedef struct {
 
 static char **Files;
 static char *CmdName;
-static int Verbose;
+static bool Verbose;
 static int PrintRemovedEdges;
 
 static void push(gv_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
@@ -197,7 +197,7 @@ static void init(int argc, char *argv[])
     while ((c = getopt(argc, argv, "vr?")) != -1) {
 	switch (c) {
 	case 'v':
-	    Verbose = 1;
+	    Verbose = true;
 	    break;
 	case 'r':
         PrintRemovedEdges = 1;
