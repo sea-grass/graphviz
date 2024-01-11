@@ -128,6 +128,9 @@
     <ClCompile Include="subg.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="tred.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="unflatten.c">
       <Filter>Source Files</Filter>
     </ClCompile>

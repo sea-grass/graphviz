@@ -12,9 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   9.
 - A new output format, `-Tsvg_inline`, has been added to generate a header-less
   SVG suitable for inlining into HTML. #2285
-- The functionality of the `unflatten` command line tool is now exposed via the
-  `graphviz_unflatten` API function in libcgraph. #2194
+- The functionality of the `tred` and `unflatten` command line tools are now
+  exposed via the `graphviz_tred` and `graphviz_unflatten` API functions in
+  libcgraph. #2194
 - `graphviz_node_induce` is available as a new API function in cgraph.h.
+- `tred` gained a `-o` command line option to redirect its output to a file.
 
 ### Changed
 
