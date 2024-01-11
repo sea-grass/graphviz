@@ -47,8 +47,13 @@ typedef struct {
 
 static char **Files;
 static char *CmdName;
-static bool Verbose;
-static bool PrintRemovedEdges;
+
+typedef struct {
+  bool Verbose;
+  bool PrintRemovedEdges;
+} graphviz_tred_options_t;
+
+typedef graphviz_tred_options_t opts_t;
 
 static void push(gv_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
 
@@ -100,7 +105,8 @@ static Agedge_t *top(gv_stack_t *sp) {
  * distance 2 we delete. We also delete all but one copy of any edges with the
  * same head.
  */
-static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp) {
+static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp,
+               const opts_t *opts) {
     Agraph_t *g = agrootof(n);
     Agedgepair_t dummy;
     Agedge_t* link;
@@ -168,7 +174,8 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn, gv_stack_t *sp) {
             if (DISTANCE(ninfo, hd)>1) do_delete = 1;
         }
         if(do_delete) {
-            if(PrintRemovedEdges) fprintf(stderr,"removed edge: %s: \"%s\" -> \"%s\"\n"
+            if (opts->PrintRemovedEdges)
+                fprintf(stderr,"removed edge: %s: \"%s\" -> \"%s\"\n"
                           , agnameof(g), agnameof(aghead(e)), agnameof(agtail(e)));
             agdelete(g, e);
         }
@@ -188,8 +195,7 @@ static void usage(int v)
     graphviz_exit(v);
 }
 
-static void init(int argc, char *argv[])
-{
+static void init(opts_t *opts, int argc, char *argv[]) {
     int c;
 
     CmdName = argv[0];
@@ -197,10 +203,10 @@ static void init(int argc, char *argv[])
     while ((c = getopt(argc, argv, "vr?")) != -1) {
 	switch (c) {
 	case 'v':
-	    Verbose = true;
+	    opts->Verbose = true;
 	    break;
 	case 'r':
-        PrintRemovedEdges = true;
+        opts->PrintRemovedEdges = true;
         break;
 	case '?':
 	    if (optopt == '\0' || optopt == '?')
@@ -226,7 +232,7 @@ static void init(int argc, char *argv[])
  * Do a DFS for each vertex in graph g, so the time
  * complexity is O(|V||E|).
  */
-static void process(Agraph_t *g, gv_stack_t *sp) {
+static void process(Agraph_t *g, gv_stack_t *sp, const opts_t *opts) {
     Agnode_t *n;
     int cnt = 0;
     int warn = 0;
@@ -238,20 +244,20 @@ static void process(Agraph_t *g, gv_stack_t *sp) {
     infosize = (agnnodes(g)+1)*sizeof(nodeinfo_t);
     ninfo = gv_alloc(infosize);
 
-    if (Verbose)
+    if (opts->Verbose)
 	fprintf(stderr, "Processing graph %s\n", agnameof(g));
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	memset(ninfo, 0, infosize);
-	if (Verbose) start_timer();
-	warn = dfs(n, ninfo, warn, sp);
-	if (Verbose) {
+	if (opts->Verbose) start_timer();
+	warn = dfs(n, ninfo, warn, sp, opts);
+	if (opts->Verbose) {
 	    secs = elapsed_sec();
             total_secs += secs;
 	    cnt++;
 	    if ((cnt%1000) == 0) fprintf (stderr, "[%d]\n", cnt);
 	}
     }
-    if (Verbose)
+    if (opts->Verbose)
 	fprintf(stderr, "Finished graph %s: %.02f secs.\n", agnameof(g), total_secs);
     free (ninfo);
     agwrite(g, stdout);
@@ -263,13 +269,14 @@ int main(int argc, char **argv)
     Agraph_t *g;
     ingraph_state ig;
     gv_stack_t estk = {0};
+    opts_t opts = {0};
 
-    init(argc, argv);
+    init(&opts, argc, argv);
     newIngraph(&ig, Files);
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (agisdirected(g))
-	    process(g, &estk);
+	    process(g, &estk, &opts);
 	agclose(g);
     }
 
