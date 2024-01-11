@@ -39,6 +39,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "cdt.h"
 #include <stddef.h>
 
@@ -671,6 +672,22 @@ and edges are embedded in main graph objects but allocated separately in subgrap
 #define AGSNMAIN(sn)        ((sn)==(&((sn)->node->mainsub)))
 #define EDGEOF(sn,rep)		(AGSNMAIN(sn)?((Agedge_t*)((unsigned char*)(rep) - offsetof(Agedge_t,seq_link))) : ((Dthold_t*)(rep))->obj)
 /// @}
+
+/// options for passing to `graphviz_tred`
+typedef struct {
+  bool Verbose;
+  bool PrintRemovedEdges;
+  FILE *out; ///< stream to write result(s) to
+  FILE *err; ///< stream to print warnings to
+} graphviz_tred_options_t;
+
+/// programmatic access to `tred`
+///
+/// See `man tred` for an explanation of the `tred` tool.
+///
+/// \param g Graph to operate on
+/// \param opts Options to control tred algorithm
+CGRAPH_API void graphviz_tred(Agraph_t *g, const graphviz_tred_options_t *opts);
 
 /// options for passing to `graphviz_unflatten`
 typedef struct {

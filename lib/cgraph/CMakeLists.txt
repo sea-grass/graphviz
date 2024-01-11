@@ -48,6 +48,7 @@ add_library(cgraph SHARED
   rec.c
   refstr.c
   subg.c
+  tred.c
   unflatten.c
   utils.c
   write.c
