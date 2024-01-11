@@ -58,6 +58,12 @@ typedef struct {
 
 typedef graphviz_tred_options_t opts_t;
 
+static unsigned char uchar_min(unsigned char a, unsigned char b) {
+  if (a < b)
+    return a;
+  return b;
+}
+
 static void push(gv_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
 
   // mark this edge on the stack
@@ -153,11 +159,11 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn,
 		}
 	    }
 	    else if (DISTANCE(ninfo,hd) == 0) {
-		DISTANCE(ninfo,hd) = MIN(1,DISTANCE(ninfo,v))+1;
+		DISTANCE(ninfo,hd) = uchar_min(1, DISTANCE(ninfo, v)) + 1;
 	        break;
 	    }
 	    else if (DISTANCE(ninfo,hd) == 1) {
-		DISTANCE(ninfo,hd) = MIN(1,DISTANCE(ninfo,v))+1;
+		DISTANCE(ninfo,hd) = uchar_min(1, DISTANCE(ninfo, v)) + 1;
 	    }
 	}
 	if (next) {
