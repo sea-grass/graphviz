@@ -63,7 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The OCaml bindings have been removed. If you use these bindings, please contact
   the maintainers to notify them of the existence of users.
 - **Breaking**: `polygon_t.sides` and `polygon_t.peripheries` are now `size_t`s.
-- **Breaking**: `lab_gamut_data_size` is now a `size_t`.
+- **Breaking**: `lab_gamut_data_size` is now a `const size_t`.
 
 ### Fixed
 

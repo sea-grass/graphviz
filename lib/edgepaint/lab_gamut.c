@@ -10746,4 +10746,4 @@ const signed char lab_gamut_data[] = {
 100,0,0,0,
 };
 
-size_t lab_gamut_data_size = sizeof(lab_gamut_data) / sizeof(signed char);
+const size_t lab_gamut_data_size = sizeof(lab_gamut_data) / sizeof(signed char);

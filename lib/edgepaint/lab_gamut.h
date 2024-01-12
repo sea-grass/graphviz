@@ -39,7 +39,7 @@ extern "C" {
  *   https://en.wikipedia.org/wiki/CIELAB_color_space
  */
 LAB_GAMUT_API extern const signed char lab_gamut_data[];
-LAB_GAMUT_API extern size_t lab_gamut_data_size;
+LAB_GAMUT_API extern const size_t lab_gamut_data_size;
 
 #undef LAB_GAMUT_API
 
