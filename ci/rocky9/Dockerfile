@@ -3,13 +3,15 @@ FROM rockylinux:9
 COPY requirements.txt ./requirements.txt
 
 # Development tools
-RUN dnf -y groupinstall 'Development Tools' \
+RUN dnf -y --setopt install_weak_deps=false groupinstall 'Development Tools' \
+# for dnf config-manager plugin
+&& dnf install -y --setopt install_weak_deps=false python3-dnf-plugins-core \
 && dnf install -y \
 # Install epel-release rpm (Needed for libglade2-devel. Must be a separate step)
 https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
 && dnf config-manager --enable crb \
 # Centos build utilities
-&& dnf -y install \
+&& dnf -y --setopt install_weak_deps=false install \
 libtool-ltdl-devel \
 libedit-devel \
 ksh \
