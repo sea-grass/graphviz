@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
+#include <cgraph/prisize_t.h>
 #include <sparse/general.h>
 #include <sparse/QuadTree.h>
 #include <edgepaint/lab.h>
@@ -156,7 +157,7 @@ double *lab_gamut(const int *lightness, int *n) {
     fprintf(stderr,"LAB color lightness range = %d,%d\n", l1, l2);
 
   if (Verbose)
-    fprintf(stderr,"size of lab gamut = %d\n", lab_gamut_data_size);
+    fprintf(stderr,"size of lab gamut = %" PRISIZE_T "\n", lab_gamut_data_size);
 
   // each L* value can be paired with 256 a* values and 256 b* values, so
   // compute the maximum number of doubles we will need to span the space
@@ -165,7 +166,7 @@ double *lab_gamut(const int *lightness, int *n) {
   x = malloc(sizeof(double)*m);
   xx = x;
   *n = 0;
-  for (size_t i = 0; i < (size_t)lab_gamut_data_size; i += 4){
+  for (size_t i = 0; i < lab_gamut_data_size; i += 4){
     if (lab_gamut_data[i] >= l1 && lab_gamut_data[i] <= l2){
       int b_lower = lab_gamut_data[i + 2];
       int b_upper = lab_gamut_data[i + 3];
