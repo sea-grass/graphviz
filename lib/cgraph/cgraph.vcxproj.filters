@@ -74,6 +74,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="acyclic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="agerror.c">
       <Filter>Source Files</Filter>
     </ClCompile>

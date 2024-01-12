@@ -20,7 +20,7 @@ if ENABLE_MAN_PDFS
 pdf_DATA = cgraph.3.pdf
 endif
 
-libcgraph_C_la_SOURCES = agerror.c apply.c attr.c edge.c \
+libcgraph_C_la_SOURCES = acyclic.c agerror.c apply.c attr.c edge.c \
 	graph.c grammar.y id.c imap.c ingraphs.c io.c mem.c node.c node_induce.c \
 	obj.c rec.c refstr.c scan.l subg.c tred.c unflatten.c utils.c write.c
 

@@ -35,6 +35,7 @@ add_library(cgraph SHARED
   unused.h
 
   # Source files
+  acyclic.c
   agerror.c
   apply.c
   attr.c
