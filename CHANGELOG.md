@@ -125,6 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A malformed config6 file that leads to plugin search failing no longer causes
   out-of-bounds memory reads. This now causes an error message and graceful
   failure. #2441
+- Discovery of `php` in the Autotools build system has been improved.
 
 ## [9.0.0] - 2023-09-11
 
