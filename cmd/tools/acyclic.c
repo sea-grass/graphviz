@@ -166,10 +166,24 @@ static void init(opts_t *opts, int argc, char *argv[]) {
 	opts->outFile = stdout;
 }
 
+static bool acyclic(Agraph_t *g, const opts_t *opts, size_t *num_rev) {
+  bool has_cycle = false;
+  aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
+  for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    if (ND_mark(n) == 0) {
+      has_cycle |= dfs(g, n, false, num_rev);
+    }
+  }
+  if (opts->doWrite) {
+    agwrite(g, opts->outFile);
+    fflush(opts->outFile);
+  }
+  return has_cycle;
+}
+
 int main(int argc, char *argv[])
 {
     Agraph_t *g;
-    Agnode_t *n;
     int rv = 0;
     opts_t opts = {0};
     size_t num_rev = 0;
@@ -178,15 +192,7 @@ int main(int argc, char *argv[])
 
     if ((g = agread(inFile, NULL)) != NULL) {
 	if (agisdirected (g)) {
-	    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
-	    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-		if (ND_mark(n) == 0)
-		    rv |= dfs(g, n, false, &num_rev);
-	    }
-	    if (opts.doWrite) {
-		agwrite(g, opts.outFile);
-		fflush(opts.outFile);
-	    }
+	    rv |= acyclic(g, &opts, &num_rev);
 	    if (opts.Verbose) {
 		if (rv)
 		    fprintf(stderr, "Graph \"%s\" has cycles; %" PRISIZE_T " reversed edges\n",
