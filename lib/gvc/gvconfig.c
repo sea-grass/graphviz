@@ -173,7 +173,7 @@ static char *token(int *nest, char **tokens)
 
 static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
 {
-    char *package_path, *name, *api;
+    char *package_path, *name;
     const char *type;
     int quality;
     int nest = 0;
@@ -188,7 +188,7 @@ static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
 	    name = "x";
         package = gvplugin_package_record(gvc, package_path, name);
 	do {
-	    api = token(&nest, &s);
+	    const char *api = token(&nest, &s);
 	    const api_t gv_api = gvplugin_api(api);
 	    do {
 		if (nest == 2) {
