@@ -52,7 +52,6 @@ typedef struct {
 typedef graphviz_acyclic_options_t opts_t;
 
 static char *cmd;
-static size_t num_rev;
 
 /* addRevEdge:
  * Add a reversed version of e. The new edge has the same key.
@@ -60,14 +59,13 @@ static size_t num_rev;
  * tail ports.
  * This assumes we've already checked that such an edge does not exist.
  */
-static void addRevEdge(Agraph_t * g, Agedge_t * e)
+static void addRevEdge(Agraph_t *g, Agedge_t *e)
 {
     Agsym_t* sym;
     Agedge_t* f = agedge (g, aghead(e), agtail(e), agnameof(e), 1);
 
     agcopyattr (e, f);
 
-    num_rev++;
     sym = agattr (g, AGEDGE, TAILPORT_ID, 0);
     if (sym) agsafeset (f, HEADPORT_ID, agxget (e, sym), "");
     sym = agattr (g, AGEDGE, HEADPORT_ID, 0);
@@ -76,8 +74,10 @@ static void addRevEdge(Agraph_t * g, Agedge_t * e)
 
 /* dfs:
  * Return true if the graph has a cycle.
+ *
+ * \param num_rev [inout] running total of reversed edges
  */
-static bool dfs(Agraph_t *g, Agnode_t *t, bool hasCycle) {
+static bool dfs(Agraph_t *g, Agnode_t *t, bool hasCycle, size_t *num_rev) {
     Agedge_t *e;
     Agedge_t *f;
     Agnode_t *h;
@@ -91,17 +91,21 @@ static bool dfs(Agraph_t *g, Agnode_t *t, bool hasCycle) {
 	h = aghead(e);
 	if (ND_onstack(h)) {
 	    if (agisstrict(g)) {
-		if (agedge(g, h, t, 0, 0) == 0)
+		if (agedge(g, h, t, 0, 0) == 0) {
 		    addRevEdge(g, e);
+		    ++*num_rev;
+		}
 	    } else {
 		char* key = agnameof (e);
-		if (!key || agedge(g, h, t, key, 0) == 0)
+		if (!key || agedge(g, h, t, key, 0) == 0) {
 		    addRevEdge(g, e);
+		    ++*num_rev;
+		}
 	    }
 	    agdelete(g, e);
 	    hasCycle = true;
 	} else if (ND_mark(h) == 0)
-	    hasCycle |= dfs(g, h, hasCycle);
+	    hasCycle |= dfs(g, h, hasCycle, num_rev);
     }
     ND_onstack(t) = false;
     return hasCycle;
@@ -168,6 +172,7 @@ int main(int argc, char *argv[])
     Agnode_t *n;
     int rv = 0;
     opts_t opts = {0};
+    size_t num_rev = 0;
 
     init(&opts, argc, argv);
 
@@ -176,7 +181,7 @@ int main(int argc, char *argv[])
 	    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
 	    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 		if (ND_mark(n) == 0)
-		    rv |= dfs(g, n, false);
+		    rv |= dfs(g, n, false, &num_rev);
 	    }
 	    if (opts.doWrite) {
 		agwrite(g, opts.outFile);
