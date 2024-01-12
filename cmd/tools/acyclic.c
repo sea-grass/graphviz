@@ -75,7 +75,7 @@ static void addRevEdge(Agraph_t * g, Agedge_t * e)
 }
 
 /* dfs:
- * Return the number of reversed edges for this component.
+ * Return true if the graph has a cycle.
  */
 static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
 {
