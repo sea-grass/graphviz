@@ -77,8 +77,7 @@ static void addRevEdge(Agraph_t * g, Agedge_t * e)
 /* dfs:
  * Return true if the graph has a cycle.
  */
-static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
-{
+static bool dfs(Agraph_t *g, Agnode_t *t, bool hasCycle) {
     Agedge_t *e;
     Agedge_t *f;
     Agnode_t *h;
@@ -100,7 +99,7 @@ static int dfs(Agraph_t * g, Agnode_t * t, int hasCycle)
 		    addRevEdge(g, e);
 	    }
 	    agdelete(g, e);
-	    hasCycle = 1;
+	    hasCycle = true;
 	} else if (ND_mark(h) == 0)
 	    hasCycle |= dfs(g, h, hasCycle);
     }
@@ -177,7 +176,7 @@ int main(int argc, char *argv[])
 	    aginit(g, AGNODE, "info", sizeof(Agnodeinfo_t), true);
 	    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 		if (ND_mark(n) == 0)
-		    rv |= dfs(g, n, 0);
+		    rv |= dfs(g, n, false);
 	    }
 	    if (opts.doWrite) {
 		agwrite(g, opts.outFile);
