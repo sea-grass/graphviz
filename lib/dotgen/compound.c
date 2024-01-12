@@ -309,7 +309,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
     node_t *tail = agtail(e);
 
     /* allocate new Bezier */
-    bezier nbez = {0}; // new Bezier  for e
+    bezier nbez = {0}; // new Bezier for `e`
     nbez.eflag = bez->eflag;
     nbez.sflag = bez->sflag;
 
