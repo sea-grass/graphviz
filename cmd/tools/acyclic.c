@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include "openFile.h"
 
@@ -51,7 +52,7 @@ typedef struct {
 typedef graphviz_acyclic_options_t opts_t;
 
 static char *cmd;
-static int num_rev;
+static size_t num_rev;
 
 /* addRevEdge:
  * Add a reversed version of e. The new edge has the same key.
@@ -184,7 +185,8 @@ int main(int argc, char *argv[])
 	    }
 	    if (opts.Verbose) {
 		if (rv)
-		    fprintf(stderr, "Graph \"%s\" has cycles; %d reversed edges\n", graphName(g), num_rev);
+		    fprintf(stderr, "Graph \"%s\" has cycles; %" PRISIZE_T " reversed edges\n",
+		            graphName(g), num_rev);
 		else
 		    fprintf(stderr, "Graph \"%s\" is acyclic\n", graphName(g));
 	    }
