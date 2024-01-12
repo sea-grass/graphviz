@@ -41,9 +41,15 @@ typedef struct {
 #include <getopt.h>
 
 static FILE *inFile;
-static FILE *outFile;
-static bool doWrite = true;
-static bool Verbose;
+
+typedef struct {
+  FILE *outFile;
+  bool doWrite;
+  bool Verbose;
+} graphviz_acyclic_options_t;
+
+typedef graphviz_acyclic_options_t opts_t;
+
 static char *cmd;
 static int num_rev;
 
@@ -113,8 +119,7 @@ static void usage(int v)
     graphviz_exit(v);
 }
 
-static void init(int argc, char *argv[])
-{
+static void init(opts_t *opts, int argc, char *argv[]) {
     int c;
 
     cmd = argv[0];
@@ -122,15 +127,15 @@ static void init(int argc, char *argv[])
     while ((c = getopt(argc, argv, ":vno:")) != -1)
 	switch (c) {
 	case 'o':
-	    if (outFile != NULL)
-		fclose(outFile);
-	    outFile = openFile(argv[0], optarg, "w");
+	    if (opts->outFile != NULL)
+		fclose(opts->outFile);
+	    opts->outFile = openFile(argv[0], optarg, "w");
 	    break;
 	case 'n':
-	    doWrite = false;
+	    opts->doWrite = false;
 	    break;
 	case 'v':
-	    Verbose = true;
+	    opts->Verbose = true;
 	    break;
 	case '?':
 	    if (optopt == '?')
@@ -153,9 +158,8 @@ static void init(int argc, char *argv[])
 	inFile = openFile(argv[0], argv[optind], "r");
     } else
 	inFile = stdin;
-    if (!outFile)
-	outFile = stdout;
-
+    if (!opts->outFile)
+	opts->outFile = stdout;
 }
 
 int main(int argc, char *argv[])
@@ -163,8 +167,9 @@ int main(int argc, char *argv[])
     Agraph_t *g;
     Agnode_t *n;
     int rv = 0;
+    opts_t opts = {0};
 
-    init(argc, argv);
+    init(&opts, argc, argv);
 
     if ((g = agread(inFile, NULL)) != NULL) {
 	if (agisdirected (g)) {
@@ -173,11 +178,11 @@ int main(int argc, char *argv[])
 		if (ND_mark(n) == 0)
 		    rv |= dfs(g, n, 0);
 	    }
-	    if (doWrite) {
-		agwrite(g, outFile);
-		fflush(outFile);
+	    if (opts.doWrite) {
+		agwrite(g, opts.outFile);
+		fflush(opts.outFile);
 	    }
-	    if (Verbose) {
+	    if (opts.Verbose) {
 		if (rv)
 		    fprintf(stderr, "Graph \"%s\" has cycles; %d reversed edges\n", graphName(g), num_rev);
 		else
@@ -185,7 +190,7 @@ int main(int argc, char *argv[])
 	    }
 	} else {
 	    rv = -1;
-	    if (Verbose)
+	    if (opts.Verbose)
 		fprintf(stderr, "Graph \"%s\" is undirected\n", graphName(g));
 	}
 	graphviz_exit(rv);
