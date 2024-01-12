@@ -190,6 +190,10 @@ static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
 	do {
 	    const char *api = token(&nest, &s);
 	    const api_t gv_api = gvplugin_api(api);
+	    if (gv_api == (api_t)-1) {
+		agerr(AGERR, "config error: %s %s not found\n", package_path, api);
+		return 0;
+	    }
 	    do {
 		if (nest == 2) {
 		    type = token(&nest, &s);
