@@ -43,7 +43,7 @@ typedef struct {
 static FILE *inFile;
 static FILE *outFile;
 static int doWrite = 1;
-static int Verbose;
+static bool Verbose;
 static char *cmd;
 static int num_rev;
 
@@ -130,7 +130,7 @@ static void init(int argc, char *argv[])
 	    doWrite = 0;
 	    break;
 	case 'v':
-	    Verbose = 1;
+	    Verbose = true;
 	    break;
 	case '?':
 	    if (optopt == '?')
