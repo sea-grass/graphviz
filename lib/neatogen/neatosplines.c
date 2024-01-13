@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <assert.h>
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
@@ -458,7 +458,8 @@ static void makePolyline(edge_t * e) {
     make_polyline (line, &spl);
     if (Verbose > 1)
 	fprintf(stderr, "polyline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
+    assert(spl.pn >= 0);
+    clip_and_install(e, aghead(e), spl.ps, (size_t)spl.pn, &sinfo);
     addEdgeLabels(e);
 }
 
@@ -504,7 +505,8 @@ void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
     /* north why did you ever use int coords */
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    clip_and_install(e, aghead(e), spline.ps, spline.pn, &sinfo);
+    assert(spline.pn >= 0);
+    clip_and_install(e, aghead(e), spline.ps, (size_t)spline.pn, &sinfo);
     free(barriers);
     addEdgeLabels(e);
 }

@@ -233,7 +233,7 @@ bezier *new_spline(edge_t *e, size_t sz) {
  * edge.
  */
 void
-clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
+clip_and_install(edge_t *fe, node_t *hn, pointf *ps, size_t pn,
 		 splineInfo * info)
 {
     pointf p2;
@@ -248,8 +248,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 
     tn = agtail(fe);
     g = agraphof(tn);
-    assert(pn >= 0);
-    newspl = new_spline(fe, (size_t)pn);
+    newspl = new_spline(fe, pn);
 
     for (orig = fe; ED_to_orig(orig) != NULL && ED_edge_type(orig) != NORMAL;
          orig = ED_to_orig(orig));
@@ -278,7 +277,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
     if(clipTail && ND_shape(tn) && ND_shape(tn)->fns->insidefn) {
 	inside_context.s.n = tn;
 	inside_context.s.bp = tbox;
-	for (start = 0; start < (size_t)pn - 4; start += 3) {
+	for (start = 0; start < pn - 4; start += 3) {
 	    p2.x = ps[start + 3].x - ND_coord(tn).x;
 	    p2.y = ps[start + 3].y - ND_coord(tn).y;
 	    if (!ND_shape(tn)->fns->insidefn(&inside_context, p2))
@@ -290,7 +289,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
     if(clipHead && ND_shape(hn) && ND_shape(hn)->fns->insidefn) {
 	inside_context.s.n = hn;
 	inside_context.s.bp = hbox;
-	for (end = (size_t)pn - 4; end > 0; end -= 3) {
+	for (end = pn - 4; end > 0; end -= 3) {
 	    p2.x = ps[end].x - ND_coord(hn).x;
 	    p2.y = ps[end].y - ND_coord(hn).y;
 	    if (!ND_shape(hn)->fns->insidefn(&inside_context, p2))
@@ -298,8 +297,8 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	}
 	shape_clip0(&inside_context, hn, &ps[end], false);
     } else
-	end = (size_t)pn - 4;
-    for (; start < (size_t)pn - 4; start += 3)
+	end = pn - 4;
+    for (; start < pn - 4; start += 3)
 	if (! APPROXEQPT(ps[start], ps[start + 3], MILLIPOINT))
 	    break;
     for (; end > 0; end -= 3)
@@ -829,7 +828,6 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     int i, sgn, point_pair;
     double hy, ty, stepx, dx, dy, height;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -863,7 +861,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
         ty += stepy;
         hy += stepy;
         dx += sgn * stepx;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x + dx, tp.y - ty / 3};
         points[pointn++] = (pointf){tp.x + dx, np.y - dy};
@@ -902,7 +900,6 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     node_t *n;
     edge_t *e;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -973,7 +970,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
         ty += stepy;
         hy += stepy;
         dx += sgn * stepx;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x + dx, tp.y + ty / 3};
         points[pointn++] = (pointf){tp.x + dx, np.y + dy};
@@ -1011,7 +1008,6 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     node_t *n;
     edge_t *e;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -1046,7 +1042,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         tx += stepx;
         hx += stepx;
         dy += sgn * stepy;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x + tx / 3, tp.y + dy};
         points[pointn++] = (pointf){np.x + dx, tp.y + dy};
@@ -1084,7 +1080,6 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     node_t *n;
     edge_t *e;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -1122,7 +1117,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         tx += stepx;
         hx += stepx;
         dy += sgn * stepy;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x - tx / 3, tp.y + dy};
         points[pointn++] = (pointf){np.x - dx, tp.y + dy};
