@@ -382,7 +382,6 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cdt/libcdt.pc.in ${CMAKE_CURRENT_
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cgraph/libcgraph.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libcgraph.pc @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/gvc/libgvc.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libgvc.pc @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/gvpr/libgvpr.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libgvpr.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/edgepaint/liblab_gamut.pc.in ${CMAKE_CURRENT_BINARY_DIR}/liblab_gamut.pc @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/pathplan/libpathplan.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpathplan.pc @ONLY)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/xdot/libxdot.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libxdot.pc @ONLY)
 file(GLOB pcfiles "${CMAKE_CURRENT_BINARY_DIR}/*.pc")
