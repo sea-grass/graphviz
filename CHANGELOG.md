@@ -111,6 +111,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `dot` and `gml2gv` tools are now built with case-insensitive parsing
   by the CMake and MSBuild systems, as they always were by autotools, and
   in accordance with the graphviz specification. #2481
+- Putting nodes in a subgraph no longer causes their layout order to be
+  reversed. #1585
+- Edges are no longer lost when using subgraphs and record shapes in
+  combination. #1624
 
 ## [9.0.0] - 2023-09-11
 
