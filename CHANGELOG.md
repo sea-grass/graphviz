@@ -67,7 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   This library had no accompanying header, so using it was not easy. If you are
   using this library, please contact the maintainers to notify them of the
   existence of users. #2489
-- **Breaking**: `bezier.size` is now a `size_t`.
+- **Breaking**: `bezier.size` and `splines.size` are now `size_t`s.
 - **Breaking**: the gv.i and gv.cpp SWIG inputs are no longer included in a
   Graphviz installation. #2491
 - **Breaking**: the `gvrender_engine_t.beziercurve`,

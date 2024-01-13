@@ -791,7 +791,6 @@ void spline_edges(graph_t * g)
  */
 static void scaleEdge(edge_t * e, double xf, double yf)
 {
-    int i;
     pointf *pt;
     bezier *bez;
     pointf delh, delt;
@@ -802,7 +801,7 @@ static void scaleEdge(edge_t * e, double xf, double yf)
     delt.y = POINTS_PER_INCH * (ND_pos(agtail(e))[1] * (yf - 1.0));
 
     bez = ED_spl(e)->list;
-    for (i = 0; i < ED_spl(e)->size; i++) {
+    for (size_t i = 0; i < ED_spl(e)->size; i++) {
 	pt = bez->list;
 	for (size_t j = 0; j < bez->size; j++) {
 	    if (i == 0 && j == 0) {
@@ -871,12 +870,11 @@ static void scaleBB(graph_t * g, double xf, double yf)
  */
 static void translateE(edge_t * e, pointf offset)
 {
-    int i;
     pointf *pt;
     bezier *bez;
 
     bez = ED_spl(e)->list;
-    for (i = 0; i < ED_spl(e)->size; i++) {
+    for (size_t i = 0; i < ED_spl(e)->size; i++) {
 	pt = bez->list;
 	for (size_t j = 0; j < bez->size; j++) {
 	    pt->x -= offset.x;

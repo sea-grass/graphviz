@@ -1272,11 +1272,10 @@ static pointf
 polylineMidpoint (splines* spl, pointf* pp, pointf* pq)
 {
     bezier bz;
-    int i;
     double d, dist = 0;
     pointf pf, qf, mf;
 
-    for (i = 0; i < spl->size; i++) {
+    for (size_t i = 0; i < spl->size; i++) {
 	bz = spl->list[i];
 	for (size_t j = 0, k = 3; k < bz.size; j += 3, k += 3) {
 	    pf = bz.list[j];
@@ -1285,7 +1284,7 @@ polylineMidpoint (splines* spl, pointf* pp, pointf* pq)
 	}
     }
     dist /= 2;
-    for (i = 0; i < spl->size; i++) {
+    for (size_t i = 0; i < spl->size; i++) {
 	bz = spl->list[i];
 	for (size_t j = 0, k = 3; k < bz.size; j += 3, k += 3) {
 	    pf = bz.list[j];

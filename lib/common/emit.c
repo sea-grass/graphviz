@@ -2083,7 +2083,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 { 
     bezier bz;
     bezier bz0, bz_l, bz_r;
-    int i, rv;
+    int rv;
     colorsegs_t segs;
     char* endcolor = NULL;
     double left;
@@ -2101,7 +2101,7 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	return 1;
     
 
-    for (i = 0; i < ED_spl(e)->size; i++) {
+    for (size_t i = 0; i < ED_spl(e)->size; i++) {
 	left = 1;
 	bz = ED_spl(e)->list[i];
 	first = 1;
@@ -2201,7 +2201,7 @@ taperfun (edge_t* e)
 
 static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 {
-    int i, cnum, numc = 0, numsemi = 0;
+    int cnum, numc = 0, numsemi = 0;
     char *color, *pencolor, *fillcolor;
     char *headcolor, *tailcolor, *lastcolor;
     char *colors = NULL;
@@ -2301,7 +2301,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    offspl.list = gv_calloc(offspl.size, sizeof(bezier));
 	    tmpspl.list = gv_calloc(tmpspl.size, sizeof(bezier));
 	    numc2 = (2 + numc) / 2.0;
-	    for (i = 0; i < offspl.size; i++) {
+	    for (size_t i = 0; i < offspl.size; i++) {
 		bz = ED_spl(e)->list[i];
 		tmpspl.list[i].size = offspl.list[i].size = bz.size;
 		offlist = offspl.list[i].list = gv_calloc(bz.size, sizeof(pointf));
@@ -2350,7 +2350,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		    headcolor = tailcolor = color;
 		if (cnum == 1)
 		    tailcolor = color;
-		for (i = 0; i < tmpspl.size; i++) {
+		for (size_t i = 0; i < tmpspl.size; i++) {
 		    tmplist = tmpspl.list[i].list;
 		    offlist = offspl.list[i].list;
 		    for (size_t j = 0; j < tmpspl.list[i].size; j++) {
@@ -2383,7 +2383,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 			arrowsize, penwidth, bz.eflag);
 	    }
 	    free(colors);
-	    for (i = 0; i < offspl.size; i++) {
+	    for (size_t i = 0; i < offspl.size; i++) {
 		free(offspl.list[i].list);
 		free(tmpspl.list[i].list);
 	    }
@@ -2402,7 +2402,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 			gvrender_set_fillcolor(job, DEFAULT_COLOR);
 	        }
 	    }
-	    for (i = 0; i < ED_spl(e)->size; i++) {
+	    for (size_t i = 0; i < ED_spl(e)->size; i++) {
 		bz = ED_spl(e)->list[i];
 		gvrender_beziercurve(job, bz.list, bz.size, 0);
 		if (bz.sflag) {
@@ -2446,7 +2446,7 @@ static void emit_begin_edge(GVJ_t *job, edge_t *e, char **styles) {
   char *s;
   textlabel_t *lab = NULL, *tlab = NULL, *hlab = NULL;
   pointf *pbs = NULL;
-  int i, *pbs_n = NULL, pbs_poly_n = 0;
+  int *pbs_n = NULL, pbs_poly_n = 0;
   char *dflt_url = NULL;
   char *dflt_target = NULL;
   double penwidth;
@@ -2589,18 +2589,18 @@ static void emit_begin_edge(GVJ_t *job, edge_t *e, char **styles) {
   if (flags & (GVRENDER_DOES_MAPS | GVRENDER_DOES_TOOLTIPS)) {
     if (ED_spl(e) && (obj->url || obj->tooltip) &&
         (flags & GVRENDER_DOES_MAP_POLYGON)) {
-      int ns;
       splines *spl;
       double w2 = MAX(job->obj->penwidth / 2.0, 2.0);
 
       spl = ED_spl(e);
-      ns = spl->size; /* number of splines */
-      for (i = 0; i < ns; i++)
+      const size_t ns = spl->size; /* number of splines */
+      for (size_t i = 0; i < ns; i++)
         map_output_bspline(&pbs, &pbs_n, &pbs_poly_n, spl->list + i, w2);
       obj->url_bsplinemap_poly_n = pbs_poly_n;
       obj->url_bsplinemap_n = pbs_n;
       if (!(flags & GVRENDER_DOES_TRANSFORM)) {
         size_t nump;
+        int i;
         for (nump = 0, i = 0; i < pbs_poly_n; i++) {
           assert(pbs_n[i] >= 0);
           nump += (size_t)pbs_n[i];
@@ -3837,14 +3837,13 @@ static boxf bezier_bb(bezier bz)
 
 static void init_splines_bb(splines *spl)
 {
-    int i;
     bezier bz;
     boxf bb, b;
 
     assert(spl->size > 0);
     bz = spl->list[0];
     bb = bezier_bb(bz);
-    for (i = 0; i < spl->size; i++) {
+    for (size_t i = 0; i < spl->size; i++) {
         if (i > 0) {
             bz = spl->list[i];
             b = bezier_bb(bz);

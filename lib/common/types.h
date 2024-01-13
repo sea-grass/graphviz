@@ -98,7 +98,7 @@ extern "C" {
 
     typedef struct splines {
 	bezier *list;
-	int size;
+	size_t size;
 	boxf bb;
     } splines;
 

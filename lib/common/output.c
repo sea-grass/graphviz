@@ -107,7 +107,6 @@ static void writenodeandport(FILE *f, node_t *node, char *portname) {
 }
 
 void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
-    int i;
     char *tport, *hport;
     node_t *n;
     edge_t *e;
@@ -157,7 +156,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		tport = hport = "";
 	    if (ED_spl(e)) {
 		size_t splinePoints = 0;
-		for (i = 0; i < ED_spl(e)->size; i++) {
+		for (size_t i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
 		    splinePoints += bz.size;
 		}
@@ -165,7 +164,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		writenodeandport(f, agtail(e), tport);
 		writenodeandport(f, aghead(e), hport);
 		printint(f, " ", splinePoints);
-		for (i = 0; i < ED_spl(e)->size; i++) {
+		for (size_t i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
 		    for (size_t j = 0; j < bz.size; j++)
 			printpoint(f, bz.list[j]);
@@ -322,7 +321,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		    continue;
 		if (ED_spl(e) == NULL)
 		    continue;	/* reported in postproc */
-		for (int i = 0; i < ED_spl(e)->size; i++) {
+		for (size_t i = 0; i < ED_spl(e)->size; i++) {
 		    if (i > 0)
 			agxbputc(&xb, ';');
 		    if (ED_spl(e)->list[i].sflag) {

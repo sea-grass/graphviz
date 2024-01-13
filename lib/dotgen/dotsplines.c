@@ -162,17 +162,17 @@ static void swap_bezier(bezier *b) {
 
 static void swap_spline(splines * s)
 {
-  int sz = s->size;
+  const size_t sz = s->size;
 
   // reverse list
-  for (int i = 0; i < sz / 2; ++i) {
+  for (size_t i = 0; i < sz / 2; ++i) {
     bezier tmp = s->list[i];
     s->list[i] = s->list[sz - 1 - i];
     s->list[sz - 1 - i] = tmp;
   }
 
   // swap beziers
-  for (int i = 0; i < sz; ++i) {
+  for (size_t i = 0; i < sz; ++i) {
     swap_bezier(&s->list[i]);
   }
 }
