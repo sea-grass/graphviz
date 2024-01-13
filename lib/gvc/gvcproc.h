@@ -114,7 +114,7 @@
     void gvrender_ellipse(GVJ_t * job, pointf * AF, int filled);
     void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled);
     void gvrender_box(GVJ_t * job, boxf BF, int filled);
-    void gvrender_beziercurve(GVJ_t * job, pointf * AF, int n, int filled);
+    void gvrender_beziercurve(GVJ_t *job, pointf *AF, size_t n, int filled);
     void gvrender_polyline(GVJ_t * job, pointf * AF, int n);
     void gvrender_comment(GVJ_t * job, char *str);
     void gvrender_usershape(GVJ_t *job, char *name, pointf *AF, size_t n,

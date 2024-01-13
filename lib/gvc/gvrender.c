@@ -31,6 +31,7 @@
 #include <common/render.h>
 #include <gvc/gvcproc.h>
 #include <cgraph/strcasecmp.h>
+#include <limits.h>
 #include <stdlib.h>
 
 extern bool mapbool(const char *s);
@@ -582,19 +583,19 @@ void gvrender_box(GVJ_t * job, boxf B, int filled)
     gvrender_polygon(job, A, 4, filled);
 }
 
-void gvrender_beziercurve(GVJ_t *job, pointf *af, int n, int filled) {
+void gvrender_beziercurve(GVJ_t *job, pointf *af, size_t n, int filled) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
 	if (gvre->beziercurve && job->obj->pen != PEN_NONE) {
+	    assert(n <= INT_MAX);
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->beziercurve(job, af, n, filled);
+		gvre->beziercurve(job, af, (int)n, filled);
 	    else {
 		pointf *AF;
-		assert(n >= 0);
-		AF = gcalloc((size_t)n, sizeof(pointf));
-		gvrender_ptf_A(job, af, AF, (size_t)n);
-		gvre->beziercurve(job, AF, n, filled);
+		AF = gcalloc(n, sizeof(pointf));
+		gvrender_ptf_A(job, af, AF, n);
+		gvre->beziercurve(job, AF, (int)n, filled);
 		free(AF);
 	    }
 	}
