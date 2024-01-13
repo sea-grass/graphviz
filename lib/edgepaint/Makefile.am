@@ -11,9 +11,9 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt
 
 noinst_HEADERS = edge_distinct_coloring.h furtherest_point.h intersection.h lab_gamut.h lab.h node_distinct_coloring.h
-noinst_LTLIBRARIES = libedgepaint_C.la liblab_gamut_C.la
+noinst_LTLIBRARIES = libedgepaint_C.la
 
-libedgepaint_C_la_SOURCES = edge_distinct_coloring.c furtherest_point.c intersection.c lab.c node_distinct_coloring.c
-liblab_gamut_C_la_SOURCES = lab_gamut.c
+libedgepaint_C_la_SOURCES = edge_distinct_coloring.c furtherest_point.c \
+  intersection.c lab.c lab_gamut.c node_distinct_coloring.c
 
 EXTRA_DIST = edgepaintlib.vcxproj* lab_gamut.vcxproj*
