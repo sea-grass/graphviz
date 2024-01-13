@@ -106,8 +106,6 @@ static void writenodeandport(FILE *f, node_t *node, char *portname) {
 	printstring(f, ":", agcanonStr(portname));
 }
 
-/* _write_plain:
- */
 void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     int i;
     char *tport, *hport;
