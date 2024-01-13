@@ -117,7 +117,6 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     char* fillcolor;
 
     putstr = g->clos->disc.io->putstr;
-//    setup_graph(job, g);
     setYInvert(g);
     pt = GD_bb(g).UR;
     printdouble(f, "graph ", job->zoom);
