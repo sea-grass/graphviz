@@ -334,7 +334,8 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    pos++;
 
 	/* parsed successfully; create spline */
-	newspl = new_spline(e, npts);
+	assert(npts >= 0);
+	newspl = new_spline(e, (size_t)npts);
 	if (sflag) {
 	    newspl->sflag = stype;
 	    newspl->sp = sp;

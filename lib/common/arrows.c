@@ -15,6 +15,7 @@
 #include <common/render.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #define EPSILON .0001
@@ -281,8 +282,8 @@ static bool inside(inside_t * inside_context, pointf p)
     return DIST2(p, inside_context->a.p[0]) <= inside_context->a.r[0];
 }
 
-int arrowEndClip(edge_t* e, pointf * ps, int startp,
-                 int endp, bezier *spl, uint32_t eflag) {
+size_t arrowEndClip(edge_t* e, pointf * ps, size_t startp,
+                    size_t endp, bezier *spl, uint32_t eflag) {
     inside_t inside_context;
     pointf sp[4];
     double elen, elen2;
@@ -312,8 +313,8 @@ int arrowEndClip(edge_t* e, pointf * ps, int startp,
     return endp;
 }
 
-int arrowStartClip(edge_t* e, pointf * ps, int startp,
-                   int endp, bezier *spl, uint32_t sflag) {
+size_t arrowStartClip(edge_t* e, pointf * ps, size_t startp,
+                      size_t endp, bezier *spl, uint32_t sflag) {
     inside_t inside_context;
     pointf sp[4];
     double slen, slen2;
@@ -352,8 +353,8 @@ int arrowStartClip(edge_t* e, pointf * ps, int startp,
  * segment is x_1,y_1 x_2,y_2 x_3,y_3 x_0,y_0. With a good deal more work, we could guarantee
  * that the truncated spl clips to the arrow shape.
  */
-void arrowOrthoClip(edge_t *e, pointf *ps, int startp, int endp, bezier *spl,
-                    uint32_t sflag, uint32_t eflag) {
+void arrowOrthoClip(edge_t *e, pointf *ps, size_t startp, size_t endp,
+                    bezier *spl, uint32_t sflag, uint32_t eflag) {
     pointf p, q, r, s, t;
     double d, tlen, hlen, maxd;
 

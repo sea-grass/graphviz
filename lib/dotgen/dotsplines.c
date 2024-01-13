@@ -141,8 +141,8 @@ int portcmp(port p0, port p1)
 }
 
 static void swap_bezier(bezier *b) {
-  int sz = b->size;
-  for (int i = 0; i < sz / 2; ++i) { // reverse list of points
+  const size_t sz = b->size;
+  for (size_t i = 0; i < sz / 2; ++i) { // reverse list of points
     pointf tmp = b->list[i];
     b->list[i] = b->list[sz - 1 - i];
     b->list[sz - 1 - i] = tmp;
@@ -1202,7 +1202,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     graph_t* subg;
     node_t *auxt, *auxh;
     edge_t* auxe;
-    int     i, j;
+    int     i;
     double midx, midy, leftx, rightx;
     pointf   del;
     edge_t* hvye = NULL;
@@ -1318,7 +1318,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	bz->sp = transformf(auxbz->sp, del, GD_flip(g));
 	bz->eflag = auxbz->eflag;
 	bz->ep = transformf(auxbz->ep, del, GD_flip(g));
-	for (j = 0; j <  auxbz->size; ) {
+	for (size_t j = 0; j < auxbz->size; ) {
 	    pointf cp[4];
 	    cp[0] = bz->list[j] = transformf(auxbz->list[j], del, GD_flip(g));
 	    j++;

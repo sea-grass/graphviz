@@ -123,18 +123,18 @@ static double l2dist (pointf p0, pointf p1)
  * turn all curves into lines
  */
 static vararr_t pathtolines(bezier *bez) {
-    int i, j, step;
+    int step;
     double seglen, linelen = 0;
     vararr_t arr = {0};
     pointf p0, p1, V[4];
-    int n = bez->size;
+    const size_t n = bez->size;
     pointf* A = bez->list;
 
     insertArr(&arr, A[0], 0);
     V[3] = A[0];
-    for (i = 0; i + 3 < n; i += 3) {
+    for (size_t i = 0; i + 3 < n; i += 3) {
 	V[0] = V[3];
-	for (j = 1; j <= 3; j++)
+	for (size_t j = 1; j <= 3; j++)
 	    V[j] = A[i + j];
 	p0 = V[0];
 	for (step = 1; step <= BEZIERSUBDIVISION; step++) {

@@ -963,13 +963,13 @@ static void map_output_bspline (pointf **pbs, int **pbs_n, int *pbs_poly_n, bezi
     segitem_t* segp = segl;
     segitem_t* segprev;
     segitem_t* segnext;
-    int nc, j, k, cnt;
+    int cnt;
     pointf pts[4], pt1[50], pt2[50];
 
     MARK_FIRST_SEG(segl);
-    nc = (bp->size - 1)/3; /* nc is number of bezier curves */
-    for (j = 0; j < nc; j++) {
-        for (k = 0; k < 4; k++) {
+    const size_t nc = (bp->size - 1) / 3; // nc is number of bezier curves
+    for (size_t j = 0; j < nc; j++) {
+        for (size_t k = 0; k < 4; k++) {
             pts[k] = bp->list[3*j + k];
         }
         segp = approx_bezier (pts, segp);
@@ -2026,7 +2026,7 @@ static double approxLen (pointf* pts)
  */
 static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
 {
-    int i, j, k, cnt = (bz->size - 1)/3;
+    const size_t cnt = (bz->size - 1) / 3;
     double last, len, sum;
     pointf* pts;
     float r;
@@ -2043,13 +2043,14 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
     double* lens = gv_calloc(cnt, sizeof(double));
     sum = 0;
     pts = bz->list;
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	lens[i] = approxLen (pts);
 	sum += lens[i];
 	pts += 3;
     }
     len = t*sum;
     sum = 0;
+    size_t i;
     for (i = 0; i < cnt; i++) {
 	sum += lens[i];
 	if (sum >= len)
@@ -2060,9 +2061,10 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
     left->list = gv_calloc(left->size, sizeof(pointf));
     right->size = 3*(cnt-i) + 1;
     right->list = gv_calloc(right->size, sizeof(pointf));
+    size_t j;
     for (j = 0; j < left->size; j++)
 	left->list[j] = bz->list[j];
-    k = j - 4;
+    size_t k = j - 4;
     for (j = 0; j < right->size; j++)
 	right->list[j] = bz->list[k++];
 
@@ -2113,7 +2115,8 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 	    if (first) {
 		first = 0;
 		splitBSpline (&bz, s->t, &bz_l, &bz_r);
-		gvrender_beziercurve(job, bz_l.list, bz_l.size, 0);
+		assert(bz_l.size <= INT_MAX);
+		gvrender_beziercurve(job, bz_l.list, (int)bz_l.size, 0);
 		free (bz_l.list);
 		if (AEQ0(left)) {
 		    free (bz_r.list);
@@ -2121,7 +2124,8 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 		}
 	    }
 	    else if (AEQ0(left)) {
-		gvrender_beziercurve(job, bz_r.list, bz_r.size, 0);
+		assert(bz_r.size <= INT_MAX);
+		gvrender_beziercurve(job, bz_r.list, (int)bz_r.size, 0);
 		free (bz_r.list);
 		break;
 	    }
@@ -2129,7 +2133,8 @@ static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int
 		bz0 = bz_r;
 		splitBSpline(&bz0, s->t / (left + s->t), &bz_l, &bz_r);
 		free (bz0.list);
-		gvrender_beziercurve(job, bz_l.list, bz_l.size, 0);
+		assert(bz_l.size <= INT_MAX);
+		gvrender_beziercurve(job, bz_l.list, (int)bz_l.size, 0);
 		free (bz_l.list);
 	    }
 		
@@ -2201,7 +2206,7 @@ taperfun (edge_t* e)
 
 static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 {
-    int i, j, cnum, numc = 0, numsemi = 0;
+    int i, cnum, numc = 0, numsemi = 0;
     char *color, *pencolor, *fillcolor;
     char *headcolor, *tailcolor, *lastcolor;
     char *colors = NULL;
@@ -2307,6 +2312,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		offlist = offspl.list[i].list = gv_calloc(bz.size, sizeof(pointf));
 		tmplist = tmpspl.list[i].list = gv_calloc(bz.size, sizeof(pointf));
 		pf3 = bz.list[0];
+		size_t j;
 		for (j = 0; j < bz.size - 1; j += 3) {
 		    pf0 = pf3;
 		    pf1 = bz.list[j + 1];
@@ -2352,11 +2358,12 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		for (i = 0; i < tmpspl.size; i++) {
 		    tmplist = tmpspl.list[i].list;
 		    offlist = offspl.list[i].list;
-		    for (j = 0; j < tmpspl.list[i].size; j++) {
+		    for (size_t j = 0; j < tmpspl.list[i].size; j++) {
 			tmplist[j].x += offlist[j].x;
 			tmplist[j].y += offlist[j].y;
 		    }
-		    gvrender_beziercurve(job, tmplist, tmpspl.list[i].size, 0);
+		    assert(tmpspl.list[i].size <= INT_MAX);
+		    gvrender_beziercurve(job, tmplist, (int)tmpspl.list[i].size, 0);
 		}
 	    }
 	    if (bz.sflag) {
@@ -2403,7 +2410,8 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    }
 	    for (i = 0; i < ED_spl(e)->size; i++) {
 		bz = ED_spl(e)->list[i];
-		gvrender_beziercurve(job, bz.list, bz.size, 0);
+		assert(bz.size <= INT_MAX);
+		gvrender_beziercurve(job, bz.list, (int)bz.size, 0);
 		if (bz.sflag) {
 		    arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0],
 		              arrowsize, penwidth, bz.sflag);
@@ -3811,14 +3819,13 @@ char **parse_style(char *s)
 
 static boxf bezier_bb(bezier bz)
 {
-    int i;
     pointf p, p1, p2;
     boxf bb;
 
     assert(bz.size > 0);
     assert(bz.size % 3 == 1);
     bb.LL = bb.UR = bz.list[0];
-    for (i = 1; i < bz.size;) {
+    for (size_t i = 1; i < bz.size;) {
 	/* take mid-point between two control points for bb calculation */
 	p1=bz.list[i];
 	i++;

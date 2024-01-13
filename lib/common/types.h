@@ -100,7 +100,7 @@ extern "C" {
 
     typedef struct bezier {
 	pointf *list;
-	int size;
+	size_t size;
 	uint32_t sflag;
 	uint32_t eflag;
 	pointf sp;
