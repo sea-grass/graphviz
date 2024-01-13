@@ -1224,7 +1224,6 @@ void build_ranks(graph_t * g, int pass)
     node_t *n, *n0, *ns;
     edge_t **otheredges;
     nodequeue *q;
-    bool walkbackwards;  /* if this is a cluster so need to walk GD_nlist backward to preserve input node order */
 
     q = new_queue(GD_n_nodes(g));
     for (n = GD_nlist(g); n; n = ND_next(n))
@@ -1245,15 +1244,17 @@ void build_ranks(graph_t * g, int pass)
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++)
 	GD_rank(g)[i].n = 0;
 
-    if (g == agroot(g)) {
-	walkbackwards = false;
+    const bool walkbackwards = g != agroot(g); // if this is a cluster, need to
+                                               // walk GD_nlist backward to
+                                               // preserve input node order
+    if (walkbackwards) {
+	for (ns = GD_nlist(g); ND_next(ns); ns = ND_next(ns)) {
+	    ;
+	}
+    } else {
 	ns = GD_nlist(g);
     }
-    else {
-	walkbackwards = true;
-	for (ns = GD_nlist(g); ND_next(ns); ns = ND_next(ns));
-    }
-    for (n = ns; n; n = walkbackwards? ND_prev(n):ND_next(n)) {
+    for (n = ns; n; n = walkbackwards ? ND_prev(n) : ND_next(n)) {
 	otheredges = pass == 0 ? ND_in(n).list : ND_out(n).list;
 	if (otheredges[0] != NULL)
 	    continue;
