@@ -7,7 +7,7 @@ if(with_smyrna)
   find_package(PkgConfig REQUIRED)
   pkg_check_modules(XRENDER REQUIRED xrender)
 
-  add_library(glcomp
+  add_library(glcomp OBJECT
     glcompbutton.h
     glcompdefs.h
     glcompfont.h
