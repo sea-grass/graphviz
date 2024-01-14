@@ -2196,6 +2196,32 @@ def test_2481():
     assert "syntax error" not in stderr, "dot displayed a syntax error message"
 
 
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2484",
+    strict=platform.system() == "Linux",
+)
+def test_2484():
+    """
+    Graphviz context should not preserve state across calls
+    https://gitlab.com/graphviz/graphviz/-/issues/2484
+    """
+
+    # find our co-located driver
+    c_src = (Path(__file__).parent / "2484.c").resolve()
+    assert c_src.exists(), "missing test case"
+
+    # find co-located input to the driver
+    dot_src = (Path(__file__).parent / "2484.dot").resolve()
+    assert dot_src.exists(), "missing test case"
+
+    # compile and run it
+    run_c(
+        c_src,
+        ["-Kdot", "-Tpng", str(dot_src), "-o", os.devnull],
+        link=["cgraph", "gvc"],
+    )
+
+
 def test_package_version():
     """
     The graphviz_version.h header should define a non-empty PACKAGE_VERSION
