@@ -305,7 +305,6 @@ right_mult_with_vector(vtx_data * matrix, int n, double *vector,
 	    res += matrix[i].ewgts[j] * vector[matrix[i].edges[j]];
 	result[i] = res;
     }
-    /* orthog1(n,vector); */
 }
 
 void
@@ -321,7 +320,6 @@ right_mult_with_vector_f(float **matrix, int n, double *vector,
 	    res += matrix[i][j] * vector[j];
 	result[i] = res;
     }
-    /* orthog1(n,vector); */
 }
 
 void
