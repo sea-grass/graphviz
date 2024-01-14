@@ -118,6 +118,7 @@ win_flex --case-insensitive --outfile=scan.c scan.l</Command>
     <ClInclude Include="unused.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="acyclic.c" />
     <ClCompile Include="agerror.c" />
     <ClCompile Include="apply.c" />
     <ClCompile Include="attr.c" />

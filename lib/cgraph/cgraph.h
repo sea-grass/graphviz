@@ -673,6 +673,25 @@ and edges are embedded in main graph objects but allocated separately in subgrap
 #define EDGEOF(sn,rep)		(AGSNMAIN(sn)?((Agedge_t*)((unsigned char*)(rep) - offsetof(Agedge_t,seq_link))) : ((Dthold_t*)(rep))->obj)
 /// @}
 
+/// options for passing to `graphviz_acyclic`
+typedef struct {
+  FILE *outFile;
+  bool doWrite;
+  bool Verbose;
+} graphviz_acyclic_options_t;
+
+/// programmatic access to `acyclic`
+///
+/// See `man acyclic` for an explanation of the `acyclic` tool.
+///
+/// \param g Graph to operate on
+/// \param opts Options to control acyclic algorithm
+/// \param num_rev [inout] Running total of reversed edges
+/// \return True if a cycle was found, indicating failure
+CGRAPH_API bool graphviz_acyclic(Agraph_t *g,
+                                 const graphviz_acyclic_options_t *opts,
+                                 size_t *num_rev);
+
 /// options for passing to `graphviz_tred`
 typedef struct {
   bool Verbose;
