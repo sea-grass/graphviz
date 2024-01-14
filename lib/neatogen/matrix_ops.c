@@ -103,7 +103,6 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 
     }
 
-
     /* sort vectors by their evals, for overcoming possible mis-convergence: */
     for (i = 0; i < neigs - 1; i++) {
 	largest_index = i;
@@ -130,15 +129,11 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
     return (iteration <= Max_iterations);
 }
 
-
-
 void
 mult_dense_mat(double **A, float **B, int dim1, int dim2, int dim3,
 	       float ***CC)
 {
-/*
-  A is dim1 x dim2, B is dim2 x dim3, C = A x B 
-*/
+  // A is dim1 × dim2, B is dim2 × dim3, C = A × B
 
     double sum;
     int i, j, k;
@@ -165,9 +160,8 @@ void
 mult_dense_mat_d(double **A, float **B, int dim1, int dim2, int dim3,
 		 double ***CC)
 {
-/*
-  A is dim1 x dim2, B is dim2 x dim3, C = A x B 
-*/
+  // A is dim1 × dim2, B is dim2 × dim3, C = A × B
+
     int i, j, k;
     double sum;
 
@@ -194,9 +188,7 @@ void
 mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
 				int dim2, float ***CC)
 {
-/*
-  A is dim1 x dim1 and sparse, B is dim2 x dim1, C = A x B 
-*/
+  // A is dim1 × dim1 and sparse, B is dim2 × dim1, C = A × B
 
     int i, j, k;
     double sum;
@@ -360,7 +352,8 @@ right_mult_with_vector_transpose(double **matrix,
 				 int dim1, int dim2,
 				 double *vector, double *result)
 {
-    /* matrix is dim2 x dim1, vector has dim2 components, result=matrix^T x vector */
+    // matrix is dim2 × dim1, vector has dim2 components,
+    // result = matrixᵀ × vector
     int i, j;
 
     double res;
@@ -377,7 +370,8 @@ right_mult_with_vector_d(double **matrix,
 			 int dim1, int dim2,
 			 double *vector, double *result)
 {
-    /* matrix is dim1 x dim2, vector has dim2 components, result=matrix x vector */
+    // matrix is dim1 × dim2, vector has dim2 components,
+    // result = matrix × vector
     int i, j;
 
     double res;
@@ -388,7 +382,6 @@ right_mult_with_vector_d(double **matrix,
 	result[i] = res;
     }
 }
-
 
 /*****************************
 ** Single precision (float) **
