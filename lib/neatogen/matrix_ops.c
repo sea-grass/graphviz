@@ -142,8 +142,8 @@ mult_dense_mat(double **A, float **B, int dim1, int dim2, int dim3,
 
     double sum;
     int i, j, k;
-    float *storage = malloc(dim1 * dim3 * sizeof(A[0]));
-    float **C = *CC = malloc(dim1 * sizeof(A));
+    float *storage = gv_calloc(dim1 * dim3, sizeof(A[0]));
+    float **C = *CC = gv_calloc(dim1, sizeof(A));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
