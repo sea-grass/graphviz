@@ -198,20 +198,13 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
   A is dim1 x dim1 and sparse, B is dim2 x dim1, C = A x B 
 */
 
-    float *storage;
     int i, j, k;
     double sum;
     float *ewgts;
     int *edges;
     int nedges;
-    float **C = *CC;
-    if (C != NULL) {
-	storage = realloc(C[0], dim1 * dim2 * sizeof(A[0]));
-	*CC = C = realloc(C, dim1 * sizeof(A));
-    } else {
-	storage = malloc(dim1 * dim2 * sizeof(A[0]));
-	*CC = C = malloc(dim1 * sizeof(A));
-    }
+    float *storage = malloc(dim1 * dim2 * sizeof(A[0]));
+    float **C = *CC = malloc(dim1 * sizeof(A));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
