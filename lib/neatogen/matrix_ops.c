@@ -52,7 +52,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	}
 	len = norm(curr_vector, n - 1);
 	if (len < 1e-10) {
-	    /* We have chosen a vector colinear with prvious ones */
+	    // we have chosen a vector colinear with previous ones
 	    goto choose;
 	}
 	vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
