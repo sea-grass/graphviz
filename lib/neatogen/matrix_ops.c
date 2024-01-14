@@ -142,15 +142,8 @@ mult_dense_mat(double **A, float **B, int dim1, int dim2, int dim3,
 
     double sum;
     int i, j, k;
-    float *storage;
-    float **C = *CC;
-    if (C != NULL) {
-	storage = realloc(C[0], dim1 * dim3 * sizeof(A[0]));
-	*CC = C = realloc(C, dim1 * sizeof(A));
-    } else {
-	storage = malloc(dim1 * dim3 * sizeof(A[0]));
-	*CC = C = malloc(dim1 * sizeof(A));
-    }
+    float *storage = malloc(dim1 * dim3 * sizeof(A[0]));
+    float **C = *CC = malloc(dim1 * sizeof(A));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
