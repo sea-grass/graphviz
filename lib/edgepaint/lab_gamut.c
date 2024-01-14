@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <edgepaint/lab_gamut.h>
+#include <stddef.h>
 
 const signed char lab_gamut_data[] = {
 0,0,0,0,
@@ -10745,4 +10746,4 @@ const signed char lab_gamut_data[] = {
 100,0,0,0,
 };
 
-int lab_gamut_data_size = sizeof(lab_gamut_data)/sizeof(signed char);
+const size_t lab_gamut_data_size = sizeof(lab_gamut_data) / sizeof(signed char);

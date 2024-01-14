@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2014 AT&T Intellectual Property 
+ * Copyright (c) 2014 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -9,6 +9,8 @@
  *************************************************************************/
 
 #pragma once
+
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -37,7 +39,7 @@ extern "C" {
  *   https://en.wikipedia.org/wiki/CIELAB_color_space
  */
 LAB_GAMUT_API extern const signed char lab_gamut_data[];
-LAB_GAMUT_API extern int lab_gamut_data_size;
+LAB_GAMUT_API extern const size_t lab_gamut_data_size;
 
 #undef LAB_GAMUT_API
 

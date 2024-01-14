@@ -254,7 +254,6 @@ EXCLUDE = (
     "lib/edgepaint/lab.c",
     "lib/edgepaint/lab.h",
     "lib/edgepaint/lab_gamut.c",
-    "lib/edgepaint/lab_gamut.h",
     "lib/edgepaint/node_distinct_coloring.c",
     "lib/expr/excc.c",
     "lib/expr/excontext.c",
