@@ -25,7 +25,7 @@ static int ntry, totalsearch;
 
 void ELcleanup(void)
 {
-    freeinit(&hfl, sizeof **ELhash);
+    freeinit(&hfl, sizeof(**ELhash));
     free(ELhash);
     ELhash = NULL;
 }
@@ -34,7 +34,7 @@ void ELinitialize(void)
 {
     int i;
 
-    freeinit(&hfl, sizeof **ELhash);
+    freeinit(&hfl, sizeof(**ELhash));
     ELhashsize = 2 * sqrt_nsites;
     if (ELhash == NULL)
 	ELhash = gv_calloc(ELhashsize, sizeof(Halfedge *));
