@@ -30,7 +30,7 @@ void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
 		 int reweight_graph)
 {
 /* Compute 'dim'-dimensional high-dimensional embedding (HDE) for the 'n' nodes
-  The embedding is based on chossing 'dim' pivots, and associating each
+  The embedding is based on choosing 'dim' pivots, and associating each
   coordinate with a unique pivot, assigning it to the graph-theoretic distances 
   of all nodes from the pivots
 */
