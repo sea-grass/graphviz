@@ -203,8 +203,8 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
     float *ewgts;
     int *edges;
     int nedges;
-    float *storage = malloc(dim1 * dim2 * sizeof(A[0]));
-    float **C = *CC = malloc(dim1 * sizeof(A));
+    float *storage = gv_calloc(dim1 * dim2, sizeof(A[0]));
+    float **C = *CC = gv_calloc(dim1, sizeof(A));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
