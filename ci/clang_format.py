@@ -639,7 +639,6 @@ EXCLUDE = (
     "plugin/xlib/gvdevice_xlib.c",
     "plugin/xlib/gvplugin_xlib.c",
     "tclpkg/gdtclft/gdtclft.c",
-    "tclpkg/gv/gv.cpp",
     "tclpkg/gv/gv_builtins.c",
     "tclpkg/gv/gv_dummy_init.c",
     "tclpkg/gv/gv_java_init.c",
