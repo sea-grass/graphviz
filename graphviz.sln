@@ -175,8 +175,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "edgepaint", "cmd\edgepaint\
 		{C5CEB09E-79AF-4091-ACCF-D28EC3D7D90F} = {C5CEB09E-79AF-4091-ACCF-D28EC3D7D90F}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lab_gamut", "lib\edgepaint\lab_gamut.vcxproj", "{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ccomps", "cmd\tools\ccomps.vcxproj", "{1B030847-602F-4095-8FA2-E8B5CF793F60}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvplugin_gdiplus", "plugin\gdiplus\gvplugin_gdiplus.vcxproj", "{0F4D5D8F-F4D6-4A5D-97E0-9B482257F493}"
@@ -533,12 +531,6 @@ Global
 		{B7A03994-C134-4FF7-98B4-97B5579EF13D}.Release|Win32.ActiveCfg = Release|Win32
 		{B7A03994-C134-4FF7-98B4-97B5579EF13D}.Release|Win32.Build.0 = Release|Win32
 		{B7A03994-C134-4FF7-98B4-97B5579EF13D}.Release|x64.ActiveCfg = Release|Win32
-		{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}.Debug|Win32.Build.0 = Debug|Win32
-		{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}.Debug|x64.ActiveCfg = Debug|Win32
-		{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}.Release|Win32.ActiveCfg = Release|Win32
-		{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}.Release|Win32.Build.0 = Release|Win32
-		{A1E78E36-1C11-4AB4-AB43-8BB7933075FB}.Release|x64.ActiveCfg = Release|Win32
 		{1B030847-602F-4095-8FA2-E8B5CF793F60}.Debug|Win32.ActiveCfg = Debug|Win32
 		{1B030847-602F-4095-8FA2-E8B5CF793F60}.Debug|Win32.Build.0 = Debug|Win32
 		{1B030847-602F-4095-8FA2-E8B5CF793F60}.Debug|x64.ActiveCfg = Debug|Win32

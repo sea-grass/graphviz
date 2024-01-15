@@ -113,10 +113,6 @@
       <Project>{b1aa9fd1-0d24-44df-8cad-aea73b52b3ec}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\..\lib\edgepaint\lab_gamut.vcxproj">
-      <Project>{a1e78e36-1c11-4ab4-ab43-8bb7933075fb}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\..\lib\gvc.vcxproj">
       <Project>{15229511-9f6c-48a5-9194-660ca6492563}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
