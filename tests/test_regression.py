@@ -3251,6 +3251,20 @@ def test_2473_2():
         )
 
 
+def test_2476():
+    """
+    tweaking `mclimit` should not lead to a “trouble in init_rank” failure
+    https://gitlab.com/graphviz/graphviz/-/issues/2476
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2476.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    subprocess.check_call(["dot", "-Tsvg", "-Gmclimit=0.5", "-o", os.devnull, input])
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
