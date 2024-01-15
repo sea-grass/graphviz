@@ -120,6 +120,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reversed. #1585
 - Edges are no longer lost when using subgraphs and record shapes in
   combination. #1624
+- A malformed config6 file that leads to plugin search failing no longer causes
+  out-of-bounds memory reads. This now causes an error message and graceful
+  failure. #2441
 
 ## [9.0.0] - 2023-09-11
 
