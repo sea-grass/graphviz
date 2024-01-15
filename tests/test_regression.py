@@ -1541,6 +1541,23 @@ def test_1931():
     assert "line 5\nline 6" in xdot
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1939"
+)
+def test_1939():
+    """
+    clustering should not cause “trouble in init_rank” errors
+    https://gitlab.com/graphviz/graphviz/-/issues/1939
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1939.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("svg", input)
+
+
 @pytest.mark.xfail()  # FIXME
 def test_1949():
     """
