@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/mem.h>
 #include <neatogen/hedges.h>
 #include <common/render.h>
@@ -24,7 +25,7 @@ static int ntry, totalsearch;
 
 void ELcleanup(void)
 {
-    freeinit(&hfl, sizeof **ELhash);
+    freeinit(&hfl, sizeof(**ELhash));
     free(ELhash);
     ELhash = NULL;
 }
@@ -33,10 +34,10 @@ void ELinitialize(void)
 {
     int i;
 
-    freeinit(&hfl, sizeof **ELhash);
+    freeinit(&hfl, sizeof(**ELhash));
     ELhashsize = 2 * sqrt_nsites;
     if (ELhash == NULL)
-	ELhash = N_GNEW(ELhashsize, Halfedge *);
+	ELhash = gv_calloc(ELhashsize, sizeof(Halfedge *));
     for (i = 0; i < ELhashsize; ++i)
 	ELhash[i] = NULL;
     ELleftend = HEcreate(NULL, 0);

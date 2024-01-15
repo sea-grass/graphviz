@@ -8,9 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
-#include <common/memory.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -23,8 +22,8 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
     /* compute the 'neigs' top eigenvectors of 'square_mat' using power iteration */
 
     int i, j;
-    double *tmp_vec = N_GNEW(n, double);
-    double *last_vec = N_GNEW(n, double);
+    double *tmp_vec = gv_calloc(n, sizeof(double));
+    double *last_vec = gv_calloc(n, sizeof(double));
     double *curr_vector;
     double len;
     double angle;
@@ -53,7 +52,7 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 	}
 	len = norm(curr_vector, n - 1);
 	if (len < 1e-10) {
-	    /* We have chosen a vector colinear with prvious ones */
+	    // we have chosen a vector colinear with previous ones
 	    goto choose;
 	}
 	vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);
@@ -104,7 +103,6 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
 
     }
 
-
     /* sort vectors by their evals, for overcoming possible mis-convergence: */
     for (i = 0; i < neigs - 1; i++) {
 	largest_index = i;
@@ -131,27 +129,16 @@ bool power_iteration(double **square_mat, int n, int neigs, double **eigs,
     return (iteration <= Max_iterations);
 }
 
-
-
 void
 mult_dense_mat(double **A, float **B, int dim1, int dim2, int dim3,
 	       float ***CC)
 {
-/*
-  A is dim1 x dim2, B is dim2 x dim3, C = A x B 
-*/
+  // A is dim1 × dim2, B is dim2 × dim3, C = A × B
 
     double sum;
     int i, j, k;
-    float *storage;
-    float **C = *CC;
-    if (C != NULL) {
-	storage = realloc(C[0], dim1 * dim3 * sizeof(A[0]));
-	*CC = C = realloc(C, dim1 * sizeof(A));
-    } else {
-	storage = malloc(dim1 * dim3 * sizeof(A[0]));
-	*CC = C = malloc(dim1 * sizeof(A));
-    }
+    float *storage = gv_calloc(dim1 * dim3, sizeof(A[0]));
+    float **C = *CC = gv_calloc(dim1, sizeof(A));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
@@ -173,21 +160,13 @@ void
 mult_dense_mat_d(double **A, float **B, int dim1, int dim2, int dim3,
 		 double ***CC)
 {
-/*
-  A is dim1 x dim2, B is dim2 x dim3, C = A x B 
-*/
-    double **C = *CC;
-    double *storage;
+  // A is dim1 × dim2, B is dim2 × dim3, C = A × B
+
     int i, j, k;
     double sum;
 
-    if (C != NULL) {
-	storage = realloc(C[0], dim1 * dim3 * sizeof(double));
-	*CC = C = realloc(C, dim1 * sizeof(double *));
-    } else {
-	storage = malloc(dim1 * dim3 * sizeof(double));
-	*CC = C = malloc(dim1 * sizeof(double *));
-    }
+    double *storage = gv_calloc(dim1 * dim3, sizeof(double));
+    double **C = *CC = gv_calloc(dim1, sizeof(double *));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
@@ -209,24 +188,15 @@ void
 mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
 				int dim2, float ***CC)
 {
-/*
-  A is dim1 x dim1 and sparse, B is dim2 x dim1, C = A x B 
-*/
+  // A is dim1 × dim1 and sparse, B is dim2 × dim1, C = A × B
 
-    float *storage;
     int i, j, k;
     double sum;
     float *ewgts;
     int *edges;
     int nedges;
-    float **C = *CC;
-    if (C != NULL) {
-	storage = realloc(C[0], dim1 * dim2 * sizeof(A[0]));
-	*CC = C = realloc(C, dim1 * sizeof(A));
-    } else {
-	storage = malloc(dim1 * dim2 * sizeof(A[0]));
-	*CC = C = malloc(dim1 * sizeof(A));
-    }
+    float *storage = gv_calloc(dim1 * dim2, sizeof(A[0]));
+    float **C = *CC = gv_calloc(dim1, sizeof(A));
 
     for (i = 0; i < dim1; i++) {
 	C[i] = storage;
@@ -306,7 +276,6 @@ right_mult_with_vector(vtx_data * matrix, int n, double *vector,
 	    res += matrix[i].ewgts[j] * vector[matrix[i].edges[j]];
 	result[i] = res;
     }
-    /* orthog1(n,vector); */
 }
 
 void
@@ -322,7 +291,6 @@ right_mult_with_vector_f(float **matrix, int n, double *vector,
 	    res += matrix[i][j] * vector[j];
 	result[i] = res;
     }
-    /* orthog1(n,vector); */
 }
 
 void
@@ -384,7 +352,8 @@ right_mult_with_vector_transpose(double **matrix,
 				 int dim1, int dim2,
 				 double *vector, double *result)
 {
-    /* matrix is dim2 x dim1, vector has dim2 components, result=matrix^T x vector */
+    // matrix is dim2 × dim1, vector has dim2 components,
+    // result = matrixᵀ × vector
     int i, j;
 
     double res;
@@ -401,7 +370,8 @@ right_mult_with_vector_d(double **matrix,
 			 int dim1, int dim2,
 			 double *vector, double *result)
 {
-    /* matrix is dim1 x dim2, vector has dim2 components, result=matrix x vector */
+    // matrix is dim1 × dim2, vector has dim2 components,
+    // result = matrix × vector
     int i, j;
 
     double res;
@@ -412,7 +382,6 @@ right_mult_with_vector_d(double **matrix,
 	result[i] = res;
     }
 }
-
 
 /*****************************
 ** Single precision (float) **

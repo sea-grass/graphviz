@@ -409,17 +409,15 @@ findInside(Ppoly_t ** polys, int n_polys, polygon* polygon_list)
 int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 {
     int i, j, vno, nverts, found;
-    vertex *vertex_list;
-    polygon *polygon_list;
     boxf bb;
     double x, y;
 
-    polygon_list = N_GNEW(n_polys, polygon);
+    polygon *polygon_list = gv_calloc(n_polys, sizeof(polygon));
 
     for (i = nverts = 0; i < n_polys; i++)
 	nverts += polys[i]->pn;
 
-    vertex_list = N_GNEW(nverts, vertex);
+    vertex *vertex_list = gv_calloc(nverts, sizeof(vertex));
 
     for (i = vno = 0; i < n_polys; i++) {
 	polygon_list[i].start = &vertex_list[vno];

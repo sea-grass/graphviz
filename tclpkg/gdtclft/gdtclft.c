@@ -389,7 +389,7 @@ static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
 
     /* If we get here, the option doesn't match. */
     Tcl_AppendResult(interp, "bad option \"", Tcl_GetString(objv[1]), "\": should be ", 0);
-    for (subi = 0; subi < (sizeof subcmdVec) / (sizeof subcmdVec[0]); subi++)
+    for (subi = 0; subi < sizeof(subcmdVec) / sizeof(subcmdVec[0]); subi++)
 	Tcl_AppendResult(interp, (subi > 0 ? ", " : ""), subcmdVec[subi].cmd, 0);
     return TCL_ERROR;
 }
@@ -644,7 +644,7 @@ tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     gdImagePtr im;
     int subi, nsub, i, args[3];
 
-    nsub = (sizeof colorCmdVec) / (sizeof colorCmdVec[0]);
+    nsub = sizeof(colorCmdVec) / sizeof(colorCmdVec[0]);
     if (argc >= 3) {
 	/* Find the subcommand. */
 	for (subi = 0; subi < nsub; subi++) {
