@@ -141,8 +141,8 @@ int portcmp(port p0, port p1)
 }
 
 static void swap_bezier(bezier *b) {
-  int sz = b->size;
-  for (int i = 0; i < sz / 2; ++i) { // reverse list of points
+  const size_t sz = b->size;
+  for (size_t i = 0; i < sz / 2; ++i) { // reverse list of points
     pointf tmp = b->list[i];
     b->list[i] = b->list[sz - 1 - i];
     b->list[sz - 1 - i] = tmp;
@@ -989,7 +989,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     int pn;
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
-    int i, pointn;
+    int i;
     double leftend, rightend, ctrx, ctry, miny, maxy;
     double uminx, umaxx;
     double lminx=0.0, lmaxx=0.0;
@@ -1011,7 +1011,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     
     /* do first edge */
     e = earray[0];
-    pointn = 0;
+    size_t pointn = 0;
     points[pointn++] = tp;
     points[pointn++] = tp;
     points[pointn++] = hp;
@@ -1080,7 +1080,8 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	ED_label(e)->pos.x = ctrx;
 	ED_label(e)->pos.y = ctry;
 	ED_label(e)->set = true;
-	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	assert(pn >= 0);
+	clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
 	free(ps);
     }
 
@@ -1134,7 +1135,8 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	    free(earray);
 	    return;
 	}
-	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	assert(pn >= 0);
+	clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
 	free(ps);
     }
    
@@ -1146,7 +1148,7 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
 {
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
-    int i, pointn;
+    int i;
     double stepy, dy;
 
     tp = add_pointf(ND_coord(tn), ED_tail_port(e).p);
@@ -1157,7 +1159,7 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
 
     for (i = 0; i < cnt; i++) {
 	e = edges[ind + i];
-	pointn = 0;
+	size_t pointn = 0;
 	if (et == EDGETYPE_SPLINE || et == EDGETYPE_LINE) {
 	    points[pointn++] = tp;
 	    points[pointn++] = (pointf){(2 * tp.x + hp.x) / 3, dy};
@@ -1202,7 +1204,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     graph_t* subg;
     node_t *auxt, *auxh;
     edge_t* auxe;
-    int     i, j;
+    int     i;
     double midx, midy, leftx, rightx;
     pointf   del;
     edge_t* hvye = NULL;
@@ -1318,7 +1320,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	bz->sp = transformf(auxbz->sp, del, GD_flip(g));
 	bz->eflag = auxbz->eflag;
 	bz->ep = transformf(auxbz->ep, del, GD_flip(g));
-	for (j = 0; j <  auxbz->size; ) {
+	for (size_t j = 0; j < auxbz->size; ) {
 	    pointf cp[4];
 	    cp[0] = bz->list[j] = transformf(auxbz->list[j], del, GD_flip(g));
 	    j++;
@@ -1444,7 +1446,8 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
 	    return;
 	}
     }
-    clip_and_install(e, aghead(e), ps, pn, &sinfo);
+    assert(pn >= 0);
+    clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
     if (ps_needs_free)
 	free(ps);
 }
@@ -1514,7 +1517,8 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
 	    free(ps);
 	    return;
 	}
-	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	assert(pn >= 0);
+	clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
 	free(ps);
 	P->nbox = 0;
     }
@@ -1639,7 +1643,8 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
 	    free(ps);
 	    return;
 	}
-	clip_and_install(e, aghead(e), ps, pn, &sinfo);
+	assert(pn >= 0);
+	clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
 	free(ps);
 	P->nbox = 0;
     }
@@ -1917,7 +1922,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     /* make copies of the spline points, one per multi-edge */
 
     if (cnt == 1) {
-	clip_and_install(fe, hn, points_at(&pointfs, 0), (int)points_size(&pointfs),
+	clip_and_install(fe, hn, points_at(&pointfs, 0), points_size(&pointfs),
 	                 &sinfo);
 	points_free(&pointfs);
 	points_free(&pointfs2);
@@ -1930,7 +1935,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     for (size_t k = 0; k < points_size(&pointfs); k++)
 	points_append(&pointfs2, points_get(&pointfs, k));
     clip_and_install(fe, hn, points_at(&pointfs2, 0),
-                     (int)points_size(&pointfs2), &sinfo);
+                     points_size(&pointfs2), &sinfo);
     for (j = 1; j < cnt; j++) {
 	e = edges[ind + j];
 	if (ED_tree_index(e) & BWDEDGE) {
@@ -1943,7 +1948,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	for (size_t k = 0; k < points_size(&pointfs); k++)
 	    points_append(&pointfs2, points_get(&pointfs, k));
 	clip_and_install(e, aghead(e), points_at(&pointfs2, 0),
-	                 (int)points_size(&pointfs2), &sinfo);
+	                 points_size(&pointfs2), &sinfo);
     }
     points_free(&pointfs);
     points_free(&pointfs2);

@@ -21,6 +21,7 @@
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <unistd.h>
 
 #include <ctype.h>
@@ -360,23 +361,24 @@ bool mapbool(const char *p)
 
 pointf dotneato_closest(splines * spl, pointf pt)
 {
-    int i, j, k, besti, bestj;
+    int i;
     double bestdist2, d2, dlow2, dhigh2; /* squares of distances */
     double low, high, t;
     pointf c[4], pt2;
     bezier bz;
 
-    besti = bestj = -1;
+    int besti = -1;
+    size_t bestj = SIZE_MAX;
     bestdist2 = 1e+38;
     for (i = 0; i < spl->size; i++) {
 	bz = spl->list[i];
-	for (j = 0; j < bz.size; j++) {
+	for (size_t j = 0; j < bz.size; j++) {
 	    pointf b;
 
 	    b.x = bz.list[j].x;
 	    b.y = bz.list[j].y;
 	    d2 = DIST2(b, pt);
-	    if (bestj == -1 || d2 < bestdist2) {
+	    if (bestj == SIZE_MAX || d2 < bestdist2) {
 		besti = i;
 		bestj = j;
 		bestdist2 = d2;
@@ -391,8 +393,8 @@ pointf dotneato_closest(splines * spl, pointf pt)
      */
     if (bestj == bz.size-1)
 	bestj--;
-    j = 3*(bestj / 3);
-    for (k = 0; k < 4; k++) {
+    const size_t j = 3 * (bestj / 3);
+    for (size_t k = 0; k < 4; k++) {
 	c[k].x = bz.list[j + k].x;
 	c[k].y = bz.list[j + k].y;
     }
@@ -665,7 +667,7 @@ void compute_bb(graph_t * g)
     boxf b, bb;
     boxf BF;
     pointf ptf, s2;
-    int i, j;
+    int i;
 
     if (agnnodes(g) == 0 && GD_n_cluster(g) == 0) {
 	bb.LL = (pointf){0};
@@ -690,7 +692,7 @@ void compute_bb(graph_t * g)
 	    if (ED_spl(e) == 0)
 		continue;
 	    for (i = 0; i < ED_spl(e)->size; i++) {
-		for (j = 0; j < (((Agedgeinfo_t*)AGDATA(e))->spl)->list[i].size; j++) {
+		for (size_t j = 0; j < (((Agedgeinfo_t*)AGDATA(e))->spl)->list[i].size; j++) {
 		    ptf = ED_spl(e)->list[i].list[j];
 		    EXPANDBP(bb,ptf);
 		}
@@ -1423,7 +1425,7 @@ static bool overlap_arrow(pointf p, pointf u, double scale, boxf b)
 static bool overlap_bezier(bezier bz, boxf b) {
     assert(bz.size);
     pointf u = bz.list[0];
-    for (int i = 1; i < bz.size; i++) {
+    for (size_t i = 1; i < bz.size; i++) {
         pointf p = bz.list[i];
         if (lineToBox(p, u, b) != -1)
             return true;

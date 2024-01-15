@@ -10,9 +10,11 @@
 
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <gvc/gvc.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 
 #define YDIR(y) (Y_invert ? (Y_off - (y)) : (y))
@@ -45,12 +47,11 @@ static void printstring(FILE * f, char *prefix, char *s)
     agputs(s, f);
 }
 
-static void printint(FILE * f, char *prefix, int i)
-{
+static void printint(FILE *f, char *prefix, size_t i) {
     char buf[BUFSIZ];
     
     if (prefix) agputs(prefix, f);
-    snprintf(buf, sizeof(buf), "%d", i);
+    snprintf(buf, sizeof(buf), "%" PRISIZE_T, i);
     agputs(buf, f);
 }
 
@@ -105,10 +106,8 @@ static void writenodeandport(FILE *f, node_t *node, char *portname) {
 	printstring(f, ":", agcanonStr(portname));
 }
 
-/* _write_plain:
- */
 void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
-    int i, j, splinePoints;
+    int i;
     char *tport, *hport;
     node_t *n;
     edge_t *e;
@@ -118,7 +117,6 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     char* fillcolor;
 
     putstr = g->clos->disc.io->putstr;
-//    setup_graph(job, g);
     setYInvert(g);
     pt = GD_bb(g).UR;
     printdouble(f, "graph ", job->zoom);
@@ -158,7 +156,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 	    else
 		tport = hport = "";
 	    if (ED_spl(e)) {
-		splinePoints = 0;
+		size_t splinePoints = 0;
 		for (i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
 		    splinePoints += bz.size;
@@ -169,7 +167,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		printint(f, " ", splinePoints);
 		for (i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
-		    for (j = 0; j < bz.size; j++)
+		    for (size_t j = 0; j < bz.size; j++)
 			printpoint(f, bz.list[j]);
 		}
 	    }
@@ -227,7 +225,6 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 {
     int e_arrows;		/* graph has edges with end arrows */
     int s_arrows;		/* graph has edges with start arrows */
-    int j;
     char buf[BUFSIZ];		/* Used only for small strings */
     char xbuffer[BUFSIZ];	/* Initial buffer for xb */
     agxbuf xb;
@@ -342,7 +339,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 				ED_spl(e)->list[i].ep.x,
 				YDIR(ED_spl(e)->list[i].ep.y));
 		    }
-		    for (j = 0; j < ED_spl(e)->list[i].size; j++) {
+		    for (size_t j = 0; j < ED_spl(e)->list[i].size; j++) {
 			if (j > 0)
 			    agxbputc(&xb, ' ');
 			ptf = ED_spl(e)->list[i].list[j];

@@ -67,6 +67,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   This library had no accompanying header, so using it was not easy. If you are
   using this library, please contact the maintainers to notify them of the
   existence of users. #2489
+- **Breaking**: `bezier.size` is now a `size_t`.
 
 ### Fixed
 

@@ -14,6 +14,7 @@
 #include <common/render.h>
 #include <label/xlabels.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static int Rankdir;
 static bool Flip;
@@ -89,7 +90,7 @@ static pointf map_point(pointf p)
 
 static void map_edge(edge_t * e)
 {
-    int j, k;
+    int j;
     bezier bz;
 
     if (ED_spl(e) == NULL) {
@@ -100,7 +101,7 @@ static void map_edge(edge_t * e)
     }
     for (j = 0; j < ED_spl(e)->size; j++) {
 	bz = ED_spl(e)->list[j];
-	for (k = 0; k < bz.size; k++)
+	for (size_t k = 0; k < bz.size; k++)
 	    bz.list[k] = map_point(bz.list[k]);
 	if (bz.sflag)
 	    ED_spl(e)->list[j].sp = map_point(ED_spl(e)->list[j].sp);

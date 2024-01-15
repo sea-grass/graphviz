@@ -531,7 +531,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 {
     pointf *B, C[5], *D, p0, p1;
     double rbconst, d, dx, dy, t;
-    int i, mode, shape;
+    int mode, shape;
     pointf* pts;
 
     shape = style & SHAPE_MASK;
@@ -546,7 +546,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	return;
     } 
     B = gv_calloc(4 * sides + 4, sizeof(pointf));
-    i = 0;
+    size_t i = 0;
     /* rbconst is distance offset from a corner of the polygon.
      * It should be the same for every corner, and also never
      * bigger than one-third the length of a side.
@@ -592,7 +592,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
     switch (mode) {
     case ROUNDED:
-	pts = N_GNEW(6 * sides + 2, pointf);
+	pts = gv_calloc(6 * sides + 2, sizeof(pointf));
 	i = 0;
 	for (size_t seg = 0; seg < sides; seg++) {
 	    pts[i++] = B[4 * seg];
@@ -4167,7 +4167,7 @@ static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled) {
     vertices[5].y = y02 - AF[5].y;
     vertices[6] = AF[6];
 
-    gvrender_beziercurve(job, AF, (int)sides, filled);
+    gvrender_beziercurve(job, AF, sides, filled);
     gvrender_beziercurve(job, vertices, 7, 0);
 }
 

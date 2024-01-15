@@ -62,9 +62,11 @@ extern "C" {
     RENDER_API boxf arrow_bb(pointf p, pointf u, double arrowsize);
     RENDER_API void arrow_gen(GVJ_t * job, emit_state_t emit_state, pointf p, pointf u,
                               double arrowsize, double penwidth, uint32_t flag);
-    RENDER_API int arrowEndClip(edge_t*, pointf*, int, int , bezier*, uint32_t eflag);
-    RENDER_API int arrowStartClip(edge_t*, pointf* ps, int, int, bezier*, uint32_t sflag);
-    RENDER_API void arrowOrthoClip(edge_t*, pointf *ps, int, int, bezier*,
+    RENDER_API size_t arrowEndClip(edge_t*, pointf*, size_t, size_t, bezier*,
+                                   uint32_t eflag);
+    RENDER_API size_t arrowStartClip(edge_t*, pointf *ps, size_t, size_t,
+                                     bezier*, uint32_t sflag);
+    RENDER_API void arrowOrthoClip(edge_t*, pointf *ps, size_t, size_t, bezier*,
                                    uint32_t sflag, uint32_t eflag);
     RENDER_API void beginpath(path *, Agedge_t *, int, pathend_t *, bool);
     RENDER_API void bezier_clip(inside_t * inside_context,
@@ -74,7 +76,7 @@ extern "C" {
     RENDER_API void makeStraightEdge(graph_t * g, edge_t * e, int edgetype, splineInfo * info);
     RENDER_API void makeStraightEdges(graph_t* g, edge_t** edges, int e_cnt, int et, splineInfo* sinfo);
     RENDER_API void clip_and_install(edge_t * fe, node_t * hn,
-	pointf * ps, int pn, splineInfo * info);
+                                     pointf *ps, size_t pn, splineInfo *info);
     RENDER_API char* charsetToStr (int c);
     RENDER_API pointf coord(node_t * n);
     RENDER_API void do_graph_label(graph_t * sg);
@@ -110,7 +112,7 @@ extern "C" {
     RENDER_API void makeSelfEdge(edge_t * edges[], int ind, int cnt,
 	double sizex, double sizey, splineInfo * sinfo);
     RENDER_API textlabel_t *make_label(void *obj, char *str, int kind, double fontsize, char *fontname, char *fontcolor);
-    RENDER_API bezier *new_spline(edge_t * e, int sz);
+    RENDER_API bezier *new_spline(edge_t *e, size_t sz);
     RENDER_API char **parse_style(char *s);
     RENDER_API void place_graph_label(Agraph_t *);
     RENDER_API int place_portlabel(edge_t * e, bool head_p);

@@ -13,8 +13,10 @@
  */
 
 #include	<cgraph/agxbuf.h>
+#include	<cgraph/alloc.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
+#include	<stddef.h>
 
 /* Return point where line segment [pp,cp] intersects
  * the box bp. Assume cp is outside the box, and pp is
@@ -286,7 +288,7 @@ static int splineIntersectf(pointf * pts, boxf * bb)
  * If edge has arrowheads, reposition them.
  */
 static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
-    int starti = 0, endi = 0;	/* index of first and last control point */
+    size_t starti = 0, endi = 0; // index of first and last control point
 
     /* find head and tail target clusters, if defined */
     graph_t *lh = getCluster(agget(e, "lhead"), clustMap); // cluster containing head
@@ -302,13 +304,13 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
 	return;
     }
     bezier *bez = ED_spl(e)->list; // original Bezier for e
-    int size = bez->size;
+    const size_t size = bez->size;
 
     node_t *head = aghead(e);
     node_t *tail = agtail(e);
 
     /* allocate new Bezier */
-    bezier nbez = {0}; // new Bezier  for e
+    bezier nbez = {0}; // new Bezier for `e`
     nbez.eflag = bez->eflag;
     nbez.sflag = bez->sflag;
 
@@ -414,10 +416,10 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
 	    } else {
 		for (starti = endi; starti > 0; starti -= 3) {
 		    pointf pts[4];
-		    for (int i = 0; i < 4; i++)
+		    for (size_t i = 0; i < 4; i++)
 			pts[i] = bez->list[starti - i];
 		    if (splineIntersectf(pts, bb)) {
-			for (int i = 0; i < 4; i++)
+			for (size_t i = 0; i < 4; i++)
 			    bez->list[starti - i] = pts[i];
 			break;
 		    }
@@ -443,8 +445,8 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
     /* complete Bezier, free garbage and attach new Bezier to edge 
      */
     nbez.size = endi - starti + 1;
-    nbez.list = N_GNEW(nbez.size, pointf);
-    for (int i = 0, j = starti; i < nbez.size; i++, j++)
+    nbez.list = gv_calloc(nbez.size, sizeof(pointf));
+    for (size_t i = 0, j = starti; i < nbez.size; i++, j++)
 	nbez.list[i] = bez->list[j];
     free(bez->list);
     *ED_spl(e)->list = nbez;

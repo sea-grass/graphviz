@@ -15,6 +15,7 @@
 #include <neatogen/neatoprocs.h>
 #include <math.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static bool spline_merge(node_t * n)
 {
@@ -683,7 +684,8 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
     }
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
+    assert(spl.pn >= 0);
+    clip_and_install(e, aghead(e), spl.ps, (size_t)spl.pn, &sinfo);
 
     addEdgeLabels(e);
 }

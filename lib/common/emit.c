@@ -589,7 +589,8 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	else
 	    angle1 = angle0 + 2 * M_PI * s->t;
 	pp = ellipticWedge (ctr, semi.x, semi.y, angle0, angle1);
-	gvrender_beziercurve(job, pp->ps, pp->pn, 1);
+	assert(pp->pn >= 0);
+	gvrender_beziercurve(job, pp->ps, (size_t)pp->pn, 1);
 	angle0 = angle1;
 	freePath (pp);
     }
@@ -963,13 +964,13 @@ static void map_output_bspline (pointf **pbs, int **pbs_n, int *pbs_poly_n, bezi
     segitem_t* segp = segl;
     segitem_t* segprev;
     segitem_t* segnext;
-    int nc, j, k, cnt;
+    int cnt;
     pointf pts[4], pt1[50], pt2[50];
 
     MARK_FIRST_SEG(segl);
-    nc = (bp->size - 1)/3; /* nc is number of bezier curves */
-    for (j = 0; j < nc; j++) {
-        for (k = 0; k < 4; k++) {
+    const size_t nc = (bp->size - 1) / 3; // nc is number of bezier curves
+    for (size_t j = 0; j < nc; j++) {
+        for (size_t k = 0; k < 4; k++) {
             pts[k] = bp->list[3*j + k];
         }
         segp = approx_bezier (pts, segp);
@@ -1481,9 +1482,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	case xd_unfilled_bezier :
     	    if (boxf_overlap(op->bb, job->clip)) {
 		pointf *pts = copyPts(op->op.u.bezier.pts, op->op.u.bezier.cnt);
-		assert(op->op.u.bezier.cnt <= INT_MAX &&
-		       "polygon count exceeds gvrender_beizercurve support");
-		gvrender_beziercurve(job, pts, (int)op->op.u.bezier.cnt,
+		gvrender_beziercurve(job, pts, op->op.u.bezier.cnt,
 		                     op->op.kind == xd_filled_bezier ? filled : 0);
 		free(pts);
 	    }
@@ -2026,7 +2025,7 @@ static double approxLen (pointf* pts)
  */
 static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
 {
-    int i, j, k, cnt = (bz->size - 1)/3;
+    const size_t cnt = (bz->size - 1) / 3;
     double last, len, sum;
     pointf* pts;
     float r;
@@ -2043,13 +2042,14 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
     double* lens = gv_calloc(cnt, sizeof(double));
     sum = 0;
     pts = bz->list;
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
 	lens[i] = approxLen (pts);
 	sum += lens[i];
 	pts += 3;
     }
     len = t*sum;
     sum = 0;
+    size_t i;
     for (i = 0; i < cnt; i++) {
 	sum += lens[i];
 	if (sum >= len)
@@ -2060,9 +2060,10 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
     left->list = gv_calloc(left->size, sizeof(pointf));
     right->size = 3*(cnt-i) + 1;
     right->list = gv_calloc(right->size, sizeof(pointf));
+    size_t j;
     for (j = 0; j < left->size; j++)
 	left->list[j] = bz->list[j];
-    k = j - 4;
+    size_t k = j - 4;
     for (j = 0; j < right->size; j++)
 	right->list[j] = bz->list[k++];
 
@@ -2201,7 +2202,7 @@ taperfun (edge_t* e)
 
 static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 {
-    int i, j, cnum, numc = 0, numsemi = 0;
+    int i, cnum, numc = 0, numsemi = 0;
     char *color, *pencolor, *fillcolor;
     char *headcolor, *tailcolor, *lastcolor;
     char *colors = NULL;
@@ -2307,6 +2308,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		offlist = offspl.list[i].list = gv_calloc(bz.size, sizeof(pointf));
 		tmplist = tmpspl.list[i].list = gv_calloc(bz.size, sizeof(pointf));
 		pf3 = bz.list[0];
+		size_t j;
 		for (j = 0; j < bz.size - 1; j += 3) {
 		    pf0 = pf3;
 		    pf1 = bz.list[j + 1];
@@ -2352,7 +2354,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		for (i = 0; i < tmpspl.size; i++) {
 		    tmplist = tmpspl.list[i].list;
 		    offlist = offspl.list[i].list;
-		    for (j = 0; j < tmpspl.list[i].size; j++) {
+		    for (size_t j = 0; j < tmpspl.list[i].size; j++) {
 			tmplist[j].x += offlist[j].x;
 			tmplist[j].y += offlist[j].y;
 		    }
@@ -3811,14 +3813,13 @@ char **parse_style(char *s)
 
 static boxf bezier_bb(bezier bz)
 {
-    int i;
     pointf p, p1, p2;
     boxf bb;
 
     assert(bz.size > 0);
     assert(bz.size % 3 == 1);
     bb.LL = bb.UR = bz.list[0];
-    for (i = 1; i < bz.size;) {
+    for (size_t i = 1; i < bz.size;) {
 	/* take mid-point between two control points for bb calculation */
 	p1=bz.list[i];
 	i++;

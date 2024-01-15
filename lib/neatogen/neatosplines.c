@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <assert.h>
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
@@ -458,7 +458,8 @@ static void makePolyline(edge_t * e) {
     make_polyline (line, &spl);
     if (Verbose > 1)
 	fprintf(stderr, "polyline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
+    assert(spl.pn >= 0);
+    clip_and_install(e, aghead(e), spl.ps, (size_t)spl.pn, &sinfo);
     addEdgeLabels(e);
 }
 
@@ -504,7 +505,8 @@ void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
     /* north why did you ever use int coords */
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    clip_and_install(e, aghead(e), spline.ps, spline.pn, &sinfo);
+    assert(spline.pn >= 0);
+    clip_and_install(e, aghead(e), spline.ps, (size_t)spline.pn, &sinfo);
     free(barriers);
     addEdgeLabels(e);
 }
@@ -789,7 +791,7 @@ void spline_edges(graph_t * g)
  */
 static void scaleEdge(edge_t * e, double xf, double yf)
 {
-    int i, j;
+    int i;
     pointf *pt;
     bezier *bez;
     pointf delh, delt;
@@ -802,7 +804,7 @@ static void scaleEdge(edge_t * e, double xf, double yf)
     bez = ED_spl(e)->list;
     for (i = 0; i < ED_spl(e)->size; i++) {
 	pt = bez->list;
-	for (j = 0; j < bez->size; j++) {
+	for (size_t j = 0; j < bez->size; j++) {
 	    if (i == 0 && j == 0) {
 		pt->x += delt.x;
 		pt->y += delt.y;
@@ -869,14 +871,14 @@ static void scaleBB(graph_t * g, double xf, double yf)
  */
 static void translateE(edge_t * e, pointf offset)
 {
-    int i, j;
+    int i;
     pointf *pt;
     bezier *bez;
 
     bez = ED_spl(e)->list;
     for (i = 0; i < ED_spl(e)->size; i++) {
 	pt = bez->list;
-	for (j = 0; j < bez->size; j++) {
+	for (size_t j = 0; j < bez->size; j++) {
 	    pt->x -= offset.x;
 	    pt->y -= offset.y;
 	    pt++;

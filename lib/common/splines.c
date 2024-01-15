@@ -19,6 +19,7 @@
 #include <common/render.h>
 #include <cgraph/unreachable.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef DEBUG
@@ -55,7 +56,7 @@ static void showPoints(pointf ps[], int pn)
  */
 static void
 arrow_clip(edge_t * fe, node_t * hn,
-	   pointf * ps, int *startp, int *endp,
+	   pointf * ps, size_t *startp, size_t *endp,
 	   bezier * spl, splineInfo * info)
 {
     edge_t *e;
@@ -210,8 +211,7 @@ void shape_clip(node_t * n, pointf curve[4])
 /* new_spline:
  * Create and attach a new bezier of size sz to the edge d
  */
-bezier *new_spline(edge_t * e, int sz)
-{
+bezier *new_spline(edge_t *e, size_t sz) {
     bezier *rv;
     while (ED_to_orig(e) != NULL && ED_edge_type(e) != NORMAL)
 	e = ED_to_orig(e);
@@ -233,13 +233,14 @@ bezier *new_spline(edge_t * e, int sz)
  * edge.
  */
 void
-clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
+clip_and_install(edge_t *fe, node_t *hn, pointf *ps, size_t pn,
 		 splineInfo * info)
 {
     pointf p2;
     bezier *newspl;
     node_t *tn;
-    int start, end, i, clipTail, clipHead;
+    int clipTail, clipHead;
+    size_t start, end;
     graph_t *g;
     edge_t *orig;
     boxf *tbox, *hbox;
@@ -304,7 +305,7 @@ clip_and_install(edge_t * fe, node_t * hn, pointf * ps, int pn,
 	if (! APPROXEQPT(ps[end], ps[end + 3], MILLIPOINT))
 	    break;
     arrow_clip(fe, hn, ps, &start, &end, newspl, info);
-    for (i = start; i < end + 4; ) {
+    for (size_t i = start; i < end + 4; ) {
 	pointf cp[4];
 	newspl->list[i - start] = ps[i];
 	cp[0] = ps[i];
@@ -827,7 +828,6 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     int i, sgn, point_pair;
     double hy, ty, stepx, dx, dy, height;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -861,7 +861,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
         ty += stepy;
         hy += stepy;
         dx += sgn * stepx;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x + dx, tp.y - ty / 3};
         points[pointn++] = (pointf){tp.x + dx, np.y - dy};
@@ -900,7 +900,6 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     node_t *n;
     edge_t *e;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -971,7 +970,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
         ty += stepy;
         hy += stepy;
         dx += sgn * stepx;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x + dx, tp.y + ty / 3};
         points[pointn++] = (pointf){tp.x + dx, np.y + dy};
@@ -1009,7 +1008,6 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     node_t *n;
     edge_t *e;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -1044,7 +1042,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         tx += stepx;
         hx += stepx;
         dy += sgn * stepy;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x + tx / 3, tp.y + dy};
         points[pointn++] = (pointf){np.x + dx, tp.y + dy};
@@ -1082,7 +1080,6 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     node_t *n;
     edge_t *e;
     pointf points[1000];
-    int pointn;
 
     e = edges[ind];
     n = agtail(e);
@@ -1120,7 +1117,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
         tx += stepx;
         hx += stepx;
         dy += sgn * stepy;
-        pointn = 0;
+        size_t pointn = 0;
         points[pointn++] = tp;
         points[pointn++] = (pointf){tp.x - tx / 3, tp.y + dy};
         points[pointn++] = (pointf){np.x - dx, tp.y + dy};
@@ -1280,13 +1277,13 @@ static pointf
 polylineMidpoint (splines* spl, pointf* pp, pointf* pq)
 {
     bezier bz;
-    int i, j, k;
+    int i;
     double d, dist = 0;
     pointf pf, qf, mf;
 
     for (i = 0; i < spl->size; i++) {
 	bz = spl->list[i];
-	for (j = 0, k=3; k < bz.size; j+=3,k+=3) {
+	for (size_t j = 0, k = 3; k < bz.size; j += 3, k += 3) {
 	    pf = bz.list[j];
 	    qf = bz.list[k];
 	    dist += DIST(pf, qf);
@@ -1295,7 +1292,7 @@ polylineMidpoint (splines* spl, pointf* pp, pointf* pq)
     dist /= 2;
     for (i = 0; i < spl->size; i++) {
 	bz = spl->list[i];
-	for (j = 0, k=3; k < bz.size; j+=3,k+=3) {
+	for (size_t j = 0, k = 3; k < bz.size; j += 3, k += 3) {
 	    pf = bz.list[j];
 	    qf = bz.list[k];
 	    d = DIST(pf,qf);
@@ -1362,7 +1359,6 @@ int place_portlabel(edge_t * e, bool head_p)
     bezier *bez;
     double dist, angle;
     pointf c[4], pe, pf;
-    int i;
     char* la;
     char* ld;
 
@@ -1383,7 +1379,7 @@ int place_portlabel(edge_t * e, bool head_p)
 	    pf = bez->list[0];
 	} else {
 	    pe = bez->list[0];
-	    for (i = 0; i < 4; i++)
+	    for (size_t i = 0; i < 4; i++)
 		c[i] = bez->list[i];
 	    pf = Bezier(c, 0.1, NULL, NULL);
 	}
@@ -1394,7 +1390,7 @@ int place_portlabel(edge_t * e, bool head_p)
 	    pf = bez->list[bez->size - 1];
 	} else {
 	    pe = bez->list[bez->size - 1];
-	    for (i = 0; i < 4; i++)
+	    for (size_t i = 0; i < 4; i++)
 		c[i] = bez->list[bez->size - 4 + i];
 	    pf = Bezier(c, 0.9, NULL, NULL);
 	}
