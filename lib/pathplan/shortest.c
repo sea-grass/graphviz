@@ -64,7 +64,6 @@ static Ppoint_t *ops;
 static size_t opn;
 
 static int triangulate(pointnlink_t **, int);
-static bool isdiagonal(int, int, pointnlink_t **, int);
 static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
 static void connecttris(size_t, size_t);
 static bool marktripath(size_t, size_t);
@@ -77,6 +76,11 @@ static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
 static int growops(size_t);
+
+static Ppoint_t *point_indexer(void *base, int index) {
+  pointnlink_t **b = base;
+  return b[index]->pp;
+}
 
 /* Pshortestpath:
  * Find a shortest path contained in the polygon polyp going between the
@@ -306,7 +310,7 @@ static int triangulate(pointnlink_t **points, int point_count) {
 		{
 			pnlip1 = (pnli + 1) % point_count;
 			pnlip2 = (pnli + 2) % point_count;
-			if (isdiagonal(pnli, pnlip2, points, point_count))
+			if (isdiagonal(pnli, pnlip2, points, point_count, point_indexer))
 			{
 				if (loadtriangle(points[pnli], points[pnlip1], points[pnlip2]) != 0)
 					return -1;
@@ -323,35 +327,6 @@ static int triangulate(pointnlink_t **points, int point_count) {
 	}
 
     return 0;
-}
-
-/* check if (i, i + 2) is a diagonal */
-static bool isdiagonal(int pnli, int pnlip2, pointnlink_t **points,
-                       int point_count) {
-    int pnlip1, pnlim1, pnlj, pnljp1, res;
-
-    /* neighborhood test */
-    pnlip1 = (pnli + 1) % point_count;
-    pnlim1 = (pnli + point_count - 1) % point_count;
-    /* If P[pnli] is a convex vertex [ pnli+1 left of (pnli-1,pnli) ]. */
-    if (ccw(points[pnlim1]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW)
-	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlim1]->pp) == ISCCW
-	   && ccw(points[pnlip2]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW;
-    /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
-    else
-	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlip1]->pp) == ISCW;
-    if (!res)
-	return false;
-
-    /* check against all other edges */
-    for (pnlj = 0; pnlj < point_count; pnlj++) {
-	pnljp1 = (pnlj + 1) % point_count;
-	if (!(pnlj == pnli || pnljp1 == pnli || pnlj == pnlip2 || pnljp1 == pnlip2))
-	    if (intersects(points[pnli]->pp, points[pnlip2]->pp,
-			   points[pnlj]->pp, points[pnljp1]->pp))
-		return false;
-    }
-    return true;
 }
 
 static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,

@@ -16,9 +16,6 @@
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
 
-typedef Ppoint_t *(*indexer_t)(void *base, int index);
-
-static bool dpd_isdiagonal(int, int, void *, int, indexer_t);
 static int triangulate(Ppoint_t ** pointp, int pointn,
 			void (*fn) (void *, Ppoint_t *), void *vc);
 
@@ -74,7 +71,7 @@ triangulate(Ppoint_t ** pointp, int pointn,
 	for (i = 0; i < pointn; i++) {
 	    ip1 = (i + 1) % pointn;
 	    ip2 = (i + 2) % pointn;
-	    if (dpd_isdiagonal(i, ip2, pointp, pointn, point_indexer)) {
+	    if (isdiagonal(i, ip2, pointp, pointn, point_indexer)) {
 		A[0] = *pointp[i];
 		A[1] = *pointp[ip1];
 		A[2] = *pointp[ip2];
@@ -96,9 +93,7 @@ triangulate(Ppoint_t ** pointp, int pointn,
     return 0;
 }
 
-/* check if (i, i + 2) is a diagonal */
-static bool dpd_isdiagonal(int i, int ip2, void *pointp, int pointn,
-                           indexer_t indexer) {
+bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer) {
     int ip1, im1, j, jp1, res;
 
     /* neighborhood test */
