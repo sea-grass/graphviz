@@ -602,7 +602,6 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     boxf bb;
     int npts;
     surface_t *sf;
-    int maxv = 4; /* default max. no. of vertices in an obstacle; set below */
     /* points in obstacle i have indices obsi[i] through obsi[i+1]-1 in pts
      */
     int *obsi = gv_calloc(npoly + 1, sizeof(int));
@@ -640,8 +639,6 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
 		segs[six++] = obsi[i];
 	    pts[ix++] = obs->ps[j - 1];
 	}
-	if (obs->pn > maxv)
-	    maxv = obs->pn;
     }
     obsi[i] = ix;
 
