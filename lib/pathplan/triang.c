@@ -17,7 +17,6 @@
 #include <pathplan/tri.h>
 
 static bool dpd_isdiagonal(int, int, Ppoint_t **, int);
-static bool dpd_intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int triangulate(Ppoint_t ** pointp, int pointn,
 			void (*fn) (void *, Ppoint_t *), void *vc);
 
@@ -113,7 +112,7 @@ static bool dpd_isdiagonal(int i, int ip2, Ppoint_t ** pointp, int pointn)
     for (j = 0; j < pointn; j++) {
 	jp1 = (j + 1) % pointn;
 	if (!(j == i || jp1 == i || j == ip2 || jp1 == ip2))
-	    if (dpd_intersects
+	    if (intersects
 		(pointp[i], pointp[ip2], pointp[j], pointp[jp1])) {
 		return false;
 	    }
@@ -121,10 +120,7 @@ static bool dpd_isdiagonal(int i, int ip2, Ppoint_t ** pointp, int pointn)
     return true;
 }
 
-/* line to line intersection */
-static bool dpd_intersects(Ppoint_t * pa, Ppoint_t * pb, Ppoint_t * pc,
-			  Ppoint_t * pd)
-{
+bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd) {
     int ccw1, ccw2, ccw3, ccw4;
 
     if (ccw(pa, pb, pc) == ISON || ccw(pa, pb, pd) == ISON ||

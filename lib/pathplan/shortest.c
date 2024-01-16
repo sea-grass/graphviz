@@ -73,7 +73,6 @@ static void add2dq(deque_t *dq, int, pointnlink_t*);
 static void splitdq(deque_t *dq, int, size_t);
 static size_t finddqsplit(const deque_t *dq, pointnlink_t*);
 
-static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
@@ -436,27 +435,6 @@ static size_t finddqsplit(const deque_t *dq, pointnlink_t *pnlp) {
 	if (ccw(dq->pnlps[index - 1]->pp, dq->pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
     return dq->apex;
-}
-
-/* line to line intersection */
-static bool intersects(Ppoint_t * pap, Ppoint_t * pbp,
-		      Ppoint_t * pcp, Ppoint_t * pdp)
-{
-    int ccw1, ccw2, ccw3, ccw4;
-
-    if (ccw(pap, pbp, pcp) == ISON || ccw(pap, pbp, pdp) == ISON ||
-	ccw(pcp, pdp, pap) == ISON || ccw(pcp, pdp, pbp) == ISON) {
-	if (between(pap, pbp, pcp) || between(pap, pbp, pdp) ||
-	    between(pcp, pdp, pap) || between(pcp, pdp, pbp))
-	    return true;
-    } else {
-	ccw1 = ccw(pap, pbp, pcp) == ISCCW ? 1 : 0;
-	ccw2 = ccw(pap, pbp, pdp) == ISCCW ? 1 : 0;
-	ccw3 = ccw(pcp, pdp, pap) == ISCCW ? 1 : 0;
-	ccw4 = ccw(pcp, pdp, pbp) == ISCCW ? 1 : 0;
-	return (ccw1 ^ ccw2) && (ccw3 ^ ccw4);
-    }
-    return false;
 }
 
 static int pointintri(size_t trii, Ppoint_t *pp) {

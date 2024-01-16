@@ -47,6 +47,9 @@ int ccw(Ppoint_t *p1, Ppoint_t *p2, Ppoint_t *p3);
 /// is pb between pa and pc?
 bool between(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc);
 
+/// line to line intersection
+bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd);
+
 #ifdef __cplusplus
 }
 #endif
