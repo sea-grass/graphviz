@@ -32,12 +32,15 @@ TRI_API int Ptriangulate(Ppoly_t *polygon,
 
 #undef TRI_API
 
-/// return value from `ccw`/`dpd_ccw`
+/// return value from `ccw`
 enum {
   ISCCW = 1, ///< counter-clockwise
   ISCW = 2,  ///< clockwise
   ISON = 3,  ///< co-linear
 };
+
+/// are the given points counter-clockwise, clockwise, or co-linear?
+int ccw(Ppoint_t *p1, Ppoint_t *p2, Ppoint_t *p3);
 
 #ifdef __cplusplus
 }

@@ -73,7 +73,6 @@ static void add2dq(deque_t *dq, int, pointnlink_t*);
 static void splitdq(deque_t *dq, int, size_t);
 static size_t finddqsplit(const deque_t *dq, pointnlink_t*);
 
-static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
@@ -438,16 +437,6 @@ static size_t finddqsplit(const deque_t *dq, pointnlink_t *pnlp) {
 	if (ccw(dq->pnlps[index - 1]->pp, dq->pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
     return dq->apex;
-}
-
-/* ccw test: CCW, CW, or co-linear */
-static int ccw(Ppoint_t * p1p, Ppoint_t * p2p, Ppoint_t * p3p)
-{
-    double d;
-
-    d = (p1p->y - p2p->y) * (p3p->x - p2p->x) -
-	(p3p->y - p2p->y) * (p1p->x - p2p->x);
-    return d > 0 ? ISCCW : (d < 0 ? ISCW : ISON);
 }
 
 /* line to line intersection */
