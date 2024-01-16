@@ -474,7 +474,6 @@ EXCLUDE = (
     "lib/pathplan/shortestpth.c",
     "lib/pathplan/solvers.c",
     "lib/pathplan/solvers.h",
-    "lib/pathplan/tri.h",
     "lib/pathplan/triang.c",
     "lib/pathplan/util.c",
     "lib/pathplan/vis.h",
