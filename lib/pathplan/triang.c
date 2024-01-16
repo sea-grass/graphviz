@@ -16,10 +16,6 @@
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
 
-#define ISCCW 1
-#define ISCW  2
-#define ISON  3
-
 static bool dpd_isdiagonal(int, int, Ppoint_t **, int);
 static bool dpd_intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static bool dpd_between(Ppoint_t *, Ppoint_t *, Ppoint_t *);

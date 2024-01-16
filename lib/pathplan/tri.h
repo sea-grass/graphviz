@@ -32,6 +32,13 @@ TRI_API int Ptriangulate(Ppoly_t *polygon,
 
 #undef TRI_API
 
+/// return value from `ccw`/`dpd_ccw`
+enum {
+  ISCCW = 1, ///< counter-clockwise
+  ISCW = 2,  ///< clockwise
+  ISON = 3,  ///< co-linear
+};
+
 #ifdef __cplusplus
 }
 #endif

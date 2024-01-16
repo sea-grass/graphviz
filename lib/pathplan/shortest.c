@@ -18,10 +18,7 @@
 #include <limits.h>
 #include <math.h>
 #include <pathplan/pathutil.h>
-
-#define ISCCW 1
-#define ISCW  2
-#define ISON  3
+#include <pathplan/tri.h>
 
 #define DQ_FRONT 1
 #define DQ_BACK  2
