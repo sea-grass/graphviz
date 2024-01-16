@@ -74,7 +74,6 @@ static void splitdq(deque_t *dq, int, size_t);
 static size_t finddqsplit(const deque_t *dq, pointnlink_t*);
 
 static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
@@ -458,19 +457,6 @@ static bool intersects(Ppoint_t * pap, Ppoint_t * pbp,
 	return (ccw1 ^ ccw2) && (ccw3 ^ ccw4);
     }
     return false;
-}
-
-/* is pbp between pap and pcp */
-static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
-{
-    Ppoint_t p1, p2;
-
-    p1.x = pbp->x - pap->x, p1.y = pbp->y - pap->y;
-    p2.x = pcp->x - pap->x, p2.y = pcp->y - pap->y;
-    if (ccw(pap, pbp, pcp) != ISON)
-	return false;
-    return p2.x * p1.x + p2.y * p1.y >= 0 &&
-	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
 static int pointintri(size_t trii, Ppoint_t *pp) {

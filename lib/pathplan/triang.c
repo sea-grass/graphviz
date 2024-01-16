@@ -18,7 +18,6 @@
 
 static bool dpd_isdiagonal(int, int, Ppoint_t **, int);
 static bool dpd_intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static bool dpd_between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int triangulate(Ppoint_t ** pointp, int pointn,
 			void (*fn) (void *, Ppoint_t *), void *vc);
 
@@ -130,8 +129,8 @@ static bool dpd_intersects(Ppoint_t * pa, Ppoint_t * pb, Ppoint_t * pc,
 
     if (ccw(pa, pb, pc) == ISON || ccw(pa, pb, pd) == ISON ||
 	ccw(pc, pd, pa) == ISON || ccw(pc, pd, pb) == ISON) {
-	if (dpd_between(pa, pb, pc) || dpd_between(pa, pb, pd) ||
-	    dpd_between(pc, pd, pa) || dpd_between(pc, pd, pb))
+	if (between(pa, pb, pc) || between(pa, pb, pd) ||
+	    between(pc, pd, pa) || between(pc, pd, pb))
 	    return true;
     } else {
 	ccw1 = ccw(pa, pb, pc) == ISCCW ? 1 : 0;
@@ -143,8 +142,7 @@ static bool dpd_intersects(Ppoint_t * pa, Ppoint_t * pb, Ppoint_t * pc,
     return false;
 }
 
-static bool dpd_between(Ppoint_t * pa, Ppoint_t * pb, Ppoint_t * pc)
-{
+bool between(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc) {
     Ppoint_t pba, pca;
 
     pba.x = pb->x - pa->x, pba.y = pb->y - pa->y;
