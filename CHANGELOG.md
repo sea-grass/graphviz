@@ -68,6 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   using this library, please contact the maintainers to notify them of the
   existence of users. #2489
 - **Breaking**: `bezier.size` is now a `size_t`.
+- **Breaking**: the gv.i and gv.cpp SWIG inputs are no longer included in a
+  Graphviz installation. #2491
 
 ### Fixed
 

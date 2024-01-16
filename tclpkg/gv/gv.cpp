@@ -8,11 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include "gv_channel.h"
 #include <cstdlib>
 #include <cstring>
 #include <gvc/gvc.h>
 #include <string>
-#include "gv_channel.h"
 
 #define agfindattr(x, s) agattrsym(x, s)
 #define agraphattr(g, n, s) agattr(g, AGRAPH, n, s)
