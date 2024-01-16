@@ -59,33 +59,33 @@ static double B01(double t);
 static double B23(double t);
 
 /* Proutespline:
- * Given a set of edgen line segments edges as obstacles, a template
- * path input, and endpoint vectors evs, construct a spline fitting the
- * input and endpoing vectors, and return in output.
+ * Given a set of barrier line segments edges as obstacles, a template
+ * path input_route, and endpoint vectors endpoint_slopes, construct a spline
+ * fitting the input and endpoint vectors, and return in output_route.
  * Return 0 on success and -1 on failure, including no memory.
  */
-int Proutespline(Pedge_t * edges, int edgen, Ppolyline_t input,
-		 Ppoint_t evs[2], Ppolyline_t * output)
-{
+int Proutespline(Pedge_t *barriers, int n_barriers, Ppolyline_t input_route,
+                 Ppoint_t endpoint_slopes[2], Ppolyline_t *output_route) {
     Ppoint_t *inps;
     int inpn;
 
     /* unpack into previous format rather than modify legacy code */
-    inps = input.ps;
-    inpn = input.pn;
+    inps = input_route.ps;
+    inpn = input_route.pn;
 
     /* generate the splines */
-    evs[0] = normv(evs[0]);
-    evs[1] = normv(evs[1]);
+    endpoint_slopes[0] = normv(endpoint_slopes[0]);
+    endpoint_slopes[1] = normv(endpoint_slopes[1]);
     opl = 0;
     if (growops(4) < 0) {
 	return -1;
     }
     ops[opl++] = inps[0];
-    if (reallyroutespline(edges, edgen, inps, inpn, evs[0], evs[1]) == -1)
+    if (reallyroutespline(barriers, n_barriers, inps, inpn, endpoint_slopes[0],
+                          endpoint_slopes[1]) == -1)
 	return -1;
-    output->pn = opl;
-    output->ps = ops;
+    output_route->pn = opl;
+    output_route->ps = ops;
 
     return 0;
 }
