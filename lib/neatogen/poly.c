@@ -381,8 +381,8 @@ static int inPoly(Point vertex[], int n, Point q)
 	i1 = (i + n - 1) % n;
 
 	/* if edge is horizontal, test to see if the point is on it */
-	if ((tp3[i].y == 0) && (tp3[i1].y == 0)) {
-	    if ((tp3[i].x * tp3[i1].x) < 0) {
+	if (tp3[i].y == 0 && tp3[i1].y == 0) {
+	    if (tp3[i].x * tp3[i1].x < 0) {
 		return 1;
 	    } else {
 		continue;
@@ -390,8 +390,8 @@ static int inPoly(Point vertex[], int n, Point q)
 	}
 
 	/* if e straddles the x-axis... */
-	if (((tp3[i].y >= 0) && (tp3[i1].y <= 0)) ||
-	    ((tp3[i1].y >= 0) && (tp3[i].y <= 0))) {
+	if ((tp3[i].y >= 0 && tp3[i1].y <= 0) ||
+	    (tp3[i1].y >= 0 && tp3[i].y <= 0)) {
 	    /* e straddles ray, so compute intersection with ray. */
 	    x = (tp3[i].x * tp3[i1].y - tp3[i1].x * tp3[i].y)
 		/ (double) (tp3[i1].y - tp3[i].y);
@@ -402,7 +402,7 @@ static int inPoly(Point vertex[], int n, Point q)
 
 	    /* crosses ray if strictly positive intersection. */
 	    if (x > 0) {
-		if ((tp3[i].y == 0) || (tp3[i1].y == 0)) {
+		if (tp3[i].y == 0 || tp3[i1].y == 0) {
 		    crossings += .5;	/* goes through vertex */
 		} else {
 		    crossings += 1.0;
@@ -412,7 +412,7 @@ static int inPoly(Point vertex[], int n, Point q)
     }
 
     /* q inside if an odd number of crossings. */
-    if ((((int) crossings) % 2) == 1)
+    if ((int)crossings % 2 == 1)
 	return 1;
     else
 	return 0;
