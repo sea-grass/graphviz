@@ -17,8 +17,6 @@ extern "C" {
 #endif
 
 #define N_NEW(n,t)       (t*)gcalloc((n),sizeof(t))
-
-#define N_GNEW(n,t)      (t*)gcalloc((n),sizeof(t))
 #define ALLOC(size,ptr,type) (ptr? (type*)grealloc(ptr,(size)*sizeof(type)):(type*)gmalloc((size)*sizeof(type)))
 #ifdef GVDLL
 #ifdef GVC_EXPORTS
