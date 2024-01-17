@@ -8,9 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-/* poly.c
- */
-
 #include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <assert.h>
