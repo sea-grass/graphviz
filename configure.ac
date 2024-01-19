@@ -927,11 +927,11 @@ else
     if test `$SWIG -help 2>&1 | $EGREP -c "(-php|-php7) *- Generate"` = 0 ; then
       use_php="No (swig does not support -php or -php7 option)"
     else
-      AC_CHECK_PROGS(PHP,php7.2,php7,php)
+      AC_CHECK_PROG(PHP,php,php)
       if test "$PHP" = ""; then
         use_php="No (php not available)"
       else
-        AC_CHECK_PROGS(PHPCONFIG,${PHP}-config,php-config)
+        AC_CHECK_PROG(PHPCONFIG,php-config,php-config)
         if test "$PHPCONFIG" = ""; then
           use_php="No (php-config not available)"
         else
