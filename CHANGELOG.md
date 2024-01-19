@@ -126,6 +126,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   out-of-bounds memory reads. This now causes an error message and graceful
   failure. #2441
 - Discovery of `php` in the Autotools build system has been improved.
+- Text in the PIC output format is no longer forced to font size 1. This was a
+  regression in Graphviz 8.0.2. Even with this fix, the PIC output format is
+  limited in its utility. #2487
 
 ## [9.0.0] - 2023-09-11
 

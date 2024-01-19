@@ -3624,7 +3624,6 @@ def test_dot_Vrandom():
     ), "unexpected -V info"
 
 
-@pytest.mark.xfail(strict=True)
 def test_pic_font_size():
     """
     font size in PIC output format should not be clamped down to 1
