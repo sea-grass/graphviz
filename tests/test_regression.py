@@ -3228,6 +3228,24 @@ def test_2460():
 
 
 @pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2471",
+    strict=True,
+)
+def test_2471():
+    """
+    another “trouble in init_rank variant”
+    https://gitlab.com/graphviz/graphviz/-/issues/2471
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2471.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("png", input)
+
+
+@pytest.mark.xfail(
     is_centos() or is_fedora_38() or is_rocky_8(),
     reason="Cairo is <v1.16 or malfunctions",
     strict=True,
