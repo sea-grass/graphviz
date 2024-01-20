@@ -605,19 +605,20 @@ static void xdot_ellipse(GVJ_t * job, pointf * A, int filled)
     xdot_fmt_num(xbufs[emit_state], A[1].y - A[0].y);
 }
 
-static void xdot_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void xdot_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     xdot_style (job);
     xdot_pencolor (job);
+    assert(n <= INT_MAX);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
-	   xdot_gradient_fillcolor (job, filled, A, n);
+	   xdot_gradient_fillcolor(job, filled, A, (int)n);
 	}
         else
 	    xdot_fillcolor (job);
-        xdot_points(job, 'b', A, n);   /* NB - 'B' & 'b' are reversed in comparison to the other items */
+        xdot_points(job, 'b', A, (int)n); // NB - 'B' & 'b' are reversed in comparison to the other items
     }
     else
-        xdot_points(job, 'B', A, n);
+        xdot_points(job, 'B', A, (int)n);
 }
 
 static void xdot_polygon(GVJ_t * job, pointf * A, int n, int filled)

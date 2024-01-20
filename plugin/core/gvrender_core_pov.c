@@ -592,7 +592,7 @@ static void pov_ellipse(GVJ_t * job, pointf * A, int filled)
 	agxbfree(&pov);
 }
 
-static void pov_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void pov_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 	(void)filled;
 
 	gvputs(job, "//*** bezier\n");
@@ -601,15 +601,16 @@ static void pov_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	char *p = pov_color_as_str(job, job->obj->fillcolor, 0.0);
 
 	agxbuf pov = {0};
-	agxbprint(&pov, POV_SPHERE_SWEEP, "b_spline", n + 2);
+	assert(n <= INT_MAX - 2);
+	agxbprint(&pov, POV_SPHERE_SWEEP, "b_spline", (int)n + 2);
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		agxbprint(&pov, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 		          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 
 		//TODO: we currently just use the start and end points of the curve as
 		//control points but we should use center of nodes
-		if (i == 0 || i == n - 1) {
+		if (i == 0 || i + 1 == n) {
 			agxbprint(&pov, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 			          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 		}

@@ -324,16 +324,13 @@ static void psgen_ellipse(GVJ_t * job, pointf * A, int filled)
     }
 }
 
-static void
-psgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
-    int j;
-
+static void psgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-	for (j = 1; j < n; j += 3) {
+	for (size_t j = 1; j < n; j += 3) {
 	    gvprintpointflist(job, &A[j], 3);
 	    gvputs(job, " curveto\n");
 	}
@@ -345,7 +342,7 @@ psgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-	for (j = 1; j < n; j += 3) {
+	for (size_t j = 1; j < n; j += 3) {
 	    gvprintpointflist(job, &A[j], 3);
 	    gvputs(job, " curveto\n");
 	}

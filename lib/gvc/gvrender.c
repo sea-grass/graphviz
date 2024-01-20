@@ -588,13 +588,12 @@ void gvrender_beziercurve(GVJ_t *job, pointf *af, size_t n, int filled) {
 
     if (gvre) {
 	if (gvre->beziercurve && job->obj->pen != PEN_NONE) {
-	    assert(n <= INT_MAX);
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->beziercurve(job, af, (int)n, filled);
+		gvre->beziercurve(job, af, n, filled);
 	    else {
 		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
-		gvre->beziercurve(job, AF, (int)n, filled);
+		gvre->beziercurve(job, AF, n, filled);
 		free(AF);
 	    }
 	}

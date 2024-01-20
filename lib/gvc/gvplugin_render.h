@@ -51,7 +51,7 @@ extern "C" {
 	void (*resolve_color) (GVJ_t * job, gvcolor_t * color);
 	void (*ellipse) (GVJ_t * job, pointf * A, int filled);
 	void (*polygon) (GVJ_t * job, pointf * A, int n, int filled);
-	void (*beziercurve) (GVJ_t * job, pointf * A, int n, int);
+	void (*beziercurve)(GVJ_t *job, pointf *A, size_t n, int);
 	void (*polyline)(GVJ_t *job, pointf *A, size_t n);
 	void (*comment) (GVJ_t * job, char *comment);
 	void (*library_shape) (GVJ_t * job, char *name, pointf * A, int n, int filled);

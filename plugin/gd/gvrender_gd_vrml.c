@@ -11,6 +11,8 @@
 
 #include "config.h"
 #include "gdgen_text.h"
+#include <assert.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -472,22 +474,22 @@ nearTail (GVJ_t* job, pointf a, Agedge_t* e)
     /* this is gruesome, but how else can we get z coord */
 #define GETZ(jp,op,p,e) (nearTail(jp,p,e)?op->tail_z:op->head_z) 
 
-static void
-vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void vrml_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     (void)filled;
 
     obj_state_t *obj = job->obj;
     edge_t *e = obj->u.e;
     double fstz, sndz;
     pointf p1, V[4];
-    int i, j, step;
+    int step;
     state_t *state = job->context;
 
     assert(e);
 
     fstz = state->Fstz = obj->tail_z; 
     sndz = state->Sndz = obj->head_z;
-    if (straight(A,n)) {
+    assert(n <= INT_MAX);
+    if (straight(A, (int)n)) {
 	doSegment (job, A, gvrender_ptf(job, ND_coord(agtail(e))),state->Fstz,gvrender_ptf(job, ND_coord(aghead(e))),state->Sndz);
 	return;
     }
@@ -495,9 +497,9 @@ vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     gvputs(job,   "Shape { geometry Extrusion  {\n"
                   "  spine [");
     V[3] = A[0];
-    for (i = 0; i + 3 < n; i += 3) {
+    for (size_t i = 0; i + 3 < n; i += 3) {
 	V[0] = V[3];
-	for (j = 1; j <= 3; j++)
+	for (size_t j = 1; j <= 3; j++)
 	    V[j] = A[i + j];
 	for (step = 0; step <= BEZIERSUBDIVISION; step++) {
 	    p1 = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);

@@ -19,7 +19,8 @@
  */
 
 #include "config.h"
-
+#include <assert.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -658,13 +659,13 @@ static void svg_ellipse(GVJ_t * job, pointf * A, int filled)
     gvputs(job, "\"/>\n");
 }
 
-static void
-svg_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     int gid = 0;
     obj_state_t *obj = job->obj;
   
+    assert(n <= INT_MAX);
     if (filled == GRADIENT) {
-	gid = svg_gradstyle(job, A, n);
+	gid = svg_gradstyle(job, A, (int)n);
     } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
@@ -676,7 +677,7 @@ svg_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     } 
     svg_grstyle(job, filled, gid);
     gvputs(job, " d=\"");
-    svg_bzptarray(job, A, n);
+    svg_bzptarray(job, A, (int)n);
     gvputs(job, "\"/>\n");
 }
 

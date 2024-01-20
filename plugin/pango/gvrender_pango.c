@@ -442,20 +442,19 @@ cairogen_polygon(GVJ_t * job, pointf * A, int n, int filled)
     cairo_stroke(cr);
 }
 
-static void
-cairogen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void cairogen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
-    int i;
 
     cairogen_set_penstyle(job, cr);
 
     cairo_move_to(cr, A[0].x, -A[0].y);
-    for (i = 1; i < n; i += 3)
+    for (size_t i = 1; i < n; i += 3)
 	cairo_curve_to(cr, A[i].x, -A[i].y, A[i + 1].x, -A[i + 1].y,
 		       A[i + 2].x, -A[i + 2].y);
     if (filled == GRADIENT || filled == RGRADIENT) {
-	cairo_gradient_fill (cr, obj, filled, A, n);
+	assert(n <= INT_MAX);
+	cairo_gradient_fill (cr, obj, filled, A, (int)n);
     }
     else if (filled) {
 	cairogen_set_color(cr, &obj->fillcolor);

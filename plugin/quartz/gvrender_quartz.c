@@ -410,13 +410,11 @@ static void quartzgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
     quartzgen_path(job, filled);
 }
 
-static void
-quartzgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void quartzgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     /* convert bezier into the current path */
     CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
-    int i;
-    for (i = 1; i < n; i += 3)
+    for (size_t i = 1; i < n; i += 3)
 	CGContextAddCurveToPoint(context, A[i].x, A[i].y, A[i + 1].x,
 				 A[i + 1].y, A[i + 2].x, A[i + 2].y);
 
