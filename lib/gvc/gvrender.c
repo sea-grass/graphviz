@@ -691,7 +691,7 @@ void gvrender_usershape(GVJ_t *job, char *name, pointf *a, size_t n,
     if (!(us = gvusershape_find(name))) {
 	if (find_user_shape(name)) {
 	    if (gvre && gvre->library_shape)
-		gvre->library_shape(job, name, a, (int)n, filled);
+		gvre->library_shape(job, name, a, n, filled);
 	}
 	return;
     }

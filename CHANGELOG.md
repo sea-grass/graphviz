@@ -71,8 +71,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: the gv.i and gv.cpp SWIG inputs are no longer included in a
   Graphviz installation. #2491
 - **Breaking**: the `gvrender_engine_t.beziercurve`,
-  `gvrender_engine_t.polygon`,  and `gvrender_engine_t.polyline` callbacks now
-  take the number of points, `n`, as a `size_t`.
+  `gvrender_engine_t.library_shape`, `gvrender_engine_t.polygon`,  and
+  `gvrender_engine_t.polyline` callbacks now take the number of points, `n`, as
+  a `size_t`.
 
 ### Fixed
 

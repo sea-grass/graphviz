@@ -54,7 +54,7 @@ extern "C" {
 	void (*beziercurve)(GVJ_t *job, pointf *A, size_t n, int);
 	void (*polyline)(GVJ_t *job, pointf *A, size_t n);
 	void (*comment) (GVJ_t * job, char *comment);
-	void (*library_shape) (GVJ_t * job, char *name, pointf * A, int n, int filled);
+	void (*library_shape)(GVJ_t *job, char *name, pointf *A, size_t n, int filled);
     };
 
 #ifdef __cplusplus

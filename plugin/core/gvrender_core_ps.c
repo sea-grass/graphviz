@@ -18,6 +18,7 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <common/utils.h>
 #include "ps.h"
 
@@ -398,25 +399,24 @@ static void psgen_comment(GVJ_t * job, char *str)
     gvputs(job, "\n");
 }
 
-static void psgen_library_shape(GVJ_t * job, char *name, pointf * A, int n, int filled)
-{
-    assert(n >= 0);
+static void psgen_library_shape(GVJ_t *job, char *name, pointf *A, size_t n,
+                                int filled) {
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "[ ");
-        gvprintpointflist(job, A, (size_t)n);
+        gvprintpointflist(job, A, n);
         gvputs(job, " ");
         gvprintpointf(job, A[0]);
-	gvprintf(job, " ]  %d true %s\n", n, name);
+	gvprintf(job, " ]  %" PRISIZE_T " true %s\n", n, name);
     }
     if (job->obj->pencolor.u.HSVA[3] > .5) {
         ps_set_pen_style(job);
         ps_set_color(job, &(job->obj->pencolor));
         gvputs(job, "[ ");
-        gvprintpointflist(job, A, (size_t)n);
+        gvprintpointflist(job, A, n);
         gvputs(job, " ");
         gvprintpointf(job, A[0]);
-        gvprintf(job, " ]  %d false %s\n", n, name);
+        gvprintf(job, " ]  %" PRISIZE_T " false %s\n", n, name);
     }
 }
 
