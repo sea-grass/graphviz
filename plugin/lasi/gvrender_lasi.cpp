@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -506,17 +507,14 @@ static void lasi_polygon(GVJ_t * job, pointf * A, int n, int filled)
     }
 }
 
-static void lasi_polyline(GVJ_t * job, pointf * A, int n)
-{
-    int j;
-
+static void lasi_polyline(GVJ_t *job, pointf *A, size_t n) {
     if (job->obj->pencolor.u.HSVA[3] > .5) {
 	ps_set_pen_style(job);
 	ps_set_color(job, &(job->obj->pencolor));
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-        for (j = 1; j < n; j++) {
+        for (size_t j = 1; j < n; j++) {
 	    gvprintpointf(job, A[j]);
 	    gvputs(job, " lineto\n");
 	}

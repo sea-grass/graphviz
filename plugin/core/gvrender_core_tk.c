@@ -300,16 +300,13 @@ static void tkgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
     }
 }
 
-static void tkgen_polyline(GVJ_t * job, pointf * A, int n)
-{
-    assert(n >= 0);
-
+static void tkgen_polyline(GVJ_t *job, pointf *A, size_t n) {
     obj_state_t *obj = job->obj;
 
     if (obj->pen != PEN_NONE) {
         tkgen_canvas(job);
         gvputs(job, " create line ");
-        gvprintpointflist(job, A, (size_t)n);
+        gvprintpointflist(job, A, n);
         gvputs(job, " -fill ");
         tkgen_print_color(job, obj->pencolor);
         if (obj->pen == PEN_DASHED)

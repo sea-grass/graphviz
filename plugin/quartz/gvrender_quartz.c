@@ -424,13 +424,11 @@ quartzgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     quartzgen_path(job, filled);
 }
 
-static void quartzgen_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void quartzgen_polyline(GVJ_t *job, pointf *A, size_t n) {
     /* convert polyline into the current path */
     CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
-    int i;
-    for (i = 1; i < n; ++i)
+    for (size_t i = 1; i < n; ++i)
 	CGContextAddLineToPoint(context, A[i].x, A[i].y);
 
     /* draw the ellipse */

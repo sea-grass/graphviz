@@ -15,6 +15,7 @@
 #include "types.h"
 #include "gvplugin.h"
 #include "gvcjob.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -51,7 +52,7 @@ extern "C" {
 	void (*ellipse) (GVJ_t * job, pointf * A, int filled);
 	void (*polygon) (GVJ_t * job, pointf * A, int n, int filled);
 	void (*beziercurve) (GVJ_t * job, pointf * A, int n, int);
-	void (*polyline) (GVJ_t * job, pointf * A, int n);
+	void (*polyline)(GVJ_t *job, pointf *A, size_t n);
 	void (*comment) (GVJ_t * job, char *comment);
 	void (*library_shape) (GVJ_t * job, char *name, pointf * A, int n, int filled);
     };

@@ -15,7 +15,9 @@
 
 #define _GNU_SOURCE
 #include "config.h"
+#include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -677,16 +679,16 @@ static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
 	}
 }
 
-static void pov_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void pov_polyline(GVJ_t *job, pointf *A, size_t n) {
 	gvputs(job, "//*** polyline\n");
 	z = layerz - 6;
 
 	char *p = pov_color_as_str(job, job->obj->pencolor, 0.0);
 
-	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", n);
+	assert(n <= INT_MAX);
+	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", (int)n);
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		gvprintf(job, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 		          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 	}

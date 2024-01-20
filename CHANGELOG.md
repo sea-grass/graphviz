@@ -70,6 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: `bezier.size` is now a `size_t`.
 - **Breaking**: the gv.i and gv.cpp SWIG inputs are no longer included in a
   Graphviz installation. #2491
+- **Breaking**: the `gvrender_engine_t.polyline` callback now takes the number
+  of points, `n`, as a `size_t`.
 
 ### Fixed
 

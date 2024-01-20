@@ -14,6 +14,7 @@
 #include <io.h>
 #endif
 
+#include <assert.h>
 #include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -635,11 +636,11 @@ static void xdot_polygon(GVJ_t * job, pointf * A, int n, int filled)
         xdot_points(job, 'p', A, n);
 }
 
-static void xdot_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void xdot_polyline(GVJ_t *job, pointf *A, size_t n) {
     xdot_style (job);
     xdot_pencolor (job);
-    xdot_points(job, 'L', A, n);
+    assert(n <= INT_MAX);
+    xdot_points(job, 'L', A, (int)n);
 }
 
 void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, bool filled)

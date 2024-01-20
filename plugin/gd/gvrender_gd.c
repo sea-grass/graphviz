@@ -513,11 +513,9 @@ static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
 	gdImageDestroy(brush);
 }
 
-static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void gdgen_polyline(GVJ_t *job, pointf *A, size_t n) {
     gdImagePtr im = job->context;
     pointf p, p1;
-    int i;
     int pen;
     bool pen_ok;
     gdImagePtr brush = NULL;
@@ -530,7 +528,7 @@ static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
 
     if (pen_ok) {
         p = A[0];
-        for (i = 1; i < n; i++) {
+        for (size_t i = 1; i < n; i++) {
 	    p1 = A[i];
 	    gdImageLine(im, ROUND(p.x), ROUND(p.y),
 		        ROUND(p1.x), ROUND(p1.y), pen);

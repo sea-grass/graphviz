@@ -56,7 +56,7 @@ static int dotted_len = ARRAY_SIZE(dotted);
 #include <cairo-svg.h>
 #endif
 
-static void cairogen_polyline(GVJ_t * job, pointf * A, int n);
+static void cairogen_polyline(GVJ_t *job, pointf *A, size_t n);
 
 static void cairogen_set_color(cairo_t * cr, gvcolor_t * color)
 {
@@ -465,17 +465,14 @@ cairogen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     cairo_stroke(cr);
 }
 
-static void
-cairogen_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void cairogen_polyline(GVJ_t *job, pointf *A, size_t n) {
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
-    int i;
 
     cairogen_set_penstyle(job, cr);
 
     cairo_move_to(cr, A[0].x, -A[0].y);
-    for (i = 1; i < n; i++)
+    for (size_t i = 1; i < n; i++)
 	cairo_line_to(cr, A[i].x, -A[i].y);
     cairogen_set_color(cr, &obj->pencolor);
     cairo_stroke(cr);

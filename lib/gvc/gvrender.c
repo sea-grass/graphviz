@@ -606,13 +606,12 @@ void gvrender_polyline(GVJ_t *job, pointf *af, size_t n) {
 
     if (gvre) {
 	if (gvre->polyline && job->obj->pen != PEN_NONE) {
-	    assert(n <= INT_MAX);
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->polyline(job, af, (int)n);
+		gvre->polyline(job, af, n);
 	    else {
 		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
-		gvre->polyline(job, AF, (int)n);
+		gvre->polyline(job, AF, n);
 		free(AF);
 	    }
 	}

@@ -9,7 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <assert.h>
+#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -26,6 +27,7 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <common/color.h>
@@ -409,8 +411,7 @@ static void fig_polygon(GVJ_t * job, pointf * A, int n, int filled)
     figptarray(job, A, n, 1);        /* closed shape */
 }
 
-static void fig_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void fig_polyline(GVJ_t *job, pointf *A, size_t n) {
     obj_state_t *obj = job->obj;
 
     int object_code = 2;        /* always 2 for polyline */
@@ -428,16 +429,17 @@ static void fig_polyline(GVJ_t * job, pointf * A, int n)
     int radius = 0;
     int forward_arrow = 0;
     int backward_arrow = 0;
-    int npoints = n;
+    const size_t npoints = n;
 
     fig_line_style(obj, &line_style, &style_val);
 
     gvprintf(job,
-            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %" PRISIZE_T "\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
-    figptarray(job, A, n, 0);        /* open shape */
+    assert(n <= INT_MAX);
+    figptarray(job, A, (int)n, 0); // open shape
 }
 
 gvrender_engine_t fig_engine = {

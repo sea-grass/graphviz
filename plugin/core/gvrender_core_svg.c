@@ -704,18 +704,15 @@ static void svg_polygon(GVJ_t * job, pointf * A, int n, int filled)
     gvputs(job, "\"/>\n");
 }
 
-static void svg_polyline(GVJ_t * job, pointf * A, int n)
-{
-    int i;
-
+static void svg_polyline(GVJ_t *job, pointf *A, size_t n) {
     gvputs(job, "<polyline");
     svg_grstyle(job, 0, 0);
     gvputs(job, " points=\"");
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         gvprintdouble(job, A[i].x);
         gvputc(job, ',');
         gvprintdouble(job, -A[i].y);
-        if (i != n - 1) {
+        if (i + 1 != n) {
             gvputc(job, ' ');
         }
     }

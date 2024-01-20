@@ -9,6 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
+#include <assert.h>
+#include <limits.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -376,9 +378,9 @@ static void pic_polygon(GVJ_t * job, pointf * A, int n, int filled)
     picptarray(job, A, n, 1);        /* closed shape */
 }
 
-static void pic_polyline(GVJ_t * job, pointf * A, int n)
-{
-    picptarray(job, A, n, 0);        /* open shape */
+static void pic_polyline(GVJ_t *job, pointf *A, size_t n) {
+  assert(n <= INT_MAX);
+  picptarray(job, A, (int)n, 0); // open shape
 }
 
 gvrender_engine_t pic_engine = {

@@ -9,7 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include <cassert>
+#include <climits>
 #include <stdlib.h>
 #include <string.h>
 
@@ -260,11 +261,11 @@ gdiplusgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	gdiplusgen_path(job, &path, filled);
 }
 
-static void gdiplusgen_polyline(GVJ_t *job, pointf *A, int n)
-{
+static void gdiplusgen_polyline(GVJ_t *job, pointf *A, size_t n) {
 	/* convert the lines into path */
 	GraphicsPath path;
-	path.AddLines(&points(A,n).front(), n);
+	assert(n <= INT_MAX);
+	path.AddLines(&points(A,n).front(), (int)n);
 
 	/* draw the path */
 	gdiplusgen_path(job, &path, 0);
