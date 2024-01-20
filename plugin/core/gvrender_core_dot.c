@@ -621,20 +621,20 @@ static void xdot_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
         xdot_points(job, 'B', A, (int)n);
 }
 
-static void xdot_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void xdot_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     xdot_style (job);
     xdot_pencolor (job);
+    assert(n <= INT_MAX);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
-	   xdot_gradient_fillcolor (job, filled, A, n);
+	   xdot_gradient_fillcolor(job, filled, A, (int)n);
 	}
         else
 	    xdot_fillcolor (job);
-        xdot_points(job, 'P', A, n);
+        xdot_points(job, 'P', A, (int)n);
     }
     else
-        xdot_points(job, 'p', A, n);
+        xdot_points(job, 'p', A, (int)n);
 }
 
 static void xdot_polyline(GVJ_t *job, pointf *A, size_t n) {

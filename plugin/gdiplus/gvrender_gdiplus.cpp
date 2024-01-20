@@ -241,11 +241,11 @@ static void gdiplusgen_ellipse(GVJ_t *job, pointf *A, int filled)
 	gdiplusgen_path(job, &path, filled);
 }
 
-static void gdiplusgen_polygon(GVJ_t *job, pointf *A, int n, int filled)
-{
+static void gdiplusgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
 	/* convert polygon into path */
 	GraphicsPath path;
-	path.AddPolygon(&points(A,n).front(), n);
+	assert(n <= INT_MAX);
+	path.AddPolygon(&points(A, n).front(), (int)n);
 
 	/* draw the path */
 	gdiplusgen_path(job, &path, filled);

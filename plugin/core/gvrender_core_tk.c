@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include "config.h"
-#include <assert.h>
 #include <inttypes.h>
 #include <stdarg.h>
 #include <stdint.h>
@@ -262,16 +261,13 @@ static void tkgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     }
 }
 
-static void tkgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
-    assert(n >= 0);
-
+static void tkgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
 
     if (obj->pen != PEN_NONE) {
         tkgen_canvas(job);
         gvputs(job, " create polygon ");
-        gvprintpointflist(job, A, (size_t)n);
+        gvprintpointflist(job, A, n);
         gvputs(job, " -fill ");
         if (filled)
             tkgen_print_color(job, obj->fillcolor);

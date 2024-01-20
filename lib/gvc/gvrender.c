@@ -555,11 +555,11 @@ void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled) {
 		job->obj->pencolor = job->obj->fillcolor;
 	    }
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->polygon(job, af, (int)n, filled);
+		gvre->polygon(job, af, n, filled);
 	    else {
 		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
-		gvre->polygon(job, AF, (int)n, filled);
+		gvre->polygon(job, AF, n, filled);
 		free(AF);
 	    }
 	    if (noPoly)

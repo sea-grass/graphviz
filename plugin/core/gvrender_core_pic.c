@@ -371,11 +371,10 @@ static void pic_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     gvputs(job, "\n");
 }
 
-static void pic_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void pic_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     (void)filled;
-
-    picptarray(job, A, n, 1);        /* closed shape */
+    assert(n <= INT_MAX);
+    picptarray(job, A, (int)n, 1); // closed shape
 }
 
 static void pic_polyline(GVJ_t *job, pointf *A, size_t n) {

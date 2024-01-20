@@ -396,13 +396,11 @@ static void quartzgen_ellipse(GVJ_t * job, pointf * A, int filled)
     quartzgen_path(job, filled);
 }
 
-static void quartzgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void quartzgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     /* convert polygon into the current path */
     CGContextRef context = job->context;
     CGContextMoveToPoint(context, A[0].x, A[0].y);
-    int i;
-    for (i = 1; i < n; ++i)
+    for (size_t i = 1; i < n; ++i)
 	CGContextAddLineToPoint(context, A[i].x, A[i].y);
     CGContextClosePath(context);
 

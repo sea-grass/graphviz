@@ -369,8 +369,7 @@ static void mp_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     gvputs(job, "\n");
 }
 
-static void mp_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void mp_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
 
     int object_code = 2;        /* always 2 for polyline */
@@ -388,16 +387,17 @@ static void mp_polygon(GVJ_t * job, pointf * A, int n, int filled)
     int radius = 0;
     int forward_arrow = 0;
     int backward_arrow = 0;
-    int npoints = n + 1;
+    const size_t npoints = n + 1;
 
     mp_line_style(obj, &line_style, &style_val);
 
     gvprintf(job,
-            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %" PRISIZE_T "\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
-    mpptarray(job, A, n, 1);        /* closed shape */
+    assert(n <= INT_MAX);
+    mpptarray(job, A, (int)n, 1); // closed shape
 }
 
 static void mp_polyline(GVJ_t *job, pointf *A, size_t n) {

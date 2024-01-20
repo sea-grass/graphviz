@@ -571,15 +571,14 @@ static void doArrowhead (GVJ_t *job, pointf * A)
                   "}\n");
 }
 
-static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
-{
+static void vrml_polygon(GVJ_t *job, pointf *A, size_t np, int filled) {
     obj_state_t *obj = job->obj;
     node_t *n;
     edge_t *e;
     double z = obj->z;
     pointf p, mp;
     gdPoint *points;
-    int i, pen;
+    int pen;
     gdImagePtr brush = NULL;
     double theta;
     state_t *state = job->context;
@@ -598,14 +597,15 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	n = obj->u.n;
 	pen = set_penstyle(job, state->im, brush);
 	points = gv_calloc(np, sizeof(gdPoint));
-	for (i = 0; i < np; i++) {
+	for (size_t i = 0; i < np; i++) {
 	    mp = vrml_node_point(job, n, A[i]);
 	    points[i].x = ROUND(mp.x);
 	    points[i].y = ROUND(mp.y);
 	}
+	assert(np <= INT_MAX);
 	if (filled)
-	    gdImageFilledPolygon(state->im, points, np, color_index(state->im, obj->fillcolor));
-	gdImagePolygon(state->im, points, np, pen);
+	    gdImageFilledPolygon(state->im, points, (int)np, color_index(state->im, obj->fillcolor));
+	gdImagePolygon(state->im, points, (int)np, pen);
 	free(points);
 	if (brush)
 	    gdImageDestroy(brush);
@@ -620,7 +620,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	gvputs(job,   "  }\n"
 	              "  geometry Extrusion {\n"
 	              "    crossSection [");
-	for (i = 0; i < np; i++) {
+	for (size_t i = 0; i < np; i++) {
 	    p.x = A[i].x - ND_coord(n).x;
 	    p.y = A[i].y - ND_coord(n).y;
 	    gvprintf(job, " %.3f %.3f,", p.x, p.y);
@@ -649,12 +649,12 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	    return;
 	}
 	p.x = p.y = 0.0;
-	for (i = 0; i < np; i++) {
+	for (size_t i = 0; i < np; i++) {
 	    p.x += A[i].x;
 	    p.y += A[i].y;
 	}
-	p.x = p.x / np;
-	p.y = p.y / np;
+	p.x /= (int)np;
+	p.y /= (int)np;
 
 	/* it is bad to know that A[1] is the aiming point, but we do */
 	theta =

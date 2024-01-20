@@ -17,6 +17,7 @@
 #include "config.h"
 #include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <limits.h>
 #include <math.h>
 #include <stdarg.h>
@@ -140,7 +141,7 @@
     "#debug %s\n"
 
 #define POV_POLYGON \
-    "polygon { %d,\n"
+    "polygon { %" PRISIZE_T ",\n"
 
 #define POV_VECTOR3 \
     "<%9.3f, %9.3f, %9.3f>"
@@ -632,16 +633,16 @@ static void pov_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 	agxbfree(&pov);
 }
 
-static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void pov_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
 	gvputs(job, "//*** polygon\n");
 	z = layerz - 2;
 
 	char *p = pov_color_as_str(job, job->obj->pencolor, 0.0);
 
-	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", n + 1);
+	assert(n <= INT_MAX - 1);
+	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", (int)n + 1);
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		gvprintf(job, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 		          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 	}
@@ -664,7 +665,7 @@ static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
 
 		gvprintf(job, POV_POLYGON, n);
 
-		for (int i = 0; i < n; i++) {
+		for (size_t i = 0; i < n; i++) {
 			//create on z = 0 plane, then translate to real z pos
 			gvprintf(job, "\n    " POV_VECTOR3,
 			       A[i].x + job->translation.x,

@@ -681,18 +681,18 @@ static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     gvputs(job, "\"/>\n");
 }
 
-static void svg_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
-    int i, gid = 0;
+static void svg_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
+    int gid = 0;
     if (filled == GRADIENT) {
-	gid = svg_gradstyle(job, A, n);
+	assert(n <= INT_MAX);
+	gid = svg_gradstyle(job, A, (int)n);
     } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
     gvputs(job, "<polygon");
     svg_grstyle(job, filled, gid);
     gvputs(job, " points=\"");
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         gvprintdouble(job, A[i].x);
         gvputc(job, ',');
         gvprintdouble(job, -A[i].y);
