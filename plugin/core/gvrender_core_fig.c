@@ -10,7 +10,6 @@
 
 #include "config.h"
 #include <assert.h>
-#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -39,12 +38,10 @@ typedef enum { FORMAT_FIG, } format_type;
 
 static int Depth;
 
-static void figptarray(GVJ_t *job, pointf * A, int n, int close)
-{
-    int i;
+static void figptarray(GVJ_t *job, pointf *A, size_t n, int close) {
     point p;
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	PF2P(A[i],p);
         gvprintf(job, " %d %d", p.x, p.y);
     }
@@ -405,8 +402,7 @@ static void fig_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
-    assert(n <= INT_MAX);
-    figptarray(job, A, (int)n, 1); // closed shape
+    figptarray(job, A, n, 1); // closed shape
 }
 
 static void fig_polyline(GVJ_t *job, pointf *A, size_t n) {
@@ -436,8 +432,7 @@ static void fig_polyline(GVJ_t *job, pointf *A, size_t n) {
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
-    assert(n <= INT_MAX);
-    figptarray(job, A, (int)n, 0); // open shape
+    figptarray(job, A, n, 0); // open shape
 }
 
 gvrender_engine_t fig_engine = {
