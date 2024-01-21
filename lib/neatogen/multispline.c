@@ -547,8 +547,7 @@ static void freeTriGraph(tgraph * tg)
  * Generate graph with triangles as nodes and an edge iff two triangles
  * share an edge.
  */
-static tgraph *mkTriGraph(surface_t * sf, int maxv, pointf * pts)
-{
+static tgraph *mkTriGraph(surface_t *sf, pointf *pts) {
     tnode *np;
     int j, i, ne = 0;
     int *jp;
@@ -603,7 +602,6 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     boxf bb;
     int npts;
     surface_t *sf;
-    int maxv = 4; /* default max. no. of vertices in an obstacle; set below */
     /* points in obstacle i have indices obsi[i] through obsi[i+1]-1 in pts
      */
     int *obsi = gv_calloc(npoly + 1, sizeof(int));
@@ -641,8 +639,6 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
 		segs[six++] = obsi[i];
 	    pts[ix++] = obs->ps[j - 1];
 	}
-	if (obs->pn > maxv)
-	    maxv = obs->pn;
     }
     obsi[i] = ix;
 
@@ -664,7 +660,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     rtr->tris = mkTriIndices(sf);
     rtr->trimap = mapSegToTri(sf);
     rtr->tn = sf->nfaces;
-    rtr->tg = mkTriGraph(sf, maxv, pts);
+    rtr->tg = mkTriGraph(sf, pts);
 
     freeSurface(sf);
     return rtr;

@@ -18,10 +18,7 @@
 #include <limits.h>
 #include <math.h>
 #include <pathplan/pathutil.h>
-
-#define ISCCW 1
-#define ISCW  2
-#define ISON  3
+#include <pathplan/tri.h>
 
 #define DQ_FRONT 1
 #define DQ_BACK  2
@@ -67,7 +64,6 @@ static Ppoint_t *ops;
 static size_t opn;
 
 static int triangulate(pointnlink_t **, int);
-static bool isdiagonal(int, int, pointnlink_t **, int);
 static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
 static void connecttris(size_t, size_t);
 static bool marktripath(size_t, size_t);
@@ -76,13 +72,15 @@ static void add2dq(deque_t *dq, int, pointnlink_t*);
 static void splitdq(deque_t *dq, int, size_t);
 static size_t finddqsplit(const deque_t *dq, pointnlink_t*);
 
-static int ccw(Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static bool intersects(Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static bool between(Ppoint_t *, Ppoint_t *, Ppoint_t *);
 static int pointintri(size_t, Ppoint_t *);
 
 static int growpnls(size_t);
 static int growops(size_t);
+
+static Ppoint_t *point_indexer(void *base, int index) {
+  pointnlink_t **b = base;
+  return b[index]->pp;
+}
 
 /* Pshortestpath:
  * Find a shortest path contained in the polygon polyp going between the
@@ -312,7 +310,7 @@ static int triangulate(pointnlink_t **points, int point_count) {
 		{
 			pnlip1 = (pnli + 1) % point_count;
 			pnlip2 = (pnli + 2) % point_count;
-			if (isdiagonal(pnli, pnlip2, points, point_count))
+			if (isdiagonal(pnli, pnlip2, points, point_count, point_indexer))
 			{
 				if (loadtriangle(points[pnli], points[pnlip1], points[pnlip2]) != 0)
 					return -1;
@@ -329,35 +327,6 @@ static int triangulate(pointnlink_t **points, int point_count) {
 	}
 
     return 0;
-}
-
-/* check if (i, i + 2) is a diagonal */
-static bool isdiagonal(int pnli, int pnlip2, pointnlink_t **points,
-                       int point_count) {
-    int pnlip1, pnlim1, pnlj, pnljp1, res;
-
-    /* neighborhood test */
-    pnlip1 = (pnli + 1) % point_count;
-    pnlim1 = (pnli + point_count - 1) % point_count;
-    /* If P[pnli] is a convex vertex [ pnli+1 left of (pnli-1,pnli) ]. */
-    if (ccw(points[pnlim1]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW)
-	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlim1]->pp) == ISCCW
-	   && ccw(points[pnlip2]->pp, points[pnli]->pp, points[pnlip1]->pp) == ISCCW;
-    /* Assume (pnli - 1, pnli, pnli + 1) not collinear. */
-    else
-	res = ccw(points[pnli]->pp, points[pnlip2]->pp, points[pnlip1]->pp) == ISCW;
-    if (!res)
-	return false;
-
-    /* check against all other edges */
-    for (pnlj = 0; pnlj < point_count; pnlj++) {
-	pnljp1 = (pnlj + 1) % point_count;
-	if (!(pnlj == pnli || pnljp1 == pnli || pnlj == pnlip2 || pnljp1 == pnlip2))
-	    if (intersects(points[pnli]->pp, points[pnlip2]->pp,
-			   points[pnlj]->pp, points[pnljp1]->pp))
-		return false;
-    }
-    return true;
 }
 
 static int loadtriangle(pointnlink_t * pnlap, pointnlink_t * pnlbp,
@@ -441,50 +410,6 @@ static size_t finddqsplit(const deque_t *dq, pointnlink_t *pnlp) {
 	if (ccw(dq->pnlps[index - 1]->pp, dq->pnlps[index]->pp, pnlp->pp) == ISCW)
 	    return index;
     return dq->apex;
-}
-
-/* ccw test: CCW, CW, or co-linear */
-static int ccw(Ppoint_t * p1p, Ppoint_t * p2p, Ppoint_t * p3p)
-{
-    double d;
-
-    d = (p1p->y - p2p->y) * (p3p->x - p2p->x) -
-	(p3p->y - p2p->y) * (p1p->x - p2p->x);
-    return d > 0 ? ISCCW : (d < 0 ? ISCW : ISON);
-}
-
-/* line to line intersection */
-static bool intersects(Ppoint_t * pap, Ppoint_t * pbp,
-		      Ppoint_t * pcp, Ppoint_t * pdp)
-{
-    int ccw1, ccw2, ccw3, ccw4;
-
-    if (ccw(pap, pbp, pcp) == ISON || ccw(pap, pbp, pdp) == ISON ||
-	ccw(pcp, pdp, pap) == ISON || ccw(pcp, pdp, pbp) == ISON) {
-	if (between(pap, pbp, pcp) || between(pap, pbp, pdp) ||
-	    between(pcp, pdp, pap) || between(pcp, pdp, pbp))
-	    return true;
-    } else {
-	ccw1 = ccw(pap, pbp, pcp) == ISCCW ? 1 : 0;
-	ccw2 = ccw(pap, pbp, pdp) == ISCCW ? 1 : 0;
-	ccw3 = ccw(pcp, pdp, pap) == ISCCW ? 1 : 0;
-	ccw4 = ccw(pcp, pdp, pbp) == ISCCW ? 1 : 0;
-	return (ccw1 ^ ccw2) && (ccw3 ^ ccw4);
-    }
-    return false;
-}
-
-/* is pbp between pap and pcp */
-static bool between(Ppoint_t * pap, Ppoint_t * pbp, Ppoint_t * pcp)
-{
-    Ppoint_t p1, p2;
-
-    p1.x = pbp->x - pap->x, p1.y = pbp->y - pap->y;
-    p2.x = pcp->x - pap->x, p2.y = pcp->y - pap->y;
-    if (ccw(pap, pbp, pcp) != ISON)
-	return false;
-    return p2.x * p1.x + p2.y * p1.y >= 0 &&
-	p2.x * p2.x + p2.y * p2.y <= p1.x * p1.x + p1.y * p1.y;
 }
 
 static int pointintri(size_t trii, Ppoint_t *pp) {
