@@ -526,7 +526,7 @@ static void xdot_color_stop (agxbuf* xb, float v, gvcolor_t* clr)
   xdot_str_xbuf(xb, "", color2str (clr->u.rgba));
 }
 
-static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
+static void xdot_gradient_fillcolor(GVJ_t *job, int filled, pointf *A, size_t n)
 {
     obj_state_t* obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180;
@@ -538,14 +538,15 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
     }
 
     agxbuf xb = {0};
+    assert(n <= INT_MAX);
     if (filled == GRADIENT) {
-	get_gradient_points(A, G, n, angle, 2);
+	get_gradient_points(A, G, (int)n, angle, 2);
 	agxbputc (&xb, '[');
 	xdot_point (&xb, G[0]);
 	xdot_point (&xb, G[1]);
     }
     else {
-	get_gradient_points(A, G, n, 0, 3);
+	get_gradient_points(A, G, (int)n, 0, 3);
 	  // r2 is outer radius
 	double r2 = G[1].y;
 	if (obj->gradient_angle == 0) {
@@ -611,7 +612,7 @@ static void xdot_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     assert(n <= INT_MAX);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
-	   xdot_gradient_fillcolor(job, filled, A, (int)n);
+	   xdot_gradient_fillcolor(job, filled, A, n);
 	}
         else
 	    xdot_fillcolor (job);
@@ -627,7 +628,7 @@ static void xdot_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     assert(n <= INT_MAX);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
-	   xdot_gradient_fillcolor(job, filled, A, (int)n);
+	   xdot_gradient_fillcolor(job, filled, A, n);
 	}
         else
 	    xdot_fillcolor (job);
