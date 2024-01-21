@@ -113,13 +113,10 @@ static void xdot_num(agxbuf *xb, double v)
   xdot_fmt_num(xb, v);
 }
 
-static void xdot_points(GVJ_t *job, char c, pointf * A, int n)
-{
+static void xdot_points(GVJ_t *job, char c, pointf *A, size_t n) {
     emit_state_t emit_state = job->obj->emit_state;
-    int i;
-
-    agxbprint(xbufs[emit_state], "%c %d ", c, n);
-    for (i = 0; i < n; i++)
+    agxbprint(xbufs[emit_state], "%c %" PRISIZE_T " ", c, n);
+    for (size_t i = 0; i < n; i++)
         xdot_point(xbufs[emit_state], A[i]);
 }
 
@@ -609,40 +606,37 @@ static void xdot_ellipse(GVJ_t * job, pointf * A, int filled)
 static void xdot_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     xdot_style (job);
     xdot_pencolor (job);
-    assert(n <= INT_MAX);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
 	   xdot_gradient_fillcolor(job, filled, A, n);
 	}
         else
 	    xdot_fillcolor (job);
-        xdot_points(job, 'b', A, (int)n); // NB - 'B' & 'b' are reversed in comparison to the other items
+        xdot_points(job, 'b', A, n); // NB - 'B' & 'b' are reversed in comparison to the other items
     }
     else
-        xdot_points(job, 'B', A, (int)n);
+        xdot_points(job, 'B', A, n);
 }
 
 static void xdot_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     xdot_style (job);
     xdot_pencolor (job);
-    assert(n <= INT_MAX);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
 	   xdot_gradient_fillcolor(job, filled, A, n);
 	}
         else
 	    xdot_fillcolor (job);
-        xdot_points(job, 'P', A, (int)n);
+        xdot_points(job, 'P', A, n);
     }
     else
-        xdot_points(job, 'p', A, (int)n);
+        xdot_points(job, 'p', A, n);
 }
 
 static void xdot_polyline(GVJ_t *job, pointf *A, size_t n) {
     xdot_style (job);
     xdot_pencolor (job);
-    assert(n <= INT_MAX);
-    xdot_points(job, 'L', A, (int)n);
+    xdot_points(job, 'L', A, n);
 }
 
 void core_loadimage_xdot(GVJ_t * job, usershape_t *us, boxf b, bool filled)
