@@ -19,8 +19,6 @@
  */
 
 #include "config.h"
-#include <assert.h>
-#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -575,8 +573,7 @@ static int svg_gradstyle(GVJ_t *job, pointf *A, size_t n) {
     obj_state_t *obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180; //angle of gradient line
     G[0].x = G[0].y = G[1].x = G[1].y = 0.;
-    assert(n <= INT_MAX);
-    get_gradient_points(A, G, (int)n, angle, 0); // get points on gradient line
+    get_gradient_points(A, G, n, angle, 0); // get points on gradient line
 
     gvputs(job, "<defs>\n<linearGradient id=\"");
     if (obj->id != NULL) {

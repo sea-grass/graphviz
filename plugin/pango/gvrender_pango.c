@@ -10,7 +10,6 @@
 
 #include "config.h"
 #include <errno.h>
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -350,13 +349,12 @@ static void cairo_gradient_fill(cairo_t *cr, obj_state_t *obj, int filled,
     float r1,r2;
     pointf G[2],c1;
 
-    assert(n <= INT_MAX);
     if (filled == GRADIENT) {
-	  get_gradient_points(A, G, (int)n, angle, 0);
+	  get_gradient_points(A, G, n, angle, 0);
 	  pat = cairo_pattern_create_linear (G[0].x,G[0].y,G[1].x,G[1].y);
     }
     else {
-	get_gradient_points(A, G, (int)n, 0, 1);
+	get_gradient_points(A, G, n, 0, 1);
 	  //r1 is inner radius, r2 is outer radius
 	r1 = G[1].x;    /* Set a r2/4 in get_gradient_points */
 	r2 = G[1].y;

@@ -107,7 +107,7 @@ UTILS_API bool overlap_node(node_t *n, boxf b);
 UTILS_API bool overlap_label(textlabel_t *lp, boxf b);
 UTILS_API bool overlap_edge(edge_t *e, boxf b);
 
-UTILS_API void get_gradient_points(pointf *A, pointf *G, int n, double angle,
+UTILS_API void get_gradient_points(pointf *A, pointf *G, size_t n, double angle,
                                    int flags);
 
 UTILS_API void processClusterEdges(graph_t *g);

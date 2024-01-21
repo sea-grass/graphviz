@@ -14,8 +14,6 @@
 #include <io.h>
 #endif
 
-#include <assert.h>
-#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -535,15 +533,14 @@ static void xdot_gradient_fillcolor(GVJ_t *job, int filled, pointf *A, size_t n)
     }
 
     agxbuf xb = {0};
-    assert(n <= INT_MAX);
     if (filled == GRADIENT) {
-	get_gradient_points(A, G, (int)n, angle, 2);
+	get_gradient_points(A, G, n, angle, 2);
 	agxbputc (&xb, '[');
 	xdot_point (&xb, G[0]);
 	xdot_point (&xb, G[1]);
     }
     else {
-	get_gradient_points(A, G, (int)n, 0, 3);
+	get_gradient_points(A, G, n, 0, 3);
 	  // r2 is outer radius
 	double r2 = G[1].y;
 	if (obj->gradient_angle == 0) {
