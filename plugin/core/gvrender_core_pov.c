@@ -18,7 +18,6 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
-#include <limits.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -118,7 +117,7 @@
 #define POV_SPHERE_SWEEP \
     "sphere_sweep {\n"\
     "    %s\n"\
-    "    %d,\n"
+    "    %" PRISIZE_T ",\n"
 
 #define POV_SPHERE \
     "sphere {"POV_VECTOR3", 1.0\n"	// center, radius
@@ -602,8 +601,7 @@ static void pov_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 	char *p = pov_color_as_str(job, job->obj->fillcolor, 0.0);
 
 	agxbuf pov = {0};
-	assert(n <= INT_MAX - 2);
-	agxbprint(&pov, POV_SPHERE_SWEEP, "b_spline", (int)n + 2);
+	agxbprint(&pov, POV_SPHERE_SWEEP, "b_spline", n + 2);
 
 	for (size_t i = 0; i < n; i++) {
 		agxbprint(&pov, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
@@ -639,8 +637,7 @@ static void pov_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
 
 	char *p = pov_color_as_str(job, job->obj->pencolor, 0.0);
 
-	assert(n <= INT_MAX - 1);
-	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", (int)n + 1);
+	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", n + 1);
 
 	for (size_t i = 0; i < n; i++) {
 		gvprintf(job, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
@@ -687,8 +684,7 @@ static void pov_polyline(GVJ_t *job, pointf *A, size_t n) {
 
 	char *p = pov_color_as_str(job, job->obj->pencolor, 0.0);
 
-	assert(n <= INT_MAX);
-	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", (int)n);
+	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", n);
 
 	for (size_t i = 0; i < n; i++) {
 		gvprintf(job, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
