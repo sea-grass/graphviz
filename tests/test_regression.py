@@ -3622,3 +3622,18 @@ def test_dot_Vrandom():
     assert proc.stderr.startswith(
         f"dot - graphviz version {package_version.strip()} ("
     ), "unexpected -V info"
+
+
+def test_pic_font_size():
+    """
+    font size in PIC output format should not be clamped down to 1
+    related to https://gitlab.com/graphviz/graphviz/-/issues/2487
+    """
+
+    # run a basic graph through PIC generation
+    src = "graph { a -- b; }"
+    pic = dot("pic", source=src)
+
+    # confirm we got a non-1 font size
+    m = re.search(r"^\.ps (\d+)", pic, flags=re.MULTILINE)
+    assert int(m.group(1)) > 1, "font size clamped down to 1"
