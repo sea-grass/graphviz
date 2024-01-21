@@ -9,8 +9,6 @@
  *************************************************************************/
 
 #include "config.h"
-#include <assert.h>
-#include <limits.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -139,11 +137,10 @@ static const char *picfontname(strview_t psname) {
     return "R";
 }
 
-static void picptarray(GVJ_t *job, pointf * A, int n, int close)
-{
+static void picptarray(GVJ_t *job, pointf *A, size_t n, int close) {
     point p;
 
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	PF2P(A[i],p);
         if (i == 0) {
             gvprintf(job, "move to (%d, %d)", p.x, p.y);
@@ -373,13 +370,11 @@ static void pic_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 
 static void pic_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     (void)filled;
-    assert(n <= INT_MAX);
-    picptarray(job, A, (int)n, 1); // closed shape
+    picptarray(job, A, n, 1); // closed shape
 }
 
 static void pic_polyline(GVJ_t *job, pointf *A, size_t n) {
-  assert(n <= INT_MAX);
-  picptarray(job, A, (int)n, 0); // open shape
+  picptarray(job, A, n, 0); // open shape
 }
 
 gvrender_engine_t pic_engine = {
