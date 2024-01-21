@@ -24,6 +24,7 @@
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -61,16 +62,14 @@ static bool emit_standalone_headers(const GVJ_t *job) {
   return job->render.id != FORMAT_SVG_INLINE;
 }
 
-static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
-{
-    int i;
+static void svg_bzptarray(GVJ_t *job, pointf *A, size_t n) {
     char c;
 
     c = 'M';			/* first point */
 #if EDGEALIGN
     if (A[0].x <= A[n-1].x) {
 #endif
-	for (i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 	    gvwrite(job, &c, 1);
             gvprintdouble(job, A[i].x);
             gvputc(job, ',');
@@ -82,7 +81,7 @@ static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
 	}
 #if EDGEALIGN
     } else {
-	for (i = n-1; i >= 0; i--) {
+	for (size_t i = n - 1; i != SIZE_MAX; i--) {
 	    gvwrite(job, &c, 1);
             gvprintdouble(job, A[i].x);
             gvputc(job, ',');
@@ -663,7 +662,6 @@ static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     int gid = 0;
     obj_state_t *obj = job->obj;
   
-    assert(n <= INT_MAX);
     if (filled == GRADIENT) {
 	gid = svg_gradstyle(job, A, n);
     } else if (filled == RGRADIENT) {
@@ -677,7 +675,7 @@ static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     } 
     svg_grstyle(job, filled, gid);
     gvputs(job, " d=\"");
-    svg_bzptarray(job, A, (int)n);
+    svg_bzptarray(job, A, n);
     gvputs(job, "\"/>\n");
 }
 
