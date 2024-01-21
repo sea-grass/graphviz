@@ -1120,7 +1120,6 @@ void dumpOpts (ipsep_options* opp, int nv)
 static void
 majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adjust_data* am)
 {
-    double **coords;
     int ne;
     int rv = 0;
     node_t *v;
@@ -1137,8 +1136,8 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
     if (init == INIT_SELF)
 	opts |= opt_smart_init;
 
-    coords = N_GNEW(dim, double *);
-    coords[0] = N_GNEW(nv * dim, double);
+    double **coords = gv_calloc(dim, sizeof(double *));
+    coords[0] = gv_calloc(nv * dim, sizeof(double));
     for (int i = 1; i < Ndim; i++) {
 	coords[i] = coords[0] + i * nv;
     }
@@ -1166,9 +1165,8 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 	else {
             char* str;
             ipsep_options opt;
-            pointf* nsize;
 	    cluster_data *cs = cluster_map(mg,g);
-	    nsize = N_GNEW(nv, pointf);
+            pointf *nsize = gv_calloc(nv, sizeof(pointf));
             opt.edge_gap = lgap;
             opt.nsize = nsize;
             opt.clusters = cs;

@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <float.h>
 #include <math.h>
 #include <neatogen/digcola.h>
@@ -70,8 +71,8 @@ power_iteration_orthog(float** square_mat, int n, int neigs,
      */
 
 	int i,j;
-	double *tmp_vec = N_GNEW(n, double);
-	double *last_vec = N_GNEW(n, double);
+	double *tmp_vec = gv_calloc(n, sizeof(double));
+	double *last_vec = gv_calloc(n, sizeof(double));
 	double *curr_vector;
 	double len;
 	double angle;
@@ -185,7 +186,7 @@ exit:
 static float* 
 compute_avgs(DistType** Dij, int n, float* all_avg) 
 {
-	float* row_avg = N_GNEW(n, float);
+	float* row_avg = gv_calloc(n, sizeof(float));
 	int i,j;
 	double sum=0, sum_row;
 
@@ -205,8 +206,8 @@ static float**
 compute_Bij(DistType** Dij, int n)
 {
 	int i,j;
-	float* storage = N_GNEW(n*n,float);
-	float** Bij = N_GNEW(n, float*);
+	float *storage = gv_calloc(n * n, sizeof(float));
+	float **Bij = gv_calloc(n, sizeof(float *));
 	float* row_avg; 
     float all_avg;
 
@@ -230,10 +231,10 @@ CMDS_orthog(int n, int dim, double** eigs, double tol,
 {
 	int i,j;
 	float** Bij = compute_Bij(Dij, n);
-	double* evals= N_GNEW(dim, double);
+	double *evals = gv_calloc(dim, sizeof(double));
 	
 	assert(orthog != NULL);
-	double *orthog_aux = N_GNEW(n, double);
+	double *orthog_aux = gv_calloc(n, sizeof(double));
 	for (i=0; i<n; i++) {
 		orthog_aux[i]=orthog[i];
 	}
@@ -257,14 +258,13 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	int iterations2;
 	int i,j, rv = 0;
 	DistType** Dij;
-	float* f_storage = NULL;	
 	double* x = given_coords;	
 	double uniLength;
 	double* y = new_coords;
-	float** lap = N_GNEW(n, float*);
+	float **lap = gv_calloc(n, sizeof(float *));
 	float degree;
 	double pos_i;
-	double* balance = N_GNEW(n, double);
+	double *balance = gv_calloc(n, sizeof(double));
 	double b;
 	bool converged;
 
@@ -296,7 +296,7 @@ int IMDS_given_dim(vtx_data* graph, int n, double* given_coords,
 	CMDS_orthog(n, 1, &y, conj_tol, x, Dij);
 	
 	/* Compute Laplacian: */
-	f_storage = N_GNEW(n*n, float);
+	float *f_storage = gv_calloc(n * n, sizeof(float));
 	
 	for (i=0; i<n; i++) {
 		lap[i]=f_storage+i*n;

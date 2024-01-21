@@ -8,9 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-/* poly.c
- */
-
+#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <assert.h>
 #include <string.h>
@@ -106,14 +104,13 @@ static Point makeScaledPoint(double x, double y)
 
 static Point *genRound(Agnode_t *n, size_t *sidep, float xm, float ym) {
     size_t sides = 0;
-    Point *verts;
     char *p = agget(n, "samplepoints");
 
     int isides = 0;
     if (p)
 	isides = atoi(p);
     sides = isides < 3 ? DFLT_SAMPLE : (size_t)isides;
-    verts = N_GNEW(sides, Point);
+    Point *verts = gv_calloc(sides, sizeof(Point));
     for (size_t i = 0; i < sides; i++) {
 	verts[i].x =
 	    (ND_width(n) / 2.0 + xm) * cos((double)i / (double)sides * M_PI * 2.0);
@@ -138,7 +135,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	b.x = ND_width(n) / 2.0 + xmargin;
 	b.y = ND_height(n) / 2.0 + ymargin;
 	pp->kind = BOX;
-	verts = N_GNEW(sides, Point);
+	verts = gv_calloc(sides, sizeof(Point));
 	PUTPT(verts[0], b.x, b.y);
 	PUTPT(verts[1], -b.x, b.y);
 	PUTPT(verts[2], -b.x, -b.y);
@@ -160,7 +157,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 		pp->kind = 0;
 
 	    if (sides >= 3) {	/* real polygon */
-		verts = N_GNEW(sides, Point);
+		verts = gv_calloc(sides, sizeof(Point));
 		if (pp->kind == BOX) {
 			/* To do an additive margin, we rely on knowing that
 			 * the vertices are CCW starting from the UR
@@ -189,7 +186,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    break;
 	case SH_RECORD: {
 	    sides = 4;
-	    verts = N_GNEW(sides, Point);
+	    verts = gv_calloc(sides, sizeof(Point));
 	    boxf b = ((field_t*)ND_shape_info(n))->b;
 	    verts[0] = makeScaledTransPoint(b.LL.x, b.LL.y, -xmargin, -ymargin);
 	    verts[1] = makeScaledTransPoint(b.UR.x, b.LL.y, xmargin, -ymargin);
@@ -229,7 +226,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	b.x = ND_width(n) / 2.0;
 	b.y = ND_height(n) / 2.0;
 	pp->kind = BOX;
-	verts = N_GNEW(sides, Point);
+	verts = gv_calloc(sides, sizeof(Point));
 	PUTPT(verts[0], b.x, b.y);
 	PUTPT(verts[1], -b.x, b.y);
 	PUTPT(verts[2], -b.x, -b.y);
@@ -240,7 +237,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    poly = ND_shape_info(n);
 	    sides = poly->sides;
 	    if (sides >= 3) {	/* real polygon */
-		verts = N_GNEW(sides, Point);
+		verts = gv_calloc(sides, sizeof(Point));
 		for (size_t i = 0; i < sides; i++) {
 		    verts[i].x = PS2INCH(poly->vertices[i].x);
 		    verts[i].y = PS2INCH(poly->vertices[i].y);
@@ -261,7 +258,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    break;
 	case SH_RECORD: {
 	    sides = 4;
-	    verts = N_GNEW(sides, Point);
+	    verts = gv_calloc(sides, sizeof(Point));
 	    boxf b = ((field_t *) ND_shape_info(n))->b;
 	    verts[0] = makeScaledPoint(b.LL.x, b.LL.y);
 	    verts[1] = makeScaledPoint(b.UR.x, b.LL.y);
@@ -371,7 +368,7 @@ static int inPoly(Point vertex[], int n, Point q)
     double crossings = 0;	/* number of edge/ray crossings */
 
     if (tp3 == NULL)
-	tp3 = N_GNEW(maxcnt, Point);
+	tp3 = gv_calloc(maxcnt, sizeof(Point));
 
     /* Shift so that q is the origin. */
     for (i = 0; i < n; i++) {
@@ -384,8 +381,8 @@ static int inPoly(Point vertex[], int n, Point q)
 	i1 = (i + n - 1) % n;
 
 	/* if edge is horizontal, test to see if the point is on it */
-	if ((tp3[i].y == 0) && (tp3[i1].y == 0)) {
-	    if ((tp3[i].x * tp3[i1].x) < 0) {
+	if (tp3[i].y == 0 && tp3[i1].y == 0) {
+	    if (tp3[i].x * tp3[i1].x < 0) {
 		return 1;
 	    } else {
 		continue;
@@ -393,8 +390,8 @@ static int inPoly(Point vertex[], int n, Point q)
 	}
 
 	/* if e straddles the x-axis... */
-	if (((tp3[i].y >= 0) && (tp3[i1].y <= 0)) ||
-	    ((tp3[i1].y >= 0) && (tp3[i].y <= 0))) {
+	if ((tp3[i].y >= 0 && tp3[i1].y <= 0) ||
+	    (tp3[i1].y >= 0 && tp3[i].y <= 0)) {
 	    /* e straddles ray, so compute intersection with ray. */
 	    x = (tp3[i].x * tp3[i1].y - tp3[i1].x * tp3[i].y)
 		/ (double) (tp3[i1].y - tp3[i].y);
@@ -405,7 +402,7 @@ static int inPoly(Point vertex[], int n, Point q)
 
 	    /* crosses ray if strictly positive intersection. */
 	    if (x > 0) {
-		if ((tp3[i].y == 0) || (tp3[i1].y == 0)) {
+		if (tp3[i].y == 0 || tp3[i1].y == 0) {
 		    crossings += .5;	/* goes through vertex */
 		} else {
 		    crossings += 1.0;
@@ -415,7 +412,7 @@ static int inPoly(Point vertex[], int n, Point q)
     }
 
     /* q inside if an odd number of crossings. */
-    if ((((int) crossings) % 2) == 1)
+    if ((int)crossings % 2 == 1)
 	return 1;
     else
 	return 0;
@@ -467,8 +464,8 @@ int polyOverlap(Point p, Poly * pp, Point q, Poly * qp)
     }
 
     if (tp1 == NULL) {
-	tp1 = N_GNEW(maxcnt, Point);
-	tp2 = N_GNEW(maxcnt, Point);
+	tp1 = gv_calloc(maxcnt, sizeof(Point));
+	tp2 = gv_calloc(maxcnt, sizeof(Point));
     }
 
     transCopy(pp->verts, pp->nverts, p, tp1);

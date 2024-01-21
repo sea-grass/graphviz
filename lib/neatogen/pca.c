@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
 #include <neatogen/pca.h>
 #include <neatogen/closest.h>
@@ -23,20 +23,16 @@ void
 PCA_alloc(DistType ** coords, int dim, int n, double **new_coords,
 	  int new_dim)
 {
-    double **DD = NULL;		/* dim*dim matrix: coords*coords^T */
     double sum;
     int i, j, k;
-    double **eigs = NULL;
-    double *evals = NULL;
-    double *storage_ptr;
 
-    eigs = N_GNEW(new_dim, double *);
+    double **eigs = gv_calloc(new_dim, sizeof(double *));
     for (i = 0; i < new_dim; i++)
-	eigs[i] = N_GNEW(dim, double);
-    evals = N_GNEW(new_dim, double);
+	eigs[i] = gv_calloc(dim, sizeof(double));
+    double *evals = gv_calloc(new_dim, sizeof(double));
 
-    DD = N_GNEW(dim, double *);
-    storage_ptr = N_GNEW(dim * dim, double);
+    double **DD = gv_calloc(dim, sizeof(double *)); // dim×dim matrix: coords×coordsᵀ
+    double *storage_ptr = gv_calloc(dim * dim, sizeof(double));
     for (i = 0; i < dim; i++) {
 	DD[i] = storage_ptr;
 	storage_ptr += dim;

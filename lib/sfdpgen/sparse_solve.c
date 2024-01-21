@@ -37,7 +37,7 @@ static double *diag_precon_new(SparseMatrix A) {
 
   assert(a);
 
-  double *data = N_GNEW(A->m + 1, double);
+  double *data = gv_calloc(A->m + 1, sizeof(double));
   double *diag = data;
 
   diag[0] = m;
@@ -55,14 +55,14 @@ static double *diag_precon_new(SparseMatrix A) {
 static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
                                  double *x, double *rhs, double tol,
                                  int maxit) {
-  double *z, *r, *p, *q, res, alpha;
+  double res, alpha;
   double rho, rho_old = 1, res0, beta;
   int iter = 0;
 
-  z = N_GNEW(n,double);
-  r = N_GNEW(n,double);
-  p = N_GNEW(n,double);
-  q = N_GNEW(n,double);
+  double *z = gv_calloc(n, sizeof(double));
+  double *r = gv_calloc(n, sizeof(double));
+  double *p = gv_calloc(n, sizeof(double));
+  double *q = gv_calloc(n, sizeof(double));
 
   SparseMatrix_multiply_vector(A, x, &r);
   r = vector_subtract_to(n, rhs, r);
@@ -119,10 +119,10 @@ static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
 
 static double cg(SparseMatrix A, const double *precond, int n, int dim,
                  double *x0, double *rhs, double tol, int maxit) {
-  double *x, *b, res = 0;
+  double res = 0;
   int k, i;
-  x = N_GNEW(n, double);
-  b = N_GNEW(n, double);
+  double *x = gv_calloc(n, sizeof(double));
+  double *b = gv_calloc(n, sizeof(double));
   for (k = 0; k < dim; k++){
     for (i = 0; i < n; i++) {
       x[i] = x0[i*dim+k];

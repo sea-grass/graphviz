@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #ifdef DIGCOLA
 #include <neatogen/matrix_ops.h>
@@ -45,10 +46,9 @@ compute_y_coords(vtx_data * graph, int n, double *y_coords,
 {
     /* Find y coords of a directed graph by solving L*x = b */
     int i, j, rv = 0;
-    double *b = N_NEW(n, double);
+    double *b = gv_calloc(n, sizeof(double));
     double tol = hierarchy_cg_tol;
     int nedges = 0;
-    float *uniform_weights;
     float *old_ewgts = graph[0].ewgts;
 
     construct_b(graph, n, b);
@@ -61,7 +61,7 @@ compute_y_coords(vtx_data * graph, int n, double *y_coords,
 
     /* replace original edge weights (which are lengths) with uniform weights */
     /* for computing the optimal arrangement */
-    uniform_weights = N_GNEW(nedges, float);
+    float *uniform_weights = gv_calloc(nedges, sizeof(float));
     for (i = 0; i < n; i++) {
 	graph[i].ewgts = uniform_weights;
 	uniform_weights[0] = (float) -(graph[i].nedges - 1);

@@ -37,7 +37,6 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
   SparseMatrix D;
   int *ia, *ja, i, j, k, l, nz;
   double *d;
-  int *mask = NULL;
   double len, di, sum, sumd;
 
   assert(SparseMatrix_is_symmetric(A, false));
@@ -48,11 +47,11 @@ static SparseMatrix ideal_distance_matrix(SparseMatrix A, int dim, double *x){
   if (D->type != MATRIX_TYPE_REAL){
     free(D->a);
     D->type = MATRIX_TYPE_REAL;
-    D->a = N_GNEW(D->nz,double);
+    D->a = gv_calloc(D->nz, sizeof(double));
   }
   d = D->a;
 
-  mask = N_GNEW(D->m,int);
+  int *mask = gv_calloc(D->m, sizeof(int));
   for (i = 0; i < D->m; i++) mask[i] = -1;
 
   for (i = 0; i < D->m; i++){
@@ -680,15 +679,14 @@ void StressMajorizationSmoother_delete(StressMajorizationSmoother sm){
 
 TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
                                       bool use_triangularization) {
-  TriangleSmoother sm;
   int i, j, k, m = A->m, *ia = A->ia, *ja = A->ja, *iw, *jw, jdiag, nz;
   SparseMatrix B;
-  double *avg_dist, *lambda, *d, *w, diag_d, diag_w, dist;
+  double *d, *w, diag_d, diag_w, dist;
   double s = 0, stop = 0, sbot = 0;
 
   assert(SparseMatrix_is_symmetric(A, false));
 
-  avg_dist = N_GNEW(m,double);
+  double *avg_dist = gv_calloc(m, sizeof(double));
 
   for (i = 0; i < m ;i++){
     avg_dist[i] = 0;
@@ -702,14 +700,14 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
     avg_dist[i] /= nz;
   }
 
-  sm = N_GNEW(1,struct TriangleSmoother_struct);
+  TriangleSmoother sm = gv_alloc(sizeof(struct TriangleSmoother_struct));
   sm->scaling = 1;
   sm->data = NULL;
   sm->scheme = SM_SCHEME_NORMAL;
   sm->tol_cg = 0.01;
   sm->maxit_cg = (int)sqrt((double) A->m);
 
-  lambda = sm->lambda = N_GNEW(m,double);
+  double *lambda = sm->lambda = gv_calloc(m, sizeof(double));
   
   if (m > 2){
     if (use_triangularization){
@@ -790,11 +788,9 @@ void TriangleSmoother_smooth(TriangleSmoother sm, int dim, double *x){
 
 /* ================================ spring and spring-electrical based smoother ================ */
 SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_control ctrl, double *x){
-  SpringSmoother sm;
   int i, j, k, l, m = A->m, *ia = A->ia, *ja = A->ja, *id, *jd;
-  int *mask, nz;
+  int nz;
   double *d, *dd;
-  double *avg_dist;
   SparseMatrix ID = NULL;
 
   assert(SparseMatrix_is_symmetric(A, false));
@@ -802,10 +798,10 @@ SpringSmoother SpringSmoother_new(SparseMatrix A, int dim, spring_electrical_con
   ID = ideal_distance_matrix(A, dim, x);
   dd = ID->a;
 
-  sm = N_GNEW(1,struct SpringSmoother_struct);
-  mask = N_GNEW(m,int);
+  SpringSmoother sm = gv_alloc(sizeof(struct SpringSmoother_struct));
+  int *mask = gv_calloc(m, sizeof(int));
 
-  avg_dist = N_GNEW(m,double);
+  double *avg_dist = gv_calloc(m, sizeof(double));
 
   for (i = 0; i < m ;i++){
     avg_dist[i] = 0;
