@@ -343,19 +343,20 @@ static void cairogen_set_penstyle(GVJ_t *job, cairo_t *cr)
     cairo_set_line_width (cr, obj->penwidth);
 }
 
-static void cairo_gradient_fill (cairo_t* cr, obj_state_t* obj, int filled, pointf* A, int n)
-{
+static void cairo_gradient_fill(cairo_t *cr, obj_state_t *obj, int filled,
+                                pointf *A, size_t n) {
     cairo_pattern_t* pat;
     double angle = obj->gradient_angle * M_PI / 180;
     float r1,r2;
     pointf G[2],c1;
 
+    assert(n <= INT_MAX);
     if (filled == GRADIENT) {
-	  get_gradient_points(A, G, n, angle, 0);
+	  get_gradient_points(A, G, (int)n, angle, 0);
 	  pat = cairo_pattern_create_linear (G[0].x,G[0].y,G[1].x,G[1].y);
     }
     else {
-	get_gradient_points(A, G, n, 0, 1);
+	get_gradient_points(A, G, (int)n, 0, 1);
 	  //r1 is inner radius, r2 is outer radius
 	r1 = G[1].x;    /* Set a r2/4 in get_gradient_points */
 	r2 = G[1].y;
@@ -429,8 +430,7 @@ static void cairogen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     cairo_line_to(cr, A[i].x, -A[i].y);
     cairo_close_path(cr);
     if (filled == GRADIENT || filled == RGRADIENT) {
-	assert(n <= INT_MAX);
-	cairo_gradient_fill(cr, obj, filled, A, (int)n);
+	cairo_gradient_fill(cr, obj, filled, A, n);
     }
     else if (filled) {
 	cairogen_set_color(cr, &obj->fillcolor);
@@ -451,8 +451,7 @@ static void cairogen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 	cairo_curve_to(cr, A[i].x, -A[i].y, A[i + 1].x, -A[i + 1].y,
 		       A[i + 2].x, -A[i + 2].y);
     if (filled == GRADIENT || filled == RGRADIENT) {
-	assert(n <= INT_MAX);
-	cairo_gradient_fill (cr, obj, filled, A, (int)n);
+	cairo_gradient_fill(cr, obj, filled, A, n);
     }
     else if (filled) {
 	cairogen_set_color(cr, &obj->fillcolor);
