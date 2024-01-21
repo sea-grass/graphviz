@@ -568,8 +568,7 @@ static void svg_print_stop(GVJ_t * job, double offset, gvcolor_t color)
 /* svg_gradstyle
  * Outputs the SVG statements that define the gradient pattern
  */
-static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
-{
+static int svg_gradstyle(GVJ_t *job, pointf *A, size_t n) {
     pointf G[2];
     static int gradId;
     int id = gradId++;
@@ -577,7 +576,8 @@ static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
     obj_state_t *obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180; //angle of gradient line
     G[0].x = G[0].y = G[1].x = G[1].y = 0.;
-    get_gradient_points(A, G, n, angle, 0);	//get points on gradient line
+    assert(n <= INT_MAX);
+    get_gradient_points(A, G, (int)n, angle, 0); // get points on gradient line
 
     gvputs(job, "<defs>\n<linearGradient id=\"");
     if (obj->id != NULL) {
@@ -665,7 +665,7 @@ static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
   
     assert(n <= INT_MAX);
     if (filled == GRADIENT) {
-	gid = svg_gradstyle(job, A, (int)n);
+	gid = svg_gradstyle(job, A, n);
     } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
@@ -684,8 +684,7 @@ static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 static void svg_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     int gid = 0;
     if (filled == GRADIENT) {
-	assert(n <= INT_MAX);
-	gid = svg_gradstyle(job, A, (int)n);
+	gid = svg_gradstyle(job, A, n);
     } else if (filled == RGRADIENT) {
 	gid = svg_rgradstyle(job);
     }
