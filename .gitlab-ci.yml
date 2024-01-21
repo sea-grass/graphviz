@@ -326,6 +326,18 @@ fedora38-build:
     variables:
       IMAGE: fedora38
 
+fedora39-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora39
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora39
+
 ubuntu-20.04-debug-build:
     <<: *deb_build_definition
     needs:
@@ -796,6 +808,26 @@ fedora38-cmake-build:
     variables:
       IMAGE: fedora38
 
+fedora39-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora39
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora39
+
 macos-cmake-build:
     <<: *macos_build_definition
     before_script:
@@ -1032,6 +1064,18 @@ fedora38-test:
     variables:
       IMAGE: fedora38
 
+fedora39-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "fedora39-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora39
+
 macos-autotools-test:
     <<: *test_definition
     before_script:
@@ -1163,6 +1207,19 @@ fedora38-cmake-test:
         - linux
     variables:
       IMAGE: fedora38
+
+fedora39-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "fedora39-cmake-build"
+          artifacts: true
+    tags:
+        - linux
+    variables:
+      IMAGE: fedora39
 
 macos-cmake-test:
     <<: *test_definition
@@ -1314,6 +1371,11 @@ docker_build_fedora38:
   variables:
     IMAGE: fedora38
 
+docker_build_fedora39:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: fedora39
+
 docker_build_ubuntu-20.04:
   <<: *docker_build_definition
   variables:
@@ -1356,6 +1418,13 @@ docker_push_fedora38:
     IMAGE: fedora38
   needs:
     - docker_build_fedora38
+
+docker_push_fedora39:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: fedora39
+  needs:
+    - docker_build_fedora39
 
 docker_push_ubuntu-20.04:
   <<: *docker_push_definition
