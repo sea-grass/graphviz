@@ -415,9 +415,7 @@ collinear (pointf * A)
  * Return true if bezier points are collinear
  * At present, just check with 4 points, the common case.
  */
-static int
-straight (pointf * A, int n)
-{
+static int straight(pointf *A, size_t n) {
     if (n != 4) return 0;
     return collinear(A) && collinear(A + 1);
 }
@@ -488,8 +486,7 @@ static void vrml_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 
     fstz = state->Fstz = obj->tail_z; 
     sndz = state->Sndz = obj->head_z;
-    assert(n <= INT_MAX);
-    if (straight(A, (int)n)) {
+    if (straight(A, n)) {
 	doSegment (job, A, gvrender_ptf(job, ND_coord(agtail(e))),state->Fstz,gvrender_ptf(job, ND_coord(aghead(e))),state->Sndz);
 	return;
     }
