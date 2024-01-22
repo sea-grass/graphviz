@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include "../tools/openFile.h"
 #include <algorithm>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
@@ -51,18 +51,6 @@ typedef struct {
 
 static char *fname;
 static FILE *outfile;
-
-static FILE *openFile(const char *name, const char* cmd)
-{
-    FILE *fp;
-
-	fp = fopen(name, "w");
-	if (!fp) {
-		std::cerr << cmd << ": could not open file " << name << " for writing\n";
-		graphviz_exit(-1);
-	}
-	return fp;
-}
 
 static const char use_msg[] =
 "Usage: mingle <options> <file>\n\
@@ -168,7 +156,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'o':
-			outfile = openFile(optarg, cmd);
+			outfile = openFile(cmd, optarg, "w");
 			break;
 		case 'p':
 			if ((sscanf(optarg,"%lf",&s) > 0))
