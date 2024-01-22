@@ -4,23 +4,6 @@ Packaging graphviz for Debian
   [ New upstream release ]
   * Update the list of config scripts if needed.
 
-  [ Patches ]
-  * Patch management: quilt is used, remember to run "autoreconf -vfi" with
-    automake1.10 installed, so as to produce the appropriate patch, stored as
-    the last patch of the series, 0_autoreconf_run. One shouldn't forget to
-    delete autom4te.cache directories before refreshing the patch.
-  * As of 2.14, there are no longer patches which imply an autoreconf run, so
-    this patch no longer exists. Anyway, upstream now uses automake1.10.
-  * The following prefix convention was originally used for patch names:
-     0 - Debian-specific fix
-     1 - Backported fix (followed by a 4-digit upstream bug number, if any)
-     2 - Submitted fix (followed by a 4-digit upstream bug number, if any)
-     3 - Not-yet submitted fix.
-    The frontier between 2 and 3 is no longer clear, since there was a lot of
-    patches sent upstream during the last weeks (may 2007), so 3_* patches
-    might have already been incorporated into upstream's CVS, and further
-    patches are likely to be sent upstream as soon as added to the package.
-
   [ Library handling ]
   * dh_makeshlibs: the -V option is used to ensure that the versioned-Depends
     on libgraphvizN is sufficient, so that one is sure that the config file
