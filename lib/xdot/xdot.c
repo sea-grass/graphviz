@@ -622,10 +622,7 @@ static void jsonString(char *p, pf print, void *info)
 
 static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 {
-    agxbuf xb;
-    char buf[BUFSIZ];
-
-    agxbinit (&xb, BUFSIZ, buf);
+    agxbuf xb = {0};
     switch (op->kind) {
     case xd_filled_ellipse:
 	print(info, "{\"E\" : ");
