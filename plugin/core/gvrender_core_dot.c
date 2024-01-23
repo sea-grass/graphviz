@@ -527,8 +527,6 @@ static void xdot_color_stop (agxbuf* xb, float v, gvcolor_t* clr)
 
 static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 {
-    char buf0[BUFSIZ];
-    agxbuf xb;
     obj_state_t* obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180;
     pointf G[2],c1,c2;
@@ -538,7 +536,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 	return;
     }
 
-    agxbinit(&xb, BUFSIZ, buf0);
+    agxbuf xb = {0};
     if (filled == GRADIENT) {
 	get_gradient_points(A, G, n, angle, 2);
 	agxbputc (&xb, '[');
