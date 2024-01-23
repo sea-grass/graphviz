@@ -498,12 +498,10 @@ gv_font_map* get_font_mapping(PangoFontMap * fontmap)
     static const size_t ps_fontnames_sz =
       sizeof(postscript_alias) / sizeof(PostscriptAlias);
     gv_font_map* gv_fmap = gv_calloc(ps_fontnames_sz, sizeof(gv_font_map));
-    agxbuf xb;
+    agxbuf xb = {0};
     agxbuf xb2;
-    char buf[BUFSIZ];
     char buf2[BUFSIZ];
 
-    agxbinit(&xb, BUFSIZ, buf);
     agxbinit(&xb2, BUFSIZ, buf2);
     availfonts_t gv_af_p = gv_get_ps_fontlist(fontmap);	// get the available installed fonts
     /* add the Graphviz PS font name and available system font string to the array */
