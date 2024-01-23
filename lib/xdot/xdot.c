@@ -515,10 +515,7 @@ typedef void (*print_op)(xdot_op * op, pf print, void *info, int more);
 
 static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 {
-    agxbuf xb;
-    char buf[BUFSIZ];
-
-    agxbinit (&xb, BUFSIZ, buf);
+    agxbuf xb = {0};
     switch (op->kind) {
     case xd_filled_ellipse:
 	print(info, "E");
