@@ -760,6 +760,7 @@ gml_to_gv (char* name, FILE* fp, int cnt, int* errors)
 	agxbinit (&unk, BUFSIZ, unknownb);
 	g = mkGraph (G, NULL, name, &xb, &unk);
 	agxbfree (&xb);
+	agxbfree(&unk);
     }
 
     cleanup ();
