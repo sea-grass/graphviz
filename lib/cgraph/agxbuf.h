@@ -46,7 +46,7 @@ typedef enum {
 ///
 /// \p buf, \p size, and \p capacity are in use when \p located is
 /// \p AGXBUF_ON_HEAP or \p AGXBUF_ON_STACK. \p store is in use when \p located
-/// is > \p AGXBUF_ON_STACK.
+/// is < \p AGXBUF_ON_STACK.
 typedef struct {
   union {
     struct {
@@ -59,7 +59,7 @@ typedef struct {
     } s;
     char store[sizeof(char *) + sizeof(size_t) * 3 -
                1]; ///< inline storage used when \p located is
-                   ///< > \p AGXBUF_ON_STACK
+                   ///< < \p AGXBUF_ON_STACK
   } u;
 } agxbuf;
 
