@@ -75,7 +75,6 @@ typedef struct {
     attrsym_t *e_l_draw;
     attrsym_t *hl_draw;
     attrsym_t *tl_draw;
-    char buf[NUMXBUFS][BUFSIZ];
     unsigned short version;
     char* version_s;
 } xdot_state_t;
@@ -377,7 +376,7 @@ xdot_begin_graph (graph_t *g, int s_arrows, int e_arrows, format_type id)
 	xd->tl_draw = NULL;
 
     for (i = 0; i < NUMXBUFS; i++)
-	agxbinit(xbuf+i, BUFSIZ, xd->buf[i]);
+	xbuf[i] = (agxbuf){0};
 }
 
 static void dot_begin_graph(GVJ_t *job)
