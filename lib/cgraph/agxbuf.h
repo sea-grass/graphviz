@@ -71,18 +71,6 @@ static inline bool agxbuf_is_inline(const agxbuf *xb) {
   return xb->u.s.located < AGXBUF_ON_HEAP;
 }
 
-/* agxbinit:
- * Initializes new agxbuf; caller provides memory.
- * Assume hint = sizeof(init[])
- */
-static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
-  assert(init != NULL);
-  xb->u.s.buf = init;
-  xb->u.s.located = AGXBUF_ON_STACK;
-  xb->u.s.size = 0;
-  xb->u.s.capacity = hint;
-}
-
 /* agxbfree:
  * Free any malloced resources.
  */
