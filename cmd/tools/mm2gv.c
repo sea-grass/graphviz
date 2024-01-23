@@ -31,8 +31,6 @@
 #include "matrix_market.h"
 #include <getopt.h>
 
-#define BUFS         1024
-
 typedef struct {
     Agrec_t h;
     int id;
@@ -80,8 +78,6 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     Agnode_t *h;
     Agedge_t *e;
     int i, j;
-    agxbuf xb;
-    char string[BUFS];
     Agsym_t *sym = NULL, *sym2 = NULL, *sym3 = NULL;
     int *ia = A->ia;
     int *ja = A->ja;
@@ -111,7 +107,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
     if (with_val) {
 	sym = agattr(g, AGEDGE, "len", "1");
     }
-    agxbinit (&xb, BUFS, string);
+    agxbuf xb = {0};
     if (with_label) {
 	agxbprint (&xb, "%s. %d nodes, %d edges.", name, A->m, A->nz);
 	agattr(g, AGRAPH, "label", agxbuse (&xb));
