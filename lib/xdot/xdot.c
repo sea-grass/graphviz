@@ -719,9 +719,7 @@ static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
 
 char *sprintXDot(xdot * x)
 {
-    char buf[BUFSIZ];
-    agxbuf xb;
-    agxbinit(&xb, BUFSIZ, buf);
+    agxbuf xb = {0};
     _printXDot(x, (pf)agxbprint, &xb, printXDot_Op);
     return agxbdisown(&xb);
 }
