@@ -223,10 +223,7 @@ ID		({NAME}|{NUMBER})
 void aagerror(const char *str);
 void aagerror(const char *str)
 {
-	char	xbuf[BUFSIZ];
-	agxbuf  xb;
-
-	agxbinit(&xb, BUFSIZ, xbuf);
+	agxbuf xb = {0};
 	if (InputFile) {
 		agxbprint (&xb, "%s: ", InputFile);
 	}
