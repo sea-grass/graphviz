@@ -94,11 +94,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="FileStream.h" />
     <ClInclude Include="gvplugin_gdiplus.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FileStream.cpp" />
     <ClCompile Include="gvdevice_gdiplus.cpp" />
     <ClCompile Include="gvloadimage_gdiplus.cpp" />
     <ClCompile Include="gvplugin_gdiplus.cpp" />

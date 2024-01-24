@@ -589,8 +589,6 @@ EXCLUDE = (
     "plugin/gd/gvrender_gd.c",
     "plugin/gd/gvrender_gd_vrml.c",
     "plugin/gd/gvtextlayout_gd.c",
-    "plugin/gdiplus/FileStream.cpp",
-    "plugin/gdiplus/FileStream.h",
     "plugin/gdiplus/gvdevice_gdiplus.cpp",
     "plugin/gdiplus/gvloadimage_gdiplus.cpp",
     "plugin/gdiplus/gvplugin_gdiplus.cpp",
