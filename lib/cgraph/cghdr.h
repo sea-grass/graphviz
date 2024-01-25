@@ -87,6 +87,9 @@ int agdtdelete(Agraph_t * g, Dict_t * dict, void *obj);
 int agdtclose(Agraph_t * g, Dict_t * dict);
 void agdictobjfree(void *p, Dtdisc_t *disc);
 
+/** @addtogroup cgraph_attr
+ *  @{
+ */
 	/* name-value pair operations */
 CGHDR_API Agdatadict_t *agdatadict(Agraph_t *g, bool cflag);
 CGHDR_API Agattr_t *agattrrec(void *obj);
@@ -97,6 +100,7 @@ void agnodeattr_init(Agraph_t *g, Agnode_t * n);
 void agnodeattr_delete(Agnode_t * n);
 void agedgeattr_init(Agraph_t *g, Agedge_t * e);
 void agedgeattr_delete(Agedge_t * e);
+/// @}
 
 	/* parsing and lexing graph files */
 int aagparse(void);
