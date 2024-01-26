@@ -1490,9 +1490,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	case xd_polyline :
     	    if (boxf_overlap(op->bb, job->clip)) {
 		pointf *pts = copyPts(op->op.u.polyline.pts, op->op.u.polyline.cnt);
-		assert(op->op.u.polyline.cnt <= INT_MAX &&
-		       "polygon count exceeds gvrender_polyline support");
-		gvrender_polyline(job, pts, (int)op->op.u.polyline.cnt);
+		gvrender_polyline(job, pts, op->op.u.polyline.cnt);
 		free(pts);
 	    }
 	    break;

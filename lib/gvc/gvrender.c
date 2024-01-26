@@ -24,6 +24,7 @@
 #include <common/colorprocs.h>
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <gvc/gvcint.h>
 #include <common/geom.h>
@@ -556,8 +557,7 @@ void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled) {
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
 		gvre->polygon(job, af, (int)n, filled);
 	    else {
-		pointf *AF;
-		AF = gcalloc(n, sizeof(pointf));
+		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
 		gvre->polygon(job, AF, (int)n, filled);
 		free(AF);
@@ -592,8 +592,7 @@ void gvrender_beziercurve(GVJ_t *job, pointf *af, size_t n, int filled) {
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
 		gvre->beziercurve(job, af, (int)n, filled);
 	    else {
-		pointf *AF;
-		AF = gcalloc(n, sizeof(pointf));
+		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
 		gvre->beziercurve(job, AF, (int)n, filled);
 		free(AF);
@@ -602,20 +601,18 @@ void gvrender_beziercurve(GVJ_t *job, pointf *af, size_t n, int filled) {
     }
 }
 
-void gvrender_polyline(GVJ_t * job, pointf * af, int n)
-{
+void gvrender_polyline(GVJ_t *job, pointf *af, size_t n) {
     gvrender_engine_t *gvre = job->render.engine;
 
     if (gvre) {
 	if (gvre->polyline && job->obj->pen != PEN_NONE) {
+	    assert(n <= INT_MAX);
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->polyline(job, af, n);
+		gvre->polyline(job, af, (int)n);
 	    else {
-		pointf *AF;
-		assert(n >= 0);
-		AF = gcalloc((size_t)n, sizeof(pointf));
-		gvrender_ptf_A(job, af, AF, (size_t)n);
-		gvre->polyline(job, AF, n);
+		pointf *AF = gv_calloc(n, sizeof(pointf));
+		gvrender_ptf_A(job, af, AF, n);
+		gvre->polyline(job, AF, (int)n);
 		free(AF);
 	    }
 	}

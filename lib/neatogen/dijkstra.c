@@ -18,6 +18,7 @@
 ******************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <common/memory.h>
 #include <float.h>
@@ -144,7 +145,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     int closestVertex, neighbor;
     DistType closestDist, prevClosestDist = MAX_DIST;
 
-    int *index = gcalloc(n, sizeof(int));
+    int *index = gv_calloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
     for (i = 0; i < n; i++)
