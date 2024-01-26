@@ -19,6 +19,7 @@
 #include <math.h>
 #include <gvc/gvc.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/streq.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>

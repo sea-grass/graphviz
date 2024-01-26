@@ -24,6 +24,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>

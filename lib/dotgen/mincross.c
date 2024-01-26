@@ -21,6 +21,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/streq.h>
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <stdbool.h>

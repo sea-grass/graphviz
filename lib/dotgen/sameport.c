@@ -14,6 +14,7 @@
  */
 
 #include <cgraph/list.h>
+#include <cgraph/streq.h>
 #include <math.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>

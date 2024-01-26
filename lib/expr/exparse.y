@@ -26,6 +26,7 @@
  */
 
 #include <assert.h>
+#include <cgraph/streq.h>
 #include <ctype.h>
 #include <expr/exop.h>
 #include <stdio.h>

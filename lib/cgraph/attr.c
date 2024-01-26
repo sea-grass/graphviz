@@ -14,6 +14,7 @@
  *************************************************************************/
 
 #include	<cgraph/cghdr.h>
+#include	<cgraph/streq.h>
 #include	<cgraph/unreachable.h>
 #include	<stddef.h>
 #include	<stdbool.h>

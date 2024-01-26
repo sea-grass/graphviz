@@ -28,6 +28,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
