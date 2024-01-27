@@ -99,7 +99,7 @@ if(with_smyrna)
     cdt
     cgraph
     expr
-    glcomp
+    $<TARGET_OBJECTS:glcomp>
     gvc
     gvpr
     neatogen
