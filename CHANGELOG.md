@@ -129,6 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Text in the PIC output format is no longer forced to font size 1. This was a
   regression in Graphviz 8.0.2. Even with this fix, the PIC output format is
   limited in its utility. #2487
+- Use of an uninitialized variable in `poly_inside` has been corrected. #2498
 
 ## [9.0.0] - 2023-09-11
 

@@ -2322,12 +2322,11 @@ static void poly_free(node_t * n)
  */
 static bool poly_inside(inside_t * inside_context, pointf p)
 {
-    static node_t *lastn;	/* last node argument */
-    static polygon_t *poly;
-    static size_t last, outp, sides;
-    static pointf O;		/* point (0,0) */
-    static pointf *vertex;
-    static double xsize, ysize, scalex, scaley, box_URx, box_URy;
+    polygon_t *poly;
+    size_t last = 0, outp = 0, sides = 0;
+    pointf O = { 0, 0 };		/* point (0,0) */
+    pointf *vertex;
+    double xsize = 0, ysize = 0, scalex = 0, scaley = 0, box_URx = 0, box_URy = 0;
 
     int s;
     pointf P, Q, R;
@@ -2335,7 +2334,6 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     node_t *n;
 
     if (!inside_context) {
-	lastn = NULL;
 	return false;
     }
 
@@ -2349,64 +2347,61 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	return INSIDE(P, bbox);
     }
 
-    if (n != lastn) {
-	double n_width, n_height;
-	double n_outline_width;
-	double n_outline_height;
-	poly = ND_shape_info(n);
-	vertex = poly->vertices;
-	sides = poly->sides;
+    double n_width, n_height;
+    double n_outline_width;
+    double n_outline_height;
+    poly = ND_shape_info(n);
+    vertex = poly->vertices;
+    sides = poly->sides;
 
-	if (poly->option & FIXEDSHAPE) {
-	   boxf bb = polyBB(poly); 
-	    n_width = bb.UR.x - bb.LL.x;
-	    n_height = bb.UR.y - bb.LL.y;
-	    n_outline_width = n_width;
-	    n_outline_height = n_height;
-	    /* get point and node size adjusted for rankdir=LR */
-	    if (GD_flip(agraphof(n))) {
-		ysize = n_width;
-		xsize = n_height;
-	    } else {
-		xsize = n_width;
-		ysize = n_height;
-	    }
-	} else {
-	    /* get point and node size adjusted for rankdir=LR */
-	    if (GD_flip(agraphof(n))) {
-		ysize = ND_lw(n) + ND_rw(n);
-		xsize = ND_ht(n);
-	    } else {
-		xsize = ND_lw(n) + ND_rw(n);
-		ysize = ND_ht(n);
-	    }
-	    n_width = INCH2PS(ND_width(n));
-	    n_height = INCH2PS(ND_height(n));
-	    n_outline_width = INCH2PS(ND_outline_width(n));
-	    n_outline_height = INCH2PS(ND_outline_height(n));
-	}
+    if (poly->option & FIXEDSHAPE) {
+       boxf bb = polyBB(poly); 
+        n_width = bb.UR.x - bb.LL.x;
+        n_height = bb.UR.y - bb.LL.y;
+        n_outline_width = n_width;
+        n_outline_height = n_height;
+        /* get point and node size adjusted for rankdir=LR */
+        if (GD_flip(agraphof(n))) {
+            ysize = n_width;
+            xsize = n_height;
+        } else {
+            xsize = n_width;
+            ysize = n_height;
+        }
+    } else {
+        /* get point and node size adjusted for rankdir=LR */
+        if (GD_flip(agraphof(n))) {
+            ysize = ND_lw(n) + ND_rw(n);
+            xsize = ND_ht(n);
+        } else {
+            xsize = ND_lw(n) + ND_rw(n);
+            ysize = ND_ht(n);
+        }
+        n_width = INCH2PS(ND_width(n));
+        n_height = INCH2PS(ND_height(n));
+        n_outline_width = INCH2PS(ND_outline_width(n));
+        n_outline_height = INCH2PS(ND_outline_height(n));
+    }
 
-	/* scale */
-	if (xsize == 0.0)
-	    xsize = 1.0;
-	if (ysize == 0.0)
-	    ysize = 1.0;
-	scalex = n_width / xsize;
-	scaley = n_height / ysize;
-	box_URx = n_outline_width / 2.0;
-	box_URy = n_outline_height / 2.0;
+    /* scale */
+    if (xsize == 0.0)
+        xsize = 1.0;
+    if (ysize == 0.0)
+        ysize = 1.0;
+    scalex = n_width / xsize;
+    scaley = n_height / ysize;
+    box_URx = n_outline_width / 2.0;
+    box_URy = n_outline_height / 2.0;
 
-	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
-	if (poly->peripheries >= 1 && penwidth > 0) {
-	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
-	    outp = (poly->peripheries + 1 - 1) * sides;
-	} else if (poly->peripheries < 1) {
-	    outp = 0;
-	} else {
-	    /* index to outer-periphery */
-	    outp = (poly->peripheries - 1) * sides;
-	}
-	lastn = n;
+    const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+    if (poly->peripheries >= 1 && penwidth > 0) {
+        /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+        outp = (poly->peripheries + 1 - 1) * sides;
+    } else if (poly->peripheries < 1) {
+        outp = 0;
+    } else {
+        /* index to outer-periphery */
+        outp = (poly->peripheries - 1) * sides;
     }
 
     /* scale */
