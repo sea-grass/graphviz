@@ -2322,11 +2322,11 @@ static void poly_free(node_t * n)
  */
 static bool poly_inside(inside_t * inside_context, pointf p)
 {
-    polygon_t *poly;
-    size_t last = 0, outp = 0, sides = 0;
-    pointf O = { 0, 0 };		/* point (0,0) */
-    pointf *vertex;
-    double xsize = 0, ysize = 0, scalex = 0, scaley = 0, box_URx = 0, box_URy = 0;
+    static polygon_t *poly;
+    static size_t last, outp, sides;
+    static pointf O;		/* point (0,0) */
+    static pointf *vertex;
+    static double xsize, ysize, scalex, scaley, box_URx, box_URy;
 
     int s;
     pointf P, Q, R;
