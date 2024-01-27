@@ -2327,7 +2327,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     static size_t last, outp, sides;
     const pointf O = {0};
     static pointf *vertex;
-    static double xsize, ysize, scalex, scaley, box_URx, box_URy;
+    static double scalex, scaley, box_URx, box_URy;
 
     int s;
     pointf P, Q, R;
@@ -2357,6 +2357,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	vertex = poly->vertices;
 	sides = poly->sides;
 
+	double xsize, ysize;
 	if (poly->option & FIXEDSHAPE) {
 	   boxf bb = polyBB(poly); 
 	    n_width = bb.UR.x - bb.LL.x;
