@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include "../tools/openFile.h"
 #include <algorithm>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
@@ -51,18 +51,6 @@ typedef struct {
 
 static char *fname;
 static FILE *outfile;
-
-static FILE *openFile(const char *name, const char* cmd)
-{
-    FILE *fp;
-
-	fp = fopen(name, "w");
-	if (!fp) {
-		std::cerr << cmd << ": could not open file " << name << " for writing\n";
-		graphviz_exit(-1);
-	}
-	return fp;
-}
 
 static const char use_msg[] =
 "Usage: mingle <options> <file>\n\
@@ -168,7 +156,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'o':
-			outfile = openFile(optarg, cmd);
+			outfile = openFile(cmd, optarg, "w");
 			break;
 		case 'p':
 			if ((sscanf(optarg,"%lf",&s) > 0))
@@ -245,25 +233,17 @@ static void init(int argc, char *argv[], opts_t* opts)
  * and last intervals, and 3 to the rest, giving the needed 3*ninterval+4 points.
  */
 static void genBundleSpline(pedge edge, std::ostream &os) {
-	int k, j, mm, kk;
+	int k, j;
 	int dim = edge->dim;
 	double* x = edge->x;
-	double tt1[3]={0.15,0.5,0.85};
-	double tt2[4]={0.15,0.4,0.6,0.85};
-	double t, *tt;
 
 	for (j = 0; j < edge->npoints; j++){
 		if (j != 0) {
 			os << ' ';
-			if ((j == 1) || (j == edge->npoints - 1)) {
-				tt = tt2;
-				mm = 4;
-			} else {
-				tt = tt1;
-				mm = 3;
-			}
-			for (kk = 1; kk <= mm; kk++){
-				t = tt[kk-1];
+			const std::vector<double> tt1{0.15, 0.5, 0.85};
+			const std::vector<double> tt2{0.15, 0.4, 0.6, 0.85};
+			const std::vector<double> &tt = (j == 1 || j == edge->npoints - 1) ? tt2 : tt1;
+			for (const double t : tt){
 				for (k = 0; k < dim; k++) {
 					if (k != 0) os << ',';
 					os << std::setprecision(3) << (x[(j-1)*dim+k]*(1-t)+x[j*dim+k]*t);

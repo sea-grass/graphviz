@@ -14,7 +14,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include "../tools/openFile.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -126,18 +126,6 @@ static void usage(char* cmd, int eval)
     graphviz_exit(eval);
 }
 
-static FILE *openFile(const char *name, const char* cmd)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	graphviz_exit(-1);
-    }
-    return (fp);
-}
-
 #define HLPFX "ighlight="
 #define N_HLPFX (sizeof(HLPFX)-1)
 
@@ -231,7 +219,7 @@ init(int argc, char **argv, params_t* pm)
       pm->plotedges = true;
       break;
     case 'o':
-	  pm->outfile = openFile(optarg, pm->cmd);
+	  pm->outfile = openFile(pm->cmd, optarg, "w");
       break;
     case 'O':
       pm->color_optimize = false;

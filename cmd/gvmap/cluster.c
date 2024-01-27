@@ -9,7 +9,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include "../tools/openFile.h"
 #include <stdio.h>
 #include <stdlib.h>
 #define STANDALONE
@@ -52,18 +52,6 @@ static void usage(char* cmd, int eval)
     graphviz_exit(eval);
 }
 
-static FILE *openFile(const char *name, const char* cmd)
-{
-    FILE *fp;
-
-    fp = fopen(name, "w");
-    if (!fp) {
-	fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-	graphviz_exit(-1);
-    }
-    return fp;
-}
-
 static void init(int argc, char *argv[], opts_t* opts) {
   char* cmd = argv[0];
   int c;
@@ -89,7 +77,7 @@ static void init(int argc, char *argv[], opts_t* opts) {
       else opts->maxcluster = v;
       break;
     case 'o':
-      opts->outfp = openFile(optarg, cmd);
+      opts->outfp = openFile(cmd, optarg, "w");
       break;
     case 'v':
       Verbose = 1;

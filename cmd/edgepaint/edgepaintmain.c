@@ -13,7 +13,7 @@
  *************************************************************************/
 
 #include "config.h"
-
+#include "../tools/openFile.h"
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/agxbuf.h>
@@ -36,18 +36,6 @@
 
 static char *fname;
 static FILE *outfile;
-
-static FILE *openFile(const char *name, const char* cmd)
-{
-    FILE *fp;
-
-	fp = fopen(name, "w");
-	if (!fp) {
-		fprintf(stderr, "%s: could not open file %s for writing\n", cmd, name);
-		graphviz_exit(EXIT_FAILURE);
-	}
-	return fp;
-}
 
 static void usage (char* cmd, int eval){
   fprintf(stderr, "Usage: %s <options> gv file with 2D coordinates.\n", cmd);
@@ -182,7 +170,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy,
       if (outfile != NULL) {
         fclose(outfile);
       }
-      outfile = openFile(arg, CmdName);
+      outfile = openFile(CmdName, arg, "w");
       break;
 
     case 'v':
