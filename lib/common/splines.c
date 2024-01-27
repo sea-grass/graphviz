@@ -193,13 +193,11 @@ void shape_clip(node_t * n, pointf curve[4])
     double save_real_size;
     bool left_inside;
     pointf c;
-    inside_t inside_context;
 
     if (ND_shape(n) == NULL || ND_shape(n)->fns->insidefn == NULL)
 	return;
 
-    inside_context.s.n = n;
-    inside_context.s.bp = NULL;
+    inside_t inside_context = {.s = {.n = n}};
     save_real_size = ND_rw(n);
     c.x = curve[0].x - ND_coord(n).x;
     c.y = curve[0].y - ND_coord(n).y;
@@ -244,7 +242,6 @@ clip_and_install(edge_t *fe, node_t *hn, pointf *ps, size_t pn,
     graph_t *g;
     edge_t *orig;
     boxf *tbox, *hbox;
-    inside_t inside_context;
 
     tn = agtail(fe);
     g = agraphof(tn);
@@ -275,8 +272,7 @@ clip_and_install(edge_t *fe, node_t *hn, pointf *ps, size_t pn,
 
     /* spline may be interior to node */
     if(clipTail && ND_shape(tn) && ND_shape(tn)->fns->insidefn) {
-	inside_context.s.n = tn;
-	inside_context.s.bp = tbox;
+	inside_t inside_context = {.s = {.n = tn, .bp = tbox}};
 	for (start = 0; start < pn - 4; start += 3) {
 	    p2.x = ps[start + 3].x - ND_coord(tn).x;
 	    p2.y = ps[start + 3].y - ND_coord(tn).y;
@@ -287,8 +283,7 @@ clip_and_install(edge_t *fe, node_t *hn, pointf *ps, size_t pn,
     } else
 	start = 0;
     if(clipHead && ND_shape(hn) && ND_shape(hn)->fns->insidefn) {
-	inside_context.s.n = hn;
-	inside_context.s.bp = hbox;
+	inside_t inside_context = {.s = {.n = hn, .bp = hbox}};
 	for (end = pn - 4; end > 0; end -= 3) {
 	    p2.x = ps[end].x - ND_coord(hn).x;
 	    p2.y = ps[end].y - ND_coord(hn).y;

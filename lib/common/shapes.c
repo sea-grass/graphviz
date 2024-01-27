@@ -2809,7 +2809,7 @@ static port poly_port(node_t * n, char *portname, char *compass)
 	}
     } else {
 	inside_t *ictxtp;
-	inside_t ictxt;
+	inside_t ictxt = {0};
 
 	if (IS_BOX(n))
 	    ictxtp = NULL;
