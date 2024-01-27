@@ -46,19 +46,6 @@ extern "C" {
 
     typedef struct htmllabel_t htmllabel_t;
 
-    typedef union inside_t {
-	struct {
-	    pointf* p;
-	    double* r;
-	} a;
-	struct {
-	    node_t* n;
-	    boxf*    bp;
-	    node_t *lastn; ///< last node argument
-	    double radius; ///< last radius seen
-	} s;
-    } inside_t;
-
     typedef struct port {	/* internal edge endpoint specification */
 	pointf p;		/* aiming point relative to node center */
 	double theta;		/* slope in radians */
@@ -148,6 +135,19 @@ extern "C" {
 	int option;		/* ROUNDED, DIAGONAL corners, etc. */
 	pointf *vertices;	/* array of vertex points */
     } polygon_t;
+
+typedef union inside_t {
+  struct {
+    pointf *p;
+    double *r;
+  } a;
+  struct {
+    node_t *n;
+    boxf *bp;
+    node_t *lastn; ///< last node argument
+    double radius; ///< last radius seen
+  } s;
+} inside_t;
 
     typedef struct stroke_t {	/* information about a single stroke */
 	/* we would have called it a path if that term wasn't already used */
