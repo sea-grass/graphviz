@@ -39,7 +39,6 @@ extern "C" {
 #define MALLOC malloc
 #define REALLOC realloc
 
-#define N_NEW(n,t)   (t*)calloc((n),sizeof(t))
 #define MAX(a,b) ((a)>(b)?(a):b)
 #define MIN(a,b) ((a)<(b)?(a):b)
 
