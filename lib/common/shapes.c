@@ -2325,7 +2325,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     static node_t *lastn;	/* last node argument */
     static polygon_t *poly;
     static size_t last, outp, sides;
-    static pointf O;		/* point (0,0) */
+    const pointf O = {0};
     static pointf *vertex;
     static double xsize, ysize, scalex, scaley, box_URx, box_URy;
 
