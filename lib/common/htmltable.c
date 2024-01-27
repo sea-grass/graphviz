@@ -2003,8 +2003,10 @@ int make_html_label(void *obj, textlabel_t * lp)
     lbl = parseHTML(lp->text, &rv, &env);
     if (!lbl) {
 	if (rv == 3) {
-	    // fatal error
-	    graphviz_exit(EXIT_FAILURE);
+	    // fatal error; `parseHTML` will have printed detail of it
+	    lp->html = false;
+	    lp->text = gv_strdup(lp->text);
+	    return rv;
 	}
 	/* Parse of label failed; revert to simple text label */
 	agxbuf xb = {0};

@@ -130,6 +130,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regression in Graphviz 8.0.2. Even with this fix, the PIC output format is
   limited in its utility. #2487
 - Use of an uninitialized variable in `poly_inside` has been corrected. #2498
+- When encountering a syntactically invalid HTML-like label, Graphviz.app no
+  longer aborts. The abort was an intentional change in Graphviz 8.0.1 to avoid
+  invalid memory reads in `dot`, but had the undesirable side effect of the
+  graphical Graphviz.app exiting with no obvious cause. #2488
 
 ## [9.0.0] - 2023-09-11
 
