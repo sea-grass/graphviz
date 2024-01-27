@@ -2831,8 +2831,6 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     double xsize, ysize;
     int style;
     pointf P, *vertices;
-    static pointf *AF;
-    static size_t A_size;
     int filled;
     bool usershape_p;
     bool pfilled;		/* true if fill not handled by user shape */
@@ -2851,10 +2849,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     vertices = poly->vertices;
     const size_t sides = poly->sides;
     size_t peripheries = poly->peripheries;
-    if (A_size < sides) {
-	A_size = sides + 5;
-	AF = ALLOC(A_size, AF, pointf);
-    }
+    pointf *AF = gv_calloc(sides + 5, sizeof(pointf));
 
     /* nominal label position in the center of the node */
     ND_label(n)->pos = ND_coord(n);
@@ -3024,6 +3019,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	filled = 0;		/* with user shapes, we have done the fill if needed */
     }
 
+    free(AF);
     free (clrs[0]);
 
     emit_label(job, EMIT_NLABEL, ND_label(n));
