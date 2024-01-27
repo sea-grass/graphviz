@@ -4039,7 +4039,7 @@ static bool star_inside(inside_t * inside_context, pointf p)
     static polygon_t *poly;
     static size_t outp, sides;
     static pointf *vertex;
-    static pointf O;		/* point (0,0) */
+    const pointf O = {0};
 
     if (!inside_context) {
 	lastn = NULL;
