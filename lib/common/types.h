@@ -54,6 +54,8 @@ extern "C" {
 	struct {
 	    node_t* n;
 	    boxf*    bp;
+	    node_t *lastn; ///< last node argument
+	    double radius; ///< last radius seen
 	} s;
     } inside_t;
 

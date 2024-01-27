@@ -3135,20 +3135,17 @@ static void point_init(node_t * n)
 
 static bool point_inside(inside_t * inside_context, pointf p)
 {
-    static node_t *lastn;	/* last node argument */
-    static double radius;
     pointf P;
     node_t *n;
 
     if (!inside_context) {
-	lastn = NULL;
 	return false;
     }
 
     n = inside_context->s.n;
     P = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
 
-    if (n != lastn) {
+    if (n != inside_context->s.lastn) {
 	size_t outp;
 	polygon_t *poly = ND_shape_info(n);
 	const size_t sides = 2;
@@ -3164,15 +3161,16 @@ static bool point_inside(inside_t * inside_context, pointf p)
 	    outp = sides * (poly->peripheries - 1);
 	}
 
-	radius = poly->vertices[outp + 1].x;
-	lastn = n;
+	inside_context->s.radius = poly->vertices[outp + 1].x;
+	inside_context->s.lastn = n;
     }
 
     /* inside bounding box? */
-    if (fabs(P.x) > radius || fabs(P.y) > radius)
+    if (fabs(P.x) > inside_context->s.radius ||
+        fabs(P.y) > inside_context->s.radius)
 	return false;
 
-    return hypot(P.x, P.y) <= radius;
+    return hypot(P.x, P.y) <= inside_context->s.radius;
 }
 
 static void point_gencode(GVJ_t * job, node_t * n)
