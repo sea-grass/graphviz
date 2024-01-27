@@ -716,8 +716,7 @@ float *compute_apsp_packed(vtx_data * graph, int n)
     return Dij;
 }
 
-float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
-{
+float *compute_apsp_artificial_weights_packed(vtx_data *graph, int n) {
     /* compute all-pairs-shortest-path-length while weighting the graph */
     /* so high-degree nodes are distantly located */
 
@@ -855,7 +854,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	/* and perform slower Dijkstra-based computation */
 	if (Verbose)
 	    fprintf(stderr, "Calculating subset model");
-	Dij = compute_apsp_artifical_weights_packed(graph, n);
+	Dij = compute_apsp_artificial_weights_packed(graph, n);
     } else if (model == MODEL_CIRCUIT) {
 	Dij = circuitModel(graph, n);
 	if (!Dij) {

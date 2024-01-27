@@ -1248,11 +1248,10 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 static void subset_model(Agraph_t * G, int nG)
 {
     int i, j, ne;
-    DistType **Dij;
     vtx_data *gp;
 
     gp = makeGraphData(G, nG, &ne, MODE_KK, MODEL_SUBSET, NULL);
-    Dij = compute_apsp_artifical_weights(gp, nG);
+    DistType **Dij = compute_apsp_artificial_weights(gp, nG);
     for (i = 0; i < nG; i++) {
 	for (j = 0; j < nG; j++) {
 	    GD_dist(G)[i][j] = Dij[i][j];

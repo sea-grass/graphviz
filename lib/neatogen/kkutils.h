@@ -22,7 +22,7 @@ extern "C" {
     extern void empty_neighbors_vec(vtx_data * graph, int vtx,
 				    int *vtx_vec);
     extern DistType **compute_apsp(vtx_data *, int);
-    extern DistType **compute_apsp_artifical_weights(vtx_data *, int);
+    extern DistType **compute_apsp_artificial_weights(vtx_data *, int);
     extern double distance_kD(double **, int, int, int);
     extern void quicksort_place(double *, int *, int);
     extern void quicksort_placef(float *, int *, int, int);
