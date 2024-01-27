@@ -2322,12 +2322,9 @@ static void poly_free(node_t * n)
  */
 static bool poly_inside(inside_t * inside_context, pointf p)
 {
-    static node_t *lastn;	/* last node argument */
-    static polygon_t *poly;
-    static size_t last, outp, sides;
+    size_t sides;
     const pointf O = {0};
-    static pointf *vertex;
-    static double scalex, scaley, box_URx, box_URy;
+    pointf *vertex = NULL;
 
     int s;
     pointf P, Q, R;
@@ -2335,7 +2332,6 @@ static bool poly_inside(inside_t * inside_context, pointf p)
     node_t *n;
 
     if (!inside_context) {
-	lastn = NULL;
 	return false;
     }
 
@@ -2349,17 +2345,17 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	return INSIDE(P, bbox);
     }
 
-    if (n != lastn) {
+    if (n != inside_context->s.lastn) {
 	double n_width, n_height;
 	double n_outline_width;
 	double n_outline_height;
-	poly = ND_shape_info(n);
-	vertex = poly->vertices;
-	sides = poly->sides;
+	inside_context->s.last_poly = ND_shape_info(n);
+	vertex = inside_context->s.last_poly->vertices;
+	sides = inside_context->s.last_poly->sides;
 
 	double xsize, ysize;
-	if (poly->option & FIXEDSHAPE) {
-	   boxf bb = polyBB(poly); 
+	if (inside_context->s.last_poly->option & FIXEDSHAPE) {
+	    boxf bb = polyBB(inside_context->s.last_poly);
 	    n_width = bb.UR.x - bb.LL.x;
 	    n_height = bb.UR.y - bb.LL.y;
 	    n_outline_width = n_width;
@@ -2392,41 +2388,48 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    xsize = 1.0;
 	if (ysize == 0.0)
 	    ysize = 1.0;
-	scalex = n_width / xsize;
-	scaley = n_height / ysize;
-	box_URx = n_outline_width / 2.0;
-	box_URy = n_outline_height / 2.0;
+	inside_context->s.scalex = n_width / xsize;
+	inside_context->s.scaley = n_height / ysize;
+	inside_context->s.box_URx = n_outline_width / 2;
+	inside_context->s.box_URy = n_outline_height / 2;
 
 	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
-	if (poly->peripheries >= 1 && penwidth > 0) {
+	if (inside_context->s.last_poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
-	    outp = (poly->peripheries + 1 - 1) * sides;
-	} else if (poly->peripheries < 1) {
-	    outp = 0;
+	    inside_context->s.outp =
+	      (inside_context->s.last_poly->peripheries + 1 - 1) * sides;
+	} else if (inside_context->s.last_poly->peripheries < 1) {
+	    inside_context->s.outp = 0;
 	} else {
 	    /* index to outer-periphery */
-	    outp = (poly->peripheries - 1) * sides;
+	    inside_context->s.outp =
+	      (inside_context->s.last_poly->peripheries - 1) * sides;
 	}
-	lastn = n;
+	inside_context->s.lastn = n;
+    } else {
+	vertex = inside_context->s.last_poly->vertices;
+	sides = inside_context->s.last_poly->sides;
     }
 
     /* scale */
-    P.x *= scalex;
-    P.y *= scaley;
+    P.x *= inside_context->s.scalex;
+    P.y *= inside_context->s.scaley;
 
     /* inside bounding box? */
-    if (fabs(P.x) > box_URx || fabs(P.y) > box_URy)
+    if (fabs(P.x) > inside_context->s.box_URx ||
+        fabs(P.y) > inside_context->s.box_URy)
 	return false;
 
     /* ellipses */
     if (sides <= 2)
-	return hypot(P.x / box_URx, P.y / box_URy) < 1.;
+	return hypot(P.x / inside_context->s.box_URx,
+	             P.y / inside_context->s.box_URy) < 1;
 
     /* use fast test in case we are converging on a segment */
-    size_t i = last % sides; // in case last left over from larger polygon
+    size_t i = inside_context->s.last % sides; // in case last left over from larger polygon
     size_t i1 = (i + 1) % sides;
-    Q = vertex[i + outp];
-    R = vertex[i1 + outp];
+    Q = vertex[i + inside_context->s.outp];
+    R = vertex[i1 + inside_context->s.outp];
     if (!same_side(P, O, Q, R))   /* false if outside the segment's face */
 	return false;
     /* else inside the segment face... */
@@ -2441,13 +2444,14 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    i1 = i;
 	    i = (i + sides - 1) % sides;
 	}
-	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { // false if outside any other segment’s face
-	    last = i;
+	if (!same_side(P, O, vertex[i + inside_context->s.outp],
+	               vertex[i1 + inside_context->s.outp])) { // false if outside any other segment’s face
+	    inside_context->s.last = i;
 	    return false;
 	}
     }
     /* inside all segments' faces */
-    last = i;			/* in case next edge is to same side */
+    inside_context->s.last = i; // in case next edge is to same side
     return true;
 }
 

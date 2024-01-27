@@ -75,9 +75,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `gvrender_engine_t.polyline` callbacks now take the number of points, `n`, as
   a `size_t`.
 - **Breaking**: the `AVG` macro has been removed.
-- **Breaking**: the `inside_t.s` union member gained members `lastn` and
-  `radius`. Zero initialize these when you construct instances of this type.
-  #2498
+- **Breaking**: the `inside_t.s` union member gained members `lastn`, `radius`,
+  `last_poly`, `last`, `outp`, `scalex`, `scaley`, `box_URx`, and `box_URy`.
+  Zero initialize these when you construct instances of this type. #2498
 
 ### Fixed
 
@@ -141,6 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   longer aborts. The abort was an intentional change in Graphviz 8.0.1 to avoid
   invalid memory reads in `dot`, but had the undesirable side effect of the
   graphical Graphviz.app exiting with no obvious cause. #2488
+- Use of an uninitialized variable in `poly_inside` has been corrected. #2498
 
 ## [9.0.0] - 2023-09-11
 

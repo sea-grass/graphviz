@@ -144,8 +144,13 @@ typedef union inside_t {
   struct {
     node_t *n;
     boxf *bp;
-    node_t *lastn; ///< last node argument
-    double radius; ///< last radius seen
+    node_t *lastn;        ///< last node argument
+    double radius;        ///< last radius seen
+    polygon_t *last_poly; ///< last seen polygon
+    size_t last;          ///< last used polygon vertex
+    size_t outp;          ///< last used outline periphery
+    double scalex, scaley, box_URx, box_URy;
+        ///< various computed sizes of aspects of the last seen polygon
   } s;
 } inside_t;
 
