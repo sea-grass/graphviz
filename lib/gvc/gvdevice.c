@@ -379,35 +379,20 @@ void gvdevice_finalize(GVJ_t * job)
 
 void gvprintf(GVJ_t * job, const char *format, ...)
 {
-    char buf[BUFSIZ];
-    int len;
+    agxbuf buf = {0};
     va_list argp;
-    char* bp = buf;
 
     va_start(argp, format);
-    {
-	va_list argp2;
-	va_copy(argp2, argp);
-	len = vsnprintf(buf, BUFSIZ, format, argp2);
-	va_end(argp2);
-    }
+    int len = vagxbprint(&buf, format, argp);
     if (len < 0) {
 	va_end(argp);
 	agerr (AGERR, "gvprintf: %s\n", strerror(errno));
 	return;
     }
-    else if (len >= BUFSIZ) {
-    /* C99 vsnprintf returns the length that would be required
-     * to write the string without truncation. 
-     */
-	bp = gmalloc((size_t)len + 1);
-	len = vsprintf(bp, format, argp);
-    }
     va_end(argp);
 
-    gvwrite(job, bp, (size_t)len);
-    if (bp != buf)
-	free (bp);
+    gvwrite(job, agxbuse(&buf), (size_t)len);
+    agxbfree(&buf);
 }
 
 
