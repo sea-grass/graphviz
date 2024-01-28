@@ -88,7 +88,7 @@ typedef struct Agdstate_s Agdstate_t;   ///< client state (closures)
 typedef struct Agsym_s Agsym_t;         ///< string attribute descriptors
 typedef struct Agattr_s Agattr_t;       ///< string attribute container
 typedef struct Agcbdisc_s Agcbdisc_t;   ///< client event callbacks
-typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for cbdisc
+typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for Agcbdisc_t
 typedef struct Agclos_s Agclos_t;       ///< common fields for graph/subgs
 typedef struct Agdatadict_s Agdatadict_t; ///< set of dictionaries per graph
 typedef struct Agedgepair_s Agedgepair_t; ///< the edge object
@@ -259,6 +259,8 @@ struct Agedgepair_s {
 
 /// @addtogroup cgraph_graph
 /// @{
+
+/// graph descriptor
 struct Agdesc_s {		/* graph descriptor */
     unsigned directed:1;	/* if edges are asymmetric */
     unsigned strict:1;		/* if multi-edges forbidden */
@@ -321,6 +323,8 @@ CGRAPH_API extern Agdisc_t AgDefaultDisc;
  *  @ingroup cgraph_object
  *  @{
  */
+
+/// client state (closures)
 struct Agdstate_s {
     void *id;
     /* IO must be initialized and finalized outside Cgraph,
@@ -331,6 +335,7 @@ typedef void (*agobjfn_t) (Agraph_t * g, Agobj_t * obj, void *arg);
 typedef void (*agobjupdfn_t) (Agraph_t * g, Agobj_t * obj, void *arg,
 			      Agsym_t * sym);
 
+/// client event callbacks, used in Agcbstack_s
 struct Agcbdisc_s {
     struct {
 	agobjfn_t ins;
@@ -341,12 +346,14 @@ struct Agcbdisc_s {
 
 /// object event callbacks
 
+/// enclosing state for Agcbdisc_s, used in Agclos_s
 struct Agcbstack_s {
     Agcbdisc_t *f;		/* methods */
     void *state;		/* closure */
     Agcbstack_t *prev;		/* kept in a stack, unlike other disciplines */
 };
 
+/// shared resources for Agraph_s
 struct Agclos_s {
     Agdisc_t disc;		/* resource discipline functions */
     Agdstate_t state;		/* resource closures */
@@ -357,6 +364,7 @@ struct Agclos_s {
     Dict_t *lookup_by_id[3];
 };
 
+/// graph or subgraph
 struct Agraph_s {
     Agobj_t base;
     Agdesc_t desc;
@@ -390,11 +398,27 @@ CGRAPH_API Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * disc);
 CGRAPH_API int agclose(Agraph_t * g);
 ///< deletes a graph, freeing its associated storage
 CGRAPH_API Agraph_t *agread(void *chan, Agdisc_t * disc);
+///< constructs a new graph
+
 CGRAPH_API Agraph_t *agmemread(const char *cp);
+///< reads a graph from the input string
+
 CGRAPH_API Agraph_t *agmemconcat(Agraph_t *g, const char *cp);
 CGRAPH_API void agreadline(int);
+///< sets input line number for subsequent error reporting
+
 CGRAPH_API void agsetfile(const char *);
+///< sets the current file name for subsequent error reporting
+
 CGRAPH_API Agraph_t *agconcat(Agraph_t * g, void *chan, Agdisc_t * disc);
+/**< @brief merges the file contents with a pre-existing graph
+ *
+ * Though I/O methods may be overridden, the default is that
+ * the channel argument is a stdio FILE pointer.
+ * In that case, if any of the streams are wide-oriented,
+ * the behavior is undefined.
+ */
+
 CGRAPH_API int agwrite(Agraph_t * g, void *chan);
 CGRAPH_API int agisdirected(Agraph_t * g);
 CGRAPH_API int agisundirected(Agraph_t * g);
