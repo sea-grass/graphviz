@@ -738,10 +738,6 @@ Agraph_t*
 gml_to_gv (char* name, FILE* fp, int cnt, int* errors)
 {
     Agraph_t* g;
-    agxbuf xb;
-    char buf[BUFSIZ];
-    agxbuf unk;
-    char unknownb[BUFSIZ];
     int error;
 
     if (cnt == 0)
@@ -758,10 +754,11 @@ gml_to_gv (char* name, FILE* fp, int cnt, int* errors)
     if (!G || error)
 	g = NULL;
     else {
-	agxbinit (&xb, BUFSIZ, buf);
-	agxbinit (&unk, BUFSIZ, unknownb);
+	agxbuf xb = {0};
+	agxbuf unk = {0};
 	g = mkGraph (G, NULL, name, &xb, &unk);
 	agxbfree (&xb);
+	agxbfree(&unk);
     }
 
     cleanup ();

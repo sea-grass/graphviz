@@ -515,10 +515,7 @@ typedef void (*print_op)(xdot_op * op, pf print, void *info, int more);
 
 static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 {
-    agxbuf xb;
-    char buf[BUFSIZ];
-
-    agxbinit (&xb, BUFSIZ, buf);
+    agxbuf xb = {0};
     switch (op->kind) {
     case xd_filled_ellipse:
 	print(info, "E");
@@ -625,10 +622,7 @@ static void jsonString(char *p, pf print, void *info)
 
 static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 {
-    agxbuf xb;
-    char buf[BUFSIZ];
-
-    agxbinit (&xb, BUFSIZ, buf);
+    agxbuf xb = {0};
     switch (op->kind) {
     case xd_filled_ellipse:
 	print(info, "{\"E\" : ");
@@ -725,9 +719,7 @@ static void _printXDot(xdot * x, pf print, void *info, print_op ofn)
 
 char *sprintXDot(xdot * x)
 {
-    char buf[BUFSIZ];
-    agxbuf xb;
-    agxbinit(&xb, BUFSIZ, buf);
+    agxbuf xb = {0};
     _printXDot(x, (pf)agxbprint, &xb, printXDot_Op);
     return agxbdisown(&xb);
 }

@@ -226,8 +226,6 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
     int e_arrows;		/* graph has edges with end arrows */
     int s_arrows;		/* graph has edges with start arrows */
     char buf[BUFSIZ];		/* Used only for small strings */
-    char xbuffer[BUFSIZ];	/* Initial buffer for xb */
-    agxbuf xb;
     node_t *n;
     edge_t *e;
     pointf ptf;
@@ -240,7 +238,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
     gv_fixLocale (1);
     e_arrows = s_arrows = 0;
     setYInvert(g);
-    agxbinit(&xb, BUFSIZ, xbuffer);
+    agxbuf xb = {0};
     safe_dcl(g, AGNODE, "pos", "");
     safe_dcl(g, AGNODE, "rects", "");
     N_width = safe_dcl(g, AGNODE, "width", "");

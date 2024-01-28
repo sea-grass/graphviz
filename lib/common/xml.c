@@ -70,8 +70,8 @@ static int xml_core(char previous, const char **current, xml_flags_t flags,
   if (c == '&' && (flags.raw || !xml_isentity(s)))
     return cb(state, "&amp;");
 
-  // '<' '>' are safe to substitute even if string is already UTF-8 coded since
-  // UTF-8 strings won't contain '<' or '>'
+  // '<' '>' are safe to substitute even if string is already XML encoded since
+  // XML strings won’t contain '<' or '>'
   if (c == '<')
     return cb(state, "&lt;");
 

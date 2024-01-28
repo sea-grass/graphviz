@@ -75,7 +75,6 @@ typedef struct {
     attrsym_t *e_l_draw;
     attrsym_t *hl_draw;
     attrsym_t *tl_draw;
-    char buf[NUMXBUFS][BUFSIZ];
     unsigned short version;
     char* version_s;
 } xdot_state_t;
@@ -377,7 +376,7 @@ xdot_begin_graph (graph_t *g, int s_arrows, int e_arrows, format_type id)
 	xd->tl_draw = NULL;
 
     for (i = 0; i < NUMXBUFS; i++)
-	agxbinit(xbuf+i, BUFSIZ, xd->buf[i]);
+	xbuf[i] = (agxbuf){0};
 }
 
 static void dot_begin_graph(GVJ_t *job)
@@ -528,8 +527,6 @@ static void xdot_color_stop (agxbuf* xb, float v, gvcolor_t* clr)
 
 static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 {
-    char buf0[BUFSIZ];
-    agxbuf xb;
     obj_state_t* obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180;
     pointf G[2],c1,c2;
@@ -539,7 +536,7 @@ static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
 	return;
     }
 
-    agxbinit(&xb, BUFSIZ, buf0);
+    agxbuf xb = {0};
     if (filled == GRADIENT) {
 	get_gradient_points(A, G, n, angle, 2);
 	agxbputc (&xb, '[');

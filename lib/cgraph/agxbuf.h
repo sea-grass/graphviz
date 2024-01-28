@@ -23,8 +23,7 @@
 /// a description of where a buffer is located
 typedef enum {
   AGXBUF_INLINE_SIZE_0 = 0,
-  AGXBUF_ON_HEAP = 254,  ///< buffer is dynamically allocated
-  AGXBUF_ON_STACK = 255, ///< buffer is statically allocated
+  AGXBUF_ON_HEAP = 255, ///< buffer is dynamically allocated
   /// other values mean an inline buffer with size N
 } agxbuf_loc_t;
 
@@ -45,8 +44,8 @@ typedef enum {
 ///   0               8               16              24              32
 ///
 /// \p buf, \p size, and \p capacity are in use when \p located is
-/// \p AGXBUF_ON_HEAP or \p AGXBUF_ON_STACK. \p store is in use when \p located
-/// is > \p AGXBUF_ON_STACK.
+/// \p AGXBUF_ON_HEAP. \p store is in use when \p located is <
+/// \p AGXBUF_ON_HEAP.
 typedef struct {
   union {
     struct {
@@ -59,28 +58,15 @@ typedef struct {
     } s;
     char store[sizeof(char *) + sizeof(size_t) * 3 -
                1]; ///< inline storage used when \p located is
-                   ///< > \p AGXBUF_ON_STACK
+                   ///< < \p AGXBUF_ON_HEAP
   } u;
 } agxbuf;
 
 static inline bool agxbuf_is_inline(const agxbuf *xb) {
   assert((xb->u.s.located == AGXBUF_ON_HEAP ||
-          xb->u.s.located == AGXBUF_ON_STACK ||
           xb->u.s.located <= sizeof(xb->u.store)) &&
          "corrupted agxbuf type");
   return xb->u.s.located < AGXBUF_ON_HEAP;
-}
-
-/* agxbinit:
- * Initializes new agxbuf; caller provides memory.
- * Assume hint = sizeof(init[])
- */
-static inline void agxbinit(agxbuf *xb, unsigned int hint, char *init) {
-  assert(init != NULL);
-  xb->u.s.buf = init;
-  xb->u.s.located = AGXBUF_ON_STACK;
-  xb->u.s.size = 0;
-  xb->u.s.capacity = hint;
 }
 
 /* agxbfree:
@@ -161,9 +147,6 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
 
   if (xb->u.s.located == AGXBUF_ON_HEAP) {
     nbuf = (char *)gv_recalloc(xb->u.s.buf, size, nsize, sizeof(char));
-  } else if (xb->u.s.located == AGXBUF_ON_STACK) {
-    nbuf = (char *)gv_calloc(nsize, sizeof(char));
-    memcpy(nbuf, xb->u.s.buf, cnt);
   } else {
     nbuf = (char *)gv_calloc(nsize, sizeof(char));
     memcpy(nbuf, xb->u.store, cnt);
@@ -332,12 +315,6 @@ static inline char *agxbdisown(agxbuf *xb) {
     // the string lives in `store`, so we need to copy its contents to heap
     // memory
     buf = gv_strndup(xb->u.store, agxblen(xb));
-  } else if (xb->u.s.located == AGXBUF_ON_STACK) {
-    // the buffer is not dynamically allocated, so we need to copy its contents
-    // to heap memory
-
-    buf = gv_strndup(xb->u.s.buf, agxblen(xb));
-
   } else {
     // the buffer is already dynamically allocated, so terminate it and then
     // take it as-is
