@@ -18,11 +18,10 @@ pkglib_LTLIBRARIES = libgvplugin_gdiplus.la
 endif
 endif
 
-noinst_HEADERS = FileStream.h gvplugin_gdiplus.h
+noinst_HEADERS = gvplugin_gdiplus.h
 
 nodist_libgvplugin_gdiplus_C_la_SOURCES = GdiPlus*.h
 libgvplugin_gdiplus_C_la_SOURCES = \
-	FileStream.cpp \
 	gvdevice_gdiplus.cpp \
 	gvloadimage_gdiplus.cpp \
 	gvplugin_gdiplus.cpp \

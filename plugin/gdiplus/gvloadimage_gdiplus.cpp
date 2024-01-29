@@ -16,16 +16,32 @@
 
 #include <gvc/gvplugin_loadimage.h>
 #include "gvplugin_gdiplus.h"
-
+#include <stringapiset.h>
 #include <windows.h>
 #include <gdiplus.h>
-
-#include "FileStream.h"
+#include <vector>
 
 using namespace Gdiplus;
 
 static void gdiplus_freeimage(usershape_t *us) {
   delete reinterpret_cast<Image*>(us->data);
+}
+
+// convert a UTF-8 string to UTF-16
+static std::vector<wchar_t> utf8_to_utf16(const char *s) {
+
+  // how much space do we need for the UTF-16 string?
+  const int wide_count = MultiByteToWideChar(CP_UTF8, 0, s, -1, nullptr, 0);
+
+  // translate it
+  std::vector<wchar_t> utf16(wide_count);
+  if (wide_count > 0) {
+    (void)MultiByteToWideChar(CP_UTF8, 0, s, -1, utf16.data(), wide_count);
+  } else {
+    utf16.push_back(0);
+  }
+
+  return utf16;
 }
 
 static Image* gdiplus_loadimage(GVJ_t * job, usershape_t *us)
@@ -45,14 +61,12 @@ static Image* gdiplus_loadimage(GVJ_t * job, usershape_t *us)
 			return nullptr;
 
 		/* create image from the usershape file */
-		/* NOTE: since Image::FromStream consumes the stream, we assume FileStream's lifetime should be shorter than us->f... */
-		IStream *stream = FileStream::Create(us->name, us->f);
-		us->data = Image::FromStream (stream);
+		const std::vector<wchar_t> filename = utf8_to_utf16(us->name);
+		us->data = Image::FromFile(filename.data());
 		
 		/* clean up */
 		if (us->data)
 			us->datafree = gdiplus_freeimage;
-		stream->Release();
 			
 		gvusershape_file_release(us);
     }

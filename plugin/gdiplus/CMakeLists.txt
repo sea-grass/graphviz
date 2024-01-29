@@ -2,11 +2,9 @@ if(WIN32)
 
   add_library(gvplugin_gdiplus SHARED
     # Header files
-    FileStream.h
     gvplugin_gdiplus.h
 
     # Source files
-    FileStream.cpp
     gvdevice_gdiplus.cpp
     gvloadimage_gdiplus.cpp
     gvplugin_gdiplus.cpp
