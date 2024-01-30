@@ -5,7 +5,7 @@
 #include <sfdpgen/stress_model.h>
 #include <stdbool.h>
 
-static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm, int *flag) {
+void stress_model(int dim, SparseMatrix B, double **x, int maxit_sm, int *flag) {
   int m;
   int i;
   SparseMatrix A = B;
@@ -47,9 +47,4 @@ static void stress_model_core(int dim, SparseMatrix B, double **x, int maxit_sm,
 
  RETURN:
   if (A != B) SparseMatrix_delete(A);
-}
-
-void stress_model(int dim, SparseMatrix D, double **x, int maxit_sm,
-                  int *flag) {
-  stress_model_core(dim, D, x, maxit_sm, flag);
 }
