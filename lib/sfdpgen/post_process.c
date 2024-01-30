@@ -324,7 +324,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   sm->tol_cg = 0.01;
   sm->maxit_cg = (int)sqrt((double) A->m);
 
-  lambda = sm->lambda = MALLOC(sizeof(double)*m);
+  lambda = sm->lambda = gv_calloc(m, sizeof(double));
   for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
 
   nz = A->nz;
