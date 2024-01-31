@@ -469,7 +469,15 @@ typedef int (*qsort_cmpf) (const void *, const void *);
 
 static int cmp(Agraph_t** p0, Agraph_t** p1)
 {
-    return agnnodes(*p1) - agnnodes(*p0);
+  const int n0 = agnnodes(*p0);
+  const int n1 = agnnodes(*p1);
+  if (n0 < n1) {
+    return 1;
+  }
+  if (n0 > n1) {
+    return -1;
+  }
+  return 0;
 }
 
 static void
