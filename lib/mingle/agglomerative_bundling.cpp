@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <algorithm>
 #include <common/types.h>
 #include <common/globals.h>
 #include <sparse/general.h>
@@ -381,7 +382,7 @@ static void agglomerative_ink_bundling_internal(
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"calling ink2...\n");
 	ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"finish calling ink2...\n");
-	assert(fabs(ink1 - grid.back().inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
+	assert(fabs(ink1 - grid.back().inks[i]) <= std::max(TOL, TOL * ink1) && ink1 - ink0 <= TOL);
 	(void)TOL;
 	assert(ink1 < 1000 * ink0); /* assert that points were found */
 	wgt_all = 0.;
@@ -440,7 +441,7 @@ static void agglomerative_ink_bundling_internal(
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"calling ink3...\n");
       ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"done calling ink3...\n");
-      assert(fabs(ink1 - grid.back().inks[i])<=MAX(TOL, TOL*ink1) && ink1 - ink0 <= TOL);
+      assert(fabs(ink1 - grid.back().inks[i]) <= std::max(TOL, TOL * ink1) && ink1 - ink0 <= TOL);
       assert(ink1 < 1000 * ink0); /* assert that points were found */
       xx[i*4 + 0] = meet1.x;
       xx[i*4 + 1] = meet1.y;
@@ -449,7 +450,7 @@ static void agglomerative_ink_bundling_internal(
       mid_edges[i] = pedge_wgt_new(2, dim, &xx.data()[i*4], wgt);
     }
 
-    A_mid = nearest_neighbor_graph(ne, MIN(nneighbors, ne), xx.data());
+    A_mid = nearest_neighbor_graph(ne, std::min(nneighbors, ne), xx.data());
 
     agglomerative_ink_bundling_internal(dim, A_mid, mid_edges.data(), nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
     SparseMatrix_delete(A_mid);

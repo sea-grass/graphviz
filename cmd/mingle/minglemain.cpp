@@ -324,7 +324,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 		edge = edges[i];
 		if (!edge->wgts.empty()) {
 			for (j = 0; j < edge->npoints - 1; j++){
-				maxwgt = MAX(maxwgt, edge->wgts[j]);
+				maxwgt = std::max(maxwgt, edge->wgts[j]);
 			}
 		}
 	}

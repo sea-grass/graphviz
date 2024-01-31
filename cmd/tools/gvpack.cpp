@@ -23,7 +23,7 @@
 #include "config.h"
 
 #include <getopt.h>
-
+#include <algorithm>
 #include <assert.h>
 #include <gvc/gvc.h>
 #include <cgraph/alloc.h>
@@ -692,10 +692,10 @@ static boxf compBB(std::vector<Agraph_t*> &gs) {
 
     for (size_t i = 1; i < gs.size(); i++) {
 	bb2 = GD_bb(gs[i]);
-	bb.LL.x = MIN(bb.LL.x, bb2.LL.x);
-	bb.LL.y = MIN(bb.LL.y, bb2.LL.y);
-	bb.UR.x = MAX(bb.UR.x, bb2.UR.x);
-	bb.UR.y = MAX(bb.UR.y, bb2.UR.y);
+	bb.LL.x = std::min(bb.LL.x, bb2.LL.x);
+	bb.LL.y = std::min(bb.LL.y, bb2.LL.y);
+	bb.UR.x = std::max(bb.UR.x, bb2.UR.x);
+	bb.UR.y = std::max(bb.UR.y, bb2.UR.y);
     }
 
     return bb;
