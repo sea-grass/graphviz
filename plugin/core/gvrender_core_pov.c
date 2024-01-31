@@ -15,7 +15,9 @@
 
 #define _GNU_SOURCE
 #include "config.h"
+#include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -115,7 +117,7 @@
 #define POV_SPHERE_SWEEP \
     "sphere_sweep {\n"\
     "    %s\n"\
-    "    %d,\n"
+    "    %" PRISIZE_T ",\n"
 
 #define POV_SPHERE \
     "sphere {"POV_VECTOR3", 1.0\n"	// center, radius
@@ -138,7 +140,7 @@
     "#debug %s\n"
 
 #define POV_POLYGON \
-    "polygon { %d,\n"
+    "polygon { %" PRISIZE_T ",\n"
 
 #define POV_VECTOR3 \
     "<%9.3f, %9.3f, %9.3f>"
@@ -590,7 +592,7 @@ static void pov_ellipse(GVJ_t * job, pointf * A, int filled)
 	agxbfree(&pov);
 }
 
-static void pov_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void pov_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 	(void)filled;
 
 	gvputs(job, "//*** bezier\n");
@@ -601,13 +603,13 @@ static void pov_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	agxbuf pov = {0};
 	agxbprint(&pov, POV_SPHERE_SWEEP, "b_spline", n + 2);
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		agxbprint(&pov, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 		          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 
 		//TODO: we currently just use the start and end points of the curve as
 		//control points but we should use center of nodes
-		if (i == 0 || i == n - 1) {
+		if (i == 0 || i + 1 == n) {
 			agxbprint(&pov, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 			          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 		}
@@ -629,8 +631,7 @@ static void pov_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	agxbfree(&pov);
 }
 
-static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void pov_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
 	gvputs(job, "//*** polygon\n");
 	z = layerz - 2;
 
@@ -638,7 +639,7 @@ static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
 
 	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", n + 1);
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		gvprintf(job, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 		          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 	}
@@ -661,7 +662,7 @@ static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
 
 		gvprintf(job, POV_POLYGON, n);
 
-		for (int i = 0; i < n; i++) {
+		for (size_t i = 0; i < n; i++) {
 			//create on z = 0 plane, then translate to real z pos
 			gvprintf(job, "\n    " POV_VECTOR3,
 			       A[i].x + job->translation.x,
@@ -677,8 +678,7 @@ static void pov_polygon(GVJ_t * job, pointf * A, int n, int filled)
 	}
 }
 
-static void pov_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void pov_polyline(GVJ_t *job, pointf *A, size_t n) {
 	gvputs(job, "//*** polyline\n");
 	z = layerz - 6;
 
@@ -686,7 +686,7 @@ static void pov_polyline(GVJ_t * job, pointf * A, int n)
 
 	gvprintf(job, POV_SPHERE_SWEEP, "linear_spline", n);
 
-	for (int i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 		gvprintf(job, "    " POV_VECTOR3 ", %.3f\n", A[i].x + job->translation.x,
 		          A[i].y + job->translation.y, 0.0, job->obj->penwidth); // z coordinate, thickness
 	}

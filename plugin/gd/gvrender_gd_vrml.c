@@ -11,6 +11,8 @@
 
 #include "config.h"
 #include "gdgen_text.h"
+#include <assert.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stddef.h>
@@ -413,9 +415,7 @@ collinear (pointf * A)
  * Return true if bezier points are collinear
  * At present, just check with 4 points, the common case.
  */
-static int
-straight (pointf * A, int n)
-{
+static int straight(pointf *A, size_t n) {
     if (n != 4) return 0;
     return collinear(A) && collinear(A + 1);
 }
@@ -472,22 +472,21 @@ nearTail (GVJ_t* job, pointf a, Agedge_t* e)
     /* this is gruesome, but how else can we get z coord */
 #define GETZ(jp,op,p,e) (nearTail(jp,p,e)?op->tail_z:op->head_z) 
 
-static void
-vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void vrml_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     (void)filled;
 
     obj_state_t *obj = job->obj;
     edge_t *e = obj->u.e;
     double fstz, sndz;
     pointf p1, V[4];
-    int i, j, step;
+    int step;
     state_t *state = job->context;
 
     assert(e);
 
     fstz = state->Fstz = obj->tail_z; 
     sndz = state->Sndz = obj->head_z;
-    if (straight(A,n)) {
+    if (straight(A, n)) {
 	doSegment (job, A, gvrender_ptf(job, ND_coord(agtail(e))),state->Fstz,gvrender_ptf(job, ND_coord(aghead(e))),state->Sndz);
 	return;
     }
@@ -495,9 +494,9 @@ vrml_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     gvputs(job,   "Shape { geometry Extrusion  {\n"
                   "  spine [");
     V[3] = A[0];
-    for (i = 0; i + 3 < n; i += 3) {
+    for (size_t i = 0; i + 3 < n; i += 3) {
 	V[0] = V[3];
-	for (j = 1; j <= 3; j++)
+	for (size_t j = 1; j <= 3; j++)
 	    V[j] = A[i + j];
 	for (step = 0; step <= BEZIERSUBDIVISION; step++) {
 	    p1 = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);
@@ -569,15 +568,14 @@ static void doArrowhead (GVJ_t *job, pointf * A)
                   "}\n");
 }
 
-static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
-{
+static void vrml_polygon(GVJ_t *job, pointf *A, size_t np, int filled) {
     obj_state_t *obj = job->obj;
     node_t *n;
     edge_t *e;
     double z = obj->z;
     pointf p, mp;
     gdPoint *points;
-    int i, pen;
+    int pen;
     gdImagePtr brush = NULL;
     double theta;
     state_t *state = job->context;
@@ -596,14 +594,15 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	n = obj->u.n;
 	pen = set_penstyle(job, state->im, brush);
 	points = gv_calloc(np, sizeof(gdPoint));
-	for (i = 0; i < np; i++) {
+	for (size_t i = 0; i < np; i++) {
 	    mp = vrml_node_point(job, n, A[i]);
 	    points[i].x = ROUND(mp.x);
 	    points[i].y = ROUND(mp.y);
 	}
+	assert(np <= INT_MAX);
 	if (filled)
-	    gdImageFilledPolygon(state->im, points, np, color_index(state->im, obj->fillcolor));
-	gdImagePolygon(state->im, points, np, pen);
+	    gdImageFilledPolygon(state->im, points, (int)np, color_index(state->im, obj->fillcolor));
+	gdImagePolygon(state->im, points, (int)np, pen);
 	free(points);
 	if (brush)
 	    gdImageDestroy(brush);
@@ -618,7 +617,7 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	gvputs(job,   "  }\n"
 	              "  geometry Extrusion {\n"
 	              "    crossSection [");
-	for (i = 0; i < np; i++) {
+	for (size_t i = 0; i < np; i++) {
 	    p.x = A[i].x - ND_coord(n).x;
 	    p.y = A[i].y - ND_coord(n).y;
 	    gvprintf(job, " %.3f %.3f,", p.x, p.y);
@@ -647,12 +646,12 @@ static void vrml_polygon(GVJ_t *job, pointf * A, int np, int filled)
 	    return;
 	}
 	p.x = p.y = 0.0;
-	for (i = 0; i < np; i++) {
+	for (size_t i = 0; i < np; i++) {
 	    p.x += A[i].x;
 	    p.y += A[i].y;
 	}
-	p.x = p.x / np;
-	p.y = p.y / np;
+	p.x /= (int)np;
+	p.y /= (int)np;
 
 	/* it is bad to know that A[1] is the aiming point, but we do */
 	theta =

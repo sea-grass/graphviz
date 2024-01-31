@@ -14,7 +14,6 @@
 #include <io.h>
 #endif
 
-#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -112,13 +111,10 @@ static void xdot_num(agxbuf *xb, double v)
   xdot_fmt_num(xb, v);
 }
 
-static void xdot_points(GVJ_t *job, char c, pointf * A, int n)
-{
+static void xdot_points(GVJ_t *job, char c, pointf *A, size_t n) {
     emit_state_t emit_state = job->obj->emit_state;
-    int i;
-
-    agxbprint(xbufs[emit_state], "%c %d ", c, n);
-    for (i = 0; i < n; i++)
+    agxbprint(xbufs[emit_state], "%c %" PRISIZE_T " ", c, n);
+    for (size_t i = 0; i < n; i++)
         xdot_point(xbufs[emit_state], A[i]);
 }
 
@@ -525,7 +521,7 @@ static void xdot_color_stop (agxbuf* xb, float v, gvcolor_t* clr)
   xdot_str_xbuf(xb, "", color2str (clr->u.rgba));
 }
 
-static void xdot_gradient_fillcolor (GVJ_t* job, int filled, pointf* A, int n)
+static void xdot_gradient_fillcolor(GVJ_t *job, int filled, pointf *A, size_t n)
 {
     obj_state_t* obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180;
@@ -604,28 +600,27 @@ static void xdot_ellipse(GVJ_t * job, pointf * A, int filled)
     xdot_fmt_num(xbufs[emit_state], A[1].y - A[0].y);
 }
 
-static void xdot_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void xdot_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     xdot_style (job);
     xdot_pencolor (job);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
-	   xdot_gradient_fillcolor (job, filled, A, n);
+	   xdot_gradient_fillcolor(job, filled, A, n);
 	}
         else
 	    xdot_fillcolor (job);
-        xdot_points(job, 'b', A, n);   /* NB - 'B' & 'b' are reversed in comparison to the other items */
+        xdot_points(job, 'b', A, n); // NB - 'B' & 'b' are reversed in comparison to the other items
     }
     else
         xdot_points(job, 'B', A, n);
 }
 
-static void xdot_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void xdot_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     xdot_style (job);
     xdot_pencolor (job);
     if (filled) {
 	if ((filled == GRADIENT) || (filled == RGRADIENT)) {
-	   xdot_gradient_fillcolor (job, filled, A, n);
+	   xdot_gradient_fillcolor(job, filled, A, n);
 	}
         else
 	    xdot_fillcolor (job);
@@ -635,8 +630,7 @@ static void xdot_polygon(GVJ_t * job, pointf * A, int n, int filled)
         xdot_points(job, 'p', A, n);
 }
 
-static void xdot_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void xdot_polyline(GVJ_t *job, pointf *A, size_t n) {
     xdot_style (job);
     xdot_pencolor (job);
     xdot_points(job, 'L', A, n);

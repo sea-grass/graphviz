@@ -11,7 +11,6 @@
 /* FIXME - incomplete replacement for codegen */
 
 #include "config.h"
-
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
@@ -21,6 +20,7 @@
 #include <io.h>
 #endif
 
+#include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <common/macros.h>
 #include <common/const.h>
@@ -39,12 +39,10 @@ typedef enum { FORMAT_MP, } format_type;
 
 static int Depth;
 
-static void mpptarray(GVJ_t *job, pointf * A, int n, int close)
-{
-    int i;
+static void mpptarray(GVJ_t *job, pointf *A, size_t n, int close) {
     point p;
 
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	PF2P(A[i],p);
         gvprintf(job, " %d %d", p.x, p.y);
     }
@@ -290,7 +288,7 @@ static void mp_ellipse(GVJ_t * job, pointf * A, int filled)
             start_y, end_x, end_y);
 }
 
-static void mp_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void mp_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
 
     int object_code = 3;        /* always 3 for spline */
@@ -306,11 +304,10 @@ static void mp_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     int cap_style = 0;
     int forward_arrow = 0;
     int backward_arrow = 0;
-    int i;
 
     pointf pf, V[4];
     point p;
-    int j, step;
+    int step;
     int count = 0;
 
     agxbuf buf = {0};
@@ -334,9 +331,9 @@ static void mp_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     PF2P(A[0], p);
     agxbprint(&buf, " %d %d", p.x, p.y);
     /* write subsequent points */
-    for (i = 0; i + 3 < n; i += 3) {
+    for (size_t i = 0; i + 3 < n; i += 3) {
         V[0] = V[3];
-        for (j = 1; j <= 3; j++) {
+        for (size_t j = 1; j <= 3; j++) {
             V[j].x = A[i + j].x;
             V[j].y = A[i + j].y;
         }
@@ -362,14 +359,13 @@ static void mp_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 
     gvprintf(job, " %s\n", agxbuse(&buf));      /* print points */
     agxbfree(&buf);
-    for (i = 0; i < count; i++) {
+    for (int i = 0; i < count; i++) {
         gvprintf(job, " %d", i % (count + 1) ? 1 : 0);   /* -1 on all */
     }
     gvputs(job, "\n");
 }
 
-static void mp_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void mp_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
 
     int object_code = 2;        /* always 2 for polyline */
@@ -387,20 +383,19 @@ static void mp_polygon(GVJ_t * job, pointf * A, int n, int filled)
     int radius = 0;
     int forward_arrow = 0;
     int backward_arrow = 0;
-    int npoints = n + 1;
+    const size_t npoints = n + 1;
 
     mp_line_style(obj, &line_style, &style_val);
 
     gvprintf(job,
-            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %" PRISIZE_T "\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
-    mpptarray(job, A, n, 1);        /* closed shape */
+    mpptarray(job, A, n, 1); // closed shape
 }
 
-static void mp_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void mp_polyline(GVJ_t *job, pointf *A, size_t n) {
     obj_state_t *obj = job->obj;
 
     int object_code = 2;        /* always 2 for polyline */
@@ -418,16 +413,16 @@ static void mp_polyline(GVJ_t * job, pointf * A, int n)
     int radius = 0;
     int forward_arrow = 0;
     int backward_arrow = 0;
-    int npoints = n;
+    const size_t npoints = n;
 
     mp_line_style(obj, &line_style, &style_val);
 
     gvprintf(job,
-            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.1f %d %d %d %d %d %" PRISIZE_T "\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints);
-    mpptarray(job, A, n, 0);        /* open shape */
+    mpptarray(job, A, n, 0); // open shape
 }
 
 gvrender_engine_t mp_engine = {

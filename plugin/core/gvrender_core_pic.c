@@ -137,11 +137,10 @@ static const char *picfontname(strview_t psname) {
     return "R";
 }
 
-static void picptarray(GVJ_t *job, pointf * A, int n, int close)
-{
+static void picptarray(GVJ_t *job, pointf *A, size_t n, int close) {
     point p;
 
-    for (int i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	PF2P(A[i],p);
         if (i == 0) {
             gvprintf(job, "move to (%d, %d)", p.x, p.y);
@@ -341,7 +340,7 @@ static void pic_ellipse(GVJ_t * job, pointf * A, int filled)
 		PS2INCH(A[0].y));
 }
 
-static void pic_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void pic_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     (void)filled;
 
     pointf V[4];
@@ -353,9 +352,9 @@ static void pic_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     PF2P(A[0], p);
     gvprintf(job, "move to (%d, %d)", p.x, p.y);
     /* write subsequent points */
-    for (int i = 0; i + 3 < n; i += 3) {
+    for (size_t i = 0; i + 3 < n; i += 3) {
         V[0] = V[3];
-        for (int j = 1; j <= 3; j++) {
+        for (size_t j = 1; j <= 3; j++) {
             V[j].x = A[i + j].x;
             V[j].y = A[i + j].y;
         }
@@ -369,16 +368,13 @@ static void pic_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     gvputs(job, "\n");
 }
 
-static void pic_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void pic_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     (void)filled;
-
-    picptarray(job, A, n, 1);        /* closed shape */
+    picptarray(job, A, n, 1); // closed shape
 }
 
-static void pic_polyline(GVJ_t * job, pointf * A, int n)
-{
-    picptarray(job, A, n, 0);        /* open shape */
+static void pic_polyline(GVJ_t *job, pointf *A, size_t n) {
+  picptarray(job, A, n, 0); // open shape
 }
 
 gvrender_engine_t pic_engine = {

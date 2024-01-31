@@ -555,11 +555,11 @@ void gvrender_polygon(GVJ_t *job, pointf *af, size_t n, int filled) {
 		job->obj->pencolor = job->obj->fillcolor;
 	    }
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->polygon(job, af, (int)n, filled);
+		gvre->polygon(job, af, n, filled);
 	    else {
 		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
-		gvre->polygon(job, AF, (int)n, filled);
+		gvre->polygon(job, AF, n, filled);
 		free(AF);
 	    }
 	    if (noPoly)
@@ -588,13 +588,12 @@ void gvrender_beziercurve(GVJ_t *job, pointf *af, size_t n, int filled) {
 
     if (gvre) {
 	if (gvre->beziercurve && job->obj->pen != PEN_NONE) {
-	    assert(n <= INT_MAX);
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->beziercurve(job, af, (int)n, filled);
+		gvre->beziercurve(job, af, n, filled);
 	    else {
 		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
-		gvre->beziercurve(job, AF, (int)n, filled);
+		gvre->beziercurve(job, AF, n, filled);
 		free(AF);
 	    }
 	}
@@ -606,13 +605,12 @@ void gvrender_polyline(GVJ_t *job, pointf *af, size_t n) {
 
     if (gvre) {
 	if (gvre->polyline && job->obj->pen != PEN_NONE) {
-	    assert(n <= INT_MAX);
 	    if (job->flags & GVRENDER_DOES_TRANSFORM)
-		gvre->polyline(job, af, (int)n);
+		gvre->polyline(job, af, n);
 	    else {
 		pointf *AF = gv_calloc(n, sizeof(pointf));
 		gvrender_ptf_A(job, af, AF, n);
-		gvre->polyline(job, AF, (int)n);
+		gvre->polyline(job, AF, n);
 		free(AF);
 	    }
 	}
@@ -693,7 +691,7 @@ void gvrender_usershape(GVJ_t *job, char *name, pointf *a, size_t n,
     if (!(us = gvusershape_find(name))) {
 	if (find_user_shape(name)) {
 	    if (gvre && gvre->library_shape)
-		gvre->library_shape(job, name, a, (int)n, filled);
+		gvre->library_shape(job, name, a, n, filled);
 	}
 	return;
     }

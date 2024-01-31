@@ -10,7 +10,6 @@
 
 #include "config.h"
 #include <errno.h>
-#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -56,7 +55,7 @@ static int dotted_len = ARRAY_SIZE(dotted);
 #include <cairo-svg.h>
 #endif
 
-static void cairogen_polyline(GVJ_t * job, pointf * A, int n);
+static void cairogen_polyline(GVJ_t *job, pointf *A, size_t n);
 
 static void cairogen_set_color(cairo_t * cr, gvcolor_t * color)
 {
@@ -343,8 +342,8 @@ static void cairogen_set_penstyle(GVJ_t *job, cairo_t *cr)
     cairo_set_line_width (cr, obj->penwidth);
 }
 
-static void cairo_gradient_fill (cairo_t* cr, obj_state_t* obj, int filled, pointf* A, int n)
-{
+static void cairo_gradient_fill(cairo_t *cr, obj_state_t *obj, int filled,
+                                pointf *A, size_t n) {
     cairo_pattern_t* pat;
     double angle = obj->gradient_angle * M_PI / 180;
     float r1,r2;
@@ -418,21 +417,18 @@ if (ry < RMIN) ry = RMIN;
     cairo_stroke(cr);
 }
 
-static void
-cairogen_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void cairogen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
-    int i;
 
     cairogen_set_penstyle(job, cr);
 
     cairo_move_to(cr, A[0].x, -A[0].y);
-    for (i = 1; i < n; i++)
+    for (size_t i = 1; i < n; i++)
     cairo_line_to(cr, A[i].x, -A[i].y);
     cairo_close_path(cr);
     if (filled == GRADIENT || filled == RGRADIENT) {
-	cairo_gradient_fill (cr, obj, filled, A, n);
+	cairo_gradient_fill(cr, obj, filled, A, n);
     }
     else if (filled) {
 	cairogen_set_color(cr, &obj->fillcolor);
@@ -442,20 +438,18 @@ cairogen_polygon(GVJ_t * job, pointf * A, int n, int filled)
     cairo_stroke(cr);
 }
 
-static void
-cairogen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void cairogen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
-    int i;
 
     cairogen_set_penstyle(job, cr);
 
     cairo_move_to(cr, A[0].x, -A[0].y);
-    for (i = 1; i < n; i += 3)
+    for (size_t i = 1; i < n; i += 3)
 	cairo_curve_to(cr, A[i].x, -A[i].y, A[i + 1].x, -A[i + 1].y,
 		       A[i + 2].x, -A[i + 2].y);
     if (filled == GRADIENT || filled == RGRADIENT) {
-	cairo_gradient_fill (cr, obj, filled, A, n);
+	cairo_gradient_fill(cr, obj, filled, A, n);
     }
     else if (filled) {
 	cairogen_set_color(cr, &obj->fillcolor);
@@ -465,17 +459,14 @@ cairogen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     cairo_stroke(cr);
 }
 
-static void
-cairogen_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void cairogen_polyline(GVJ_t *job, pointf *A, size_t n) {
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
-    int i;
 
     cairogen_set_penstyle(job, cr);
 
     cairo_move_to(cr, A[0].x, -A[0].y);
-    for (i = 1; i < n; i++)
+    for (size_t i = 1; i < n; i++)
 	cairo_line_to(cr, A[i].x, -A[i].y);
     cairogen_set_color(cr, &obj->pencolor);
     cairo_stroke(cr);

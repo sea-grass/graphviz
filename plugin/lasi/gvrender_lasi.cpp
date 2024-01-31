@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
@@ -26,6 +27,7 @@
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <common/const.h>
 #include <common/utils.h>
 #include "../core/ps.h"
@@ -449,15 +451,13 @@ static void lasi_ellipse(GVJ_t * job, pointf * A, int filled)
     }
 }
 
-static void lasi_bezier(GVJ_t *job, pointf *A, int n, int filled) {
-    int j;
-
+static void lasi_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-	for (j = 1; j < n; j += 3) {
+	for (size_t j = 1; j < n; j += 3) {
 	    gvprintpointflist(job, &A[j], 3);
 	    gvputs(job, " curveto\n");
 	}
@@ -469,7 +469,7 @@ static void lasi_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-	for (j = 1; j < n; j += 3) {
+	for (size_t j = 1; j < n; j += 3) {
 	    gvprintpointflist(job, &A[j], 3);
 	    gvputs(job, " curveto\n");
 	}
@@ -477,16 +477,13 @@ static void lasi_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     }
 }
 
-static void lasi_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
-    int j;
-
+static void lasi_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-	for (j = 1; j < n; j++) {
+	for (size_t j = 1; j < n; j++) {
 	    gvprintpointf(job, A[j]);
 	    gvputs(job, " lineto\n");
         }
@@ -498,7 +495,7 @@ static void lasi_polygon(GVJ_t * job, pointf * A, int n, int filled)
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-        for (j = 1; j < n; j++) {
+        for (size_t j = 1; j < n; j++) {
 	    gvprintpointf(job, A[j]);
 	    gvputs(job, " lineto\n");
 	}
@@ -506,17 +503,14 @@ static void lasi_polygon(GVJ_t * job, pointf * A, int n, int filled)
     }
 }
 
-static void lasi_polyline(GVJ_t * job, pointf * A, int n)
-{
-    int j;
-
+static void lasi_polyline(GVJ_t *job, pointf *A, size_t n) {
     if (job->obj->pencolor.u.HSVA[3] > .5) {
 	ps_set_pen_style(job);
 	ps_set_color(job, &(job->obj->pencolor));
 	gvputs(job, "newpath ");
 	gvprintpointf(job, A[0]);
 	gvputs(job, " moveto\n");
-        for (j = 1; j < n; j++) {
+        for (size_t j = 1; j < n; j++) {
 	    gvprintpointf(job, A[j]);
 	    gvputs(job, " lineto\n");
 	}
@@ -531,16 +525,15 @@ static void lasi_comment(GVJ_t * job, char *str)
     gvputs(job, "\n");
 }
 
-static void lasi_library_shape(GVJ_t * job, char *name, pointf * A, int n, int filled)
-{
-    assert(n >= 0);
+static void lasi_library_shape(GVJ_t *job, char *name, pointf *A, size_t n,
+                               int filled) {
     if (filled && job->obj->fillcolor.u.HSVA[3] > .5) {
 	ps_set_color(job, &(job->obj->fillcolor));
 	gvputs(job, "[ ");
-	gvprintpointflist(job, A, (size_t)n);
+	gvprintpointflist(job, A, n);
 	gvputs(job, " ");
 	gvprintpointf(job, A[0]);
-	gvprintf(job, " ]  %d true %s\n", n, name);
+	gvprintf(job, " ]  %" PRISIZE_T " true %s\n", n, name);
     }
     if (job->obj->pencolor.u.HSVA[3] > .5) {
         ps_set_pen_style(job);
@@ -549,7 +542,7 @@ static void lasi_library_shape(GVJ_t * job, char *name, pointf * A, int n, int f
 	gvprintpointflist(job, A, n);
 	gvputs(job, " ");
 	gvprintpointf(job, A[0]);
-	gvprintf(job, " ]  %d false %s\n", n, name);
+	gvprintf(job, " ]  %" PRISIZE_T " false %s\n", n, name);
     }
 }
 

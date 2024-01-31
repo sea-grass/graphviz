@@ -19,10 +19,10 @@
  */
 
 #include "config.h"
-
 #include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -60,16 +60,14 @@ static bool emit_standalone_headers(const GVJ_t *job) {
   return job->render.id != FORMAT_SVG_INLINE;
 }
 
-static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
-{
-    int i;
+static void svg_bzptarray(GVJ_t *job, pointf *A, size_t n) {
     char c;
 
     c = 'M';			/* first point */
 #if EDGEALIGN
     if (A[0].x <= A[n-1].x) {
 #endif
-	for (i = 0; i < n; i++) {
+	for (size_t i = 0; i < n; i++) {
 	    gvwrite(job, &c, 1);
             gvprintdouble(job, A[i].x);
             gvputc(job, ',');
@@ -81,7 +79,7 @@ static void svg_bzptarray(GVJ_t * job, pointf * A, int n)
 	}
 #if EDGEALIGN
     } else {
-	for (i = n-1; i >= 0; i--) {
+	for (size_t i = n - 1; i != SIZE_MAX; i--) {
 	    gvwrite(job, &c, 1);
             gvprintdouble(job, A[i].x);
             gvputc(job, ',');
@@ -567,8 +565,7 @@ static void svg_print_stop(GVJ_t * job, double offset, gvcolor_t color)
 /* svg_gradstyle
  * Outputs the SVG statements that define the gradient pattern
  */
-static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
-{
+static int svg_gradstyle(GVJ_t *job, pointf *A, size_t n) {
     pointf G[2];
     static int gradId;
     int id = gradId++;
@@ -576,7 +573,7 @@ static int svg_gradstyle(GVJ_t * job, pointf * A, int n)
     obj_state_t *obj = job->obj;
     double angle = obj->gradient_angle * M_PI / 180; //angle of gradient line
     G[0].x = G[0].y = G[1].x = G[1].y = 0.;
-    get_gradient_points(A, G, n, angle, 0);	//get points on gradient line
+    get_gradient_points(A, G, n, angle, 0); // get points on gradient line
 
     gvputs(job, "<defs>\n<linearGradient id=\"");
     if (obj->id != NULL) {
@@ -658,8 +655,7 @@ static void svg_ellipse(GVJ_t * job, pointf * A, int filled)
     gvputs(job, "\"/>\n");
 }
 
-static void
-svg_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void svg_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     int gid = 0;
     obj_state_t *obj = job->obj;
   
@@ -680,9 +676,8 @@ svg_bezier(GVJ_t *job, pointf *A, int n, int filled) {
     gvputs(job, "\"/>\n");
 }
 
-static void svg_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
-    int i, gid = 0;
+static void svg_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
+    int gid = 0;
     if (filled == GRADIENT) {
 	gid = svg_gradstyle(job, A, n);
     } else if (filled == RGRADIENT) {
@@ -691,7 +686,7 @@ static void svg_polygon(GVJ_t * job, pointf * A, int n, int filled)
     gvputs(job, "<polygon");
     svg_grstyle(job, filled, gid);
     gvputs(job, " points=\"");
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         gvprintdouble(job, A[i].x);
         gvputc(job, ',');
         gvprintdouble(job, -A[i].y);
@@ -704,18 +699,15 @@ static void svg_polygon(GVJ_t * job, pointf * A, int n, int filled)
     gvputs(job, "\"/>\n");
 }
 
-static void svg_polyline(GVJ_t * job, pointf * A, int n)
-{
-    int i;
-
+static void svg_polyline(GVJ_t *job, pointf *A, size_t n) {
     gvputs(job, "<polyline");
     svg_grstyle(job, 0, 0);
     gvputs(job, " points=\"");
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
         gvprintdouble(job, A[i].x);
         gvputc(job, ',');
         gvprintdouble(job, -A[i].y);
-        if (i != n - 1) {
+        if (i + 1 != n) {
             gvputc(job, ' ');
         }
     }

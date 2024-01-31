@@ -12,6 +12,8 @@
 #include "gdioctx_wrapper.h"
 #include "gdgen_text.h"
 #include "gd_psfontResolve.h"
+#include <assert.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -403,12 +405,11 @@ static int gdgen_set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr* brush)
     return pen;
 }
 
-static void
-gdgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
+static void gdgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
     gdImagePtr im = job->context;
     pointf p0, p1, V[4];
-    int i, j, step, pen;
+    int step, pen;
     bool pen_ok, fill_ok;
     gdImagePtr brush = NULL;
     gdPoint F[4];
@@ -424,9 +425,9 @@ gdgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
         V[3] = A[0];
         PF2P(A[0], F[0]);
         PF2P(A[n-1], F[3]);
-        for (i = 0; i + 3 < n; i += 3) {
+        for (size_t i = 0; i + 3 < n; i += 3) {
 	    V[0] = V[3];
-	    for (j = 1; j <= 3; j++)
+	    for (size_t j = 1; j <= 3; j++)
 	        V[j] = A[i + j];
 	    p0 = V[0];
 	    for (step = 1; step <= BEZIERSUBDIVISION; step++) {
@@ -448,12 +449,10 @@ gdgen_bezier(GVJ_t *job, pointf *A, int n, int filled) {
 static gdPoint *points;
 static size_t points_allocated;
 
-static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
-{
+static void gdgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
     obj_state_t *obj = job->obj;
     gdImagePtr im = job->context;
     gdImagePtr brush = NULL;
-    int i;
     int pen;
     bool pen_ok, fill_ok;
 
@@ -465,19 +464,20 @@ static void gdgen_polygon(GVJ_t * job, pointf * A, int n, int filled)
     fill_ok = filled && obj->fillcolor.u.index != gdImageGetTransparent(im);
 
     if (pen_ok || fill_ok) {
-        if (n > 0 && (size_t)n > points_allocated) {
-	    points = gv_recalloc(points, points_allocated, (size_t)n, sizeof(gdPoint));
-	    points_allocated = (size_t)n;
+        if (n > points_allocated) {
+	    points = gv_recalloc(points, points_allocated, n, sizeof(gdPoint));
+	    points_allocated = n;
 	}
-        for (i = 0; i < n; i++) {
+        for (size_t i = 0; i < n; i++) {
 	    points[i].x = ROUND(A[i].x);
 	    points[i].y = ROUND(A[i].y);
         }
+        assert(n <= INT_MAX);
         if (fill_ok)
-	    gdImageFilledPolygon(im, points, n, obj->fillcolor.u.index);
+	    gdImageFilledPolygon(im, points, (int)n, obj->fillcolor.u.index);
     
         if (pen_ok)
-            gdImagePolygon(im, points, n, pen);
+            gdImagePolygon(im, points, (int)n, pen);
     }
     if (brush)
 	gdImageDestroy(brush);
@@ -513,11 +513,9 @@ static void gdgen_ellipse(GVJ_t * job, pointf * A, int filled)
 	gdImageDestroy(brush);
 }
 
-static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
-{
+static void gdgen_polyline(GVJ_t *job, pointf *A, size_t n) {
     gdImagePtr im = job->context;
     pointf p, p1;
-    int i;
     int pen;
     bool pen_ok;
     gdImagePtr brush = NULL;
@@ -530,7 +528,7 @@ static void gdgen_polyline(GVJ_t * job, pointf * A, int n)
 
     if (pen_ok) {
         p = A[0];
-        for (i = 1; i < n; i++) {
+        for (size_t i = 1; i < n; i++) {
 	    p1 = A[i];
 	    gdImageLine(im, ROUND(p.x), ROUND(p.y),
 		        ROUND(p1.x), ROUND(p1.y), pen);

@@ -1536,7 +1536,7 @@ void setEdgeType(graph_t *g, int defaultValue) {
  * By default, this assumes a left-hand coordinate system (for svg); if RHS = 2 flag
  * is set, use standard coordinate system.
  */
-void get_gradient_points(pointf *A, pointf *G, int n, double angle, int flags) {
+void get_gradient_points(pointf *A, pointf *G, size_t n, double angle, int flags) {
     pointf min,max,center;
     int isRadial = flags & 1;
     int isRHS = flags & 2;
@@ -1552,7 +1552,7 @@ void get_gradient_points(pointf *A, pointf *G, int n, double angle, int flags) {
     else {
       min.x = max.x = A[0].x;
       min.y = max.y = A[0].y;
-      for (int i = 0; i < n; i++) {
+      for (size_t i = 0; i < n; i++) {
             min.x = MIN(A[i].x, min.x);
             min.y = MIN(A[i].y, min.y);
             max.x = MAX(A[i].x, max.x);
