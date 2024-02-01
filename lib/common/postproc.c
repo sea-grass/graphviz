@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
@@ -413,8 +414,6 @@ static void addXLabels(Agraph_t * gp)
     label_params_t params;
     object_t* objs;
     xlabel_t* lbls;
-    object_t* objp;
-    xlabel_t* xlp;
     Agsym_t* force;
     int et = EDGE_TYPE(gp);
 
@@ -470,8 +469,8 @@ static void addXLabels(Agraph_t * gp)
      * and all unset edge labels and xlabels.
      */
     size_t n_objs = (size_t)agnnodes(gp) + n_set_lbls + n_clbls + n_elbls;
-    objp = objs = N_NEW(n_objs, object_t);
-    xlp = lbls = N_NEW(n_lbls, xlabel_t);
+    object_t* objp = objs = gv_calloc(n_objs, sizeof(object_t));
+    xlabel_t* xlp = lbls = gv_calloc(n_lbls, sizeof(xlabel_t));
     bb.LL = (pointf){INT_MAX, INT_MAX};
     bb.UR = (pointf){-INT_MAX, -INT_MAX};
 

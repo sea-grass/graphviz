@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <limits.h>
 #include <neatogen/neato.h>
@@ -50,11 +51,11 @@ static graph_sgd * extract_adjacency(graph_t *G, int model) {
             }
         }
     }
-    graph_sgd *graph = N_NEW(1, graph_sgd);
-    graph->sources = N_NEW(n_nodes + 1, size_t);
+    graph_sgd *graph = gv_alloc(sizeof(graph_sgd));
+    graph->sources = gv_calloc(n_nodes + 1, sizeof(size_t));
     graph->pinneds = bitarray_new(n_nodes);
-    graph->targets = N_NEW(n_edges, size_t);
-    graph->weights = N_NEW(n_edges, float);
+    graph->targets = gv_calloc(n_edges, sizeof(size_t));
+    graph->weights = gv_calloc(n_edges, sizeof(float));
 
     graph->n = n_nodes;
     assert(n_edges <= INT_MAX);
@@ -168,7 +169,7 @@ void sgd(graph_t *G, /* input graph */
             n_terms += n-n_fixed;
         }
     }
-    term_sgd *terms = N_NEW(n_terms, term_sgd);
+    term_sgd *terms = gv_calloc(n_terms, sizeof(term_sgd));
     // calculate term values through shortest paths
     int offset = 0;
     graph_sgd *graph = extract_adjacency(G, model);
@@ -201,8 +202,8 @@ void sgd(graph_t *G, /* input graph */
     // initialise starting positions (from neatoprocs)
     initial_positions(G, n);
     // copy initial positions and state into temporary space for speed
-    float *pos = N_NEW(2*n, float);
-    bool *unfixed = N_NEW(n, bool);
+    float *pos = gv_calloc(2 * n, sizeof(float));
+    bool *unfixed = gv_calloc(n, sizeof(bool));
     for (i=0; i<n; i++) {
         node_t *node = GD_neato_nlist(G)[i];
         pos[2*i] = ND_pos(node)[0];

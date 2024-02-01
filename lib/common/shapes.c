@@ -2080,7 +2080,7 @@ static void poly_init(node_t * n)
 
     if (sides < 3) {		/* ellipses */
 	sides = 2;
-	vertices = N_NEW(outp * sides, pointf);
+	vertices = gv_calloc(outp * sides, sizeof(pointf));
 	pointf P;
 	P.x = bb.x / 2.;
 	P.y = bb.y / 2.;
@@ -2131,7 +2131,7 @@ static void poly_init(node_t * n)
  *   the current segments, and outside by GAP distance, intersect.   
  */
 
-	vertices = N_NEW(outp * sides, pointf);
+	vertices = gv_calloc(outp * sides, sizeof(pointf));
 	if (ND_shape(n)->polygon->vertices) {
 	    poly_desc_t* pd = (poly_desc_t*)ND_shape(n)->polygon->vertices;
 	    pd->vertex_gen (vertices, &bb);
@@ -3092,7 +3092,7 @@ static void point_init(node_t * n)
         // periphery with penwidth taken into account
         ++outp;
     }
-    vertices = N_NEW(outp * sides, pointf);
+    vertices = gv_calloc(outp * sides, sizeof(pointf));
     P.y = P.x = sz / 2.;
     vertices[0].x = -P.x;
     vertices[0].y = -P.y;
@@ -3621,7 +3621,6 @@ static void record_init(node_t * n)
     pointf sz;
     int flip;
     size_t len;
-    char *textbuf;		/* temp buffer for storing labels */
     unsigned char sides = BOTTOM | RIGHT | TOP | LEFT;
 
     /* Always use rankdir to determine how records are laid out */
@@ -3633,7 +3632,7 @@ static void record_init(node_t * n)
      * error path involving "\\N" below.
      */
     len = MAX(MAX(len, 1), strlen("\\N"));
-    textbuf = N_NEW(len + 1, char);
+    char *textbuf = gv_calloc(len + 1, sizeof(char)); // temp buffer for storing labels
     if (!(info = parse_reclbl(n, flip, true, textbuf))) {
 	agerr(AGERR, "bad label format %s\n", ND_label(n)->text);
 	reclblp = "\\N";

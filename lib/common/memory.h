@@ -16,7 +16,6 @@
 extern "C" {
 #endif
 
-#define N_NEW(n,t)       (t*)gcalloc((n),sizeof(t))
 #define ALLOC(size,ptr,type) (ptr? (type*)grealloc(ptr,(size)*sizeof(type)):(type*)gmalloc((size)*sizeof(type)))
 #ifdef GVDLL
 #ifdef GVC_EXPORTS
@@ -30,7 +29,6 @@ extern "C" {
 #define MEMORY_API /* nothing */
 #endif
 
-    MEMORY_API void *gcalloc(size_t nmemb, size_t size);
     MEMORY_API void *gmalloc(size_t);
 	MEMORY_API void *grealloc(void *, size_t);
 #undef MEMORY_API

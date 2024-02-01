@@ -31,6 +31,7 @@
  *	n    - the order of the matrices A and Ainv
  */
 
+#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <common/render.h>
 #include <neatogen/neato.h>
@@ -38,14 +39,14 @@
 int matinv(double **A, double **Ainv, int n)
 {
     int i, j;
-    double *b, temp;
+    double temp;
 
     /* Decompose matrix into L and U triangular matrices */
     if (lu_decompose(A, n) == 0)
 	return (0);		/* Singular */
 
     /* Invert matrix by solving n simultaneous equations n times */
-    b = N_NEW(n, double);
+    double *b = gv_calloc(n, sizeof(double));
     for (i = 0; i < n; i++) {
 	for (j = 0; j < n; j++)
 	    b[j] = 0.0;

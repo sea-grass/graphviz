@@ -42,6 +42,7 @@
  *	written 3/2/79, revised and enhanced 8/9/83.
  */
 
+#include <cgraph/alloc.h>
 #include <math.h>
 #include <neatogen/neato.h>
 
@@ -71,9 +72,9 @@ int lu_decompose(double **a, int n)
 	free_array(lu);
     lu = new_array(n, n, 0.0);
     free(ps);
-    ps = N_NEW(n, int);
+    ps = gv_calloc(n, sizeof(int));
     free(scales);
-    scales = N_NEW(n, double);
+    scales = gv_calloc(n, sizeof(double));
 
     for (i = 0; i < n; i++) {	/* For each row */
 	/* Find the largest element in each row for row equilibration */

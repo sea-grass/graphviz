@@ -110,7 +110,7 @@ int sizeOf(PointSet * ps)
 point *pointsOf(PointSet * ps)
 {
     int n = dtsize(ps);
-    point *pts = N_NEW(n, point);
+    point *pts = gv_calloc(n, sizeof(point));
     pair *p;
     point *pp = pts;
 

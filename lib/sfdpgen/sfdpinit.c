@@ -20,6 +20,7 @@
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/overlap.h>
 #include <sfdpgen/stress_model.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
@@ -62,7 +63,7 @@ static void sfdp_init_graph(Agraph_t * g)
 static double *getPos(Agraph_t * g)
 {
     Agnode_t *n;
-    double *pos = N_NEW(Ndim * agnnodes(g), double);
+    double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));
     int ix, i;
 
     if (agfindnodeattr(g, "pos") == NULL)

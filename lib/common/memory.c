@@ -15,16 +15,6 @@
 #include <stdlib.h>
 #include <common/memory.h>
 
-void *gcalloc(size_t nmemb, size_t size)
-{
-    char *rv = calloc(nmemb, size);
-    if (nmemb > 0 && size > 0 && rv == NULL) {
-	fprintf(stderr, "out of memory\n");
-	graphviz_exit(EXIT_FAILURE);
-    }
-    return rv;
-}
-
 void *gmalloc(size_t nbytes)
 {
     char *rv;

@@ -217,7 +217,7 @@ bezier *new_spline(edge_t *e, size_t sz) {
 	ED_spl(e) = gv_alloc(sizeof(splines));
     ED_spl(e)->list = ALLOC(ED_spl(e)->size + 1, ED_spl(e)->list, bezier);
     rv = &(ED_spl(e)->list[ED_spl(e)->size++]);
-    rv->list = N_NEW(sz, pointf);
+    rv->list = gv_calloc(sz, sizeof(pointf));
     rv->size = sz;
     rv->sflag = rv->eflag = 0;
     rv->sp.x = rv->sp.y = rv->ep.x = rv->ep.y = 0;

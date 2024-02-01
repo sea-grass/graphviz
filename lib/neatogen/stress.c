@@ -168,7 +168,7 @@ int initLayout(int n, int dim, double **coords, node_t **nodes) {
 float *circuitModel(vtx_data * graph, int nG)
 {
     int i, j, e, rv, count;
-    float *Dij = N_NEW(nG * (nG + 1) / 2, float);
+    float *Dij = gv_calloc(nG * (nG + 1) / 2, sizeof(float));
     double **Gm;
     double **Gm_inv;
 
@@ -646,9 +646,9 @@ finish0:
 static float *compute_weighted_apsp_packed(vtx_data * graph, int n)
 {
     int i, j, count;
-    float *Dij = N_NEW(n * (n + 1) / 2, float);
+    float *Dij = gv_calloc(n * (n + 1) / 2, sizeof(float));
 
-    float *Di = N_NEW(n, float);
+    float *Di = gv_calloc(n, sizeof(float));
 
     count = 0;
     for (i = 0; i < n; i++) {
@@ -701,9 +701,9 @@ float *mdsModel(vtx_data * graph, int nG)
 float *compute_apsp_packed(vtx_data * graph, int n)
 {
     int i, j, count;
-    float *Dij = N_NEW(n * (n + 1) / 2, float);
+    float *Dij = gv_calloc(n * (n + 1) / 2, sizeof(float));
 
-    DistType *Di = N_NEW(n, DistType);
+    DistType *Di = gv_calloc(n, sizeof(DistType));
 
     count = 0;
     for (i = 0; i < n; i++) {
@@ -716,8 +716,7 @@ float *compute_apsp_packed(vtx_data * graph, int n)
     return Dij;
 }
 
-float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
-{
+float *compute_apsp_artificial_weights_packed(vtx_data *graph, int n) {
     /* compute all-pairs-shortest-path-length while weighting the graph */
     /* so high-degree nodes are distantly located */
 
@@ -725,19 +724,14 @@ float *compute_apsp_artifical_weights_packed(vtx_data * graph, int n)
     int i, j;
     float *old_weights = graph[0].ewgts;
     int nedges = 0;
-    float *weights;
-    int *vtx_vec;
     int deg_i, deg_j, neighbor;
 
     for (i = 0; i < n; i++) {
 	nedges += graph[i].nedges;
     }
 
-    weights = N_NEW(nedges, float);
-    vtx_vec = N_NEW(n, int);
-    for (i = 0; i < n; i++) {
-	vtx_vec[i] = 0;
-    }
+    float *weights = gv_calloc(nedges, sizeof(float));
+    int *vtx_vec = gv_calloc(n, sizeof(int));
 
     if (graph->ewgts) {
 	for (i = 0; i < n; i++) {
@@ -860,7 +854,7 @@ int stress_majorization_kD_mkernel(vtx_data * graph,	/* Input graph in sparse re
 	/* and perform slower Dijkstra-based computation */
 	if (Verbose)
 	    fprintf(stderr, "Calculating subset model");
-	Dij = compute_apsp_artifical_weights_packed(graph, n);
+	Dij = compute_apsp_artificial_weights_packed(graph, n);
     } else if (model == MODEL_CIRCUIT) {
 	Dij = circuitModel(graph, n);
 	if (!Dij) {

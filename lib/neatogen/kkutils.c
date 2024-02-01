@@ -94,8 +94,7 @@ DistType **compute_apsp(vtx_data * graph, int n)
 	return compute_apsp_simple(graph, n);
 }
 
-DistType **compute_apsp_artifical_weights(vtx_data * graph, int n)
-{
+DistType **compute_apsp_artificial_weights(vtx_data *graph, int n) {
     DistType **Dij;
     /* compute all-pairs-shortest-path-length while weighting the graph */
     /* so high-degree nodes are distantly located */

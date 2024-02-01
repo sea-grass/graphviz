@@ -56,7 +56,7 @@ void neato_init_node(node_t * n)
 {
     agbindrec(n, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);	//node custom data
     common_init_node(n);
-    ND_pos(n) = N_NEW(GD_ndim(agraphof(n)), double);
+    ND_pos(n) = gv_calloc(GD_ndim(agraphof(n)), sizeof(double));
     gv_nodesize(n, GD_flip(agraphof(n)));
 }
 
@@ -1248,11 +1248,10 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 static void subset_model(Agraph_t * G, int nG)
 {
     int i, j, ne;
-    DistType **Dij;
     vtx_data *gp;
 
     gp = makeGraphData(G, nG, &ne, MODE_KK, MODEL_SUBSET, NULL);
-    Dij = compute_apsp_artifical_weights(gp, nG);
+    DistType **Dij = compute_apsp_artificial_weights(gp, nG);
     for (i = 0; i < nG; i++) {
 	for (j = 0; j < nG; j++) {
 	    GD_dist(G)[i][j] = Dij[i][j];
@@ -1452,7 +1451,7 @@ void neato_layout(Agraph_t * g)
 		    else spline_edges(gc);
 		}
 		if (pin) {
-		    bp = N_NEW(n_cc, bool);
+		    bp = gv_calloc(n_cc, sizeof(bool));
 		    bp[0] = true;
 		} else
 		    bp = NULL;
