@@ -516,8 +516,17 @@ CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
  *
  * Programmer-defined values may be dynamically
  * attached to graphs, subgraphs, nodes, and edges.
- * Such values are either character string data (for I/O)
+ * Such values are either character string data (see @ref agattr) (for I/O)
  * or uninterpreted binary @ref cgraph_rec (for implementing algorithms efficiently).
+ *
+ * *String attributes* are handled automatically in reading and writing graph files.
+ * A string attribute is identified by name
+ * and by an internal symbol table entry (@ref Agsym_t) created by Libcgraph.
+ * Attributes of nodes, edges, and graphs (with their subgraphs) have separate namespaces.
+ * The contents of an @ref Agsym_t have a char* *name* for the attribute's name,
+ * a char* *defval* field for the attribute's default value,
+ * and an int *id* field containing the index of the attribute's specific value
+ * for an object in the object's array of attribute values.
  *
  * @{
  */
@@ -551,7 +560,22 @@ struct Agdatadict_s {		/* set of dictionaries per graph */
 
 CGRAPH_API Agsym_t *agattr(Agraph_t * g, int kind, char *name,
                            const char *value);
+/**< @brief creates or looks up attributes of a graph
+ * @param g graph. When is NULL, the default is set for all graphs created subsequently.
+ * @param kind may be @ref AGRAPH, @ref AGNODE, or @ref AGEDGE.
+ * @param value default value. When is (char*)0, the request is to search
+ * for an existing attribute of the given kind and name.
+ *
+ * If the attribute already exists, its default
+ * for creating new objects is set to the given **value**;
+ * if it does not exist, a new attribute is created with the
+ * given default **value**, and the default is applied to all pre-existing
+ * objects of the given **kind**
+ */
+
 CGRAPH_API Agsym_t *agattrsym(void *obj, char *name);
+///< looks up a string attribute for a graph object given as an argument
+
 CGRAPH_API Agsym_t *agnxtattr(Agraph_t * g, int kind, Agsym_t * attr);
 CGRAPH_API int      agcopyattr(void *oldobj, void *newobj);
 
