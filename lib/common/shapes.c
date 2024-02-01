@@ -2322,11 +2322,9 @@ static void poly_free(node_t * n)
  */
 static bool poly_inside(inside_t * inside_context, pointf p)
 {
-    polygon_t *poly;
-    size_t last = 0, outp = 0, sides = 0;
-    pointf O = { 0, 0 };		/* point (0,0) */
-    pointf *vertex;
-    double xsize = 0, ysize = 0, scalex = 0, scaley = 0, box_URx = 0, box_URy = 0;
+    size_t sides;
+    const pointf O = {0};
+    pointf *vertex = NULL;
 
     int s;
     pointf P, Q, R;
@@ -2347,80 +2345,91 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	return INSIDE(P, bbox);
     }
 
-    double n_width, n_height;
-    double n_outline_width;
-    double n_outline_height;
-    poly = ND_shape_info(n);
-    vertex = poly->vertices;
-    sides = poly->sides;
+    if (n != inside_context->s.lastn) {
+	double n_width, n_height;
+	double n_outline_width;
+	double n_outline_height;
+	inside_context->s.last_poly = ND_shape_info(n);
+	vertex = inside_context->s.last_poly->vertices;
+	sides = inside_context->s.last_poly->sides;
 
-    if (poly->option & FIXEDSHAPE) {
-       boxf bb = polyBB(poly); 
-        n_width = bb.UR.x - bb.LL.x;
-        n_height = bb.UR.y - bb.LL.y;
-        n_outline_width = n_width;
-        n_outline_height = n_height;
-        /* get point and node size adjusted for rankdir=LR */
-        if (GD_flip(agraphof(n))) {
-            ysize = n_width;
-            xsize = n_height;
-        } else {
-            xsize = n_width;
-            ysize = n_height;
-        }
+	double xsize, ysize;
+	if (inside_context->s.last_poly->option & FIXEDSHAPE) {
+	    boxf bb = polyBB(inside_context->s.last_poly);
+	    n_width = bb.UR.x - bb.LL.x;
+	    n_height = bb.UR.y - bb.LL.y;
+	    n_outline_width = n_width;
+	    n_outline_height = n_height;
+	    /* get point and node size adjusted for rankdir=LR */
+	    if (GD_flip(agraphof(n))) {
+		ysize = n_width;
+		xsize = n_height;
+	    } else {
+		xsize = n_width;
+		ysize = n_height;
+	    }
+	} else {
+	    /* get point and node size adjusted for rankdir=LR */
+	    if (GD_flip(agraphof(n))) {
+		ysize = ND_lw(n) + ND_rw(n);
+		xsize = ND_ht(n);
+	    } else {
+		xsize = ND_lw(n) + ND_rw(n);
+		ysize = ND_ht(n);
+	    }
+	    n_width = INCH2PS(ND_width(n));
+	    n_height = INCH2PS(ND_height(n));
+	    n_outline_width = INCH2PS(ND_outline_width(n));
+	    n_outline_height = INCH2PS(ND_outline_height(n));
+	}
+
+	/* scale */
+	if (xsize == 0.0)
+	    xsize = 1.0;
+	if (ysize == 0.0)
+	    ysize = 1.0;
+	inside_context->s.scalex = n_width / xsize;
+	inside_context->s.scaley = n_height / ysize;
+	inside_context->s.box_URx = n_outline_width / 2;
+	inside_context->s.box_URy = n_outline_height / 2;
+
+	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
+	if (inside_context->s.last_poly->peripheries >= 1 && penwidth > 0) {
+	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
+	    inside_context->s.outp =
+	      (inside_context->s.last_poly->peripheries + 1 - 1) * sides;
+	} else if (inside_context->s.last_poly->peripheries < 1) {
+	    inside_context->s.outp = 0;
+	} else {
+	    /* index to outer-periphery */
+	    inside_context->s.outp =
+	      (inside_context->s.last_poly->peripheries - 1) * sides;
+	}
+	inside_context->s.lastn = n;
     } else {
-        /* get point and node size adjusted for rankdir=LR */
-        if (GD_flip(agraphof(n))) {
-            ysize = ND_lw(n) + ND_rw(n);
-            xsize = ND_ht(n);
-        } else {
-            xsize = ND_lw(n) + ND_rw(n);
-            ysize = ND_ht(n);
-        }
-        n_width = INCH2PS(ND_width(n));
-        n_height = INCH2PS(ND_height(n));
-        n_outline_width = INCH2PS(ND_outline_width(n));
-        n_outline_height = INCH2PS(ND_outline_height(n));
+	vertex = inside_context->s.last_poly->vertices;
+	sides = inside_context->s.last_poly->sides;
     }
 
     /* scale */
-    if (xsize == 0.0)
-        xsize = 1.0;
-    if (ysize == 0.0)
-        ysize = 1.0;
-    scalex = n_width / xsize;
-    scaley = n_height / ysize;
-    box_URx = n_outline_width / 2.0;
-    box_URy = n_outline_height / 2.0;
-
-    const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
-    if (poly->peripheries >= 1 && penwidth > 0) {
-        /* index to outline, i.e., the outer-periphery with penwidth taken into account */
-        outp = (poly->peripheries + 1 - 1) * sides;
-    } else if (poly->peripheries < 1) {
-        outp = 0;
-    } else {
-        /* index to outer-periphery */
-        outp = (poly->peripheries - 1) * sides;
-    }
-
-    /* scale */
-    P.x *= scalex;
-    P.y *= scaley;
+    P.x *= inside_context->s.scalex;
+    P.y *= inside_context->s.scaley;
 
     /* inside bounding box? */
-    if (fabs(P.x) > box_URx || fabs(P.y) > box_URy)
+    if (fabs(P.x) > inside_context->s.box_URx ||
+        fabs(P.y) > inside_context->s.box_URy)
 	return false;
 
     /* ellipses */
     if (sides <= 2)
-	return hypot(P.x / box_URx, P.y / box_URy) < 1.;
+	return hypot(P.x / inside_context->s.box_URx,
+	             P.y / inside_context->s.box_URy) < 1;
 
     /* use fast test in case we are converging on a segment */
-    size_t i = last % sides; // in case last left over from larger polygon
+    size_t i = inside_context->s.last % sides; // in case last left over from larger polygon
     size_t i1 = (i + 1) % sides;
-    Q = vertex[i + outp];
-    R = vertex[i1 + outp];
+    Q = vertex[i + inside_context->s.outp];
+    R = vertex[i1 + inside_context->s.outp];
     if (!same_side(P, O, Q, R))   /* false if outside the segment's face */
 	return false;
     /* else inside the segment face... */
@@ -2435,13 +2444,14 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	    i1 = i;
 	    i = (i + sides - 1) % sides;
 	}
-	if (!same_side(P, O, vertex[i + outp], vertex[i1 + outp])) { // false if outside any other segment’s face
-	    last = i;
+	if (!same_side(P, O, vertex[i + inside_context->s.outp],
+	               vertex[i1 + inside_context->s.outp])) { // false if outside any other segment’s face
+	    inside_context->s.last = i;
 	    return false;
 	}
     }
     /* inside all segments' faces */
-    last = i;			/* in case next edge is to same side */
+    inside_context->s.last = i; // in case next edge is to same side
     return true;
 }
 
@@ -2804,7 +2814,7 @@ static port poly_port(node_t * n, char *portname, char *compass)
 	}
     } else {
 	inside_t *ictxtp;
-	inside_t ictxt;
+	inside_t ictxt = {0};
 
 	if (IS_BOX(n))
 	    ictxtp = NULL;
@@ -3130,20 +3140,17 @@ static void point_init(node_t * n)
 
 static bool point_inside(inside_t * inside_context, pointf p)
 {
-    static node_t *lastn;	/* last node argument */
-    static double radius;
     pointf P;
     node_t *n;
 
     if (!inside_context) {
-	lastn = NULL;
 	return false;
     }
 
     n = inside_context->s.n;
     P = ccwrotatepf(p, 90 * GD_rankdir(agraphof(n)));
 
-    if (n != lastn) {
+    if (n != inside_context->s.lastn) {
 	size_t outp;
 	polygon_t *poly = ND_shape_info(n);
 	const size_t sides = 2;
@@ -3159,15 +3166,16 @@ static bool point_inside(inside_t * inside_context, pointf p)
 	    outp = sides * (poly->peripheries - 1);
 	}
 
-	radius = poly->vertices[outp + 1].x;
-	lastn = n;
+	inside_context->s.radius = poly->vertices[outp + 1].x;
+	inside_context->s.lastn = n;
     }
 
     /* inside bounding box? */
-    if (fabs(P.x) > radius || fabs(P.y) > radius)
+    if (fabs(P.x) > inside_context->s.radius ||
+        fabs(P.y) > inside_context->s.radius)
 	return false;
 
-    return hypot(P.x, P.y) <= radius;
+    return hypot(P.x, P.y) <= inside_context->s.radius;
 }
 
 static void point_gencode(GVJ_t * job, node_t * n)
