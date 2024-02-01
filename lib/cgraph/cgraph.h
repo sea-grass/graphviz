@@ -537,7 +537,7 @@ CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
 struct Agattr_s {		/* dynamic string attributes */
     Agrec_t h;			/* common data header */
     Dict_t *dict;		/* shared dict to interpret attr field */
-    char **str;			/* the attribute string values */
+    char **str;		///< the attribute string values indexed by Agsym_s.id
 };
 
 /// @brief string attribute descriptor
@@ -546,7 +546,7 @@ struct Agsym_s {
     Dtlink_t link;
     char *name;			/* attribute's name */
     char *defval;		/* its default value for initialization */
-    int id;			/* its index in attr[] */
+    int id;			///< index in Agattr_s.str
     unsigned char kind;		/* referent object type */
     unsigned char fixed;	/* immutable value */
     unsigned char print;	/* always print */
