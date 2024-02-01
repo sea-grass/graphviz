@@ -531,16 +531,17 @@ CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
  * @{
  */
 
-/// definitions for dynamic string attributes
+// definitions for dynamic string attributes
 
+/// string attribute container
 struct Agattr_s {		/* dynamic string attributes */
     Agrec_t h;			/* common data header */
     Dict_t *dict;		/* shared dict to interpret attr field */
     char **str;			/* the attribute string values */
 };
 
-/// symbol in one of the above dictionaries
-
+/// @brief string attribute descriptor
+/// symbol in Agattr_s.dict
 struct Agsym_s {
     Dtlink_t link;
     char *name;			/* attribute's name */
@@ -551,7 +552,7 @@ struct Agsym_s {
     unsigned char print;	/* always print */
 };
 
-struct Agdatadict_s {		/* set of dictionaries per graph */
+struct Agdatadict_s {		///< set of dictionaries per graph
     Agrec_t h;			/* installed in list of graph recs */
     struct {
 	Dict_t *n, *e, *g;
