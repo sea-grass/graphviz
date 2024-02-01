@@ -18,6 +18,7 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
+#include <cgraph/streq.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <common/pointset.h>

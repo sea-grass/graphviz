@@ -35,10 +35,6 @@
 #include <assert.h>
 #include <stdint.h>
 
-static inline bool streq(const char *a, const char *b) {
-  return strcmp(a, b) == 0;
-}
-
 #define	SUCCESS				0
 #define FAILURE				-1
 #define LOCALNAMEPREFIX		'%'

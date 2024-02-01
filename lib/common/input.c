@@ -19,6 +19,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
+#include <cgraph/streq.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>

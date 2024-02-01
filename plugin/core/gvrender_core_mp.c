@@ -21,6 +21,7 @@
 #endif
 
 #include <cgraph/prisize_t.h>
+#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <common/macros.h>
 #include <common/const.h>

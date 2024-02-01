@@ -11,6 +11,7 @@
 #include <sparse/color_palette.h>
 #include <string.h>
 #include <common/macros.h>
+#include <cgraph/streq.h>
 
 int knownColorScheme(const char* name)
 {

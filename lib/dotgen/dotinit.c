@@ -11,6 +11,7 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/streq.h>
 #include <time.h>
 #include <dotgen/dot.h>
 #include <pack/pack.h>

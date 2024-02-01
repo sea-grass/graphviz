@@ -60,7 +60,7 @@ exnewnode(Expr_t* p, int op, int binary, int type, Exnode_t* left, Exnode_t* rig
 	Exnode_t*	x;
 
 	x = ALLOCATE(p, Exnode_t);
-	memzero(x, sizeof(*x));
+	*x = (Exnode_t){0};
 	x->op = op;
 	x->type = type;
 	x->binary = binary;
@@ -595,7 +595,7 @@ preprint(Exnode_t* args)
 	if (args->data.operand.left->op != CONSTANT)
 	{
 		x = ALLOCATE(expr.program, Print_t);
-		memzero(x, sizeof(*x));
+		*x = (Print_t){0};
 		x->arg = args;
 		return x;
 	}
@@ -623,7 +623,7 @@ preprint(Exnode_t* args)
 		else
 			p = q;
 		x = q;
-		memzero(x, sizeof(*x));
+		*x = (Print_t){0};
 		if (*s)
 		{
 			i = 0;

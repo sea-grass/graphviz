@@ -18,6 +18,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/overflow.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/streq.h>
 #include <common/render.h>
 #include <limits.h>
 #include <stdbool.h>

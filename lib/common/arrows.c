@@ -10,6 +10,7 @@
 
 
 #include <assert.h>
+#include <cgraph/streq.h>
 #include <cgraph/startswith.h>
 #include <common/geomprocs.h>
 #include <common/render.h>

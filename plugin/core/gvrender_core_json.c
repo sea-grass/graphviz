@@ -28,6 +28,7 @@
 #include <gvc/gvplugin_device.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
+#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>

@@ -27,6 +27,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
+#include <cgraph/streq.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
 #include <cgraph/unreachable.h>
@@ -39,8 +40,6 @@ static FILE *outFile;
 static char *CmdName;
 static char **Files;
 static uint64_t id;
-
-#define streq(s,t) (!strcmp(s,t))
 
 #define POS_SET (1<<0)
 #define W_SET   (1<<1)

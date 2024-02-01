@@ -17,6 +17,7 @@
 
 #include "config.h"
 #include <cgraph/agxbuf.h>
+#include <cgraph/streq.h>
 #include <ctype.h>
 #include <expr/exlib.h>
 #include <stdio.h>

@@ -33,8 +33,6 @@ extern "C" {
 #define CC_vt       0013	/* vt character         */
 
 #define elementsof(x)   (sizeof(x)/sizeof(x[0]))
-#define streq(a,b)  (!strcmp(a,b))
-#define memzero(b,n)    memset(b,0,n)
 
     extern char *pathpath(const char *);
     extern char *pathfind(const char *, const char *, const char *);

@@ -10,6 +10,7 @@
 
 #include    <assert.h>
 #include    <cgraph/alloc.h>
+#include    <cgraph/streq.h>
 #include    <twopigen/circle.h>
 #include    <ctype.h>
 #include    <inttypes.h>

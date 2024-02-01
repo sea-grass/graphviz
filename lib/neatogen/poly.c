@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
+#include <cgraph/streq.h>
 #include <neatogen/neato.h>
 #include <assert.h>
 #include <string.h>

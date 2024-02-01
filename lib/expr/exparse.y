@@ -26,6 +26,7 @@
  */
 
 #include <assert.h>
+#include <cgraph/streq.h>
 #include <ctype.h>
 #include <expr/exop.h>
 #include <stdio.h>
@@ -1166,7 +1167,7 @@ members	:	/* empty */
 			Exref_t*	r;
 
 			r = ALLOCATE(expr.program, Exref_t);
-			memzero(r, sizeof(*r));
+			*r = (Exref_t){0};
 			r->symbol = $1;
 			expr.refs = r;
 			r->next = 0;
@@ -1179,12 +1180,12 @@ members	:	/* empty */
 			Exref_t*	l;
 
 			r = ALLOCATE(expr.program, Exref_t);
-			memzero(r, sizeof(*r));
+			*r = (Exref_t){0};
 			r->symbol = $3;
 			r->index = 0;
 			r->next = 0;
 			l = ALLOCATE(expr.program, Exref_t);
-			memzero(l, sizeof(*l));
+			*l = (Exref_t){0};
 			l->symbol = $2;
 			l->index = 0;
 			l->next = r;

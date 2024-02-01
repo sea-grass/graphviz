@@ -22,10 +22,6 @@
 #define HAS_CLUST_EDGE(g) (aggetrec(g, CL_EDGE_TAG, 0))
 #define EDGE_TYPE(g) (GD_flags(g) & (7 << 1))
 
-#ifndef streq
-#define streq(a,b)		(!strcmp(a,b))
-#endif
-
 #define XPAD(d) ((d).x += 4*GAP)
 #define YPAD(d) ((d).y += 2*GAP)
 #define PAD(d)  {XPAD(d); YPAD(d);}
