@@ -18,6 +18,7 @@
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
+#include    <cgraph/gv_ctype.h>
 #include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
@@ -27,7 +28,6 @@
 #include    "openFile.h"
 #ifdef HAVE_EXPAT
 #include    <expat.h>
-#include    <ctype.h>
 
 #ifndef XML_STATUS_ERROR
 #define XML_STATUS_ERROR 0
@@ -117,7 +117,7 @@ static void freeUserdata(userdata_t ud) {
 static int isAnonGraph(const char *name) {
     if (*name++ != '%')
 	return 0;
-    while (isdigit((int)*name))
+    while (gv_isdigit(*name))
 	name++;			/* skip over digits */
     return (*name == '\0');
 }
