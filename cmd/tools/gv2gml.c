@@ -34,7 +34,6 @@
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
-#include <ctype.h>
 #include "openFile.h"
 
 static FILE *outFile;
@@ -148,7 +147,7 @@ static void emitPoint(double x, double y, int ix) {
 static char*
 skipWS (char* s)
 {
-    while (isspace((int)*s)) s++;
+    while (gv_isspace(*s)) s++;
     return s;
 }
 
