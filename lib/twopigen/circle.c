@@ -10,9 +10,9 @@
 
 #include    <assert.h>
 #include    <cgraph/alloc.h>
+#include    <cgraph/gv_ctype.h>
 #include    <cgraph/streq.h>
 #include    <twopigen/circle.h>
-#include    <ctype.h>
 #include    <inttypes.h>
 #include    <limits.h>
 #include    <math.h>
@@ -307,7 +307,7 @@ getRankseps (Agraph_t* g, uint64_t maxrank)
 	    xf += delx;
 	    ranks[rk++] = xf;
 	    p = endp;
-	    while ((c = *p) && (isspace(c) || c == ':'))
+	    while ((c = *p) && (gv_isspace(c) || c == ':'))
 		p++;
 	}
     }
