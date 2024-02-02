@@ -17,8 +17,8 @@
 
 #include "config.h"
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/streq.h>
-#include <ctype.h>
 #include <expr/exlib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -439,7 +439,7 @@ extoken_fn(Expr_t* ex)
 		case '#':
 			if (!ex->linewrap) {
 				s = ex->linep - 1;
-				while (s > ex->line && isspace((int)*(s - 1)))
+				while (s > ex->line && gv_isspace(*(s - 1)))
 					s--;
 				if (s == ex->line)
 				{
@@ -505,7 +505,7 @@ extoken_fn(Expr_t* ex)
 			ex_lval.integer = chrtoi(s);
 			return INTEGER;
 		case '.':
-			if (isdigit(c = lex(ex)))
+			if (gv_isdigit(c = lex(ex)))
 			{
 				agxbclear(&ex->tmp);
 				agxbput(&ex->tmp, "0.");
@@ -523,14 +523,14 @@ extoken_fn(Expr_t* ex)
 			{
 				b = 16;
 				agxbputc(&ex->tmp, (char)c);
-				for (c = lex(ex); isxdigit(c); c = lex(ex))
+				for (c = lex(ex); gv_isxdigit(c); c = lex(ex))
 				{
 					agxbputc(&ex->tmp, (char)c);
 				}
 			}
 			else
 			{
-				while (isdigit(c))
+				while (gv_isdigit(c))
 				{
 					agxbputc(&ex->tmp, (char)c);
 					c = lex(ex);
@@ -541,7 +541,7 @@ extoken_fn(Expr_t* ex)
 					do
 					{
 						agxbputc(&ex->tmp, (char)c);
-					} while (isalnum(c = lex(ex)));
+					} while (gv_isalnum(c = lex(ex)));
 				}
 				else
 				{
@@ -550,7 +550,7 @@ extoken_fn(Expr_t* ex)
 					floating:
 						q = FLOATING;
 						agxbputc(&ex->tmp, (char)c);
-						while (isdigit(c = lex(ex)))
+						while (gv_isdigit(c = lex(ex)))
 							agxbputc(&ex->tmp, (char)c);
 					}
 					if (c == 'e' || c == 'E')
@@ -562,7 +562,7 @@ extoken_fn(Expr_t* ex)
 							agxbputc(&ex->tmp, (char)c);
 							c = lex(ex);
 						}
-						while (isdigit(c))
+						while (gv_isdigit(c))
 						{
 							agxbputc(&ex->tmp, (char)c);
 							c = lex(ex);
@@ -585,7 +585,7 @@ extoken_fn(Expr_t* ex)
 					ex_lval.integer = strtoll(s, &e, b);
 			}
 			exunlex(ex, c);
-			if (*e || isalpha(c) || c == '_' || c == '$')
+			if (*e || gv_isalpha(c) || c == '_' || c == '$')
 			{
 				exerror("%s: invalid numeric constant", s);
 				goto eof;
@@ -593,11 +593,11 @@ extoken_fn(Expr_t* ex)
 			return q;
 		}
 		default:
-			if (isalpha(c) || c == '_' || c == '$')
+			if (gv_isalpha(c) || c == '_' || c == '$')
 			{
 				agxbclear(&ex->tmp);
 				agxbputc(&ex->tmp, (char)c);
-				while (isalnum(c = lex(ex)) || c == '_' || c == '$')
+				while (gv_isalnum(c = lex(ex)) || c == '_' || c == '$')
 					agxbputc(&ex->tmp, (char)c);
 				exunlex(ex, c);
 				s = agxbuse(&ex->tmp);
