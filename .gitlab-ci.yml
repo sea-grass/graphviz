@@ -399,18 +399,6 @@ ubuntu-22.04-static-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.04-build:
-    <<: *deb_build_definition
-    needs:
-        - job: docker_build_ubuntu-23.04
-          artifacts: false
-        - job: portable-source
-          artifacts: true
-    tags:
-        - linux
-    variables:
-      IMAGE: ubuntu-23.04
-
 ubuntu-23.10-build:
     <<: *deb_build_definition
     needs:
@@ -645,27 +633,6 @@ ubuntu-22.04-cmake-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.04-cmake-build:
-    <<: *deb_build_definition
-    needs:
-        - job: docker_build_ubuntu-23.04
-          artifacts: false
-    before_script:
-        - export build_system="cmake"
-        # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-deprecated-declarations"
-        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
-    tags:
-        - linux
-    variables:
-      IMAGE: ubuntu-23.04
-
 ubuntu-23.10-cmake-build:
     <<: *deb_build_definition
     needs:
@@ -708,10 +675,10 @@ ubuntu-22.04-cmake-minimal-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.04-cmake-ASan-build-for-ctest:
+ubuntu-22.04-cmake-ASan-build-for-ctest:
     <<: *deb_build_definition
     needs:
-        - job: docker_build_ubuntu-23.04
+        - job: docker_build_ubuntu-22.04
           artifacts: false
     before_script:
         - export build_system="cmake"
@@ -758,7 +725,7 @@ ubuntu-23.04-cmake-ASan-build-for-ctest:
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-23.04
+      IMAGE: ubuntu-22.04
 
 centos7-cmake-build:
     <<: *rpm_build_definition
@@ -1033,18 +1000,6 @@ ubuntu-22.04-test:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.04-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="autotools"
-    needs:
-        - job: "ubuntu-23.04-build"
-          artifacts: true
-    tags:
-        - linux
-    variables:
-      IMAGE: ubuntu-23.04
-
 ubuntu-23.10-test:
     <<: *linux_test_definition
     before_script:
@@ -1163,19 +1118,6 @@ ubuntu-22.04-cmake-test:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.04-cmake-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="cmake"
-        - python3 gen_version.py --output GRAPHVIZ_VERSION
-    needs:
-        - job: "ubuntu-23.04-cmake-build"
-          artifacts: true
-    tags:
-        - linux
-    variables:
-      IMAGE: ubuntu-23.04
-
 ubuntu-23.10-cmake-test:
     <<: *linux_test_definition
     before_script:
@@ -1189,7 +1131,7 @@ ubuntu-23.10-cmake-test:
     variables:
       IMAGE: ubuntu-23.10
 
-ubuntu-23.04-cmake-ASan-test-including-ctest:
+ubuntu-22.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
     before_script:
         - export build_system="cmake"
@@ -1201,12 +1143,12 @@ ubuntu-23.04-cmake-ASan-test-including-ctest:
         - export LSAN_OPTIONS=suppressions=$(pwd)/suppressions.txt
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
-        - job: "ubuntu-23.04-cmake-ASan-build-for-ctest"
+        - job: "ubuntu-22.04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - linux
     variables:
-      IMAGE: ubuntu-23.04
+      IMAGE: ubuntu-22.04
 
 centos7-cmake-test:
     <<: *linux_test_definition
@@ -1440,11 +1382,6 @@ docker_build_ubuntu-22.04:
   variables:
     IMAGE: ubuntu-22.04
 
-docker_build_ubuntu-23.04:
-  <<: *docker_build_definition
-  variables:
-    IMAGE: ubuntu-23.04
-
 docker_build_ubuntu-23.10:
   <<: *docker_build_definition
   variables:
@@ -1499,13 +1436,6 @@ docker_push_ubuntu-22.04:
   needs:
     - docker_build_ubuntu-22.04
 
-docker_push_ubuntu-23.04:
-  <<: *docker_push_definition
-  variables:
-    IMAGE: ubuntu-23.04
-  needs:
-    - docker_build_ubuntu-23.04
-
 docker_push_ubuntu-23.10:
   <<: *docker_push_definition
   variables:
@@ -1539,10 +1469,10 @@ lint_cmake_format:
     - tags
 
 lint_html:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-23.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-23.04
+    - docker_build_ubuntu-22.04
   script:
     - git ls-files -z -- '**/*.html' | xargs -0 -- xmllint --nonet --noout --html --valid
   except:
