@@ -8,13 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
-#include <ctype.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
 #include <cgraph/startswith.h>
@@ -84,7 +83,7 @@ static int isLegal(const char *p) {
     char c;
 
     while ((c = *p++)) {
-	if (c != '_' && !isalnum((int)c))
+	if (c != '_' && !gv_isalnum(c))
 	    return 0;
     }
 
