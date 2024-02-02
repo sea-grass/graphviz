@@ -10,12 +10,12 @@
 
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 /* the parse functions should return NULL on error */
 static char *parseReal(char *s, double *fp)
@@ -172,7 +172,7 @@ static char *parseOp(xdot_op * op, char *s, drawfunc_t ops[], int* error)
     xdot_color clr;
 
     *error = 0;
-    while (isspace((int)*s))
+    while (gv_isspace(*s))
 	s++;
     switch (*s++) {
     case 'E':
@@ -957,7 +957,7 @@ parseXDotColor (char* cp, xdot_color* clr)
 	return cp;
 	break;
     default :
-	if (isalnum(c)) {
+	if (gv_isalnum(c)) {
 	    clr->type = xd_none; 
 	    clr->u.clr = cp;
 	    return cp;
