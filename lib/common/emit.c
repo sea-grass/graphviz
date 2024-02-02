@@ -1966,7 +1966,7 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
     const char *s;
 
     for (s = lp->text; *s; s++) {
-	if (!isspace((int)*s))
+	if (!gv_isspace(*s))
 	    break;
     }
     if (*s == '\0')
