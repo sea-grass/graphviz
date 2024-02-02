@@ -8,7 +8,6 @@
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
-#include <ctype.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -28,10 +27,10 @@ static bool xml_isentity(const char *s) {
     s++;
     if (*s == 'x' || *s == 'X') {
       s++;
-      while (isxdigit((int)*s))
+      while (gv_isxdigit(*s))
         s++;
     } else {
-      while (isdigit((int)*s))
+      while (gv_isdigit(*s))
         s++;
     }
   } else {
