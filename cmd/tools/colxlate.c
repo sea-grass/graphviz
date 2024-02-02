@@ -35,9 +35,9 @@ static char *canoncolor(const char *orig, char *out)
     char c;
     char *p = out;
     while ((c = *orig++)) {
-	if (!isalnum(c))
+	if (!gv_isalnum(c))
 	    continue;
-	if (isupper(c))
+	if (gv_isupper(c))
 	    c = (char)tolower(c);
 	*p++ = c;
     }
