@@ -18,13 +18,13 @@
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/unreachable.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
 
 static int lineno = 1;		/* current line number */
 static int col0 = 1;		/* true if char ptr is at column 0 */
@@ -151,7 +151,7 @@ static int skipWS(FILE *str) {
 
     while (true) {
 	c = readc(str, 0);
-	if (!isspace(c)) {
+	if (!gv_isspace(c)) {
 	    return c;
 	}
     }
@@ -170,7 +170,7 @@ static void parseID(FILE *str, int c, char *buf, size_t bsize) {
 	c = readc(str, 0);
 	if (c < 0)
 	    break;
-	if (isalpha(c) || c == '_') {
+	if (gv_isalpha(c) || c == '_') {
 	    if (ptr == eptr)
 		break;
 	    *ptr++ = (char)c;
@@ -197,7 +197,7 @@ static case_t parseKind(FILE *str) {
     c = skipWS(str);
     if (c < 0)
 	return Eof;
-    if (!isalpha(c)) {
+    if (!gv_isalpha(c)) {
 	error(ERROR_ERROR,
 	      "expected keyword BEGIN/END/N/E...; found '%c', line %d", c,
 	      lineno);
