@@ -19,13 +19,13 @@
  * Updated by Emden Gansner
  */
 
-#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
@@ -161,12 +161,12 @@ static void init(int argc, char *argv[])
 		char *p = optarg + 1;
 		if (*optarg == '#') x_mode = BY_INDEX;
 		else x_mode = BY_SIZE;
-		if (isdigit((int)*p)) {
+		if (gv_isdigit(*p)) {
 		    x_index = (int)strtol (p, &endp, 10);
 		    printMode = EXTRACT;
 		    if (*endp == '-') {
 			p = endp + 1;
-			if (isdigit((int)*p)) {
+			if (gv_isdigit(*p)) {
 			    x_final = atoi (p);
 			    if (x_final < x_index) {
 				printMode = INTERNAL;
