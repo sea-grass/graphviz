@@ -36,6 +36,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
@@ -958,7 +959,7 @@ setSeed (graph_t * G, int dflt, long* seedp)
     int init = dflt;
 
     if (!p || *p == '\0') return dflt;
-    if (isalpha(*(unsigned char *)p)) {
+    if (gv_isalpha(*p)) {
 	if (startswith(p, SMART)) {
 	    init = INIT_SELF;
 	    p += SLEN(SMART);
@@ -971,14 +972,14 @@ setSeed (graph_t * G, int dflt, long* seedp)
 	}
 	else init = dflt;
     }
-    else if (isdigit(*(unsigned char *)p)) {
+    else if (gv_isdigit(*p)) {
 	init = INIT_RANDOM;
     }
 
     if (init == INIT_RANDOM) {
 	long seed;
 	/* Check for seed value */
-	if (!isdigit(*(unsigned char *)p) || sscanf(p, "%ld", &seed) < 1) {
+	if (!gv_isdigit(*p) || sscanf(p, "%ld", &seed) < 1) {
 #if defined(_WIN32)
 	    seed = (unsigned) time(NULL);
 #else
