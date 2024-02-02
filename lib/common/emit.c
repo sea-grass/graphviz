@@ -18,7 +18,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
-#include <ctype.h>
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
@@ -3712,7 +3711,7 @@ static token_t style_token(char **s) {
     char *p = *s;
     int token;
 
-    while (*p && (isspace((int)*p) || *p == ','))
+    while (*p && (gv_isspace(*p) || *p == ','))
 	p++;
     const char *start = p;
     switch (*p) {
