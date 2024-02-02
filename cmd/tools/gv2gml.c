@@ -26,6 +26,7 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/streq.h>
 #include <cgraph/strview.h>
@@ -102,7 +103,7 @@ static bool isNumber(char* s) {
     char* ep = s;
     strtod(s, &ep);
     if (s != ep) {
-	while (*ep && isspace((int)*ep)) ep++;
+	while (*ep && gv_isspace(*ep)) ep++;
 	if (*ep) return false;
 	return true;
     }
