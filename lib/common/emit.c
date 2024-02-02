@@ -3711,7 +3711,7 @@ static token_t style_token(char **s) {
     char *p = *s;
     int token;
 
-    while (*p && (gv_isspace(*p) || *p == ','))
+    while (gv_isspace(*p) || *p == ',')
 	p++;
     const char *start = p;
     switch (*p) {
