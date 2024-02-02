@@ -22,8 +22,6 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include <ctype.h>
-
 #include <neatogen/neato.h>
 #include <pack/pack.h>
 #include <neatogen/stress.h>
@@ -163,20 +161,19 @@ void neato_cleanup(graph_t * g)
     neato_cleanup_graph(g);
 }
 
-static int numFields(unsigned char *pos)
-{
+static int numFields(const char *pos) {
     int cnt = 0;
-    unsigned char c;
+    char c;
 
     do {
-	while (isspace(*pos))
+	while (gv_isspace(*pos))
 	    pos++;		/* skip white space */
 	if ((c = *pos)) { /* skip token */
 	    cnt++;
-	    while ((c = *pos) && !isspace(c) && c != ';')
+	    while ((c = *pos) && !gv_isspace(c) && c != ';')
 		pos++;
 	}
-    } while (isspace(c));
+    } while (gv_isspace(c));
     return cnt;
 }
 
@@ -300,7 +297,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    ep.y = y;
 	}
 
-	npts = numFields((unsigned char *) pos);	/* count potential points */
+	npts = numFields(pos); // count potential points
 	n = npts;
 	if (n < 4 || n % 3 != 1) {
 	    gv_free_splines(e);
@@ -329,7 +326,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    pp++;
 	    n--;
 	}
- 	while (isspace((int)*pos)) pos++;
+ 	while (gv_isspace(*pos)) pos++;
 	if (*pos == '\0')
 	    more = 0;
 	else
