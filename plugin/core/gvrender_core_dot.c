@@ -18,7 +18,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #include <common/macros.h>
 #include <common/const.h>
@@ -27,6 +26,7 @@
 #include <gvc/gvplugin_device.h>
 #include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
@@ -277,7 +277,7 @@ static void xdot_end_cluster(GVJ_t * job)
 static unsigned short versionStr2Version(const char *str) {
   unsigned short us = 0;
   for (size_t i = 0; str[i] != '\0'; ++i) {
-    if (!isdigit((int)str[i])) {
+    if (!gv_isdigit(str[i])) {
       continue;
     }
     unsigned short digit = (unsigned short)(str[i] - '0');
