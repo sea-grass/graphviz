@@ -705,7 +705,7 @@ int agwrite(Agraph_t * g, void *ofile)
     char* s;
     Level = 0;			/* re-initialize tab level */
     s = agget(g, "linelength");
-    if (s != NULL && isdigit((int)*s)) {
+    if (s != NULL && gv_isdigit(*s)) {
 	unsigned long len = strtoul(s, NULL, 10);
 	if ((len == 0 || len >= MIN_OUTPUTLINE) && len <= (unsigned long)INT_MAX)
 	    Max_outputline = (int)len;
