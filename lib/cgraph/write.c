@@ -15,6 +15,7 @@
 #include <stdio.h>		/* need sprintf() */
 #include <ctype.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strcasecmp.h>
 #include <inttypes.h>
 
@@ -112,7 +113,7 @@ static char *_agstrcanon(char *arg, char *buf)
     p = buf;
     *p++ = '\"';
     uc = *s++;
-    maybe_num = isdigit(uc) != 0 || uc == '.' || uc == '-';
+    maybe_num = gv_isdigit(uc) || uc == '.' || uc == '-';
     while (uc) {
 	if (uc == '\"' && !part_of_escape) {
 	    *p++ = '\\';
@@ -133,7 +134,7 @@ static char *_agstrcanon(char *arg, char *buf)
 		    needs_quotes = true;
 		}
 	    }
-	    else if (!isdigit(uc)) {
+	    else if (!gv_isdigit(uc)) {
 		maybe_num = false;
 		needs_quotes = true;
 	    }

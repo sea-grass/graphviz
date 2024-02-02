@@ -36,6 +36,9 @@
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="gv_ctype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ingraphs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
