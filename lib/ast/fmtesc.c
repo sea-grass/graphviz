@@ -16,9 +16,9 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/gv_ctype.h>
 #include <stddef.h>
 #include <string.h>
-#include <ctype.h>
 
 /*
  * quote string as of length n with qb...qe
@@ -51,7 +51,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
     escaped = spaced = 0;
     while (s < e) {
 	    int c = *s++;
-	    if (iscntrl(c) || !isprint(c) || c == '\\') {
+	    if (gv_iscntrl(c) || !gv_isprint(c) || c == '\\') {
 		escaped = 1;
 		*b++ = '\\';
 		switch (c) {
@@ -97,10 +97,10 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
 		*b++ = '\\';
 	    } else if (!spaced &&
 		       !escaped &&
-		       (isspace(c) ||
+		       (gv_isspace(c) ||
 			(shell &&
 			 (strchr("\";~&|()<>[]*?", c) ||
-			  (c == '#' && (b == f || isspace((int)*(b - 1)))
+			  (c == '#' && (b == f || gv_isspace(*(b - 1)))
 			  )
 			 )
 			)
