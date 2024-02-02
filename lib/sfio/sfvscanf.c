@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/gv_ctype.h>
 #include <inttypes.h>
 #include	<limits.h>
 #include	<sfio/sfhdr.h>
@@ -106,13 +107,13 @@ int sfvscanf(FILE *f, const char *form, va_list args)
   loop_fmt:
     while ((fmt = *form++)) {
 	if (fmt != '%') {
-	    if (isspace(fmt)) {
+	    if (gv_isspace(fmt)) {
 		if (fmt != '\n')
 		    fmt = -1;
 		for (;;) {
 		    if (SFGETC(f, inp) < 0 || inp == fmt)
 			goto loop_fmt;
-		    else if (!isspace(inp)) {
+		    else if (!gv_isspace(inp)) {
 			SFUNGETC(f, inp);
 			goto loop_fmt;
 		    }
@@ -204,7 +205,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 
 	case '.':		/* width & base */
 	    dot += 1;
-	    if (isdigit((int)*form)) {
+	    if (gv_isdigit(*form)) {
 		fmt = *form++;
 		goto dot_size;
 	    } else if (*form == '*') {
@@ -239,7 +240,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	case '8':
 	case '9':
 	  dot_size:
-	    for (v = fmt - '0'; isdigit((int)*form); ++form)
+	    for (v = fmt - '0'; gv_isdigit(*form); ++form)
 		v = v * 10 + (*form - '0');
 
 	  dot_set:
@@ -252,8 +253,8 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	case 'I':		/* object size */
 	    size = 0;
 	    flags = (flags & ~SFFMT_TYPES) | SFFMT_IFLAG;
-	    if (isdigit((int)*form)) {
-		for (n = *form; isdigit(n); n = *++form)
+	    if (gv_isdigit(*form)) {
+		for (n = *form; gv_isdigit(n); n = *++form)
 		    size = size * 10 + (n - '0');
 	    } else if (*form == '*') {
 		form = _Sffmtintf(form + 1, &n);
@@ -406,7 +407,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    do {
 		SFGETC(f, inp);
 	    }
-	    while (isspace(inp))	/* skip starting blanks */
+	    while (gv_isspace(inp)) // skip starting blanks
 	    ;
 	}
 	if (inp < 0)
@@ -421,7 +422,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    int exponent = 0;
 	    bool seen_dot = false;
 	    do {
-		if (isdigit(inp))
+		if (gv_isdigit(inp))
 		    *val++ = inp;
 		else if (inp == '.') {	/* too many dots */
 		    if (seen_dot)
@@ -433,7 +434,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			break;
 		    *val++ = inp;
 		    if (--width <= 0 || SFGETC(f, inp) < 0 ||
-			(inp != '-' && inp != '+' && !isdigit(inp)))
+			(inp != '-' && inp != '+' && !gv_isdigit(inp)))
 			break;
 		    *val++ = inp;
 		} else if (inp == '-' || inp == '+') {	/* too many signs */
@@ -467,7 +468,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		if (inp == '-')
 		    flags |= SFFMT_MINUS;
 		while (--width > 0 && SFGETC(f, inp) >= 0)
-		    if (!isspace(inp))
+		    if (!gv_isspace(inp))
 			break;
 	    }
 	    if (inp < 0)
@@ -600,7 +601,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    n = 0;
 	    if (fmt == 's') {
 		do {
-		    if (isspace(inp))
+		    if (gv_isspace(inp))
 			break;
 		    if ((n += 1) <= size)
 			*argv.s++ = inp;

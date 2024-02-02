@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/gv_ctype.h>
 #include <inttypes.h>
 #include	<sfio/sfhdr.h>
 #include	<stddef.h>
@@ -219,7 +220,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		base = 0;	/* for %s,%c */
 		if (*form == 'c' || *form == 's')
 		    goto loop_flags;
-		if (*form && !isalnum((int)*form) &&
+		if (*form && !gv_isalnum(*form) &&
 		    (form[1] == 'c' || form[1] == 's')) {
 		    if (*form == '*')
 			goto do_star;
@@ -230,7 +231,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		}
 	    }
 
-	    if (isdigit((int)*form)) {
+	    if (gv_isdigit(*form)) {
 		fmt = *form++;
 		goto dot_size;
 	    } else if (*form != '*')
@@ -266,7 +267,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	case '8':
 	case '9':
 	  dot_size:
-	    for (v = fmt - '0'; isdigit((int)*form); ++form)
+	    for (v = fmt - '0'; gv_isdigit(*form); ++form)
 		v = v * 10 + (*form - '0');
 	  dot_set:
 	    if (dot == 0) {
@@ -283,8 +284,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	case 'I':		/* object length */
 	    size = 0;
 	    flags = (flags & ~SFFMT_TYPES) | SFFMT_IFLAG;
-	    if (isdigit((int)*form)) {
-		for (n = *form; isdigit(n); n = *++form)
+	    if (gv_isdigit(*form)) {
+		for (n = *form; gv_isdigit(n); n = *++form)
 		    size = size * 10 + (n - '0');
 	    } else if (*form == '*') {
 		form = _Sffmtintf(form + 1, &n);
@@ -734,7 +735,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    }
 
 	  e_format:		/* build the x.yyyy string */
-	    if (isalpha((int)*ep))
+	    if (gv_isalpha(*ep))
 		goto infinite;
 	    sp = endsp = buf + 1;	/* reserve space for sign */
 	    *endsp++ = *ep ? *ep++ : '0';
@@ -765,12 +766,12 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
 	    /* the e/Exponent separator and sign */
 	    *--ep = (decpt > 0 || dval == 0.) ? '+' : '-';
-	    *--ep = isupper(fmt) ? 'E' : 'e';
+	    *--ep = gv_isupper(fmt) ? 'E' : 'e';
 
 	    goto end_efg;
 
 	  f_format:		/* data before the decimal point */
-	    if (isalpha((int)*ep)) {
+	    if (gv_isalpha(*ep)) {
 	      infinite:
 		endsp = (sp = ep) + sfslen();
 		ep = endep;

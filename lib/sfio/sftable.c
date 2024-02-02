@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include	<cgraph/gv_ctype.h>
 #include	<limits.h>
 #include	<sfio/sfhdr.h>
 #include	<stddef.h>
@@ -19,7 +20,7 @@
 
 static char *sffmtint(const char *str, int *v)
 {
-    for (*v = 0; isdigit((int)*str); ++str)
+    for (*v = 0; gv_isdigit(*str); ++str)
 	*v = *v * 10 + (*str - '0');
     *v -= 1;
     return (char *) str;
