@@ -44,18 +44,11 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strview.h>
 #include <ctype.h>
 #include <stddef.h>
 #include <string.h>
-
-#ifndef	isblank
-#define	isblank(x)	((x)==' '||(x)=='\t')
-#endif
-
-#ifndef isgraph
-#define	isgraph(x)	(isprint(x)&&!isblank(x))
-#endif
 
 #ifdef _DEBUG_MATCH
 #include <ast/error.h>
@@ -177,7 +170,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
     do {
 	olds = s;
 	sc = getsource(s, e);
-	if (icase && isupper(sc))
+	if (icase && gv_isupper(sc))
 	    sc = tolower(sc);
 	oldp = p;
 	switch (pc = mbgetchar(p)) {
@@ -308,7 +301,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			    pc = *mp->current.beg[n];
 		    }
 		/*FALLTHROUGH*/ default:
-		    if (icase && isupper(pc))
+		    if (icase && gv_isupper(pc))
 			pc = tolower(pc);
 		    n = 0;
 		    break;
@@ -322,7 +315,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			RETURN(0);
 		    olds = s;
 		    sc = getsource(s, e);
-		    if ((flags & STR_ICASE) && isupper(sc))
+		    if ((flags & STR_ICASE) && gv_isupper(sc))
 			sc = tolower(sc);
 		}
 	    } else if (pc != '?' && pc != sc)
@@ -389,40 +382,40 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			    /*NOP*/;
 			else if (n == ':') {
 			    if (strview_str_eq(callee, "alnum")) {
-				if (isalnum(sc))
+				if (gv_isalnum(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "alpha")) {
-				if (isalpha(sc))
+				if (gv_isalpha(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "blank")) {
-				if (isblank(sc))
+				if (gv_isblank(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "cntrl")) {
-				if (iscntrl(sc))
+				if (gv_iscntrl(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "digit")) {
-				if (isdigit(sc))
+				if (gv_isdigit(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "graph")) {
-				if (isgraph(sc))
+				if (gv_isgraph(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "lower")) {
-				if (islower(sc))
+				if (gv_islower(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "print")) {
-				if (isprint(sc))
+				if (gv_isprint(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "punct")) {
-				if (ispunct(sc))
+				if (gv_ispunct(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "space")) {
-				if (isspace(sc))
+				if (gv_isspace(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "upper")) {
-				if (icase ? islower(sc) : isupper(sc))
+				if (icase ? gv_islower(sc) : gv_isupper(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "xdigit")) {
-				if (isxdigit(sc))
+				if (gv_isxdigit(sc))
 				    ok = 1;
 			    }
 			}
@@ -432,7 +425,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			    (void)mbgetchar(p);
 			    range = oldp;
 			} else
-			    if ((isalpha((int)*oldp) && isalpha((int)*olds)
+			    if ((gv_isalpha(*oldp) && gv_isalpha(*olds)
 				 && tolower(*oldp) == tolower(*olds))
 				|| sc == mbgetchar(oldp))
 			    ok = 1;
@@ -449,10 +442,10 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		    else if (range)
 		    {
 		      getrange:
-			    if (icase && isupper(pc))
+			    if (icase && gv_isupper(pc))
 				pc = tolower(pc);
 			x = mbgetchar(range);
-			if (icase && isupper(x))
+			if (icase && gv_isupper(x))
 			    x = tolower(x);
 			if (sc == x || sc == pc || (sc > x && sc < pc))
 			    ok = 1;
@@ -467,7 +460,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			range = oldp;
 			n = 1;
 		    } else {
-			if (icase && isupper(pc))
+			if (icase && gv_isupper(pc))
 			    pc = tolower(pc);
 			if (sc == pc)
 			    ok = 1;
@@ -498,7 +491,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		}
 	    }
 	/*FALLTHROUGH*/ default:
-	    if (icase && isupper(pc))
+	    if (icase && gv_isupper(pc))
 		pc = tolower(pc);
 	    if (pc != sc)
 		RETURN(0);

@@ -21,10 +21,18 @@
 
 #include <stdbool.h>
 
-static inline bool gv_isalpha(int c) {
-  if (c >= 'a' && c <= 'z')
+static inline bool gv_islower(int c) { return c >= 'a' && c <= 'z'; }
+
+static inline bool gv_isupper(int c) { return c >= 'A' && c <= 'Z'; }
+
+static inline bool gv_isalpha(int c) { return gv_islower(c) || gv_isupper(c); }
+
+static inline bool gv_isblank(int c) { return c == ' ' || c == '\t'; };
+
+static inline bool gv_iscntrl(int c) {
+  if (c >= 0 && c <= 31)
     return true;
-  if (c >= 'A' && c <= 'Z')
+  if (c == 127)
     return true;
   return false;
 }
@@ -32,3 +40,39 @@ static inline bool gv_isalpha(int c) {
 static inline bool gv_isdigit(int c) { return c >= '0' && c <= '9'; }
 
 static inline bool gv_isalnum(int c) { return gv_isalpha(c) || gv_isdigit(c); }
+
+static inline bool gv_isgraph(int c) { return c > 32 && c < 127; }
+
+static inline bool gv_isprint(int c) { return c > 31 && c < 127; }
+
+static inline bool gv_ispunct(int c) {
+  if (gv_isalnum(c))
+    return false;
+  return c > 32 && c < 127;
+}
+
+static inline bool gv_isspace(int c) {
+  if (c == '\t')
+    return true;
+  if (c == '\n')
+    return true;
+  if (c == '\v')
+    return true;
+  if (c == '\f')
+    return true;
+  if (c == '\r')
+    return true;
+  if (c == ' ')
+    return true;
+  return false;
+}
+
+static inline bool gv_isxdigit(int c) {
+  if (gv_isdigit(c))
+    return true;
+  if (c >= 'A' && c <= 'F')
+    return true;
+  if (c >= 'a' && c <= 'f')
+    return true;
+  return false;
+}
