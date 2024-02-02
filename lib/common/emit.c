@@ -25,6 +25,7 @@
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/list.h>
 #include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
@@ -1007,7 +1008,7 @@ static bool is_natural_number(const char *sstr)
     const char *str = sstr;
 
     while (*str)
-	if (!isdigit((int)*str++))
+	if (!gv_isdigit(*str++))
 	    return false;
     return true;
 }
