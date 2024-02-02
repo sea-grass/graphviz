@@ -30,3 +30,5 @@ static inline bool gv_isalpha(int c) {
 }
 
 static inline bool gv_isdigit(int c) { return c >= '0' && c <= '9'; }
+
+static inline bool gv_isalnum(int c) { return gv_isalpha(c) || gv_isdigit(c); }

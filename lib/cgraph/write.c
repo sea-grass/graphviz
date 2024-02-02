@@ -48,7 +48,7 @@ static int indent(Agraph_t * g, iochan_t * ofile)
 
 // alphanumeric, '.', '-', or non-ascii; basically, chars used in unquoted ids
 static bool is_id_char(char c) {
-  return isalnum(c) || c == '.' || c == '-' || !isascii(c);
+  return gv_isalnum(c) || c == '.' || c == '-' || !isascii(c);
 }
 
 // is the prefix of this string a recognized Graphviz escape sequence?
@@ -140,7 +140,7 @@ static char *_agstrcanon(char *arg, char *buf)
 	    }
 	    part_of_escape = false;
 	}
-	else if (!(isalnum(uc) || uc == '_' || !isascii(uc))) {
+	else if (!(gv_isalnum(uc) || uc == '_' || !isascii(uc))) {
 	    needs_quotes = true;
 	    part_of_escape = false;
 	}
