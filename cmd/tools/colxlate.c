@@ -14,6 +14,7 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -62,7 +63,7 @@ void colorxlate(char *str, agxbuf *buf) {
 	               sizeof(fake), colorcmpf);
     }
     if (last == NULL) {
-	if (!isdigit((int)canon[0])) {
+	if (!gv_isdigit(canon[0])) {
 	    fprintf(stderr, "warning: %s is not a known color\n", str);
 	    agxbput(buf, str);
 	} else
