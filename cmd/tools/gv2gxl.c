@@ -15,11 +15,11 @@
 
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include "convert.h"
-#include <ctype.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -125,10 +125,10 @@ static void tabover(FILE * gxlFile)
  */
 static bool legalGXLName(const char *id) {
     char c = *id++;
-    if (!isalpha(c) && c != '_' && c != ':')
+    if (!gv_isalpha(c) && c != '_' && c != ':')
 	return false;
     while ((c = *id++)) {
-	if (!isalnum(c) && c != '_' && c != ':' && c != '-' && c != '.')
+	if (!gv_isalnum(c) && c != '_' && c != ':' && c != '-' && c != '.')
 	    return false;
     }
     return true;
