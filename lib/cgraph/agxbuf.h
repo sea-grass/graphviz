@@ -165,23 +165,10 @@ static inline char *agxbnext(agxbuf *xb) {
   return agxbuf_is_inline(xb) ? &xb->u.store[len] : &xb->u.s.buf[len];
 }
 
-/* support for extra API misuse warnings if available */
-#ifdef __GNUC__
-#define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
-#else
-#define PRINTF_LIKE(index, first) /* nothing */
-#endif
-
-/* agxbprint:
- * Printf-style output to an agxbuf
- */
-static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
-                                              ...) {
-  va_list ap;
+/// vprintf-style output to an agxbuf
+static inline int vagxbprint(agxbuf *xb, const char *fmt, va_list ap) {
   size_t size;
   int result;
-
-  va_start(ap, fmt);
 
   // determine how many bytes we need to print
   {
@@ -219,6 +206,28 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
       xb->u.s.size += (size_t)result;
     }
   }
+
+  return result;
+}
+
+/* support for extra API misuse warnings if available */
+#ifdef __GNUC__
+#define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
+#else
+#define PRINTF_LIKE(index, first) /* nothing */
+#endif
+
+/* agxbprint:
+ * Printf-style output to an agxbuf
+ */
+static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
+                                              ...) {
+  va_list ap;
+  int result;
+
+  va_start(ap, fmt);
+
+  result = vagxbprint(xb, fmt, ap);
 
   va_end(ap);
   return result;

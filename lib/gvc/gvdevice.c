@@ -46,6 +46,7 @@ static uint64_t crc;
 
 #include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/startswith.h>
 #include <cgraph/exit.h>
 #include <common/const.h>
 #include <common/memory.h>
@@ -379,35 +380,20 @@ void gvdevice_finalize(GVJ_t * job)
 
 void gvprintf(GVJ_t * job, const char *format, ...)
 {
-    char buf[BUFSIZ];
-    int len;
+    agxbuf buf = {0};
     va_list argp;
-    char* bp = buf;
 
     va_start(argp, format);
-    {
-	va_list argp2;
-	va_copy(argp2, argp);
-	len = vsnprintf(buf, BUFSIZ, format, argp2);
-	va_end(argp2);
-    }
+    int len = vagxbprint(&buf, format, argp);
     if (len < 0) {
 	va_end(argp);
 	agerr (AGERR, "gvprintf: %s\n", strerror(errno));
 	return;
     }
-    else if (len >= BUFSIZ) {
-    /* C99 vsnprintf returns the length that would be required
-     * to write the string without truncation. 
-     */
-	bp = gmalloc((size_t)len + 1);
-	len = vsprintf(bp, format, argp);
-    }
     va_end(argp);
 
-    gvwrite(job, bp, (size_t)len);
-    if (bp != buf)
-	free (bp);
+    gvwrite(job, agxbuse(&buf), (size_t)len);
+    agxbfree(&buf);
 }
 
 
@@ -415,75 +401,46 @@ void gvprintf(GVJ_t * job, const char *format, ...)
  *	cc -DGVPRINTNUM_TEST gvprintnum.c -o gvprintnum
  */
 
-#define DECPLACES 4
-#define DECPLACES_SCALE 10000
-
 /* use macro so maxnegnum is stated just once for both double and string versions */
 #define val_str(n, x) static double n = x; static char n##str[] = #x;
 val_str(maxnegnum, -999999999999999.99)
 
-/* Note.  Returned string is only good until the next call to gvprintnum */
-static char * gvprintnum (size_t *len, double number)
-{
-    static char tmpbuf[sizeof(maxnegnumstr)];   /* buffer big enough for worst case */
-    char *result = tmpbuf+sizeof(maxnegnumstr); /* init result to end of tmpbuf */
-    long int N;
-    bool showzeros, negative;
-    int digit, i;
-
+static void gvprintnum(agxbuf *xb, double number) {
     /*
         number limited to a working range: maxnegnum >= n >= -maxnegnum
-	N = number * DECPLACES_SCALE rounded towards zero,
-	printing to buffer in reverse direction,
-	printing "." after DECPLACES
 	suppressing trailing "0" and "."
      */
 
     if (number < maxnegnum) {		/* -ve limit */
-	*len = sizeof(maxnegnumstr)-1;  /* len doesn't include terminator */
-	return maxnegnumstr;;
+	agxbput(xb, maxnegnumstr);
+	return;
     }
     if (number > -maxnegnum) {		/* +ve limit */
-	*len = sizeof(maxnegnumstr)-2;  /* len doesn't include terminator or sign */
-	return maxnegnumstr+1;		/* +1 to skip the '-' sign */
+	agxbput(xb, maxnegnumstr + 1); // +1 to skip the '-' sign
+	return;
     }
-    number *= DECPLACES_SCALE;		/* scale by DECPLACES_SCALE */
-    if (number < 0.0)			/* round towards zero */
-        N = number - 0.5;
-    else
-        N = number + 0.5;
-    if (N == 0) {			/* special case for exactly 0 */
-	*len = 1;
-	return "0";
-    }
-    if ((negative = N < 0))		/* avoid "-0" by testing rounded int */
-        N = -N;				/* make number +ve */
-    showzeros = false;			/* don't print trailing zeros */
-    for (i = DECPLACES; N || i > 0; i--) {  /* non zero remainder,
-						or still in fractional part */
-        digit = (int)(N % 10L);			/* next least-significant digit */
-        N /= 10;
-        if (digit || showzeros) {	/* if digit is non-zero,
-						or if we are printing zeros */
-            *--result = (char)digit | '0';	/* convert digit to ascii */
-            showzeros = true;		/* from now on we must print zeros */
+
+    agxbprint(xb, "%.03f", number);
+    agxbuf_trim_zeros(xb);
+
+    // strip off unnecessary leading '0'
+    {
+        char *staging = agxbdisown(xb);
+        if (startswith(staging, "0.")) {
+            memmove(staging, &staging[1], strlen(staging));
+        } else if (startswith(staging, "-0.")) {
+            memmove(&staging[1], &staging[2], strlen(&staging[1]));
         }
-        if (i == 1) {			/* if completed fractional part */
-            if (showzeros)		/* if there was a non-zero fraction */
-                *--result = '.';	/* print decimal point */
-            showzeros = true;		/* print all digits in int part */
-        }
+        agxbput(xb, staging);
+        free(staging);
     }
-    if (negative)			/* print "-" if needed */
-        *--result = '-';
-    *len = tmpbuf+sizeof(maxnegnumstr) - result;
-    return result;				
 }
 
 
 #ifdef GVPRINTNUM_TEST
 int main (int argc, char *argv[])
 {
+    agxbuf xb = {0};
     char *buf;
     size_t len;
 
@@ -499,10 +456,12 @@ int main (int argc, char *argv[])
     int i = sizeof(test) / sizeof(test[0]);
 
     while (i--) {
-	buf = gvprintnum(&len, test[i]);
+	gvprintnum(&xb, test[i]);
+	buf = agxbuse(&xb);;
         fprintf (stdout, "%g = %s %d\n", test[i], buf, len);
     }
 
+    agxbfree(&xb);
     graphviz_exit(0);
 }
 #endif
@@ -520,14 +479,16 @@ void gvprintdouble(GVJ_t * job, double num)
 
 void gvprintpointf(GVJ_t * job, pointf p)
 {
-    char *buf;
-    size_t len;
+    agxbuf xb = {0};
 
-    buf = gvprintnum(&len, p.x);
-    gvwrite(job, buf, len);
+    gvprintnum(&xb, p.x);
+    const char *buf = agxbuse(&xb);
+    gvwrite(job, buf, strlen(buf));
     gvwrite(job, " ", 1);
-    buf = gvprintnum(&len, p.y);
-    gvwrite(job, buf, len);
+    gvprintnum(&xb, p.y);
+    buf = agxbuse(&xb);
+    gvwrite(job, buf, strlen(buf));
+    agxbfree(&xb);
 } 
 
 void gvprintpointflist(GVJ_t *job, pointf *p, size_t n) {
