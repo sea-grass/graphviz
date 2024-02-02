@@ -4,6 +4,7 @@
  */
 
 #include <cgraph/exit.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -34,7 +35,7 @@ static bool xml_isentity(const char *s) {
         s++;
     }
   } else {
-    while (isalpha_no_locale(*s))
+    while (gv_isalpha(*s))
       s++;
   }
   if (*s == ';')

@@ -21,4 +21,12 @@
 
 #include <stdbool.h>
 
+static inline bool gv_isalpha(int c) {
+  if (c >= 'a' && c <= 'z')
+    return true;
+  if (c >= 'A' && c <= 'Z')
+    return true;
+  return false;
+}
+
 static inline bool gv_isdigit(int c) { return c >= '0' && c <= '9'; }

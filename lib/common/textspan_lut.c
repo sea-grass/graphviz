@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <common/render.h>
 #include <common/textspan_lut.h>
 #include <common/types.h>
@@ -711,11 +712,11 @@ static bool font_name_equal_permissive(const char *a, const char *b) {
   size_t a_pos = 0;
   size_t b_pos = 0;
   while (a_pos != a_length && b_pos != b_length) {
-    if (!isalpha_no_locale(a[a_pos])) {
+    if (!gv_isalpha(a[a_pos])) {
       ++a_pos;
       continue;
     }
-    if (!isalpha_no_locale(b[b_pos])) {
+    if (!gv_isalpha(b[b_pos])) {
       ++b_pos;
       continue;
     }
@@ -726,13 +727,13 @@ static bool font_name_equal_permissive(const char *a, const char *b) {
     ++b_pos;
   }
   while (a_pos != a_length) {
-    if (isalpha_no_locale(a[a_pos])) {
+    if (gv_isalpha(a[a_pos])) {
       return false;
     }
     ++a_pos;
   }
   while (b_pos != b_length) {
-    if (isalpha_no_locale(b[b_pos])) {
+    if (gv_isalpha(b[b_pos])) {
       return false;
     }
     ++b_pos;
