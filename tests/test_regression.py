@@ -2164,6 +2164,24 @@ def test_2242():
         assert ref == png, "repeated rendering changed output"
 
 
+def test_2331():
+    """
+    layout of a graph should not result in a double free
+    https://gitlab.com/graphviz/graphviz/-/issues/2331
+    """
+    # FIXME: Remove skip when
+    # https://gitlab.com/graphviz/graphviz/-/issues/1777 is fixed
+    if os.getenv("build_system") == "msbuild":
+        pytest.skip("Windows MSBuild release does not contain any header files (#1777)")
+
+    # find co-located test source
+    c_src = (Path(__file__).parent / "2331.c").resolve()
+    assert c_src.exists(), "missing test case"
+
+    # run the test
+    run_c(c_src, link=["cgraph", "gvc"])
+
+
 def test_2342():
     """
     using an arrow with size 0 should not trigger an assertion failure
