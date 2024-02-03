@@ -103,7 +103,7 @@ static bool isNumber(char* s) {
     char* ep = s;
     strtod(s, &ep);
     if (s != ep) {
-	while (*ep && gv_isspace(*ep)) ep++;
+	while (gv_isspace(*ep)) ep++;
 	if (*ep) return false;
 	return true;
     }
