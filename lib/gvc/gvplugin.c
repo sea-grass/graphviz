@@ -32,6 +32,7 @@
 #include	<common/const.h>
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
+#include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 
@@ -515,11 +516,11 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
 
                         /* hack for aliases */
 			lq = q;
-                        if (!strncmp(q, "jp", 2)) {
+                        if (startswith(q, "jp")) {
                             q = "jpg";                /* canonical - for node name */
 			    lq = "jpeg\\njpe\\njpg";  /* list - for label */
 			}
-                        else if (!strncmp(q, "tif", 3)) {
+                        else if (startswith(q, "tif")) {
                             q = "tif";
 			    lq = "tiff\\ntif";
 			}
@@ -686,11 +687,11 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
 
  		    /* hack for aliases */
                     lq = q;
-                    if (!strncmp(q, "jp", 2)) {
+                    if (startswith(q, "jp")) {
                         q = "jpg";                /* canonical - for node name */
                         lq = "jpeg\\njpe\\njpg";  /* list - for label */
                     }
-                    else if (!strncmp(q, "tif", 3)) {
+                    else if (startswith(q, "tif")) {
                         q = "tif";
                         lq = "tiff\\ntif";
                     }

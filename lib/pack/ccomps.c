@@ -17,6 +17,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
+#include <cgraph/startswith.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <stdbool.h>
@@ -286,7 +287,7 @@ dnodeSet (Agnode_t* v, Agnode_t* n)
 /* isCluster:
  * Return true if graph is a cluster
  */
-#define isCluster(g) (strncmp(agnameof(g), "cluster", 7) == 0)
+#define isCluster(g) startswith(agnameof(g), "cluster")
 
 /* deriveClusters:
  * Construct nodes in derived graph corresponding top-level clusters.

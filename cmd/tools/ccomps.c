@@ -29,6 +29,7 @@
 #include <cgraph/ingraphs.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
+#include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
 
@@ -124,7 +125,7 @@ static void split(void) {
  */
 static int isCluster(Agraph_t * g)
 {
-    return strncmp(agnameof(g), "cluster", 7) == 0;
+  return startswith(agnameof(g), "cluster");
 }
 
 static void init(int argc, char *argv[])
@@ -385,7 +386,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     Agnode_t *n;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	if (!strncmp(agnameof(subg), "cluster", 7)) {
+	if (startswith(agnameof(subg), "cluster")) {
 	    dn = agnode(dg, agnameof(subg), 1);
 	    agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
 	    ND_ptr(dn) = (Agobj_t*)subg;

@@ -18,6 +18,7 @@
 #include <limits.h>
 #include <math.h>
 #include <gvc/gvc.h>
+#include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
 #include <stddef.h>
@@ -899,7 +900,7 @@ static item *mapEdge(Dt_t * map, edge_t * e)
  *
  * Return 1 if cluster edge is created.
  */
-#define MAPC(n) (strncmp(agnameof(n),"cluster",7)?NULL:findCluster(cmap,agnameof(n)))
+#define MAPC(n) (startswith(agnameof(n), "cluster") ? findCluster(cmap, agnameof(n)) : NULL)
 
 static int
 checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)

@@ -29,6 +29,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
+#include <cgraph/startswith.h>
 #include <common/render.h>
 #include <neatogen/neatoprocs.h>
 #include <iostream>
@@ -474,7 +475,7 @@ static std::string xName(used_t &names, char *oldname) {
 
 #define MARK(e) (ED_alg(e) = e)
 #define MARKED(e) (ED_alg(e))
-#define ISCLUSTER(g) (!strncmp(agnameof(g),"cluster",7))
+#define ISCLUSTER(g) startswith(agnameof(g), "cluster")
 #define SETCLUST(g,h) (GD_alg(g) = h)
 #define GETCLUST(g) ((Agraph_t*)GD_alg(g))
 

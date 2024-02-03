@@ -31,6 +31,7 @@
 #include <neatogen/overlap.h>
 #include <sparse/clustering.h>
 #include <cgraph/ingraphs.h>
+#include <cgraph/startswith.h>
 #include <sparse/DotIO.h>
 #include <sparse/colorutil.h>
 #include <sparse/color_palette.h>
@@ -187,7 +188,7 @@ init(int argc, char **argv, params_t* pm)
     case 'h':
       if (sscanf(optarg, "%d", &v) > 0) {
         pm->nedgep = MAX(0, v);
-      } else if (!strncmp(optarg, HLPFX, N_HLPFX) &&
+      } else if (startswith(optarg, HLPFX) &&
                  sscanf(optarg + N_HLPFX, "%d", &v) > 0) {
         pm->highlight_cluster = MAX(0, v);
       } else {

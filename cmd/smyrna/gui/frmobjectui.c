@@ -22,6 +22,7 @@
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <stdint.h>
@@ -183,7 +184,7 @@ static void set_attr_object_type(const char *str, int *t) {
   object_type_helper(a, t);
   while (true) {
     const char *start = a.data + a.size;
-    if (strncmp(start, " or ", strlen(" or ")) != 0) {
+    if (!startswith(start, " or ")) {
       break;
     }
     start += strlen(" or ");

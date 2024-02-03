@@ -24,6 +24,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/startswith.h>
 #include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <ast/error.h>
@@ -1994,7 +1995,7 @@ strToTvtype (char* s)
     int rt = 0;
     char* sfx;
 
-    if (!strncmp(s, "TV_", 3)) {
+    if (startswith(s, "TV_")) {
 	sfx = s + 3;
 	if (!strcmp(sfx, "flat")) {
 	    rt = TV_flat;
