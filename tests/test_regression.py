@@ -2784,20 +2784,6 @@ def test_2325():
     dot("svg", input)
 
 
-def test_2331():
-    """
-    TODO
-    https://gitlab.com/graphviz/graphviz/-/issues/2331
-    """
-
-    # locate our associated test case in this directory
-    input = Path(__file__).parent / "2331.dot"
-    assert input.exists(), "unexpectedly missing test case"
-
-    # run it through Graphviz
-    dot("svg", input)
-
-
 @pytest.mark.skipif(shutil.which("groff") is None, reason="groff not available")
 def test_2341():
     """
