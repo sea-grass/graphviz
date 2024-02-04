@@ -578,11 +578,6 @@ windows-cygwin-build-using-autogen:
         - C:\cygwin64\bin\find . '(' -name Makefile.am -or -name "*.def" ')' -exec C:\cygwin64\bin\sed -i 's/\r//g' "{}" ';'
         - C:\cygwin64\bin\sed -i 's/\r//g' autogen.sh ci/*.sh configure.ac lib/common/color_names lib/common/brewer_colors lib/common/svgcolor_names
         - C:\cygwin64\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
-    artifacts:
-        when: always
-        expire_in: 1 week
-        paths:
-            - Packages/*/*/*.xz
     cache:
         key: windows-cygwin-build-using-autogen
         paths:
@@ -951,7 +946,6 @@ windows-cygwin-cmake-build:
         when: always
         expire_in: 1 week
         paths:
-            - Packages/*/*/*.zip
             - Packages/*/*/*.bz2
     cache:
         key: windows-cygwin-cmake-build
