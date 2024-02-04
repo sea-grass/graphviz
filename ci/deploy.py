@@ -23,7 +23,7 @@ from typing import List, Optional
 log = None
 
 
-def upload(version: str, path: Path, name: Optional[str] = None) -> str:
+def upload(dry_run: bool, version: str, path: Path, name: Optional[str] = None) -> str:
     """
     upload a file to the Graphviz generic package with the given version
     """
@@ -42,6 +42,10 @@ def upload(version: str, path: Path, name: Optional[str] = None) -> str:
         f'{os.environ["CI_PROJECT_ID"]}/packages/generic/graphviz-releases/'
         f"{version}/{safe}"
     )
+
+    if dry_run:
+        log.info("skipping upload due to 'dry_run' flag")
+        return target
 
     log.info(f"uploading {path} to {target}")
     # calling Curl is not the cleanest way to achieve this, but Curl takes care of
@@ -151,12 +155,7 @@ def main() -> int:  # pylint: disable=missing-function-docstring
     log.info(f"using generic package version {package_version}")
 
     # we only create Gitlab releases for stable version numbers
-    if re.match(r"\d+\.\d+\.\d+$", version) is None:
-        log.warning(
-            f"skipping release creation because {version} is not "
-            "of the form \\d+.\\d+.\\d+"
-        )
-        return 0
+    skip_release = re.match(r"\d+\.\d+\.\d+$", version) is None
 
     # list of assets we have uploaded
     assets: List[str] = []
@@ -178,11 +177,11 @@ def main() -> int:  # pylint: disable=missing-function-docstring
             return -1
 
         # accrue the source tarball and accompanying checksum
-        url = upload(package_version, tarball)
+        url = upload(skip_release, package_version, tarball)
         assets.append(url)
         webentry = {"format": get_format(tarball), "url": url}
         check = checksum(tarball)
-        url = upload(package_version, check)
+        url = upload(skip_release, package_version, check)
         assets.append(url)
         webentry[check.suffix[1:]] = url
 
@@ -198,7 +197,9 @@ def main() -> int:  # pylint: disable=missing-function-docstring
             # fixup permissions, o-rwx g-wx
             path.chmod(mode & ~stat.S_IRWXO & ~stat.S_IWGRP & ~stat.S_IXGRP)
 
-            url = upload(package_version, path, str(path)[len("Packages/") :])
+            url = upload(
+                skip_release, package_version, path, str(path)[len("Packages/") :]
+            )
             assets.append(url)
 
             webentry = {
@@ -214,7 +215,9 @@ def main() -> int:  # pylint: disable=missing-function-docstring
             # checksum(s)
             if is_macos_artifact(path) or is_windows_artifact(path):
                 c = checksum(path)
-                url = upload(package_version, c, str(c)[len("Packages/") :])
+                url = upload(
+                    skip_release, package_version, c, str(c)[len("Packages/") :]
+                )
                 assets.append(url)
                 webentry[c.suffix[1:]] = url
 
@@ -233,6 +236,13 @@ def main() -> int:  # pylint: disable=missing-function-docstring
         return -1
 
     assert len(webdata["windows"]) > 0, "no Windows artifacts found"
+
+    if skip_release:
+        log.warning(
+            f"skipping release creation because {version} is not "
+            "of the form \\d+.\\d+.\\d+"
+        )
+        return 0
 
     # construct a command to create the release itself
     cmd = [
