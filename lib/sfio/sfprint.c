@@ -52,7 +52,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
     Argv_t argv;		/* for extf to return value     */
     Sffmt_t *ft;		/* format environment           */
-    Fmt_t *fm, *fmstk;		/* stack contexts               */
 
     Fmtpos_t *fp;		/* arg position list            */
     int argp, argn;		/* arg position and number      */
@@ -82,7 +81,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
     tls[1] = NULL;
 
-    fmstk = NULL;
     ft = NULL;
 
     fp = NULL;
@@ -92,26 +90,14 @@ int sfprint(FILE *f, Sffmt_t *format) {
     argv.ft = format;
     assert(argv.ft != NULL);
     assert(argv.ft->form != NULL);
-    if (!(fm = malloc(sizeof(Fmt_t))))
-	goto done;
-
-    fm->form = "";
-    memset(&fm->args, 0, sizeof(fm->args));
-
-    fm->argn = argn;
-    fm->fp = NULL;
 
     const char *form = argv.ft->form;
     va_list args;
     va_copy(args, argv.ft->args);
     fp = NULL;
 
-    fm->ft = ft;
-    fm->next = fmstk;
-    fmstk = fm;
     ft = argv.ft;
 
-  loop_fmt:
     while ((n = *form)) {
 	if (n != '%') {		/* collect the non-pattern chars */
 	    sp = (char *) form++;
@@ -877,25 +863,9 @@ int sfprint(FILE *f, Sffmt_t *format) {
   pop_fmt:
     free(fp);
     fp = NULL;
-    while ((fm = fmstk)) {	/* pop the format stack and continue */
-	fmstk = fm->next;
-	if ((form = fm->form)) {
-	    va_copy(args, fm->args);
-	    argn = fm->argn;
-	    fp = fm->fp;
-	}
-	ft = fm->ft;
-	free(fm);
-	if (form && form[0])
-	    goto loop_fmt;
-    }
 
   done:
     free(fp);
-    while ((fm = fmstk)) {
-	fmstk = fm->next;
-	free(fm);
-    }
 
     return n_output;
 }
