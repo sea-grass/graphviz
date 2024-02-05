@@ -71,7 +71,6 @@ extern "C" {
 #define FP_SIZE		4
 #define FP_INDEX	5	/* index size   */
 
-    typedef struct _fmt_s Fmt_t;
     typedef struct _fmtpos_s Fmtpos_t;
     typedef union {
 	int i, *ip;
@@ -89,17 +88,6 @@ extern "C" {
 	void *vp;
 	Sffmt_t *ft;
     } Argv_t;
-
-    struct _fmt_s {
-	char *form;		/* format string                */
-	va_list args;		/* corresponding arglist        */
-
-	int argn;		/* number of args already used  */
-	Fmtpos_t *fp;		/* position list                */
-
-	Sffmt_t *ft;		/* formatting environment       */
-	Fmt_t *next;		/* stack frame pointer          */
-    };
 
     struct _fmtpos_s {
 	Sffmt_t ft;		/* environment                  */
