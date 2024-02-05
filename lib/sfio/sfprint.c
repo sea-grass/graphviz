@@ -53,7 +53,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
     Argv_t argv;		/* for extf to return value     */
     Sffmt_t *ft;		/* format environment           */
 
-    Fmtpos_t *fp;		/* arg position list            */
     int argp, argn;		/* arg position and number      */
 
 #define SLACK		1024
@@ -83,7 +82,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
     ft = NULL;
 
-    fp = NULL;
     argn = -1;
 
     // stack a new environment
@@ -94,7 +92,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
     const char *form = argv.ft->form;
     va_list args;
     va_copy(args, argv.ft->args);
-    fp = NULL;
 
     ft = argv.ft;
 
@@ -147,10 +144,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			t_str = _Sffmtintf(t_str + 1, &n);
 			n = FP_SET(-1, argn);
 
-			if (fp) {
-			    t_str = fp[n].argv.s;
-			    n_str = fp[n].ft.size;
-			} else if (ft && ft->extf) {
+			if (ft && ft->extf) {
 			    FMTSET(ft, form, args,
 				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
 			    n = ft->extf(&argv, ft);
@@ -228,9 +222,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    form = _Sffmtintf(form, &n);
 	    n = FP_SET(-1, argn);
 
-	    if (fp)
-		v = fp[n].argv.i;
-	    else if (ft && ft->extf) {
+	    if (ft && ft->extf) {
 		FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL,
 		       0);
 		if (ft->extf(&argv, ft) < 0)
@@ -277,9 +269,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		if (fp)		/* use position list */
-		    size = fp[n].argv.i;
-		else if (ft && ft->extf) {
+		if (ft && ft->extf) {
 		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
@@ -348,12 +338,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	}
 
 	argp = FP_SET(argp, argn);
-	if (fp) {
-	    if (ft && ft->extf && fp[argp].ft.fmt != fp[argp].fmt)
-		fmt = fp[argp].ft.fmt;
-	    argv = fp[argp].argv;
-	    size = fp[argp].ft.size;
-	} else if (ft && ft->extf) {	/* extended processing */
+	if (ft && ft->extf) {	/* extended processing */
 	    FMTSET(ft, form, args, fmt, size, flags, width, precis, base,
 		   t_str, n_str);
 	    v = ft->extf(&argv, ft);
@@ -861,7 +846,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
     }
 
   done:
-    free(fp);
 
     return n_output;
 }
