@@ -69,9 +69,7 @@ extern "C" {
 #define FP_BASE		2
 #define FP_STR		3
 #define FP_SIZE		4
-#define FP_INDEX	5	/* index size   */
 
-    typedef struct _fmtpos_s Fmtpos_t;
     typedef union {
 	int i, *ip;
 	long l, *lp;
@@ -88,13 +86,6 @@ extern "C" {
 	void *vp;
 	Sffmt_t *ft;
     } Argv_t;
-
-    struct _fmtpos_s {
-	Sffmt_t ft;		/* environment                  */
-	Argv_t argv;		/* argument value               */
-	int fmt;		/* original format              */
-	int need[FP_INDEX];	/* positions depending on       */
-    };
 
 #define LEFTP		'('
 #define RIGHTP		')'
