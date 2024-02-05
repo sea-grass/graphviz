@@ -77,8 +77,8 @@ extern "C" {
      extern ssize_t _Sfi;
 
     extern int sfprint(FILE*, Sffmt_t *format);
-    extern int sfscanf(FILE*, const char *, ...);
-    extern int sfvscanf(FILE*, const char *, va_list);
+    extern int sfscanf(FILE*, ...);
+    extern int sfvscanf(FILE*, va_list);
 
 /* miscellaneous function analogues of fast in-line functions */
     extern ssize_t sfslen(void);
