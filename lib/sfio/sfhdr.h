@@ -64,11 +64,6 @@ extern "C" {
 
 /* extensions to sfvprintf/sfvscanf */
 #define FP_SET(fp,fn)	(fp < 0 ? (fn += 1) : (fn = fp) )
-#define FP_WIDTH	0
-#define FP_PRECIS	1
-#define FP_BASE		2
-#define FP_STR		3
-#define FP_SIZE		4
 
     typedef union {
 	int i, *ip;
