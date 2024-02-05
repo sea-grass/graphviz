@@ -93,10 +93,6 @@ int sfvscanf(FILE *f, va_list args) {
 
     inp = -1;
 
-    ft = NULL;
-
-    argn = -1;
-
     const char *form;
     argv.ft = va_arg(args, Sffmt_t *);
 
