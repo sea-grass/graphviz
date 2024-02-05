@@ -74,7 +74,6 @@ int sfvscanf(FILE *f, va_list args) {
 
     Argv_t argv;
     Sffmt_t *ft;
-    Fmt_t *fm, *fmstk;
 
     int argp, argn;
 
@@ -94,28 +93,17 @@ int sfvscanf(FILE *f, va_list args) {
 
     inp = -1;
 
-    fmstk = NULL;
     ft = NULL;
 
     argn = -1;
 
     const char *form;
     argv.ft = va_arg(args, Sffmt_t *);
-    if (!(fm = malloc(sizeof(Fmt_t))))
-	goto done;
-
-    fm->form = "";
-    va_copy(fm->args, args);
-
-    fm->argn = argn;
 
     form = argv.ft->form;
     va_copy(args, argv.ft->args);
     argn = -1;
 
-    fm->ft = ft;
-    fm->next = fmstk;
-    fmstk = fm;
     ft = argv.ft;
 
   loop_fmt:
@@ -625,23 +613,8 @@ int sfvscanf(FILE *f, va_list args) {
     }
 
   pop_fmt:
-    while ((fm = fmstk)) {	/* pop the format stack and continue */
-	fmstk = fm->next;
-	if ((form = fm->form)) {
-	    va_copy(args, fm->args);
-	    argn = fm->argn;
-	}
-	ft = fm->ft;
-	free(fm);
-	if (form && form[0])
-	    goto loop_fmt;
-    }
 
   done:
-    while ((fm = fmstk)) {
-	fmstk = fm->next;
-	free(fm);
-    }
 
     if (n_assign == 0 && inp < 0)
 	n_assign = -1;
