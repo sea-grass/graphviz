@@ -16,6 +16,7 @@
 #include	<stdbool.h>
 #include	<stddef.h>
 #include	<stdio.h>
+#include	<string.h>
 
 /*	The main engine for reading formatted data
 **
@@ -103,6 +104,34 @@ int sfvscanf(FILE *f, const char *form, va_list args)
     ft = NULL;
 
     argn = -1;
+
+    if (strcmp(form, "%!") == 0) {
+	if (!(argv.ft = va_arg(args, Sffmt_t *)))
+	    ; // nothing
+	if (!argv.ft->form && ft) {	/* change extension functions */
+	    fmstk->ft = ft = argv.ft;
+	} else {		/* stack a new environment */
+	    if (!(fm = malloc(sizeof(Fmt_t))))
+		goto done;
+
+	    if (argv.ft->form) {
+		fm->form = "";
+		va_copy(fm->args, args);
+
+		fm->argn = argn;
+
+		form = argv.ft->form;
+		va_copy(args, argv.ft->args);
+		argn = -1;
+	    } else
+		fm->form = NULL;
+
+	    fm->ft = ft;
+	    fm->next = fmstk;
+	    fmstk = fm;
+	    ft = argv.ft;
+	}
+    }
 
   loop_fmt:
     while ((fmt = *form++)) {
@@ -349,35 +378,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 
 	if (_Sftype[fmt] == 0)	/* unknown pattern */
 	    continue;
-
-	if (fmt == '!') {
-	    if (!(argv.ft = va_arg(args, Sffmt_t *)))
-		continue;
-	    if (!argv.ft->form && ft) {	/* change extension functions */
-		fmstk->ft = ft = argv.ft;
-	    } else {		/* stack a new environment */
-		if (!(fm = malloc(sizeof(Fmt_t))))
-		    goto done;
-
-		if (argv.ft->form) {
-		    fm->form = (char *) form;
-		    va_copy(fm->args, args);
-
-		    fm->argn = argn;
-
-		    form = argv.ft->form;
-		    va_copy(args, argv.ft->args);
-		    argn = -1;
-		} else
-		    fm->form = NULL;
-
-		fm->ft = ft;
-		fm->next = fmstk;
-		fmstk = fm;
-		ft = argv.ft;
-	    }
-	    continue;
-	}
 
 	/* get the address to assign value */
 	if (!value && !(flags & SFFMT_SKIP))
