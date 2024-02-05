@@ -121,7 +121,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	switch ((fmt = *form++)) {
 	case '\0':
 	    SFputc(f, '%');
-	    goto pop_fmt;
+	    goto done;
 	case '%':
 	    SFputc(f, '%');
 	    continue;
@@ -155,7 +155,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
 			    n = ft->extf(&argv, ft);
 			    if (n < 0)
-				goto pop_fmt;
+				goto done;
 			    if (!(ft->flags & SFFMT_VALUE))
 				goto t_arg;
 			    if ((t_str = argv.s) &&
@@ -234,7 +234,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL,
 		       0);
 		if (ft->extf(&argv, ft) < 0)
-		    goto pop_fmt;
+		    goto done;
 		if (ft->flags & SFFMT_VALUE)
 		    v = argv.i;
 		else
@@ -283,7 +283,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
-			goto pop_fmt;
+			goto done;
 		    if (ft->flags & SFFMT_VALUE)
 			size = argv.i;
 		    else
@@ -359,7 +359,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    v = ft->extf(&argv, ft);
 
 	    if (v < 0)
-		goto pop_fmt;
+		goto done;
 	    else if (v == 0) {	/* extf did not output */
 		FMTGET(ft, form, args, fmt, size, flags, width, precis,
 		       base);
@@ -859,10 +859,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		SFnputc(f, ' ', n);
 	}
     }
-
-  pop_fmt:
-    free(fp);
-    fp = NULL;
 
   done:
     free(fp);
