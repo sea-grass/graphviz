@@ -100,31 +100,23 @@ int sfvscanf(FILE *f, va_list args) {
     argn = -1;
 
     const char *form;
-    if (!(argv.ft = va_arg(args, Sffmt_t *)))
-	; // nothing
-    if (!argv.ft->form && ft) {	/* change extension functions */
-	fmstk->ft = ft = argv.ft;
-    } else {		/* stack a new environment */
-	if (!(fm = malloc(sizeof(Fmt_t))))
-	    goto done;
+    argv.ft = va_arg(args, Sffmt_t *);
+    if (!(fm = malloc(sizeof(Fmt_t))))
+	goto done;
 
-	if (argv.ft->form) {
-	    fm->form = "";
-	    va_copy(fm->args, args);
+    fm->form = "";
+    va_copy(fm->args, args);
 
-	    fm->argn = argn;
+    fm->argn = argn;
 
-	    form = argv.ft->form;
-	    va_copy(args, argv.ft->args);
-	    argn = -1;
-	} else
-	    fm->form = NULL;
+    form = argv.ft->form;
+    va_copy(args, argv.ft->args);
+    argn = -1;
 
-	fm->ft = ft;
-	fm->next = fmstk;
-	fmstk = fm;
-	ft = argv.ft;
-    }
+    fm->ft = ft;
+    fm->next = fmstk;
+    fmstk = fm;
+    ft = argv.ft;
 
   loop_fmt:
     while ((fmt = *form++)) {
