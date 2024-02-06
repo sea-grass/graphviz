@@ -27,9 +27,7 @@ bool validTVT(long long c) {
   return TV_flat <= c && c <= TV_prepostrev;
 }
 
-void initGPRState(Gpr_t * state, Vmalloc_t * vm)
-{
-  (void)vm;
+void initGPRState(Gpr_t *state) {
   state->tgtname = strdup("gvpr_result");
 }
 
