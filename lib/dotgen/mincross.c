@@ -1326,28 +1326,29 @@ static bool constraining_flat_edge(Agraph_t *g, Agedge_t *e) {
 /* construct nodes reachable from 'here' in post-order.
 * This is the same as doing a topological sort in reverse order.
 */
-static int postorder(graph_t * g, node_t * v, node_t ** list, int r)
-{
+static size_t postorder(graph_t *g, node_t *v, node_t **list, size_t offset,
+                        int r) {
     edge_t *e;
-    int i, cnt = 0;
+    int i;
+    size_t cnt = 0;
 
     MARK(v) = true;
     if (ND_flat_out(v).size > 0) {
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
 	    if (!constraining_flat_edge(g, e)) continue;
 	    if (!MARK(aghead(e)))
-		cnt += postorder(g, aghead(e), list + cnt, r);
+		cnt += postorder(g, aghead(e), list, offset + cnt, r);
 	}
     }
     assert(ND_rank(v) == r);
-    list[cnt++] = v;
+    list[offset + cnt++] = v;
     return cnt;
 }
 
 static void flat_reorder(graph_t * g)
 {
-    int i, r, pos, n_search, local_in_cnt, local_out_cnt, base_order;
-    node_t *v, **left, **right, *t;
+    int i, r, local_in_cnt, local_out_cnt, base_order;
+    node_t *v;
     node_t **temprank = NULL;
     edge_t *flat_e, *e;
 
@@ -1359,7 +1360,7 @@ static void flat_reorder(graph_t * g)
 	for (i = 0; i < GD_rank(g)[r].n; i++)
 	    MARK(GD_rank(g)[r].v[i]) = false;
 	temprank = ALLOC(i + 1, temprank, node_t *);
-	pos = 0;
+	size_t pos = 0;
 
 	/* construct reverse topological sort order in temprank */
 	for (i = 0; i < GD_rank(g)[r].n; i++) {
@@ -1379,8 +1380,8 @@ static void flat_reorder(graph_t * g)
 		temprank[pos++] = v;
 	    else {
 		if (!MARK(v) && local_in_cnt == 0) {
-		    left = temprank + pos;
-		    n_search = postorder(g, v, left, r);
+		    const size_t left = pos;
+		    const size_t n_search = postorder(g, v, temprank, left, r);
 		    pos += n_search;
 		}
 	    }
@@ -1388,12 +1389,12 @@ static void flat_reorder(graph_t * g)
 
 	if (pos) {
 	    if (!GD_flip(g)) {
-		left = temprank;
-		right = temprank + pos - 1;
+		size_t left = 0;
+		size_t right = pos - 1;
 		while (left < right) {
-		    t = *left;
-		    *left = *right;
-		    *right = t;
+		    node_t *t = temprank[left];
+		    temprank[left] = temprank[right];
+		    temprank[right] = t;
 		    left++;
 		    right--;
 		}
