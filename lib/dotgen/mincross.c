@@ -1386,15 +1386,7 @@ static void flat_reorder(graph_t * g)
 
 	if (nodes_size(&temprank) > 0) {
 	    if (!GD_flip(g)) {
-		size_t left = 0;
-		size_t right = nodes_size(&temprank) - 1;
-		while (left < right) {
-		    node_t *t = nodes_get(&temprank, left);
-		    nodes_set(&temprank, left, nodes_get(&temprank, right));
-		    nodes_set(&temprank, right, t);
-		    left++;
-		    right--;
-		}
+		nodes_reverse(&temprank);
 	    }
 	    for (i = 0; i < GD_rank(g)[r].n; i++) {
 		v = GD_rank(g)[r].v[i] = nodes_get(&temprank, (size_t)i);

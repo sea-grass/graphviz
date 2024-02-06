@@ -242,6 +242,25 @@
     }                                                                          \
   }                                                                            \
                                                                                \
+  /** flip the order of elements in the list */                                \
+  static inline LIST_UNUSED void name##_reverse(name##_t *list) {              \
+    assert(list != NULL);                                                      \
+                                                                               \
+    if (list->size == 0) {                                                     \
+      return;                                                                  \
+    }                                                                          \
+                                                                               \
+    size_t left = 0;                                                           \
+    size_t right = list->size - 1;                                             \
+    while (left < right) {                                                     \
+      type temp = list->data[left];                                            \
+      list->data[left] = list->data[right];                                    \
+      list->data[right] = temp;                                                \
+      ++left;                                                                  \
+      --right;                                                                 \
+    }                                                                          \
+  }                                                                            \
+                                                                               \
   /** deallocate unused backing storage, shrinking capacity to size */         \
   static inline LIST_UNUSED void name##_shrink_to_fit(name##_t *list) {        \
     assert(list != NULL);                                                      \
