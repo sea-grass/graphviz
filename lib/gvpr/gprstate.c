@@ -19,6 +19,7 @@
 #include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h>
 
 static int name_used;
 
@@ -28,7 +29,8 @@ bool validTVT(long long c) {
 
 void initGPRState(Gpr_t * state, Vmalloc_t * vm)
 {
-    state->tgtname = vmstrdup(vm, "gvpr_result");
+  (void)vm;
+  state->tgtname = strdup("gvpr_result");
 }
 
 Gpr_t *openGPRState(gpr_info* info)
@@ -120,6 +122,7 @@ void closeGPRState(Gpr_t* state)
 {
     if (!state) return;
     name_used = state->name_used;
+    free(state->tgtname);
     free (state->dp);
     free (state);
 }

@@ -1656,11 +1656,9 @@ setval(Expr_t * pgm, Exnode_t * x, Exid_t * sym, Exref_t * ref,
 	    }
 	    break;
 	case V_tgtname:
-	    if (!streq(state->tgtname, v.string)) {
-		vmfree(pgm->vm, state->tgtname);
-		state->tgtname = vmstrdup(pgm->vm, v.string);
-		state->name_used = 0;
-	    }
+	    free(state->tgtname);
+	    state->tgtname = strdup(v.string);
+	    state->name_used = 0;
 	    break;
 	default:
 	    rv = -1;
