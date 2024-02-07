@@ -463,7 +463,8 @@ static void agglomerative_ink_bundling_internal(
       npp = midedge->npoints + 2;
       for (j = ia[i]; j < ia[i+1]; j++){
 	jj = ja[j];
-	e = edges[jj] = pedge_wgts_realloc(edges[jj], npp);
+	pedge_wgts_realloc(edges[jj], npp);
+	e = edges[jj];
 
 	assert(e->npoints == 2);
 	for (l = 0; l < dim; l++){/* move the second point to the last */

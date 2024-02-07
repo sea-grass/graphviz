@@ -310,10 +310,10 @@ static void pedge_print(char *comments, pedge e){
 }
 #endif
 
-pedge pedge_wgts_realloc(pedge e, int n){
+void pedge_wgts_realloc(pedge e, int n) {
   /* diff from pedge_alloc: allocate wgts if do not exist and initialize to wgt */
   int i;
-  if (n <= e->npoints) return e;
+  if (n <= e->npoints) return;
   e->x = (double*)REALLOC(e->x, e->dim*n*sizeof(double));
   if (e->wgts.empty()){
     e->wgts.resize(n - 1);
@@ -322,7 +322,6 @@ pedge pedge_wgts_realloc(pedge e, int n){
     e->wgts.resize(n - 1);
   }
   e->len = n;
-  return e;
 }
 
 void pedge_double(pedge e) {
