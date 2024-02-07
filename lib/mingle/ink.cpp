@@ -224,7 +224,7 @@ static double project_to_line(point_t pt, point_t left, point_t right, double an
  * Compute minimal ink used the input edges are bundled.
  * Assumes tails all occur on one side and heads on the other.
  */
-double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
+double ink(const std::vector<pedge> &edges, int numEdges, int *pick,
            double *ink0, point_t *meet1, point_t *meet2, double angle_param,
            double angle) {
   int i;
@@ -243,7 +243,7 @@ double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
 
   begin = end = Origin;
   for (i = 0; i < numEdges; i++) {
-    const pedge_struct &e = pick ? edges[pick[i]] : edges[i];
+    const pedge &e = pick ? edges[pick[i]] : edges[i];
     const double *x = e.x;
     point_t source = {x[0], x[1]};
     point_t target = {x[e.dim * e.npoints - e.dim],
@@ -268,7 +268,7 @@ double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
   std::vector<point_t> sources;
   std::vector<point_t> targets;
   for (i = 0; i < numEdges; i++) {
-    const pedge_struct &e = pick ? edges[pick[i]] : edges[i];
+    const pedge &e = pick ? edges[pick[i]] : edges[i];
     const double *x = e.x;
     sources.push_back(point_t{x[0], x[1]});
     targets.push_back(point_t{x[e.dim * e.npoints - e.dim],
@@ -305,7 +305,7 @@ double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
   return inkUsed;
 }
 
-double ink1(const pedge_struct &e) {
+double ink1(const pedge &e) {
   double ink0 = 0;
 
   const double *x = e.x;

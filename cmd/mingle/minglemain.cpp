@@ -232,7 +232,7 @@ static void init(int argc, char *argv[], opts_t* opts)
  * We have ninterval+1 points. We drop the ninterval-1 internal points, and add 4 points to the first
  * and last intervals, and 3 to the rest, giving the needed 3*ninterval+4 points.
  */
-static void genBundleSpline(const pedge_struct &edge, std::ostream &os) {
+static void genBundleSpline(const pedge &edge, std::ostream &os) {
 	int k, j;
 	const int dim = edge.dim;
 	const double *x = edge.x;
@@ -260,7 +260,7 @@ static void genBundleSpline(const pedge_struct &edge, std::ostream &os) {
     }
 }
 
-static void genBundleInfo(const pedge_struct &edge, std::ostream &os) {
+static void genBundleInfo(const pedge &edge, std::ostream &os) {
 	int k, j;
 	const int dim = edge.dim;
 	const double *x = edge.x;
@@ -278,7 +278,7 @@ static void genBundleInfo(const pedge_struct &edge, std::ostream &os) {
 	}
 }
 
-static void genBundleColors(const pedge_struct &edge, std::ostream &os,
+static void genBundleColors(const pedge &edge, std::ostream &os,
                             double maxwgt) {
 	int k, j, r, g, b;
 	double len, t, len_total0 = 0;
@@ -308,7 +308,7 @@ static void genBundleColors(const pedge_struct &edge, std::ostream &os,
 	os << std::dec << std::setw(0); // reset stream characteristics
 }
 
-static void export_dot(FILE *fp, int ne, const std::vector<pedge_struct> &edges,
+static void export_dot(FILE *fp, int ne, const std::vector<pedge> &edges,
                        Agraph_t *g) {
 	Agsym_t* epos = agattr(g, AGEDGE, const_cast<char*>("pos"), "");
 	Agsym_t* esects = agattr(g, AGEDGE, const_cast<char*>("bundle"), "");
@@ -320,7 +320,7 @@ static void export_dot(FILE *fp, int ne, const std::vector<pedge_struct> &edges,
 
 	  /* figure out max number of bundled original edges in a pedge */
 	for (i = 0; i < ne; i++){
-		const pedge_struct &edge = edges[i];
+		const pedge &edge = edges[i];
 		if (!edge.wgts.empty()) {
 			for (j = 0; j < edge.npoints - 1; j++){
 				maxwgt = std::max(maxwgt, edge.wgts[j]);
@@ -331,7 +331,7 @@ static void export_dot(FILE *fp, int ne, const std::vector<pedge_struct> &edges,
 	std::ostringstream buf;
 	for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
 		for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
-			const pedge_struct &edge = edges[ED_idx(e)];
+			const pedge &edge = edges[ED_idx(e)];
 
 			genBundleSpline(edge, buf);
 			agxset(e, epos, buf.str().c_str());
@@ -438,7 +438,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	free(x);
 	x = xx.data();
 
-	std::vector<pedge_struct> edges =
+	std::vector<pedge> edges =
             edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method,
                           opts->nneighbors, opts->compatibility_method,
                           opts->max_recursion, opts->angle_param, opts->angle);

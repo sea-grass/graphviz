@@ -45,8 +45,8 @@ static double dist(int dim, double *x, double *y){
   return sqrt(sqr_dist(dim,x,y));
 }
 
-pedge_struct pedge_new(int np, int dim, double *x) {
-  pedge_struct e;
+pedge pedge_new(int np, int dim, double *x) {
+  pedge e;
 
   e.npoints = np;
   e.dim = dim;
@@ -59,8 +59,8 @@ pedge_struct pedge_new(int np, int dim, double *x) {
 
 }
 
-pedge_struct pedge_wgt_new(int np, int dim, double *x, double wgt) {
-  pedge_struct e;
+pedge pedge_wgt_new(int np, int dim, double *x, double wgt) {
+  pedge e;
 
   e.npoints = np;
   e.dim = dim;
@@ -73,10 +73,9 @@ pedge_struct pedge_wgt_new(int np, int dim, double *x, double wgt) {
   return e;
 }
 
-void pedge_delete(pedge_struct &e) { free(e.x); }
+void pedge_delete(pedge &e) { free(e.x); }
 
-static double edge_compatibility(const pedge_struct &e1,
-                                 const pedge_struct &e2) {
+static double edge_compatibility(const pedge &e1, const pedge &e2) {
   /* two edges are u1->v1, u2->v2.
      return 1 if two edges are exactly the same, 0 if they are very different.
    */
@@ -107,8 +106,7 @@ static double edge_compatibility(const pedge_struct &e1,
   }
 }
 
-static double edge_compatibility_full(const pedge_struct &e1,
-                                      const pedge_struct &e2) {
+static double edge_compatibility_full(const pedge &e1, const pedge &e2) {
   /* two edges are u1->v1, u2->v2.
      return 1 if two edges are exactly the same, 0 if they are very different.
      This is based on Holten and van Wijk's paper
@@ -170,7 +168,7 @@ static void fprint_rgb(FILE* fp, int r, int g, int b, int alpha){
   fprintf(fp, "#%02x%02x%02x%02x", r, g, b, alpha);
 }
 
-void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge_struct> &edges) {
+void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge> &edges) {
   double *x, t;
   int i, j, k, kk, dim, sta, sto;
   double maxwgt = 0, len, len_total0;
@@ -182,7 +180,7 @@ void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge_struct> &edges) {
   fprintf(fp,"strict graph{\n");
   /* points */
   for (i = 0; i < ne; i++){
-    const pedge_struct &edge = edges[i];
+    const pedge &edge = edges[i];
     x = edge.x;
     dim = edge.dim;
     sta = 0;
@@ -206,7 +204,7 @@ void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge_struct> &edges) {
 
   /* figure out max number of bundled original edges in a pedge */
   for (i = 0; i < ne; i++){
-    const pedge_struct &edge = edges[i];
+    const pedge &edge = edges[i];
     if (!edge.wgts.empty()) {
       for (j = 0; j < edge.npoints - 1; j++) {
         maxwgt = std::max(maxwgt, edge.wgts[j]);
@@ -217,7 +215,7 @@ void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge_struct> &edges) {
   /* spline and colors */
   for (i = 0; i < ne; i++){
     fprintf(fp,"%d -- %d [pos=\"", i, i + ne);
-    const pedge_struct &edge = edges[i];
+    const pedge &edge = edges[i];
     x = edge.x;
     dim = edge.dim;
     /* splines */
@@ -290,7 +288,7 @@ void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge_struct> &edges) {
 }
 
 #ifdef DEBUG
-static void pedge_print(char *comments, const pedge_struct &e) {
+static void pedge_print(char *comments, const pedge &e) {
   int i, j, dim;
   dim = e.dim;
   fprintf(stderr,"%s", comments);
@@ -307,7 +305,7 @@ static void pedge_print(char *comments, const pedge_struct &e) {
 }
 #endif
 
-void pedge_wgts_realloc(pedge_struct &e, int n) {
+void pedge_wgts_realloc(pedge &e, int n) {
   /* diff from pedge_alloc: allocate wgts if do not exist and initialize to wgt */
   int i;
   if (n <= e.npoints)
@@ -323,7 +321,7 @@ void pedge_wgts_realloc(pedge_struct &e, int n) {
   e.len = n;
 }
 
-void pedge_double(pedge_struct &e) {
+void pedge_double(pedge &e) {
   /* double the number of points (more precisely, add a point between two points in the polyline */
   int npoints = e.npoints, len = e.len, i, dim = e.dim;
   double *x;
@@ -355,8 +353,7 @@ void pedge_double(pedge_struct &e) {
   e.edge_length = dist(dim, &x[0 * dim], &x[(np - 1) * dim]);
 }
 
-static void edge_tension_force(std::vector<double> &force,
-                               const pedge_struct &e) {
+static void edge_tension_force(std::vector<double> &force, const pedge &e) {
   const double *x = e.x;
   const int dim = e.dim;
   const int np = e.npoints;
@@ -374,9 +371,8 @@ static void edge_tension_force(std::vector<double> &force,
   }
 }
 
-static void edge_attraction_force(double similarity, const pedge_struct &e1,
-                                  const pedge_struct &e2,
-                                  std::vector<double> &force) {
+static void edge_attraction_force(double similarity, const pedge &e1,
+                                  const pedge &e2, std::vector<double> &force) {
   /* attractive force from x2 applied to x1 */
   const double *x1 = e1.x, *x2 = e2.x;
   const int dim = e1.dim;
@@ -413,7 +409,7 @@ static void edge_attraction_force(double similarity, const pedge_struct &e1,
 }
 
 static void force_directed_edge_bundling(SparseMatrix A,
-                                         const std::vector<pedge_struct> &edges,
+                                         const std::vector<pedge> &edges,
                                          int maxit, double step0, double K) {
   int i, j, ne = A->n, k;
   int *ia = A->ia, *ja = A->ja, iter = 0;
@@ -436,11 +432,11 @@ static void force_directed_edge_bundling(SparseMatrix A,
 	force_t[j] = 0.;
 	force_a[j] = 0.;
       }
-      const pedge_struct &e1 = edges[i];
+      const pedge &e1 = edges[i];
       x = e1.x;
       edge_tension_force(force_t, e1);
       for (j = ia[i]; j < ia[i+1]; j++){
-	const pedge_struct &e2 = edges[ja[j]];
+	const pedge &e2 = edges[ja[j]];
 	edge_attraction_force(a[j], e1, e2, force_a);
       }
       fnorm_t = std::max(SMALL, norm(dim * (np - 2), &force_t.data()[dim]));
@@ -463,7 +459,7 @@ static void force_directed_edge_bundling(SparseMatrix A,
 }
 
 static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
-                                    std::vector<pedge_struct> &edges,
+                                    std::vector<pedge> &edges,
                                     double angle_param, double angle) {
   int *assignment = NULL, nclusters;
   double modularity;
@@ -504,7 +500,7 @@ static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
 	/* make this edge 5 points, insert two meeting points at 1 and 2, make 3 the last point */
 	pedge_double(edges[clusters[j]]);
 	pedge_double(edges[clusters[j]]);
-	pedge_struct &e = edges[clusters[j]];
+	pedge &e = edges[clusters[j]];
 	e.x[1 * dim] = meet1.x;
 	e.x[1 * dim + 1] = meet1.y;
 	e.x[2 * dim] = meet2.x;
@@ -519,7 +515,7 @@ static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
 }
 
 static SparseMatrix check_compatibility(SparseMatrix A, int ne,
-                                        const std::vector<pedge_struct> &edges,
+                                        const std::vector<pedge> &edges,
                                         int compatibility_method, double tol) {
   /* go through the links and make sure edges are compatible */
   SparseMatrix B, C;
@@ -554,11 +550,11 @@ static SparseMatrix check_compatibility(SparseMatrix A, int ne,
   return B;
 }
 
-std::vector<pedge_struct> edge_bundling(SparseMatrix A0, int dim, double *x,
-                                        int maxit_outer, double K, int method,
-                                        int nneighbor, int compatibility_method,
-                                        int max_recursion, double angle_param,
-                                        double angle) {
+std::vector<pedge> edge_bundling(SparseMatrix A0, int dim, double *x,
+                                 int maxit_outer, double K, int method,
+                                 int nneighbor, int compatibility_method,
+                                 int max_recursion, double angle_param,
+                                 double angle) {
   /* bundle edges.
      A: edge graph
      x: edge i is at {p,q}, 
@@ -581,7 +577,7 @@ std::vector<pedge_struct> edge_bundling(SparseMatrix A0, int dim, double *x,
   int maxit = 10;
 
   assert(A->n == ne);
-  std::vector<pedge_struct> edges;
+  std::vector<pedge> edges;
   edges.reserve(ne);
 
   for (i = 0; i < ne; i++){

@@ -29,9 +29,9 @@ typedef struct {
    meet1, meet2: meeting point
    return: best ink needed if bundled.
 */
-double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
+double ink(const std::vector<pedge> &edges, int numEdges, int *pick,
            double *ink0, point_t *meet1, point_t *meet2, double angle_param,
            double angle);
-double ink1(const pedge_struct &e);
+double ink1(const pedge &e);
 
 extern double ink_count;
