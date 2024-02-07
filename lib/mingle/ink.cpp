@@ -224,12 +224,11 @@ static double project_to_line(point_t pt, point_t left, point_t right, double an
  * Compute minimal ink used the input edges are bundled.
  * Assumes tails all occur on one side and heads on the other.
  */
-double ink(const pedge *edges, int numEdges, int *pick, double *ink0,
-           point_t *meet1, point_t *meet2, double angle_param, double angle) {
+double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
+           double *ink0, point_t *meet1, point_t *meet2, double angle_param,
+           double angle) {
   int i;
   point_t begin, end, mid, diff;
-  pedge e;
-  double *x;
   double inkUsed;
   double eps = 1.0e-2;
   double cend = 0, cbegin = 0;
@@ -244,19 +243,15 @@ double ink(const pedge *edges, int numEdges, int *pick, double *ink0,
 
   begin = end = Origin;
   for (i = 0; i < numEdges; i++) {
-    if (pick) {
-      e = edges[pick[i]];
-    } else {
-      e = edges[i];
-    }
-    x = e->x;
+    const pedge_struct &e = pick ? edges[pick[i]] : edges[i];
+    const double *x = e.x;
     point_t source = {x[0], x[1]};
-    point_t target = {x[e->dim*e->npoints - e->dim],
-                      x[e->dim*e->npoints - e->dim + 1]};
+    point_t target = {x[e.dim * e.npoints - e.dim],
+                      x[e.dim * e.npoints - e.dim + 1]};
     (*ink0) += hypot(source.x - target.x, source.y - target.y);
-    begin = addPoint (begin, scalePoint(source, e->wgt));
-    end = addPoint (end, scalePoint(target, e->wgt));
-    wgt += e->wgt;
+    begin = addPoint(begin, scalePoint(source, e.wgt));
+    end = addPoint(end, scalePoint(target, e.wgt));
+    wgt += e.wgt;
   }
 
   begin = scalePoint (begin, 1.0/wgt);
@@ -273,15 +268,11 @@ double ink(const pedge *edges, int numEdges, int *pick, double *ink0,
   std::vector<point_t> sources;
   std::vector<point_t> targets;
   for (i = 0; i < numEdges; i++) {
-    if (pick) {
-      e = edges[pick[i]];
-    } else {
-      e = edges[i];
-    }
-    x = e->x;
+    const pedge_struct &e = pick ? edges[pick[i]] : edges[i];
+    const double *x = e.x;
     sources.push_back(point_t{x[0], x[1]});
-    targets.push_back(point_t{x[e->dim*e->npoints - e->dim],
-                              x[e->dim*e->npoints - e->dim + 1]});
+    targets.push_back(point_t{x[e.dim * e.npoints - e.dim],
+                              x[e.dim * e.npoints - e.dim + 1]});
     /* begin(1) ----------- mid(0) */
     if (i == 0){
       cbegin = project_to_line(sources[i], begin, end, angle);
@@ -314,14 +305,12 @@ double ink(const pedge *edges, int numEdges, int *pick, double *ink0,
   return inkUsed;
 }
 
-double ink1(pedge e){
-  double *x, xx, yy;
-
+double ink1(const pedge_struct &e) {
   double ink0 = 0;
 
-  x = e->x;
-  xx = x[0] - x[e->dim*e->npoints - e->dim];
-  yy = x[1] - x[e->dim*e->npoints - e->dim + 1];
+  const double *x = e.x;
+  const double xx = x[0] - x[e.dim * e.npoints - e.dim];
+  const double yy = x[1] - x[e.dim * e.npoints - e.dim + 1];
   ink0 += hypot(xx, yy);
   return ink0;
 }

@@ -10,6 +10,9 @@
 
 #pragma once
 
-void agglomerative_ink_bundling(int dim, SparseMatrix A, pedge *edges,
-                                int nneighbor, int max_recursion,
-                                double angle_param, double angle);
+#include <vector>
+
+void agglomerative_ink_bundling(int dim, SparseMatrix A,
+                                std::vector<pedge_struct> &edges, int nneighbor,
+                                int max_recursion, double angle_param,
+                                double angle);

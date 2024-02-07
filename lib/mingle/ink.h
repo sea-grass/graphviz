@@ -11,6 +11,7 @@
 #pragma once
 
 #include <mingle/edge_bundling.h>
+#include <vector>
 
 typedef struct {
   double x, y;
@@ -28,8 +29,9 @@ typedef struct {
    meet1, meet2: meeting point
    return: best ink needed if bundled.
 */
-double ink(const pedge *edges, int numEdges, int *pick, double *ink0,
-           point_t *meet1, point_t *meet2, double angle_param, double angle);
-double ink1(pedge e);
+double ink(const std::vector<pedge_struct> &edges, int numEdges, int *pick,
+           double *ink0, point_t *meet1, point_t *meet2, double angle_param,
+           double angle);
+double ink1(const pedge_struct &e);
 
 extern double ink_count;
