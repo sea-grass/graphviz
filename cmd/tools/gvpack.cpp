@@ -31,6 +31,7 @@
 #include <cgraph/ingraphs.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
+#include <common/utils.h>
 #include <neatogen/neatoprocs.h>
 #include <iostream>
 #include <limits>
@@ -475,7 +476,6 @@ static std::string xName(used_t &names, char *oldname) {
 
 #define MARK(e) (ED_alg(e) = e)
 #define MARKED(e) (ED_alg(e))
-#define ISCLUSTER(g) startswith(agnameof(g), "cluster")
 #define SETCLUST(g,h) (GD_alg(g) = h)
 #define GETCLUST(g) ((Agraph_t*)GD_alg(g))
 
@@ -507,7 +507,7 @@ cloneSubg(Agraph_t *g, Agraph_t *ng, Agsym_t *G_bb, used_t &gnames) {
 	/* if subgraphs are clusters, point to the new 
 	 * one so we can find it later.
 	 */
-	if (ISCLUSTER(subg))
+	if (is_a_cluster(subg))
 	    SETCLUST(subg, nsubg);
     }
 
