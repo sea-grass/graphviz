@@ -306,7 +306,6 @@ static void pedge_print(char *comments, const pedge &e) {
 #endif
 
 void pedge_wgts_realloc(pedge &e, int n) {
-  /* diff from pedge_alloc: allocate wgts if do not exist and initialize to wgt */
   int i;
   if (n <= e.npoints)
     return;
