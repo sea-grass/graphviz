@@ -37,4 +37,4 @@ enum {METHOD_NONE = -1, METHOD_FD, METHOD_INK_AGGLOMERATE, METHOD_INK};
 enum {COMPATIBILITY_DIST = 0, COMPATIBILITY_FULL};
 pedge pedge_new(int np, int dim, double *x);
 pedge pedge_wgt_new(int np, int dim, double *x, double wgt);
-pedge pedge_double(pedge e);
+void pedge_double(pedge e);

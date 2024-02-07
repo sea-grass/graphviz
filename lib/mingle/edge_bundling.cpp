@@ -325,8 +325,7 @@ pedge pedge_wgts_realloc(pedge e, int n){
   return e;
 }
 
-
-pedge pedge_double(pedge e){
+void pedge_double(pedge e) {
   /* double the number of points (more precisely, add a point between two points in the polyline */
   int npoints = e->npoints, len = e->len, i, dim = e->dim;
   double *x;
@@ -356,8 +355,6 @@ pedge pedge_double(pedge e){
   e->len = len;
   np = e->npoints = 2*e->npoints - 1;
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
-  
-  return e;
 }
 
 static void edge_tension_force(std::vector<double> &force, pedge e) {
@@ -506,8 +503,9 @@ static void modularity_ink_bundling(int dim, int ne, SparseMatrix B,
     if (ink1 < ink0){
       for (j = clusterp[i]; j < clusterp[i+1]; j++){
 	/* make this edge 5 points, insert two meeting points at 1 and 2, make 3 the last point */
-	edges[clusters[j]] = pedge_double(edges[clusters[j]]);
-	e = edges[clusters[j]] = pedge_double(edges[clusters[j]]);
+	pedge_double(edges[clusters[j]]);
+	pedge_double(edges[clusters[j]]);
+	e = edges[clusters[j]];
 	e->x[1*dim] = meet1.x;
 	e->x[1*dim+1] = meet1.y;
 	e->x[2*dim] = meet2.x;
@@ -621,7 +619,7 @@ std::vector<pedge> edge_bundling(SparseMatrix A0, int dim, double *x,
 
     for (k = 0; k < maxit_outer; k++){
       for (i = 0; i < ne; i++){
-	edges[i] = pedge_double(edges[i]);
+	pedge_double(edges[i]);
       }
       step0 /= 2;
       force_directed_edge_bundling(B, edges.data(), maxit, step0, K);

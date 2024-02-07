@@ -390,9 +390,10 @@ static void agglomerative_ink_bundling_internal(
 	  for (j = ia[i]; j < ia[i+1]; j++){
 	    /* make this edge 4 points, insert two meeting points at 1 and 2, make 3 the last point */
 	    jj = ja[j];
-	    edges[jj] = pedge_double(edges[jj]);/* has to call pedge_double twice: from 2 points to 3 points to 5 points. The last point not used, may be
+	    pedge_double(edges[jj]);/* has to call pedge_double twice: from 2 points to 3 points to 5 points. The last point not used, may be
 						 improved later */
-	    e = edges[jj] = pedge_double(edges[jj]);
+	    pedge_double(edges[jj]);
+	    e = edges[jj];
 
 	    e->wgts.resize(4);	
 	    e->x[1*dim] = meet1.x;
