@@ -395,7 +395,6 @@ static void agglomerative_ink_bundling_internal(
 	    pedge_double(edges[jj]);
 	    e = edges[jj];
 
-	    e->wgts.resize(4);	
 	    e->x[1*dim] = meet1.x;
 	    e->x[1*dim+1] = meet1.y;
 	    e->x[2*dim] = meet2.x;
@@ -403,7 +402,7 @@ static void agglomerative_ink_bundling_internal(
 	    e->x[3*dim] = e->x[4*dim];
 	    e->x[3*dim+1] = e->x[4*dim+1];
 	    e->npoints = 4;
-	    for (k = 0; k < 3; k++) e->wgts[k] = e->wgt;
+	    e->wgts = std::vector<double>(4, e->wgt);
 	    wgt_all += e->wgt;
 	
 	  }

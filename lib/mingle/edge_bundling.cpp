@@ -60,7 +60,6 @@ pedge pedge_new(int np, int dim, double *x){
 }
 pedge pedge_wgt_new(int np, int dim, double *x, double wgt){
   pedge e;
-  int i;
 
   e = (pedge)MALLOC(sizeof(struct pedge_struct));
   e->npoints = np;
@@ -70,8 +69,7 @@ pedge pedge_wgt_new(int np, int dim, double *x, double wgt){
   memcpy(e->x, x, dim*e->len*sizeof(double));
   e->edge_length = dist(dim, &x[0*dim], &x[(np-1)*dim]);
   e->wgt = wgt;
-  e->wgts.resize(np - 1);
-  for (i = 0; i < np - 1; i++) e->wgts[i] = wgt;
+  e->wgts = std::vector<double>(np - 1, wgt);
   return e;
 
 }
