@@ -229,7 +229,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
 	/* there are ninterval+1 points, add 3*ninterval+2 points, get rid of internal ninternal-1 points,
 	  make into 3*ninterval+4 points so that gviz spline rendering can work */
 	if (j == 1 || j == edge->npoints - 1) {
-	  /* every interval gets 3 points inmserted except the first and last one */
+	  // every interval gets 3 points inserted except the first and last one
 	  tt = tt2;
 	  mm = 4;
 	} else {
@@ -276,7 +276,7 @@ void pedge_export_gv(FILE *fp, int ne, pedge *edges){
 	}
 	len = sqrt(len/k);
 	t = edge->wgts[j]/maxwgt;
-	/* interpotate between red (t = 1) to blue (t = 0) */
+	// interpolate between red (t = 1) to blue (t = 0)
 	r = 255*t; g = 0; b = 255*(1-t); b = 255*(1-t);
 	if (j != 0) fprintf(fp,":");
 	fprint_rgb(fp, r, g, b, 85);
@@ -361,7 +361,7 @@ static void edge_tension_force(std::vector<double> &force, pedge e) {
   int i, left, right, j;
   double s;
 
-  /* tention force = ((np-1)*||2x-xleft-xright||)/||e||, so the force is norminal and unitless
+  /* tension force = ((np-1)*||2x-xleft-xright||)/||e||, so the force is nominal and unitless
   */
   s =  (np - 1) / std::max(SMALL, e->edge_length);
   for (i = 1; i <= np - 2; i++){
@@ -374,7 +374,7 @@ static void edge_tension_force(std::vector<double> &force, pedge e) {
 
 static void edge_attraction_force(double similarity, pedge e1, pedge e2,
                                   std::vector<double> &force) {
-  /* attrractive force from x2 applied to x1 */
+  /* attractive force from x2 applied to x1 */
   double *x1 = e1->x, *x2 = e2->x;
   int dim = e1->dim;
   int np = e1->npoints;
@@ -386,7 +386,7 @@ static void edge_attraction_force(double similarity, pedge e1, pedge e2,
   assert(e1->npoints == e2->npoints);
 
   /* attractive force = 1/d where d = D/||e1|| is the relative distance, D is the distance between e1 and e2.
-   so the force is norminal and unitless
+   so the force is nominal and unitless
   */
   if (similarity > 0){
     s = edge_length;
@@ -563,7 +563,7 @@ std::vector<pedge> edge_bundling(SparseMatrix A0, int dim, double *x,
      .  where p = x[2*dim*i : 2*dim*i+dim-1]
      .    and q = x[2*dim*i+dim : 2*dim*i+2*dim-1]
      maxit_outer: max outer iteration for force directed bundling. Every outer iter subdivide each edge segment into 2.
-     K: norminal edge length in force directed bundling
+     K: nominal edge length in force directed bundling
      method: which method to use.
      nneighbor: number of neighbors to be used in forming nearest neighbor graph. Used only in agglomerative method
      compatibility_method: which method to use to calculate compatibility. Used only in force directed.
