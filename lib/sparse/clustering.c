@@ -300,7 +300,6 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   Multilevel_Modularity_Clustering grid, cgrid;
   int *matching, i;
   SparseMatrix P;
-  double *u;
   assert(A->m == A->n);
 
   *modularity = 0.;
@@ -314,7 +313,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   }
 
   /* project clustering up */
-  u =  MALLOC(sizeof(double)*cgrid->n);
+  double *u = gv_calloc(cgrid->n, sizeof(double));
   for (i = 0; i < cgrid->n; i++) u[i] = (double) (cgrid->matching)[i];
   *nclusters = cgrid->n;
   *modularity = cgrid->modularity;
@@ -331,7 +330,7 @@ static void hierachical_modularity_clustering(SparseMatrix A, int ncluster_targe
   if (*assignment){
     matching = *assignment; 
   } else {
-    matching = MALLOC(sizeof(int) * grid->n);
+    matching = gv_calloc(grid->n, sizeof(int));
     *assignment = matching;
   }
   for (i = 0; i < grid->n; i++) (matching)[i] = (int) u[i];
