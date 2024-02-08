@@ -334,8 +334,8 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
 #ifdef DEBUG
       {int ncluster;
 	double mq2, mq_in2, mq_out2, *dout2;
-	int *matching2, nc2 = nc;
-	matching2 = MALLOC(sizeof(int)*A->m);
+	int nc2 = nc;
+	int *matching2 = gv_calloc(A->m, sizeof(int));
 	memcpy(matching2, matching, sizeof(double)*A->m);
 	if (jc != UNMATCHED) {
 	  matching2[i] = jc;
