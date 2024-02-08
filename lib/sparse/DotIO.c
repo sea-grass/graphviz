@@ -11,6 +11,7 @@
 #define STANDALONE
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <sparse/general.h>
 #include <sparse/DotIO.h>
 #include <sparse/clustering.h>
@@ -394,7 +395,7 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
     int gid = 1;  
     memset (*clusters, 0, sizeof(int)*nnodes);
     for (sg = agfstsubg(g); sg; sg = agnxtsubg(sg)) {
-      if (strncmp(agnameof(sg), "cluster", 7)) continue;
+      if (!startswith(agnameof(sg), "cluster")) continue;
       gid++;
       for (n = agfstnode(sg); n; n = agnxtnode (sg, n)) {
         i = ND_id(n);

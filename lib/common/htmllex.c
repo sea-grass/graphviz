@@ -16,6 +16,7 @@
 #include <cdt/cdt.h>
 #include <ctype.h>
 #include <cgraph/alloc.h>
+#include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
@@ -833,7 +834,7 @@ static char *eatComment(char *p)
     s--;			/* move back to '\0' or '>' */
     if (*s) {
 	char *t = s - 2;
-	if (t < p || strncmp(t, "--", 2)) {
+	if (t < p || !startswith(t, "--")) {
 	    agerr(AGWARN, "Unclosed comment\n");
 	    state.warn = 1;
 	}
@@ -851,7 +852,7 @@ static char *findNext(char *s, agxbuf* xb)
     char c;
 
     if (*s == '<') {
-	if (!strncmp(t, "!--", 3))
+	if (startswith(t, "!--"))
 	    t = eatComment(t + 3);
 	else
 	    while (*t && *t != '>')

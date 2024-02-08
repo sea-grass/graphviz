@@ -19,6 +19,7 @@
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/stack.h>
+#include    <cgraph/startswith.h>
 #include    <stdbool.h>
 #include    <stdio.h>
 #ifdef HAVE_EXPAT
@@ -258,7 +259,7 @@ setNodeAttr(Agnode_t * np, char *name, char *value, userdata_t * ud,
 static void
 setGlobalNodeAttr(Agraph_t * g, char *name, char *value)
 {
-    if (strncmp(name, NODELBL, NLBLLEN))
+    if (!startswith(name, NODELBL))
 	fprintf(stderr,
 		"Warning: global node attribute %s in graph %s does not begin with the prefix %s\n",
 		name, agnameof(g), NODELBL);
@@ -314,7 +315,7 @@ setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud,
 static void
 setGlobalEdgeAttr(Agraph_t * g, char *name, char *value)
 {
-    if (strncmp(name, EDGELBL, ELBLLEN))
+    if (!startswith(name, EDGELBL))
 	fprintf(stderr,
 		"Warning: global edge attribute %s in graph %s does not begin with the prefix %s\n",
 		name, agnameof(g), EDGELBL);

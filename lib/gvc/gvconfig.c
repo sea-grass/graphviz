@@ -18,6 +18,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
+#include <cgraph/startswith.h>
 #include <gvc/gvconfig.h>
 
 #include <ctype.h>
@@ -266,7 +267,6 @@ static void gvconfig_write_library_config(GVC_t *gvc, char *lib_path,
 
 #define BSZ 1024
 #define DOTLIBS "/.libs"
-#define STRLEN(s) (sizeof(s)-1)
 
 #ifdef HAVE_DL_ITERATE_PHDR
 static int line_callback(struct dl_phdr_info *info, size_t size, void *line)
@@ -331,7 +331,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 			const char *s = tmp - 1;
 			/* back up to previous slash (or head of string) */
 			while (*s != '/' && s > p) s--;
-			if (strncmp (s, DOTLIBS, STRLEN(DOTLIBS)) == 0)
+			if (startswith(s, DOTLIBS))
 			    continue;
 		    }
 
@@ -427,8 +427,7 @@ static bool is_plugin(const char *filepath) {
 
     // does this filename contain the expected version?
     if (len < strlen(VERSION)
-        || strncmp(filepath + len - strlen(VERSION), VERSION,
-          strlen(VERSION)) != 0) {
+        || !startswith(filepath + len - strlen(VERSION), VERSION)) {
 	return false;
     }
     len -= strlen(VERSION);
@@ -459,14 +458,12 @@ static bool is_plugin(const char *filepath) {
     }
 #elif ((defined(__hpux__) || defined(__hpux)) && !(defined(__ia64)))
     static const char SL[] = ".sl.";
-    if (len < strlen(SL)
-        || strncmp(filepath + len - strlen(SL), SL, strlen(SL)) != 0) {
+    if (len < strlen(SL) || !startswith(filepath + len - strlen(SL), SL)) {
 	return false;
     }
 #else
     static const char SO[] = ".so.";
-    if (len < strlen(SO)
-        || strncmp(filepath + len - strlen(SO), SO, strlen(SO)) != 0) {
+    if (len < strlen(SO) || !startswith(filepath + len - strlen(SO), SO)) {
 	return false;
     }
 #endif

@@ -17,6 +17,7 @@
 #include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/startswith.h>
 #include <common/utils.h>
 #include <ctype.h>
 #include <float.h>
@@ -582,9 +583,8 @@ static void updateGraph(void)
 }
 
 #define ELS "|edgelabel|"
-#define ELSN (sizeof(ELS)-1)
   /* Return true if node name starts with ELS */
-#define IS_LNODE(n) (!strncmp(agnameof(n),ELS,ELSN))
+#define IS_LNODE(n) startswith(agnameof(n), ELS)
 
 /* getSizes:
  * Set up array of half sizes in inches.

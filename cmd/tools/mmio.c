@@ -15,7 +15,7 @@
 *
 */
 
-
+#include <cgraph/startswith.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -51,8 +51,7 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     for (p = storage_scheme; *p != '\0'; *p = (char)tolower((int)*p), p++);
 
     /* check for banner */
-    if (strncmp(banner, MatrixMarketBanner, strlen(MatrixMarketBanner)) !=
-	0)
+    if (!startswith(banner, MatrixMarketBanner))
 	return MM_NO_HEADER;
 
     /* first field should be "mtx" */

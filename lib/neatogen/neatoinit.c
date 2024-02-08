@@ -203,7 +203,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
 
     cdata->ntoplevel = agnnodes(g);
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
-        if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (startswith(agnameof(subg), "cluster")) {
             nclusters++;
         }
     }
@@ -213,7 +213,7 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
     cn = cdata->clustersizes = gv_calloc(nclusters, sizeof(int));
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
         /* clusters are processed by separate calls to ordered_edges */
-        if (!strncmp(agnameof(subg), "cluster", 7)) {
+        if (startswith(agnameof(subg), "cluster")) {
             int *c;
 
             *cn = agnnodes(subg);
@@ -479,7 +479,7 @@ dfs(Agraph_t * subg, Agraph_t * parentg, attrsym_t * G_lp, attrsym_t * G_bb)
 {
     boxf bb;
 
-    if (!strncmp(agnameof(subg), "cluster", 7) && chkBB(subg, G_bb, &bb)) {
+    if (startswith(agnameof(subg), "cluster") && chkBB(subg, G_bb, &bb)) {
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_bb(subg) = bb;
 	add_cluster(parentg, subg);
@@ -551,7 +551,7 @@ int init_nop(Agraph_t * g, int adjust)
 
     scan_graph(g);		/* mainly to set up GD_neato_nlist */
     for (i = 0; (np = GD_neato_nlist(g)[i]); i++) {
-	if (!hasPos(np) && strncmp(agnameof(np), "cluster", 7)) {
+	if (!hasPos(np) && !startswith(agnameof(np), "cluster")) {
 	    agerr(AGERR, "node %s in graph %s has no position\n",
 		  agnameof(np), agnameof(g));
 	    return -1;
@@ -959,13 +959,13 @@ setSeed (graph_t * G, int dflt, long* seedp)
 
     if (!p || *p == '\0') return dflt;
     if (isalpha(*(unsigned char *)p)) {
-	if (!strncmp(p, SMART, SLEN(SMART))) {
+	if (startswith(p, SMART)) {
 	    init = INIT_SELF;
 	    p += SLEN(SMART);
-	} else if (!strncmp(p, REGULAR, SLEN(REGULAR))) {
+	} else if (startswith(p, REGULAR)) {
 	    init = INIT_REGULAR;
 	    p += SLEN(REGULAR);
-	} else if (!strncmp(p, RANDOM, SLEN(RANDOM))) {
+	} else if (startswith(p, RANDOM)) {
 	    init = INIT_RANDOM;
 	    p += SLEN(RANDOM);
 	}
@@ -1370,7 +1370,7 @@ addCluster (graph_t* g)
 {
     graph_t *subg;
     for (subg = agfstsubg(agroot(g)); subg; subg = agnxtsubg(subg)) {
-	if (!strncmp(agnameof(subg), "cluster", 7)) {
+	if (startswith(agnameof(subg), "cluster")) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    add_cluster(g, subg);
 	    compute_bb(subg);
