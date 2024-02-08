@@ -242,9 +242,7 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
     return -1;
   }
  
-  if (!(*colors)) {
-    *colors = gv_calloc(cdim * n, sizeof(double));
-  }
+  *colors = gv_calloc(cdim * n, sizeof(double));
   double *ctmp = gv_calloc(cdim * n, sizeof(double));
 
   B = SparseMatrix_symmetrize(A, false);
