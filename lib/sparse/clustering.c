@@ -97,18 +97,16 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
   double modularity = 0;
   int *ia = A->ia, *ja = A->ja;
   double *deg = grid->deg;
-  double *deg_new;
   int i, j, jj, jc, jmax;
   double inv_deg_total = 1./ grid->deg_total;
-  double *deg_inter, gain;
-  int *mask;
+  double gain;
   double maxgain;
   double total_gain = 0;
   modularity = grid->modularity;
 
-  deg_new = MALLOC(sizeof(double)*n);
-  deg_inter = MALLOC(sizeof(double)*n);
-  mask = MALLOC(sizeof(int)*n);
+  double *deg_new = gv_calloc(n, sizeof(double));
+  double *deg_inter = gv_calloc(n, sizeof(double));
+  int *mask = gv_calloc(n, sizeof(int));
   for (i = 0; i < n; i++) mask[i] = -1;
 
   assert(n == A->n);
@@ -232,7 +230,6 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
     grid->R = R;
     level++;
     cgrid = Multilevel_Modularity_Clustering_init(cA, level); 
-    deg_new = REALLOC(deg_new, nc*sizeof(double));
     cgrid->deg = deg_new;
     cgrid->modularity = grid->modularity + total_gain;
     cgrid->deg_total = grid->deg_total;
