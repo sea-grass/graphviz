@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #define STANDALONE
+#include <cgraph/alloc.h>
 #include <math.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
@@ -17,7 +18,6 @@
 
 
 static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(SparseMatrix A, int level){
-  Multilevel_Modularity_Clustering grid;
   int n = A->n, i, j;
 
   assert(A->type == MATRIX_TYPE_REAL);
@@ -25,7 +25,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
 
   if (!A) return NULL;
   assert(A->m == n);
-  grid = MALLOC(sizeof(struct Multilevel_Modularity_Clustering_struct));
+  Multilevel_Modularity_Clustering grid = gv_alloc(sizeof(struct Multilevel_Modularity_Clustering_struct));
   grid->level = level;
   grid->n = n;
   grid->A = A;
@@ -34,7 +34,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = false;
-  grid->matching = MALLOC(sizeof(double) * n);
+  grid->matching = gv_calloc(n, sizeof(double));
   grid->deg = NULL;
   grid->agglomerate_regardless = false;
 
@@ -43,13 +43,12 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
     int *ia = A->ia, *ja = A->ja;
     double deg_total = 0;
     double *deg, *a = A->a;
-    double *indeg;
 
     grid->deg_total = 0.;
-    grid->deg = MALLOC(sizeof(double) * n);
+    grid->deg = gv_calloc(n, sizeof(double));
     deg = grid->deg;
 
-    indeg = MALLOC(sizeof(double)*n);
+    double *indeg = gv_calloc(n, sizeof(double));
     for (i = 0; i < n; i++){
       deg[i] = 0;
       indeg[i] = 0.;
