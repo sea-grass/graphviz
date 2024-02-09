@@ -162,9 +162,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     /* No Jiggling, might conflict with constraints                      */
     for (i = 0; i < dim; i++) {
 	for (int j = 0; j < n; j++) {
-	    if (fabs(d_coords[i][j]) > max) {
-		max = fabs(d_coords[i][j]);
-	    }
+	    max = fmax(max, fabs(d_coords[i][j]));
 	}
     }
     for (i = 0; i < dim; i++) {
