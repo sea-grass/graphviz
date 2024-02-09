@@ -275,6 +275,12 @@ struct Agdesc_s {		/* graph descriptor */
 /** @defgroup cgraph_disc disciplines
  *  @ingroup cgraph_misc
  *  @brief disciplines for external resources needed by libgraph
+ *
+ *  (This section is not intended for casual users.)
+ *
+ *  Programmer-defined disciplines customize certain resources:
+ *  ID namespace, memory, and I/O - needed by Libcgraph.
+ *  A discipline struct (or NULL) is passed at graph creation time.
  *  @{
  */
 
@@ -286,6 +292,7 @@ struct Agdesc_s {		/* graph descriptor */
  * they are mapped to and from strings.
  */
 
+/// object ID allocator
 struct Agiddisc_s {
     void *(*open) (Agraph_t * g, Agdisc_t*);	/* associated with a graph */
     long (*map) (void *state, int objtype, char *str, IDTYPE *id,
@@ -297,6 +304,7 @@ struct Agiddisc_s {
     void (*idregister) (void *state, int objtype, void *obj);
 };
 
+/// IO services
 struct Agiodisc_s {
     int (*afread) (void *chan, char *buf, int bufsize);
     int (*putstr) (void *chan, const char *str);
@@ -304,8 +312,9 @@ struct Agiodisc_s {
     /* error messages? */
 };
 
-/// user's discipline
-
+/// @brief user's discipline
+///
+/// A default discipline is supplied when NULL is given for any of these fields.
 struct Agdisc_s {
     Agiddisc_t *id;
     Agiodisc_t *io;
