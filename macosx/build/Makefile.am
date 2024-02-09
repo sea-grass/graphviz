@@ -8,7 +8,7 @@
 # Contributors: Details at http://www.graphviz.org/
 #######################################################################
 
-ARCH:=$(shell uname -m)
+ARCH=$(shell uname -m)
 
 # build directories
 
