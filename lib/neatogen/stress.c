@@ -33,7 +33,7 @@
 
  /* a structure used for storing sparse distance matrix */
 typedef struct {
-    int nedges;
+    size_t nedges;
     int *edges;
     DistType *edist;
     bool free_mem;
@@ -76,12 +76,12 @@ compute_stress1(double **coords, dist_data * distances, int dim, int n, int exp)
 {
     /* compute the overall stress */
 
-    int i, j, l, node;
+    int i, l, node;
     double sum, dist, Dij;
     sum = 0;
     if (exp == 2) {
 	for (i = 0; i < n; i++) {
-	    for (j = 0; j < distances[i].nedges; j++) {
+	    for (size_t j = 0; j < distances[i].nedges; j++) {
 		node = distances[i].edges[j];
 		if (node <= i) {
 		    continue;
@@ -100,7 +100,7 @@ compute_stress1(double **coords, dist_data * distances, int dim, int n, int exp)
 	}
     } else {
 	for (i = 0; i < n; i++) {
-	    for (j = 0; j < distances[i].nedges; j++) {
+	    for (size_t j = 0; j < distances[i].nedges; j++) {
 		node = distances[i].edges[j];
 		if (node <= i) {
 		    continue;
@@ -167,7 +167,7 @@ int initLayout(int n, int dim, double **coords, node_t **nodes) {
 
 float *circuitModel(vtx_data * graph, int nG)
 {
-    int i, j, e, rv, count;
+    int i, j, rv, count;
     float *Dij = gv_calloc(nG * (nG + 1) / 2, sizeof(float));
     double **Gm;
     double **Gm_inv;
@@ -178,7 +178,7 @@ float *circuitModel(vtx_data * graph, int nG)
     /* set non-diagonal entries */
     if (graph->ewgts) {
 	for (i = 0; i < nG; i++) {
-	    for (e = 1; e < graph[i].nedges; e++) {
+	    for (size_t e = 1; e < graph[i].nedges; e++) {
 		j = graph[i].edges[e];
 		/* conductance is 1/resistance */
 		Gm[i][j] = Gm[j][i] = -1.0 / graph[i].ewgts[e];	/* negate */
@@ -186,7 +186,7 @@ float *circuitModel(vtx_data * graph, int nG)
 	}
     } else {
 	for (i = 0; i < nG; i++) {
-	    for (e = 1; e < graph[i].nedges; e++) {
+	    for (size_t e = 1; e < graph[i].nedges; e++) {
 		j = graph[i].edges[e];
 		/* conductance is 1/resistance */
 		Gm[i][j] = Gm[j][i] = -1.0;	/* ewgts are all 1 */
@@ -246,7 +246,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	** k-D  stress minimization by majorization                **    
 	*************************************************/
 
-    int i, j, k, node;
+    int i, k, node;
 
 	/*************************************************
 	** First compute the subspace in which we optimize     **
@@ -274,7 +274,6 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     int num_visited_nodes;
     int num_neighbors;
     int index;
-    int nedges;
     DistType *dist_list;
     vtx_data *lap;
     int *edges;
@@ -374,7 +373,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	    bfs(node, graph, n, Dij[i]);
 	}
 	max_dist = 0;
-	for (j = 0; j < n; j++) {
+	for (int j = 0; j < n; j++) {
 	    dist[j] = MIN(dist[j], Dij[i][j]);
 	    if (dist[j] > max_dist
 		|| (dist[j] == max_dist && rand() % (j + 1) == 0)) {
@@ -396,20 +395,20 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
     visited_nodes = gv_calloc(n, sizeof(int));
     distances = gv_calloc(n, sizeof(dist_data));
     available_space = 0;
-    nedges = 0;
+    size_t nedges = 0;
     for (i = 0; i < n; i++) {
 	if (CenterIndex[i] >= 0) {	/* a pivot node */
 	    distances[i].edges = gv_calloc(n - 1, sizeof(int));
 	    distances[i].edist = gv_calloc(n - 1, sizeof(DistType));
-	    distances[i].nedges = n - 1;
-	    nedges += n - 1;
+	    distances[i].nedges = (size_t)n - 1;
+	    nedges += (size_t)n - 1;
 	    distances[i].free_mem = true;
 	    index = CenterIndex[i];
-	    for (j = 0; j < i; j++) {
+	    for (int j = 0; j < i; j++) {
 		distances[i].edges[j] = j;
 		distances[i].edist[j] = Dij[index][j];
 	    }
-	    for (j = i + 1; j < n; j++) {
+	    for (int j = i + 1; j < n; j++) {
 		distances[i].edges[j - 1] = j;
 		distances[i].edist[j - 1] = Dij[index][j];
 	    }
@@ -430,15 +429,15 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	}
 	distances[i].edges = storage1;
 	distances[i].edist = storage2;
-	distances[i].nedges = num_neighbors;
-	nedges += num_neighbors;
-	for (j = 0; j < num_visited_nodes; j++) {
+	distances[i].nedges = (size_t)num_neighbors;
+	nedges += (size_t)num_neighbors;
+	for (int j = 0; j < num_visited_nodes; j++) {
 	    storage1[j] = visited_nodes[j];
 	    storage2[j] = dist[visited_nodes[j]];
 	    dist[visited_nodes[j]] = -1;
 	}
 	/* add all pivots: */
-	for (j = num_visited_nodes; j < num_neighbors; j++) {
+	for (int j = num_visited_nodes; j < num_neighbors; j++) {
 	    index = j - num_visited_nodes;
 	    storage1[j] = invCenterIndex[index];
 	    storage2[j] = Dij[index][i];
@@ -471,13 +470,13 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 	dist_list = distances[i].edist - 1;	/* '-1' since edist[0] goes for number '1' entry in the lap */
 	degree = 0;
 	if (exp == 2) {
-	    for (j = 1; j < lap[i].nedges; j++) {
+	    for (size_t j = 1; j < lap[i].nedges; j++) {
 		edges[j] = distances[i].edges[j - 1];
 		ewgts[j] = (float) -1.0 / ((float) dist_list[j] * (float) dist_list[j]);	/* cast to float to prevent overflow */
 		degree -= ewgts[j];
 	    }
 	} else {
-	    for (j = 1; j < lap[i].nedges; j++) {
+	    for (size_t j = 1; j < lap[i].nedges; j++) {
 		edges[j] = distances[i].edges[j - 1];
 		ewgts[j] = -1.0f / (float) dist_list[j];
 		degree -= ewgts[j];
@@ -578,7 +577,7 @@ static int sparse_stress_subspace_majorization_kD(vtx_data * graph,	/* Input gra
 		dist_list = distances[i].edist - 1;
 		edges = lap[i].edges;
 		ewgts = lap[i].ewgts;
-		for (j = 1; j < lap[i].nedges; j++) {
+		for (size_t j = 1; j < lap[i].nedges; j++) {
 		    node = edges[j];
 		    dist_ij = distance_kD(coords, dim, i, node);
 		    if (dist_ij > 1e-30) {	/* skip zero distances */
@@ -667,7 +666,7 @@ static float *compute_weighted_apsp_packed(vtx_data * graph, int n)
  */
 float *mdsModel(vtx_data * graph, int nG)
 {
-    int i, j, e;
+    int i, j;
     float *Dij;
     int shift = 0;
     double delta = 0.0;
@@ -681,7 +680,7 @@ float *mdsModel(vtx_data * graph, int nG)
     /* then, replace edge entries will user-supplied len */
     for (i = 0; i < nG; i++) {
 	shift += i;
-	for (e = 1; e < graph[i].nedges; e++) {
+	for (size_t e = 1; e < graph[i].nedges; e++) {
 	    j = graph[i].edges[e];
 	    if (j < i)
 		continue;
@@ -721,10 +720,11 @@ float *compute_apsp_artificial_weights_packed(vtx_data *graph, int n) {
     /* so high-degree nodes are distantly located */
 
     float *Dij;
-    int i, j;
+    int i;
     float *old_weights = graph[0].ewgts;
-    int nedges = 0;
-    int deg_i, deg_j, neighbor;
+    size_t nedges = 0;
+    size_t deg_i, deg_j;
+    int neighbor;
 
     for (i = 0; i < n; i++) {
 	nedges += graph[i].nedges;
@@ -737,7 +737,7 @@ float *compute_apsp_artificial_weights_packed(vtx_data *graph, int n) {
 	for (i = 0; i < n; i++) {
 	    fill_neighbors_vec_unweighted(graph, i, vtx_vec);
 	    deg_i = graph[i].nedges - 1;
-	    for (j = 1; j <= deg_i; j++) {
+	    for (size_t j = 1; j <= deg_i; j++) {
 		neighbor = graph[i].edges[j];
 		deg_j = graph[neighbor].nedges - 1;
 		weights[j] = fmaxf((float)(deg_i + deg_j -
@@ -753,11 +753,11 @@ float *compute_apsp_artificial_weights_packed(vtx_data *graph, int n) {
 	    graph[i].ewgts = weights;
 	    fill_neighbors_vec_unweighted(graph, i, vtx_vec);
 	    deg_i = graph[i].nedges - 1;
-	    for (j = 1; j <= deg_i; j++) {
+	    for (size_t j = 1; j <= deg_i; j++) {
 		neighbor = graph[i].edges[j];
 		deg_j = graph[neighbor].nedges - 1;
 		weights[j] =
-		    ((float) deg_i + deg_j - 2 * common_neighbors(graph, neighbor, vtx_vec));
+		    (float)(deg_i + deg_j - 2 * common_neighbors(graph, neighbor, vtx_vec));
 	    }
 	    empty_neighbors_vec(graph, i, vtx_vec);
 	    weights += graph[i].nedges;

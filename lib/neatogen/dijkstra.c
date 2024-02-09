@@ -140,7 +140,6 @@ increaseKey(heap * h, int increasedVertex, Word newDist, int index[],
 
 void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 {
-    int i;
     heap H;
     int closestVertex, neighbor;
     DistType closestDist, prevClosestDist = MAX_DIST;
@@ -148,10 +147,10 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     int *index = gv_calloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
 	dist[i] = MAX_DIST;
     dist[vertex] = 0;
-    for (i = 1; i < graph[vertex].nedges; i++)
+    for (size_t i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = (DistType) graph[vertex].ewgts[i];
 
     initHeap(&H, vertex, index, dist, n);
@@ -160,7 +159,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
 	closestDist = dist[closestVertex];
 	if (closestDist == MAX_DIST)
 	    break;
-	for (i = 1; i < graph[closestVertex].nedges; i++) {
+	for (size_t i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
 	    increaseKey(&H, neighbor, closestDist +
 			(DistType)graph[closestVertex].ewgts[i], index, dist);
@@ -169,7 +168,7 @@ void dijkstra(int vertex, vtx_data * graph, int n, DistType * dist)
     }
 
     /* For dealing with disconnected graphs: */
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
 	if (dist[i] == MAX_DIST)	/* 'i' is not connected to 'vertex' */
 	    dist[i] = prevClosestDist + 10;
     freeHeap(&H);
@@ -259,17 +258,16 @@ increaseKey_f(heap * h, int increasedVertex, float newDist, int index[],
  */
 void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 {
-    int i;
     heap H;
     int closestVertex = 0, neighbor;
     float closestDist;
     int *index = gv_calloc(n, sizeof(int));
 
     /* initial distances with edge weights: */
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
 	dist[i] = FLT_MAX;
     dist[vertex] = 0;
-    for (i = 1; i < graph[vertex].nedges; i++)
+    for (size_t i = 1; i < graph[vertex].nedges; i++)
 	dist[graph[vertex].edges[i]] = graph[vertex].ewgts[i];
 
     initHeap_f(&H, vertex, index, dist, n);
@@ -278,7 +276,7 @@ void dijkstra_f(int vertex, vtx_data * graph, int n, float *dist)
 	closestDist = dist[closestVertex];
 	if (closestDist == FLT_MAX)
 	    break;
-	for (i = 1; i < graph[closestVertex].nedges; i++) {
+	for (size_t i = 1; i < graph[closestVertex].nedges; i++) {
 	    neighbor = graph[closestVertex].edges[i];
 	    increaseKey_f(&H, neighbor, closestDist + graph[closestVertex].ewgts[i],
 			  index, dist);

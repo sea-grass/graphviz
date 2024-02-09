@@ -245,8 +245,7 @@ static void find_closest_pairs(double *place, size_t n, int num_pairs,
 
 static void add_edge(vtx_data * graph, int u, int v)
 {
-    int i;
-    for (i = 0; i < graph[u].nedges; i++) {
+    for (size_t i = 0; i < graph[u].nedges; i++) {
 	if (graph[u].edges[i] == v) {
 	    /* edge already exist */
 	    return;

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,7 +20,7 @@ extern "C" {
 
     extern void fill_neighbors_vec_unweighted(vtx_data *, int vtx,
 					      int *vtx_vec);
-    extern int common_neighbors(vtx_data *, int u, int *);
+    extern size_t common_neighbors(vtx_data *, int u, int *);
     extern void empty_neighbors_vec(vtx_data * graph, int vtx,
 				    int *vtx_vec);
     extern DistType **compute_apsp(vtx_data *, int);

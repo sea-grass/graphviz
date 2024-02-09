@@ -190,11 +190,10 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
 {
   // A is dim1 × dim1 and sparse, B is dim2 × dim1, C = A × B
 
-    int i, j, k;
+    int i, j;
     double sum;
     float *ewgts;
     int *edges;
-    int nedges;
     float *storage = gv_calloc(dim1 * dim2, sizeof(A[0]));
     float **C = *CC = gv_calloc(dim1, sizeof(A));
 
@@ -206,10 +205,10 @@ mult_sparse_dense_mat_transpose(vtx_data * A, double **B, int dim1,
     for (i = 0; i < dim1; i++) {
 	edges = A[i].edges;
 	ewgts = A[i].ewgts;
-	nedges = A[i].nedges;
+	const size_t nedges = A[i].nedges;
 	for (j = 0; j < dim2; j++) {
 	    sum = 0;
-	    for (k = 0; k < nedges; k++) {
+	    for (size_t k = 0; k < nedges; k++) {
 		sum += ewgts[k] * B[j][edges[k]];
 	    }
 	    C[i][j] = (float) (sum);
@@ -267,12 +266,12 @@ void
 right_mult_with_vector(vtx_data * matrix, int n, double *vector,
 		       double *result)
 {
-    int i, j;
+    int i;
 
     double res;
     for (i = 0; i < n; i++) {
 	res = 0;
-	for (j = 0; j < matrix[i].nedges; j++)
+	for (size_t j = 0; j < matrix[i].nedges; j++)
 	    res += matrix[i].ewgts[j] * vector[matrix[i].edges[j]];
 	result[i] = res;
     }

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -23,7 +25,7 @@ extern "C" {
     } v_data; 
 
     typedef struct {
-	int nedges;		/* no. of neighbors, including self */
+	size_t nedges; ///< no. of neighbors, including self
 	int *edges;		/* edges[0..(nedges-1)] are neighbors; edges[0] is self */
 	float *ewgts;		/* preferred edge lengths */
 	float *eweights;	/* edge weights */
