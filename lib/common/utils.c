@@ -1709,6 +1709,22 @@ findCluster (Dt_t* map, char* name)
 	return NULL;
 }
 
+char *agrec_repr(const Agrec_t *head) {
+  agxbuf xb;
+  agxbinit(&xb, SMALLBUF, NULL);
+
+  if (!head)
+    return agxbdisown(&xb);
+
+  const Agrec_t *r = head;
+  do {
+    agxbprint(&xb, "%s @ %p ", r->name, r);
+    r = r->next;
+  } while (r != head);
+
+  return agxbdisown(&xb);
+}
+
 /**
  * @dir lib/common
  * @brief common code for layout engines
