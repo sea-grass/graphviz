@@ -168,7 +168,6 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
 static void
 fillEdge(Agedge_t * e, point p, PointSet * ps, int dx, int dy,
          int ssize, bool doS) {
-    int j;
     size_t k;
     bezier bz;
     pointf pt, hpt;
@@ -186,7 +185,7 @@ fillEdge(Agedge_t * e, point p, PointSet * ps, int dx, int dy,
 	return;
     }
 
-    for (j = 0; j < ED_spl(e)->size; j++) {
+    for (size_t j = 0; j < ED_spl(e)->size; j++) {
 	bz = ED_spl(e)->list[j];
 	if (bz.sflag) {
 	    pt = bz.sp;
@@ -997,7 +996,6 @@ packRects(int ng, boxf* bbs, pack_info* pinfo)
  */
 static void shiftEdge(Agedge_t * e, int dx, int dy)
 {
-    int j;
     bezier bz;
 
     if (ED_label(e))
@@ -1012,7 +1010,7 @@ static void shiftEdge(Agedge_t * e, int dx, int dy)
     if (ED_spl(e) == NULL)
 	return;
 
-    for (j = 0; j < ED_spl(e)->size; j++) {
+    for (size_t j = 0; j < ED_spl(e)->size; j++) {
 	bz = ED_spl(e)->list[j];
 	for (size_t k = 0; k < bz.size; k++)
 	    MOVEPT(bz.list[k]);

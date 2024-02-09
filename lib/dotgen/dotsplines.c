@@ -162,17 +162,17 @@ static void swap_bezier(bezier *b) {
 
 static void swap_spline(splines * s)
 {
-  int sz = s->size;
+  const size_t sz = s->size;
 
   // reverse list
-  for (int i = 0; i < sz / 2; ++i) {
+  for (size_t i = 0; i < sz / 2; ++i) {
     bezier tmp = s->list[i];
     s->list[i] = s->list[sz - 1 - i];
     s->list[sz - 1 - i] = tmp;
   }
 
   // swap beziers
-  for (int i = 0; i < sz; ++i) {
+  for (size_t i = 0; i < sz; ++i) {
     swap_bezier(&s->list[i]);
   }
 }
@@ -1966,24 +1966,23 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
 
     edge_t *uleft, *uright, *lleft, *lright;
     int i, fb, lb;
-    splines *spl;
 
     fb = lb = -1;
     uleft = uright = NULL;
     uleft = top_bound(first, -1), uright = top_bound(first, 1);
     if (uleft) {
-	if (!(spl = getsplinepoints(uleft))) return;
+	if (getsplinepoints(uleft) == NULL) return;
     }
     if (uright) {
-	if (!(spl = getsplinepoints(uright))) return;
+	if (getsplinepoints(uright) == NULL) return;
     }
     lleft = lright = NULL;
     lleft = bot_bound(last, -1), lright = bot_bound(last, 1);
     if (lleft) {
-	if (!(spl = getsplinepoints(lleft))) return;
+	if (getsplinepoints(lleft) == NULL) return;
     }
     if (lright) {
-	if (!(spl = getsplinepoints(lright))) return;
+	if (getsplinepoints(lright) == NULL) return;
     }
     for (i = 0; i < tendp->boxn; i++)
 	add_box(P, tendp->boxes[i]);

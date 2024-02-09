@@ -363,16 +363,15 @@ bool mapbool(const char *p)
 
 pointf dotneato_closest(splines * spl, pointf pt)
 {
-    int i;
     double bestdist2, d2, dlow2, dhigh2; /* squares of distances */
     double low, high, t;
     pointf c[4], pt2;
     bezier bz;
 
-    int besti = -1;
+    size_t besti = SIZE_MAX;
     size_t bestj = SIZE_MAX;
     bestdist2 = 1e+38;
-    for (i = 0; i < spl->size; i++) {
+    for (size_t i = 0; i < spl->size; i++) {
 	bz = spl->list[i];
 	for (size_t j = 0; j < bz.size; j++) {
 	    pointf b;
@@ -669,7 +668,6 @@ void compute_bb(graph_t * g)
     boxf b, bb;
     boxf BF;
     pointf ptf, s2;
-    int i;
 
     if (agnnodes(g) == 0 && GD_n_cluster(g) == 0) {
 	bb.LL = (pointf){0};
@@ -693,7 +691,7 @@ void compute_bb(graph_t * g)
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    if (ED_spl(e) == 0)
 		continue;
-	    for (i = 0; i < ED_spl(e)->size; i++) {
+	    for (size_t i = 0; i < ED_spl(e)->size; i++) {
 		for (size_t j = 0; j < (((Agedgeinfo_t*)AGDATA(e))->spl)->list[i].size; j++) {
 		    ptf = ED_spl(e)->list[i].list[j];
 		    EXPANDBP(bb,ptf);
@@ -714,7 +712,7 @@ void compute_bb(graph_t * g)
 	}
     }
 
-    for (i = 1; i <= GD_n_cluster(g); i++) {
+    for (int i = 1; i <= GD_n_cluster(g); i++) {
 	B2BF(GD_bb(GD_clust(g)[i]), BF);
 	EXPANDBB(bb,BF);
     }
@@ -1450,7 +1448,7 @@ bool overlap_edge(edge_t *e, boxf b)
 {
     splines *spl = ED_spl(e);
     if (spl && boxf_overlap(spl->bb, b))
-        for (int i = 0; i < spl->size; i++)
+        for (size_t i = 0; i < spl->size; i++)
             if (overlap_bezier(spl->list[i], b))
                 return true;
 
@@ -1597,7 +1595,7 @@ void get_gradient_points(pointf *A, pointf *G, size_t n, double angle, int flags
 
 void gv_free_splines(edge_t *e) {
     if (ED_spl(e)) {
-        for (int i = 0; i < ED_spl(e)->size; i++)
+        for (size_t i = 0; i < ED_spl(e)->size; i++)
             free(ED_spl(e)->list[i].list);
         free(ED_spl(e)->list);
         free(ED_spl(e));

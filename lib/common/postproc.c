@@ -91,7 +91,6 @@ static pointf map_point(pointf p)
 
 static void map_edge(edge_t * e)
 {
-    int j;
     bezier bz;
 
     if (ED_spl(e) == NULL) {
@@ -100,7 +99,7 @@ static void map_edge(edge_t * e)
 		  agnameof(aghead(e)));
 	return;
     }
-    for (j = 0; j < ED_spl(e)->size; j++) {
+    for (size_t j = 0; j < ED_spl(e)->size; j++) {
 	bz = ED_spl(e)->list[j];
 	for (size_t k = 0; k < bz.size; k++)
 	    bz.list[k] = map_point(bz.list[k]);
