@@ -221,9 +221,9 @@ static char* resolveColor (char* str)
     }
     else if (ISNONDFLT(colorscheme)) s = fullColor(&xb, colorscheme, str);
     else s = str;
-    s = canontoken(s);
+    char *on_heap = strdup(s);
     agxbfree(&xb);
-    return s;
+    return on_heap;
 }
 
 int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
