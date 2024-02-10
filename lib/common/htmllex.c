@@ -551,9 +551,8 @@ static attr_item br_items[] = {
  * Name/value pairs are in array atts, which is null terminated.
  * s is the name of the HTML element being processed.
  */
-static void
-doAttrs(void *tp, attr_item * items, int nel, char **atts, char *s)
-{
+static void doAttrs(void *tp, attr_item *items, size_t nel, char **atts,
+                    char *s) {
     char *name;
     char *val;
     attr_item *ip;
