@@ -63,11 +63,9 @@ static const unsigned char *setclass(const unsigned char *form, bool *accept) {
 
 /**
  * @param f file to be scanned
- * @param form scanning format
  * @param args
  */
-int sfvscanf(FILE *f, const char *form, va_list args)
-{
+int sfvscanf(FILE *f, va_list args) {
     int inp, shift, base, width;
     ssize_t size;
     int fmt, flags, dot, n_assign, v, n, n_input;
@@ -76,7 +74,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 
     Argv_t argv;
     Sffmt_t *ft;
-    Fmt_t *fm, *fmstk;
 
     int argp, argn;
 
@@ -92,17 +89,18 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 
     assert(f != NULL);
 
-    if (!form)
-	return -1;
-
     n_assign = n_input = 0;
 
     inp = -1;
 
-    fmstk = NULL;
-    ft = NULL;
+    const char *form;
+    argv.ft = va_arg(args, Sffmt_t *);
 
+    form = argv.ft->form;
+    va_copy(args, argv.ft->args);
     argn = -1;
+
+    ft = argv.ft;
 
   loop_fmt:
     while ((fmt = *form++)) {
@@ -123,7 +121,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		if (SFGETC(f, inp) != fmt) {
 		    if (inp >= 0)
 			SFUNGETC(f, inp);
-		    goto pop_fmt;
+		    goto done;
 		}
 	    }
 	    continue;
@@ -135,7 +133,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	}
 
 	if (*form == '\0')
-	    goto pop_fmt;
+	    goto done;
 
 	if (*form == '*') {
 	    flags = SFFMT_SKIP;
@@ -180,7 +178,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
 			    n = ft->extf(&argv, ft);
 			    if (n < 0)
-				goto pop_fmt;
+				goto done;
 			    if (!(ft->flags & SFFMT_VALUE))
 				goto t_arg;
 			    if ((t_str = argv.s) &&
@@ -216,7 +214,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		    FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0,
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
-			goto pop_fmt;
+			goto done;
 		    if (ft->flags & SFFMT_VALUE)
 			v = argv.i;
 		    else
@@ -264,7 +262,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
-			goto pop_fmt;
+			goto done;
 		    if (ft->flags & SFFMT_VALUE)
 			size = argv.i;
 		    else
@@ -334,7 +332,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    v = ft->extf(&argv, ft);
 
 	    if (v < 0)
-		goto pop_fmt;
+		goto done;
 	    else if (v == 0) {	/* extf did not use input stream */
 		FMTGET(ft, form, args, fmt, size, flags, width, n, base);
 		if ((ft->flags & SFFMT_VALUE) && !(ft->flags & SFFMT_SKIP))
@@ -349,35 +347,6 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 
 	if (_Sftype[fmt] == 0)	/* unknown pattern */
 	    continue;
-
-	if (fmt == '!') {
-	    if (!(argv.ft = va_arg(args, Sffmt_t *)))
-		continue;
-	    if (!argv.ft->form && ft) {	/* change extension functions */
-		fmstk->ft = ft = argv.ft;
-	    } else {		/* stack a new environment */
-		if (!(fm = malloc(sizeof(Fmt_t))))
-		    goto done;
-
-		if (argv.ft->form) {
-		    fm->form = (char *) form;
-		    va_copy(fm->args, args);
-
-		    fm->argn = argn;
-
-		    form = argv.ft->form;
-		    va_copy(args, argv.ft->args);
-		    argn = -1;
-		} else
-		    fm->form = NULL;
-
-		fm->ft = ft;
-		fm->next = fmstk;
-		fmstk = fm;
-		ft = argv.ft;
-	    }
-	    continue;
-	}
 
 	/* get the address to assign value */
 	if (!value && !(flags & SFFMT_SKIP))
@@ -459,7 +428,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	} else if (_Sftype[fmt] == SFFMT_UINT || fmt == 'p') {
 	    if (inp == '-') {
 		SFUNGETC(f, inp);
-		goto pop_fmt;
+		goto done;
 	    } else
 		goto int_cvt;
 	} else if (_Sftype[fmt] == SFFMT_INT) {
@@ -497,7 +466,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		shift = 4;
 		if (sp[inp] >= 16) {
 		    SFUNGETC(f, inp);
-		    goto pop_fmt;
+		    goto done;
 		}
 		if (inp == '0' && --width > 0) {	/* skip leading 0x or 0X */
 		    if (SFGETC(f, inp) >= 0 &&
@@ -509,7 +478,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    } else if (base == 10) {	/* fast base 10 conversion */
 		if (inp < '0' || inp > '9') {
 		    SFUNGETC(f, inp);
-		    goto pop_fmt;
+		    goto done;
 		}
 
 		do {
@@ -521,7 +490,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		if (fmt == 'i' && inp == '#' && !(flags & SFFMT_ALTER)) {
 		    base = (int) argv.lu;
 		    if (base < 2 || base > SF_RADIX)
-			goto pop_fmt;
+			goto done;
 		    argv.lu = 0;
 		    sp = base <= 36 ? (char *) _Sfcv36 : (char *) _Sfcv64;
 		    if (--width > 0 &&
@@ -532,7 +501,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 		sp = base <= 36 ? (char *) _Sfcv36 : (char *) _Sfcv64;
 		if (base < 2 || base > SF_RADIX || sp[inp] >= base) {
 		    SFUNGETC(f, inp);
-		    goto pop_fmt;
+		    goto done;
 		}
 
 	      base_conv:	/* check for power of 2 conversions */
@@ -620,7 +589,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 			    break;
 			else {
 			    SFUNGETC(f, inp);
-			    goto pop_fmt;
+			    goto done;
 			}
 		    }
 		    if ((n += 1) <= size)
@@ -639,24 +608,7 @@ int sfvscanf(FILE *f, const char *form, va_list args)
 	    SFUNGETC(f, inp);
     }
 
-  pop_fmt:
-    while ((fm = fmstk)) {	/* pop the format stack and continue */
-	fmstk = fm->next;
-	if ((form = fm->form)) {
-	    va_copy(args, fm->args);
-	    argn = fm->argn;
-	}
-	ft = fm->ft;
-	free(fm);
-	if (form && form[0])
-	    goto loop_fmt;
-    }
-
   done:
-    while ((fm = fmstk)) {
-	fmstk = fm->next;
-	free(fm);
-    }
 
     if (n_assign == 0 && inp < 0)
 	n_assign = -1;

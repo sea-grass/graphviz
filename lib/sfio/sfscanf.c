@@ -16,11 +16,11 @@
 **	Written by Kiem-Phong Vo.
 */
 
-int sfscanf(FILE *f, const char *form, ...) {
+int sfscanf(FILE *f, ...) {
     va_list args;
     int rv;
-    va_start(args, form);
-    rv = (f && form) ? sfvscanf(f, form, args) : -1;
+    va_start(args, f);
+    rv = f ? sfvscanf(f, args) : -1;
     va_end(args);
     return rv;
 }

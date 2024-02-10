@@ -533,10 +533,10 @@ static int scan(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 		}
 		fputs(v.string, sp);
 		rewind(sp);
-		n = sfscanf(sp, "%!", &fmt);
+		n = sfscanf(sp, &fmt);
 		fclose(sp);
 	} else {
-		n = sfscanf(sp, "%!", &fmt);
+		n = sfscanf(sp, &fmt);
 	}
 	if (fmt.actuals && !*fmt.fmt.form)
 		exerror("scanf: %s: too many arguments", fmt.actuals->data.operand.left->data.variable.symbol->name);

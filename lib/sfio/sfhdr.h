@@ -64,15 +64,7 @@ extern "C" {
 
 /* extensions to sfvprintf/sfvscanf */
 #define FP_SET(fp,fn)	(fp < 0 ? (fn += 1) : (fn = fp) )
-#define FP_WIDTH	0
-#define FP_PRECIS	1
-#define FP_BASE		2
-#define FP_STR		3
-#define FP_SIZE		4
-#define FP_INDEX	5	/* index size   */
 
-    typedef struct _fmt_s Fmt_t;
-    typedef struct _fmtpos_s Fmtpos_t;
     typedef union {
 	int i, *ip;
 	long l, *lp;
@@ -89,24 +81,6 @@ extern "C" {
 	void *vp;
 	Sffmt_t *ft;
     } Argv_t;
-
-    struct _fmt_s {
-	char *form;		/* format string                */
-	va_list args;		/* corresponding arglist        */
-
-	int argn;		/* number of args already used  */
-	Fmtpos_t *fp;		/* position list                */
-
-	Sffmt_t *ft;		/* formatting environment       */
-	Fmt_t *next;		/* stack frame pointer          */
-    };
-
-    struct _fmtpos_s {
-	Sffmt_t ft;		/* environment                  */
-	Argv_t argv;		/* argument value               */
-	int fmt;		/* original format              */
-	int need[FP_INDEX];	/* positions depending on       */
-    };
 
 #define LEFTP		'('
 #define RIGHTP		')'

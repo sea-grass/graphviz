@@ -52,9 +52,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
     Argv_t argv;		/* for extf to return value     */
     Sffmt_t *ft;		/* format environment           */
-    Fmt_t *fm, *fmstk;		/* stack contexts               */
 
-    Fmtpos_t *fp;		/* arg position list            */
     int argp, argn;		/* arg position and number      */
 
 #define SLACK		1024
@@ -82,36 +80,21 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
     tls[1] = NULL;
 
-    fmstk = NULL;
     ft = NULL;
 
-    fp = NULL;
     argn = -1;
 
     // stack a new environment
     argv.ft = format;
     assert(argv.ft != NULL);
     assert(argv.ft->form != NULL);
-    if (!(fm = malloc(sizeof(Fmt_t))))
-	goto done;
-
-    fm->form = "";
-    memset(&fm->args, 0, sizeof(fm->args));
-
-    fm->argn = argn;
-    fm->fp = NULL;
 
     const char *form = argv.ft->form;
     va_list args;
     va_copy(args, argv.ft->args);
-    fp = NULL;
 
-    fm->ft = ft;
-    fm->next = fmstk;
-    fmstk = fm;
     ft = argv.ft;
 
-  loop_fmt:
     while ((n = *form)) {
 	if (n != '%') {		/* collect the non-pattern chars */
 	    sp = (char *) form++;
@@ -135,7 +118,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	switch ((fmt = *form++)) {
 	case '\0':
 	    SFputc(f, '%');
-	    goto pop_fmt;
+	    goto done;
 	case '%':
 	    SFputc(f, '%');
 	    continue;
@@ -161,15 +144,12 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			t_str = _Sffmtintf(t_str + 1, &n);
 			n = FP_SET(-1, argn);
 
-			if (fp) {
-			    t_str = fp[n].argv.s;
-			    n_str = fp[n].ft.size;
-			} else if (ft && ft->extf) {
+			if (ft && ft->extf) {
 			    FMTSET(ft, form, args,
 				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
 			    n = ft->extf(&argv, ft);
 			    if (n < 0)
-				goto pop_fmt;
+				goto done;
 			    if (!(ft->flags & SFFMT_VALUE))
 				goto t_arg;
 			    if ((t_str = argv.s) &&
@@ -242,13 +222,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    form = _Sffmtintf(form, &n);
 	    n = FP_SET(-1, argn);
 
-	    if (fp)
-		v = fp[n].argv.i;
-	    else if (ft && ft->extf) {
+	    if (ft && ft->extf) {
 		FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL,
 		       0);
 		if (ft->extf(&argv, ft) < 0)
-		    goto pop_fmt;
+		    goto done;
 		if (ft->flags & SFFMT_VALUE)
 		    v = argv.i;
 		else
@@ -291,13 +269,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		if (fp)		/* use position list */
-		    size = fp[n].argv.i;
-		else if (ft && ft->extf) {
+		if (ft && ft->extf) {
 		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
-			goto pop_fmt;
+			goto done;
 		    if (ft->flags & SFFMT_VALUE)
 			size = argv.i;
 		    else
@@ -362,18 +338,13 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	}
 
 	argp = FP_SET(argp, argn);
-	if (fp) {
-	    if (ft && ft->extf && fp[argp].ft.fmt != fp[argp].fmt)
-		fmt = fp[argp].ft.fmt;
-	    argv = fp[argp].argv;
-	    size = fp[argp].ft.size;
-	} else if (ft && ft->extf) {	/* extended processing */
+	if (ft && ft->extf) {	/* extended processing */
 	    FMTSET(ft, form, args, fmt, size, flags, width, precis, base,
 		   t_str, n_str);
 	    v = ft->extf(&argv, ft);
 
 	    if (v < 0)
-		goto pop_fmt;
+		goto done;
 	    else if (v == 0) {	/* extf did not output */
 		FMTGET(ft, form, args, fmt, size, flags, width, precis,
 		       base);
@@ -874,28 +845,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	}
     }
 
-  pop_fmt:
-    free(fp);
-    fp = NULL;
-    while ((fm = fmstk)) {	/* pop the format stack and continue */
-	fmstk = fm->next;
-	if ((form = fm->form)) {
-	    va_copy(args, fm->args);
-	    argn = fm->argn;
-	    fp = fm->fp;
-	}
-	ft = fm->ft;
-	free(fm);
-	if (form && form[0])
-	    goto loop_fmt;
-    }
-
   done:
-    free(fp);
-    while ((fm = fmstk)) {
-	fmstk = fm->next;
-	free(fm);
-    }
 
     return n_output;
 }
