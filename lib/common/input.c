@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <ctype.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <errno.h>
@@ -16,6 +15,7 @@
 #include <xdot/xdot.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/exit.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
@@ -152,11 +152,7 @@ static char *dotneato_basename(char *pathname) {
 #ifdef _WIN32
     /* On Windows, names are case-insensitive, so make name lower-case
      */
-    {
-	char c;
-	for (s = ret; (c = *s); s++)
-	    *s = tolower(c);
-    }
+    gv_tolower_str(ret);
 #endif
     return ret;
 }

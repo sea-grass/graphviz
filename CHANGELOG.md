@@ -76,6 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (including `"false"`) being coerced into `"true"`. #2521
 - Crashes and misbehavior no longer occur when the `sides` attribute contains
   non-ASCII characters.
+- Graphviz binaries like `dot.exe` and `neato.exe` no longer crash or misbehave
+  when symlinked to a non-ASCII file name on Windows. This is a rare scenario
+  that normal users should not encounter.
 
 ## [10.0.1] – 2024-02-11
 

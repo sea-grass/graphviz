@@ -83,3 +83,9 @@ static inline char gv_tolower(int c) {
     return (char)c - 'A' + 'a';
   return (char)c;
 }
+
+static inline void gv_tolower_str(char *s) {
+  for (; *s != '\0'; ++s) {
+    *s = gv_tolower(*s);
+  }
+}
