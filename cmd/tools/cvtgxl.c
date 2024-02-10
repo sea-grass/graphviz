@@ -20,7 +20,6 @@
 
 #include "config.h"
 
-#include <ctype.h>
 #include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,6 +27,7 @@
 #include "convert.h"
 #include "openFile.h"
 #include <cgraph/exit.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 
 typedef enum { Unset, ToGV, ToGXL } mode;
@@ -110,10 +110,10 @@ static void checkInput(void)
 
 static void setAction(void)
 {
-    if (tolower(CmdName[0]) == 'd') 
+    if (gv_tolower(CmdName[0]) == 'd') 
 	act = ToGXL;
-    else if (tolower(CmdName[0]) == 'g') {
-	if (tolower(CmdName[1]) == 'v')
+    else if (gv_tolower(CmdName[0]) == 'g') {
+	if (gv_tolower(CmdName[1]) == 'v')
 	    act = ToGXL;
 	else
 	    act = ToGV;
