@@ -51,6 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   out of bounds memory writes. This was a regression in Graphviz 7.0.0. #2497
 - Unsafe use of a dangling pointer in `ccomps` has been removed. This was a
   regression in Graphviz 7.1.0.
+- `gvcolor` no longer crashes when processing color names longer than 127
+  characters.
 
 ## [10.0.1] – 2024-02-11
 

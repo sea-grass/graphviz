@@ -30,19 +30,15 @@ typedef struct {
 #include "colortbl.h"
 #include "colorxlate.h"
 
-static char *canoncolor(const char *orig, char *out)
-{
+static void canoncolor(const char *orig, agxbuf *out) {
     char c;
-    char *p = out;
     while ((c = *orig++)) {
 	if (!gv_isalnum(c))
 	    continue;
 	if (gv_isupper(c))
 	    c = (char)tolower(c);
-	*p++ = c;
+	agxbputc(out, c);
     }
-    *p = '\0';
-    return out;
 }
 
 static int colorcmpf(const void *a0, const void *a1)
@@ -53,11 +49,13 @@ static int colorcmpf(const void *a0, const void *a1)
 
 void colorxlate(char *str, agxbuf *buf) {
     static hsbcolor_t *last;
-    char canon[128];
+    agxbuf canon_buf = {0};
+    const char *canon = NULL;
 
     if (last == NULL || strcmp(last->name, str)) {
-	char *name = canoncolor(str, canon);
-	last = bsearch(name, color_lib, sizeof(color_lib) / sizeof(hsbcolor_t),
+	canoncolor(str, &canon_buf);
+	canon = agxbuse(&canon_buf);
+	last = bsearch(canon, color_lib, sizeof(color_lib) / sizeof(hsbcolor_t),
 	               sizeof(color_lib[0]), colorcmpf);
     }
     if (last == NULL) {
@@ -70,4 +68,5 @@ void colorxlate(char *str, agxbuf *buf) {
     } else
 	agxbprint(buf, "%.3f %.3f %.3f", ((double) last->h) / 255,
 		((double) last->s) / 255, ((double) last->b) / 255);
+    agxbfree(&canon_buf);
 }
