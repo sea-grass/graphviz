@@ -15,6 +15,7 @@
 #include <stdio.h>		/* need sprintf() */
 #include <ctype.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strcasecmp.h>
 #include <inttypes.h>
 
@@ -47,7 +48,7 @@ static int indent(Agraph_t * g, iochan_t * ofile)
 
 // alphanumeric, '.', '-', or non-ascii; basically, chars used in unquoted ids
 static bool is_id_char(char c) {
-  return isalnum(c) || c == '.' || c == '-' || !isascii(c);
+  return gv_isalnum(c) || c == '.' || c == '-' || !isascii(c);
 }
 
 // is the prefix of this string a recognized Graphviz escape sequence?
@@ -112,7 +113,7 @@ static char *_agstrcanon(char *arg, char *buf)
     p = buf;
     *p++ = '\"';
     uc = *s++;
-    maybe_num = isdigit(uc) != 0 || uc == '.' || uc == '-';
+    maybe_num = gv_isdigit(uc) || uc == '.' || uc == '-';
     while (uc) {
 	if (uc == '\"' && !part_of_escape) {
 	    *p++ = '\\';
@@ -133,13 +134,13 @@ static char *_agstrcanon(char *arg, char *buf)
 		    needs_quotes = true;
 		}
 	    }
-	    else if (!isdigit(uc)) {
+	    else if (!gv_isdigit(uc)) {
 		maybe_num = false;
 		needs_quotes = true;
 	    }
 	    part_of_escape = false;
 	}
-	else if (!(isalnum(uc) || uc == '_' || !isascii(uc))) {
+	else if (!(gv_isalnum(uc) || uc == '_' || !isascii(uc))) {
 	    needs_quotes = true;
 	    part_of_escape = false;
 	}
@@ -704,7 +705,7 @@ int agwrite(Agraph_t * g, void *ofile)
     char* s;
     Level = 0;			/* re-initialize tab level */
     s = agget(g, "linelength");
-    if (s != NULL && isdigit((int)*s)) {
+    if (s != NULL && gv_isdigit(*s)) {
 	unsigned long len = strtoul(s, NULL, 10);
 	if ((len == 0 || len >= MIN_OUTPUTLINE) && len <= (unsigned long)INT_MAX)
 	    Max_outputline = (int)len;

@@ -11,6 +11,7 @@
 #include <common/render.h>
 #include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
 #include <common/htmltable.h>
@@ -25,8 +26,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
-
-#include <ctype.h>
 
 /*
  *  a queue of nodes
@@ -350,7 +349,7 @@ bool mapBool(const char *p, bool defaultValue) {
 	return true;
     if (!strcasecmp(p, "yes"))
 	return true;
-    if (isdigit((int)*p))
+    if (gv_isdigit(*p))
 	return atoi(p) != 0;
     else
         return defaultValue;

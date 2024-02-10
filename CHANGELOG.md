@@ -142,6 +142,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   invalid memory reads in `dot`, but had the undesirable side effect of the
   graphical Graphviz.app exiting with no obvious cause. #2488
 - Use of an uninitialized variable in `poly_inside` has been corrected. #2498
+- Input containing UTF-8 data that is destined to appear as-is in the output
+  (e.g. UTF-8 characters in a label when using the `-Tdot` output format) is
+  once again processed correctly. On platforms with a signed `char` this could
+  previously crash. This was a regression in Graphviz 2.49.0. #2502
 
 ## [9.0.0] - 2023-09-11
 

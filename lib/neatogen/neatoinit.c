@@ -22,8 +22,6 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-#include <ctype.h>
-
 #include <neatogen/neato.h>
 #include <pack/pack.h>
 #include <neatogen/stress.h>
@@ -36,6 +34,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
@@ -162,20 +161,19 @@ void neato_cleanup(graph_t * g)
     neato_cleanup_graph(g);
 }
 
-static int numFields(unsigned char *pos)
-{
+static int numFields(const char *pos) {
     int cnt = 0;
-    unsigned char c;
+    char c;
 
     do {
-	while (isspace(*pos))
+	while (gv_isspace(*pos))
 	    pos++;		/* skip white space */
 	if ((c = *pos)) { /* skip token */
 	    cnt++;
-	    while ((c = *pos) && !isspace(c) && c != ';')
+	    while ((c = *pos) && !gv_isspace(c) && c != ';')
 		pos++;
 	}
-    } while (isspace(c));
+    } while (gv_isspace(c));
     return cnt;
 }
 
@@ -299,7 +297,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    ep.y = y;
 	}
 
-	npts = numFields((unsigned char *) pos);	/* count potential points */
+	npts = numFields(pos); // count potential points
 	n = npts;
 	if (n < 4 || n % 3 != 1) {
 	    gv_free_splines(e);
@@ -328,7 +326,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    pp++;
 	    n--;
 	}
- 	while (isspace((int)*pos)) pos++;
+ 	while (gv_isspace(*pos)) pos++;
 	if (*pos == '\0')
 	    more = 0;
 	else
@@ -958,7 +956,7 @@ setSeed (graph_t * G, int dflt, long* seedp)
     int init = dflt;
 
     if (!p || *p == '\0') return dflt;
-    if (isalpha(*(unsigned char *)p)) {
+    if (gv_isalpha(*p)) {
 	if (startswith(p, SMART)) {
 	    init = INIT_SELF;
 	    p += SLEN(SMART);
@@ -971,14 +969,14 @@ setSeed (graph_t * G, int dflt, long* seedp)
 	}
 	else init = dflt;
     }
-    else if (isdigit(*(unsigned char *)p)) {
+    else if (gv_isdigit(*p)) {
 	init = INIT_RANDOM;
     }
 
     if (init == INIT_RANDOM) {
 	long seed;
 	/* Check for seed value */
-	if (!isdigit(*(unsigned char *)p) || sscanf(p, "%ld", &seed) < 1) {
+	if (!gv_isdigit(*p) || sscanf(p, "%ld", &seed) < 1) {
 #if defined(_WIN32)
 	    seed = (unsigned) time(NULL);
 #else

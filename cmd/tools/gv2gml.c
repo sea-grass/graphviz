@@ -26,6 +26,7 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/streq.h>
 #include <cgraph/strview.h>
@@ -33,7 +34,6 @@
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
-#include <ctype.h>
 #include "openFile.h"
 
 static FILE *outFile;
@@ -102,7 +102,7 @@ static bool isNumber(char* s) {
     char* ep = s;
     strtod(s, &ep);
     if (s != ep) {
-	while (*ep && isspace((int)*ep)) ep++;
+	while (gv_isspace(*ep)) ep++;
 	if (*ep) return false;
 	return true;
     }
@@ -147,7 +147,7 @@ static void emitPoint(double x, double y, int ix) {
 static char*
 skipWS (char* s)
 {
-    while (isspace((int)*s)) s++;
+    while (gv_isspace(*s)) s++;
     return s;
 }
 

@@ -11,6 +11,7 @@
 #include <assert.h>
 #include "topviewfuncs.h"
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/cgraph.h>
 #include "smyrna_utils.h"
 #include <common/colorprocs.h>
@@ -21,7 +22,6 @@
 #include "selectionfuncs.h"
 #include <common/types.h>
 #include <common/utils.h>
-#include <ctype.h>
 #include <limits.h>
 #include <float.h>
 #include <math.h>
@@ -430,7 +430,7 @@ static void renderSelectedEdges(Agraph_t * g)
  */
 static char* skipWS (char* p)
 {
-    while (isspace(*p)) p++;
+    while (gv_isspace(*p)) p++;
     return p;
 }
 
@@ -439,7 +439,7 @@ static char* skipWS (char* p)
  */
 static char* skipNWS (char* p)
 {
-    while (*p && !isspace(*p)) p++;
+    while (*p && !gv_isspace(*p)) p++;
     return p;
 }
 

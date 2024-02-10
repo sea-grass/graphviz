@@ -18,6 +18,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
 #include <cgraph/exit.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/unreachable.h>
 #include <expr/exlib.h>
 #include <expr/exop.h>
@@ -293,36 +294,36 @@ prformat(void* vp, Sffmt_t* dp)
 		{
 			if (strview_str_eq(txt, "identifier"))
 			{
-				if (*s && !isalpha((int)*s))
+				if (*s && !gv_isalpha(*s))
 					*s++ = '_';
 				for (; *s; s++)
-					if (!isalnum((int)*s))
+					if (!gv_isalnum(*s))
 						*s = '_';
 			}
 			else if (strview_str_eq(txt, "invert"))
 			{
 				for (; *s; s++)
-					if (isupper((int)*s))
+					if (gv_isupper(*s))
 						*s = (char)tolower(*s);
-					else if (islower((int)*s))
+					else if (gv_islower(*s))
 						*s = (char)toupper(*s);
 			}
 			else if (strview_str_eq(txt, "lower"))
 			{
 				for (; *s; s++)
-					if (isupper((int)*s))
+					if (gv_isupper(*s))
 						*s = (char)tolower(*s);
 			}
 			else if (strview_str_eq(txt, "upper"))
 			{
 				for (; *s; s++)
-					if (islower((int)*s))
+					if (gv_islower(*s))
 						*s = (char)toupper(*s);
 			}
 			else if (strview_str_eq(txt, "variable"))
 			{
 				for (; *s; s++)
-					if (!isalnum((int)*s) && *s != '_')
+					if (!gv_isalnum(*s) && *s != '_')
 						*s = '.';
 			}
 		}
@@ -766,7 +767,7 @@ static void replace(agxbuf *s, char *base, char *repl, int ng, int *sub) {
 
   while ((c = *repl++)) {
     if (c == '\\') {
-      if ((c = *repl) && isdigit(c)) {
+      if ((c = *repl) && gv_isdigit(c)) {
         idx = c - '0';
         if (idx < ng) {
           offset = sub[2 * idx];

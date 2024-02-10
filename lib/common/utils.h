@@ -139,15 +139,6 @@ UTILS_API double elapsed_sec(void);
 UTILS_API void cat_libfile(GVJ_t *job, const char **arglib,
                            const char **stdlib);
 
-// variant of `isalpha` that assumes a C locale
-static inline bool isalpha_no_locale(char c) {
-  if (c >= 'a' && c <= 'z')
-    return true;
-  if (c >= 'A' && c <= 'Z')
-    return true;
-  return false;
-}
-
 #undef UTILS_API
 
 #ifdef __cplusplus

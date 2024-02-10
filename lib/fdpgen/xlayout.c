@@ -23,11 +23,10 @@ Increase less between tries
 
 /* uses PRIVATE interface */
 #define FDP_PRIVATE 1
-
+#include <cgraph/gv_ctype.h>
 #include <fdpgen/xlayout.h>
 #include <neatogen/adjust.h>
 #include <fdpgen/dbg.h>
-#include <ctype.h>
 #include <math.h>
 
 /* Use bbox based force function */
@@ -530,7 +529,7 @@ void fdp_xLayout(graph_t * g, xparams * xpms)
 	ovlp = DFLT_overlap;
     }
     /* look for optional ":" or "number:" */
-    if ((cp = strchr(ovlp, ':')) && (cp == ovlp || isdigit((int)*ovlp))) {
+    if ((cp = strchr(ovlp, ':')) && (cp == ovlp || gv_isdigit(*ovlp))) {
       cp++;
       rest = cp;
       tries = atoi (ovlp);

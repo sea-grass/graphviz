@@ -18,13 +18,13 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
-#include <ctype.h>
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/list.h>
 #include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
@@ -1007,7 +1007,7 @@ static bool is_natural_number(const char *sstr)
     const char *str = sstr;
 
     while (*str)
-	if (!isdigit((int)*str++))
+	if (!gv_isdigit(*str++))
 	    return false;
     return true;
 }
@@ -1965,7 +1965,7 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
     const char *s;
 
     for (s = lp->text; *s; s++) {
-	if (!isspace((int)*s))
+	if (!gv_isspace(*s))
 	    break;
     }
     if (*s == '\0')
@@ -3711,7 +3711,7 @@ static token_t style_token(char **s) {
     char *p = *s;
     int token;
 
-    while (*p && (isspace((int)*p) || *p == ','))
+    while (gv_isspace(*p) || *p == ',')
 	p++;
     const char *start = p;
     switch (*p) {

@@ -27,8 +27,8 @@
 #include <grammar.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
-#include <ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
@@ -149,8 +149,8 @@ static bool twoDots(void) {
  * or something like 123.456.78, and report this to the user.
  */
 static int chkNum(void) {
-    unsigned char c = (unsigned char)aagtext[aagleng-1];   /* last character */
-    if ((!isdigit(c) && c != '.') || (c == '.' && twoDots())) {  /* c is letter */
+    char c = aagtext[aagleng - 1]; // last character
+    if ((!gv_isdigit(c) && c != '.') || (c == '.' && twoDots())) { // c is letter
 	const char* fname;
 
 	if (InputFile)

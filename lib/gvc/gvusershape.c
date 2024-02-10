@@ -14,7 +14,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <errno.h>
 
 #ifdef _WIN32
@@ -29,6 +28,7 @@
 #include <common/usershape.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strview.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_loadimage.h>
@@ -505,7 +505,7 @@ skipWS (stream_t* str)
 {
     char c;
     while ((c = strc(str))) {
-	if (isspace((int)c)) stradv(str);
+	if (gv_isspace(c)) stradv(str);
 	else return;
     }
 }
@@ -527,7 +527,7 @@ getNum (stream_t* str, char* buf)
     int len = 0;
     char c;
     skipWS(str);
-    while ((c = strc(str)) && (isdigit(c) || (c == '.'))) {
+    while ((c = strc(str)) && (gv_isdigit(c) || (c == '.'))) {
 	buf[len++] = c;
 	stradv(str);
 	if (len == BUFSIZ-1) break;

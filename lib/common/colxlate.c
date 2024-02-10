@@ -23,6 +23,7 @@
 #include <common/memory.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 
@@ -151,7 +152,7 @@ char *canontoken(char *str)
     }
     q = canon;
     while ((c = *p++)) {
-	if (isupper(c))
+	if (gv_isupper(c))
 	    c = (char)tolower(c);
 	*q++ = c;
     }
@@ -316,7 +317,7 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     }
 
     /* test for hsv value such as: ".6,.5,.3" */
-    if ((c = *p) == '.' || isdigit(c)) {
+    if ((c = *p) == '.' || gv_isdigit(c)) {
 	agxbuf canon = {0};
 	while ((c = *p++)) {
 	    agxbputc(&canon, c == ',' ? ' ' : c);

@@ -26,8 +26,8 @@
  */
 
 #include <assert.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/streq.h>
-#include <ctype.h>
 #include <expr/exop.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1286,7 +1286,7 @@ const char *exop(size_t index) {
       {
         size_t k;
         for (k = 0; yytname[i][k] != '\0'; ++k) {
-          if (yytname[i][k] != '_' && !isalnum((int)yytname[i][k])) {
+          if (yytname[i][k] != '_' && !gv_isalnum(yytname[i][k])) {
             break;
           }
         }

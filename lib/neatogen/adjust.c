@@ -15,11 +15,11 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/startswith.h>
 #include <common/utils.h>
-#include <ctype.h>
 #include <float.h>
 #include <math.h>
 #include <neatogen/voronoi.h>
@@ -1140,7 +1140,7 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
     int i;
     float x, y;
 
-    while (isspace((int)*s)) s++;
+    while (gv_isspace(*s)) s++;
     if (*s == '+') {
 	s++;
 	pp->doAdd = true;

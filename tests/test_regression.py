@@ -3318,6 +3318,20 @@ def test_2476():
     subprocess.check_call(["dot", "-Tsvg", "-Gmclimit=0.5", "-o", os.devnull, input])
 
 
+def test_2502():
+    """
+    unicode labels should be usable
+    https://gitlab.com/graphviz/graphviz/-/issues/2502
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2502.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("dot", input)
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted

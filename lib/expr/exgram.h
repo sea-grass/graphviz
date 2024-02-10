@@ -28,6 +28,7 @@ extern "C" {
 #endif
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_ctype.h>
 #include <expr/exlib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -699,7 +700,7 @@ preprint(Exnode_t* args)
 					t = STRING;
 					goto specified;
 				default:
-					if (isalpha(c))
+					if (gv_isalpha(c))
 						goto specified;
 					break;
 				}

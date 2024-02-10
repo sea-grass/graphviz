@@ -21,6 +21,7 @@ add_library(cgraph
   cgraph.h
   clamp.h
   exit.h
+  gv_ctype.h
   ingraphs.h
   list.h
   overflow.h

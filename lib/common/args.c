@@ -18,7 +18,7 @@
  */
 
 #include <assert.h>
-#include <ctype.h>
+#include <cgraph/gv_ctype.h>
 #include <common/render.h>
 #include <fdpgen/tlayout.h>
 #include <gvc/gvc.h>
@@ -88,7 +88,7 @@ config_extra_args(GVC_t *gvc, int argc, char** argv)
       switch (arg[1]) {
       case 'v':
 	gvc->common.verbose = 1;
-	if (isdigit((int)arg[2]))
+	if (gv_isdigit(arg[2]))
 	  gvc->common.verbose = atoi(&arg[2]);
         break;
       case 'O' :

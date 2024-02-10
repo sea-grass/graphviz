@@ -16,12 +16,12 @@
 #include <neatogen/adjust.h>
 #include <pack/pack.h>
 #include <assert.h>
-#include <ctype.h>
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/overlap.h>
 #include <sfdpgen/stress_model.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -124,7 +124,7 @@ late_smooth (graph_t* g, Agsym_t* sym, int dflt)
 
     if (!sym) return dflt;
     s = agxget (g, sym);
-    if (isdigit((int)*s)) {
+    if (gv_isdigit(*s)) {
 #if (defined(HAVE_GTS) || defined(HAVE_TRIANGLE))
 	if ((v = atoi (s)) <= SMOOTHING_RNG)
 #else
@@ -134,7 +134,7 @@ late_smooth (graph_t* g, Agsym_t* sym, int dflt)
 	else
 	    rv = dflt;
     }
-    else if (isalpha((int)*s)) {
+    else if (gv_isalpha(*s)) {
 	if (!strcasecmp(s, "avg_dist"))
 	    rv = SMOOTHING_STRESS_MAJORIZATION_AVG_DIST;
 	else if (!strcasecmp(s, "graph_dist"))
@@ -170,13 +170,13 @@ late_quadtree_scheme (graph_t* g, Agsym_t* sym, int dflt)
 
     if (!sym) return dflt;
     s = agxget (g, sym);
-    if (isdigit((int)*s)) {
+    if (gv_isdigit(*s)) {
       if ((v = atoi (s)) <= QUAD_TREE_FAST && v >= QUAD_TREE_NONE){
 	rv = v;
       }	else {
 	rv = dflt;
       }
-    } else if (isalpha((int)*s)) {
+    } else if (gv_isalpha(*s)) {
       if (!strcasecmp(s, "none") || !strcasecmp(s, "false") ){
 	rv = QUAD_TREE_NONE;
       } else if (!strcasecmp(s, "normal") || !strcasecmp(s, "true") || !strcasecmp(s, "yes")){

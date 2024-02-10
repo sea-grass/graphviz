@@ -22,6 +22,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/exit.h>
 #include <cgraph/stack.h>
@@ -35,7 +36,6 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 #include <setjmp.h>
 #include <getopt.h>
 
@@ -103,7 +103,7 @@ static char *gettok(char **sp)
     char c;
     char q = '\0';		/* if non-0, in quote mode with quote char q */
 
-    while (isspace((int)*rs))
+    while (gv_isspace(*rs))
 	rs++;
     if ((c = *rs) == '\0')
 	return NULL;
@@ -122,7 +122,7 @@ static char *gettok(char **sp)
 		      "backslash in argument followed by no character - ignored");
 		rs--;
 	    }
-	} else if (q || !isspace(c))
+	} else if (q || !gv_isspace(c))
 	    *ws++ = c;
 	else
 	    break;
