@@ -95,3 +95,9 @@ static inline char gv_toupper(int c) {
     return (char)c - 'a' + 'A';
   return (char)c;
 }
+
+static inline void gv_toupper_str(char *s) {
+  for (; *s != '\0'; ++s) {
+    *s = gv_toupper(*s);
+  }
+}
