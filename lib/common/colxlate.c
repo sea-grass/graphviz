@@ -14,8 +14,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-
 #include <common/arith.h>
 #include <common/color.h>
 #include <common/colorprocs.h>
@@ -143,9 +141,7 @@ char *canontoken(char *str)
 
     p = str;
     while ((c = *p++)) {
-	if (gv_isupper(c))
-	    c = (char)tolower(c);
-	agxbputc(&canon, c);
+	agxbputc(&canon, gv_tolower(c));
     }
     return agxbdisown(&canon);
 }
