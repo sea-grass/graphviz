@@ -1133,7 +1133,7 @@ attrsym_t *safe_dcl(graph_t *g, int obj_kind, char *name, char *defaultValue) {
 }
 
 static int comp_entities(const void *e1, const void *e2) {
-  return strcmp(((const struct entities_s *)e1)->name, ((const struct entities_s *)e2)->name);
+  return strcmp(e1, ((const struct entities_s *)e2)->name);
 }
 
 #define MAXENTLEN 8
@@ -1146,7 +1146,7 @@ static int comp_entities(const void *e1, const void *e2) {
 char* scanEntity (char* t, agxbuf* xb)
 {
     char*  endp = strchr (t, ';');
-    struct entities_s key, *res;
+    struct entities_s *res;
     size_t len;
     char   buf[MAXENTLEN+1];
 
@@ -1155,8 +1155,7 @@ char* scanEntity (char* t, agxbuf* xb)
     if ((len = (size_t)(endp - t)) > MAXENTLEN || len < 2) return t;
     strncpy (buf, t, len);
     buf[len] = '\0';
-    key.name =  buf;
-    res = bsearch(&key, entities, NR_OF_ENTITIES,
+    res = bsearch(buf, entities, NR_OF_ENTITIES,
         sizeof(entities[0]), comp_entities);
     if (!res) return t;
     agxbprint(xb, "#%d;", res->value);
@@ -1175,7 +1174,7 @@ static int
 htmlEntity (char** s)
 {
     char *p;
-    struct entities_s key, *res;
+    struct entities_s *res;
     char entity_name_buf[ENTITY_NAME_LENGTH_MAX+1];
     unsigned char* str = *(unsigned char**)s;
     unsigned int byte;
@@ -1215,13 +1214,13 @@ htmlEntity (char** s)
 	}
     }
     else {
-	key.name = p = entity_name_buf;
+	p = entity_name_buf;
 	for (i = 0; i <  ENTITY_NAME_LENGTH_MAX; i++) {
 	    byte = *(str + i);
 	    if (byte == '\0') break;
 	    if (byte == ';') {
 		*p++ = '\0';
-		res = bsearch(&key, entities, NR_OF_ENTITIES,
+		res = bsearch(entity_name_buf, entities, NR_OF_ENTITIES,
 		    sizeof(entities[0]), *comp_entities);
 		if (res) {
 		    n = res->value;
