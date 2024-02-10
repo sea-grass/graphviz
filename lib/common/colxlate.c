@@ -382,7 +382,7 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     char *name = resolveColor(str);
     if (!name)
 	return COLOR_MALLOC_FAIL;
-    if (last == NULL || strcmp(last->name, name)) {
+    if (last == NULL || strcasecmp(last->name, name)) {
 	last = bsearch(name, color_lib, sizeof(color_lib) / sizeof(hsvrgbacolor_t),
 	               sizeof(color_lib[0]), colorcmpf);
     }
