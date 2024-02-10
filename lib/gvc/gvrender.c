@@ -177,15 +177,14 @@ pointf *gvrender_ptf_A(GVJ_t *job, pointf *af, pointf *AF, size_t n) {
 
 static int gvrender_comparestr(const void *s1, const void *s2)
 {
-    return strcmp(*(char *const *) s1, *(char *const *) s2);
+  return strcmp(s1, *(char *const *) s2);
 }
 
 /* gvrender_resolve_color:
  * N.B. strcmp cannot be used in bsearch, as it will pass a pointer
  * to an element in the array features->knowncolors (i.e., a char**)
  * as an argument of the compare function, while the arguments to 
- * strcmp are both char*. Given this, the first argument to
- * bsearch must also be char**, so we use &tok.
+ * strcmp are both char*.
  */
 static void gvrender_resolve_color(gvrender_features_t * features,
 				   char *name, gvcolor_t * color)
@@ -198,8 +197,7 @@ static void gvrender_resolve_color(gvrender_features_t * features,
     tok = canontoken(name);
     if (!features->knowncolors
 	||
-	(bsearch
-	 (&tok, features->knowncolors, features->sz_knowncolors,
+	(bsearch(tok, features->knowncolors, features->sz_knowncolors,
 	  sizeof(char *), gvrender_comparestr)) == NULL) {
 	/* if tok was not found in known_colors */
 	rc = colorxlate(name, color, features->color_type);
