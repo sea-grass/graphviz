@@ -68,6 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `rank=same` constraint could cause a crash when installing ranks. #1308
 - `gxl2gv` no longer crashes or misbehaves when symlinked to a non-ASCII file
   name. This is a rare scenario that normal users should not encounter.
+- `mm2gv` no longer crashes or misbehaves when reading malformed Matrix Market
+  files with non-ASCII bytes in the header.
 
 ## [10.0.1] – 2024-02-11
 
