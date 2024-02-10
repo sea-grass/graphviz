@@ -56,18 +56,18 @@ static PostscriptAlias postscript_alias[] = {
 
 static int fontcmpf(const void *a, const void *b)
 {
-    return (strcasecmp(((const PostscriptAlias*)a)->name, ((const PostscriptAlias*)b)->name));
+  return strcasecmp(a, ((const PostscriptAlias*)b)->name);
 }
 
 static PostscriptAlias* translate_postscript_fontname(char* fontname)
 {
-    static PostscriptAlias key;
+    static char *key;
     static PostscriptAlias *result;
 
-    if (key.name == NULL || strcasecmp(key.name, fontname)) {
-	free(key.name);
-        key.name = strdup(fontname);
-        result = bsearch(&key, postscript_alias,
+    if (key == NULL || strcasecmp(key, fontname)) {
+        free(key);
+        key = strdup(fontname);
+        result = bsearch(key, postscript_alias,
                          sizeof(postscript_alias) / sizeof(PostscriptAlias),
                          sizeof(PostscriptAlias), fontcmpf);
     }
