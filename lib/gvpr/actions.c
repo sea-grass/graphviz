@@ -16,6 +16,7 @@
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/unused.h>
@@ -724,7 +725,7 @@ char *toLower(Expr_t *pgm, char *src) {
   }
 
   for (size_t i = 0; i < len; ++i) {
-    dst[i] = (char)tolower((int)src[i]);
+    dst[i] = gv_tolower(src[i]);
   }
 
   dst[len] = '\0';
