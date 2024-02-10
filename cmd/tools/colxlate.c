@@ -47,20 +47,18 @@ static char *canoncolor(const char *orig, char *out)
 
 static int colorcmpf(const void *a0, const void *a1)
 {
-    const hsbcolor_t *p0 = a0;
     const hsbcolor_t *p1 = a1;
-    return strcmp(p0->name, p1->name);
+    return strcmp(a0, p1->name);
 }
 
 void colorxlate(char *str, agxbuf *buf) {
     static hsbcolor_t *last;
     char canon[128];
-    hsbcolor_t fake;
 
     if (last == NULL || strcmp(last->name, str)) {
-	fake.name = canoncolor(str, canon);
-	last = bsearch(&fake, color_lib, sizeof(color_lib) / sizeof(hsbcolor_t),
-	               sizeof(fake), colorcmpf);
+	char *name = canoncolor(str, canon);
+	last = bsearch(name, color_lib, sizeof(color_lib) / sizeof(hsbcolor_t),
+	               sizeof(color_lib[0]), colorcmpf);
     }
     if (last == NULL) {
 	if (!gv_isdigit(canon[0])) {
