@@ -309,9 +309,7 @@ prformat(void* vp, Sffmt_t* dp)
 			}
 			else if (strview_str_eq(txt, "lower"))
 			{
-				for (; *s; s++)
-					if (gv_isupper(*s))
-						*s = (char)tolower(*s);
+				gv_tolower_str(s);
 			}
 			else if (strview_str_eq(txt, "upper"))
 			{
