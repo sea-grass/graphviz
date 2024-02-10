@@ -79,9 +79,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Graphviz binaries like `dot.exe` and `neato.exe` no longer crash or misbehave
   when symlinked to a non-ASCII file name on Windows. This is a rare scenario
   that normal users should not encounter.
-- GVPR programs that use `tolower` on strings containing non-ASCII characters
-  no longer crash. This function does not lowercase non-ASCII characters, so
-  users probably still do not want to use non-ASCII strings in a GVPR program.
+- GVPR programs that use `tolower` or `toupper` on strings containing non-ASCII
+  characters no longer crash. These functions do not lowercase/uppercase
+  non-ASCII characters, so users probably still do not want to use non-ASCII
+  strings in a GVPR program.
 
 ## [10.0.1] – 2024-02-11
 
