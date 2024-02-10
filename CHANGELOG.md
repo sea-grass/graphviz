@@ -23,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Indexing within `gvNextInputGraph` no longer incorrectly retains the index
   from prior use of the GVC context. When using Graphviz libraries
   programmatically, this could previously cause crashes or misbehavior. #2484
+- Color schemes, typically controlled through the `colorscheme` attribute are
+  now pushed and popped as they are applied and released. Previously processing
+  multiple graphs wherein the first uses color schemes but later ones do not
+  could result in color schemes being incorrectly retained and reapplied or
+  use-after-free memory accesses.
 
 ## [10.0.1] – 2024-02-11
 
