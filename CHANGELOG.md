@@ -55,6 +55,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regression in Graphviz 7.1.0.
 - `gvcolor` no longer crashes when processing color names longer than 127
   characters.
+- Interleaving calls to `colorxlate` and `gvrender_resolve_color` no longer
+  confuse internal caching mechanisms. Callers should now get the correct color
+  back.
 
 ## [10.0.1] – 2024-02-11
 
