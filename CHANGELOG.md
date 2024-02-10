@@ -74,6 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   files has been fixed.
 - The `newrank` attribute is treated as a boolean instead of any value
   (including `"false"`) being coerced into `"true"`. #2521
+- Crashes and misbehavior no longer occur when the `sides` attribute contains
+  non-ASCII characters.
 
 ## [10.0.1] – 2024-02-11
 
