@@ -19,6 +19,7 @@
 #include <cdt/cdt.h>
 #include <common/render.h>
 #include <common/textspan_lut.h>
+#include <cgraph/alloc.h>
 #include <cgraph/strcasecmp.h>
 
 /* estimate_textspan_size:
@@ -66,7 +67,7 @@ static PostscriptAlias* translate_postscript_fontname(char* fontname)
 
     if (key == NULL || strcasecmp(key, fontname)) {
         free(key);
-        key = strdup(fontname);
+        key = gv_strdup(fontname);
         result = bsearch(key, postscript_alias,
                          sizeof(postscript_alias) / sizeof(PostscriptAlias),
                          sizeof(PostscriptAlias), fontcmpf);
