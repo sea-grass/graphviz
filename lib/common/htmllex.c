@@ -106,11 +106,10 @@ typedef struct {
 #define ISIZE (sizeof(attr_item))
 
 /* icmp:
- * Compare two attr_item. Used in bsearch
+ * Compare an attr_item. Used in bsearch
  */
-static int icmp(attr_item * i, attr_item * j)
-{
-    return strcasecmp(i->name, j->name);
+static int icmp(const char *name, attr_item *j) {
+  return strcasecmp(name, j->name);
 }
 
 static int bgcolorfn(htmldata_t * p, char *v)
@@ -556,12 +555,10 @@ static void doAttrs(void *tp, attr_item *items, size_t nel, char **atts,
     char *name;
     char *val;
     attr_item *ip;
-    attr_item key;
 
     while ((name = *atts++) != NULL) {
 	val = *atts++;
-	key.name = name;
-	ip = bsearch(&key, items, nel, ISIZE, (bcmpfn) icmp);
+	ip = bsearch(name, items, nel, ISIZE, (bcmpfn)icmp);
 	if (ip)
 	    state.warn |= ip->action(tp, val);
 	else {
