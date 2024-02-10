@@ -133,7 +133,7 @@ static void rgb2cmyk(double r, double g, double b, double *c, double *m,
 
 static int colorcmpf(const void *p0, const void *p1)
 {
-    return strcasecmp(((const hsvrgbacolor_t *) p0)->name, ((const hsvrgbacolor_t *) p1)->name);
+  return strcasecmp(p0, ((const hsvrgbacolor_t *)p1)->name);
 }
 
 char *canontoken(char *str)
@@ -240,7 +240,6 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 {
     static hsvrgbacolor_t *last;
     char *p;
-    hsvrgbacolor_t fake;
     char c;
     double H, S, V, A, R, G, B;
     double C, M, Y, K;
@@ -380,12 +379,12 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     }
 
     /* test for known color name (generic, not renderer specific known names) */
-    fake.name = resolveColor(str);
-    if (!fake.name)
+    char *name = resolveColor(str);
+    if (!name)
 	return COLOR_MALLOC_FAIL;
-    if (last == NULL || strcmp(last->name, fake.name)) {
-	last = bsearch(&fake, color_lib, sizeof(color_lib) / sizeof(hsvrgbacolor_t),
-	               sizeof(fake), colorcmpf);
+    if (last == NULL || strcmp(last->name, name)) {
+	last = bsearch(name, color_lib, sizeof(color_lib) / sizeof(hsvrgbacolor_t),
+	               sizeof(color_lib[0]), colorcmpf);
     }
     if (last != NULL) {
 	switch (target_type) {
