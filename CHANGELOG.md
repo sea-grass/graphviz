@@ -4,7 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (10.0.2)]
+## [Unreleased (10.1.0)]
+
+### Added
+
+- `gv2gml` gained a `-y` option to output the yWorks.com variant of GML instead
+  of the default.
 
 ### Changed
 
@@ -2469,7 +2474,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (10.0.2)]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...main
+[Unreleased (10.1.0)]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...main
 [10.0.1]: https://gitlab.com/graphviz/graphviz/compare/9.0.0...10.0.1
 [9.0.0]: https://gitlab.com/graphviz/graphviz/compare/8.1.0...9.0.0
 [8.1.0]: https://gitlab.com/graphviz/graphviz/compare/8.0.5...8.1.0

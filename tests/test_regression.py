@@ -3319,7 +3319,6 @@ def test_2476():
 
 
 @pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
-@pytest.mark.xfail(strict=True)
 def test_2493():
     """
     `gv2gml` should support the yWorks.com variant of GML
