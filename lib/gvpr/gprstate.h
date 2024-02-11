@@ -20,7 +20,6 @@ extern "C" {
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <vmalloc/vmalloc.h>
 #include <expr/expr.h>
 #include "gvpr.h"
 
@@ -68,7 +67,7 @@ extern "C" {
     extern void addBindings(Gpr_t* state, gvprbinding*);
     extern gvprbinding* findBinding(Gpr_t* state, char*);
     extern void closeGPRState(Gpr_t* state);
-    extern void initGPRState(Gpr_t *, Vmalloc_t *);
+    extern void initGPRState(Gpr_t *);
     extern bool validTVT(long long);
 
 #ifdef __cplusplus

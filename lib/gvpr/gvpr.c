@@ -935,7 +935,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	return 1;
     }
 
-    initGPRState(gs->state, gs->xprog->prog->vm);
+    initGPRState(gs->state);
     
     if ((uopts->flags & GV_USE_OUTGRAPH)) {
 	uopts->outgraphs = 0;
