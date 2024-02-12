@@ -8,10 +8,10 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
+@import AppKit;
 
-
-@interface GVAttributeSchema : NSObject {
+@interface GVAttributeSchema : NSObject
+{
 	NSXMLElement *_element;
 }
 
@@ -19,8 +19,7 @@
 @property(readonly) NSCell *cell;
 @property(readonly) NSString *documentation;
 
-+ (NSArray*)attributeSchemasWithComponent:(NSString *)component;
-- (id)initWithXMLElement:(NSXMLElement *)element;
++ (NSArray *)attributeSchemasWithComponent:(NSString *)component;
+- (instancetype)initWithXMLElement:(NSXMLElement *)element;
 
-- (void)dealloc;
 @end

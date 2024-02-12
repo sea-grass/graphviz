@@ -8,24 +8,18 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import <Quartz/Quartz.h>
-
-#if !defined(MAC_OS_X_VERSION_10_13) || MAC_OS_X_VERSION_MAX_ALLOWED < MAC_OS_X_VERSION_10_13
-@protocol PDFViewDelegate <NSObject> @end
-#endif
+@import PDFKit;
 
 @interface GVWindowController : NSWindowController <NSUserInterfaceValidations, PDFViewDelegate>
 {
 	IBOutlet PDFView *documentView;
 }
 
-- (id)init;
-- (void)setDocument: (NSDocument *)document;
+- (instancetype)init;
+- (void)setDocument:(NSDocument *)document;
 - (void)awakeFromNib;
 
-- (void)graphDocumentDidChange:(NSNotification*)notification;
+- (void)graphDocumentDidChange:(NSNotification *)notification;
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)defaultFrame;
 
 - (IBAction)actualSizeView:(id)sender;
@@ -35,7 +29,7 @@
 
 - (IBAction)printGraphDocument:(id)sender;
 
-- (void)PDFViewWillClickOnLink:(PDFView *)sender withURL:(NSURL *)URL;
+- (void)PDFViewWillClickOnLink:(PDFView *)sender withURL:(NSURL *)url;
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 

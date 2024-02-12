@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="22505" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22505"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="GVExportViewController">
+            <connections>
+                <outlet property="view" destination="1" id="20"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="1" userLabel="Accessory View">
+            <rect key="frame" x="0.0" y="0.0" width="440" height="48"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField focusRingType="none" verticalHuggingPriority="750" id="2">
+                    <rect key="frame" x="17" y="17" width="75" height="16"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Format:" id="3">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton imageHugsTitle="YES" verticalHuggingPriority="750" id="8" userLabel="Format Popup">
+                    <rect key="frame" x="94" y="10" width="125" height="26"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" selectedItem="11" id="9">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="10">
+                            <items>
+                                <menuItem title="Item 1" state="on" id="11"/>
+                                <menuItem title="Item 2" id="12"/>
+                                <menuItem title="Item 3" id="13"/>
+                            </items>
+                        </menu>
+                    </popUpButtonCell>
+                    <connections>
+                        <binding destination="21" name="content" keyPath="arrangedObjects" id="30"/>
+                        <binding destination="21" name="contentValues" keyPath="arrangedObjects.format" previousBinding="30" id="41"/>
+                        <binding destination="-2" name="selectedObject" keyPath="formatRender" previousBinding="41" id="77"/>
+                    </connections>
+                </popUpButton>
+                <textField focusRingType="none" verticalHuggingPriority="750" id="4">
+                    <rect key="frame" x="221" y="17" width="75" height="16"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="Render:" id="5">
+                        <font key="font" metaFont="system"/>
+                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton imageHugsTitle="YES" verticalHuggingPriority="750" id="14" userLabel="Render Popup">
+                    <rect key="frame" x="298" y="10" width="125" height="26"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                    <popUpButtonCell key="cell" type="push" title="Item 1" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" inset="2" selectedItem="19" id="15">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" title="OtherViews" id="16">
+                            <items>
+                                <menuItem title="Item 1" state="on" id="19"/>
+                                <menuItem title="Item 2" id="18"/>
+                                <menuItem title="Item 3" id="17"/>
+                            </items>
+                        </menu>
+                        <connections>
+                            <binding destination="49" name="content" keyPath="arrangedObjects" id="52">
+                                <dictionary key="options">
+                                    <integer key="NSContentPlacementTag" value="0"/>
+                                    <integer key="NSInsertsNullPlaceholder" value="1"/>
+                                    <string key="NSMultipleValuesPlaceholder"></string>
+                                    <string key="NSNoSelectionPlaceholder"></string>
+                                    <string key="NSNotApplicablePlaceholder"></string>
+                                    <string key="NSNullPlaceholder">(default)</string>
+                                    <integer key="NSRaisesForNotApplicableKeys" value="1"/>
+                                </dictionary>
+                            </binding>
+                        </connections>
+                    </popUpButtonCell>
+                    <connections>
+                        <binding destination="49" name="content" keyPath="arrangedObjects" id="81">
+                            <dictionary key="options">
+                                <integer key="NSInsertsNullPlaceholder" value="1"/>
+                                <string key="NSMultipleValuesPlaceholder"></string>
+                                <string key="NSNoSelectionPlaceholder"></string>
+                                <string key="NSNotApplicablePlaceholder"></string>
+                                <string key="NSNullPlaceholder">(default)</string>
+                            </dictionary>
+                        </binding>
+                        <binding destination="-2" name="selectedValue" keyPath="render" previousBinding="81" id="84"/>
+                    </connections>
+                </popUpButton>
+            </subviews>
+            <point key="canvasLocation" x="48" y="154"/>
+        </customView>
+        <arrayController editable="NO" id="21" userLabel="FormatRenders">
+            <declaredKeys>
+                <string>format</string>
+                <string>renders</string>
+            </declaredKeys>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="formatRenders" id="76"/>
+            </connections>
+        </arrayController>
+        <arrayController objectClassName="NSString" editable="NO" id="49" userLabel="Renders">
+            <declaredKeys>
+                <string>render</string>
+            </declaredKeys>
+            <classReference key="objectClass" className="NSString"/>
+            <connections>
+                <binding destination="-2" name="contentArray" keyPath="formatRender.renders" id="78"/>
+            </connections>
+        </arrayController>
+    </objects>
+</document>

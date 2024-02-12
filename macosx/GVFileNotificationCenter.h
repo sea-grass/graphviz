@@ -8,18 +8,18 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
+@import Foundation;
 
 @interface GVFileNotificationCenter : NSObject
 {
-	CFFileDescriptorRef _queue;
+	int _queuefd;
 	NSMutableSet *_records;
 }
 
 + (void)initialize;
 + (id)defaultCenter;
 
-- (id)init;
+- (instancetype)init;
 
 - (void)addObserver:(id)observer selector:(SEL)selector path:(NSString *)path;
 - (void)removeObserver:(id)observer path:(NSString *)path;

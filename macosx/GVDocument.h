@@ -8,8 +8,7 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
+@import AppKit;
 
 @class GVExportViewController;
 @class GVZGraph;
@@ -17,22 +16,21 @@
 @interface GVDocument : NSDocument
 {
 	GVExportViewController *_exporter;
-	GVZGraph *_graph;
 }
 
 @property(readonly) GVZGraph *graph;
 
-- (id)init;
+- (instancetype)init;
 
-- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError;
-- (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError;
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError;
+- (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError;
 
 - (void)makeWindowControllers;
 
 - (void)setPrintInfo:(NSPrintInfo *)printInfo;
 
 - (IBAction)exportDocument:(id)sender;
-- (void)exporterDidEnd:(GVExportViewController *)exporter;
+- (void)exporterDidEnd;
 
 - (void)fileDidChange:(NSString *)path;
 - (void)graphDidChange:(NSNotification *)notification;
