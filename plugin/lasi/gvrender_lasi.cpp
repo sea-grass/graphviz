@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <string>
 #include <LASi.h>
 
 // Confusingly, Freetype (included transitively by LASi), ship their Autotools
@@ -281,7 +282,7 @@ static void ps_set_pen_style(GVJ_t *job)
     gvputs(job," setlinewidth\n");
 
     while (s && (p = line = *s++)) {
-	if (strcmp(line, "setlinewidth") == 0)
+	if (line == std::string{"setlinewidth"})
 	    continue;
 	while (*p)
 	    p++;
@@ -292,7 +293,7 @@ static void ps_set_pen_style(GVJ_t *job)
 		p++;
 	    p++;
 	}
-	if (strcmp(line, "invis") == 0)
+	if (line == std::string{"invis"})
 	    job->obj->penwidth = 0;
 	gvprintf(job, "%s\n", line);
     }
@@ -403,14 +404,12 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	pA = span->font->postscript_alias;
 	font = pA->svg_font_family;
 	stretch = NORMAL_STRETCH;
-	if (pA->svg_font_style
-	&& strcmp(pA->svg_font_style, "italic") == 0)
+	if (pA->svg_font_style && pA->svg_font_style == std::string{"italic"})
 	    style = ITALIC;
 	else
 	    style = NORMAL_STYLE;
 	variant = NORMAL_VARIANT;
-	if (pA->svg_font_weight
-	&& strcmp(pA->svg_font_weight, "bold") == 0)
+	if (pA->svg_font_weight && pA->svg_font_weight == std::string{"bold"})
 	    weight = BOLD;
 	else
 	    weight = NORMAL_WEIGHT;
