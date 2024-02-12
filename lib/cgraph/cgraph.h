@@ -545,7 +545,7 @@ CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
 /// string attribute container
 struct Agattr_s {		/* dynamic string attributes */
     Agrec_t h;			/* common data header */
-    Dict_t *dict;		/* shared dict to interpret attr field */
+    Dict_t *dict;	///< shared dict of Agsym_s to interpret Agattr_s.str
     char **str;		///< the attribute string values indexed by Agsym_s.id
 };
 
