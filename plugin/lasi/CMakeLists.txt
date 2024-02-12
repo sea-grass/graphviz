@@ -1,7 +1,7 @@
 if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
 
   add_library(gvplugin_lasi SHARED
-    gvloadimage_lasi.c
+    gvloadimage_lasi.cpp
     gvplugin_lasi.c
     gvrender_lasi.cpp
   )

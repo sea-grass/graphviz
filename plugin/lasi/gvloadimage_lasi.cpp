@@ -41,6 +41,8 @@ static void ps_freeimage(usershape_t *us)
 #endif
 }
 
+extern "C" {
+
 /* usershape described by a postscript file */
 static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 {
@@ -98,12 +100,18 @@ static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
     }
 }
 
+}
+
 static gvloadimage_engine_t engine_ps = {
     lasi_loadimage_ps
 };
+
+extern "C" {
 
 gvplugin_installed_t gvloadimage_lasi_types[] = {
     {FORMAT_PS_PS, "eps:lasi", -5, &engine_ps, NULL},
     {FORMAT_PS_PS, "ps:lasi", -5, &engine_ps, NULL},
     {0, NULL, 0, NULL, NULL}
 };
+
+}
