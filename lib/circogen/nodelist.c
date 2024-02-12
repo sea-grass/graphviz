@@ -50,17 +50,6 @@ void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
   nodelist_set(list, one + 1, n);
 }
 
-/* reverseNodelist;
- * Destructively reverse a list.
- */
-void reverseNodelist(nodelist_t *list) {
-  for (size_t i = 0; i < nodelist_size(list) / 2; ++i) {
-    node_t *temp = nodelist_get(list, i);
-    nodelist_set(list, i, nodelist_get(list, nodelist_size(list) - i - 1));
-    nodelist_set(list, nodelist_size(list) - i - 1, temp);
-  }
-}
-
 /* realignNodelist:
  * Make np new front of list, with current last hooked to
  * current first.
@@ -134,7 +123,7 @@ static void concatNodelist(nodelist_t * l1, nodelist_t * l2)
  */
 void reverseAppend(nodelist_t * l1, nodelist_t * l2)
 {
-    reverseNodelist(l2);
+    nodelist_reverse(l2);
     concatNodelist(l1, l2);
     freeNodelist(l2);
 }

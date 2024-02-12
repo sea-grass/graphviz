@@ -1262,36 +1262,25 @@ parsePackModeInfo(const char* p, pack_mode dflt, pack_info* pinfo)
     pinfo->mode = dflt;
     pinfo->sz = 0;
     pinfo->vals = NULL;
-    if (p && *p) {
-	switch (*p) {
-	case 'a':
-	    if (startswith(p, "array")) {
-		pinfo->mode = l_array;
-		p += strlen("array");
-		p = chkFlags (p, pinfo);
-		if ((sscanf (p, "%d", &i)>0) && (i > 0))
-		    pinfo->sz = i;
-	    }
-	    else if (startswith(p, "aspect")) {
-		pinfo->mode = l_aspect;
-		if (sscanf(p + strlen("aspect"), "%f", &v) > 0 && v > 0)
-		    pinfo->aspect = v;
-		else
-		    pinfo->aspect = 1;
-	    }
-	    break;
-	case 'c':
-	    if (streq(p, "cluster"))
-		pinfo->mode = l_clust;
-	    break;
-	case 'g':
-	    if (streq(p, "graph"))
-		pinfo->mode = l_graph;
-	    break;
-	case 'n':
-	    if (streq(p, "node"))
-		pinfo->mode = l_node;
-	    break;
+    if (p) {
+	if (startswith(p, "array")) {
+	    pinfo->mode = l_array;
+	    p += strlen("array");
+	    p = chkFlags (p, pinfo);
+	    if ((sscanf (p, "%d", &i)>0) && (i > 0))
+		pinfo->sz = i;
+	} else if (startswith(p, "aspect")) {
+	    pinfo->mode = l_aspect;
+	    if (sscanf(p + strlen("aspect"), "%f", &v) > 0 && v > 0)
+		pinfo->aspect = v;
+	    else
+		pinfo->aspect = 1;
+	} else if (streq(p, "cluster")) {
+	    pinfo->mode = l_clust;
+	} else if (streq(p, "graph")) {
+	    pinfo->mode = l_graph;
+	} else if (streq(p, "node")) {
+	    pinfo->mode = l_node;
 	}
     }
 

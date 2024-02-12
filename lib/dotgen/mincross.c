@@ -21,6 +21,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/list.h>
 #include <cgraph/streq.h>
 #include <dotgen/dot.h>
 #include <limits.h>
@@ -1323,32 +1324,32 @@ static bool constraining_flat_edge(Agraph_t *g, Agedge_t *e) {
   return true;
 }
 
+DEFINE_LIST(nodes, node_t *)
+
 /* construct nodes reachable from 'here' in post-order.
 * This is the same as doing a topological sort in reverse order.
 */
-static int postorder(graph_t * g, node_t * v, node_t ** list, int r)
-{
+static void postorder(graph_t *g, node_t *v, nodes_t *list, int r) {
     edge_t *e;
-    int i, cnt = 0;
+    int i;
 
     MARK(v) = true;
     if (ND_flat_out(v).size > 0) {
 	for (i = 0; (e = ND_flat_out(v).list[i]); i++) {
 	    if (!constraining_flat_edge(g, e)) continue;
 	    if (!MARK(aghead(e)))
-		cnt += postorder(g, aghead(e), list + cnt, r);
+		postorder(g, aghead(e), list, r);
 	}
     }
     assert(ND_rank(v) == r);
-    list[cnt++] = v;
-    return cnt;
+    nodes_append(list, v);
 }
 
 static void flat_reorder(graph_t * g)
 {
-    int i, r, pos, n_search, local_in_cnt, local_out_cnt, base_order;
-    node_t *v, **left, **right, *t;
-    node_t **temprank = NULL;
+    int i, r, local_in_cnt, local_out_cnt, base_order;
+    node_t *v;
+    nodes_t temprank = {0};
     edge_t *flat_e, *e;
 
     if (!GD_has_flat_edges(g))
@@ -1358,8 +1359,7 @@ static void flat_reorder(graph_t * g)
 	base_order = ND_order(GD_rank(g)[r].v[0]);
 	for (i = 0; i < GD_rank(g)[r].n; i++)
 	    MARK(GD_rank(g)[r].v[i]) = false;
-	temprank = ALLOC(i + 1, temprank, node_t *);
-	pos = 0;
+	nodes_clear(&temprank);
 
 	/* construct reverse topological sort order in temprank */
 	for (i = 0; i < GD_rank(g)[r].n; i++) {
@@ -1376,30 +1376,20 @@ static void flat_reorder(graph_t * g)
 		if (constraining_flat_edge(g, flat_e)) local_out_cnt++;
 	    }
 	    if ((local_in_cnt == 0) && (local_out_cnt == 0))
-		temprank[pos++] = v;
+		nodes_append(&temprank, v);
 	    else {
 		if (!MARK(v) && local_in_cnt == 0) {
-		    left = temprank + pos;
-		    n_search = postorder(g, v, left, r);
-		    pos += n_search;
+		    postorder(g, v, &temprank, r);
 		}
 	    }
 	}
 
-	if (pos) {
+	if (nodes_size(&temprank) > 0) {
 	    if (!GD_flip(g)) {
-		left = temprank;
-		right = temprank + pos - 1;
-		while (left < right) {
-		    t = *left;
-		    *left = *right;
-		    *right = t;
-		    left++;
-		    right--;
-		}
+		nodes_reverse(&temprank);
 	    }
 	    for (i = 0; i < GD_rank(g)[r].n; i++) {
-		v = GD_rank(g)[r].v[i] = temprank[i];
+		v = GD_rank(g)[r].v[i] = nodes_get(&temprank, (size_t)i);
 		ND_order(v) = i + base_order;
 	    }
 
@@ -1423,7 +1413,7 @@ static void flat_reorder(graph_t * g)
 	/* else do no harm! */
 	GD_rank(Root)[r].valid = false;
     }
-    free(temprank);
+    nodes_free(&temprank);
 }
 
 static void reorder(graph_t * g, int r, bool reverse, bool hasfixed)
