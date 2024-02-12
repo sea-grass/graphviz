@@ -369,6 +369,8 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_VARIANT_UNICASE: variant = SMALLCAPS; break;
 	    case PANGO_VARIANT_TITLE_CAPS: variant = SMALLCAPS; break;
 #endif
+	    default:
+	        UNREACHABLE();
 	}
 	switch (pango_font_description_get_weight(pango_font)) {
 #if PANGO_VERSION_CHECK(1, 24, 0)
