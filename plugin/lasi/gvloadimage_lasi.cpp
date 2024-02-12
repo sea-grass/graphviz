@@ -37,7 +37,7 @@ static void ps_freeimage(usershape_t *us)
 #ifdef HAVE_SYS_MMAN_H
     munmap(us->data, us->datasize);
 #else
-    free(us->data);
+    delete[] us->data;
 #endif
 }
 
@@ -76,7 +76,7 @@ static void lasi_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 		if (us->data == MAP_FAILED)
 			us->data = NULL;
 #else
-		us->data = malloc(statbuf.st_size);
+		us->data = new char[statbuf.st_size];
 		fread(us->data, 1, (size_t)statbuf.st_size, us->f);
 #endif
 		us->must_inline = true;
