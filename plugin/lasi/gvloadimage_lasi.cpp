@@ -52,8 +52,8 @@ static void lasi_loadimage_ps(GVJ_t *job, usershape_t *us, boxf b,
   if (us->data) {
     if (us->datafree != ps_freeimage) {
       us->datafree(us); /* free incompatible cache data */
-      us->data = NULL;
-      us->datafree = NULL;
+      us->data = nullptr;
+      us->datafree = nullptr;
       us->datasize = 0;
     }
   }
@@ -73,7 +73,7 @@ static void lasi_loadimage_ps(GVJ_t *job, usershape_t *us, boxf b,
 #ifdef HAVE_SYS_MMAN_H
       us->data = mmap(0, statbuf.st_size, PROT_READ, MAP_SHARED, fd, 0);
       if (us->data == MAP_FAILED)
-        us->data = NULL;
+        us->data = nullptr;
 #else
       us->data = new char[statbuf.st_size];
       fread(us->data, 1, (size_t)statbuf.st_size, us->f);
@@ -105,7 +105,7 @@ static gvloadimage_engine_t engine_ps = {lasi_loadimage_ps};
 extern "C" {
 
 gvplugin_installed_t gvloadimage_lasi_types[] = {
-    {FORMAT_PS_PS, "eps:lasi", -5, &engine_ps, NULL},
-    {FORMAT_PS_PS, "ps:lasi", -5, &engine_ps, NULL},
-    {0, NULL, 0, NULL, NULL}};
+    {FORMAT_PS_PS, "eps:lasi", -5, &engine_ps, nullptr},
+    {FORMAT_PS_PS, "ps:lasi", -5, &engine_ps, nullptr},
+    {0, nullptr, 0, nullptr, nullptr}};
 }

@@ -91,7 +91,7 @@ static void lasi_end_job(GVJ_t * job)
 
     if (job->render.id != FORMAT_EPS)
 	gvprintf(job, "%%%%Pages: %d\n", job->common->viewNum);
-    if (job->common->show_boxes == NULL)
+    if (job->common->show_boxes == nullptr)
         if (job->render.id != FORMAT_EPS)
 	    gvprintf(job, "%%%%BoundingBox: %d %d %d %d\n",
 	        job->boundingBox.LL.x, job->boundingBox.LL.y,
@@ -143,7 +143,7 @@ static void lasi_begin_graph(GVJ_t * job)
 	    gvputs(job, "%%Pages: (atend)\n");
 	else
 	    gvputs(job, "%%Pages: 1\n");
-        if (job->common->show_boxes == NULL) {
+        if (job->common->show_boxes == nullptr) {
     	    if (job->render.id != FORMAT_EPS)
 		gvputs(job, "%%BoundingBox: (atend)\n");
 	    else
@@ -159,8 +159,8 @@ static void lasi_begin_graph(GVJ_t * job)
         if (job->common->show_boxes) {
             const char* args[2];
             args[0] = job->common->show_boxes[0];
-            args[1] = NULL;
-            cat_libfile(job, NULL, args);
+            args[1] = nullptr;
+            cat_libfile(job, nullptr, args);
         }
     }
     /*  Set base URL for relative links (for Distiller >= 3.0)  */
@@ -180,7 +180,7 @@ static void lasi_begin_page(GVJ_t * job)
 
     gvprintf(job, "%%%%Page: %d %d\n",
 	    job->common->viewNum + 1, job->common->viewNum + 1);
-    if (job->common->show_boxes == NULL)
+    if (job->common->show_boxes == nullptr)
 	gvprintf(job, "%%%%PageBoundingBox: %d %d %d %d\n",
 	    pbr.LL.x, pbr.LL.y, pbr.UR.x, pbr.UR.y);
     gvprintf(job, "%%%%PageOrientation: %s\n",
@@ -190,7 +190,7 @@ static void lasi_begin_page(GVJ_t * job)
 	    pbr.UR.x, pbr.UR.y);
     gvprintf(job, "%d %d %d beginpage\n",
 	job->pagesArrayElem.x, job->pagesArrayElem.y, job->numPages);
-    if (job->common->show_boxes == NULL)
+    if (job->common->show_boxes == nullptr)
 	gvprintf(job, "gsave\n%d %d %d %d boxprim clip newpath\n",
 	    pbr.LL.x, pbr.LL.y, pbr.UR.x-pbr.LL.x, pbr.UR.y-pbr.LL.y);
     gvprintf(job, "%g %g set_scale %d rotate %g %g translate\n",
@@ -213,7 +213,7 @@ static void lasi_end_page(GVJ_t * job)
 {
     if (job->common->show_boxes) {
 	gvputs(job, "0 0 0 edgecolor\n");
-	cat_libfile(job, NULL, job->common->show_boxes + 1);
+	cat_libfile(job, nullptr, job->common->show_boxes + 1);
     }
     /* the showpage is really a no-op, but at least one PS processor
      * out there needs to see this literal token.  endpage does the real work.
@@ -593,7 +593,7 @@ static gvrender_features_t render_features_lasi = {
 	| GVRENDER_NO_WHITE_BG
 	| GVRENDER_DOES_MAP_RECTANGLE,
     4.,                         /* default pad - graph units */
-    NULL,			/* knowncolors */
+    nullptr,			/* knowncolors */
     0,				/* sizeof knowncolors */
     HSVA_DOUBLE,		/* color_type */
 };
@@ -615,12 +615,12 @@ static gvdevice_features_t device_features_eps = {
 
 gvplugin_installed_t gvrender_lasi_types[] = {
     {FORMAT_PS, "lasi", -5, &lasi_engine, &render_features_lasi},
-    {0, NULL, 0, NULL, NULL}
+    {0, nullptr, 0, nullptr, nullptr}
 };
 
 gvplugin_installed_t gvdevice_lasi_types[] = {
-    {FORMAT_PS, "ps:lasi", -5, NULL, &device_features_ps},
-    {FORMAT_PS2, "ps2:lasi", -5, NULL, &device_features_ps},
-    {FORMAT_EPS, "eps:lasi", -5, NULL, &device_features_eps},
-    {0, NULL, 0, NULL, NULL}
+    {FORMAT_PS, "ps:lasi", -5, nullptr, &device_features_ps},
+    {FORMAT_PS2, "ps2:lasi", -5, nullptr, &device_features_ps},
+    {FORMAT_EPS, "eps:lasi", -5, nullptr, &device_features_eps},
+    {0, nullptr, 0, nullptr, nullptr}
 };
