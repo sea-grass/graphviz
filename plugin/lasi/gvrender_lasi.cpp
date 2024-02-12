@@ -395,6 +395,8 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 #if PANGO_VERSION_CHECK(1, 24, 0)
 	    case PANGO_WEIGHT_ULTRAHEAVY: weight = HEAVY; break; // no exact match in LASi
 #endif
+	    default:
+	        UNREACHABLE();
 	}
     }
     else {
