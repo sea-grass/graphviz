@@ -356,6 +356,8 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_STYLE_NORMAL: style = NORMAL_STYLE; break;
 	    case PANGO_STYLE_OBLIQUE: style = OBLIQUE; break;
 	    case PANGO_STYLE_ITALIC: style = ITALIC; break;
+	    default:
+	        UNREACHABLE();
 	}
 	switch (pango_font_description_get_variant(pango_font)) {
 	    case PANGO_VARIANT_NORMAL: variant = NORMAL_VARIANT; break;
