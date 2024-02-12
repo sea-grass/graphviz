@@ -31,6 +31,7 @@
 #include <cgraph/ingraphs.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
+#include <common/utils.h>
 #include <neatogen/neatoprocs.h>
 #include <iostream>
 #include <limits>
@@ -159,8 +160,6 @@ static Agsym_t *agedgeattr(Agraph_t *g, char *name, const char *value) {
     return agattr(g, AGEDGE, name, value);
 }
 
-/* init:
- */
 static void init(int argc, char *argv[], pack_info* pinfo)
 {
     int c;
@@ -352,8 +351,6 @@ static void cloneEdge(Agedge_t *old, Agedge_t *new_edge) {
   ED_xlabel(new_edge) = ED_xlabel(old);
 }
 
-/* cloneNode:
- */
 static void cloneNode(Agnode_t *old, Agnode_t *new_node) {
   cloneAttrs(old, new_node);
   ND_coord(new_node).x = POINTS(ND_pos(old)[0]);
@@ -368,8 +365,6 @@ static void cloneNode(Agnode_t *old, Agnode_t *new_node) {
   ND_xlabel(new_node) = ND_xlabel(old);
 }
 
-/* cloneCluster:
- */
 static void cloneCluster(Agraph_t *old, Agraph_t *new_cluster) {
   // string attributes were cloned as subgraphs
   GD_label(new_cluster) = GD_label(old);
@@ -445,8 +440,6 @@ static void initAttrs(Agraph_t *root, std::vector<Agraph_t*> &gs) {
     fillGraph(root, e_attrs, agedgeattr, gs.size());
 }
 
-/* cloneGraphAttr:
- */
 static void cloneGraphAttr(Agraph_t * g, Agraph_t * ng)
 {
     cloneAttrs(g, ng);
@@ -475,7 +468,6 @@ static std::string xName(used_t &names, char *oldname) {
 
 #define MARK(e) (ED_alg(e) = e)
 #define MARKED(e) (ED_alg(e))
-#define ISCLUSTER(g) startswith(agnameof(g), "cluster")
 #define SETCLUST(g,h) (GD_alg(g) = h)
 #define GETCLUST(g) ((Agraph_t*)GD_alg(g))
 
@@ -507,7 +499,7 @@ cloneSubg(Agraph_t *g, Agraph_t *ng, Agsym_t *G_bb, used_t &gnames) {
 	/* if subgraphs are clusters, point to the new 
 	 * one so we can find it later.
 	 */
-	if (ISCLUSTER(subg))
+	if (is_a_cluster(subg))
 	    SETCLUST(subg, nsubg);
     }
 
