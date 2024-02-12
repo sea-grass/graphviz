@@ -10,8 +10,8 @@
 
 #include "config.h"
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include <sys/stat.h>
 #include <sys/types.h>
 #ifdef HAVE_SYS_MMAN_H
