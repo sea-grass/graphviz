@@ -28,6 +28,7 @@
 #include <gvc/gvcint.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/unreachable.h>
 #include <common/const.h>
 #include <common/utils.h>
 #include "../core/ps.h"
@@ -348,6 +349,8 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_STRETCH_EXPANDED: stretch = EXPANDED; break;
 	    case PANGO_STRETCH_EXTRA_EXPANDED: stretch = EXTRAEXPANDED; break;
 	    case PANGO_STRETCH_ULTRA_EXPANDED: stretch = ULTRAEXPANDED; break;
+	    default:
+	        UNREACHABLE();
 	}
 	switch (pango_font_description_get_style(pango_font)) {
 	    case PANGO_STYLE_NORMAL: style = NORMAL_STYLE; break;
