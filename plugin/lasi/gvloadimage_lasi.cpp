@@ -42,8 +42,7 @@ static void ps_freeimage(usershape_t *us) {
 extern "C" {
 
 /* usershape described by a postscript file */
-static void lasi_loadimage_ps(GVJ_t *job, usershape_t *us, boxf b,
-                              bool filled) {
+static void lasi_loadimage_ps(GVJ_t *job, usershape_t *us, boxf b, bool) {
   assert(job);
   assert(us);
   assert(us->name);
