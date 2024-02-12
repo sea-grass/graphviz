@@ -608,7 +608,6 @@ EXCLUDE = (
     "plugin/gtk/interface.h",
     "plugin/gtk/support.c",
     "plugin/gtk/support.h",
-    "plugin/lasi/gvplugin_lasi.c",
     "plugin/lasi/gvrender_lasi.cpp",
     "plugin/neato_layout/gvlayout_neato_layout.c",
     "plugin/neato_layout/gvplugin_neato_layout.c",
