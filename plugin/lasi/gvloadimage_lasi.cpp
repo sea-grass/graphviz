@@ -41,7 +41,7 @@ static void ps_freeimage(usershape_t *us) {
 
 extern "C" {
 
-/* usershape described by a postscript file */
+/// usershape described by a postscript file
 static void lasi_loadimage_ps(GVJ_t *job, usershape_t *us, boxf b, bool) {
   assert(job);
   assert(us);
@@ -49,14 +49,14 @@ static void lasi_loadimage_ps(GVJ_t *job, usershape_t *us, boxf b, bool) {
 
   if (us->data) {
     if (us->datafree != ps_freeimage) {
-      us->datafree(us); /* free incompatible cache data */
+      us->datafree(us); // free incompatible cache data
       us->data = nullptr;
       us->datafree = nullptr;
       us->datasize = 0;
     }
   }
 
-  if (!us->data) { /* read file into cache */
+  if (!us->data) { // read file into cache
     int fd;
     struct stat statbuf;
 

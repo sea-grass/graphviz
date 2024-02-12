@@ -37,12 +37,10 @@
 using namespace LASi;
 using namespace std;
 
-/*
- *     J$: added `pdfmark' URL embedding.  PostScript rendered from
- *         dot files with URL attributes will get active PDF links
- *         from Adobe's Distiller.
- */
-#define PDFMAX  14400           /*  Maximum size of PDF page  */
+// J$: added `pdfmark' URL embedding.  PostScript rendered from
+//     dot files with URL attributes will get active PDF links
+//     from Adobe's Distiller.
+#define PDFMAX  14400 ///< Maximum size of PDF page
 
 typedef enum { FORMAT_PS, FORMAT_PS2, FORMAT_EPS } format_type;
 
@@ -152,9 +150,9 @@ static void lasi_begin_graph(GVJ_t * job)
 	            job->pageBoundingBox.UR.x, job->pageBoundingBox.UR.y);
 	}
 	gvputs(job, "%%EndComments\nsave\n");
-        /* include shape library */
+        // include shape library
         cat_libfile(job, job->common->lib, ps_txt);
-	/* include epsf */
+	// include epsf
         epsf_define(job);
         if (job->common->show_boxes) {
             const char* args[2];
@@ -163,7 +161,7 @@ static void lasi_begin_graph(GVJ_t * job)
             cat_libfile(job, nullptr, args);
         }
     }
-    /*  Set base URL for relative links (for Distiller >= 3.0)  */
+    // Set base URL for relative links (for Distiller ≥ 3.0)
     if (obj->url)
 	gvprintf(job, "[ {Catalog} << /URI << /Base %s >> >>\n"
 		"/PUT pdfmark\n", ps_string(obj->url, CHAR_UTF8));
@@ -198,7 +196,7 @@ static void lasi_begin_page(GVJ_t * job)
 	    job->rotation,
 	    job->translation.x, job->translation.y);
 
-    /*  Define the size of the PS canvas  */
+    // Define the size of the PS canvas
     if (job->render.id == FORMAT_PS2) {
 	if (pbr.UR.x >= PDFMAX || pbr.UR.y >= PDFMAX)
 	    job->common->errorfn("canvas size (%d,%d) exceeds PDF limit (%d)\n"
@@ -215,9 +213,8 @@ static void lasi_end_page(GVJ_t * job)
 	gvputs(job, "0 0 0 edgecolor\n");
 	cat_libfile(job, nullptr, job->common->show_boxes + 1);
     }
-    /* the showpage is really a no-op, but at least one PS processor
-     * out there needs to see this literal token.  endpage does the real work.
-     */
+    // the showpage is really a no-op, but at least one PS processor
+    // out there needs to see this literal token.  endpage does the real work.
     gvputs(job, "endpage\nshowpage\ngrestore\n");
     gvputs(job, "%%PageTrailer\n");
     gvprintf(job, "%%%%EndPage: %d\n", job->common->viewNum);
@@ -335,7 +332,7 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
     PostscriptAlias *pA;
 
     if (job->obj->pencolor.u.HSVA[3] < .5)
-	return;  /* skip transparent text */
+	return; // skip transparent text
 
     if (span->layout) {
 	pango_font = pango_layout_get_font_description((PangoLayout*)(span->layout));
@@ -439,7 +436,7 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 
 static void lasi_ellipse(GVJ_t * job, pointf * A, int filled)
 {
-    /* A[] contains 2 points: the center and corner. */
+    // A[] contains 2 points: the center and corner.
     pointf AA[2];
 
     AA[0] = A[0];
@@ -558,27 +555,27 @@ static gvrender_engine_t lasi_engine = {
     lasi_begin_job,
     lasi_end_job,
     lasi_begin_graph,
-    0,				/* lasi_end_graph */
+    0,				// lasi_end_graph
     lasi_begin_layer,
-    0,				/* lasi_end_layer */
+    0,				// lasi_end_layer
     lasi_begin_page,
     lasi_end_page,
     lasi_begin_cluster,
     lasi_end_cluster,
-    0,				/* lasi_begin_nodes */
-    0,				/* lasi_end_nodes */
-    0,				/* lasi_begin_edges */
-    0,				/* lasi_end_edges */
+    0,				// lasi_begin_nodes
+    0,				// lasi_end_nodes
+    0,				// lasi_begin_edges
+    0,				// lasi_end_edges
     lasi_begin_node,
     lasi_end_node,
     lasi_begin_edge,
     lasi_end_edge,
     lasi_begin_anchor,
-    0,				/* lasi_end_anchor */
-    0,				/* lasi_begin_label */
-    0,				/* lasi_end_label */
+    0,				// lasi_end_anchor
+    0,				// lasi_begin_label
+    0,				// lasi_end_label
     lasi_textspan,
-    0,				/* lasi_resolve_color */
+    0,				// lasi_resolve_color
     lasi_ellipse,
     lasi_polygon,
     lasi_bezier,
@@ -592,25 +589,25 @@ static gvrender_features_t render_features_lasi = {
 	| GVRENDER_DOES_MAPS
 	| GVRENDER_NO_WHITE_BG
 	| GVRENDER_DOES_MAP_RECTANGLE,
-    4.,                         /* default pad - graph units */
-    nullptr,			/* knowncolors */
-    0,				/* sizeof knowncolors */
-    HSVA_DOUBLE,		/* color_type */
+    4.,                         // default pad - graph units
+    nullptr,			// knowncolors
+    0,				// sizeof knowncolors
+    HSVA_DOUBLE,		// color_type
 };
 
 static gvdevice_features_t device_features_ps = {
     GVDEVICE_DOES_PAGES
-	| GVDEVICE_DOES_LAYERS,	/* flags */
-    {36.,36.},			/* default margin - points */
-    {612.,792.},                /* default page width, height - points */
-    {72.,72.},			/* default dpi */
+	| GVDEVICE_DOES_LAYERS,	// flags
+    {36.,36.},			// default margin - points
+    {612.,792.},                // default page width, height - points
+    {72.,72.},			// default dpi
 };
 
 static gvdevice_features_t device_features_eps = {
-    0,				/* flags */
-    {36.,36.},			/* default margin - points */
-    {612.,792.},                /* default page width, height - points */
-    {72.,72.},			/* default dpi */
+    0,				// flags
+    {36.,36.},			// default margin - points
+    {612.,792.},                // default page width, height - points
+    {72.,72.},			// default dpi
 };
 
 gvplugin_installed_t gvrender_lasi_types[] = {
