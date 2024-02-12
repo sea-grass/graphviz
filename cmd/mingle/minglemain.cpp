@@ -232,17 +232,17 @@ static void init(int argc, char *argv[], opts_t* opts)
  * We have ninterval+1 points. We drop the ninterval-1 internal points, and add 4 points to the first
  * and last intervals, and 3 to the rest, giving the needed 3*ninterval+4 points.
  */
-static void genBundleSpline(pedge edge, std::ostream &os) {
+static void genBundleSpline(const pedge &edge, std::ostream &os) {
 	int k, j;
-	int dim = edge->dim;
-	double* x = edge->x;
+	const int dim = edge.dim;
+	const double *x = edge.x;
 
-	for (j = 0; j < edge->npoints; j++){
+	for (j = 0; j < edge.npoints; j++){
 		if (j != 0) {
 			os << ' ';
 			const std::vector<double> tt1{0.15, 0.5, 0.85};
 			const std::vector<double> tt2{0.15, 0.4, 0.6, 0.85};
-			const std::vector<double> &tt = (j == 1 || j == edge->npoints - 1) ? tt2 : tt1;
+			const std::vector<double> &tt = (j == 1 || j == edge.npoints - 1) ? tt2 : tt1;
 			for (const double t : tt){
 				for (k = 0; k < dim; k++) {
 					if (k != 0) os << ',';
@@ -251,7 +251,7 @@ static void genBundleSpline(pedge edge, std::ostream &os) {
 				os << ' ';
 			}
 		}
-		if ((j == 0) || (j == edge->npoints - 1)) {
+		if (j == 0 || j == edge.npoints - 1) {
 			for (k = 0; k < dim; k++) {
 				if (k != 0) os << ',';
 				os << std::setprecision(3) << x[j * dim + k];
@@ -260,32 +260,33 @@ static void genBundleSpline(pedge edge, std::ostream &os) {
     }
 }
 
-static void genBundleInfo(pedge edge, std::ostream &os) {
+static void genBundleInfo(const pedge &edge, std::ostream &os) {
 	int k, j;
-	int dim = edge->dim;
-	double* x = edge->x;
+	const int dim = edge.dim;
+	const double *x = edge.x;
 
-	for (j = 0; j < edge->npoints; j++){
+	for (j = 0; j < edge.npoints; j++){
 		if (j != 0) os << ':';
 		for (k = 0; k < dim; k++) {
 			if (k != 0) os << ',';
 			os << std::setprecision(3) << x[j * dim + k];
 		}
 
-		if (j < edge->npoints - 1 && !edge->wgts.empty())  {
-			os << ';' << std::setprecision(3) << edge->wgts[j];
+		if (j < edge.npoints - 1 && !edge.wgts.empty())  {
+			os << ';' << std::setprecision(3) << edge.wgts[j];
 		}
 	}
 }
 
-static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
+static void genBundleColors(const pedge &edge, std::ostream &os,
+                            double maxwgt) {
 	int k, j, r, g, b;
 	double len, t, len_total0 = 0;
-	int dim = edge->dim;
-	double* x = edge->x;
-	std::vector<double> lens(edge->npoints);
+	const int dim = edge.dim;
+	const double *x = edge.x;
+	std::vector<double> lens(edge.npoints);
 
-	for (j = 0; j < edge->npoints - 1; j++){
+	for (j = 0; j < edge.npoints - 1; j++){
 		len = 0;
 		for (k = 0; k < dim; k++){
 			len += (x[dim*j+k] - x[dim*(j+1)+k])*(x[dim*j+k] - x[dim*(j+1)+k]);
@@ -293,23 +294,22 @@ static void genBundleColors(pedge edge, std::ostream &os, double maxwgt) {
 		lens[j] = len = sqrt(len/k);
 		len_total0 += len;
 	}
-	for (j = 0; j < edge->npoints - 1; j++){
-		t = edge->wgts[j]/maxwgt;
+	for (j = 0; j < edge.npoints - 1; j++){
+		t = edge.wgts[j] / maxwgt;
 		/* interpolate between red (t = 1) to blue (t = 0) */
 		r = 255*t; g = 0; b = 255*(1-t);
 		if (j != 0) os << ':';
 		os << std::hex << std::setw(2) << std::setfill('0') << '#' << r << g << b
 			<< 85;
-		if (j < edge->npoints-2) {
+		if (j < edge.npoints - 2) {
 			os << ';' << (lens[j] / len_total0);
 		}
 	}
 	os << std::dec << std::setw(0); // reset stream characteristics
 }
 
-static void
-export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
-{
+static void export_dot(FILE *fp, int ne, const std::vector<pedge> &edges,
+                       Agraph_t *g) {
 	Agsym_t* epos = agattr(g, AGEDGE, const_cast<char*>("pos"), "");
 	Agsym_t* esects = agattr(g, AGEDGE, const_cast<char*>("bundle"), "");
 	Agsym_t* eclrs = nullptr;
@@ -317,14 +317,13 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 	Agedge_t* e;
 	int i, j;
 	double maxwgt = 0;
-	pedge edge;
 
 	  /* figure out max number of bundled original edges in a pedge */
 	for (i = 0; i < ne; i++){
-		edge = edges[i];
-		if (!edge->wgts.empty()) {
-			for (j = 0; j < edge->npoints - 1; j++){
-				maxwgt = std::max(maxwgt, edge->wgts[j]);
+		const pedge &edge = edges[i];
+		if (!edge.wgts.empty()) {
+			for (j = 0; j < edge.npoints - 1; j++){
+				maxwgt = std::max(maxwgt, edge.wgts[j]);
 			}
 		}
 	}
@@ -332,7 +331,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 	std::ostringstream buf;
 	for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
 		for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
-			edge = edges[ED_idx(e)];
+			const pedge &edge = edges[ED_idx(e)];
 
 			genBundleSpline(edge, buf);
 			agxset(e, epos, buf.str().c_str());
@@ -342,7 +341,7 @@ export_dot (FILE* fp, int ne, pedge *edges, Agraph_t* g)
 			agxset(e, esects, buf.str().c_str());
 			buf.str("");
 
-			if (!edge->wgts.empty()) {
+			if (!edge.wgts.empty()) {
 				if (!eclrs) eclrs = agattr(g, AGEDGE, const_cast<char*>("color"), "");
 				genBundleColors(edge, buf, maxwgt);
 				agxset(e, eclrs, buf.str().c_str());
@@ -445,10 +444,10 @@ bundle (Agraph_t* g, opts_t* opts)
                           opts->max_recursion, opts->angle_param, opts->angle);
 
 	if (opts->fmt == FMT_GV) {
-	    	export_dot (outfile, A->m, edges.data(), g);
+	    	export_dot(outfile, A->m, edges, g);
 	}
 	else {
-		pedge_export_gv(outfile, A->m, edges.data());
+		pedge_export_gv(outfile, A->m, edges);
 	}
 	return rv;
 }

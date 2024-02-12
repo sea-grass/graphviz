@@ -26,7 +26,8 @@ enum {MINGLE_DEBUG=0};
 
 namespace {
 struct Agglomerative_Ink_Bundling {
-  Agglomerative_Ink_Bundling(int level, int n, SparseMatrix A, pedge *edges)
+  Agglomerative_Ink_Bundling(int level, int n, SparseMatrix A,
+                             const std::vector<pedge> &edges)
       : level(level), n(n), A(A), edges(edges) {}
 
   int level; /* 0, 1, ... */
@@ -42,8 +43,8 @@ struct Agglomerative_Ink_Bundling {
       inks; /* amount of ink needed to draw this edge/bundle. Dimension n. */
   double total_ink = -1; /* amount of ink needed to draw this edge/bundle. Dimension
                        n. */
-  pedge
-      *edges; /* the original edge info. This does not vary level to level and
+  std::vector<pedge>
+      edges; /* the original edge info. This does not vary level to level and
                  is of dimenion n0, where n0 is the number of original edges */
   bool delete_top_level_A = false; /*whether the top level matrix should be deleted on
                               garbage collecting the grid */
@@ -52,7 +53,8 @@ struct Agglomerative_Ink_Bundling {
 
 using aib_t = std::vector<Agglomerative_Ink_Bundling>;
 
-static aib_t Agglomerative_Ink_Bundling_init(SparseMatrix A, pedge *edges,
+static aib_t Agglomerative_Ink_Bundling_init(SparseMatrix A,
+                                             const std::vector<pedge> &edges,
                                              int level) {
   int n = A->n, i;
 
@@ -95,7 +97,7 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
   int n = grid.front().n, level = grid.front().level, nc = 0;
   int *ia = A->ia, *ja = A->ja;
   int i, j, k, jj, jc, jmax, ni, nj, npicks;
-  pedge *edges = grid.front().edges;
+  const std::vector<pedge> &edges = grid.front().edges;
   const std::vector<double> &inks = grid.front().inks;
   double inki, inkj;
   double gain, maxgain, minink, total_gain = 0;
@@ -162,7 +164,8 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
       }
 
       npicks = ni + nj;
-      ink1 = ink(edges, npicks, pick, &ink0, &meet1, &meet2, angle_param, angle);
+      ink1 =
+          ink(edges, npicks, pick, &ink0, &meet1, &meet2, angle_param, angle);
       if (MINGLE_DEBUG) {
 	if (Verbose) {
 		fprintf(stderr,", if merging {");
@@ -302,9 +305,11 @@ static void Agglomerative_Ink_Bundling_establish(aib_t &grid, int *pick,
   }
 }
 
-static aib_t Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges,
+static aib_t Agglomerative_Ink_Bundling_new(SparseMatrix A0,
+                                            const std::vector<pedge> &edges,
                                             double angle_param, double angle) {
-  /* give a link of edges and their nearest neighbor graph, return a multilevel of edge bundling based on ink saving */
+  /* give a link of edges and their nearest neighbor graph, return a multilevel
+   * of edge bundling based on ink saving */
   SparseMatrix A = A0;
 
   if (!SparseMatrix_is_symmetric(A, false) || A->type != MATRIX_TYPE_REAL){
@@ -322,8 +327,8 @@ static aib_t Agglomerative_Ink_Bundling_new(SparseMatrix A0, pedge *edges,
 }
 
 static void agglomerative_ink_bundling_internal(
-    int dim, SparseMatrix A, pedge *edges, int nneighbors, int *recurse_level,
-    int MAX_RECURSE_LEVEL, double angle_param, double angle,
+    int dim, SparseMatrix A, std::vector<pedge> &edges, int nneighbors,
+    int *recurse_level, int MAX_RECURSE_LEVEL, double angle_param, double angle,
     double *current_ink, double *ink00) {
 
   int i, j, jj, k;
@@ -332,7 +337,6 @@ static void agglomerative_ink_bundling_internal(
   SparseMatrix R;
   double ink0, ink1;
   point_t meet1, meet2;
-  pedge e;
   double TOL = 0.0001, wgt_all;
   clock_t start;
 
@@ -390,32 +394,31 @@ static void agglomerative_ink_bundling_internal(
 	  for (j = ia[i]; j < ia[i+1]; j++){
 	    /* make this edge 4 points, insert two meeting points at 1 and 2, make 3 the last point */
 	    jj = ja[j];
-	    edges[jj] = pedge_double(edges[jj]);/* has to call pedge_double twice: from 2 points to 3 points to 5 points. The last point not used, may be
+	    pedge_double(edges[jj]);/* has to call pedge_double twice: from 2 points to 3 points to 5 points. The last point not used, may be
 						 improved later */
-	    e = edges[jj] = pedge_double(edges[jj]);
+	    pedge_double(edges[jj]);
+	    pedge &e = edges[jj];
 
-	    e->wgts.resize(4);	
-	    e->x[1*dim] = meet1.x;
-	    e->x[1*dim+1] = meet1.y;
-	    e->x[2*dim] = meet2.x;
-	    e->x[2*dim+1] = meet2.y;
-	    e->x[3*dim] = e->x[4*dim];
-	    e->x[3*dim+1] = e->x[4*dim+1];
-	    e->npoints = 4;
-	    for (k = 0; k < 3; k++) e->wgts[k] = e->wgt;
-	    wgt_all += e->wgt;
+	    e.x[1 * dim] = meet1.x;
+	    e.x[1 * dim + 1] = meet1.y;
+	    e.x[2 * dim] = meet2.x;
+	    e.x[2 * dim + 1] = meet2.y;
+	    e.x[3 * dim] = e.x[4 * dim];
+	    e.x[3 * dim + 1] = e.x[4 * dim + 1];
+	    e.npoints = 4;
+	    e.wgts = std::vector<double>(4, e.wgt);
+	    wgt_all += e.wgt;
 	
 	  }
 	  for (j = ia[i]; j < ia[i+1]; j++){
-	    e = edges[ja[j]];
-	    e->wgts[1] = wgt_all;
+	    pedge &e = edges[ja[j]];
+	    e.wgts[1] = wgt_all;
 	  }
 	}
 	
       }
     }
   } else {
-    pedge midedge;/* middle section of edges that will be bundled again */
     int ne, npp, l;
     SparseMatrix A_mid;
     double wgt;
@@ -437,7 +440,7 @@ static void agglomerative_ink_bundling_internal(
     for (i = 0; i < R->m; i++){
       pick = &(ja[ia[i]]);
       wgt = 0.;
-      for (j = ia[i]; j < ia[i+1]; j++) wgt += edges[j]->wgt;
+      for (j = ia[i]; j < ia[i+1]; j++) wgt += edges[j].wgt;
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"calling ink3...\n");
       ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
       if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"done calling ink3...\n");
@@ -452,39 +455,41 @@ static void agglomerative_ink_bundling_internal(
 
     A_mid = nearest_neighbor_graph(ne, std::min(nneighbors, ne), xx.data());
 
-    agglomerative_ink_bundling_internal(dim, A_mid, mid_edges.data(), nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
+    agglomerative_ink_bundling_internal(dim, A_mid, mid_edges, nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
     SparseMatrix_delete(A_mid);
 
     /* patching edges with the new mid-section */
     for (i = 0; i < R->m; i++){
       pick = &(ja[ia[i]]);
-      midedge = mid_edges[i];
-      npp = midedge->npoints + 2;
+      // middle section of edges that will be bundled again
+      const pedge &midedge = mid_edges[i];
+      npp = midedge.npoints + 2;
       for (j = ia[i]; j < ia[i+1]; j++){
 	jj = ja[j];
-	e = edges[jj] = pedge_wgts_realloc(edges[jj], npp);
+	pedge_wgts_realloc(edges[jj], npp);
+	pedge &e = edges[jj];
 
-	assert(e->npoints == 2);
+	assert(e.npoints == 2);
 	for (l = 0; l < dim; l++){/* move the second point to the last */
-	  e->x[(npp - 1)*dim+l] = e->x[1*dim+l];
+	  e.x[(npp - 1) * dim + l] = e.x[1 * dim + l];
 	}
 
-	for (k = 0; k < midedge->npoints; k++){
+	for (k = 0; k < midedge.npoints; k++){
 	  for (l = 0; l < dim; l++){
-	    e->x[(k+1)*dim+l] = midedge->x[k*dim+l];
+	    e.x[(k + 1) * dim + l] = midedge.x[k * dim + l];
 	  }
-	  if (k < midedge->npoints - 1){
-	    if (!midedge->wgts.empty()) {
-	      e->wgts[(k+1)] = midedge->wgts[k];
+	  if (k < midedge.npoints - 1){
+	    if (!midedge.wgts.empty()) {
+	      e.wgts[k + 1] = midedge.wgts[k];
 	    } else {
-	      e->wgts[(k+1)] = midedge->wgt;
+	      e.wgts[k + 1] = midedge.wgt;
 	    }
 	  }
 	}
-	e->wgts[npp - 2] = e->wgts[0];/* the last interval take from the 1st interval */
+	e.wgts[npp - 2] = e.wgts[0]; // the last interval take from the 1st interval
 
 
-	e->npoints = npp;
+	e.npoints = npp;
       }
     }
 
@@ -495,9 +500,10 @@ static void agglomerative_ink_bundling_internal(
   Agglomerative_Ink_Bundling_delete(grid);
 }
 
-void agglomerative_ink_bundling(int dim, SparseMatrix A, pedge *edges,
-                                int nneighbor, int MAX_RECURSE_LEVEL,
-                                double angle_param, double angle) {
+void agglomerative_ink_bundling(int dim, SparseMatrix A,
+                                std::vector<pedge> &edges, int nneighbor,
+                                int MAX_RECURSE_LEVEL, double angle_param,
+                                double angle) {
   int recurse_level = 0;
   double current_ink = -1, ink0;
 
