@@ -170,6 +170,7 @@ static void zkitty_format(GVJ_t *job) {
   size_t zsize;
   int ret = zlib_compress(imagedata, imagedata_size, &zbuf, &zsize, -1);
   assert(ret == Z_OK);
+  (void)ret;
 
   kitty_write(zbuf, zsize, job->width, job->height, true);
 
