@@ -76,7 +76,7 @@ void node_in_root_vlist(node_t * n);
 
 	/* mincross parameters */
 static int MinQuit;
-static double Convergence;
+static const double Convergence = .995;
 
 static graph_t *Root;
 static int GlobalMinRank, GlobalMaxRank;
@@ -1801,7 +1801,6 @@ static void mincross_options(graph_t * g)
     /* set default values */
     MinQuit = 8;
     MaxIter = 24;
-    Convergence = .995;
 
     p = agget(g, "mclimit");
     if (p && (f = atof(p)) > 0.0) {
