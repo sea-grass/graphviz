@@ -126,8 +126,11 @@ bcomps_LDADD = \
 gc_SOURCES = gc.c
 
 gc_LDADD = \
-	$(top_builddir)/lib/cgraph/libcgraph.la
-
+	$(top_builddir)/lib/common/libcommon_C.la \
+	$(top_builddir)/lib/gvc/libgvc_C.la \
+	$(top_builddir)/lib/pathplan/libpathplan_C.la \
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/cdt/libcdt_C.la
 
 gvpack_SOURCES = gvpack.cpp
 gvpack_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0

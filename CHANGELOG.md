@@ -8,10 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `gvpack`, in addition to recognizing a “cluster” name prefix as a mark of a
-  cluster, now recognizes this case insensitively as well as recognizing the
-  `cluster` attribute. This is more consistent with how the Graphviz libraries
-  work.
+- `gc` and `gvpack`, in addition to recognizing a “cluster” name prefix as a
+  mark of a cluster, now recognize this case insensitively as well as
+  recognizing the `cluster` attribute. This is more consistent with how the
+  Graphviz libraries work.
 
 ## [10.0.1] – 2024-02-11
 

@@ -71,6 +71,7 @@ add_simple_tool(acyclic)
 add_simple_tool(bcomps)
 add_simple_tool(ccomps)
 add_simple_tool(gc)
+target_link_libraries(gc gvc)
 add_simple_tool(nop)
 add_simple_tool(tred)
 target_link_libraries(tred gvc) # e.g. for start_timer
