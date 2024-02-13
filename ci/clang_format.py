@@ -96,7 +96,6 @@ EXCLUDE = (
     "cmd/tools/convert.h",
     "cmd/tools/cvtgxl.c",
     "cmd/tools/dijkstra.c",
-    "cmd/tools/gc.c",
     "cmd/tools/gml2gv.c",
     "cmd/tools/gml2gv.h",
     "cmd/tools/graph_generator.c",
