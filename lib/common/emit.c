@@ -2468,8 +2468,7 @@ static void emit_begin_edge(GVJ_t *job, edge_t *e, char **styles) {
   obj->type = EDGE_OBJTYPE;
   obj->u.e = e;
   obj->emit_state = EMIT_EDRAW;
-  if (ED_label(e) && !ED_label(e)->html &&
-      mapBool(agget(e, "labelaligned"), false))
+  if (ED_label(e) && !ED_label(e)->html && mapbool(agget(e, "labelaligned")))
     obj->labeledgealigned = true;
 
   /* We handle the edge style and penwidth here because the width

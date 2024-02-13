@@ -542,7 +542,7 @@ int init_nop(Agraph_t * g, int adjust)
     attrsym_t *G_bb = agfindgraphattr(g, "bb");
     int didAdjust = 0;  /* Have nodes been moved? */
     int haveBackground;
-    bool translate = !mapBool(agget(g, "notranslate"), false);
+    bool translate = !mapbool(agget(g, "notranslate"));
 
     /* If G_bb not defined, define it */
     if (!G_bb)
@@ -1412,7 +1412,7 @@ void neato_layout(Agraph_t * g)
 	}
 	else gv_postprocess(g, 0);
     } else {
-	bool noTranslate = mapBool(agget(g, "notranslate"), false);
+	bool noTranslate = mapbool(agget(g, "notranslate"));
 	PSinputscale = get_inputscale (g);
 	neato_init_graph(g);
 	layoutMode = neatoMode(g);
