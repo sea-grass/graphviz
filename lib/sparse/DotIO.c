@@ -12,6 +12,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
+#include <cgraph/unreachable.h>
 #include <sparse/general.h>
 #include <sparse/DotIO.h>
 #include <sparse/clustering.h>
@@ -624,7 +625,7 @@ void attached_clustering(Agraph_t* g, int maxcluster, int clustering_scheme){
       modularity_clustering(A, false, maxcluster,
 			    &nc, &clusters, &modularity);
     } else {
-      assert(0);
+      UNREACHABLE();
     }
     for (i = 0; i < nnodes; i++) (clusters)[i]++;/* make into 1 based */
     for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
