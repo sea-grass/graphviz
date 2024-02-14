@@ -447,7 +447,7 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
       modularity_clustering(A, false, maxcluster,
 		    &nc, clusters, &modularity);
     } else {
-      assert(0);
+      UNREACHABLE();
     }
     for (i = 0; i < nnodes; i++) (*clusters)[i]++;/* make into 1 based */
     for (n = agfstnode (g); n; n = agnxtnode (g, n)) {
