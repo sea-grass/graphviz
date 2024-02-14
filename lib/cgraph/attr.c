@@ -546,8 +546,7 @@ static void init_all_attrs(Agraph_t * g)
     }
 }
 
-/* agcopyattr:
- * Assumes attributes have already been declared.
+/* Assumes attributes have already been declared.
  * Do not copy key attribute for edges, as this must be distinct.
  * Returns non-zero on failure or if objects have different type.
  */

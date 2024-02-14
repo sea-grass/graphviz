@@ -74,8 +74,7 @@ static Agedge_t *top(gv_stack_t *sp) {
   return stack_top(sp);
 }
 
-/* dfs:
- * Main function for transitive reduction.
+/* Main function for transitive reduction.
  * This does a DFS starting at node n. Each node records the length of
  * its largest simple path from n. We only care if the length is > 1. Node
  * n will have distance 0; outneighbors of n will have distance 1 or 2; all

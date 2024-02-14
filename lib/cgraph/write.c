@@ -96,8 +96,7 @@ static bool is_escape(const char *str) {
   return false;
 }
 
-/* _agstrcanon:
- * Canonicalize ordinary strings. 
+/* Canonicalize ordinary strings. 
  * Assumes buf is large enough to hold output.
  */
 static char *_agstrcanon(char *arg, char *buf)
@@ -705,9 +704,7 @@ static void set_attrwf(Agraph_t * g, bool toplevel, bool value)
     }
 }
 
-/* agwrite:
- * Return 0 on success, EOF on failure
- */
+/// Return 0 on success, EOF on failure
 int agwrite(Agraph_t * g, void *ofile)
 {
     char* s;

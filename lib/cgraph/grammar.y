@@ -449,8 +449,6 @@ concat (char* s1, char* s2)
   return s;
 }
 
-/* concatPort:
- */
 static char*
 concatPort (char* s1, char* s2)
 {
