@@ -25,12 +25,11 @@
 void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
  /* compute vector 'dist' of distances of all nodes from 'vertex' */
 {
-    int i;
     int closestVertex, neighbor;
     DistType closestDist = INT_MAX;
 
     /* initial distances with edge weights: */
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
 	dist[i] = -1;
     dist[vertex] = 0;
 
@@ -41,7 +40,7 @@ void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
     if (graph[0].ewgts == NULL) {
 	while (deQueue(&Q, &closestVertex)) {
 	    closestDist = dist[closestVertex];
-	    for (i = 1; i < graph[closestVertex].nedges; i++) {
+	    for (size_t i = 1; i < graph[closestVertex].nedges; i++) {
 		neighbor = graph[closestVertex].edges[i];
 		if (dist[neighbor] < -0.5) {	/* first time to reach neighbor */
 		    dist[neighbor] = closestDist + 1;
@@ -52,7 +51,7 @@ void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
     } else {
 	while (deQueue(&Q, &closestVertex)) {
 	    closestDist = dist[closestVertex];
-	    for (i = 1; i < graph[closestVertex].nedges; i++) {
+	    for (size_t i = 1; i < graph[closestVertex].nedges; i++) {
 		neighbor = graph[closestVertex].edges[i];
 		if (dist[neighbor] < -0.5) {	/* first time to reach neighbor */
 		    dist[neighbor] =
@@ -65,7 +64,7 @@ void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
     }
 
     /* For dealing with disconnected graphs: */
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < n; i++)
 	if (dist[i] < -0.5)	/* 'i' is not connected to 'vertex' */
 	    dist[i] = closestDist + 10;
 

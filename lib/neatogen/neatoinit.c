@@ -35,6 +35,7 @@
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
@@ -710,7 +711,7 @@ static void
 dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
 {
     node_t *np, *hp;
-    int j, e, f;
+    int j;
     /* if mode is IPSEP make it an in-edge
      * at both ends, so that an edge constraint won't be generated!
      */
@@ -719,12 +720,13 @@ dfsCycle (vtx_data* graph, int i,int mode, node_t* nodes[])
     np = nodes[i];
     ND_mark(np) = true;
     ND_onstack(np) = true;
-    for (e = 1; e < graph[i].nedges; e++) {
+    for (size_t e = 1; e < graph[i].nedges; e++) {
 	if (graph[i].edists[e] == 1.0) continue;  /* in edge */
 	j = graph[i].edges[e];
 	hp = nodes[j];
 	if (ND_onstack(hp)) {  /* back edge: reverse it */
             graph[i].edists[e] = x;
+            size_t f;
             for (f = 1; f < graph[j].nedges && graph[j].edges[f] != i; f++) ;
             assert (f < graph[j].nedges);
             graph[j].edists[f] = -1.0;
@@ -786,7 +788,7 @@ static vtx_data *makeGraphData(graph_t * g, int nv, int *nedges, int mode, int m
     float *edists = NULL;
 #endif
     PointMap *ps = newPM();
-    int i, i_nedges, idx;
+    int i, idx;
 
     /* lengths and weights unused in reweight model */
     bool haveLen = false;
@@ -833,7 +835,7 @@ static vtx_data *makeGraphData(graph_t * g, int nv, int *nedges, int mode, int m
 	else
 	    graph[i].edists = NULL;
 #endif
-	i_nedges = 1;		/* one for the self */
+	size_t i_nedges = 1; // one for the self
 
 	for (ep = agfstedge(g, np); ep; ep = agnxtedge(g, ep, np)) {
 	    if (aghead(ep) == agtail(ep))
@@ -894,7 +896,7 @@ static vtx_data *makeGraphData(graph_t * g, int nv, int *nedges, int mode, int m
 	    eweights = gv_recalloc(graph[0].eweights, edges_size, 2 * ne + nv, sizeof(float));
 
 	for (i = 0; i < nv; i++) {
-	    int sz = graph[i].nedges;
+	    const size_t sz = graph[i].nedges;
 	    graph[i].edges = edges;
 	    edges += sz;
 	    if (haveLen) {
@@ -1035,36 +1037,36 @@ int checkStart(graph_t * G, int nG, int dflt)
 void dumpData(graph_t * g, vtx_data * gp, int nv, int ne)
 {
     node_t *v;
-    int i, j, n;
+    int i;
 
     fprintf(stderr, "#nodes %d #edges %d\n", nv, ne);
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	fprintf(stderr, "\"%s\" %d\n", agnameof(v), ND_id(v));
     }
     for (i = 0; i < nv; i++) {
-	n = gp[i].nedges;
-	fprintf(stderr, "[%d] %d\n", i, n);
-	for (j = 0; j < n; j++) {
+	const size_t n = gp[i].nedges;
+	fprintf(stderr, "[%d] %" PRISIZE_T "\n", i, n);
+	for (size_t j = 0; j < n; j++) {
 	    fprintf(stderr, "  %3d", gp[i].edges[j]);
 	}
 	fputs("\n", stderr);
 	if (gp[i].ewgts) {
 	    fputs("  ewgts", stderr);
-	    for (j = 0; j < n; j++) {
+	    for (size_t j = 0; j < n; j++) {
 		fprintf(stderr, "  %3f", gp[i].ewgts[j]);
 	    }
 	    fputs("\n", stderr);
 	}
 	if (gp[i].eweights) {
 	    fputs("  eweights", stderr);
-	    for (j = 0; j < n; j++) {
+	    for (size_t j = 0; j < n; j++) {
 		fprintf(stderr, "  %3f", gp[i].eweights[j]);
 	    }
 	    fputs("\n", stderr);
 	}
 	if (gp[i].edists) {
 	    fputs("  edists", stderr);
-	    for (j = 0; j < n; j++) {
+	    for (size_t j = 0; j < n; j++) {
 		fprintf(stderr, "  %3f", gp[i].edists[j]);
 	    }
 	    fputs("\n", stderr);

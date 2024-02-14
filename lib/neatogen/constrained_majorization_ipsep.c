@@ -70,7 +70,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	** This function imposes HIERARCHY CONSTRAINTS  **
 	*************************************************/
 
-    int i, j, k;
+    int i, k;
     float *lap1 = NULL;
     float *dist_accumulator = NULL;
     float *tmp_coords = NULL;
@@ -105,7 +105,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	return 0;
 
     for (i = 0; i < n; i++) {
-	for (j = 1; j < graph[i].nedges; j++) {
+	for (size_t j = 1; j < graph[i].nedges; j++) {
 	    maxEdgeLen = MAX(graph[i].ewgts[j], maxEdgeLen);
 	}
     }
@@ -161,14 +161,12 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     /* for numerical stability, scale down layout                */
     /* No Jiggling, might conflict with constraints                      */
     for (i = 0; i < dim; i++) {
-	for (j = 0; j < n; j++) {
-	    if (fabs(d_coords[i][j]) > max) {
-		max = fabs(d_coords[i][j]);
-	    }
+	for (int j = 0; j < n; j++) {
+	    max = fmax(max, fabs(d_coords[i][j]));
 	}
     }
     for (i = 0; i < dim; i++) {
-	for (j = 0; j < n; j++) {
+	for (int j = 0; j < n; j++) {
 	    d_coords[i][j] *= 10 / max;
 	}
     }
@@ -207,7 +205,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	float v;
 	c0 = c1 = 0;
 	for (i = 0; i < nn; i++) {
-	    for (j = 0; j < nn - i; j++) {
+	    for (int j = 0; j < nn - i; j++) {
 		if (i < n && j < n - i) {
 		    v = lap2[c0++];
 		} else {
@@ -236,7 +234,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     for (i = 0; i < n - 1; i++) {
 	degree = 0;
 	count++;		/* skip main diag entry */
-	for (j = 1; j < n - i; j++, count++) {
+	for (int j = 1; j < n - i; j++, count++) {
 	    val = lap2[count];
 	    degree += val;
 	    degrees[i + j] -= val;
@@ -251,7 +249,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     f_storage = gv_calloc(dim * n, sizeof(float));
     for (i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * n;
-	for (j = 0; j < n; j++) {
+	for (int j = 0; j < n; j++) {
 	    coords[i][j] = j < orig_n ? (float)d_coords[i][j] : 0;
 	}
     }
@@ -311,7 +309,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 	    /* convert to 1/d_{ij} */
 	    invert_sqrt_vec(len, dist_accumulator);
 	    /* detect overflows */
-	    for (j = 0; j < len; j++) {
+	    for (int j = 0; j < len; j++) {
 		if (dist_accumulator[j] >= FLT_MAX || dist_accumulator[j] < 0) {
 		    dist_accumulator[j] = 0;
 		}
@@ -319,7 +317,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 
 	    count++;		/* save place for the main diagonal entry */
 	    degree = 0;
-	    for (j = 0; j < len; j++, count++) {
+	    for (int j = 0; j < len; j++, count++) {
 		val = lap1[count] *= dist_accumulator[j];
 		degree += val;
 		degrees[i + j + 1] -= val;
@@ -441,7 +439,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
 finish:
     if (coords != NULL) {
 	for (i = 0; i < dim; i++) {
-	    for (j = 0; j < orig_n; j++) {
+	    for (int j = 0; j < orig_n; j++) {
 		d_coords[i][j] = coords[i][j];
 	    }
 	}

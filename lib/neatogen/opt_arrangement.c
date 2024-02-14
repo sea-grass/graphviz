@@ -13,6 +13,7 @@
 #ifdef DIGCOLA
 #include <neatogen/matrix_ops.h>
 #include <neatogen/conjgrad.h>
+#include <stddef.h>
 
 static void construct_b(vtx_data * graph, int n, double *b)
 {
@@ -22,7 +23,7 @@ static void construct_b(vtx_data * graph, int n, double *b)
      * real laplacian L, but its negation: -L. 
      * So instead of solving Lx=b, we will solve -Lx=-b
      */
-    int i, j;
+    int i;
 
     double b_i = 0;
 
@@ -31,7 +32,7 @@ static void construct_b(vtx_data * graph, int n, double *b)
 	if (graph[0].edists == NULL) {
 	    continue;
 	}
-	for (j = 1; j < graph[i].nedges; j++) {	/* skip the self loop */
+	for (size_t j = 1; j < graph[i].nedges; j++) { // skip the self loop
 	    b_i += graph[i].ewgts[j] * graph[i].edists[j];
 	}
 	b[i] = b_i;
@@ -45,10 +46,10 @@ compute_y_coords(vtx_data * graph, int n, double *y_coords,
 		 int max_iterations)
 {
     /* Find y coords of a directed graph by solving L*x = b */
-    int i, j, rv = 0;
+    int i, rv = 0;
     double *b = gv_calloc(n, sizeof(double));
     double tol = hierarchy_cg_tol;
-    int nedges = 0;
+    size_t nedges = 0;
     float *old_ewgts = graph[0].ewgts;
 
     construct_b(graph, n, b);
@@ -65,7 +66,7 @@ compute_y_coords(vtx_data * graph, int n, double *y_coords,
     for (i = 0; i < n; i++) {
 	graph[i].ewgts = uniform_weights;
 	uniform_weights[0] = (float) -(graph[i].nedges - 1);
-	for (j = 1; j < graph[i].nedges; j++) {
+	for (size_t j = 1; j < graph[i].nedges; j++) {
 	    uniform_weights[j] = 1;
 	}
 	uniform_weights += graph[i].nedges;

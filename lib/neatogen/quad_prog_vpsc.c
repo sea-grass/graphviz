@@ -186,7 +186,7 @@ constrained_majorization_vpsc(CMajEnvVPSC * e, float *b, float *place,
 CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 			  ipsep_options * opt, int diredges)
 {
-    int i, j;
+    int i;
     /* nv is the number of real nodes */
     int nConCs;
     CMajEnvVPSC *e = gv_alloc(sizeof(CMajEnvVPSC));
@@ -207,7 +207,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	if (Verbose)
 	    fprintf(stderr, "  generate edge constraints...\n");
 	for (i = 0; i < e->nv; i++) {
-	    for (j = 1; j < graph[i].nedges; j++) {
+	    for (size_t j = 1; j < graph[i].nedges; j++) {
 		if (graph[i].edists[j] > 0.01) {
 		    e->gm++;
 		}
@@ -216,7 +216,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	e->gcs = newConstraints(e->gm);
 	e->gm = 0;
 	for (i = 0; i < e->nv; i++) {
-	    for (j = 1; j < graph[i].nedges; j++) {
+	    for (size_t j = 1; j < graph[i].nedges; j++) {
 		int u = i, v = graph[i].edges[j];
 		if (graph[i].edists[j] > 0) {
 		    e->gcs[e->gm++] =
@@ -254,13 +254,13 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	for (i = 0; i < e->ndv; i++) {
 	    cvar = n + i;
 	    /* outgoing constraints for each var in level below boundary */
-	    for (j = 0; j < levels[i].num_nodes; j++) {
+	    for (int j = 0; j < levels[i].num_nodes; j++) {
 		e->gcs[e->gm++] =
 		    newConstraint(e->vs[levels[i].nodes[j]], e->vs[cvar],
 				  halfgap);
 	    }
 	    /* incoming constraints for each var in level above boundary */
-	    for (j = 0; j < levels[i + 1].num_nodes; j++) {
+	    for (int j = 0; j < levels[i + 1].num_nodes; j++) {
 		e->gcs[e->gm++] =
 		    newConstraint(e->vs[cvar],
 				  e->vs[levels[i + 1].nodes[j]], halfgap);
@@ -282,7 +282,7 @@ CMajEnvVPSC *initCMajVPSC(int n, float *packedMat, vtx_data * graph,
 	if (ecs != NULL)
 	    deleteConstraints(0, ecs);
 	for (i = 0; i < opt->clusters->nclusters; i++) {
-	    for (j = 0; j < opt->clusters->clustersizes[i]; j++) {
+	    for (int j = 0; j < opt->clusters->clustersizes[i]; j++) {
 		Variable *v = e->vs[opt->clusters->clusters[i][j]];
 		Variable *cl = e->vs[e->nv + 2 * i];
 		Variable *cr = e->vs[e->nv + 2 * i + 1];

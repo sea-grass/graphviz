@@ -59,10 +59,6 @@ int conjugate_gradient
 	    vectors_scalar_mult(n, Ap, alpha, Ap);
 	    vectors_subtraction(n, r, Ap, r);	/* fast computation of r, the residual */
 
-	    /* Alternaive accurate, but slow, computation of the residual - r */
-	    /* right_mult_with_vector(A, n, x, Ax); */
-	    /* vectors_subtraction(n,b,Ax,r); */
-
 	    r_r_new = vectors_inner_product(n, r, r);
 	    if (r_r == 0) {
 		agerr (AGERR, "conjugate_gradient: unexpected length 0 vector\n");

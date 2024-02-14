@@ -16,13 +16,11 @@
 #include <stdlib.h>
 #include <math.h>
 
-int common_neighbors(vtx_data * graph, int u, int *v_vector)
-{
+size_t common_neighbors(vtx_data *graph, int u, int *v_vector) {
     // count number of common neighbors of 'v_vector' and 'u'
     int neighbor;
-    int num_shared_neighbors = 0;
-    int j;
-    for (j = 1; j < graph[u].nedges; j++) {
+    size_t num_shared_neighbors = 0;
+    for (size_t j = 1; j < graph[u].nedges; j++) {
 	neighbor = graph[u].edges[j];
 	if (v_vector[neighbor] > 0) {
 	    // a shared neighbor
@@ -35,18 +33,16 @@ void fill_neighbors_vec_unweighted(vtx_data * graph, int vtx, int *vtx_vec)
 {
     /* a node is NOT a neighbor of itself! */
     /* unlike the other version of this function */
-    int j;
-    for (j = 1; j < graph[vtx].nedges; j++) {
+    for (size_t j = 1; j < graph[vtx].nedges; j++) {
 	vtx_vec[graph[vtx].edges[j]] = 1;
     }
 }
 
 void empty_neighbors_vec(vtx_data * graph, int vtx, int *vtx_vec)
 {
-    int j;
     /* a node is NOT a neighbor of itself! */
     /* unlike the other version ofthis function */
-    for (j = 1; j < graph[vtx].nedges; j++) {
+    for (size_t j = 1; j < graph[vtx].nedges; j++) {
 	vtx_vec[graph[vtx].edges[j]] = 0;
     }
 }
@@ -170,10 +166,11 @@ void compute_new_weights(vtx_data * graph, int n)
 {
     /* Reweight graph so that high degree nodes will be separated */
 
-    int i, j;
-    int nedges = 0;
+    int i;
+    size_t nedges = 0;
     int *vtx_vec = gv_calloc(n, sizeof(int));
-    int deg_i, deg_j, neighbor;
+    size_t deg_i, deg_j;
+    int neighbor;
 
     for (i = 0; i < n; i++) {
 	nedges += graph[i].nedges;
@@ -184,7 +181,7 @@ void compute_new_weights(vtx_data * graph, int n)
 	graph[i].ewgts = weights;
 	fill_neighbors_vec_unweighted(graph, i, vtx_vec);
 	deg_i = graph[i].nedges - 1;
-	for (j = 1; j <= deg_i; j++) {
+	for (size_t j = 1; j <= deg_i; j++) {
 	    neighbor = graph[i].edges[j];
 	    deg_j = graph[neighbor].nedges - 1;
 	    weights[j] =
