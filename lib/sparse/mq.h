@@ -23,7 +23,6 @@ struct Multilevel_MQ_Clustering_struct {
   int n;
   SparseMatrix A; /* n x n matrix */
   SparseMatrix P; 
-  SparseMatrix R; 
   Multilevel_MQ_Clustering next;
   Multilevel_MQ_Clustering prev;
   bool delete_top_level_A;

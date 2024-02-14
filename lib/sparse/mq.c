@@ -166,7 +166,6 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_init(SparseMatrix A, in
   grid->n = n;
   grid->A = A;
   grid->P = NULL;
-  grid->R = NULL;
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = false;
@@ -215,7 +214,6 @@ static void Multilevel_MQ_Clustering_delete(Multilevel_MQ_Clustering grid){
     }
   }
   SparseMatrix_delete(grid->P);
-  SparseMatrix_delete(grid->R);
   free(grid->matching);
   free(grid->deg_intra);
   free(grid->dout);
@@ -461,6 +459,7 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
     SparseMatrix_delete(R0);
     P = SparseMatrix_transpose(R);
     B = SparseMatrix_multiply(R, A);
+    SparseMatrix_delete(R);
     if (!B) {
         free(deg_intra_new);
         free(wgt_new);
@@ -476,7 +475,6 @@ static Multilevel_MQ_Clustering Multilevel_MQ_Clustering_establish(Multilevel_MQ
         goto RETURN;
     }
     grid->P = P;
-    grid->R = R;
     level++;
     cgrid = Multilevel_MQ_Clustering_init(cA, level); 
     deg_intra_new = gv_recalloc(deg_intra_new, n, nc, sizeof(double));
