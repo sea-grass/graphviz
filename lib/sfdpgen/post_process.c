@@ -295,7 +295,6 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   /* solve a stress model to achieve the ideal distance among a sparse set of edges recorded in A.
      A must be a real matrix.
    */
-  StressMajorizationSmoother sm;
   int i, j, k, m = A->m, *ia, *ja, *iw, *jw, *id, *jd;
   int nz;
   double *d, *w, *lambda;
@@ -314,8 +313,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   ja = A->ja;
   a = A->a;
 
-
-  sm = MALLOC(sizeof(struct StressMajorizationSmoother_struct));
+  StressMajorizationSmoother sm = gv_alloc(sizeof(struct StressMajorizationSmoother_struct));
   sm->scaling = 1.;
   sm->data = NULL;
   sm->scheme = SM_SCHEME_NORMAL;

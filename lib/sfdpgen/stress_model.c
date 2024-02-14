@@ -1,3 +1,4 @@
+#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
@@ -23,7 +24,7 @@ void stress_model(int dim, SparseMatrix B, double **x, int maxit_sm, int *flag) 
   *flag = 0;
   m = A->m;
   if (!x) {
-    *x = MALLOC(sizeof(double)*m*dim);
+    *x = gv_calloc(m * dim, sizeof(double));
     srand(123);
     for (i = 0; i < dim*m; i++) (*x)[i] = drand();
   }

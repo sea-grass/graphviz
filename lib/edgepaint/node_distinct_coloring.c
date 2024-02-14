@@ -196,7 +196,6 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
   SparseMatrix B, A = A0;
   int ncomps, *comps = NULL;
   int nn, n;
-  double *ctmp;
   int i, j, jj;
   QuadTree qt = NULL;
   int cdim;
@@ -243,10 +242,8 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
     return -1;
   }
  
-  if (!(*colors)) {
-    *colors = MALLOC(sizeof(double)*cdim*n);
-  }
-  ctmp = MALLOC(sizeof(double)*cdim*n);
+  *colors = gv_calloc(cdim * n, sizeof(double));
+  double *ctmp = gv_calloc(cdim * n, sizeof(double));
 
   B = SparseMatrix_symmetrize(A, false);
   A = B;
