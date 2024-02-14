@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <cghdr.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
@@ -453,18 +454,13 @@ concat (char* s1, char* s2)
 static char*
 concatPort (char* s1, char* s2)
 {
-  char*  s;
-  char   buf[BUFSIZ];
-  char*  sym;
-  size_t len = strlen(s1) + strlen(s2) + 2;  /* one more for ':' */
+  agxbuf buf = {0};
 
-  if (len <= BUFSIZ) sym = buf;
-  else sym = gv_alloc(len);
-  sprintf (sym, "%s:%s", s1, s2);
-  s = agstrdup (G,sym);
+  agxbprint(&buf, "%s:%s", s1, s2);
+  char *s = agstrdup(G, agxbuse(&buf));
   agstrfree (G,s1);
   agstrfree (G,s2);
-  if (sym != buf) free (sym);
+  agxbfree(&buf);
   return s;
 }
 
