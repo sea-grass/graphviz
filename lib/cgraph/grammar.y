@@ -32,7 +32,7 @@
 #include <stddef.h>
 extern void aagerror(const char*);
 
-static char Key[] = "key";
+static const char Key[] = "key";
 static int SubgraphDepth = 0;
 
 typedef union s {					/* possible items in generic list */
