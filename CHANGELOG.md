@@ -30,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   use-after-free memory accesses.
 - The GDI+ plugin, when asked to render a graphic metafile, no longer references
   uninitialized memory. This bug was introduced in Graphviz 2.24.0.
+- A `free` of an invalid pointer in `edgepaint` was fixed. #2513
 
 ## [10.0.1] – 2024-02-11
 
