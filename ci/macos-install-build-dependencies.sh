@@ -5,6 +5,14 @@ set -o pipefail
 set -u
 set -x
 
+# Homebrew/Macports install steps may pull in newer versions of Flex or Bison,
+# but we still end up with the XCode-provided headers in the compiler’s include
+# path, so log what versions we have for debugging purposes
+echo -n 'XCode-provided version of Flex is: '
+flex --version
+echo -n 'XCode-provided version of Bison is: '
+bison --version | head -1
+
 brew tap --repair
 brew update
 brew install autogen || brew upgrade autogen
