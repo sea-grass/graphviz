@@ -30,7 +30,6 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_init(Sp
   grid->n = n;
   grid->A = A;
   grid->P = NULL;
-  grid->R = NULL;
   grid->next = NULL;
   grid->prev = NULL;
   grid->delete_top_level_A = false;
@@ -82,7 +81,6 @@ static void Multilevel_Modularity_Clustering_delete(Multilevel_Modularity_Cluste
     }
   }
   SparseMatrix_delete(grid->P);
-  SparseMatrix_delete(grid->R);
   free(grid->matching);
   free(grid->deg);
 
@@ -216,6 +214,7 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
     SparseMatrix_delete(R0);
     P = SparseMatrix_transpose(R);
     B = SparseMatrix_multiply(R, A);
+    SparseMatrix_delete(R);
     if (!B) {
       free(deg_new);
       goto RETURN;
@@ -227,7 +226,6 @@ static Multilevel_Modularity_Clustering Multilevel_Modularity_Clustering_establi
       goto RETURN;
     }
     grid->P = P;
-    grid->R = R;
     level++;
     cgrid = Multilevel_Modularity_Clustering_init(cA, level); 
     cgrid->deg = deg_new;
