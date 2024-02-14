@@ -30,9 +30,9 @@ $(top_builddir)/graphviz_version.h: config.h
 	$(EGREP) 'PACKAGE|VERSION|GVPLUGIN' config.h >> $(top_builddir)/graphviz_version.h
 
 EXTRA_DIST = graphviz.spec \
-	config/depcomp config/config.rpath \
+	config/depcomp \
 	builddate.h \
-	m4/README m4/lib-ld.m4 m4/lib-link.m4 m4/lib-prefix.m4 \
+	m4/README \
 	Doxyfile.in Doxyfile \
 	config/config_perl.pl \
 	config/config_ruby.rb config/config_tcl.tcl dot.demo plugin.demo \
