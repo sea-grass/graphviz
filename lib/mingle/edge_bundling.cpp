@@ -41,7 +41,8 @@ static double sqr_dist(int dim, const double *x, const double *y) {
   for (i = 0; i < dim; i++) res += (x[i] - y[i])*(x[i] - y[i]);
   return res;
 }
-static double dist(int dim, double *x, double *y){
+
+static double dist(int dim, const double *x, const double *y) {
   return sqrt(sqr_dist(dim,x,y));
 }
 
