@@ -409,8 +409,8 @@ static void edge_attraction_force(double similarity, const pedge &e1,
 }
 
 static void force_directed_edge_bundling(SparseMatrix A,
-                                         const std::vector<pedge> &edges,
-                                         int maxit, double step0, double K) {
+                                         std::vector<pedge> &edges, int maxit,
+                                         double step0, double K) {
   int i, j, ne = A->n, k;
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
@@ -432,7 +432,7 @@ static void force_directed_edge_bundling(SparseMatrix A,
 	force_t[j] = 0.;
 	force_a[j] = 0.;
       }
-      const pedge &e1 = edges[i];
+      pedge &e1 = edges[i];
       x = e1.x;
       edge_tension_force(force_t, e1);
       for (j = ia[i]; j < ia[i+1]; j++){
