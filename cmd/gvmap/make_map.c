@@ -14,6 +14,7 @@
 #include <math.h>
 #include <sparse/QuadTree.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
@@ -397,6 +398,9 @@ static void get_tri(int n, int dim, double *x, int *nt, struct Triangle **T, Spa
   SparseMatrix A, B;
 
   int* trilist = get_triangles(x, n, &ntri);
+  if (trilist == NULL) {
+    return;
+  }
 
   *T = gv_calloc(ntri, sizeof(struct Triangle));
 
