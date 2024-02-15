@@ -110,7 +110,7 @@ static double edge_compatibility_full(const pedge &e1, const pedge &e2) {
      return 1 if two edges are exactly the same, 0 if they are very different.
      This is based on Holten and van Wijk's paper
    */
-  double *u1, *v1, *u2, *v2, *u, dist1, dist2, len1, len2, len;
+  double *u1, *v1, *u2, *v2, dist1, dist2, len1, len2, len;
   double tmp, ca, cp, cs;
   int dim = e1.dim, i;
   bool flipped = false;
@@ -122,9 +122,7 @@ static double edge_compatibility_full(const pedge &e1, const pedge &e2) {
   dist1 = sqr_dist(dim, u1, u2) + sqr_dist(dim, v1, v2);
   dist2 =  sqr_dist(dim, u1, v2) + sqr_dist(dim, v1, u2);
   if (dist1 > dist2){
-    u = u2;
-    u2 = v2;
-    v2 = u;
+    std::swap(u2, v2);
     dist1 = dist2;
     flipped = true;
   }
