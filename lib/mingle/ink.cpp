@@ -244,7 +244,7 @@ double ink(const std::vector<pedge> &edges, int numEdges, int *pick,
   begin = end = Origin;
   for (i = 0; i < numEdges; i++) {
     const pedge &e = pick ? edges[pick[i]] : edges[i];
-    const double *x = e.x;
+    const std::vector<double> &x = e.x;
     point_t source = {x[0], x[1]};
     point_t target = {x[e.dim * e.npoints - e.dim],
                       x[e.dim * e.npoints - e.dim + 1]};
@@ -269,7 +269,7 @@ double ink(const std::vector<pedge> &edges, int numEdges, int *pick,
   std::vector<point_t> targets;
   for (i = 0; i < numEdges; i++) {
     const pedge &e = pick ? edges[pick[i]] : edges[i];
-    const double *x = e.x;
+    const std::vector<double> &x = e.x;
     sources.push_back(point_t{x[0], x[1]});
     targets.push_back(point_t{x[e.dim * e.npoints - e.dim],
                               x[e.dim * e.npoints - e.dim + 1]});
@@ -308,7 +308,7 @@ double ink(const std::vector<pedge> &edges, int numEdges, int *pick,
 double ink1(const pedge &e) {
   double ink0 = 0;
 
-  const double *x = e.x;
+  const std::vector<double> &x = e.x;
   const double xx = x[0] - x[e.dim * e.npoints - e.dim];
   const double yy = x[1] - x[e.dim * e.npoints - e.dim + 1];
   ink0 += hypot(xx, yy);

@@ -52,8 +52,7 @@ pedge pedge_new(int np, int dim, double *x) {
   e.npoints = np;
   e.dim = dim;
   e.len = np;
-  e.x = (double *)MALLOC(dim * e.len * sizeof(double));
-  memcpy(e.x, x, dim * e.len * sizeof(double));
+  e.x.assign(x, &x[dim * e.len]);
   e.edge_length = dist(dim, &x[0 * dim], &x[(np - 1) * dim]);
   e.wgt = 1;
   return e;
@@ -66,28 +65,27 @@ pedge pedge_wgt_new(int np, int dim, double *x, double wgt) {
   e.npoints = np;
   e.dim = dim;
   e.len = np;
-  e.x = (double *)MALLOC(dim * e.len * sizeof(double));
-  memcpy(e.x, x, dim * e.len * sizeof(double));
+  e.x.assign(x, &x[dim * e.len]);
   e.edge_length = dist(dim, &x[0 * dim], &x[(np - 1) * dim]);
   e.wgt = wgt;
   e.wgts = std::vector<double>(np - 1, wgt);
   return e;
 }
 
-void pedge_delete(pedge &e) { free(e.x); }
+void pedge_delete(pedge &) { }
 
 static double edge_compatibility(const pedge &e1, const pedge &e2) {
   /* two edges are u1->v1, u2->v2.
      return 1 if two edges are exactly the same, 0 if they are very different.
    */
-  double *u1, *v1, *u2, *v2, dist1, dist2, len1, len2;
+  double dist1, dist2, len1, len2;
   const int dim = e1.dim;
   bool flipped = false;
 
-  u1 = e1.x;
-  v1 = e1.x + e1.npoints * dim - dim;
-  u2 = e2.x;
-  v2 = e2.x + e2.npoints * dim - dim;
+  const double *u1 = e1.x.data();
+  const double *v1 = e1.x.data() + e1.npoints * dim - dim;
+  const double *u2 = e2.x.data();
+  const double *v2 = e2.x.data() + e2.npoints * dim - dim;
   dist1 = sqr_dist(dim, u1, u2) + sqr_dist(dim, v1, v2);
   dist2 =  sqr_dist(dim, u1, v2) + sqr_dist(dim, v1, u2);
   if (dist1 > dist2){
@@ -110,15 +108,15 @@ static double edge_compatibility_full(const pedge &e1, const pedge &e2) {
      return 1 if two edges are exactly the same, 0 if they are very different.
      This is based on Holten and van Wijk's paper
    */
-  double *u1, *v1, *u2, *v2, dist1, dist2, len1, len2, len;
+  double dist1, dist2, len1, len2, len;
   double tmp, ca, cp, cs;
   int dim = e1.dim, i;
   bool flipped = false;
 
-  u1 = e1.x;
-  v1 = e1.x + e1.npoints * dim - dim;
-  u2 = e2.x;
-  v2 = e2.x + e2.npoints * dim - dim;
+  const double *u1 = e1.x.data();
+  const double *v1 = e1.x.data() + e1.npoints * dim - dim;
+  const double *u2 = e2.x.data();
+  const double *v2 = e2.x.data() + e2.npoints * dim - dim;
   dist1 = sqr_dist(dim, u1, u2) + sqr_dist(dim, v1, v2);
   dist2 =  sqr_dist(dim, u1, v2) + sqr_dist(dim, v1, u2);
   if (dist1 > dist2){
@@ -166,7 +164,7 @@ static void fprint_rgb(FILE* fp, int r, int g, int b, int alpha){
 }
 
 void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge> &edges) {
-  double *x, t;
+  double t;
   int i, j, k, kk, dim, sta, sto;
   double maxwgt = 0, len, len_total0;
   int r, g, b;
@@ -178,7 +176,7 @@ void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge> &edges) {
   /* points */
   for (i = 0; i < ne; i++){
     const pedge &edge = edges[i];
-    x = edge.x;
+    const std::vector<double> &x = edge.x;
     dim = edge.dim;
     sta = 0;
     sto = edge.npoints - 1;
@@ -213,7 +211,7 @@ void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge> &edges) {
   for (i = 0; i < ne; i++){
     fprintf(fp,"%d -- %d [pos=\"", i, i + ne);
     const pedge &edge = edges[i];
-    x = edge.x;
+    const std::vector<double> &x = edge.x;
     dim = edge.dim;
     /* splines */
     for (j = 0; j < edge.npoints; j++) {
@@ -306,7 +304,7 @@ void pedge_wgts_realloc(pedge &e, int n) {
   int i;
   if (n <= e.npoints)
     return;
-  e.x = (double *)REALLOC(e.x, e.dim * n * sizeof(double));
+  e.x.resize(e.dim * n, 0);
   if (e.wgts.empty()) {
     e.wgts.resize(n - 1);
     for (i = 0; i < e.npoints; i++)
@@ -320,15 +318,14 @@ void pedge_wgts_realloc(pedge &e, int n) {
 void pedge_double(pedge &e) {
   /* double the number of points (more precisely, add a point between two points in the polyline */
   int npoints = e.npoints, len = e.len, i, dim = e.dim;
-  double *x;
   int j, ii, ii2, np;
 
   assert(npoints >= 2);
   if (npoints*2-1 > len){
     len = 3*npoints;
-    e.x = (double *)REALLOC(e.x, dim * len * sizeof(double));
+    e.x.resize(dim * len, 0);
   }
-  x = e.x;
+  std::vector<double> &x = e.x;
 
   for (i = npoints - 1; i >= 0; i--){
     ii = 2*i;
@@ -346,11 +343,11 @@ void pedge_double(pedge &e) {
   }
   e.len = len;
   np = e.npoints = 2 * e.npoints - 1;
-  e.edge_length = dist(dim, &x[0 * dim], &x[(np - 1) * dim]);
+  e.edge_length = dist(dim, &x.data()[0 * dim], &x.data()[(np - 1) * dim]);
 }
 
 static void edge_tension_force(std::vector<double> &force, const pedge &e) {
-  const double *x = e.x;
+  const std::vector<double> &x = e.x;
   const int dim = e.dim;
   const int np = e.npoints;
   int i, left, right, j;
@@ -370,7 +367,7 @@ static void edge_tension_force(std::vector<double> &force, const pedge &e) {
 static void edge_attraction_force(double similarity, const pedge &e1,
                                   const pedge &e2, std::vector<double> &force) {
   /* attractive force from x2 applied to x1 */
-  const double *x1 = e1.x, *x2 = e2.x;
+  const std::vector<double> &x1 = e1.x, &x2 = e2.x;
   const int dim = e1.dim;
   const int np = e1.npoints;
   int i, j;
@@ -386,7 +383,7 @@ static void edge_attraction_force(double similarity, const pedge &e1,
     s = edge_length;
     s = similarity*edge_length;
     for (i = 1; i <= np - 2; i++){
-      dist = sqr_dist(dim, &x1[i*dim], &x2[i*dim]);
+      dist = sqr_dist(dim, &x1.data()[i*dim], &x2.data()[i*dim]);
       if (dist < SMALL) dist = SMALL;
       ss = s/(dist+0.1*edge_length*sqrt(dist));
       for (j = 0; j < dim; j++) force[i*dim + j] += ss*(x2[i*dim + j] - x1[i*dim + j]);
@@ -395,7 +392,7 @@ static void edge_attraction_force(double similarity, const pedge &e1,
     s = -edge_length;
     s = -similarity*edge_length; 
     for (i = 1; i <= np - 2; i++){
-      dist = sqr_dist(dim, &x1[i*dim], &x2[(np - 1 - i)*dim]);
+      dist = sqr_dist(dim, &x1.data()[i*dim], &x2.data()[(np - 1 - i)*dim]);
       if (dist < SMALL) dist = SMALL;
       ss = s/(dist+0.1*edge_length*sqrt(dist));
       for (j = 0; j < dim; j++) force[i*dim + j] += ss*(x2[(np - 1 - i)*dim + j] - x1[i*dim + j]);
@@ -411,7 +408,6 @@ static void force_directed_edge_bundling(SparseMatrix A,
   int *ia = A->ia, *ja = A->ja, iter = 0;
   double *a = (double*) A->a;
   const int np = edges[0].npoints, dim = edges[0].dim;
-  double *x;
   double step = step0;
   double fnorm_a, fnorm_t, edge_length, start;
   
@@ -429,7 +425,7 @@ static void force_directed_edge_bundling(SparseMatrix A,
 	force_a[j] = 0.;
       }
       pedge &e1 = edges[i];
-      x = e1.x;
+      std::vector<double> &x = e1.x;
       edge_tension_force(force_t, e1);
       for (j = ia[i]; j < ia[i+1]; j++){
 	const pedge &e2 = edges[ja[j]];

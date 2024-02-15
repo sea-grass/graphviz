@@ -235,7 +235,7 @@ static void init(int argc, char *argv[], opts_t* opts)
 static void genBundleSpline(const pedge &edge, std::ostream &os) {
 	int k, j;
 	const int dim = edge.dim;
-	const double *x = edge.x;
+	const std::vector<double> &x = edge.x;
 
 	for (j = 0; j < edge.npoints; j++){
 		if (j != 0) {
@@ -263,7 +263,7 @@ static void genBundleSpline(const pedge &edge, std::ostream &os) {
 static void genBundleInfo(const pedge &edge, std::ostream &os) {
 	int k, j;
 	const int dim = edge.dim;
-	const double *x = edge.x;
+	const std::vector<double> &x = edge.x;
 
 	for (j = 0; j < edge.npoints; j++){
 		if (j != 0) os << ':';
@@ -283,7 +283,7 @@ static void genBundleColors(const pedge &edge, std::ostream &os,
 	int k, j, r, g, b;
 	double len, t, len_total0 = 0;
 	const int dim = edge.dim;
-	const double *x = edge.x;
+	const std::vector<double> &x = edge.x;
 	std::vector<double> lens(edge.npoints);
 
 	for (j = 0; j < edge.npoints - 1; j++){
