@@ -1252,13 +1252,16 @@ static void make_map_internal(bool include_OK_points,
     }
   }
 
-  get_tri(n + nrandom, dim2, xcombined, &nt, &Tp, &E);
+  if (get_tri(n + nrandom, dim2, xcombined, &nt, &Tp, &E) != 0) {
+    goto done;
+  }
   get_polygons(n, nrandom, dim2, graph, grouping, nt, Tp, E, nverts, x_poly, poly_lines, polys, polys_groups,
 	       poly_point_map, country_graph);
 
-  free(xcombined);
   SparseMatrix_delete(E);
   free(Tp);
+done:
+  free(xcombined);
   free(xran);
   if (grouping != grouping0) free(grouping);
   if (x != x0) free(x);
