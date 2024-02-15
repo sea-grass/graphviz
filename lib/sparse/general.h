@@ -36,7 +36,6 @@ extern "C" {
 #define clear_flag(a, flag) ((a) &=(~(flag)))
 
 #ifdef STANDALONE
-#define REALLOC realloc
 
 #define MAX(a,b) ((a)>(b)?(a):b)
 #define MIN(a,b) ((a)<(b)?(a):b)
@@ -49,8 +48,6 @@ __declspec(dllimport) extern unsigned char Verbose;
 extern unsigned char Verbose;
 #endif
 
-#else  /* STANDALONE */
-#define REALLOC grealloc
 #endif    /* STANDALONE */
 
 #ifdef DEBUG
