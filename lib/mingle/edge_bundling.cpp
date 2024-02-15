@@ -26,7 +26,7 @@
 
 #define SMALL 1.e-10
 
-static double norm(int n, double *x){
+static double norm(int n, const double *x) {
   double res = 0;
   int i;
 
