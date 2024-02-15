@@ -12,6 +12,7 @@
 
 #include <vector>
 
-void nearest_neighbor_graph_ann(int nPts, int k, const double *x, int &nz0,
-                                std::vector<int> &irn, std::vector<int> &jcn,
+void nearest_neighbor_graph_ann(int nPts, int k, const std::vector<double> &x,
+                                int &nz0, std::vector<int> &irn,
+                                std::vector<int> &jcn,
                                 std::vector<double> &val);

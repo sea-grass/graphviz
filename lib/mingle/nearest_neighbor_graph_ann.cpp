@@ -50,7 +50,7 @@ static void sortPtsY(int n, ANNpointArray pts){
   }
 }
 
-void nearest_neighbor_graph_ann(int nPts, int k, const double *x,
+void nearest_neighbor_graph_ann(int nPts, int k, const std::vector<double> &x,
                                 int &nz0, std::vector<int> &irn,
                                 std::vector<int> &jcn,
                                 std::vector<double> &val) {
