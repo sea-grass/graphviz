@@ -542,11 +542,11 @@ static SparseMatrix check_compatibility(SparseMatrix A, int ne,
   return B;
 }
 
-std::vector<pedge> edge_bundling(SparseMatrix A0, int dim, double *x,
-                                 int maxit_outer, double K, int method,
-                                 int nneighbor, int compatibility_method,
-                                 int max_recursion, double angle_param,
-                                 double angle) {
+std::vector<pedge> edge_bundling(SparseMatrix A0, int dim,
+                                 const std::vector<double> &x, int maxit_outer,
+                                 double K, int method, int nneighbor,
+                                 int compatibility_method, int max_recursion,
+                                 double angle_param, double angle) {
   /* bundle edges.
      A: edge graph
      x: edge i is at {p,q}, 
@@ -573,7 +573,7 @@ std::vector<pedge> edge_bundling(SparseMatrix A0, int dim, double *x,
   edges.reserve(ne);
 
   for (i = 0; i < ne; i++){
-    edges.emplace_back(pedge_new(2, dim, &x[dim*2*i]));
+    edges.emplace_back(pedge_new(2, dim, &x.data()[dim * 2 * i]));
   }
 
   A = SparseMatrix_symmetrize(A0, true);

@@ -23,11 +23,11 @@ struct pedge {
   std::vector<double> wgts;/* number of original edges each section represnet. Dimension npoint - 1. This only applied for agglomerative bundling Null for other methods */
 };
 
-std::vector<pedge> edge_bundling(SparseMatrix A, int dim, double *x,
-                                 int maxit_outer, double K, int method,
-                                 int nneighbor, int compatibility_method,
-                                 int max_recursion, double angle_param,
-                                 double angle);
+std::vector<pedge> edge_bundling(SparseMatrix A, int dim,
+                                 const std::vector<double> &x, int maxit_outer,
+                                 double K, int method, int nneighbor,
+                                 int compatibility_method, int max_recursion,
+                                 double angle_param, double angle);
 void pedge_delete(pedge &e);
 void pedge_wgts_realloc(pedge &e, int n);
 void pedge_export_gv(FILE *fp, int ne, const std::vector<pedge> &edges);

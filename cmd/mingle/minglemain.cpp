@@ -436,10 +436,9 @@ bundle (Agraph_t* g, opts_t* opts)
 	SparseMatrix_delete(A);
 	A = B;
 	free(x);
-	x = xx.data();
 
 	std::vector<pedge> edges =
-            edge_bundling(A, 2, x, opts->outer_iter, opts->K, opts->method,
+            edge_bundling(A, 2, xx, opts->outer_iter, opts->K, opts->method,
                           opts->nneighbors, opts->compatibility_method,
                           opts->max_recursion, opts->angle_param, opts->angle);
 
