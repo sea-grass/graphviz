@@ -36,7 +36,6 @@ extern "C" {
 #define clear_flag(a, flag) ((a) &=(~(flag)))
 
 #ifdef STANDALONE
-#define MALLOC malloc
 #define REALLOC realloc
 
 #define MAX(a,b) ((a)>(b)?(a):b)
@@ -51,7 +50,6 @@ extern unsigned char Verbose;
 #endif
 
 #else  /* STANDALONE */
-#define MALLOC gmalloc
 #define REALLOC grealloc
 #endif    /* STANDALONE */
 
