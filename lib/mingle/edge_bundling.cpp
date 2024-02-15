@@ -46,7 +46,7 @@ static double dist(int dim, const double *x, const double *y) {
   return sqrt(sqr_dist(dim,x,y));
 }
 
-static pedge pedge_new(int np, int dim, double *x) {
+static pedge pedge_new(int np, int dim, const double *x) {
   pedge e;
 
   e.npoints = np;
