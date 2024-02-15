@@ -431,7 +431,7 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx.data());
+	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx);
 
 	SparseMatrix_delete(A);
 	A = B;

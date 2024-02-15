@@ -10,4 +10,7 @@
 
 #pragma once
 
-SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors, double *x);
+#include <vector>
+
+SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors,
+                                    const std::vector<double> &x);

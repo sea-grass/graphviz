@@ -16,7 +16,8 @@
 #include <mingle/nearest_neighbor_graph.h>
 #include <vector>
 
-SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors, double *x) {
+SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors,
+                                    const std::vector<double> &x) {
   /* Gives a nearest neighbor graph of a list of dim-dimendional points. The result is a sparse matrix
      of nPts x nPts, with num_neigbors entries per row.
 
@@ -37,7 +38,7 @@ SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors, double *x) {
   std::vector<int> jcn(nPts * k * 2);
   std::vector<double> val(nPts * k * 2);
 
-  nearest_neighbor_graph_ann(nPts, num_neighbors, x, nz, irn, jcn, val);
+  nearest_neighbor_graph_ann(nPts, num_neighbors, x.data(), nz, irn, jcn, val);
 
   A = SparseMatrix_from_coordinate_arrays(nz, nPts, nPts, irn.data(),
                                           jcn.data(), val.data(),
