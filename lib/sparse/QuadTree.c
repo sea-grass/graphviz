@@ -35,11 +35,6 @@ static void node_data_delete(node_data nd){
   free(nd);
 }
 
-static int node_data_get_id(void *d){
-  node_data nd = d;
-  return nd->id;
-}
-
 #define node_data_get_data(d) (((node_data) (d))->data)
 
 
@@ -65,7 +60,7 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt,
   node_data l = qt->l;
   while (l) {
     check_or_realloc_arrays(dim, nsuper, nsupermax, center, supernode_wgts, distances);
-    if (node_data_get_id(l) != nodeid){
+    if (l->id != nodeid){
       coord = l->coord;
       for (i = 0; i < dim; i++){
         (*center)[dim*(*nsuper)+i] = coord[i];
@@ -177,13 +172,13 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
     while (l1){
       x1 = l1->coord;
       wgt1 = l1->node_weight;
-      i1 = node_data_get_id(l1);
+      i1 = l1->id;
       f1 = get_or_assign_node_force(force, i1, l1, dim);
       l2 = qt2->l;
       while (l2){
 	x2 = l2->coord;
 	wgt2 = l2->node_weight;
-	i2 = node_data_get_id(l2);
+	i2 = l2->id;
 	f2 = get_or_assign_node_force(force, i2, l2, dim);
 	if ((qt1 == qt2 && i2 < i1) || i1 == i2) {
 	  l2 = l2->next;
@@ -261,7 +256,7 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
 
   if (l){
     while (l){
-      i = node_data_get_id(l);
+      i = l->id;
       f2 = get_or_assign_node_force(force, i, l, dim);
       wgt2 = l->node_weight;
       wgt2 = wgt2/wgt;
@@ -482,7 +477,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     assert(q->qts[ii]);
 
     if (q->l){
-      idd = node_data_get_id(q->l);
+      idd = q->l->id;
       assert(q->n == 1);
       coord = q->l->coord;
       weight = q->l->node_weight;
@@ -596,7 +591,7 @@ static void QuadTree_print_internal(FILE *fp, QuadTree q, int level){
     while (l){
       if (l != l0) printf(",");
       coord = l->coord;
-      fprintf(fp, "(*node %d*) Point[{",  node_data_get_id(l));
+      fprintf(fp, "(*node %d*) Point[{", l->id);
       for (i = 0; i < dim; i++){
 	if (i != 0) printf(",");
 	fprintf(fp, "%f",coord[i]);
@@ -651,7 +646,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y,
     dist = point_distance(x, coord, dim);
     if(*min < 0 || dist < *min) {
       *min = dist;
-      *imin = node_data_get_id(l);
+      *imin = l->id;
       for (i = 0; i < dim; i++) y[i] = coord[i];
     }
     l = l->next;
