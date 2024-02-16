@@ -2231,9 +2231,9 @@ def test_2481():
     assert "syntax error" not in stderr, "dot displayed a syntax error message"
 
 
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2484",
-    strict=platform.system() == "Linux",
+@pytest.mark.skipif(
+    os.getenv("build_system") == "msbuild",
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/1777",
 )
 def test_2484():
     """
