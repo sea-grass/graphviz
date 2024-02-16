@@ -40,6 +40,7 @@ static FILE *outFile;
 static char *CmdName;
 static char **Files;
 static uint64_t id;
+static bool yworks; ///< use yWorks.com variant of GML?
 
 #define POS_SET (1<<0)
 #define W_SET   (1<<1)
@@ -398,7 +399,7 @@ static void  emitNodeAttrs(Agraph_t *G, Agnode_t *np, int ix) {
 	fprintf (outFile, "    LabelGraphics [\n");
 	if (label) emitAttr("text", label, ix+1);
 	if (attrs.fontColor) {
-	    emitAttr("fontColor", attrs.fontColor, ix+1);
+	    emitAttr(yworks ? "color" : "fontColor", attrs.fontColor, ix+1);
 	}
 	if (attrs.fontSize) {
 	    emitAttr("fontSize", attrs.fontSize, ix+1);
@@ -577,7 +578,7 @@ static void emitEdgeAttrs(Agraph_t *G, Agedge_t *ep, int ix) {
 	fprintf (outFile, "    LabelGraphics [\n");
 	if (label) emitAttr("text", label, ix+1);
 	if (attrs.fontColor) {
-	    emitAttr("fontColor", attrs.fontColor, ix+1);
+	    emitAttr(yworks ? "color" : "fontColor", attrs.fontColor, ix+1);
 	}
 	if (attrs.fontSize) {
 	    emitAttr("fontSize", attrs.fontSize, ix+1);
@@ -634,8 +635,9 @@ static void gv_to_gml(Agraph_t *G) {
     fprintf (outFile, "]\n");
 }
 
-static char *useString = "Usage: %s [-?] <files>\n\
+static char *useString = "Usage: %s [-y] [-?] <files>\n\
   -o<file>  : output to <file> (stdout)\n\
+  -y        : output yWorks.com GML variant\n\
   -? - print usage\n\
 If no files are specified, stdin is used\n";
 
@@ -663,12 +665,15 @@ static void initargs(int argc, char **argv)
 
     CmdName = cmdName(argv[0]);
     opterr = 0;
-    while ((c = getopt(argc, argv, ":o:")) != -1) {
+    while ((c = getopt(argc, argv, ":o:y")) != -1) {
 	switch (c) {
 	case 'o':
 	    if (outFile != NULL)
 		fclose(outFile);
 	    outFile = openFile(CmdName, optarg, "w");
+	    break;
+	case 'y':
+	    yworks = true;
 	    break;
 	case ':':
 	    fprintf(stderr, "%s: option -%c missing parameter\n", CmdName, optopt);

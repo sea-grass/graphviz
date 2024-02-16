@@ -3318,6 +3318,27 @@ def test_2476():
     subprocess.check_call(["dot", "-Tsvg", "-Gmclimit=0.5", "-o", os.devnull, input])
 
 
+@pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
+def test_2493():
+    """
+    `gv2gml` should support the yWorks.com variant of GML
+    https://gitlab.com/graphviz/graphviz/-/issues/2493
+    """
+
+    # a trivial graph with a colored label
+    src = 'graph { a -- b[label="foo", fontcolor="red"]; }'
+
+    # pass this through `gv2gml`
+    gml = subprocess.check_output(["gv2gml", "-y"], input=src, universal_newlines=True)
+
+    assert (
+        re.search(r"\bfontcolor\b", gml) is None
+    ), "gv2gml emitted 'fontcolor' when in yWorks.com mode"
+    assert (
+        re.search(r"\bcolor\b", gml) is not None
+    ), "gv2gml did not emit LabelGraphics 'color' attribute"
+
+
 def test_2502():
     """
     unicode labels should be usable
