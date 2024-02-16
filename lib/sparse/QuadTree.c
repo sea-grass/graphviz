@@ -35,9 +35,6 @@ static void node_data_delete(node_data nd){
   free(nd);
 }
 
-#define node_data_get_data(d) (((node_data) (d))->data)
-
-
 static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances){
   
   if (*nsuper >= *nsupermax) {
@@ -111,11 +108,11 @@ void QuadTree_get_supernodes(QuadTree qt, double bh, double *pt, int nodeid, int
 static double *get_or_assign_node_force(double *force, int i, node_data l,
                                         int dim) {
 
-  double *f = node_data_get_data(l);
+  double *f = l->data;
 
   if (!f){
-    node_data_get_data(l) = &(force[i*dim]);
-    f = node_data_get_data(l);
+    l->data = &(force[i*dim]);
+    f = l->data;
   }
   return f;
 }
