@@ -35,11 +35,6 @@ static void node_data_delete(node_data nd){
   free(nd);
 }
 
-static double node_data_get_weight(void *d){
-  node_data nd = d;
-  return nd->node_weight;
-}
-
 static double* node_data_get_coord(void *d){
   node_data nd = d;
   return nd->coord;
@@ -80,7 +75,7 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt,
       for (i = 0; i < dim; i++){
         (*center)[dim*(*nsuper)+i] = coord[i];
       }
-      (*supernode_wgts)[*nsuper] = node_data_get_weight(l);
+      (*supernode_wgts)[*nsuper] = l->node_weight;
       (*distances)[*nsuper] = point_distance(pt, coord, dim);
       (*nsuper)++;
     }
@@ -186,13 +181,13 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
   if (l1 && l2){
     while (l1){
       x1 = node_data_get_coord(l1);
-      wgt1 = node_data_get_weight(l1);
+      wgt1 = l1->node_weight;
       i1 = node_data_get_id(l1);
       f1 = get_or_assign_node_force(force, i1, l1, dim);
       l2 = qt2->l;
       while (l2){
 	x2 = node_data_get_coord(l2);
-	wgt2 = node_data_get_weight(l2);
+	wgt2 = l2->node_weight;
 	i2 = node_data_get_id(l2);
 	f2 = get_or_assign_node_force(force, i2, l2, dim);
 	if ((qt1 == qt2 && i2 < i1) || i1 == i2) {
@@ -273,7 +268,7 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
     while (l){
       i = node_data_get_id(l);
       f2 = get_or_assign_node_force(force, i, l, dim);
-      wgt2 = node_data_get_weight(l);
+      wgt2 = l->node_weight;
       wgt2 = wgt2/wgt;
       for (k = 0; k < dim; k++) f2[k] += wgt2*f[k];
       l = l->next;
@@ -495,7 +490,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
       idd = node_data_get_id(q->l);
       assert(q->n == 1);
       coord = node_data_get_coord(q->l);
-      weight = node_data_get_weight(q->l);
+      weight = q->l->node_weight;
       ii = QuadTree_get_quadrant(dim, q->center, coord);
       assert(ii < 1<<dim && ii >= 0);
 
