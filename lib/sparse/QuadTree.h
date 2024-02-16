@@ -10,12 +10,21 @@
 
 #pragma once
 
-#include <sparse/LinkedList.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct node_data_struct *node_data;
+
+struct node_data_struct {
+  double node_weight;
+  double *coord;
+  int id;
+  void *data;
+  node_data next;
+};
 
 typedef struct QuadTree_struct *QuadTree;
 
@@ -32,7 +41,7 @@ struct QuadTree_struct {
 		"radius" */
   double *average;/* the average coordinates. Array of length dim. Allocated inside  */
   QuadTree *qts;/* subtree . If dim = 2, there are 4, dim = 3 gives 8 */
-  SingleLinkedList l;
+  node_data l;
   int max_level;
   void *data;
 };

@@ -13,21 +13,10 @@
 #include <common/geom.h>
 #include <common/arith.h>
 #include <math.h>
-#include <sparse/LinkedList.h>
 #include <sparse/QuadTree.h>
 #include <stdbool.h>
 
 extern double distance_cropped(double *x, int dim, int i, int j);
-
-struct node_data_struct {
-  double node_weight;
-  double *coord;
-  int id;
-  void *data;
-};
-
-typedef struct node_data_struct *node_data;
-
 
 static node_data node_data_new(int dim, double weight, double *coord, int id){
   int i;
@@ -77,7 +66,6 @@ static void check_or_realloc_arrays(int dim, int *nsuper, int *nsupermax, double
 }
 
 static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt, int nodeid, int *nsuper, int *nsupermax, double **center, double **supernode_wgts, double **distances, double *counts) {
-  SingleLinkedList l;
   double *coord, dist;
   int dim, i;
 
@@ -85,19 +73,19 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt,
 
   if (!qt) return;
   dim = qt->dim;
-  l = qt->l;
+  node_data l = qt->l;
   while (l) {
     check_or_realloc_arrays(dim, nsuper, nsupermax, center, supernode_wgts, distances);
-    if (node_data_get_id(SingleLinkedList_get_data(l)) != nodeid){
-      coord = node_data_get_coord(SingleLinkedList_get_data(l));
+    if (node_data_get_id(l) != nodeid){
+      coord = node_data_get_coord(l);
       for (i = 0; i < dim; i++){
         (*center)[dim*(*nsuper)+i] = coord[i];
       }
-      (*supernode_wgts)[*nsuper] = node_data_get_weight(SingleLinkedList_get_data(l));
+      (*supernode_wgts)[*nsuper] = node_data_get_weight(l);
       (*distances)[*nsuper] = point_distance(pt, coord, dim);
       (*nsuper)++;
     }
-    l = SingleLinkedList_get_next(l);
+    l = l->next;
   }
 
   if (qt->qts){
@@ -136,14 +124,14 @@ void QuadTree_get_supernodes(QuadTree qt, double bh, double *pt, int nodeid, int
 
 }
 
+static double *get_or_assign_node_force(double *force, int i, node_data l,
+                                        int dim) {
 
-static double *get_or_assign_node_force(double *force, int i, SingleLinkedList l, int dim){
-
-  double *f = node_data_get_data(SingleLinkedList_get_data(l));
+  double *f = node_data_get_data(l);
 
   if (!f){
-    node_data_get_data(SingleLinkedList_get_data(l)) = &(force[i*dim]);
-    f = node_data_get_data(SingleLinkedList_get_data(l));
+    node_data_get_data(l) = &(force[i*dim]);
+    f = node_data_get_data(l);
   }
   return f;
 }
@@ -160,7 +148,6 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
   /* calculate the all to all reopulsive force and accumulate on each node of the quadtree if an interaction is possible.
      force[i*dim+j], j=1,...,dim is the force on node i 
    */
-  SingleLinkedList l1, l2;
   double *x1, *x2, dist, wgt1, wgt2, f, *f1, *f2, w1, w2;
   int dim, i, j, i1, i2, k;
   QuadTree qt11, qt12; 
@@ -169,8 +156,8 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
   assert(qt1->n > 0 && qt2->n > 0);
   dim = qt1->dim;
 
-  l1 = qt1->l;
-  l2 = qt2->l;
+  node_data l1 = qt1->l;
+  node_data l2 = qt2->l;
 
   /* far enough, calculate repulsive force */
   dist = point_distance(qt1->average, qt2->average, dim); 
@@ -199,18 +186,18 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
   /* both at leaves, calculate repulsive force */
   if (l1 && l2){
     while (l1){
-      x1 = node_data_get_coord(SingleLinkedList_get_data(l1));
-      wgt1 = node_data_get_weight(SingleLinkedList_get_data(l1));
-      i1 = node_data_get_id(SingleLinkedList_get_data(l1));
+      x1 = node_data_get_coord(l1);
+      wgt1 = node_data_get_weight(l1);
+      i1 = node_data_get_id(l1);
       f1 = get_or_assign_node_force(force, i1, l1, dim);
       l2 = qt2->l;
       while (l2){
-	x2 = node_data_get_coord(SingleLinkedList_get_data(l2));
-	wgt2 = node_data_get_weight(SingleLinkedList_get_data(l2));
-	i2 = node_data_get_id(SingleLinkedList_get_data(l2));
+	x2 = node_data_get_coord(l2);
+	wgt2 = node_data_get_weight(l2);
+	i2 = node_data_get_id(l2);
 	f2 = get_or_assign_node_force(force, i2, l2, dim);
 	if ((qt1 == qt2 && i2 < i1) || i1 == i2) {
-	  l2 = SingleLinkedList_get_next(l2);
+	  l2 = l2->next;
 	  continue;
 	}
 	counts[1]++;
@@ -224,9 +211,9 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
 	  f1[k] += f;
 	  f2[k] -= f;
 	}
-	l2 = SingleLinkedList_get_next(l2);
+	l2 = l2->next;
       }
-      l1 = SingleLinkedList_get_next(l1);
+      l1 = l1->next;
     }
     return;
   }
@@ -273,7 +260,7 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
   /* push down forces on cells into the node level */
   double wgt, wgt2;
   double *f, *f2;
-  SingleLinkedList l = qt->l;
+  node_data l = qt->l;
   int i, k, dim;
   QuadTree qt2;
 
@@ -285,12 +272,12 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
 
   if (l){
     while (l){
-      i = node_data_get_id(SingleLinkedList_get_data(l));
+      i = node_data_get_id(l);
       f2 = get_or_assign_node_force(force, i, l, dim);
-      wgt2 = node_data_get_weight(SingleLinkedList_get_data(l));
+      wgt2 = node_data_get_weight(l);
       wgt2 = wgt2/wgt;
       for (k = 0; k < dim; k++) f2[k] += wgt2*f[k];
-      l = SingleLinkedList_get_next(l);
+      l = l->next;
     }
     return;
   }
@@ -415,7 +402,11 @@ void QuadTree_delete(QuadTree q){
     }
     free(q->qts);
   }
-  SingleLinkedList_delete(q->l, node_data_delete);
+  while (q->l) {
+    node_data next = q->l->next;
+    node_data_delete(q->l);
+    q->l = next;
+  }
   free(q);
 }
 
@@ -484,7 +475,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     for (i = 0; i < q->dim; i++) q->average[i] = coord[i];
     nd = node_data_new(q->dim, weight, coord, id);
     assert(!(q->l));
-    q->l = SingleLinkedList_new(nd);
+    q->l = nd;
   } else if (level < max_level){
     /* otherwise open up into 2^dim quadtrees unless the level is too high */
     q->total_weight += weight;
@@ -502,10 +493,10 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     assert(q->qts[ii]);
 
     if (q->l){
-      idd = node_data_get_id(SingleLinkedList_get_data(q->l));
+      idd = node_data_get_id(q->l);
       assert(q->n == 1);
-      coord = node_data_get_coord(SingleLinkedList_get_data(q->l));
-      weight = node_data_get_weight(SingleLinkedList_get_data(q->l));
+      coord = node_data_get_coord(q->l);
+      weight = node_data_get_weight(q->l);
       ii = QuadTree_get_quadrant(dim, q->center, coord);
       assert(ii < 1<<dim && ii >= 0);
 
@@ -515,8 +506,11 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
       assert(q->qts[ii]);
       
       /* delete the old node data on parent */
-      SingleLinkedList_delete(q->l, node_data_delete);
-      q->l = NULL;
+      while (q->l != NULL) {
+        node_data next = q->l->next;
+        node_data_delete(q->l);
+        q->l = next;
+      }
     }
     
     q->n++;
@@ -528,7 +522,8 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     for (i = 0; i < q->dim; i++) q->average[i] = (q->average[i] * q->n + coord[i]) / (q->n + 1);
     nd = node_data_new(q->dim, weight, coord, id);
     assert(q->l);
-    q->l = SingleLinkedList_prepend(q->l, nd);
+    nd->next = q->l;
+    q->l = nd;
   }
   return q;
 }
@@ -597,7 +592,7 @@ static void draw_polygon(FILE *fp, int dim, double *center, double width){
 }
 static void QuadTree_print_internal(FILE *fp, QuadTree q, int level){
   /* dump a quad tree in Mathematica format. */
-  SingleLinkedList l, l0;
+  node_data l, l0;
   double *coord;
   int i, dim;
 
@@ -611,14 +606,14 @@ static void QuadTree_print_internal(FILE *fp, QuadTree q, int level){
     printf(",(*a*) {Red,");
     while (l){
       if (l != l0) printf(",");
-      coord = node_data_get_coord(SingleLinkedList_get_data(l));
-      fprintf(fp, "(*node %d*) Point[{",  node_data_get_id(SingleLinkedList_get_data(l)));
+      coord = node_data_get_coord(l);
+      fprintf(fp, "(*node %d*) Point[{",  node_data_get_id(l));
       for (i = 0; i < dim; i++){
 	if (i != 0) printf(",");
 	fprintf(fp, "%f",coord[i]);
       }
       fprintf(fp, "}]");
-      l = SingleLinkedList_get_next(l);
+      l = l->next;
     }
     fprintf(fp, "}");
   }
@@ -655,23 +650,22 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y,
                                           double *min, int *imin,
                                           bool tentative) {
   /* get the nearest point years to {x[0], ..., x[dim]} and store in y.*/
-  SingleLinkedList l;
   double *coord, dist;
   int dim, i, iq = -1;
   double qmin;
 
   if (!qt) return;
   dim = qt->dim;
-  l = qt->l;
+  node_data l = qt->l;
   while (l){
-    coord = node_data_get_coord(SingleLinkedList_get_data(l));
+    coord = node_data_get_coord(l);
     dist = point_distance(x, coord, dim);
     if(*min < 0 || dist < *min) {
       *min = dist;
-      *imin = node_data_get_id(SingleLinkedList_get_data(l));
+      *imin = node_data_get_id(l);
       for (i = 0; i < dim; i++) y[i] = coord[i];
     }
-    l = SingleLinkedList_get_next(l);
+    l = l->next;
   }
   
   if (qt->qts){
