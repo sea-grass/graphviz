@@ -29,8 +29,7 @@ static node_data node_data_new(int dim, double weight, double *coord, int id){
   return nd;
 }
 
-static void node_data_delete(void *d){
-  node_data nd = (node_data) d;
+static void node_data_delete(node_data nd){
   free(nd->coord);
   /*delete outside   if (nd->data) free(nd->data);*/
   free(nd);
