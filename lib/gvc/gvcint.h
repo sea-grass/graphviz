@@ -85,6 +85,7 @@ extern "C" {
 
 	/* gvParseArgs */
 	char **input_filenames; /* null terminated array of input filenames */
+	int fidx; /* index of input_filenames to be processed next */
 
 	/* gvNextInputGraph() */
 	GVG_t *gvgs;	/* linked list of graphs */

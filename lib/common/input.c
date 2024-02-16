@@ -508,16 +508,16 @@ graph_t *gvNextInputGraph(GVC_t *gvc)
     static char *fn;
     static FILE *fp;
     static FILE *oldfp;
-    static int fidx, gidx;
+    static int gidx;
 
     while (!g) {
 	if (!fp) {
     	    if (!(fn = gvc->input_filenames[0])) {
-		if (fidx++ == 0)
+		if (gvc->fidx++ == 0)
 		    fp = stdin;
 	    }
 	    else {
-		while ((fn = gvc->input_filenames[fidx++]) && !(fp = fopen(fn, "r")))  {
+		while ((fn = gvc->input_filenames[gvc->fidx++]) && !(fp = fopen(fn, "r")))  {
 		    agerr(AGERR, "%s: can't open %s: %s\n", gvc->common.cmdname, fn, strerror(errno));
 		    graphviz_errors++;
 		}
