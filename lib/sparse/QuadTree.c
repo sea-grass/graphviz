@@ -35,11 +35,6 @@ static void node_data_delete(node_data nd){
   free(nd);
 }
 
-static double* node_data_get_coord(void *d){
-  node_data nd = d;
-  return nd->coord;
-}
-
 static int node_data_get_id(void *d){
   node_data nd = d;
   return nd->id;
@@ -71,7 +66,7 @@ static void QuadTree_get_supernodes_internal(QuadTree qt, double bh, double *pt,
   while (l) {
     check_or_realloc_arrays(dim, nsuper, nsupermax, center, supernode_wgts, distances);
     if (node_data_get_id(l) != nodeid){
-      coord = node_data_get_coord(l);
+      coord = l->coord;
       for (i = 0; i < dim; i++){
         (*center)[dim*(*nsuper)+i] = coord[i];
       }
@@ -180,13 +175,13 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
   /* both at leaves, calculate repulsive force */
   if (l1 && l2){
     while (l1){
-      x1 = node_data_get_coord(l1);
+      x1 = l1->coord;
       wgt1 = l1->node_weight;
       i1 = node_data_get_id(l1);
       f1 = get_or_assign_node_force(force, i1, l1, dim);
       l2 = qt2->l;
       while (l2){
-	x2 = node_data_get_coord(l2);
+	x2 = l2->coord;
 	wgt2 = l2->node_weight;
 	i2 = node_data_get_id(l2);
 	f2 = get_or_assign_node_force(force, i2, l2, dim);
@@ -489,7 +484,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     if (q->l){
       idd = node_data_get_id(q->l);
       assert(q->n == 1);
-      coord = node_data_get_coord(q->l);
+      coord = q->l->coord;
       weight = q->l->node_weight;
       ii = QuadTree_get_quadrant(dim, q->center, coord);
       assert(ii < 1<<dim && ii >= 0);
@@ -600,7 +595,7 @@ static void QuadTree_print_internal(FILE *fp, QuadTree q, int level){
     printf(",(*a*) {Red,");
     while (l){
       if (l != l0) printf(",");
-      coord = node_data_get_coord(l);
+      coord = l->coord;
       fprintf(fp, "(*node %d*) Point[{",  node_data_get_id(l));
       for (i = 0; i < dim; i++){
 	if (i != 0) printf(",");
@@ -652,7 +647,7 @@ static void QuadTree_get_nearest_internal(QuadTree qt, double *x, double *y,
   dim = qt->dim;
   node_data l = qt->l;
   while (l){
-    coord = node_data_get_coord(l);
+    coord = l->coord;
     dist = point_distance(x, coord, dim);
     if(*min < 0 || dist < *min) {
       *min = dist;
