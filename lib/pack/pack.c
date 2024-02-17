@@ -17,6 +17,7 @@
 #include <math.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/sort.h>
 #include <cgraph/startswith.h>
 #include <cgraph/streq.h>
 #include <common/render.h>
@@ -564,15 +565,13 @@ void dumpp(ginfo * info, char *pfx)
 }
 #endif
 
-static packval_t* userVals;
-
 /* ucmpf;
  * Sort by user values.
  */
-static int ucmpf(const void *X, const void *Y)
-{
+static int ucmpf(const void *X, const void *Y, void *user_values) {
     const ainfo* x = *(ainfo *const *) X;
     const ainfo* y = *(ainfo *const *) Y;
+    const packval_t *userVals = user_values;
 
     const unsigned int dX = userVals[x->index];
     const unsigned int dY = userVals[y->index];
@@ -656,8 +655,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     }
 
     if (pinfo->vals) {
-	userVals = pinfo->vals;
-	qsort(sinfo, ng, sizeof(ainfo *), ucmpf);
+	gv_sort(sinfo, ng, sizeof(ainfo *), ucmpf, pinfo->vals);
     }
     else if (!(pinfo->flags & PK_INPUT_ORDER)) {
 	qsort(sinfo, ng, sizeof(ainfo *), acmpf);
