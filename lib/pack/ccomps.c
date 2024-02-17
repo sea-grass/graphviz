@@ -21,8 +21,6 @@
 #include <pack/pack.h>
 #include <stdbool.h>
 
-#define UNMARK(stk,n) ((stk)->markfn(n,0))
-
 typedef struct {
     gv_stack_t data;
     void (*actionfn) (Agnode_t *, void *);
@@ -37,6 +35,11 @@ static bool marked(const stk_t *stk, Agnode_t *n) {
 /// set a mark on `n`
 static void mark(const stk_t *stk, Agnode_t *n) {
   stk->markfn(n, 1);
+}
+
+/// unset a mark on `n`
+static void unmark(const stk_t *stk, Agnode_t *n) {
+  stk->markfn(n, 0);
 }
 
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
@@ -150,7 +153,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	UNMARK(&stk,n);
+	unmark(&stk, n);
 
     /* Component with pinned nodes */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -218,7 +221,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     Agraph_t **ccs = gv_calloc(bnd, sizeof(Agraph_t*));
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	UNMARK(&stk,n);
+	unmark(&stk, n);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (marked(&stk, n))
@@ -580,7 +583,7 @@ int isConnected(Agraph_t * g)
 
     initStk(&stk, NULL, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	UNMARK(&stk,n);
+	unmark(&stk, n);
 
     n = agfstnode(g);
     cnt = dfs(g, agfstnode(g), NULL, &stk);
