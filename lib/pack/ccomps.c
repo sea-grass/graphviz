@@ -107,10 +107,9 @@ static void insertFn(Agnode_t * n, void *state)
 }
 
 static bool markFn(Agnode_t *n, int v) {
-    int ret;
     if (v < 0) return ND_mark(n) != 0;
-    ret = ND_mark(n);
-    ND_mark(n) = (char) v;
+    const size_t ret = ND_mark(n);
+    ND_mark(n) = v != 0;
     return ret != 0;
 }
 
