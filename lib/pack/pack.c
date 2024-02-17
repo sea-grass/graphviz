@@ -600,12 +600,9 @@ static int acmpf(const void *X, const void *Y)
 
 /* arrayRects:
  */
-static point *
-arrayRects (int ng, boxf* gs, pack_info* pinfo)
-{
-    int i;
-    int nr = 0, nc;
-    int r, c;
+static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
+    size_t nr = 0, nc;
+    size_t r, c;
     ainfo *info;
     double v, wd, ht;
     point *places = gv_calloc(ng, sizeof(point));
@@ -617,7 +614,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     if (pinfo->flags & PK_COL_MAJOR) {
 	rowMajor = 0;
 	if (sz > 0) {
-	    nr = sz;
+	    nr = (size_t)sz;
 	    nc = (ng + (nr-1))/nr;
 	}
 	else {
@@ -628,7 +625,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
     else {
 	rowMajor = 1;
 	if (sz > 0) {
-	    nc = sz;
+	    nc = (size_t)sz;
 	    nr = (ng + (nc-1))/nc;
 	}
 	else {
@@ -637,20 +634,21 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
 	}
     }
     if (Verbose)
-	fprintf (stderr, "array packing: %s %d rows %d columns\n", (rowMajor?"row major":"column major"), nr, nc);
+	fprintf(stderr, "array packing: %s %" PRISIZE_T " rows %" PRISIZE_T
+	        " columns\n", rowMajor ? "row major" : "column major", nr, nc);
     double *widths = gv_calloc(nc + 1, sizeof(double));
     double *heights = gv_calloc(nr + 1, sizeof(double));
 
     ainfo *ip = info = gv_calloc(ng, sizeof(ainfo));
-    for (i = 0; i < ng; i++, ip++) {
+    for (size_t i = 0; i < ng; i++, ip++) {
 	bb = gs[i];
 	ip->width = bb.UR.x - bb.LL.x + pinfo->margin;
 	ip->height = bb.UR.y - bb.LL.y + pinfo->margin;
-	ip->index = i;
+	ip->index = (int)i;
     }
 
     ainfo **sinfo = gv_calloc(ng, sizeof(ainfo*));
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
 
@@ -663,7 +661,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
 
     /* compute column widths and row heights */
     r = c = 0;
-    for (i = 0; i < ng; i++, ip++) {
+    for (size_t i = 0; i < ng; i++, ip++) {
 	ip = sinfo[i];
 	widths[c] = MAX(widths[c],ip->width);
 	heights[r] = MAX(heights[r],ip->height);
@@ -672,14 +670,14 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
 
     /* convert widths and heights to positions */
     wd = 0;
-    for (i = 0; i <= nc; i++) {
+    for (size_t i = 0; i <= nc; i++) {
 	v = widths[i];
 	widths[i] = wd;
 	wd += v;
     }
 
     ht = 0;
-    for (i = nr; 0 < i; i--) {
+    for (size_t i = nr; 0 < i; i--) {
 	v = heights[i-1];
 	heights[i] = ht;
 	ht += v;
@@ -688,7 +686,7 @@ arrayRects (int ng, boxf* gs, pack_info* pinfo)
 
     /* position rects */
     r = c = 0;
-    for (i = 0; i < ng; i++, ip++) {
+    for (size_t i = 0; i < ng; i++, ip++) {
 	int idx;
 	ip = sinfo[i];
 	idx = ip->index;
@@ -930,7 +928,7 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 	    }
 
 	}
-	pts = arrayRects (ng, bbs, pinfo);
+	pts = arrayRects(ng_s, bbs, pinfo);
 	if (pinfo->flags & PK_USER_VALS)
 	    free (pinfo->vals);
     }
@@ -948,7 +946,7 @@ putRects(int ng, boxf* bbs, pack_info* pinfo)
     if (pinfo->mode == l_graph)
 	return polyRects (ng, bbs, pinfo);
     if (pinfo->mode == l_array)
-	return arrayRects (ng, bbs, pinfo);
+	return arrayRects((size_t)ng, bbs, pinfo);
     return NULL;
 }
 
