@@ -47,8 +47,7 @@ typedef struct {
     size_t index; ///< index in original array
 } ainfo;
 
-/* computeStep:
- * Compute grid step size. This is a root of the
+/* Compute grid step size. This is a root of the
  * quadratic equation al^2 +bl + c, where a, b and
  * c are defined below.
  */
@@ -91,8 +90,7 @@ static int computeStep(int ng, boxf* bbs, unsigned int margin)
     return root;
 }
 
-/* cmpf;
- * Comparison function for polyominoes.
+/* Comparison function for polyominoes.
  * Size is determined by perimeter.
  */
 static int cmpf(const void *X, const void *Y)
@@ -109,8 +107,7 @@ static int cmpf(const void *X, const void *Y)
     return 0;
 }
 
-/* fillLine:
- * Mark cells crossed by line from cell p to cell q.
+/* Mark cells crossed by line from cell p to cell q.
  * Bresenham's algorithm, from Graphics Gems I, pp. 99-100.
  */
 static void fillLine(pointf p, pointf q, PointSet * ps)
@@ -162,8 +159,7 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
     }
 }
 
-/* fillEdge:
- * It appears that spline_edges always have the start point at the
+/* It appears that spline_edges always have the start point at the
  * beginning and the end point at the end.
  */
 static void
@@ -222,8 +218,7 @@ fillEdge(Agedge_t * e, point p, PointSet * ps, int dx, int dy,
 
 }
 
-/* genBox:
- * Generate polyomino info from graph using the bounding box of
+/* Generate polyomino info from graph using the bounding box of
  * the graph.
  */
 static void
@@ -268,8 +263,7 @@ genBox(boxf bb0, ginfo * info, int ssize, unsigned int margin, point center,
     freePS(ps);
 }
 
-/* genPoly:
- * Generate polyomino info from graph.
+/* Generate polyomino info from graph.
  * We add all cells covered partially by the bounding box of the 
  * node. If doSplines is true and an edge has a spline, we use the 
  * polyline determined by the control point. Otherwise,
@@ -418,8 +412,7 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
     return 0;
 }
 
-/* fits:
- * Check if polyomino fits at given point.
+/* Check if polyomino fits at given point.
  * If so, add cells to pointset, store point in place and return true.
  */
 static int
@@ -459,8 +452,7 @@ fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* b
     return 1;
 }
 
-/* placeFixed:
- * Position fixed graph. Store final translation and
+/* Position fixed graph. Store final translation and
  * fill polyomino set. Note that polyomino set for the
  * graph is constructed where it will be.
  */
@@ -483,8 +475,7 @@ placeFixed(ginfo * info, PointSet * ps, point * place, point center)
 		place->y);
 }
 
-/* placeGraph:
- * Search for points on concentric "circles" out
+/* Search for points on concentric "circles" out
  * from the origin. Check if polyomino can be placed
  * with bounding box origin at point.
  * First graph (i == 0) is centered on the origin if possible.
@@ -565,9 +556,7 @@ void dumpp(ginfo * info, char *pfx)
 }
 #endif
 
-/* ucmpf;
- * Sort by user values.
- */
+/// Sort by user values.
 static int ucmpf(const void *X, const void *Y, void *user_values) {
     const ainfo* x = *(ainfo *const *) X;
     const ainfo* y = *(ainfo *const *) Y;
@@ -580,9 +569,7 @@ static int ucmpf(const void *X, const void *Y, void *user_values) {
     return 0;
 }
 
-/* acmpf;
- * Sort by height + width
- */
+/// Sort by height + width
 static int acmpf(const void *X, const void *Y)
 {
     const ainfo* x = *(ainfo *const *) X;
@@ -598,8 +585,6 @@ static int acmpf(const void *X, const void *Y)
     if (m){ c++; if (c == nc) { c = 0; r++; } } \
     else { r++; if (r == nr) { r = 0; c++; } }
 
-/* arrayRects:
- */
 static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
     size_t nr = 0, nc;
     size_t r, c;
@@ -762,8 +747,7 @@ polyRects(int ng, boxf* gs, pack_info * pinfo)
     return places;
 }
 
-/* polyGraphs:
- *  Given a collection of graphs, reposition them in the plane
+/* Given a collection of graphs, reposition them in the plane
  *  to not overlap but pack "nicely".
  *   ng is the number of graphs
  *   gs is a pointer to an array of graph pointers
@@ -949,8 +933,7 @@ putRects(int ng, boxf* bbs, pack_info* pinfo)
     return NULL;
 }
 
-/* packRects:
- * Packs rectangles.
+/* Packs rectangles.
  *  ng - number of rectangles
  *  bbs - array of rectangles
  *  info - parameters used in packing
@@ -987,9 +970,7 @@ packRects(int ng, boxf* bbs, pack_info* pinfo)
     return 0;
 }
 
-/* shiftEdge:
- * Translate all of the edge components by the given offset.
- */
+/// Translate all of the edge components by the given offset.
 static void shiftEdge(Agedge_t * e, int dx, int dy)
 {
     bezier bz;
@@ -1017,8 +998,6 @@ static void shiftEdge(Agedge_t * e, int dx, int dy)
     }
 }
 
-/* shiftGraph:
- */
 static void shiftGraph(Agraph_t * g, int dx, int dy)
 {
     graph_t *subg;
@@ -1041,8 +1020,7 @@ static void shiftGraph(Agraph_t * g, int dx, int dy)
     }
 }
 
-/* shiftGraphs:
- * The function takes ng graphs gs and a similar
+/* The function takes ng graphs gs and a similar
  * number of points pp and translates each graph so
  * that the lower left corner of the bounding box of graph gs[i] is at
  * point ps[i]. To do this, it assumes the bb field in
@@ -1109,8 +1087,7 @@ shiftGraphs(int ng, Agraph_t ** gs, point * pp, Agraph_t * root, bool doSplines)
     return 0;
 }
 
-/* packGraphs:
- * Packs graphs.
+/* Packs graphs.
  *  ng - number of graphs
  *  gs - pointer to array of graphs
  *  root - graph used to find edges
@@ -1133,8 +1110,7 @@ int packGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
     return ret;
 }
 
-/* packSubgraphs:
- * Packs subgraphs of given root graph, then recalculates root's bounding box.
+/* Packs subgraphs of given root graph, then recalculates root's bounding box.
  * Note that it does not recompute subgraph bounding boxes.
  * Cluster bounding boxes are recomputed in shiftGraphs.
  */
@@ -1162,9 +1138,7 @@ packSubgraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
     return ret;
 }
 
-/* pack_graph:
- * Pack subgraphs followed by postprocessing.
- */
+/// Pack subgraphs followed by postprocessing.
 int 
 pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed)
 {
@@ -1243,8 +1217,7 @@ static const char *mode2Str(pack_mode m) {
     return "undefined";
 }
 
-/* parsePackModeInfo;
- * Return pack_mode of graph using "packmode" attribute.
+/* Return pack_mode of graph using "packmode" attribute.
  * If not defined, return dflt
  */
 pack_mode 
@@ -1291,8 +1264,7 @@ parsePackModeInfo(const char* p, pack_mode dflt, pack_info* pinfo)
     return pinfo->mode;
 }
 
-/* getPackModeInfo;
- * Return pack_mode of graph using "packmode" attribute.
+/* Return pack_mode of graph using "packmode" attribute.
  * If not defined, return dflt
  */
 pack_mode 
@@ -1308,8 +1280,7 @@ getPackMode(Agraph_t * g, pack_mode dflt)
   return getPackModeInfo (g, dflt, &info);
 }
 
-/* getPack:
- * Return "pack" attribute of g.
+/* Return "pack" attribute of g.
  * If not defined or negative, return not_def.
  * If defined but not specified, return dflt.
  */
