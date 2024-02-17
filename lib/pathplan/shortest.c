@@ -54,10 +54,6 @@ typedef struct deque_t {
     size_t pnlpn, fpnlpi, lpnlpi, apex;
 } deque_t;
 
-static pointnlink_t *pnls, **pnlps;
-static size_t pnln;
-static int pnll;
-
 static triangles_t tris;
 
 static Ppoint_t *ops;
@@ -74,7 +70,6 @@ static size_t finddqsplit(const deque_t *dq, pointnlink_t*);
 
 static int pointintri(size_t, Ppoint_t *);
 
-static int growpnls(size_t);
 static int growops(size_t);
 
 static Ppoint_t point_indexer(void *base, int index) {
@@ -102,15 +97,26 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 
     /* make space */
     assert(polyp->pn >= 0);
-    if (growpnls((size_t)polyp->pn) != 0)
+    pointnlink_t *pnls = calloc((size_t)polyp->pn, sizeof(pnls[0]));
+    if (polyp->pn > 0 && pnls == NULL) {
+	prerror("cannot realloc pnls");
 	return -2;
-    pnll = 0;
+    }
+    pointnlink_t **pnlps = calloc((size_t)polyp->pn, sizeof(pnlps[0]));
+    if (polyp->pn > 0 && pnlps == NULL) {
+	prerror("cannot realloc pnlps");
+	free(pnls);
+	return -2;
+    }
+    int pnll = 0;
     triangles_clear(&tris);
 
     deque_t dq = {.pnlpn = (size_t)polyp->pn * 2};
     dq.pnlps = calloc(dq.pnlpn, POINTNLINKPSIZE);
     if (dq.pnlps == NULL) {
 	prerror("cannot realloc dq.pnls");
+	free(pnlps);
+	free(pnls);
 	return -2;
     }
     dq.fpnlpi = dq.pnlpn / 2;
@@ -157,6 +163,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     /* generate list of triangles */
     if (triangulate(pnlps, pnll)) {
 	free(dq.pnlps);
+	free(pnlps);
+	free(pnls);
 	return -2;
     }
 
@@ -180,6 +188,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     if (trii == triangles_size(&tris)) {
 	prerror("source point not in any triangle");
 	free(dq.pnlps);
+	free(pnlps);
+	free(pnls);
 	return -1;
     }
     ftrii = trii;
@@ -189,6 +199,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     if (trii == triangles_size(&tris)) {
 	prerror("destination point not in any triangle");
 	free(dq.pnlps);
+	free(pnlps);
+	free(pnls);
 	return -1;
     }
     ltrii = trii;
@@ -197,6 +209,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     if (!marktripath(ftrii, ltrii)) {
 	prerror("cannot find triangle path");
 	free(dq.pnlps);
+	free(pnlps);
+	free(pnls);
 	/* a straight line is better than failing */
 	if (growops(2) != 0)
 		return -2;
@@ -209,6 +223,8 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     /* if endpoints in same triangle, use a single line */
     if (ftrii == ltrii) {
 	free(dq.pnlps);
+	free(pnlps);
+	free(pnls);
 	if (growops(2) != 0)
 		return -2;
 	output->pn = 2;
@@ -289,13 +305,18 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     size_t i;
     for (i = 0, pnlp = &epnls[1]; pnlp; pnlp = pnlp->link)
 	i++;
-    if (growops(i) != 0)
+    if (growops(i) != 0) {
+	free(pnlps);
+	free(pnls);
 	return -2;
+    }
     assert(i <= INT_MAX);
     output->pn = (int)i;
     for (i = i - 1, pnlp = &epnls[1]; pnlp; i--, pnlp = pnlp->link)
 	ops[i] = *pnlp->pp;
     output->ps = ops;
+    free(pnlps);
+    free(pnls);
 
     return 0;
 }
@@ -420,25 +441,6 @@ static int pointintri(size_t trii, Ppoint_t *pp) {
 	        *triangles_get(&tris, trii).e[ei].pnl1p->pp, *pp) != ISCW)
 	    sum++;
     return sum == 3 || sum == 0;
-}
-
-static int growpnls(size_t newpnln) {
-    if (newpnln <= pnln)
-	return 0;
-    pointnlink_t *new_pnls = realloc(pnls, POINTNLINKSIZE * newpnln);
-    if (new_pnls == NULL) {
-	prerror("cannot realloc pnls");
-	return -1;
-    }
-    pnls = new_pnls;
-    pointnlink_t **new_pnlps = realloc(pnlps, POINTNLINKPSIZE * newpnln);
-    if (new_pnlps == NULL) {
-	prerror("cannot realloc pnlps");
-	return -1;
-    }
-    pnlps = new_pnlps;
-    pnln = newpnln;
-    return 0;
 }
 
 static int growops(size_t newopn) {
