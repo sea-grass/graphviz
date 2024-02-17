@@ -284,8 +284,6 @@ typedef struct
 	glCompColor penColor;
 	/*default fill color */
 	glCompColor fillColor;
-	/*highlighted Node Color */
-	glCompColor highlightedNodeColor;
 	/*grid color */
 	glCompColor gridColor;	//grid color
 	/*border color */

@@ -10,8 +10,6 @@ strict digraph template {
 		gridcoloralpha="1",
 		gridsize="30",
 		gridvisible="0",
-		highlightednodecolor="#d1cd24",
-		highlightednodecoloralpha="1",
 		defaultlinewidth="1"
 		nodesizewithdegree="1",
 		selectededgecolor="#EE1F1C",
