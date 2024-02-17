@@ -465,10 +465,8 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     return rc;
 }
 
-/* setColorScheme:
- * Set current color scheme for resolving names.
- */
-void setColorScheme (char* s)
-{
-    colorscheme = s;
+char *setColorScheme(const char *s) {
+  char *previous = colorscheme;
+  colorscheme = s == NULL ? NULL : gv_strdup(s);
+  return previous;
 }

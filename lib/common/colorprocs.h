@@ -30,7 +30,14 @@ extern "C" {
 #define COLORPROCS_API /* nothing */
 #endif
 
-COLORPROCS_API void setColorScheme (char* s);
+/// set current color scheme for resolving names
+///
+/// Callers should eventually free the returned pointer from this function.
+///
+/// @param s Color scheme to set
+/// @return Previous color scheme
+COLORPROCS_API char *setColorScheme(const char *s);
+
 COLORPROCS_API int colorxlate(char *str, gvcolor_t * color, color_type_t target_type);
 COLORPROCS_API char *canontoken(char *str);
 

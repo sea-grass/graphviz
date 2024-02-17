@@ -26,7 +26,7 @@
 #include <float.h>
 #include <math.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdlib.h>
 
 static xdot *parseXdotwithattrs(void *e)
 {
@@ -160,7 +160,7 @@ static int object_color(void* obj,glCompColor* c)
     if (!visible(vis,obj))
 	return 0;
 
-    setColorScheme (agget (obj, "colorscheme"));
+    char *previous_color_scheme = setColorScheme(agget (obj, "colorscheme"));
     /*get objects's color attribute */
     bf = getAttrStr(g,obj,"color",NULL);
     if(bf && (*bf)) {
@@ -185,6 +185,11 @@ static int object_color(void* obj,glCompColor* c)
 	c->A = c->A*Alpha;
 
     }
+
+    char *color_scheme = setColorScheme(previous_color_scheme);
+    free(color_scheme);
+    free(previous_color_scheme);
+
     return return_value;
 }
 

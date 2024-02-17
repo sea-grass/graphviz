@@ -16,7 +16,7 @@
 #include "config.h"
 #include <assert.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 #include <limits.h>
 #include <locale.h>
@@ -1739,6 +1739,8 @@ static bool node_in_box(node_t *n, boxf b)
     return boxf_overlap(ND_bb(n), b) != 0;
 }
 
+static char *saved_color_scheme;
+
 static void emit_begin_node(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj;
@@ -1876,13 +1878,19 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
         obj->url_map_n = nump;
     }
 
-    setColorScheme (agget (n, "colorscheme"));
+    saved_color_scheme = setColorScheme(agget(n, "colorscheme"));
     gvrender_begin_node(job);
 }
 
 static void emit_end_node(GVJ_t * job)
 {
     gvrender_end_node(job);
+
+    char *color_scheme = setColorScheme(saved_color_scheme);
+    free(color_scheme);
+    free(saved_color_scheme);
+    saved_color_scheme = NULL;
+
     pop_obj_state(job);
 }
 
@@ -2214,7 +2222,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 
 #define SEP 2.0
 
-    setColorScheme (agget (e, "colorscheme"));
+    char *previous_color_scheme = setColorScheme(agget(e, "colorscheme"));
     if (ED_spl(e)) {
 	arrowsize = late_double(e, E_arrowsz, 1.0, 0.0);
 	color = late_string(e, E_color, "");
@@ -2242,7 +2250,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		color = DEFAULT_COLOR;
 	    }
 	    else
-		return;
+		goto done;
 	}
 
 	fillcolor = pencolor = color;
@@ -2418,6 +2426,11 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 		}
 	}
     }
+
+done:;
+    char *color_scheme = setColorScheme(previous_color_scheme);
+    free(color_scheme);
+    free(previous_color_scheme);
 }
 
 static bool edge_in_box(edge_t *e, boxf b)
@@ -3358,7 +3371,7 @@ static void emit_page(GVJ_t * job, graph_t * g)
     else
 	saveid = NULL;
 
-    setColorScheme (agget (g, "colorscheme"));
+    char *previous_color_scheme = setColorScheme(agget(g, "colorscheme"));
     setup_page(job);
     gvrender_begin_page(job);
     gvrender_set_pencolor(job, DEFAULT_COLOR);
@@ -3408,6 +3421,10 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	obj->id = saveid;
     }
     agxbfree(&xb);
+
+    char *color_scheme = setColorScheme(previous_color_scheme);
+    free(color_scheme);
+    free(previous_color_scheme);
 }
 
 void emit_graph(GVJ_t * job, graph_t * g)
@@ -3536,7 +3553,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	emit_begin_cluster(job, sg);
 	obj = job->obj;
 	doAnchor = obj->url || obj->explicit_tooltip;
-	setColorScheme (agget (sg, "colorscheme"));
+	char *previous_color_scheme = setColorScheme(agget(sg, "colorscheme"));
 	if (doAnchor && !(flags & EMIT_CLUSTERS_LAST)) {
 	    emit_map_rect(job, GD_bb(sg));
 	    gvrender_begin_anchor(job, obj->url, obj->tooltip, obj->target, obj->id);
@@ -3679,6 +3696,10 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	/* when drawing, lay down clusters before sub_clusters */
 	if (!(flags & EMIT_CLUSTERS_LAST))
 	    emit_clusters(job, sg, flags);
+
+	char *color_scheme = setColorScheme(previous_color_scheme);
+	free(color_scheme);
+	free(previous_color_scheme);
     }
 }
 
