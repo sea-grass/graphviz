@@ -92,7 +92,7 @@ static void gdiplusgen_begin_page(GVJ_t *job)
 {
 	if (!job->context)
 	{
-		if (!job->external_context) {
+		if (!job->external_context && job->device.id != FORMAT_METAFILE) {
 		/* allocate memory and attach stream to it */
 		HGLOBAL buffer = GlobalAlloc(GMEM_MOVEABLE, 0);
 		IStream *stream = nullptr;
@@ -111,9 +111,6 @@ static void gdiplusgen_begin_page(GVJ_t *job)
 					job->device.id == FORMAT_EMFPLUS ? EmfTypeEmfPlusOnly : EmfTypeEmfPlusDual);
 				/* output in EMF for wider compatibility; output in EMF+ for antialiasing etc. */
 			break;
-
-			case FORMAT_METAFILE:
-				break;
 
 		default:
 			/* bitmap image */

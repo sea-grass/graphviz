@@ -28,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   multiple graphs wherein the first uses color schemes but later ones do not
   could result in color schemes being incorrectly retained and reapplied or
   use-after-free memory accesses.
+- The GDI+ plugin, when asked to render a graphic metafile, no longer references
+  uninitialized memory. This bug was introduced in Graphviz 2.24.0.
 
 ## [10.0.1] – 2024-02-11
 
