@@ -12,6 +12,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <string>
 #include <LASi.h>
 
 // Confusingly, Freetype (included transitively by LASi), ship their Autotools
@@ -28,6 +29,7 @@
 #include <gvc/gvcint.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/unreachable.h>
 #include <common/const.h>
 #include <common/utils.h>
 #include "../core/ps.h"
@@ -35,12 +37,10 @@
 using namespace LASi;
 using namespace std;
 
-/*
- *     J$: added `pdfmark' URL embedding.  PostScript rendered from
- *         dot files with URL attributes will get active PDF links
- *         from Adobe's Distiller.
- */
-#define PDFMAX  14400           /*  Maximum size of PDF page  */
+// J$: added `pdfmark' URL embedding.  PostScript rendered from
+//     dot files with URL attributes will get active PDF links
+//     from Adobe's Distiller.
+#define PDFMAX  14400 ///< Maximum size of PDF page
 
 typedef enum { FORMAT_PS, FORMAT_PS2, FORMAT_EPS } format_type;
 
@@ -89,7 +89,7 @@ static void lasi_end_job(GVJ_t * job)
 
     if (job->render.id != FORMAT_EPS)
 	gvprintf(job, "%%%%Pages: %d\n", job->common->viewNum);
-    if (job->common->show_boxes == NULL)
+    if (job->common->show_boxes == nullptr)
         if (job->render.id != FORMAT_EPS)
 	    gvprintf(job, "%%%%BoundingBox: %d %d %d %d\n",
 	        job->boundingBox.LL.x, job->boundingBox.LL.y,
@@ -141,7 +141,7 @@ static void lasi_begin_graph(GVJ_t * job)
 	    gvputs(job, "%%Pages: (atend)\n");
 	else
 	    gvputs(job, "%%Pages: 1\n");
-        if (job->common->show_boxes == NULL) {
+        if (job->common->show_boxes == nullptr) {
     	    if (job->render.id != FORMAT_EPS)
 		gvputs(job, "%%BoundingBox: (atend)\n");
 	    else
@@ -150,18 +150,18 @@ static void lasi_begin_graph(GVJ_t * job)
 	            job->pageBoundingBox.UR.x, job->pageBoundingBox.UR.y);
 	}
 	gvputs(job, "%%EndComments\nsave\n");
-        /* include shape library */
+        // include shape library
         cat_libfile(job, job->common->lib, ps_txt);
-	/* include epsf */
+	// include epsf
         epsf_define(job);
         if (job->common->show_boxes) {
             const char* args[2];
             args[0] = job->common->show_boxes[0];
-            args[1] = NULL;
-            cat_libfile(job, NULL, args);
+            args[1] = nullptr;
+            cat_libfile(job, nullptr, args);
         }
     }
-    /*  Set base URL for relative links (for Distiller >= 3.0)  */
+    // Set base URL for relative links (for Distiller ≥ 3.0)
     if (obj->url)
 	gvprintf(job, "[ {Catalog} << /URI << /Base %s >> >>\n"
 		"/PUT pdfmark\n", ps_string(obj->url, CHAR_UTF8));
@@ -178,7 +178,7 @@ static void lasi_begin_page(GVJ_t * job)
 
     gvprintf(job, "%%%%Page: %d %d\n",
 	    job->common->viewNum + 1, job->common->viewNum + 1);
-    if (job->common->show_boxes == NULL)
+    if (job->common->show_boxes == nullptr)
 	gvprintf(job, "%%%%PageBoundingBox: %d %d %d %d\n",
 	    pbr.LL.x, pbr.LL.y, pbr.UR.x, pbr.UR.y);
     gvprintf(job, "%%%%PageOrientation: %s\n",
@@ -188,7 +188,7 @@ static void lasi_begin_page(GVJ_t * job)
 	    pbr.UR.x, pbr.UR.y);
     gvprintf(job, "%d %d %d beginpage\n",
 	job->pagesArrayElem.x, job->pagesArrayElem.y, job->numPages);
-    if (job->common->show_boxes == NULL)
+    if (job->common->show_boxes == nullptr)
 	gvprintf(job, "gsave\n%d %d %d %d boxprim clip newpath\n",
 	    pbr.LL.x, pbr.LL.y, pbr.UR.x-pbr.LL.x, pbr.UR.y-pbr.LL.y);
     gvprintf(job, "%g %g set_scale %d rotate %g %g translate\n",
@@ -196,7 +196,7 @@ static void lasi_begin_page(GVJ_t * job)
 	    job->rotation,
 	    job->translation.x, job->translation.y);
 
-    /*  Define the size of the PS canvas  */
+    // Define the size of the PS canvas
     if (job->render.id == FORMAT_PS2) {
 	if (pbr.UR.x >= PDFMAX || pbr.UR.y >= PDFMAX)
 	    job->common->errorfn("canvas size (%d,%d) exceeds PDF limit (%d)\n"
@@ -211,11 +211,10 @@ static void lasi_end_page(GVJ_t * job)
 {
     if (job->common->show_boxes) {
 	gvputs(job, "0 0 0 edgecolor\n");
-	cat_libfile(job, NULL, job->common->show_boxes + 1);
+	cat_libfile(job, nullptr, job->common->show_boxes + 1);
     }
-    /* the showpage is really a no-op, but at least one PS processor
-     * out there needs to see this literal token.  endpage does the real work.
-     */
+    // the showpage is really a no-op, but at least one PS processor
+    // out there needs to see this literal token.  endpage does the real work.
     gvputs(job, "endpage\nshowpage\ngrestore\n");
     gvputs(job, "%%PageTrailer\n");
     gvprintf(job, "%%%%EndPage: %d\n", job->common->viewNum);
@@ -280,7 +279,7 @@ static void ps_set_pen_style(GVJ_t *job)
     gvputs(job," setlinewidth\n");
 
     while (s && (p = line = *s++)) {
-	if (strcmp(line, "setlinewidth") == 0)
+	if (line == std::string{"setlinewidth"})
 	    continue;
 	while (*p)
 	    p++;
@@ -291,7 +290,7 @@ static void ps_set_pen_style(GVJ_t *job)
 		p++;
 	    p++;
 	}
-	if (strcmp(line, "invis") == 0)
+	if (line == std::string{"invis"})
 	    job->obj->penwidth = 0;
 	gvprintf(job, "%s\n", line);
     }
@@ -333,7 +332,7 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
     PostscriptAlias *pA;
 
     if (job->obj->pencolor.u.HSVA[3] < .5)
-	return;  /* skip transparent text */
+	return; // skip transparent text
 
     if (span->layout) {
 	pango_font = pango_layout_get_font_description((PangoLayout*)(span->layout));
@@ -348,11 +347,15 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_STRETCH_EXPANDED: stretch = EXPANDED; break;
 	    case PANGO_STRETCH_EXTRA_EXPANDED: stretch = EXTRAEXPANDED; break;
 	    case PANGO_STRETCH_ULTRA_EXPANDED: stretch = ULTRAEXPANDED; break;
+	    default:
+	        UNREACHABLE();
 	}
 	switch (pango_font_description_get_style(pango_font)) {
 	    case PANGO_STYLE_NORMAL: style = NORMAL_STYLE; break;
 	    case PANGO_STYLE_OBLIQUE: style = OBLIQUE; break;
 	    case PANGO_STYLE_ITALIC: style = ITALIC; break;
+	    default:
+	        UNREACHABLE();
 	}
 	switch (pango_font_description_get_variant(pango_font)) {
 	    case PANGO_VARIANT_NORMAL: variant = NORMAL_VARIANT; break;
@@ -364,6 +367,8 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	    case PANGO_VARIANT_UNICASE: variant = SMALLCAPS; break;
 	    case PANGO_VARIANT_TITLE_CAPS: variant = SMALLCAPS; break;
 #endif
+	    default:
+	        UNREACHABLE();
 	}
 	switch (pango_font_description_get_weight(pango_font)) {
 #if PANGO_VERSION_CHECK(1, 24, 0)
@@ -388,20 +393,20 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 #if PANGO_VERSION_CHECK(1, 24, 0)
 	    case PANGO_WEIGHT_ULTRAHEAVY: weight = HEAVY; break; // no exact match in LASi
 #endif
+	    default:
+	        UNREACHABLE();
 	}
     }
     else {
 	pA = span->font->postscript_alias;
 	font = pA->svg_font_family;
 	stretch = NORMAL_STRETCH;
-	if (pA->svg_font_style
-	&& strcmp(pA->svg_font_style, "italic") == 0)
+	if (pA->svg_font_style && pA->svg_font_style == std::string{"italic"})
 	    style = ITALIC;
 	else
 	    style = NORMAL_STYLE;
 	variant = NORMAL_VARIANT;
-	if (pA->svg_font_weight
-	&& strcmp(pA->svg_font_weight, "bold") == 0)
+	if (pA->svg_font_weight && pA->svg_font_weight == std::string{"bold"})
 	    weight = BOLD;
 	else
 	    weight = NORMAL_WEIGHT;
@@ -431,7 +436,7 @@ static void lasi_textspan(GVJ_t * job, pointf p, textspan_t * span)
 
 static void lasi_ellipse(GVJ_t * job, pointf * A, int filled)
 {
-    /* A[] contains 2 points: the center and corner. */
+    // A[] contains 2 points: the center and corner.
     pointf AA[2];
 
     AA[0] = A[0];
@@ -550,27 +555,27 @@ static gvrender_engine_t lasi_engine = {
     lasi_begin_job,
     lasi_end_job,
     lasi_begin_graph,
-    0,				/* lasi_end_graph */
+    0,				// lasi_end_graph
     lasi_begin_layer,
-    0,				/* lasi_end_layer */
+    0,				// lasi_end_layer
     lasi_begin_page,
     lasi_end_page,
     lasi_begin_cluster,
     lasi_end_cluster,
-    0,				/* lasi_begin_nodes */
-    0,				/* lasi_end_nodes */
-    0,				/* lasi_begin_edges */
-    0,				/* lasi_end_edges */
+    0,				// lasi_begin_nodes
+    0,				// lasi_end_nodes
+    0,				// lasi_begin_edges
+    0,				// lasi_end_edges
     lasi_begin_node,
     lasi_end_node,
     lasi_begin_edge,
     lasi_end_edge,
     lasi_begin_anchor,
-    0,				/* lasi_end_anchor */
-    0,				/* lasi_begin_label */
-    0,				/* lasi_end_label */
+    0,				// lasi_end_anchor
+    0,				// lasi_begin_label
+    0,				// lasi_end_label
     lasi_textspan,
-    0,				/* lasi_resolve_color */
+    0,				// lasi_resolve_color
     lasi_ellipse,
     lasi_polygon,
     lasi_bezier,
@@ -584,35 +589,35 @@ static gvrender_features_t render_features_lasi = {
 	| GVRENDER_DOES_MAPS
 	| GVRENDER_NO_WHITE_BG
 	| GVRENDER_DOES_MAP_RECTANGLE,
-    4.,                         /* default pad - graph units */
-    NULL,			/* knowncolors */
-    0,				/* sizeof knowncolors */
-    HSVA_DOUBLE,		/* color_type */
+    4.,                         // default pad - graph units
+    nullptr,			// knowncolors
+    0,				// sizeof knowncolors
+    HSVA_DOUBLE,		// color_type
 };
 
 static gvdevice_features_t device_features_ps = {
     GVDEVICE_DOES_PAGES
-	| GVDEVICE_DOES_LAYERS,	/* flags */
-    {36.,36.},			/* default margin - points */
-    {612.,792.},                /* default page width, height - points */
-    {72.,72.},			/* default dpi */
+	| GVDEVICE_DOES_LAYERS,	// flags
+    {36.,36.},			// default margin - points
+    {612.,792.},                // default page width, height - points
+    {72.,72.},			// default dpi
 };
 
 static gvdevice_features_t device_features_eps = {
-    0,				/* flags */
-    {36.,36.},			/* default margin - points */
-    {612.,792.},                /* default page width, height - points */
-    {72.,72.},			/* default dpi */
+    0,				// flags
+    {36.,36.},			// default margin - points
+    {612.,792.},                // default page width, height - points
+    {72.,72.},			// default dpi
 };
 
 gvplugin_installed_t gvrender_lasi_types[] = {
     {FORMAT_PS, "lasi", -5, &lasi_engine, &render_features_lasi},
-    {0, NULL, 0, NULL, NULL}
+    {0, nullptr, 0, nullptr, nullptr}
 };
 
 gvplugin_installed_t gvdevice_lasi_types[] = {
-    {FORMAT_PS, "ps:lasi", -5, NULL, &device_features_ps},
-    {FORMAT_PS2, "ps2:lasi", -5, NULL, &device_features_ps},
-    {FORMAT_EPS, "eps:lasi", -5, NULL, &device_features_eps},
-    {0, NULL, 0, NULL, NULL}
+    {FORMAT_PS, "ps:lasi", -5, nullptr, &device_features_ps},
+    {FORMAT_PS2, "ps2:lasi", -5, nullptr, &device_features_ps},
+    {FORMAT_EPS, "eps:lasi", -5, nullptr, &device_features_eps},
+    {0, nullptr, 0, nullptr, nullptr}
 };
