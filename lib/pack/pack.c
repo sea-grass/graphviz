@@ -901,19 +901,20 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 		 pack_info * pinfo)
 {
-    int i, v;
+    int v;
     Agraph_t* g;
     point* pts = NULL;
     char* s;
 
     if (ng <= 0) return NULL;
+    const size_t ng_s = (size_t)ng;
 
     if (pinfo->mode <= l_graph)
 	return polyGraphs (ng, gs, root, pinfo);
     
-    boxf *bbs = gv_calloc(ng, sizeof(boxf));
+    boxf *bbs = gv_calloc(ng_s, sizeof(boxf));
 
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng_s; i++) {
 	g = gs[i];
 	compute_bb(g);
 	bbs[i] = GD_bb(g);
@@ -921,8 +922,8 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 
     if (pinfo->mode == l_array) {
 	if (pinfo->flags & PK_USER_VALS) {
-	    pinfo->vals = gv_calloc(ng, sizeof(packval_t));
-	    for (i = 0; i < ng; i++) {
+	    pinfo->vals = gv_calloc(ng_s, sizeof(packval_t));
+	    for (size_t i = 0; i < ng_s; i++) {
 		s = agget (gs[i], "sortv");
 		if (s && sscanf(s, "%d", &v) > 0 && v >= 0)
 		    pinfo->vals[i] = v;
