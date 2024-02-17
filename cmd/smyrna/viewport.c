@@ -143,14 +143,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->highlightedNodeColor.A = (float)
 	atof(get_attribute_value("highlightednodecoloralpha", vi, g));
 
-    buf = agget(g, "highlightededgecolor");
-    colorxlate(get_attribute_value("highlightededgecolor", vi, g), &cl,
-	       RGBA_DOUBLE);
-    vi->highlightedEdgeColor.R = (float)cl.u.RGBA[0];
-    vi->highlightedEdgeColor.G = (float)cl.u.RGBA[1];
-    vi->highlightedEdgeColor.B = (float)cl.u.RGBA[2];
-    vi->highlightedEdgeColor.A = (float)
-	atof(get_attribute_value("highlightededgecoloralpha", vi, g));
     vi->defaultnodealpha = (float)
 	atof(get_attribute_value("defaultnodealpha", vi, g));
 
