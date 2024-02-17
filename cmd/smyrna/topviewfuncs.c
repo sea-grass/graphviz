@@ -182,7 +182,7 @@ static int object_color(void* obj,glCompColor* c)
 	    c->B = cl.u.RGBA[2];
 	    c->A = cl.u.RGBA[3];
 	}
-	c->A = c->A*Alpha;
+	c->A *= Alpha;
 
     }
 
