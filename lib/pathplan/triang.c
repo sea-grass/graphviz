@@ -125,8 +125,8 @@ bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd) {
 
     if (ccw(*pa, *pb, *pc) == ISON || ccw(*pa, *pb, *pd) == ISON ||
 	ccw(*pc, *pd, *pa) == ISON || ccw(*pc, *pd, *pb) == ISON) {
-	if (between(pa, pb, pc) || between(pa, pb, pd) ||
-	    between(pc, pd, pa) || between(pc, pd, pb))
+	if (between(*pa, *pb, *pc) || between(*pa, *pb, *pd) ||
+	    between(*pc, *pd, *pa) || between(*pc, *pd, *pb))
 	    return true;
     } else {
 	ccw1 = ccw(*pa, *pb, *pc) == ISCCW ? 1 : 0;
@@ -138,12 +138,10 @@ bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd) {
     return false;
 }
 
-bool between(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc) {
-    Ppoint_t pba, pca;
-
-    pba.x = pb->x - pa->x, pba.y = pb->y - pa->y;
-    pca.x = pc->x - pa->x, pca.y = pc->y - pa->y;
-    if (ccw(*pa, *pb, *pc) != ISON)
+bool between(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc) {
+    const Ppoint_t pba = {.x = pb.x - pa.x, .y = pb.y - pa.y};
+    const Ppoint_t pca = {.x = pc.x - pa.x, .y = pc.y - pa.y};
+    if (ccw(pa, pb, pc) != ISON)
 	return false;
     return pca.x * pba.x + pca.y * pba.y >= 0 &&
 	pca.x * pca.x + pca.y * pca.y <= pba.x * pba.x + pba.y * pba.y;
