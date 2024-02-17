@@ -574,8 +574,8 @@ static int ucmpf(const void *X, const void *Y)
     const ainfo* x = *(ainfo *const *) X;
     const ainfo* y = *(ainfo *const *) Y;
 
-    int dX = userVals[x->index];
-    int dY = userVals[y->index];
+    const unsigned int dX = userVals[x->index];
+    const unsigned int dY = userVals[y->index];
     if (dX > dY) return 1;
     if (dX < dY) return -1;
     return 0;
