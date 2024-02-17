@@ -24,7 +24,7 @@
 typedef struct {
     gv_stack_t data;
     void (*actionfn) (Agnode_t *, void *);
-    int (*markfn) (Agnode_t *, int);
+    bool (*markfn)(Agnode_t *, int);
 } stk_t;
 
 /// does `n` have a mark set?
@@ -43,7 +43,7 @@ static void unmark(const stk_t *stk, Agnode_t *n) {
 }
 
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
-     int (*markfn) (Agnode_t *, int))
+                    bool (*markfn)(Agnode_t *, int))
 {
     sp->data = (gv_stack_t){0};
     sp->actionfn = actionfn;
@@ -106,13 +106,12 @@ static void insertFn(Agnode_t * n, void *state)
     agsubnode(state, n, 1);
 }
 
-static int markFn (Agnode_t* n, int v)
-{
+static bool markFn(Agnode_t *n, int v) {
     int ret;
-    if (v < 0) return ND_mark(n);
+    if (v < 0) return ND_mark(n) != 0;
     ret = ND_mark(n);
     ND_mark(n) = (char) v;
-    return ret;
+    return ret != 0;
 }
 
 static void setPrefix(agxbuf *xb, const char *pfx) {
@@ -392,13 +391,12 @@ static void unionNodes(Agraph_t * dg, Agraph_t * g)
     }
 }
 
-static int clMarkFn (Agnode_t* n, int v)
-{
+static bool clMarkFn(Agnode_t *n, int v) {
     int ret;
-    if (v < 0) return clMark(n);
+    if (v < 0) return clMark(n) != 0;
     ret = clMark(n);
     clMark(n) = (char) v;
-    return ret;
+    return ret != 0;
 }
 
 typedef struct {
