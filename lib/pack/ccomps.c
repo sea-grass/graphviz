@@ -21,7 +21,6 @@
 #include <pack/pack.h>
 #include <stdbool.h>
 
-#define MARKED(stk,n) ((stk)->markfn(n,-1))
 #define MARK(stk,n)   ((stk)->markfn(n,1))
 #define UNMARK(stk,n) ((stk)->markfn(n,0))
 
@@ -30,6 +29,11 @@ typedef struct {
     void (*actionfn) (Agnode_t *, void *);
     int (*markfn) (Agnode_t *, int);
 } stk_t;
+
+/// does `n` have a mark set?
+static bool marked(const stk_t *stk, Agnode_t *n) {
+  return stk->markfn(n, -1);
+}
 
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
      int (*markfn) (Agnode_t *, int))
@@ -72,7 +76,7 @@ static size_t dfs(Agraph_t * g, Agnode_t * n, void *state, stk_t* stk)
         for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	    if ((other = agtail(e)) == n)
 		other = aghead(e);
-            if (!MARKED(stk,other))
+            if (!marked(stk, other))
                 push(stk, other);
         }
     }
@@ -146,7 +150,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     /* Component with pinned nodes */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARKED(&stk,n) || !isPinned(n))
+	if (marked(&stk, n) || !isPinned(n))
 	    continue;
 	if (!out) {
 	    setPrefix(&name, pfx);
@@ -162,7 +166,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     /* Remaining nodes */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARKED(&stk,n))
+	if (marked(&stk, n))
 	    continue;
 	setPrefix(&name, pfx);
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
@@ -213,7 +217,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
 	UNMARK(&stk,n);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARKED(&stk,n))
+	if (marked(&stk, n))
 	    continue;
 	setPrefix(&name, pfx);
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
@@ -510,7 +514,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 
     c_cnt = 0;
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
-	if (MARKED(&stk,dn))
+	if (marked(&stk, dn))
 	    continue;
 	setPrefix(&name, pfx);
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
