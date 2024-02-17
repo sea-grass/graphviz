@@ -21,7 +21,6 @@
 #include <pack/pack.h>
 #include <stdbool.h>
 
-#define MARK(stk,n)   ((stk)->markfn(n,1))
 #define UNMARK(stk,n) ((stk)->markfn(n,0))
 
 typedef struct {
@@ -33,6 +32,11 @@ typedef struct {
 /// does `n` have a mark set?
 static bool marked(const stk_t *stk, Agnode_t *n) {
   return stk->markfn(n, -1);
+}
+
+/// set a mark on `n`
+static void mark(const stk_t *stk, Agnode_t *n) {
+  stk->markfn(n, 1);
 }
 
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
@@ -49,7 +53,7 @@ static void freeStk (stk_t* sp)
 }
 
 static void push(stk_t *sp, Agnode_t *np) {
-  MARK(sp, np);
+  mark(sp, np);
   stack_push(&sp->data, np);
 }
 
