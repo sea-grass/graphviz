@@ -44,7 +44,7 @@ typedef struct {
 
 typedef struct {
     double width, height;
-    int index;			/* index in original array */
+    size_t index; ///< index in original array
 } ainfo;
 
 /* computeStep:
@@ -644,7 +644,7 @@ static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
 	bb = gs[i];
 	ip->width = bb.UR.x - bb.LL.x + pinfo->margin;
 	ip->height = bb.UR.y - bb.LL.y + pinfo->margin;
-	ip->index = (int)i;
+	ip->index = i;
     }
 
     ainfo **sinfo = gv_calloc(ng, sizeof(ainfo*));
@@ -687,9 +687,8 @@ static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
     /* position rects */
     r = c = 0;
     for (size_t i = 0; i < ng; i++, ip++) {
-	int idx;
 	ip = sinfo[i];
-	idx = ip->index;
+	const size_t idx = ip->index;
 	bb = gs[idx];
 	if (pinfo->flags & PK_LEFT_ALIGN)
 	    places[idx].x = widths[c];
