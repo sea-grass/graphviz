@@ -18,7 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `cluster` attribute. This is more consistent with how the Graphviz libraries
   work.
 
-## Fixed
+### Fixed
 
 - Indexing within `gvNextInputGraph` no longer incorrectly retains the index
   from prior use of the GVC context. When using Graphviz libraries
