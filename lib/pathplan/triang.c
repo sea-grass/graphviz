@@ -24,9 +24,9 @@ int ccw(Ppoint_t p1, Ppoint_t p2, Ppoint_t p3) {
     return d > 0 ? ISCW : (d < 0 ? ISCCW : ISON);
 }
 
-static Ppoint_t *point_indexer(void *base, int index) {
+static Ppoint_t point_indexer(void *base, int index) {
   Ppoint_t **b = base;
-  return b[index];
+  return *b[index];
 }
 
 /* Ptriangulate:
@@ -98,12 +98,12 @@ bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer) {
     ip1 = (i + 1) % pointn;
     im1 = (i + pointn - 1) % pointn;
     /* If P[i] is a convex vertex [ i+1 left of (i-1,i) ]. */
-    if (ccw(*indexer(pointp, im1), *indexer(pointp, i), *indexer(pointp, ip1)) == ISCCW)
-	res = ccw(*indexer(pointp, i), *indexer(pointp, ip2), *indexer(pointp, im1)) == ISCCW &&
-	    ccw(*indexer(pointp, ip2), *indexer(pointp, i), *indexer(pointp, ip1)) == ISCCW;
+    if (ccw(indexer(pointp, im1), indexer(pointp, i), indexer(pointp, ip1)) == ISCCW)
+	res = ccw(indexer(pointp, i), indexer(pointp, ip2), indexer(pointp, im1)) == ISCCW &&
+	    ccw(indexer(pointp, ip2), indexer(pointp, i), indexer(pointp, ip1)) == ISCCW;
     /* Assume (i - 1, i, i + 1) not collinear. */
     else
-	res = ccw(*indexer(pointp, i), *indexer(pointp, ip2), *indexer(pointp, ip1)) == ISCW;
+	res = ccw(indexer(pointp, i), indexer(pointp, ip2), indexer(pointp, ip1)) == ISCW;
     if (!res) {
 	return false;
     }
@@ -113,7 +113,7 @@ bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer) {
 	jp1 = (j + 1) % pointn;
 	if (!(j == i || jp1 == i || j == ip2 || jp1 == ip2))
 	    if (intersects
-		(*indexer(pointp, i), *indexer(pointp, ip2), *indexer(pointp, j), *indexer(pointp, jp1))) {
+		(indexer(pointp, i), indexer(pointp, ip2), indexer(pointp, j), indexer(pointp, jp1))) {
 		return false;
 	    }
     }

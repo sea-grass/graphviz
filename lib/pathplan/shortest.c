@@ -77,9 +77,9 @@ static int pointintri(size_t, Ppoint_t *);
 static int growpnls(size_t);
 static int growops(size_t);
 
-static Ppoint_t *point_indexer(void *base, int index) {
+static Ppoint_t point_indexer(void *base, int index) {
   pointnlink_t **b = base;
-  return b[index]->pp;
+  return *b[index]->pp;
 }
 
 /* Pshortestpath:
