@@ -275,11 +275,10 @@ double IncVPSC::mostViolated(ConstraintList &l, Constraint* &v) {
 	for(ConstraintList::iterator i=l.begin();i!=end;i++) {
 		Constraint *c=*i;
 		double slack = c->slack();
-		if(c->equality || slack < minSlack) {
+		if (slack < minSlack) {
 			minSlack=slack;	
 			v=c;
 			deletePoint=i;
-			if(c->equality) break;
 		}
 	}
 	// Because the constraint list is not order dependent we just
