@@ -83,7 +83,7 @@ int init_ex_graph(v_data * graph1, v_data * graph2, int n,
 // layout distortion:
 void rescale_layout_polar(double * x_coords, double * y_coords, 
     double * x_foci, double * y_foci, int num_foci, size_t n, int interval,
-    double width, double height, double margin, double distortion);
+    double width, double height, double distortion);
 
 void find_physical_coords(Hierarchy*, int, int, double *x, double *y);
 void find_old_physical_coords(Hierarchy * hierarchy, int level, int node, double *x,double *y);

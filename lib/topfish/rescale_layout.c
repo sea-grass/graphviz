@@ -194,17 +194,13 @@ void
 rescale_layout_polar(double *x_coords, double *y_coords,
 		     double *x_foci, double *y_foci, int num_foci,
 		     size_t n, int interval, double width,
-		     double height, double margin, double distortion)
-{
+		     double height, double distortion) {
     // Polar distortion - main function
     double minX, maxX, minY, maxY;
     double aspect_ratio;
     v_data *graph;
     double scaleX;
     double scale_ratio;
-
-    width -= 2 * margin;
-    height -= 2 * margin;
 
     // compute original aspect ratio
     minX = maxX = x_coords[0];
@@ -281,10 +277,5 @@ rescale_layout_polar(double *x_coords, double *y_coords,
     for (size_t i = 0; i < n; i++) {
 	x_coords[i] *= scale_ratio;
 	y_coords[i] *= scale_ratio;
-    }
-
-    for (size_t i = 0; i < n; i++) {
-	x_coords[i] += margin;
-	y_coords[i] += margin;
     }
 }

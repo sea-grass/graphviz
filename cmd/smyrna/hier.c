@@ -39,7 +39,7 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     if (fs->num_foci != 0) {
 	rescale_layout_polar(x_coords, y_coords, fs->x_foci,
 				 fs->y_foci, fs->num_foci, counter,
-				 interval, width, height, 0, distortion);
+				 interval, width, height, distortion);
     }
 
     /* Update the final physical coordinates of the active nodes */
