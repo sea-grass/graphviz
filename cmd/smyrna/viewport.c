@@ -319,7 +319,6 @@ void init_viewport(ViewInfo *vi) {
     vi->Topview->fisheyeParams.hier.dist2_limit = 1;
     vi->Topview->fisheyeParams.repos.width = (int)(vi->bdxRight - vi->bdxLeft);
     vi->Topview->fisheyeParams.repos.height = (int)(vi->bdyTop - vi->bdyBottom);
-    vi->Topview->fisheyeParams.repos.margin = 0;
     vi->Topview->fisheyeParams.repos.distortion = 1.0;
     /*create timer */
     vi->timer = g_timer_new();

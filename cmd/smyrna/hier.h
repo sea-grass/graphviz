@@ -23,7 +23,6 @@
   // All 5 must be set
 	int width;		/* viewport width */
 	int height;		/* viewport height */
-	int margin;		/* viewport margin */
 	double distortion;	/* default of 1.0 */
     } reposition_t;
 
