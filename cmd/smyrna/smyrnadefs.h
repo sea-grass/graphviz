@@ -292,8 +292,6 @@ typedef struct
 	glCompColor selectedNodeColor;
 	/*default node alpha */
 	float defaultnodealpha;
-	/*default edge alpha */
-	float defaultedgealpha;
 
 	/*default line width */
 	float LineWidth;

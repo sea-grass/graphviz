@@ -130,11 +130,6 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->defaultnodealpha = (float)
 	atof(get_attribute_value("defaultnodealpha", vi, g));
 
-    vi->defaultedgealpha = (float)
-	atof(get_attribute_value("defaultedgealpha", vi, g));
-
-
-
     /*default line width */
     vi->LineWidth =
 	(float) atof(get_attribute_value("defaultlinewidth", vi, g));
