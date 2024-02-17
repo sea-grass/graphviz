@@ -494,7 +494,7 @@ static bool is_empty(graph_t *g) {
 static bool is_a_strong_cluster(graph_t * g)
 {
     char *str = agget(g, "compact");
-    return mapBool(str, false);
+    return mapbool(str);
 }
 
 static int rankset_kind(graph_t * g)

@@ -948,7 +948,7 @@ static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
 	    ap++;
 	}
 	if (ap->attrib == NULL ) {
-	    bool v = mapBool(s, false);
+	    bool v = mapbool(s);
 	    bool unmappable = v != mapBool(s, true);
 	    if (unmappable) {
 		agerr (AGWARN, "Unrecognized overlap value \"%s\" - using false\n", s);
