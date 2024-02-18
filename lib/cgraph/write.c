@@ -183,7 +183,7 @@ static char *_agstrcanon(char *arg, char *buf)
     return arg;
 }
 
-/* agcanonhtmlstr:
+/**
  * Canonicalize html strings. 
  */
 static char *agcanonhtmlstr(const char *arg, char *buf)
@@ -192,7 +192,7 @@ static char *agcanonhtmlstr(const char *arg, char *buf)
     return buf;
 }
 
-/*
+/**
  * canonicalize a string for printing.
  * must agree with strings in scan.l
  * Unsafe if buffer is not large enough.
@@ -222,7 +222,7 @@ static char *getoutputbuffer(const char *str)
     return rv;
 }
 
-/*
+/**
  * canonicalize a string for printing.
  * must agree with strings in scan.l
  * Shared static buffer - unsafe.
@@ -235,7 +235,7 @@ char *agcanonStr(char *str)
     return agstrcanon(str, buffer);
 }
 
-/*
+/**
  * canonicalize a string for printing.
  * If html is true, use HTML canonicalization.
  * Shared static buffer - unsafe.

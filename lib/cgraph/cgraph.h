@@ -507,14 +507,37 @@ CGRAPH_API int agobjkind(void *);
  *  Storage management of strings as reference-counted strings.
  *  The caller does not need to dynamically allocate storage.
  *
+ * All uses of cgraph strings need to be freed using @ref agstrfree
+ * in order to correctly maintain the reference count.
+ *
+ * @ref agcanonStr returns a pointer to a version of the input string
+ * canonicalized for output for later re-parsing.
+ * This includes quoting special characters and keywords.
+ * It uses its own internal buffer, so the value will be lost on
+ * the next call to @ref agcanonStr.
+ * @ref agcanon is identical with @ref agcanonStr
+ * except it can be used with any character string.
+ * The second argument indicates whether or not the string
+ * should be canonicalized as an HTML-like string.
+ *
  * @{
  */
 CGRAPH_API char *agstrdup(Agraph_t *, const char *);
+///< @brief returns a pointer to a reference-counted copy of the argument string,
+/// creating one if necessary
+
 CGRAPH_API char *agstrdup_html(Agraph_t *, const char *);
+///< create an HTML-like string
+///
+CGRAPH_API int aghtmlstr(const char *);
+///< query if a string is an ordinary string or an HTML-like string
+///
 CGRAPH_API int aghtmlstr(const char *);
 CGRAPH_API char *agstrbind(Agraph_t * g, const char *);
+///< returns a pointer to a reference-counted string if it exists, or NULL if not
+
 CGRAPH_API int agstrfree(Agraph_t *, const char *);
-CGRAPH_API char *agcanon(char *, int);
+CGRAPH_API char *agcanon(char *str, int html);
 CGRAPH_API char *agstrcanon(char *, char *);
 CGRAPH_API char *agcanonStr(char *str);  /* manages its own buf */
 /// @}
