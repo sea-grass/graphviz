@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -164,7 +165,7 @@ extern "C" {
     } glCompRect;
 
     typedef struct _glCompTex {
-	GLuint id;
+	uint32_t id;
 	char *def;
 	char *text;
 	float width;
