@@ -17,15 +17,15 @@ tessPoly TP;
 #ifndef _WIN32
 #define CALLBACK 
 #endif
-static void CALLBACK combineCallback(GLdouble coords[3],
-                                     GLdouble *vertex_data[4],
+static void CALLBACK combineCallback(double coords[3],
+                                     double *vertex_data[4],
                                      float weight[4],
-                                     GLdouble **dataOut) {
+                                     double **dataOut) {
     (void)vertex_data;
     (void)weight;
 
     int i;
-    GLdouble *vertex = gv_calloc(6, sizeof(GLdouble));
+    double *vertex = gv_calloc(6, sizeof(double));
     vertex[0] = coords[0];
     vertex[1] = coords[1];
     vertex[2] = coords[2];
@@ -39,9 +39,7 @@ static void CALLBACK combineCallback(GLdouble coords[3],
 
 static void CALLBACK vertexCallback(GLvoid *vertex)
 {
-    GLdouble *ptr = vertex;
-    glVertex3dv(ptr);
-
+  glVertex3dv(vertex);
 }
 
 // OpenGL’s `gluTessCallback` function has a prototype indicating it takes a
@@ -79,7 +77,7 @@ static void Set_Winding_Rule(GLUtesselator *tobj, GLenum winding_rule)
 
 static void Render_Contour2(GLUtesselator *tobj, sdot_op* p)
 {
-    GLdouble *d = gv_calloc(p->op.u.polygon.cnt * 3, sizeof(GLdouble));
+    double *d = gv_calloc(p->op.u.polygon.cnt * 3, sizeof(double));
     for (size_t x = 0; x < p->op.u.polygon.cnt; x++)
     {
         d[x * 3] = p->op.u.polygon.pts[x].x;

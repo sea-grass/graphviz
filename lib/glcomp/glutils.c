@@ -15,14 +15,14 @@
 
 /*transforms 2d windows location to 3d gl coords but depth is calculated unlike the previous function*/
 int GetOGLPosRef(int x, int y, float *X, float *Y) {
-    GLdouble wwinX;
-    GLdouble wwinY;
-    GLdouble wwinZ;
-    GLdouble posX, posY, posZ;
+    double wwinX;
+    double wwinY;
+    double wwinZ;
+    double posX, posY, posZ;
 
     GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
+    double modelview[16];
+    double projection[16];
     float winX, winY;
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
     glGetDoublev(GL_PROJECTION_MATRIX, projection);
@@ -51,15 +51,15 @@ int GetOGLPosRef(int x, int y, float *X, float *Y) {
 float GetOGLDistance(int l)
 {
     int x, y;
-    GLdouble wwinX;
-    GLdouble wwinY;
-    GLdouble wwinZ;
-    GLdouble posX, posY, posZ;
-    GLdouble posXX, posYY, posZZ;
+    double wwinX;
+    double wwinY;
+    double wwinZ;
+    double posX, posY, posZ;
+    double posXX, posYY, posZZ;
 
     GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
+    double modelview[16];
+    double projection[16];
     float winX, winY;
 
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
@@ -102,11 +102,11 @@ void to3D(int x, int y, float *X, float *Y, float *Z) {
     int const WIDTH = 20;
 
     GLint viewport[4];
-    GLdouble modelview[16];
-    GLdouble projection[16];
+    double modelview[16];
+    double projection[16];
     float winX, winY;
     float winZ[400];
-    GLdouble posX, posY, posZ;
+    double posX, posY, posZ;
     int idx;
 
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
