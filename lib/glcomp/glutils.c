@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <glcomp/glutils.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <glcomp/glcompdefs.h>
@@ -20,7 +21,7 @@ int GetOGLPosRef(int x, int y, float *X, float *Y) {
     double wwinZ;
     double posX, posY, posZ;
 
-    GLint viewport[4];
+    int32_t viewport[4];
     double modelview[16];
     double projection[16];
     float winX, winY;
@@ -57,7 +58,7 @@ float GetOGLDistance(int l)
     double posX, posY, posZ;
     double posXX, posYY, posZZ;
 
-    GLint viewport[4];
+    int32_t viewport[4];
     double modelview[16];
     double projection[16];
     float winX, winY;
@@ -101,7 +102,7 @@ float GetOGLDistance(int l)
 void to3D(int x, int y, float *X, float *Y, float *Z) {
     int const WIDTH = 20;
 
-    GLint viewport[4];
+    int32_t viewport[4];
     double modelview[16];
     double projection[16];
     float winX, winY;
