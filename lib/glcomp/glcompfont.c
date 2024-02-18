@@ -27,9 +27,7 @@ static void print_bitmap_string(void *font, char *s)
     }
 }
 
-void glprintfglut(void *font, GLfloat xpos, GLfloat ypos, GLfloat zpos,
-		  char *bf)
-{
+void glprintfglut(void *font, float xpos, float ypos, float zpos, char *bf) {
     glRasterPos3f(xpos, ypos, zpos + 0.001f);
     print_bitmap_string(font, bf);
 
@@ -115,8 +113,8 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 }
 
 /*texture base 3d text rendering*/
-void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z, GLfloat w,
-                      GLfloat h) {
+void glCompDrawText3D(glCompFont *f, float x, float y, double z, float w,
+                      float h) {
 	glEnable(GL_BLEND);		// Turn Blending On
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_TEXTURE_2D);
@@ -134,8 +132,7 @@ void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z, GLfloat w,
 
 }
 
-void glCompDrawText(glCompFont * f,GLfloat x,GLfloat y)
-{
+void glCompDrawText(glCompFont *f, float x, float y) {
     glRasterPos2f(x, y);
     glDrawPixels(f->tex->width, f->tex->height, GL_RGBA, GL_UNSIGNED_BYTE,  f->tex->data);
 }
@@ -143,11 +140,10 @@ void glCompDrawText(glCompFont * f,GLfloat x,GLfloat y)
 /*text rendering functions, depends on a globject to retrieve stats*/
 void glCompRenderText(glCompFont * f, glCompObj * parentObj)
 {
-    GLfloat x, y;
     if (!f->tex)
 	return;
-    x = 0;
-    y = 0;
+    float x = 0;
+    float y = 0;
     glCompCommon ref = parentObj->common;
     switch (f->justify.HJustify) 
     {

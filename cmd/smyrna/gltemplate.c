@@ -58,12 +58,12 @@ static void realize(GtkWidget * widget, gpointer data)
     GdkGLDrawable *gldrawable = gtk_widget_get_gl_drawable(widget);
 
     /*smyrna does not use any ligthting affects but can be turned on for more effects in the future */
-    GLfloat ambient[] = { 0.0, 0.0, 0.0, 1.0 };
-    GLfloat diffuse[] = { 0.5, 0.5, 0.5, 1.0 };
-    GLfloat position[] = { 0.0, 3.0, 3.0, 0.0 };
+    float ambient[] = {0.0f, 0.0f, 0.0f, 1.0f};
+    float diffuse[] = {0.5f, 0.5f, 0.5f, 1.0f};
+    float position[] = {0.0f, 3.0f, 3.0f, 0.0f};
 
-    GLfloat lmodel_ambient[] = { 0.2f, 0.2f, 0.2f, 1.0f };
-    GLfloat local_view[] = { 0.0 };
+    float lmodel_ambient[] = {0.2f, 0.2f, 0.2f, 1.0f};
+    float local_view[] = {0.0f};
 
 	/*** OpenGL BEGIN ***/
     if (!gdk_gl_drawable_gl_begin(gldrawable, glcontext))
@@ -118,7 +118,7 @@ static gboolean configure_event(GtkWidget * widget,
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (widget->allocation.width > 1)
-	init_arcBall(view->arcball, (GLfloat) view->w, (GLfloat) view->h);
+	init_arcBall(view->arcball, (float)view->w, (float)view->h);
 
     if (view->w > view->h) {
 	aspect = (float) view->w / (float) view->h;
@@ -190,7 +190,7 @@ static gboolean button_press_event(GtkWidget * widget,
 
     begin_x = (float) event->x;
     begin_y = (float) event->y;
-    view->widgets->common.functions.mousedown((glCompObj*)view->widgets,(GLfloat) event->x,(GLfloat) event->y,getGlCompMouseType(event->button));
+    view->widgets->common.functions.mousedown((glCompObj*)view->widgets, (float)event->x, (float)event->y, getGlCompMouseType(event->button));
     if (event->button == 1)	//left click
 	appmouse_left_click_down(view,(int) event->x,(int) event->y);
 
@@ -217,7 +217,7 @@ static gboolean button_release_event(GtkWidget * widget,
 
     if (view->widgets == 0) return FALSE;
     view->arcball->isDragging = 0;
-    view->widgets->common.functions.mouseup((glCompObj*)view->widgets,(GLfloat) event->x,(GLfloat) event->y,getGlCompMouseType(event->button));
+    view->widgets->common.functions.mouseup((glCompObj*)view->widgets, (float)event->x, (float)event->y, getGlCompMouseType(event->button));
 
 
     if (event->button == 1)	//left click release
@@ -290,7 +290,7 @@ static gboolean motion_notify_event(GtkWidget * widget,
 
     bool redraw = false;
     if (view->widgets)
-	view->widgets->common.functions.mouseover((glCompObj*)view->widgets, (GLfloat) x,(GLfloat) y);
+	view->widgets->common.functions.mouseover((glCompObj*)view->widgets, x, y);
 
     dx = x - begin_x;
     dy = y - begin_y;

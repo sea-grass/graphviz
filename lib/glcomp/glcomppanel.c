@@ -15,9 +15,8 @@
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
 
-glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x, GLfloat y,
-			    GLfloat w, GLfloat h)
-{
+glCompPanel *glCompPanelNew(glCompObj *parentObj, float x, float y, float w,
+                            float h) {
     glCompPanel *p = gv_alloc(sizeof(glCompPanel));
     glCompInitCommon((glCompObj *) p, parentObj, x, y);
 

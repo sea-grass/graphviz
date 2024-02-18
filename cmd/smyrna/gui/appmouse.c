@@ -31,8 +31,8 @@ static void apply_actions(ViewInfo* v,int x,int y)
 	seconds = g_timer_elapsed(view->timer3, NULL);
 	if (seconds > 0.1) {
 	    g_timer_stop(view->timer3);
-		view->arcball->MousePt.s.X = (GLfloat) x;
-		view->arcball->MousePt.s.Y = (GLfloat) y;
+		view->arcball->MousePt.s.X = (float)x;
+		view->arcball->MousePt.s.Y = (float)y;
 		if (!view->arcball->isDragging) {
 		    arcmouseClick();
 		    view->arcball->isDragging = 1;

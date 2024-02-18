@@ -179,8 +179,8 @@ static void DrawEllipse(sdot_op*  o, int param)
     for (i = 0; i < 360; i = i + 1) {
 	//convert degrees into radians
 	float degInRad = (float) (i * DEG2RAD);
-	glVertex3f((GLfloat) (x + cos(degInRad) * xradius),
-		   (GLfloat) (y + sin(degInRad) * yradius), (GLfloat)view->Topview->global_z);
+	glVertex3f((float)(x + cos(degInRad) * xradius),
+		   (float)(y + sin(degInRad) * yradius), (float)view->Topview->global_z);
     }
     glEnd();
 }
@@ -230,9 +230,9 @@ static void DrawPolyline(sdot_op* o, int param)
     glLineWidth(view->LineWidth);
     glBegin(GL_LINE_STRIP);
     for (size_t i = 0; i < op->u.polyline.cnt; ++i) {
-	glVertex3f((GLfloat) op->u.polyline.pts[i].x - dx,
-		   (GLfloat) op->u.polyline.pts[i].y - dy,
-		   (GLfloat)(op->u.polyline.pts[i].z + view->Topview->global_z));
+	glVertex3f((float)op->u.polyline.pts[i].x - dx,
+		   (float)op->u.polyline.pts[i].y - dy,
+		   (float)(op->u.polyline.pts[i].z + view->Topview->global_z));
     }
     glEnd();
 }
@@ -324,7 +324,7 @@ static void EmbedText(sdot_op* o, int param)
 {
 	(void)param;
 
-	GLfloat x,y;
+	float x, y;
 	glColor4f(view->penColor.R,view->penColor.G,view->penColor.B,view->penColor.A);
 	view->Topview->global_z += o->layer * LAYER_DIFF + 0.05;
 	switch (o->op.u.text.align)
@@ -390,9 +390,9 @@ void drawCircle(float x, float y, float radius, float zdepth)
     glBegin(GL_POLYGON);
     for (i = 0; i < 360; i = i + 36) {
 	float degInRad = (float) (i * DEG2RAD);
-	glVertex3f((GLfloat) (x + cos(degInRad) * radius),
-		   (GLfloat) (y + sin(degInRad) * radius),
-		   (GLfloat)(zdepth + view->Topview->global_z));
+	glVertex3f((float)(x + cos(degInRad) * radius),
+		   (float)(y + sin(degInRad) * radius),
+		   (float)(zdepth + view->Topview->global_z));
     }
 
     glEnd();

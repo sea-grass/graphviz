@@ -18,7 +18,7 @@
 #include <glcomp/glutils.h>
 #include <stdlib.h>
 
-static GLfloat startX, startY;
+static float startX, startY;
 
 static int glCompPointInObject(glCompObj * p, float x, float y)
 {
@@ -45,8 +45,7 @@ static glCompObj *glCompGetObjByMouse(glCompSet *s, glCompMouse *m) {
     return rv;
 }
 
-static void glCompMouseMove(void *obj, GLfloat x, GLfloat y)
-{
+static void glCompMouseMove(void *obj, float x, float y) {
     ((glCompSet *) obj)->mouse.pos.x = x;
     ((glCompSet *) obj)->mouse.pos.y =
 	((glCompObj *) obj)->common.height - y;
@@ -59,14 +58,14 @@ static void glCompMouseMove(void *obj, GLfloat x, GLfloat y)
 	((glCompSet *) obj)->common.callbacks.mouseover(obj, x, y);
 }
 
-static void glCompSetMouseClick(void *obj, GLfloat x, GLfloat y,
+static void glCompSetMouseClick(void *obj, float x, float y,
 				glMouseButtonType t)
 {
     if (((glCompSet *) obj)->common.callbacks.click)
 	((glCompSet *) obj)->common.callbacks.click(obj, x, y, t);
 }
 
-static void glCompSetMouseDown(void *obj, GLfloat x, GLfloat y,
+static void glCompSetMouseDown(void *obj, float x, float y,
 			       glMouseButtonType t)
 {
     ((glCompSet *) obj)->mouse.t = t;
@@ -93,12 +92,9 @@ static void glCompSetMouseDown(void *obj, GLfloat x, GLfloat y,
 	((glCompSet *) obj)->common.callbacks.mousedown(obj, x, y, t);
 }
 
-static void glCompSetMouseUp(void *obj, GLfloat x, GLfloat y,
-			     glMouseButtonType t)
-{
-
-    GLfloat tempX = x;
-    GLfloat tempY = ((glCompObj *) obj)->common.height - y;
+static void glCompSetMouseUp(void *obj, float x, float y, glMouseButtonType t) {
+    float tempX = x;
+    float tempY = ((glCompObj *) obj)->common.height - y;
 
     ((glCompSet *) obj)->mouse.down = 0;
     if (t == glMouseLeftButton) {
@@ -121,9 +117,8 @@ static void glCompSetMouseUp(void *obj, GLfloat x, GLfloat y,
 	glCompSetMouseClick(obj, x, y, t);
 }
 
-void glCompInitCommon(glCompObj * childObj, glCompObj * parentObj,
-			     GLfloat x, GLfloat y)
-{
+void glCompInitCommon(glCompObj *childObj, glCompObj *parentObj, float x,
+                      float y) {
     glCompCommon *c;
     glCompCommon *parent;
     c = &childObj->common;
@@ -194,8 +189,8 @@ glCompSet *glCompSetNew(int w, int h)
 {
     glCompSet *s = gv_alloc(sizeof(glCompSet));
     glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
-    s->common.width = (GLfloat) w;
-    s->common.height = (GLfloat) h;
+    s->common.width = (float)w;
+    s->common.height = (float)h;
     s->objcnt = 0;
     s->obj = NULL;
     s->textureCount = 0;
@@ -257,7 +252,7 @@ void glCompSetDraw(glCompSet *s) {
 void glcompsetUpdateBorder(glCompSet * s, int w, int h)
 {
     if (w > 0 && h > 0) {
-	s->common.width = (GLfloat) w;
-	s->common.height = (GLfloat) h;
+	s->common.width = (float)w;
+	s->common.height = (float)h;
     }
 }

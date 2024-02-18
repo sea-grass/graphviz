@@ -100,13 +100,12 @@ static glCompPoint getEdgeTail(Agedge_t *  edge)
 {
     return getPointFromStr(agget(agtail(edge),"pos"));
 }
-static GLfloat getEdgeLength(Agedge_t *  edge)
-{
-    GLfloat rv=0;	
+
+static float getEdgeLength(Agedge_t *edge) {
     glCompPoint A,B;
     A=getEdgeTail(edge);
     B=getEdgeHead(edge);
-    rv=(A.x-B.x)*(A.x-B.x) + (A.y-B.y)*(A.y-B.y) +(A.z-B.z)*(A.z-B.z);
+    float rv = (A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y) + (A.z - B.z) * (A.z - B.z);
     rv=sqrtf(rv);
     return rv;
 }
@@ -198,8 +197,8 @@ static int object_color(void* obj,glCompColor* c)
 	draws multi edges , single edges
 	this function assumes     glBegin(GL_LINES) has been called 
 */
-static void draw_edge(glCompPoint* posT,glCompPoint* posH, GLfloat length,int deg)
-{
+static void draw_edge(glCompPoint *posT, glCompPoint *posH, float length,
+                      int deg) {
     double alpha, R, ITERANGLE;
     double X1, Y1, X2, Y2;
 
@@ -259,7 +258,7 @@ static void renderSelectedNodes(Agraph_t * g)
     Agsym_t* l_color_attr = GG_nodelabelcolor(g);
     glCompColor c;
     int defaultNodeShape;
-    GLfloat nodeSize;
+    float nodeSize;
 
     glCompColorxlate(&c,agxget(g,l_color_attr));
 
@@ -315,7 +314,7 @@ static void renderNodes(Agraph_t * g)
     Agsym_t* size_attr = GN_size(g);
     Agsym_t* selected_attr = GN_selected(g);
     int defaultNodeShape;
-    GLfloat nodeSize;
+    float nodeSize;
     glCompColor c;
     xdot * x;
     int ind;
@@ -360,7 +359,7 @@ static void renderNodes(Agraph_t * g)
 	}
 	glColor4f(c.R,c.G,c.B,c.A);	    
 	pos=getPointFromStr(agxget(v, pos_attr));
-	nodeSize=(GLfloat)l_float(v, size_attr,0);
+	nodeSize = l_float(v, size_attr, 0);
 
 	ND_A(v) = pos;
 
@@ -718,7 +717,6 @@ static void renderEdgeLabels(Agraph_t * g)
     Agsym_t* data_attr = GE_labelattribute(g);
     Agsym_t* l_color_attr = GG_edgelabelcolor(g);
     glCompColor c;
-    GLfloat x,y,z;
 
     glCompColorxlate(&c,agxget(g,l_color_attr));
 
@@ -736,9 +734,9 @@ static void renderEdgeLabels(Agraph_t * g)
 	    posT = ED_posTail(e);
 	    posH = ED_posHead(e);
 	    glColor4f(c.R,c.G,c.B,c.A);
-	    x=posH.x+(posT.x-posH.x)/2;
-	    y=posH.y+(posT.y-posH.y)/2;
-	    z=posH.z+(posT.z-posH.z)/2;
+	    float x = posH.x + (posT.x - posH.x) / 2;
+	    float y = posH.y + (posT.y - posH.y) / 2;
+	    float z = posH.z + (posT.z - posH.z) / 2;
 	    glprintfglut(view->glutfont,x,y,z,agxget(e,data_attr));
 
 	}

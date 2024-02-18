@@ -20,9 +20,8 @@
 #include <GL/glut.h>
 
 
-glCompButton *glCompButtonNew(glCompObj * par, GLfloat x, GLfloat y,
-			      GLfloat w, GLfloat h, char *caption)
-{
+glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
+                              float h, char *caption) {
     glCompButton *p = gv_alloc(sizeof(glCompButton));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glButtonObj;
@@ -136,9 +135,7 @@ void glCompButtonDraw(glCompButton * p)
 	p->common.callbacks.draw(p);	/*user defined drawing routines are called here. */
 }
 
-void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
-		       glMouseButtonType t)
-{
+void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
     glCompButton *p = (glCompButton *) o;
     glCompObj *obj;
     glCompSet *s = o->common.compset;
@@ -167,7 +164,7 @@ void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
 	p->common.callbacks.click((glCompObj *) p, x, y, t);
 }
 
-void glCompButtonDoubleClick(glCompObj * obj, GLfloat x, GLfloat y,
+void glCompButtonDoubleClick(glCompObj *obj, float x, float y,
 			     glMouseButtonType t)
 {
     /*Put your internal code here */
@@ -175,7 +172,7 @@ void glCompButtonDoubleClick(glCompObj * obj, GLfloat x, GLfloat y,
 	((glCompButton *) obj)->common.callbacks.doubleclick(obj, x, y, t);
 }
 
-void glCompButtonMouseDown(glCompObj * obj, GLfloat x, GLfloat y,
+void glCompButtonMouseDown(glCompObj *obj, float x, float y,
 			   glMouseButtonType t)
 {
     /*Put your internal code here */
@@ -187,29 +184,25 @@ void glCompButtonMouseDown(glCompObj * obj, GLfloat x, GLfloat y,
 	((glCompButton *) obj)->common.callbacks.mousedown(obj, x, y, t);
 }
 
-void glCompButtonMouseIn(glCompObj * obj, GLfloat x, GLfloat y)
-{
+void glCompButtonMouseIn(glCompObj *obj, float x, float y) {
     /*Put your internal code here */
     if (((glCompButton *) obj)->common.callbacks.mousein)
 	((glCompButton *) obj)->common.callbacks.mousein(obj, x, y);
 }
 
-void glCompButtonMouseOut(glCompObj * obj, GLfloat x, GLfloat y)
-{
+void glCompButtonMouseOut(glCompObj *obj, float x, float y) {
     /*Put your internal code here */
     if (((glCompButton *) obj)->common.callbacks.mouseout)
 	((glCompButton *) obj)->common.callbacks.mouseout(obj, x, y);
 }
 
-void glCompButtonMouseOver(glCompObj * obj, GLfloat x, GLfloat y)
-{
+void glCompButtonMouseOver(glCompObj *obj, float x, float y) {
     /*Put your internal code here */
     if (((glCompButton *) obj)->common.callbacks.mouseover)
 	((glCompButton *) obj)->common.callbacks.mouseover(obj, x, y);
 }
 
-void glCompButtonMouseUp(glCompObj * obj, GLfloat x, GLfloat y,
-			 glMouseButtonType t)
+void glCompButtonMouseUp(glCompObj *obj, float x, float y, glMouseButtonType t)
 {
     /*Put your internal code here */
 

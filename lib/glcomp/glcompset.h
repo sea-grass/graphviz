@@ -21,9 +21,8 @@
 extern "C" {
 #endif
 
-    extern void glCompInitCommon(glCompObj * childObj,
-				 glCompObj * parentObj, GLfloat x,
-				 GLfloat y);
+void glCompInitCommon(glCompObj *childObj, glCompObj *parentObj, float x,
+                      float y);
     void glCompEmptyCommon(glCompCommon * c);
     extern glCompSet *glCompSetNew(int w, int h);
     extern void glCompSetDraw(glCompSet *s);
