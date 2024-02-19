@@ -108,6 +108,8 @@ def get_format(path: Path) -> str:
         return "EXE installer"
     if path.suffix[1:].lower() == "zip":
         return "ZIP archive"
+    if ".tar." in str(path):
+        return "".join(path.suffixes[-2:])[1:].lower()
     return path.suffix[1:].lower()
 
 
