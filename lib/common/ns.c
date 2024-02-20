@@ -39,7 +39,6 @@ static void check_cycles(graph_t * g);
 
 static graph_t *G;
 static size_t N_nodes, N_edges;
-static int Maxrank;
 static size_t S_i;			/* search index for enter_edge */
 static int Search_size;
 #define SEARCHSIZE 30
@@ -669,12 +668,11 @@ update(edge_t * e, edge_t * f)
     return 0;
 }
 
-static void scan_and_normalize(void)
-{
+static int scan_and_normalize(void) {
     node_t *n;
 
     int Minrank = INT_MAX;
-    Maxrank = -INT_MAX;
+    int Maxrank = -INT_MAX;
     for (n = GD_nlist(G); n; n = ND_next(n)) {
 	if (ND_node_type(n) == NORMAL) {
 	    Minrank = MIN(Minrank, ND_rank(n));
@@ -684,6 +682,7 @@ static void scan_and_normalize(void)
     for (n = GD_nlist(G); n; n = ND_next(n))
 	ND_rank(n) -= Minrank;
     Maxrank -= Minrank;
+    return Maxrank;
 }
 
 static void reset_lists(void) {
@@ -759,7 +758,7 @@ static void TB_balance(void)
     int adj = 0;
     char *s;
 
-    scan_and_normalize();
+    const int Maxrank = scan_and_normalize();
 
     /* find nodes that are not tight and move to less populated ranks */
     int *nrank = gv_calloc(Maxrank + 1, sizeof(int));
@@ -964,7 +963,7 @@ int rank2(graph_t * g, int balance, int maxiter, int search_size)
 	LR_balance();
 	break;
     default:
-	scan_and_normalize();
+	(void)scan_and_normalize();
 	freeTreeList (G);
 	break;
     }
