@@ -293,8 +293,7 @@ limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
 #define INIT_DELTA 10 
 #define LOOP_TRIES 15  /* number of times to try to limiting boxes to regain space, using smaller divisions */
 
-/* routesplines:
- * Route a path using the path info in pp. This includes start and end points
+/** Route a path using the path info in pp. This includes start and end points
  * plus a collection of contiguous boxes contain the terminal points. The boxes
  * are converted into a containing polygon. A shortest path is constructed within
  * the polygon from between the terminal points. If polyline is true, this path
@@ -312,8 +311,7 @@ limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
  *
  * If a catastrophic error, return NULL and npoints is 0.
  */
-static pointf *_routesplines(path * pp, int *npoints, int polyline)
-{
+static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     Ppoly_t poly;
     Ppolyline_t pl, spl;
     int splinepi;
@@ -581,12 +579,12 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 
 pointf *routesplines(path * pp, int *npoints)
 {
-    return _routesplines (pp, npoints, 0);
+  return routesplines_(pp, npoints, 0);
 }
 
 pointf *routepolylines(path * pp, int *npoints)
 {
-    return _routesplines (pp, npoints, 1);
+  return routesplines_(pp, npoints, 1);
 }
 
 static double overlap(double i0, double i1, double j0, double j1) {
