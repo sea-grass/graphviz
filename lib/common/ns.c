@@ -761,7 +761,8 @@ static void TB_balance(void)
     const int Maxrank = scan_and_normalize();
 
     /* find nodes that are not tight and move to less populated ranks */
-    int *nrank = gv_calloc(Maxrank + 1, sizeof(int));
+    assert(Maxrank >= 0);
+    int *nrank = gv_calloc((size_t)Maxrank + 1, sizeof(int));
     if ( (s = agget(G,"TBbalance")) ) {
          if (streq(s,"min")) adj = 1;
          else if (streq(s,"max")) adj = 2;
