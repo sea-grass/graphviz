@@ -729,7 +729,19 @@ static void LR_balance(void)
     freeTreeList (G);
 }
 
-static int decreasingrankcmpf(node_t **n0, node_t **n1) {
+static int decreasingrankcmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  node_t **n0 = (node_t**)x;
+  node_t **n1 = (node_t**)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   if (ND_rank(*n1) < ND_rank(*n0)) {
     return -1;
   }
@@ -739,7 +751,19 @@ static int decreasingrankcmpf(node_t **n0, node_t **n1) {
   return 0;
 }
 
-static int increasingrankcmpf(node_t **n0, node_t **n1) {
+static int increasingrankcmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  node_t **n0 = (node_t **)x;
+  node_t **n1 = (node_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   if (ND_rank(*n0) < ND_rank(*n1)) {
     return -1;
   }
@@ -782,8 +806,7 @@ static void TB_balance(void)
     }
     Tree_node.size = ii;
     qsort(Tree_node.list, Tree_node.size, sizeof(Tree_node.list[0]),
-        adj > 1? (int(*)(const void*,const void*))decreasingrankcmpf
-               : (int(*)(const void*,const void*))increasingrankcmpf);
+          adj > 1 ? decreasingrankcmpf: increasingrankcmpf);
     for (size_t i = 0; i < Tree_node.size; i++) {
         n = Tree_node.list[i];
         if (ND_node_type(n) == NORMAL)

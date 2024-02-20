@@ -130,8 +130,9 @@ static treenode_t *mkTree (Agraph_t * g, attrsym_t* gp, attrsym_t* ap, attrsym_t
     return p;
 }
 
-static int nodecmp (treenode_t** p0, treenode_t** p1)
-{
+static int nodecmp(const void *x, const void *y) {
+  const treenode_t *const *p0 = x;
+  const treenode_t *const *p1 = y;
   if ((*p0)->area < (*p1)->area) {
     return 1;
   }
@@ -157,7 +158,7 @@ static void layoutTree(treenode_t * tree)
 	cp = cp->rightsib;
     }
 
-    qsort (nodes, nc, sizeof(treenode_t*), (qsort_cmpf)nodecmp);
+    qsort(nodes, nc, sizeof(treenode_t *), nodecmp);
     double* areas_sorted = gv_calloc(nc, sizeof(double));
     for (size_t i = 0; i < nc; i++) {
 	areas_sorted[i] = nodes[i]->area;

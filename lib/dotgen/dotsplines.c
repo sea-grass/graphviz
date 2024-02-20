@@ -73,7 +73,7 @@ static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
 static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
 				pathend_t *, pathend_t *, boxf *, int, int);
-static int edgecmp(Agedge_t **, Agedge_t **);
+static int edgecmp(const void *, const void *);
 static void make_flat_edge(graph_t*, spline_info_t*, path *, Agedge_t **, int, int, int);
 static void make_regular_edge(graph_t* g, spline_info_t*, path *, Agedge_t **, int, int, int);
 static boxf makeregularend(boxf, int, double);
@@ -361,7 +361,7 @@ static void _dot_splines(graph_t * g, int normalize)
      * alternatively, the edges would be routed identically if
      * routed separately.
      */
-    qsort(edges, n_edges, sizeof(edges[0]), (qsort_cmpf)edgecmp);
+    qsort(edges, n_edges, sizeof(edges[0]), edgecmp);
 
     /* FIXME: just how many boxes can there be? */
     P.boxes = gv_calloc(n_nodes + 20 * 2 * NSUB, sizeof(boxf));
@@ -577,8 +577,19 @@ setflags(edge_t *e, int hint1, int hint2, int f3)
  *  - labels if flat edges
  *  - edge id
  */
-static int edgecmp(edge_t** ptr0, edge_t** ptr1)
-{
+static int edgecmp(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  edge_t **ptr0 = (edge_t **)x;
+  edge_t **ptr1 = (edge_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     Agedgeinfo_t fwdedgeai, fwdedgebi;
     Agedgepair_t fwdedgea, fwdedgeb;
     edge_t *e0, *e1, *ea, *eb, *le0, *le1;
@@ -949,8 +960,19 @@ transformf (pointf p, pointf del, int flip)
  *  - label is wider
  *  - label is higher
  */
-static int edgelblcmpfn(edge_t** ptr0, edge_t** ptr1)
-{
+static int edgelblcmpfn(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  edge_t **ptr0 = (edge_t **)x;
+  edge_t **ptr1 = (edge_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     pointf sz0, sz1;
 
     edge_t *e0 = *ptr0;
@@ -1000,7 +1022,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	earray[i] = edges[ind + i];
     }
 
-    qsort (earray, cnt, sizeof(edge_t*), (qsort_cmpf) edgelblcmpfn);
+    qsort(earray, cnt, sizeof(edge_t *), edgelblcmpfn);
 
     tp = add_pointf(ND_coord(tn), ED_tail_port(e).p);
     hp = add_pointf(ND_coord(hn), ED_head_port(e).p);

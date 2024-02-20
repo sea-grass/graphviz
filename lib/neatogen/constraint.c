@@ -632,10 +632,9 @@ typedef struct {
     node_t *np;
 } info;
 
-typedef int (*sortfn_t) (const void *, const void *);
-
-static int sortf(pointf * p, pointf * q)
-{
+static int sortf(const void *x, const void *y) {
+    const pointf *p = x;
+    const pointf *q = y;
     if (p->x < q->x)
 	return -1;
     else if (p->x > q->x)
@@ -730,7 +729,7 @@ static pointf computeScaleXY(pointf *aarr, size_t m) {
 
     aarr[0].x = 1;
     aarr[0].y = HUGE_VAL;
-    qsort(aarr + 1, m - 1, sizeof(pointf), (sortfn_t)sortf);
+    qsort(aarr + 1, m - 1, sizeof(pointf), sortf);
 
     pointf *barr = gv_calloc(m, sizeof(pointf));
     barr[m - 1].x = aarr[m - 1].x;

@@ -317,11 +317,10 @@ static gint addEdge(void *edge, void *state) {
 // when moving to C11, qsort_s should be used instead of having a global
 // variable
 static double* _vals;
-typedef int (*qsort_cmpf) (const void *, const void *);
 
-static int 
-vcmp (int* a, int* b)
-{
+static int vcmp(const void *x, const void *y) {
+    const int *a = x;
+    const int *b = y;
     double va = _vals[*a];
     double vb = _vals[*b];
 
@@ -378,7 +377,7 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
 	    _vals = y;
 	else              
 	    _vals = x;
-	qsort (vs, n, sizeof(int), (qsort_cmpf)vcmp);
+	qsort(vs, n, sizeof(int), vcmp);
 
 	tl = vs[0];
 	for (i = 1; i < n; i++) {
