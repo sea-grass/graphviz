@@ -27,8 +27,6 @@ static int routeinit;
 /* static data used across multiple edges */
 static Ppoint_t *polypoints;  /* vertices of polygon defined by boxes */
 static int polypointn;        /* size of polypoints[] */
-static Pedge_t *edges;        /* polygon edges passed to Proutespline */
-static int edgen;             /* size of edges[] */
 
 static int checkpath(int, boxf*, path*);
 static void printpath(path * pp);
@@ -201,18 +199,19 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
     if (polyline)
 	make_polyline (pl, &spl);
     else {
-	if (poly.pn > edgen) {
-	    edges = ALLOC(poly.pn, edges, Pedge_t);
-	    edgen = poly.pn;
-	}
+	// polygon edges passed to Proutespline
+	Pedge_t *edges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (i = 0; i < poly.pn; i++) {
 	    edges[i].a = poly.ps[i];
 	    edges[i].b = poly.ps[(i + 1) % poly.pn];
 	}
 	    evs[0].x = evs[0].y = 0;
 	    evs[1].x = evs[1].y = 0;
-	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0)
+	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
+            free(edges);
             return NULL;
+	}
+	free(edges);
     }
 
     pointf *ps = calloc(spl.pn, sizeof(ps[0]));
@@ -490,10 +489,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	make_polyline (pl, &spl);
     }
     else {
-	if (poly.pn > edgen) {
-	    edges = ALLOC(poly.pn, edges, Pedge_t);
-	    edgen = poly.pn;
-	}
+	Pedge_t *edges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (edgei = 0; edgei < poly.pn; edgei++) {
 	    edges[edgei].a = polypoints[edgei];
 	    edges[edgei].b = polypoints[(edgei + 1) % poly.pn];
@@ -510,9 +506,11 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	    evs[1].x = evs[1].y = 0;
 
 	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
+	    free(edges);
 	    agerr(AGERR, "in routesplines, Proutespline failed\n");
 	    return NULL;
 	}
+	free(edges);
 #ifdef DEBUG
 	if (debugleveln(realedge, 3)) {
 	    psprintspline(spl);
