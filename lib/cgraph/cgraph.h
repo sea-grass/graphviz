@@ -640,8 +640,24 @@ CGRAPH_API Agraph_t *agparent(Agraph_t * g);
  *  @{
  */
 
-/// @defgroup card set cardinality
-/// @{
+/** @defgroup card set cardinality
+ *
+ * By default, nodes are stored in ordered sets for
+ * efficient random access to insert, find, and delete nodes.
+ *
+ * @ref agnnodes, @ref agnedges, and @ref agnsubg return the
+ * sizes of node, edge and subgraph sets of a graph.
+ *
+ * The function @ref agdegree returns the size of a node’s edge set,
+ * and takes flags to select in-edges, out-edges, or both.
+ *
+ * The function @ref agcountuniqedges returns
+ * the size of a node’s edge set, and takes flags
+ * to select in-edges, out-edges, or both.
+ * Unlike @ref agdegree, each loop is only counted once.
+ *
+ * @{
+ */
 CGRAPH_API int agnnodes(Agraph_t * g);
 CGRAPH_API int agnedges(Agraph_t * g);
 CGRAPH_API int agnsubg(Agraph_t * g);
