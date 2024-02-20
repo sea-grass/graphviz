@@ -1204,7 +1204,13 @@ edgeLen (Agedge_t* e)
 
 static int edgecmp(epair_t* e0, epair_t* e1)
 {
-    return e0->d - e1->d;
+  if (e0->d > e1->d) {
+    return 1;
+  }
+  if (e0->d < e1->d) {
+    return -1;
+  }
+  return 0;
 }
 
 static bool spline_merge(node_t * n)
