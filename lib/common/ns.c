@@ -672,7 +672,7 @@ static int scan_and_normalize(void) {
     node_t *n;
 
     int Minrank = INT_MAX;
-    int Maxrank = -INT_MAX;
+    int Maxrank = INT_MIN;
     for (n = GD_nlist(G); n; n = ND_next(n)) {
 	if (ND_node_type(n) == NORMAL) {
 	    Minrank = MIN(Minrank, ND_rank(n));
