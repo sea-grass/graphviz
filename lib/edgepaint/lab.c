@@ -265,10 +265,12 @@ double *color_blend_rgb2lab(char *color_list, const int maxpoints) {
     ii = 0; jj = 0; dist_current = 0;
     while (dists[jj] < dists[ii] + step) jj++;
     
+    double *colors_ptr = colors;
     for (i = 0; i < maxpoints; i++){
-      lab_interpolate(lab[ii], lab[jj], (dist_current - dists[ii])/MAX(0.001, (dists[jj] - dists[ii])), colors);
+      lab_interpolate(lab[ii], lab[jj], (dist_current - dists[ii]) /
+                      MAX(0.001, (dists[jj] - dists[ii])), colors_ptr);
       dist_current += step;
-      colors += cdim;
+      colors_ptr += cdim;
       if (dist_current > dists[jj]) ii = jj;
       while (jj < nc -1 && dists[jj] < dists[ii] + step) jj++;
     }
