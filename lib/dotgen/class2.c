@@ -11,8 +11,10 @@
 
 /* classify edges for mincross/nodepos/splines, using given ranks */
 
+#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 static node_t*
 label_vnode(graph_t * g, edge_t * orig)
@@ -292,7 +294,8 @@ void class2(graph_t * g)
     }
     /* since decompose() is not called on subgraphs */
     if (g != dot_root(g)) {
-	GD_comp(g).list = ALLOC(1, GD_comp(g).list, node_t *);
+	free(GD_comp(g).list);
+	GD_comp(g).list = gv_alloc(sizeof(node_t *));
 	GD_comp(g).list[0] = GD_nlist(g);
     }
 }
