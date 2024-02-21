@@ -453,7 +453,7 @@ static void agglomerative_ink_bundling_internal(
       mid_edges[i] = pedge_wgt_new(2, dim, &xx.data()[i*4], wgt);
     }
 
-    A_mid = nearest_neighbor_graph(ne, std::min(nneighbors, ne), xx.data());
+    A_mid = nearest_neighbor_graph(ne, std::min(nneighbors, ne), xx);
 
     agglomerative_ink_bundling_internal(dim, A_mid, mid_edges, nneighbors, recurse_level, MAX_RECURSE_LEVEL, angle_param, angle, current_ink, ink00);
     SparseMatrix_delete(A_mid);
