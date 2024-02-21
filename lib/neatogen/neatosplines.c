@@ -232,7 +232,7 @@ void makeSelfArcs(edge_t * e, int stepx)
 	if (ED_label(e))
 	    updateBB(agraphof(agtail(e)), ED_label(e));
 	makePortLabels(e);
-    } else {
+    } else if (cnt > 1) {
 	int i;
 	edge_t **edges = gv_calloc(cnt, sizeof(edge_t*));
 	for (i = 0; i < cnt; i++) {

@@ -1180,9 +1180,7 @@ void
 makeSelfEdge(edge_t * edges[], int ind, int cnt, double sizex,
 	     double sizey, splineInfo * sinfo)
 {
-    edge_t *e;
-
-    e = edges[ind];
+    edge_t *e = edges[ind];
 
     /* self edge without ports or
      * self edge with all ports inside, on the right, or at most 1 on top

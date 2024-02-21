@@ -47,6 +47,7 @@ static std::vector<wchar_t> utf8_to_utf16(const char *s) {
 static Image* gdiplus_loadimage(GVJ_t * job, usershape_t *us)
 {
     assert(job);
+    (void)job;
     assert(us);
     assert(us->name);
 

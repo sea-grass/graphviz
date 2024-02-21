@@ -14,6 +14,7 @@
 #include <math.h>
 #include <sparse/QuadTree.h>
 #include <stdbool.h>
+#include <stddef.h>
 #include <string.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
@@ -381,22 +382,29 @@ void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
   agxbfree(&sbuff);
 }
 
-static void get_tri(int n, int dim, double *x, int *nt, struct Triangle **T, SparseMatrix *E) {
-   /* always contains a self edge and is symmetric.
-     input:
-     n: number of points
-     dim: dimension, only first2D used
-     x: point j is stored x[j*dim]--x[j*dim+dim-1]
-     output: 
-     nt: number of triangles
-     T: triangles
-     E: a matrix of size nxn, if two points i > j are connected by an triangulation edge, and is neighboring two triangles
-     .  t1 and t2, then A[i,j] is both t1 and t2
-   */
+/** construct triangles
+ *
+ * Always contains a self edge and is symmetric.
+ *
+ * @param n Number of points
+ * @param dim Dimension, only first2D is used
+ * @param x Point j is stored x[j × dim] -- x[j × dim + dim - 1]
+ * @param nt [out] Number of triangles
+ * @param T [out] triangles
+ * @param E [out] A matrix of size n×n, if two points i > j are connected by an
+ *   triangulation edge, and is neighboring two triangles t1 and t2, then
+ *   A[i, j] is both t1 and t2
+ * @return 0 on success
+ */
+static int get_tri(int n, int dim, double *x, int *nt, struct Triangle **T,
+                   SparseMatrix *E) {
   int i, j, i0, i1, i2, ntri;
   SparseMatrix A, B;
 
   int* trilist = get_triangles(x, n, &ntri);
+  if (trilist == NULL) {
+    return -1;
+  }
 
   *T = gv_calloc(ntri, sizeof(struct Triangle));
 
@@ -421,6 +429,7 @@ static void get_tri(int n, int dim, double *x, int *nt, struct Triangle **T, Spa
   *nt = ntri;
 
   free(trilist);
+  return 0;
 }
 
 static SparseMatrix get_country_graph(int n, SparseMatrix A, int *groups, int GRP_RANDOM, int GRP_BBOX){
@@ -1243,13 +1252,16 @@ static void make_map_internal(bool include_OK_points,
     }
   }
 
-  get_tri(n + nrandom, dim2, xcombined, &nt, &Tp, &E);
+  if (get_tri(n + nrandom, dim2, xcombined, &nt, &Tp, &E) != 0) {
+    goto done;
+  }
   get_polygons(n, nrandom, dim2, graph, grouping, nt, Tp, E, nverts, x_poly, poly_lines, polys, polys_groups,
 	       poly_point_map, country_graph);
 
-  free(xcombined);
   SparseMatrix_delete(E);
   free(Tp);
+done:
+  free(xcombined);
   free(xran);
   if (grouping != grouping0) free(grouping);
   if (x != x0) free(x);

@@ -926,6 +926,24 @@ windows-mingw64-cmake-build:
     except:
         - tags
 
+windows-mingw64-cmake-release-build:
+    stage: build
+    needs: []
+    script:
+        # disable Windows Defender
+        - Add-MpPreference -ExclusionPath 'C:\'
+        - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
+        - $Env:build_system = "cmake"
+        # fail on any compiler warnings
+        - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror -Wno-deprecated-declarations"
+        - $Env:CMAKE_OPTIONS = "-DCMAKE_BUILD_TYPE=Release"
+        - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
+    tags:
+        - windows
+    except:
+        - tags
+
 windows-cygwin-cmake-build:
     stage: build
     needs: []
