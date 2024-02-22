@@ -333,9 +333,6 @@ def test_191():
         assert p.returncode != 0, "syntax error was only a warning, not an error"
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/218"
-)
 def test_218():
     """
     out-of-spec font names should cause warnings in the core PS renderer

@@ -22,6 +22,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `${prefix}/include/graphviz`. Previously this missing path meant building
   Graphviz demo examples against an installation of Graphviz in a non-system
   path would not work. #2474
+- The core PostScript output format (`-Tps`) warns if using an
+  out-of-specification font name. To avoid this, use a more sophisticated output
+  format like Cairo (`-Tps:cairo`) that does font name lookup and translation.
+  #218
 
 ### Fixed
 
