@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (10.1.0)]
+## [Unreleased (11.0.0)]
 
 ### Added
 
@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   cluster, now recognizes this case insensitively as well as recognizing the
   `cluster` attribute. This is more consistent with how the Graphviz libraries
   work.
+- **Breaking**: `pkg-config` (.pc) files shipped with Graphviz now include
+  `${prefix}/include` in the include path in addition to
+  `${prefix}/include/graphviz`. Previously this missing path meant building
+  Graphviz demo examples against an installation of Graphviz in a non-system
+  path would not work. #2474
 
 ### Fixed
 
@@ -2490,7 +2495,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (10.1.0)]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...main
+[Unreleased (11.0.0)]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...main
 [10.0.1]: https://gitlab.com/graphviz/graphviz/compare/9.0.0...10.0.1
 [9.0.0]: https://gitlab.com/graphviz/graphviz/compare/8.1.0...9.0.0
 [8.1.0]: https://gitlab.com/graphviz/graphviz/compare/8.0.5...8.1.0
