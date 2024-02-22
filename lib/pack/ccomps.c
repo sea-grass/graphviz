@@ -21,18 +21,29 @@
 #include <pack/pack.h>
 #include <stdbool.h>
 
-#define MARKED(stk,n) ((stk)->markfn(n,-1))
-#define MARK(stk,n)   ((stk)->markfn(n,1))
-#define UNMARK(stk,n) ((stk)->markfn(n,0))
-
 typedef struct {
     gv_stack_t data;
     void (*actionfn) (Agnode_t *, void *);
-    int (*markfn) (Agnode_t *, int);
+    bool (*markfn)(Agnode_t *, int);
 } stk_t;
 
+/// does `n` have a mark set?
+static bool marked(const stk_t *stk, Agnode_t *n) {
+  return stk->markfn(n, -1);
+}
+
+/// set a mark on `n`
+static void mark(const stk_t *stk, Agnode_t *n) {
+  stk->markfn(n, 1);
+}
+
+/// unset a mark on `n`
+static void unmark(const stk_t *stk, Agnode_t *n) {
+  stk->markfn(n, 0);
+}
+
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
-     int (*markfn) (Agnode_t *, int))
+                    bool (*markfn)(Agnode_t *, int))
 {
     sp->data = (gv_stack_t){0};
     sp->actionfn = actionfn;
@@ -45,7 +56,7 @@ static void freeStk (stk_t* sp)
 }
 
 static void push(stk_t *sp, Agnode_t *np) {
-  MARK(sp, np);
+  mark(sp, np);
   stack_push(&sp->data, np);
 }
 
@@ -72,7 +83,7 @@ static size_t dfs(Agraph_t * g, Agnode_t * n, void *state, stk_t* stk)
         for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	    if ((other = agtail(e)) == n)
 		other = aghead(e);
-            if (!MARKED(stk,other))
+            if (!marked(stk, other))
                 push(stk, other);
         }
     }
@@ -95,13 +106,11 @@ static void insertFn(Agnode_t * n, void *state)
     agsubnode(state, n, 1);
 }
 
-static int markFn (Agnode_t* n, int v)
-{
-    int ret;
-    if (v < 0) return ND_mark(n);
-    ret = ND_mark(n);
-    ND_mark(n) = (char) v;
-    return ret;
+static bool markFn(Agnode_t *n, int v) {
+    if (v < 0) return ND_mark(n) != 0;
+    const size_t ret = ND_mark(n);
+    ND_mark(n) = v != 0;
+    return ret != 0;
 }
 
 static void setPrefix(agxbuf *xb, const char *pfx) {
@@ -142,11 +151,11 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	UNMARK(&stk,n);
+	unmark(&stk, n);
 
     /* Component with pinned nodes */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARKED(&stk,n) || !isPinned(n))
+	if (marked(&stk, n) || !isPinned(n))
 	    continue;
 	if (!out) {
 	    setPrefix(&name, pfx);
@@ -162,7 +171,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
 
     /* Remaining nodes */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARKED(&stk,n))
+	if (marked(&stk, n))
 	    continue;
 	setPrefix(&name, pfx);
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
@@ -210,10 +219,10 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     Agraph_t **ccs = gv_calloc(bnd, sizeof(Agraph_t*));
     initStk(&stk, insertFn, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	UNMARK(&stk,n);
+	unmark(&stk, n);
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARKED(&stk,n))
+	if (marked(&stk, n))
 	    continue;
 	setPrefix(&name, pfx);
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
@@ -381,13 +390,12 @@ static void unionNodes(Agraph_t * dg, Agraph_t * g)
     }
 }
 
-static int clMarkFn (Agnode_t* n, int v)
-{
+static bool clMarkFn(Agnode_t *n, int v) {
     int ret;
-    if (v < 0) return clMark(n);
+    if (v < 0) return clMark(n) != 0;
     ret = clMark(n);
     clMark(n) = (char) v;
-    return ret;
+    return ret != 0;
 }
 
 typedef struct {
@@ -510,7 +518,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
 
     c_cnt = 0;
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
-	if (MARKED(&stk,dn))
+	if (marked(&stk, dn))
 	    continue;
 	setPrefix(&name, pfx);
 	agxbprint(&name, "%" PRISIZE_T, c_cnt);
@@ -572,7 +580,7 @@ int isConnected(Agraph_t * g)
 
     initStk(&stk, NULL, markFn);
     for (n = agfstnode(g); n; n = agnxtnode(g, n))
-	UNMARK(&stk,n);
+	unmark(&stk, n);
 
     n = agfstnode(g);
     cnt = dfs(g, agfstnode(g), NULL, &stk);

@@ -248,10 +248,7 @@ static glCompColor GetglCompColor(char *color)
 	c.B = (float) cl.u.RGBA[2];
 	c.A = (float) cl.u.RGBA[3];
     } else {
-	c.R = view->penColor.R;
-	c.G = view->penColor.G;
-	c.B = view->penColor.B;
-	c.A = view->penColor.A;
+	c = view->penColor;
     }
     return c;
 }
@@ -260,23 +257,14 @@ static void SetFillColor(sdot_op*  o, int param)
     (void)param;
 
     xdot_op * op=&o->op;
-    glCompColor c = GetglCompColor(op->u.color);
-    view->fillColor.R = c.R;
-    view->fillColor.G = c.G;
-    view->fillColor.B = c.B;
-    view->fillColor.A = c.A;
+    view->fillColor = GetglCompColor(op->u.color);
 }
 static void SetPenColor(sdot_op* o, int param)
 {
     (void)param;
 
-    glCompColor c;
     xdot_op * op=&o->op;
-    c = GetglCompColor(op->u.color);
-    view->penColor.R = c.R;
-    view->penColor.G = c.G;
-    view->penColor.B = c.B;
-    view->penColor.A = c.A;
+    view->penColor = GetglCompColor(op->u.color);
 }
 
 static void SetStyle(sdot_op* o, int param)

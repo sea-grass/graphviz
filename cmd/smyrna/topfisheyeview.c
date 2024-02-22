@@ -291,15 +291,14 @@ static void drawtopfishedges(topview * t)
 						  &nodee);
 			if (get_temp_coords(t, levell, nodee, &x, &y)) {
 
-			    if ((!(((-x0 / view->zoom > view->clipX1)
-				    && (-x0 / view->zoom < view->clipX2)
-				    && (-y0 / view->zoom > view->clipY1)
-				    && (-y0 / view->zoom < view->clipY2))))
-				&& (!(((-x / view->zoom > view->clipX1)
-				       && (-x / view->zoom < view->clipX2)
-				       && (-y / view->zoom > view->clipY1)
-				       && (-y / view->zoom <
-					   view->clipY2)))))
+			    if (!(-x0 / view->zoom > view->clipX1
+				    && -x0 / view->zoom < view->clipX2
+				    && -y0 / view->zoom > view->clipY1
+				    && -y0 / view->zoom < view->clipY2)
+				&& !(-x / view->zoom > view->clipX1
+				       && -x / view->zoom < view->clipX2
+				       && -y / view->zoom > view->clipY1
+				       && -y / view->zoom < view->clipY2))
 
 				continue;
 

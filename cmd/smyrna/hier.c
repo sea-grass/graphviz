@@ -24,7 +24,6 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     int max_level = hp->nlevels - 1;	// coarsest level
     double width = parms->width;
     double height = parms->height;
-    double margin = parms->margin;
     double distortion = parms->distortion;
 
     /* get all logical coordinates of active nodes */
@@ -40,8 +39,7 @@ void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
     if (fs->num_foci != 0) {
 	rescale_layout_polar(x_coords, y_coords, fs->x_foci,
 				 fs->y_foci, fs->num_foci, counter,
-				 interval, width, height, margin,
-				 distortion);
+				 interval, width, height, distortion);
     }
 
     /* Update the final physical coordinates of the active nodes */
