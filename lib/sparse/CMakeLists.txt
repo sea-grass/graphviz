@@ -5,7 +5,6 @@ add_library(sparse STATIC
   colorutil.h
   DotIO.h
   general.h
-  LinkedList.h
   mq.h
   QuadTree.h
   SparseMatrix.h
@@ -16,7 +15,6 @@ add_library(sparse STATIC
   colorutil.c
   DotIO.c
   general.c
-  LinkedList.c
   mq.c
   QuadTree.c
   SparseMatrix.c

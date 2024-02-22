@@ -503,8 +503,6 @@ EXCLUDE = (
     "lib/sfio/sfvscanf.c",
     "lib/sparse/DotIO.c",
     "lib/sparse/DotIO.h",
-    "lib/sparse/LinkedList.c",
-    "lib/sparse/LinkedList.h",
     "lib/sparse/QuadTree.c",
     "lib/sparse/QuadTree.h",
     "lib/sparse/SparseMatrix.c",

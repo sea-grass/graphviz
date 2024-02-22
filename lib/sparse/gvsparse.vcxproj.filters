@@ -35,9 +35,6 @@
     <ClCompile Include="general.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LinkedList.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="mq.c">
       <Filter>Source Files</Filter>
     </ClCompile>
