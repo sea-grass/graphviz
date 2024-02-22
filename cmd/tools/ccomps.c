@@ -286,7 +286,7 @@ static char *getName(void)
 	    agxbprint(&name, "%s_%d", path, sufcnt);
     }
     sufcnt++;
-    return agxbuse(&name);
+    return agxbdisown(&name);
 }
 
 static void gwrite(Agraph_t * g)
