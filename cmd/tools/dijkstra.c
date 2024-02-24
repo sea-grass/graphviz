@@ -40,7 +40,7 @@ typedef struct {
     Agrec_t hdr;
     double dist;		/* always positive for scanned nodes */
     Agnode_t* prev;
-    int done;                   /* > 0 if finished */
+    bool done; ///< true if finished
 } nodedata_t;
 
 static double getlength(Agedge_t * e)
@@ -76,7 +76,7 @@ static void setdist(Agnode_t * n, double dist)
 #define getprev(n) (((nodedata_t*)((n)->base.data))->prev)
 #define setprev(n,p) (((nodedata_t*)((n)->base.data))->prev = (p))
 #define isDone(n) (((nodedata_t*)((n)->base.data))->done)
-#define setDone(n) (((nodedata_t*)((n)->base.data))->done = 1)
+#define setDone(n) (((nodedata_t*)((n)->base.data))->done = true)
 
 static int cmpf(Dt_t * d, void *key1, void *key2, Dtdisc_t * disc)
 {
