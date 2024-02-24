@@ -494,6 +494,8 @@ CGRAPH_API Agedge_t *agnxtedge(Agraph_t * g, Agedge_t * e, Agnode_t * n);
 
 CGRAPH_API Agraph_t *agraphof(void* obj);
 CGRAPH_API Agraph_t *agroot(void* obj);
+///< takes any graph object (graph, subgraph, node, edge) and returns the root graph in which it lives
+
 CGRAPH_API int agcontains(Agraph_t *, void *obj);
 ///< returns non-zero if **obj** is a member of (sub)graph
 
