@@ -203,24 +203,25 @@ static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
 static void rec_attach_bb(graph_t * g, Agsym_t* bbsym, Agsym_t* lpsym, Agsym_t* lwsym, Agsym_t* lhsym)
 {
     int c;
-    char buf[BUFSIZ];
+    agxbuf buf = {0};
     pointf pt;
 
-    snprintf(buf, sizeof(buf), "%.5g,%.5g,%.5g,%.5g", GD_bb(g).LL.x,
-             YDIR(GD_bb(g).LL.y), GD_bb(g).UR.x, YDIR(GD_bb(g).UR.y));
-    agxset(g, bbsym, buf);
+    agxbprint(&buf, "%.5g,%.5g,%.5g,%.5g", GD_bb(g).LL.x, YDIR(GD_bb(g).LL.y),
+              GD_bb(g).UR.x, YDIR(GD_bb(g).UR.y));
+    agxset(g, bbsym, agxbuse(&buf));
     if (GD_label(g) && GD_label(g)->text[0]) {
 	pt = GD_label(g)->pos;
-	snprintf(buf, sizeof(buf), "%.5g,%.5g", pt.x, YDIR(pt.y));
-	agxset(g, lpsym, buf);
+	agxbprint(&buf, "%.5g,%.5g", pt.x, YDIR(pt.y));
+	agxset(g, lpsym, agxbuse(&buf));
 	pt = GD_label(g)->dimen;
-	snprintf(buf, sizeof(buf), "%.2f", PS2INCH(pt.x));
-	agxset (g, lwsym, buf);
-	snprintf(buf, sizeof(buf), "%.2f", PS2INCH(pt.y));
-	agxset (g, lhsym, buf);
+	agxbprint(&buf, "%.2f", PS2INCH(pt.x));
+	agxset(g, lwsym, agxbuse(&buf));
+	agxbprint(&buf, "%.2f", PS2INCH(pt.y));
+	agxset(g, lhsym, agxbuse(&buf));
     }
     for (c = 1; c <= GD_n_cluster(g); c++)
 	rec_attach_bb(GD_clust(g)[c], bbsym, lpsym, lwsym, lhsym);
+    agxbfree(&buf);
 }
 
 void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
