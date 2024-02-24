@@ -100,13 +100,13 @@ exfreenode(Expr_t* p, Exnode_t* x)
 			exfreenode(p, x->data.variable.index);
 		if (x->data.variable.symbol->local)
 		{
-			dtclose((Dt_t *)x->data.variable.symbol->local);
+			dtclose(x->data.variable.symbol->local);
 			x->data.variable.symbol->local = NULL;
 		}
 		break;
 	case '#':
 		if (x->data.variable.symbol->local) {
-			dtclose((Dt_t *)x->data.variable.symbol->local);
+			dtclose(x->data.variable.symbol->local);
 			x->data.variable.symbol->local = NULL;
 		}
 		break;
@@ -115,7 +115,7 @@ exfreenode(Expr_t* p, Exnode_t* x)
 		if (x->data.variable.index)
 			exfreenode(p, x->data.variable.index);
 		if (x->data.variable.symbol->local) {
-			dtclose((Dt_t *)x->data.variable.symbol->local);
+			dtclose(x->data.variable.symbol->local);
 			x->data.variable.symbol->local = NULL;
 		}
 		break;
@@ -148,7 +148,7 @@ exfreenode(Expr_t* p, Exnode_t* x)
 			exfreenode(p, x->data.split.seps);
 		exfreenode(p, x->data.split.string);
 		if (x->data.split.array->local) {
-			dtclose((Dt_t *)x->data.split.array->local);
+			dtclose(x->data.split.array->local);
 			x->data.split.array->local = NULL;
 		}
 		break;

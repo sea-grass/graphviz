@@ -530,7 +530,7 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 					}
 					else
 						disc->key = offsetof(Exassoc_t, name);
-					if (!($1->local = (char*)dtopen(disc, Dtoset)))
+					if (!($1->local = dtopen(disc, Dtoset)))
 						exerror("%s: cannot initialize associative array", $1->name);
 					$1->index_type = $3; /* -1 indicates no typechecking */
 				}

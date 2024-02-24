@@ -101,7 +101,7 @@ typedef struct Exid_s			/* id symbol table info		*/
 	long		index_type;	/* index type for arrays        */
 	long		flags;		/* user defined flags		*/
 	Exnode_t*	value;		/* value			*/
-	char *local; ///< user defined local stuff
+	void *local; ///< user defined local stuff
 	long		isstatic;	/* static			*/
 	char		name[EX_NAMELEN];/* symbol name			*/
 } Exid_t;
@@ -155,7 +155,7 @@ struct Exnode_s				/* expression tree node		*/
 	int	type;		/* value type			*/
 	int	op;		/* operator			*/
 	int	binary;		/* data.operand.{left,right} ok	*/
-	char *local; ///< user defined local stuff
+	void *local; ///< user defined local stuff
 	union
 	{
 	double	(*floating)(char**);	/* FLOATING return value	*/
