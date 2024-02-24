@@ -311,11 +311,11 @@ int sfvscanf(FILE *f, va_list args) {
 	/* set object size */
 	if (flags & (SFFMT_TYPES & ~SFFMT_IFLAG)) {
 	    if ((_Sftype[fmt] & (SFFMT_INT | SFFMT_UINT)) || fmt == 'n') {
-		size = (flags & SFFMT_LLONG) ? sizeof(Sflong_t) :
+		size = (flags & SFFMT_LLONG) ? sizeof(long long) :
 		    (flags & SFFMT_LONG) ? sizeof(long) :
 		    (flags & SFFMT_SHORT) ? sizeof(short) :
 		    (flags & SFFMT_SSHORT) ? sizeof(char) :
-		    (flags & SFFMT_JFLAG) ? sizeof(Sflong_t) :
+		    (flags & SFFMT_JFLAG) ? sizeof(long long) :
 		    (flags & SFFMT_TFLAG) ? sizeof(ptrdiff_t) :
 		    (flags & SFFMT_ZFLAG) ? sizeof(size_t) : -1;
 	    } else if (_Sftype[fmt] & SFFMT_FLOAT) {
@@ -353,10 +353,9 @@ int sfvscanf(FILE *f, va_list args) {
 	    value = va_arg(args, void *);
 
 	if (fmt == 'n') {	/* return length of consumed input */
-	    if (sizeof(long) > sizeof(int) && FMTCMP(size, long, Sflong_t))
+	    if (sizeof(long) > sizeof(int) && FMTCMP(size, long, long long))
 		*((long *) value) = (long)n_input;
-	    else if (sizeof(short) < sizeof(int) &&
-		     FMTCMP(size, short, Sflong_t))
+	    else if (sizeof(short) < sizeof(int) && FMTCMP(size, short, long long))
 		*((short *) value) = (short)n_input;
 	    else if (size == sizeof(char))
 		*((char *) value) = (char)n_input;
@@ -533,14 +532,12 @@ int sfvscanf(FILE *f, va_list args) {
 
 		if (fmt == 'p') {
 		    *((void **) value) = (void *)(uintptr_t)argv.lu;
-		} else if (sizeof(long) > sizeof(int) &&
-			 FMTCMP(size, long, Sflong_t)) {
+		} else if (sizeof(long) > sizeof(int) && FMTCMP(size, long, long long)) {
 		    if (fmt == 'd' || fmt == 'i')
 			*((long *) value) = (long) argv.ll;
 		    else
 			*((ulong *) value) = (ulong) argv.lu;
-		} else if (sizeof(short) < sizeof(int) &&
-			   FMTCMP(size, short, Sflong_t)) {
+		} else if (sizeof(short) < sizeof(int) && FMTCMP(size, short, long long)) {
 		    if (fmt == 'd' || fmt == 'i')
 			*((short *) value) = (short) argv.ll;
 		    else

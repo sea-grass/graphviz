@@ -269,8 +269,8 @@ prformat(void* vp, Sffmt_t* dp)
 		fmt->fmt.size = sizeof(double);
 		break;
 	default:
-		*(Sflong_t*)vp = fmt->value.integer;
-		dp->size = sizeof(Sflong_t);
+		*(long long *)vp = fmt->value.integer;
+		dp->size = sizeof(long long);
 		break;
 	}
 	strview_t txt = {0};
@@ -332,7 +332,7 @@ prformat(void* vp, Sffmt_t* dp)
 		break;
 	case 't':
 	case 'T':
-		if ((tm = *(Sflong_t*)vp) == -1)
+		if ((tm = *(long long *)vp) == -1)
 			tm = time(NULL);
         if (txt.data == NULL) {
             exerror("printf: no time format provided");
@@ -473,7 +473,7 @@ scformat(void* vp, Sffmt_t* dp)
 			exerror("scanf: %s: char variable address argument expected", node->data.variable.symbol->name);
 			return -1;
 		}
-		fmt->fmt.size = sizeof(Sflong_t);
+		fmt->fmt.size = sizeof(long long);
 		*((void **) vp) = &node->data.variable.symbol->value->data.constant.value;
 		break;
 	default:
@@ -482,7 +482,7 @@ scformat(void* vp, Sffmt_t* dp)
 			exerror("scanf: %s: integer variable address argument expected", node->data.variable.symbol->name);
 			return -1;
 		}
-		dp->size = sizeof(Sflong_t);
+		dp->size = sizeof(long long);
 		*(void**)vp = &node->data.variable.symbol->value->data.constant.value;
 		break;
 	}
@@ -1482,25 +1482,25 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 					if ((r.integer = r.floating) == 0)
 						exerror("floating 0 modulus");
 					else
-						v.floating = (Sflong_t)v.floating % r.integer;
+						v.floating = (long long)v.floating % r.integer;
 					break;
 				case '&':
-					v.floating = (Sflong_t)v.floating & (Sflong_t)r.floating;
+					v.floating = (long long)v.floating & (long long)r.floating;
 					break;
 				case '|':
-					v.floating = (Sflong_t)v.floating | (Sflong_t)r.floating;
+					v.floating = (long long)v.floating | (long long)r.floating;
 					break;
 				case '^':
-					v.floating = (Sflong_t)v.floating ^ (Sflong_t)r.floating;
+					v.floating = (long long)v.floating ^ (long long)r.floating;
 					break;
 				case LSH:
-					v.floating = (Sflong_t)v.floating << (Sflong_t)r.floating;
+					v.floating = (long long)v.floating << (long long)r.floating;
 					break;
 				case RSH:
 #ifdef _WIN32
-					v.floating = (Sflong_t)((unsigned long long)v.floating >> (Sflong_t)r.floating);
+					v.floating = (long long)((unsigned long long)v.floating >> (long long)r.floating);
 #else
-					v.floating = (unsigned long long)v.floating >> (Sflong_t)r.floating;
+					v.floating = (unsigned long long)v.floating >> (long long)r.floating;
 #endif
 					break;
 				default:
@@ -1646,10 +1646,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			tmp.type = exnode->type;
 			return tmp.data.constant.value;
 		case '!':
-			v.floating = !(Sflong_t)v.floating;
+			v.floating = !(long long)v.floating;
 			return v;
 		case '~':
-			v.floating = ~(Sflong_t)v.floating;
+			v.floating = ~(long long)v.floating;
 			return v;
 		case '-':
 			if (x)
@@ -1661,13 +1661,13 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.floating += r.floating;
 			return v;
 		case '&':
-			v.floating = (Sflong_t)v.floating & (Sflong_t)r.floating;
+			v.floating = (long long)v.floating & (long long)r.floating;
 			return v;
 		case '|':
-			v.floating = (Sflong_t)v.floating | (Sflong_t)r.floating;
+			v.floating = (long long)v.floating | (long long)r.floating;
 			return v;
 		case '^':
-			v.floating = (Sflong_t)v.floating ^ (Sflong_t)r.floating;
+			v.floating = (long long)v.floating ^ (long long)r.floating;
 			return v;
 		case '*':
 			v.floating *= r.floating;
@@ -1682,7 +1682,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			if ((r.integer = r.floating) == 0)
 				exerror("floating 0 modulus");
 			else
-				v.floating = (Sflong_t)v.floating % r.integer;
+				v.floating = (long long)v.floating % r.integer;
 			return v;
 		case '<':
 			v.integer = v.floating < r.floating;
@@ -1703,10 +1703,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = v.floating > r.floating;
 			return v;
 		case LSH:
-			v.integer = (Sflong_t)((unsigned long long)v.floating << (Sflong_t)r.floating);
+			v.integer = (long long)((unsigned long long)v.floating << (long long)r.floating);
 			return v;
 		case RSH:
-			v.integer = (Sflong_t)((unsigned long long)v.floating >> (Sflong_t)r.floating);
+			v.integer = (long long)((unsigned long long)v.floating >> (long long)r.floating);
 			return v;
 		}
 		break;

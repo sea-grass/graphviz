@@ -42,7 +42,7 @@
 	double		floating;
 	struct Exref_s*	reference;
 	struct Exid_s*	id;
-	Sflong_t	integer;
+	long long integer;
 	int		op;
 	char*		string;
 }

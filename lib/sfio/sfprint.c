@@ -40,7 +40,7 @@ static int imin(int a, int b) {
  */
 int sfprint(FILE *f, Sffmt_t *format) {
     int v = 0, n_s, base, fmt, flags;
-    Sflong_t lv;
+    long long lv;
     char *sp, *ssp, *endsp, *ep, *endep;
     int dot, width, precis, n, n_output = 0;
     int sign, decpt;
@@ -323,11 +323,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	/* set the correct size */
 	if (flags & (SFFMT_TYPES & ~SFFMT_IFLAG)) {
 	    if (_Sftype[fmt] & (SFFMT_INT | SFFMT_UINT)) {
-		size = (flags & SFFMT_LLONG) ? sizeof(Sflong_t) :
+		size = (flags & SFFMT_LLONG) ? sizeof(long long) :
 		    (flags & SFFMT_LONG) ? sizeof(long) :
 		    (flags & SFFMT_SHORT) ? sizeof(short) :
 		    (flags & SFFMT_SSHORT) ? sizeof(char) :
-		    (flags & SFFMT_JFLAG) ? sizeof(Sflong_t) :
+		    (flags & SFFMT_JFLAG) ? sizeof(long long) :
 		    (flags & SFFMT_TFLAG) ? sizeof(ptrdiff_t) :
 		    (flags & SFFMT_ZFLAG) ? sizeof(size_t) : -1;
 	    } else if (_Sftype[fmt] & SFFMT_FLOAT) {
@@ -359,7 +359,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    switch (_Sftype[fmt]) {
 	    case SFFMT_INT:
 	    case SFFMT_UINT:
-		if (FMTCMP(size, long, Sflong_t))
+		if (FMTCMP(size, long, long long))
 		     argv.l = va_arg(args, long);
 		else
 		    argv.i = va_arg(args, int);
@@ -465,7 +465,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		(flags & ~(SFFMT_SIGN | SFFMT_BLANK | SFFMT_ZERO)) |
 		SFFMT_ALTER;
 	    if (sizeof(void*) > sizeof(int)) {
-		lv = (Sflong_t)(intptr_t)argv.vp;
+		lv = (long long)(intptr_t)argv.vp;
 		goto long_cvt;
 	    } else {
 		v = (int)(intptr_t)argv.vp;
@@ -508,29 +508,29 @@ int sfprint(FILE *f, Sffmt_t *format) {
 
 	  int_arg:
 	    if ((sizeof(long) > sizeof(int) || sizeof(void*) > sizeof(int))
-	        && FMTCMP(size, Sflong_t, Sflong_t)) {
+	        && FMTCMP(size, long long, long long)) {
 		lv = argv.ll;
 		goto long_cvt;
 	    } else if ((sizeof(long) > sizeof(int) || sizeof(void*) > sizeof(int))
-	               && FMTCMP(size, long, Sflong_t)) {
+	               && FMTCMP(size, long, long long)) {
 		if (fmt == 'd')
-		    lv = (Sflong_t) argv.l;
+		    lv = (long long)argv.l;
 		else
-		    lv = (Sflong_t) ((ulong) argv.l);
+		    lv = (long long)(ulong)argv.l;
 	      long_cvt:
 		if (lv == 0 && precis == 0)
 		    break;
 		if (lv < 0 && fmt == 'd') {
 		    flags |= SFFMT_MINUS;
 		    if (lv == HIGHBITL) {	/* avoid overflow */
-			lv = (Sflong_t) (HIGHBITL / base);
+			lv = (long long)(HIGHBITL / base);
 			*--sp = _Sfdigits[HIGHBITL - (unsigned long long)lv * base];
 		    } else
 			lv = -lv;
 		}
 		if (n_s < 0) {	/* base 10 */
-		    Sflong_t nv;
-		    sfucvt(lv, sp, nv, ssp, Sflong_t, unsigned long long);
+		    long long nv;
+		    sfucvt(lv, sp, nv, ssp, long long, unsigned long long);
 		} else if (n_s > 0) {	/* base power-of-2 */
 		    do {
 			*--sp = ssp[lv & n_s];
@@ -541,8 +541,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    } while ((lv = (unsigned long long)lv / base));
 		}
 	    } else
-	    if (sizeof(short) < sizeof(int)
-		    && FMTCMP(size, short, Sflong_t)) {
+	    if (sizeof(short) < sizeof(int) && FMTCMP(size, short, long long)) {
 		if (ft && ft->extf && (ft->flags & SFFMT_VALUE)) {
 		    if (fmt == 'd')
 			v = (int) ((short) argv.h);

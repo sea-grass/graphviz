@@ -72,7 +72,7 @@ extern "C" {
 	unsigned ui;
 	ulong ul;
 	ushort uh;
-	Sflong_t ll, *llp;
+	long long ll, *llp;
 	unsigned long long lu;
 	long double ld;
 	double d;

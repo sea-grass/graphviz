@@ -49,12 +49,12 @@ static int isedge(Agobj_t *obj) {
 
 #define BITS_PER_BYTE 8
 
-static void *int2ptr(Sflong_t i) {
+static void *int2ptr(long long i) {
   return (void*)(intptr_t)i;
 }
 
-static Sflong_t ptr2int(const void *p) {
-  return (Sflong_t)(intptr_t)p;
+static long long ptr2int(const void *p) {
+  return (long long)(intptr_t)p;
 }
 
 static int iofread(void *chan, char *buf, int bufsize)

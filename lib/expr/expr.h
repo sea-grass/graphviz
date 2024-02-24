@@ -94,7 +94,7 @@ typedef void (*Exexit_f) (Expr_t *, Exdisc_t *, int);
 
 typedef struct Exlocal_s		/* user defined member type	*/
 {
-	Sflong_t	number;
+	long long number;
 	char*		pointer;
 } Exlocal_t;
 
@@ -165,7 +165,7 @@ struct Exnode_s				/* expression tree node		*/
 	union
 	{
 	double	(*floating)(char**);	/* FLOATING return value	*/
-	Sflong_t(*integer)(char**);	/* INTEGER|UNSIGNED return value*/
+	long long (*integer)(char **); ///< INTEGER|UNSIGNED return value
 	char*	(*string)(char**);	/* STRING return value		*/
 	}		compiled;	/* compiled function pointer	*/
 	Exdata_t	data;		/* node data			*/

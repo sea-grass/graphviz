@@ -29,8 +29,6 @@ extern "C" {
 #include <stdarg.h>
 #include <stdio.h>
 
-#define Sflong_t	long long
-
 /* formatting environment */
     typedef struct _sffmt_s Sffmt_t;
     typedef int (*Sffmtext_f)(void *, Sffmt_t *);
