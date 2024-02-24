@@ -614,7 +614,12 @@ CGRAPH_API Agsym_t *agattrsym(void *obj, char *name);
 ///< looks up a string attribute for a graph object given as an argument
 
 CGRAPH_API Agsym_t *agnxtattr(Agraph_t * g, int kind, Agsym_t * attr);
-CGRAPH_API int      agcopyattr(void *oldobj, void *newobj);
+CGRAPH_API int agcopyattr(void *oldobj, void *newobj);
+/**< @brief copies all of the attributes from one object to another
+ * @return fails and returns non-zero if argument objects are different kinds,
+ * or if all of the attributes of the source object have not been declared
+ * for the target object
+ */
 
 /// @addtogroup cgraph_rec
 /// @{
