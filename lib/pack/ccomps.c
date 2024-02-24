@@ -132,8 +132,7 @@ static void setPrefix(agxbuf *xb, const char *pfx) {
  * be obtained from the root graph.
  * Return NULL if graph is empty.
  */
-Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
-{
+Agraph_t **pccomps(Agraph_t *g, size_t *ncc, char *pfx, bool *pinned) {
     size_t c_cnt = 0;
     agxbuf name = {0};
     Agraph_t *out = NULL;
@@ -188,7 +187,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
     freeStk (&stk);
     agxbfree(&name);
     ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
-    *ncc = (int) c_cnt;
+    *ncc = c_cnt;
     *pinned = pin;
     return ccs;
 }
@@ -202,8 +201,7 @@ Agraph_t **pccomps(Agraph_t * g, int *ncc, char *pfx, bool *pinned)
  * be obtained from the root graph.
  * Returns NULL on error or if graph is empty.
  */
-Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
-{
+Agraph_t **ccomps(Agraph_t *g, size_t *ncc, char *pfx) {
     size_t c_cnt = 0;
     agxbuf name = {0};
     Agraph_t *out;
@@ -245,7 +243,7 @@ Agraph_t **ccomps(Agraph_t * g, int *ncc, char *pfx)
     freeStk (&stk);
     ccs = gv_recalloc(ccs, bnd, c_cnt, sizeof(Agraph_t*));
     agxbfree(&name);
-    *ncc = (int) c_cnt;
+    *ncc = c_cnt;
     return ccs;
 }
 
@@ -488,8 +486,7 @@ subGInduce(Agraph_t* g, Agraph_t * out)
  * is cloned within the subgraph. Each cloned cluster contains a record pointing
  * to the real cluster.
  */
-Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
-{
+Agraph_t **cccomps(Agraph_t *g, size_t *ncc, char *pfx) {
     Agraph_t *dg;
     size_t n_cnt, c_cnt, e_cnt;
     agxbuf name = {0};
@@ -559,7 +556,7 @@ Agraph_t **cccomps(Agraph_t * g, int *ncc, char *pfx)
     freeStk (&stk);
     ccs = gv_recalloc(ccs, ccs_length, c_cnt, sizeof(Agraph_t*));
     agxbfree(&name);
-    *ncc = (int) c_cnt;
+    *ncc = c_cnt;
     return ccs;
 }
 

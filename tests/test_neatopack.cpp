@@ -18,7 +18,7 @@ TEST_CASE("take an input graph, compute its connected components, lay out each "
   const std::string graph_type = directed_graph ? "digraph" : "graph";
   const std::string edge_op = directed_graph ? "->" : "--";
 
-  const auto num_subgraphs = GENERATE(1, 2);
+  const auto num_subgraphs = GENERATE(1ul, 2ul);
 
   const std::string dot =
       num_subgraphs == 1
@@ -32,13 +32,13 @@ TEST_CASE("take an input graph, compute its connected components, lay out each "
   aginit(g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
   aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 
-  int ncc = 0;
+  size_t ncc = 0;
   auto **cc = ccomps(g, &ncc, NULL);
   REQUIRE(ncc == num_subgraphs);
 
   auto *gvc = gvContextPlugins(lt_preloaded_symbols, false);
 
-  for (int i = 0; i < ncc; i++) {
+  for (size_t i = 0; i < ncc; i++) {
     graph_t *sg = cc[i];
     const auto nedges = graphviz_node_induce(sg, NULL);
     REQUIRE(nedges == 1);
@@ -81,7 +81,7 @@ TEST_CASE("take an input graph, compute its connected components, lay out each "
 
   gvFreeRenderData(result);
 
-  for (int i = 0; i < ncc; i++) {
+  for (size_t i = 0; i < ncc; i++) {
     graph_t *sg = cc[i];
     gvFreeLayout(gvc, sg);
     agdelete(g, sg);

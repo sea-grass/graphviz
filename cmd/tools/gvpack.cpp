@@ -740,8 +740,7 @@ int main(int argc, char *argv[])
 
     /* pack graphs */
     if (doPack) {
-	assert(gs.size() <= INT_MAX);
-	if (packGraphs((int)gs.size(), gs.data(), 0, &pinfo)) {
+	if (packGraphs(gs.size(), gs.data(), 0, &pinfo)) {
 	    std::cerr << "gvpack: packing of graphs failed.\n";
 	    graphviz_exit(1);
 	}

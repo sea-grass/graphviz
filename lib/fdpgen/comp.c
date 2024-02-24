@@ -22,6 +22,7 @@
 
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/prisize_t.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/comp.h>
 #include <pack/pack.h>
@@ -57,25 +58,23 @@ static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out, char *marks)
  * Note that if ports and/or pinned nodes exists, they will all be
  * in the first component returned by findCComp.
  */
-static int C_cnt = 0;
-graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
-{
+static size_t C_cnt = 0;
+graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
     node_t *n;
     graph_t *subg;
     char name[128];
-    int c_cnt = 0;
+    size_t c_cnt = 0;
     bport_t *pp;
     graph_t **comps;
     graph_t **cp;
     int pinflag = 0;
 
-/* fprintf (stderr, "comps of %s starting at %d \n", g->name, c_cnt); */
     char *marks = gv_calloc(agnnodes(g), sizeof(char)); // freed below
 
     /* Create component based on port nodes */
     subg = 0;
     if ((pp = PORTS(g))) {
-	snprintf(name, sizeof(name), "cc%s_%d", agnameof(g), c_cnt++ + C_cnt);
+	snprintf(name, sizeof(name), "cc%s_%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_alg(subg) = gv_alloc(sizeof(gdata));
@@ -96,7 +95,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
 	if (ND_pinned(n) != P_PIN)
 	    continue;
 	if (!subg) {
-	    snprintf(name, sizeof(name), "cc%s_%d", agnameof(g), c_cnt++ + C_cnt);
+	    snprintf(name, sizeof(name), "cc%s_%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
 	    subg = agsubg(g, name,1);
 		agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = gv_alloc(sizeof(gdata));
@@ -111,7 +110,7 @@ graph_t **findCComp(graph_t * g, int *cnt, int *pinned)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (MARK(n))
 	    continue;
-	snprintf(name, sizeof(name), "cc%s+%d", agnameof(g), c_cnt++ + C_cnt);
+	snprintf(name, sizeof(name), "cc%s+%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	GD_alg(subg) = gv_alloc(sizeof(gdata));

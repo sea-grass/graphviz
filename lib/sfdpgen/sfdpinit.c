@@ -234,8 +234,6 @@ void sfdp_layout(graph_t * g)
     if (agnnodes(g)) {
 	Agraph_t **ccs;
 	Agraph_t *sg;
-	int ncc;
-	int i;
 	expand_t sep;
 	pointf pad;
 	spring_electrical_control ctrl = spring_electrical_control_new();
@@ -268,6 +266,7 @@ void sfdp_layout(graph_t * g)
 	if (Verbose)
 	    spring_electrical_control_print(ctrl);
 
+	size_t ncc;
 	ccs = ccomps(g, &ncc, 0);
 	if (ncc == 1) {
 	    sfdpLayout(g, ctrl, pad);
@@ -278,7 +277,7 @@ void sfdp_layout(graph_t * g)
 	    getPackInfo(g, l_node, CL_OFFSET, &pinfo);
 	    pinfo.doSplines = true;
 
-	    for (i = 0; i < ncc; i++) {
+	    for (size_t i = 0; i < ncc; i++) {
 		sg = ccs[i];
 		(void)graphviz_node_induce(sg, NULL);
 		sfdpLayout(sg, ctrl, pad);
@@ -288,7 +287,7 @@ void sfdp_layout(graph_t * g)
 	    }
 	    packSubgraphs(ncc, ccs, g, &pinfo);
 	}
-	for (i = 0; i < ncc; i++) {
+	for (size_t i = 0; i < ncc; i++) {
 	    agdelete(g, ccs[i]);
 	}
 	free(ccs);

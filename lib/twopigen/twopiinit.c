@@ -113,10 +113,9 @@ void twopi_layout(Agraph_t * g)
 	Agraph_t *sg;
 	Agnode_t *c = NULL;
 	Agnode_t *n;
-	int ncc;
-	int i;
 	Agnode_t* lctr;
 
+	size_t ncc;
 	ccs = ccomps(g, &ncc, 0);
 	if (ncc == 1) {
 	    if (ctr)
@@ -138,7 +137,7 @@ void twopi_layout(Agraph_t * g)
 	    getPackInfo (g, l_node, CL_OFFSET, &pinfo);
 	    pinfo.doSplines = false;
 
-	    for (i = 0; i < ncc; i++) {
+	    for (size_t i = 0; i < ncc; i++) {
 		sg = ccs[i];
 		if (ctr && agcontains(sg, ctr))
 		    lctr = ctr;
@@ -158,7 +157,7 @@ void twopi_layout(Agraph_t * g)
 	    packSubgraphs(ncc, ccs, g, &pinfo);
 	    spline_edges(g);
 	}
-	for (i = 0; i < ncc; i++) {
+	for (size_t i = 0; i < ncc; i++) {
 	    agdelete(g, ccs[i]);
 	}
 	free(ccs);

@@ -73,10 +73,8 @@ typedef struct {
  * node's connected component.
  * Also, entire layout is translated to origin.
  */
-static void
-finalCC(graph_t * g, int c_cnt, graph_t ** cc, point * pts, graph_t * rg,
-	layout_info* infop)
-{
+static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
+                    graph_t *rg, layout_info* infop) {
     attrsym_t * G_width = infop->G_width;
     attrsym_t * G_height = infop->G_height;
     graph_t *cg;
@@ -821,7 +819,6 @@ static int layout(graph_t * g, layout_info * infop)
     graph_t *sg;
     graph_t **cc;
     graph_t **pg;
-    int c_cnt;
     int pinned;
     xparams xpms;
 
@@ -842,6 +839,7 @@ static int layout(graph_t * g, layout_info * infop)
     if (dg == NULL) {
 	return -1;
     }
+    size_t c_cnt;
     cc = pg = findCComp(dg, &c_cnt, &pinned);
 
     while ((cg = *pg++)) {

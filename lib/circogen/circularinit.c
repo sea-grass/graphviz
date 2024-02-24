@@ -91,15 +91,12 @@ static node_t *makeDerivedNode(graph_t * dg, char *name, int isNode,
  * Each component has its blocks as subgraphs.
  * FIX: Check that blocks are disjoint.
  */
-static Agraph_t **circomps(Agraph_t * g, int *cnt)
-{
-    int c_cnt;
+static Agraph_t **circomps(Agraph_t *g, size_t *cnt) {
     Agraph_t **ccs;
     Agraph_t *dg;
     Agnode_t *n, *v, *dt, *dh;
     Agedge_t *e;
     Agraph_t *sg;
-    int i;
     Agedge_t *ep;
     Agnode_t *p;
 
@@ -124,10 +121,11 @@ static Agraph_t **circomps(Agraph_t * g, int *cnt)
 	}
     }
 
+    size_t c_cnt;
     ccs = ccomps(dg, &c_cnt, 0);
 
     /* replace block nodes with block contents */
-    for (i = 0; i < c_cnt; i++) {
+    for (size_t i = 0; i < c_cnt; i++) {
 	sg = ccs[i];
 
 	/* add edges: since sg is a union of components, all edges
@@ -198,10 +196,9 @@ void circoLayout(Agraph_t * g)
 {
     Agraph_t **ccs;
     Agraph_t *sg;
-    int ncc;
-    int i;
 
     if (agnnodes(g)) {
+	size_t ncc;
 	ccs = circomps(g, &ncc);
 
 	if (ncc == 1) {
@@ -213,7 +210,7 @@ void circoLayout(Agraph_t * g)
 	    pack_info pinfo;
 	    getPackInfo(g, l_node, CL_OFFSET, &pinfo);
 
-	    for (i = 0; i < ncc; i++) {
+	    for (size_t i = 0; i < ncc; i++) {
 		sg = ccs[i];
 		circularLayout(sg, g);
 		adjustNodes(sg);
@@ -223,7 +220,7 @@ void circoLayout(Agraph_t * g)
 	     * construct components of g from ccs and use that in packing.
 	     */
 	    packSubgraphs(ncc, ccs, dg, &pinfo);
-	    for (i = 0; i < ncc; i++)
+	    for (size_t i = 0; i < ncc; i++)
 		copyPosns(ccs[i]);
 	}
 	free(ccs);

@@ -10,13 +10,15 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #include <common/render.h>
 
-    extern graph_t **findCComp(graph_t *, int *, int *);
+graph_t **findCComp(graph_t *, size_t *, int *);
 
 #ifdef __cplusplus
 }
