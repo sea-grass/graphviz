@@ -2169,8 +2169,8 @@ static int convert(Exnode_t *x, int type, int arg) {
 	else if (validTVT(x->data.constant.value.integer))
 	    ret = 0;
 	else
-	    exerror("Integer value %" PRIdMAX " not legal for type tvtype_t",
-	            (intmax_t)x->data.constant.value.integer);
+	    exerror("Integer value %lld not legal for type tvtype_t",
+	            x->data.constant.value.integer);
     }
     /* in case libexpr hands us the trivial case */
     else if (x->type == type) {

@@ -598,25 +598,21 @@ Agraph_t *readFile(char *f) {
   return gp;
 }
 
-int fwriteFile(Expr_t *ex, Agraph_t *g, int fd) {
+int fwriteFile(Expr_t *ex, Agraph_t *g, long long fd) {
   FILE *sp;
 
-  if (fd < 0 ||
-      (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file)) ||
-      !((sp = ex->file[fd]))) {
-    exerror("fwriteG: %d: invalid descriptor", fd);
+  if (fd < 0 || fd >= (long long)elementsof(ex->file) || !(sp = ex->file[fd])) {
+    exerror("fwriteG: %lld: invalid descriptor", fd);
     return 0;
   }
   return sfioWrite(g, sp);
 }
 
-Agraph_t *freadFile(Expr_t *ex, int fd) {
+Agraph_t *freadFile(Expr_t *ex, long long fd) {
   FILE *sp;
 
-  if (fd < 0 ||
-      (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file)) ||
-      !((sp = ex->file[fd]))) {
-    exerror("freadG: %d: invalid descriptor", fd);
+  if (fd < 0 || fd >= (long long)elementsof(ex->file) || !(sp = ex->file[fd])) {
+    exerror("freadG: %lld: invalid descriptor", fd);
     return 0;
   }
   return readG(sp);
@@ -640,20 +636,19 @@ int openFile(Expr_t *ex, const char *fname, const char *mode) {
     return -1;
 }
 
-int closeFile(Expr_t *ex, int fd) {
+int closeFile(Expr_t *ex, long long fd) {
   int rv;
 
   if (0 <= fd && fd <= 2) {
-    exerror("closeF: cannot close standard stream %d", fd);
+    exerror("closeF: cannot close standard stream %lld", fd);
     return -1;
   }
-  if (fd < 0 ||
-      (elementsof(ex->file) <= INT_MAX && fd >= (int)elementsof(ex->file))) {
-    exerror("closeG: %d: invalid descriptor", fd);
+  if (fd < 0 || fd >= (long long)elementsof(ex->file)) {
+    exerror("closeG: %lld: invalid descriptor", fd);
     return -1;
   }
   if (!ex->file[fd]) {
-    exerror("closeF: stream %d not open", fd);
+    exerror("closeF: stream %lld not open", fd);
     return -1;
   }
   rv = fclose(ex->file[fd]);
@@ -666,13 +661,13 @@ int closeFile(Expr_t *ex, int fd) {
  * Read single line from stream.
  * Return "" on EOF.
  */
-char *readLine(Expr_t *ex, int fd) {
+char *readLine(Expr_t *ex, long long fd) {
   FILE *sp;
   int c;
   char *line;
 
-  if (fd < 0 || fd >= elementsof(ex->file) || !((sp = ex->file[fd]))) {
-    exerror("readL: %d: invalid descriptor", fd);
+  if (fd < 0 || fd >= (long long)elementsof(ex->file) || !(sp = ex->file[fd])) {
+    exerror("readL: %lld: invalid descriptor", fd);
     return "";
   }
 

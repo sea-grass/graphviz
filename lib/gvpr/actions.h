@@ -34,12 +34,12 @@ extern "C" {
     extern int compare(Agobj_t *, Agobj_t *);
     extern int sfioWrite(Agraph_t*, FILE*);
     extern int writeFile(Agraph_t*, char*);
-    extern int fwriteFile(Expr_t*, Agraph_t*, int);
+    extern int fwriteFile(Expr_t *, Agraph_t *, long long);
     extern Agraph_t *readFile(char *);
-    extern Agraph_t *freadFile(Expr_t *, int);
+    extern Agraph_t *freadFile(Expr_t *, long long);
     extern int openFile(Expr_t *, const char *, const char *);
-    extern int closeFile(Expr_t *, int);
-    extern char *readLine(Expr_t *, int);
+    extern int closeFile(Expr_t *, long long);
+    extern char *readLine(Expr_t *, long long);
     extern char *canon(Expr_t * pgm, char *);
     extern char *toHtml(Agraph_t*, char *);
     extern char *toLower(Expr_t *pgm, char *src);

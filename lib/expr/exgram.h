@@ -333,7 +333,7 @@ static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
 		break;
 	    case INTEGER:
 		x->data.constant.value.string =
-		  exprintf(p->vm, "%lld", (long long)x->data.constant.value.integer);
+		  exprintf(p->vm, "%lld", x->data.constant.value.integer);
 		break;
 	    default:
 		exerror("internal error: %d: unknown type", type);
@@ -513,7 +513,7 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 			break;
 		case I2S:
 			x->data.constant.value.string =
-			  exprintf(p->vm, "%lld", (long long)x->data.constant.value.integer);
+			  exprintf(p->vm, "%lld", x->data.constant.value.integer);
 			break;
 		case S2F:
 			s =  x->data.constant.value.string;

@@ -385,11 +385,11 @@ static int print(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 	if (!sp)
 	{
 		v = eval(ex, exnode->data.print.descriptor, env);
-		if (v.integer < 0 || (long long unsigned)v.integer >= elementsof(ex->file) ||
+		if (v.integer < 0 || v.integer >= (long long)elementsof(ex->file) ||
 		    (!(sp = ex->file[v.integer]) &&
 		    !(sp = ex->file[v.integer] = tmpfile())))
 		{
-			exerror("printf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
+			exerror("printf: %lld: invalid descriptor", v.integer);
 			return -1;
 		}
 	}
@@ -511,9 +511,9 @@ static int scan(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 		}
 		else
 			v.integer = 0;
-		if (v.integer < 0 || (size_t)v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = tmpfile())))
+		if (v.integer < 0 || v.integer >= (long long)elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = tmpfile())))
 		{
-			exerror("scanf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
+			exerror("scanf: %lld: invalid descriptor", v.integer);
 			return 0;
 		}
 	}
@@ -991,13 +991,12 @@ static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 	len = strlen(s.string);
 	i = eval(ex, exnode->data.string.pat, env);
 	if (i.integer < 0 || len < i.integer)
-		exerror("illegal start index in substr(%s,%" PRIdMAX ")", s.string,
-		        (intmax_t)i.integer);
+		exerror("illegal start index in substr(%s,%lld)", s.string, i.integer);
 	if (exnode->data.string.repl) {
 		l = eval(ex, exnode->data.string.repl, env);
 		if (l.integer < 0 || len - i.integer < l.integer)
-	    exerror("illegal length in substr(%s,%" PRIdMAX ",%" PRIdMAX ")",
-	            s.string, (intmax_t)i.integer, (intmax_t)l.integer);
+	    exerror("illegal length in substr(%s,%lld,%lld)",
+	            s.string, i.integer, l.integer);
 	} else
 		l.integer = len - i.integer;
 
@@ -1782,7 +1781,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 				if (exnode->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
 				else
-					str = exprintf(ex->ve, "%lld", (long long)v.integer);
+					str = exprintf(ex->ve, "%lld", v.integer);
 				tmp.data.constant.value.string = str;
 			}
 			else if (ex->disc->convertf(&tmp, STRING, 0)) {
@@ -1790,7 +1789,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 				if (exnode->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
 				else
-					str = exprintf(ex->ve, "%lld", (long long)v.integer);
+					str = exprintf(ex->ve, "%lld", v.integer);
 				tmp.data.constant.value.string = str;
 			}
 			tmp.type = STRING;
@@ -1848,10 +1847,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = v.integer != r.integer;
 			return v;
 		case LSH:
-			v.integer = (Sflong_t)v.integer << (Sflong_t)r.integer;
+			v.integer = v.integer << r.integer;
 			return v;
 		case RSH:
-			v.integer = (Sfulong_t)v.integer >> (Sflong_t)r.integer;
+			v.integer = (Sfulong_t)v.integer >> r.integer;
 			return v;
 		case '<':
 			v.integer = v.integer < r.integer;
