@@ -160,9 +160,15 @@ def main() -> int:  # pylint: disable=missing-function-docstring
     # list of assets we have uploaded
     assets: List[str] = []
 
+    # 0-pad major version to 2 digits, to sort versions properly
+    vparts = version.split(".")
+    assert len(vparts) > 0, "Malformed version string"
+    vparts[0] = f"{int(vparts[0]):02d}"
+
     # data for the website’s download page
     webdata = {
-        "version": f"graphviz-{version}",
+        "name": f"graphviz-{version}",
+        "version": ".".join(vparts),
         "sources": [],
         "windows": [],
     }
