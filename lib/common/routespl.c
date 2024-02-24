@@ -774,96 +774,26 @@ static pointf get_centroid(Agraph_t *g)
     return sum;
 }
 
-//generic vector structure
-typedef struct _tag_vec
-{
-    void** _mem;
-    size_t _elems;
-    size_t _capelems;
-} vec;
+DEFINE_LIST(nodes, node_t *)
 
-static vec* vec_new(void)
-{
-    vec* pvec = malloc(sizeof(vec));
-    pvec->_capelems = 10;
-    pvec->_elems = 0;
-    pvec->_mem = malloc(pvec->_capelems * sizeof(void*));
-    return pvec;
+static void nodes_delete(nodes_t *pvec) {
+  if (pvec != NULL) {
+    nodes_free(pvec);
+  }
+  free(pvec);
 }
 
-static size_t vec_length(const vec* pvec)
-{
-    return pvec->_elems;
-}
+DEFINE_LIST_WITH_DTOR(cycles, nodes_t *, nodes_delete)
 
-static void* vec_get(vec* pvec, size_t index)
-{
-    assert(index < pvec->_elems);
-    return pvec->_mem[index];
-}
-
-static void vec_delete(vec* pvec)
-{
-    free(pvec->_mem);
-    free(pvec);
-}
-
-DEFINE_LIST_WITH_DTOR(cycles, vec *, vec_delete)
-
-static void vec_push_back(vec* pvec, void* data)
-{
-    if (pvec->_elems == pvec->_capelems) {
-		pvec->_capelems += 10;
-		pvec->_mem = realloc(pvec->_mem, pvec->_capelems * sizeof(void*));
-	}
-    pvec->_mem[pvec->_elems++] = data;  
-}
-
-static void* vec_pop(vec* pvec)
-{
-	if (pvec->_elems > 0)
-		return pvec->_mem[--pvec->_elems];
-	return NULL;
-}
-
-static bool vec_contains(vec* pvec, void* item)
-{
-	for (size_t i=0; i < pvec->_elems; ++i) {
-		if (pvec->_mem[i] == item)
-			return true;
-	}
-
-	return false;
-}
-
-static vec* vec_copy(vec* pvec)
-{
-    vec* nvec = malloc(sizeof(vec));
-    nvec->_capelems = pvec->_capelems;
-    nvec->_elems = pvec->_elems;
-    nvec->_mem = malloc(pvec->_capelems * sizeof(void*));
-	memcpy(nvec->_mem, pvec->_mem, pvec->_elems * sizeof(void*));
-    return nvec;
-}
-//end generic vector structure
-
-static bool cycle_contains_edge(vec* cycle, edge_t* edge)
-{
+static bool cycle_contains_edge(nodes_t *cycle, edge_t *edge) {
 	node_t* start = agtail(edge);
 	node_t* end = aghead(edge);
-	node_t* c_start;
-	node_t* c_end;
 
-	size_t cycle_len = vec_length(cycle);
+	const size_t cycle_len = nodes_size(cycle);
 
 	for (size_t i=0; i < cycle_len; ++i) {
-		if (i == 0) {
-			c_start = vec_get(cycle, cycle_len-1);
-		} else {
-			c_start = vec_get(cycle, i-1);
-		}
-	
-		c_end = vec_get(cycle, i);
+		const node_t *c_start = nodes_get(cycle, i == 0 ? cycle_len - 1 : i - 1);
+		const node_t *c_end = nodes_get(cycle, i);
 
 		if (c_start == start && c_end == end)
 			return true;
@@ -873,24 +803,24 @@ static bool cycle_contains_edge(vec* cycle, edge_t* edge)
 	return false;
 }
 
-static bool is_cycle_unique(cycles_t *cycles, vec *cycle) {
-	size_t cycle_len = vec_length(cycle);
+static bool eq(const node_t *a, const node_t *b) { return a == b; }
+
+static bool is_cycle_unique(cycles_t *cycles, nodes_t *cycle) {
+	const size_t cycle_len = nodes_size(cycle);
 	size_t i; //node counter
 
-	size_t cur_cycle_len;
-	void* cur_cycle_item;
 	bool all_items_match;
 
 	for (size_t c = 0; c < cycles_size(cycles); ++c) {
-		vec *cur_cycle = cycles_get(cycles, c);
-		cur_cycle_len = vec_length(cur_cycle);
+		nodes_t *cur_cycle = cycles_get(cycles, c);
+		const size_t cur_cycle_len = nodes_size(cur_cycle);
 
 		//if all the items match in equal length cycles then we're not unique
 		if (cur_cycle_len == cycle_len) {
 			all_items_match = true;
 			for (i=0; i < cur_cycle_len; ++i) {
-				cur_cycle_item = vec_get(cur_cycle, i);
-				if (!vec_contains(cycle, cur_cycle_item)) {
+				node_t *cur_cycle_item = nodes_get(cur_cycle, i);
+				if (!nodes_contains(cycle, cur_cycle_item, eq)) {
 					all_items_match = false;
 					break;
 				}
@@ -903,25 +833,28 @@ static bool is_cycle_unique(cycles_t *cycles, vec *cycle) {
 	return true;
 }
 
-static void dfs(graph_t *g, node_t *search, vec *visited, node_t *end,
+static void dfs(graph_t *g, node_t *search, nodes_t *visited, node_t *end,
                 cycles_t *cycles) {
 	edge_t* e;
 	node_t* n;
 
-	if (vec_contains(visited, search)) {
+	if (nodes_contains(visited, search, eq)) {
 		if (search == end) {
 			if (is_cycle_unique(cycles, visited)) {
-				vec* cycle = vec_copy(visited);
+				nodes_t *cycle = gv_alloc(sizeof(nodes_t));
+				*cycle = nodes_copy(visited);
 				cycles_append(cycles, cycle);
 			}
 		}
 	} else {
-		vec_push_back(visited, search);
+		nodes_append(visited, search);
 		for (e = agfstout(g, search); e; e = agnxtout(g, e)) {
 			n = aghead(e);
 			dfs(g, n, visited, end, cycles);
 		}
-		vec_pop(visited);
+		if (!nodes_is_empty(visited)) {
+			(void)nodes_pop(visited);
+		}
 	}
 }
 
@@ -932,10 +865,9 @@ static cycles_t find_all_cycles(graph_t *g) {
     // vector of vectors of nodes -- AKA cycles to delete
     cycles_t alloced_cycles = {0};
     cycles_t cycles = {0}; // vector of vectors of nodes AKA a vector of cycles
-    vec* cycle;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-		cycle = vec_new();
+		nodes_t *cycle = gv_alloc(sizeof(nodes_t));
 		// keep track of all items we allocate to clean up at the end of this function
 		cycles_append(&alloced_cycles, cycle);
 		
@@ -946,19 +878,18 @@ static cycles_t find_all_cycles(graph_t *g) {
     return cycles;
 }
 
-static vec *find_shortest_cycle_with_edge(cycles_t *cycles, edge_t *edge,
-                                          size_t min_size) {
-	size_t cycle_len; 
-	vec* shortest = 0;
+static nodes_t *find_shortest_cycle_with_edge(cycles_t *cycles, edge_t *edge,
+                                              size_t min_size) {
+	nodes_t *shortest = NULL;
 
 	for (size_t c = 0; c < cycles_size(cycles); ++c) {
-		vec *cycle = cycles_get(cycles, c);
-		cycle_len = vec_length(cycle);
+		nodes_t *cycle = cycles_get(cycles, c);
+		size_t cycle_len = nodes_size(cycle);
 
 		if (cycle_len < min_size)
 			continue;
 
-		if (!shortest || vec_length(shortest) > cycle_len) {
+		if (shortest == NULL || nodes_size(shortest) > cycle_len) {
 			if (cycle_contains_edge(cycle, edge)) {
 				shortest = cycle;
 			}
@@ -973,22 +904,17 @@ static pointf get_cycle_centroid(graph_t *g, edge_t* edge)
 
 	//find the center of the shortest cycle containing this edge
 	//cycles of length 2 do their own thing, we want 3 or
-	vec* cycle = find_shortest_cycle_with_edge(&cycles, edge, 3);
-	size_t cycle_len;
+	nodes_t *cycle = find_shortest_cycle_with_edge(&cycles, edge, 3);
     pointf sum = {0.0, 0.0};
-	size_t idx; //edge index
-	node_t *n;
 
 	if (cycle == NULL) {
 		cycles_free(&cycles);
 		return get_centroid(g);
 	}
 
-	cycle_len = vec_length(cycle);
-
 	double cnt = 0;
-	for (idx=0; idx < cycle_len; ++idx) {
-		n = vec_get(cycle, idx);
+	for (size_t idx = 0; idx < nodes_size(cycle); ++idx) {
+		node_t *n = nodes_get(cycle, idx);
 		sum.x += ND_coord(n).x;
         sum.y += ND_coord(n).y;
         cnt++;
