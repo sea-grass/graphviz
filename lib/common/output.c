@@ -224,10 +224,7 @@ static void rec_attach_bb(graph_t * g, Agsym_t* bbsym, Agsym_t* lpsym, Agsym_t* 
     agxbfree(&buf);
 }
 
-void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
-{
-    int e_arrows;		/* graph has edges with end arrows */
-    int s_arrows;		/* graph has edges with start arrows */
+void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
     node_t *n;
     edge_t *e;
     pointf ptf;
@@ -238,7 +235,8 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
     Agsym_t* lhsym = NULL;
 
     gv_fixLocale (1);
-    e_arrows = s_arrows = 0;
+    bool e_arrows = false; // graph has edges with end arrows
+    bool s_arrows = false; // graph has edges with start arrows
     setYInvert(g);
     agxbuf xb = {0};
     safe_dcl(g, AGNODE, "pos", "");
@@ -327,13 +325,13 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		    if (i > 0)
 			agxbputc(&xb, ';');
 		    if (ED_spl(e)->list[i].sflag) {
-			s_arrows = 1;
+			s_arrows = true;
 			agxbprint(&xb, "s,%.5g,%.5g ",
 				ED_spl(e)->list[i].sp.x,
 				YDIR(ED_spl(e)->list[i].sp.y));
 		    }
 		    if (ED_spl(e)->list[i].eflag) {
-			e_arrows = 1;
+			e_arrows = true;
 			agxbprint(&xb, "e,%.5g,%.5g ",
 				ED_spl(e)->list[i].ep.x,
 				YDIR(ED_spl(e)->list[i].ep.y));
@@ -382,7 +380,7 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 
 void attach_attrs(graph_t * g)
 {
-    int e, s;
+    bool e, s;
     attach_attrs_and_arrows (g, &s, &e);
 }
 
