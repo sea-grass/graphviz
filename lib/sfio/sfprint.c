@@ -331,7 +331,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    (flags & SFFMT_TFLAG) ? sizeof(ptrdiff_t) :
 		    (flags & SFFMT_ZFLAG) ? sizeof(size_t) : -1;
 	    } else if (_Sftype[fmt] & SFFMT_FLOAT) {
-		size = (flags & SFFMT_LDOUBLE) ? sizeof(Sfdouble_t) :
+		size = (flags & SFFMT_LDOUBLE) ? sizeof(long double) :
 		    (flags & (SFFMT_LONG | SFFMT_LLONG)) ?
 		    sizeof(double) : -1;
 	    }
@@ -656,7 +656,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	case 'E':
 	case 'f':
 	    if (!(ft && ft->extf && (ft->flags & SFFMT_VALUE)) ||
-		    FMTCMP(size, double, Sfdouble_t))
+		    FMTCMP(size, double, long double))
 		 dval = argv.d;
 	    else
 		dval = (double) argv.f;

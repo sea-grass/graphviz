@@ -319,7 +319,7 @@ int sfvscanf(FILE *f, va_list args) {
 		    (flags & SFFMT_TFLAG) ? sizeof(ptrdiff_t) :
 		    (flags & SFFMT_ZFLAG) ? sizeof(size_t) : -1;
 	    } else if (_Sftype[fmt] & SFFMT_FLOAT) {
-		size = (flags & SFFMT_LDOUBLE) ? sizeof(Sfdouble_t) :
+		size = (flags & SFFMT_LDOUBLE) ? sizeof(long double) :
 		    (flags & (SFFMT_LONG | SFFMT_LLONG)) ?
 		    sizeof(double) : -1;
 	    }
@@ -420,7 +420,7 @@ int sfvscanf(FILE *f, va_list args) {
 		    argv.d = strtod(accept, NULL);
 
 		n_assign += 1;
-		if (FMTCMP(size, double, Sfdouble_t))
+		if (FMTCMP(size, double, long double))
 		    *((double *) value) = argv.d;
 		else
 		    *((float *) value) = (float) argv.d;

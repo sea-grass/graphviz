@@ -30,7 +30,6 @@ extern "C" {
 #include <stdio.h>
 
 #define Sflong_t	long long
-#define Sfdouble_t	long double
 
 /* formatting environment */
     typedef struct _sffmt_s Sffmt_t;
