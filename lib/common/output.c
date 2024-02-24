@@ -48,11 +48,12 @@ static void printstring(int (*putstr)(void *chan, const char *str), FILE *f,
 
 static void printint(int (*putstr)(void *chan, const char *str), FILE *f,
                      char *prefix, size_t i) {
-    char buf[BUFSIZ];
+  agxbuf buf = {0};
     
   if (prefix) agputs(putstr, prefix, f);
-    snprintf(buf, sizeof(buf), "%" PRISIZE_T, i);
-  agputs(putstr, buf, f);
+  agxbprint(&buf, "%" PRISIZE_T, i);
+  agputs(putstr, agxbuse(&buf), f);
+  agxbfree(&buf);
 }
 
 static void printdouble(int (*putstr)(void *chan, const char *str), FILE *f,
