@@ -58,11 +58,12 @@ static void printint(int (*putstr)(void *chan, const char *str), FILE *f,
 
 static void printdouble(int (*putstr)(void *chan, const char *str), FILE *f,
                         char *prefix, double v) {
-    char buf[BUFSIZ];
+  agxbuf buf = {0};
     
   if (prefix) agputs(putstr, prefix, f);
-    snprintf(buf, sizeof(buf), "%.5g", v);
-  agputs(putstr, buf, f);
+  agxbprint(&buf, "%.5g", v);
+  agputs(putstr, agxbuse(&buf), f);
+  agxbfree(&buf);
 }
 
 static void printpoint(int (*putstr)(void *chan, const char *str), FILE *f,
