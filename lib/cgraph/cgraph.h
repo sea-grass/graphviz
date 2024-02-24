@@ -501,7 +501,8 @@ CGRAPH_API int agdelete(Agraph_t * g, void *obj);
 CGRAPH_API int agdelsubg(Agraph_t * g, Agraph_t * sub);	/* could be agclose */
 CGRAPH_API int agdelnode(Agraph_t * g, Agnode_t * arg_n);
 CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
-CGRAPH_API int agobjkind(void *);
+CGRAPH_API int agobjkind(void *obj);
+///< returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending on the type of the object. Synonym for @ref AGTYPE.
 /// @}
 
 /** @defgroup cgraph_string string utilities
