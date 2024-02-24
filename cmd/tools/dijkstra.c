@@ -83,8 +83,8 @@ static int cmpf(Dt_t * d, void *key1, void *key2, Dtdisc_t * disc)
     (void)d;
     (void)disc;
 
-    double dist1 = getdist((Agnode_t *) key1);
-    double dist2 = getdist((Agnode_t *) key2);
+    const double dist1 = getdist(key1);
+    const double dist2 = getdist(key2);
     if (dist1 < dist2)
 	return -1;
     if (dist1 > dist2)
