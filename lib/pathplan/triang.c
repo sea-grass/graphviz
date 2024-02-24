@@ -19,16 +19,14 @@
 static int triangulate(Ppoint_t ** pointp, int pointn,
 			void (*fn) (void *, Ppoint_t *), void *vc);
 
-int ccw(Ppoint_t *p1, Ppoint_t *p2, Ppoint_t *p3) {
-    double d =
-	(p1->y - p2->y) * (p3->x - p2->x) -
-	(p3->y - p2->y) * (p1->x - p2->x);
+int ccw(Ppoint_t p1, Ppoint_t p2, Ppoint_t p3) {
+    double d = (p1.y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p1.x - p2.x);
     return d > 0 ? ISCW : (d < 0 ? ISCCW : ISON);
 }
 
-static Ppoint_t *point_indexer(void *base, int index) {
+static Ppoint_t point_indexer(void *base, int index) {
   Ppoint_t **b = base;
-  return b[index];
+  return *b[index];
 }
 
 /* Ptriangulate:
@@ -122,7 +120,7 @@ bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer) {
     return true;
 }
 
-bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd) {
+bool intersects(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc, Ppoint_t pd) {
     int ccw1, ccw2, ccw3, ccw4;
 
     if (ccw(pa, pb, pc) == ISON || ccw(pa, pb, pd) == ISON ||
@@ -140,11 +138,9 @@ bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd) {
     return false;
 }
 
-bool between(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc) {
-    Ppoint_t pba, pca;
-
-    pba.x = pb->x - pa->x, pba.y = pb->y - pa->y;
-    pca.x = pc->x - pa->x, pca.y = pc->y - pa->y;
+bool between(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc) {
+    const Ppoint_t pba = {.x = pb.x - pa.x, .y = pb.y - pa.y};
+    const Ppoint_t pca = {.x = pc.x - pa.x, .y = pc.y - pa.y};
     if (ccw(pa, pb, pc) != ISON)
 	return false;
     return pca.x * pba.x + pca.y * pba.y >= 0 &&

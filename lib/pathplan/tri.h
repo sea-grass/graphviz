@@ -42,15 +42,15 @@ enum {
 };
 
 /// are the given points counter-clockwise, clockwise, or co-linear?
-int ccw(Ppoint_t *p1, Ppoint_t *p2, Ppoint_t *p3);
+int ccw(Ppoint_t p1, Ppoint_t p2, Ppoint_t p3);
 
 /// is pb between pa and pc?
-bool between(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc);
+bool between(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc);
 
 /// line to line intersection
-bool intersects(Ppoint_t *pa, Ppoint_t *pb, Ppoint_t *pc, Ppoint_t *pd);
+bool intersects(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc, Ppoint_t pd);
 
-typedef Ppoint_t *(*indexer_t)(void *base, int index);
+typedef Ppoint_t (*indexer_t)(void *base, int index);
 
 /// is (i, i + 2) a diagonal?
 bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer);
