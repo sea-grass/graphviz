@@ -3382,9 +3382,6 @@ def test_2493():
     ), "gv2gml did not emit LabelGraphics 'color' attribute"
 
 
-@pytest.mark.xfail(
-    strict=not is_centos(), reason="https://gitlab.com/graphviz/graphviz/-/issues/2497"
-)
 def test_2497():
     """
     graph rendering should be deterministic
