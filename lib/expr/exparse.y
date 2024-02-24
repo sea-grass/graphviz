@@ -325,7 +325,7 @@ statement	:	'{' statement_list '}'
 		}
 		|	UNSET '(' DYNAMIC ')'
 		{
-			if ($3->local.pointer == 0)
+			if ($3->local == NULL)
               			exerror("cannot apply unset to non-array %s", $3->name);
 			$$ = exnewnode(expr.program, UNSET, 0, INTEGER, NULL, NULL);
 			$$->data.variable.symbol = $3;
@@ -333,7 +333,7 @@ statement	:	'{' statement_list '}'
 		}
 		|	UNSET '(' DYNAMIC ',' expr  ')'
 		{
-			if ($3->local.pointer == 0)
+			if ($3->local == NULL)
               			exerror("cannot apply unset to non-array %s", $3->name);
 			if (($3->index_type > 0) && ($5->type != $3->index_type))
             		    exerror("%s indices must have type %s, not %s", 
@@ -517,7 +517,7 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 			{
 				$1->lex = DYNAMIC;
 				$1->value = exnewnode(expr.program, 0, 0, 0, NULL, NULL);
-				if ($3 && !$1->local.pointer)
+				if ($3 && $1->local == NULL)
 				{
 					Dtdisc_t*	disc;
 
@@ -530,7 +530,7 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 					}
 					else
 						disc->key = offsetof(Exassoc_t, name);
-					if (!($1->local.pointer = (char*)dtopen(disc, Dtoset)))
+					if (!($1->local = (char*)dtopen(disc, Dtoset)))
 						exerror("%s: cannot initialize associative array", $1->name);
 					$1->index_type = $3; /* -1 indicates no typechecking */
 				}
@@ -789,7 +789,7 @@ expr		:	'(' expr ')'
 		}
 		|	'#' DYNAMIC
 		{
-			if ($2->local.pointer == 0)
+			if ($2->local == NULL)
               			exerror("cannot apply '#' operator to non-array %s", $2->name);
 			$$ = exnewnode(expr.program, '#', 0, INTEGER, NULL, NULL);
 			$$->data.variable.symbol = $2;
@@ -966,7 +966,7 @@ expr		:	'(' expr ')'
 		}
 		|	expr IN_OP DYNAMIC
 		{
-			if ($3->local.pointer == 0)
+			if ($3->local == NULL)
               			exerror("cannot apply IN to non-array %s", $3->name);
 			if (($3->index_type > 0) && ($1->type != $3->index_type))
             		    exerror("%s indices must have type %s, not %s", 
@@ -1039,9 +1039,9 @@ variable	:	ID members
 			n = exnewnode(expr.program, DYNAMIC, 0, $1->type, NULL, NULL);
 			n->data.variable.symbol = $1;
 			n->data.variable.reference = 0;
-			if (((n->data.variable.index = $2) == 0) != ($1->local.pointer == 0))
-				exerror("%s: is%s an array", $1->name, $1->local.pointer ? "" : " not");
-			if ($1->local.pointer && ($1->index_type > 0)) {
+			if (((n->data.variable.index = $2) == 0) != ($1->local == NULL))
+				exerror("%s: is%s an array", $1->name, $1->local != NULL ? "" : " not");
+			if ($1->local != NULL && ($1->index_type > 0)) {
 				if ($2->type != $1->index_type)
 					exerror("%s: indices must have type %s, not %s", 
 						$1->name, extypename(expr.program, $1->index_type),extypename(expr.program, $2->type));

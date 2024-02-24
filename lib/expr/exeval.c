@@ -88,7 +88,7 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 
 	v = eval(ex, exnode->data.variable.index, env);
 	if (exnode->data.variable.symbol->index_type == INTEGER) {
-		if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local.pointer, &v))) {
+		if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local, &v))) {
 			return 0;
 		}
 	} 
@@ -103,13 +103,12 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 			keyname = buf;
 		} else
 			keyname = v.string;
-		if (!(b = dtmatch((Dt_t *)exnode->data.variable.
-			symbol->local.pointer, keyname))) {
+		if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local, keyname))) {
 			return 0;
 		}
 	}
 	if (delete) {
-		dtdelete((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
+		dtdelete((Dt_t *)exnode->data.variable.symbol->local, b);
 		free (b);
 	}
 	return 1;
@@ -132,12 +131,12 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 
 		v = eval(ex, exnode->data.variable.index, env);
 		if (exnode->data.variable.symbol->index_type == INTEGER) {
-			if (!(b = dtmatch((Dt_t *) exnode->data.variable.symbol->local.pointer, &v)))
+			if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local, &v)))
 			{
 				if (!(b = calloc(1, sizeof(Exassoc_t))))
 					exnospace();
 				b->key = v;
-				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
+				dtinsert((Dt_t *)exnode->data.variable.symbol->local, b);
 			}
 		} else {
 			int type = exnode->data.variable.index->type;
@@ -150,13 +149,13 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 				keyname = buf;
 			} else
 				keyname = v.string;
-			if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local.pointer, keyname)))
+			if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local, keyname)))
 			{
 				if (!(b = calloc(1, sizeof(Exassoc_t) + strlen(keyname))))
 					exnospace();
 				strcpy(b->name, keyname);
 				b->key = v;
-				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
+				dtinsert((Dt_t *)exnode->data.variable.symbol->local, b);
 			}
 		}
 		*assoc = b;
@@ -809,7 +808,7 @@ static Extype_t exsplit(Expr_t *ex, Exnode_t *exnode, void *env) {
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
+	Dt_t* arr = (Dt_t*)exnode->data.split.array->local;
 
 	str = eval(ex, exnode->data.split.string, env).string;
 	if (exnode->data.split.seps)
@@ -862,7 +861,7 @@ static Extype_t extokens(Expr_t *ex, Exnode_t *exnode, void *env) {
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
+	Dt_t* arr = (Dt_t*)exnode->data.split.array->local;
 
 	str = eval(ex, exnode->data.split.string, env).string;
 	if (exnode->data.split.seps)
@@ -1264,7 +1263,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		if (exnode->data.generate.array->op == DYNAMIC)
 		{
 			n = exnode->data.generate.index->type == STRING;
-			for (assoc = dtfirst((Dt_t*)exnode->data.generate.array->data.variable.symbol->local.pointer); assoc; assoc = dtnext((Dt_t*)exnode->data.generate.array->data.variable.symbol->local.pointer, assoc))
+			for (assoc = dtfirst((Dt_t *)exnode->data.generate.array->data.variable.symbol->local); assoc; assoc = dtnext((Dt_t *)exnode->data.generate.array->data.variable.symbol->local, assoc))
 			{
 				v.integer++;
 				if (n)
@@ -1301,10 +1300,9 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		if (exnode->data.generate.array->op == DYNAMIC) {
 			n = exnode->data.generate.index->type == STRING;
 			for (assoc = dtlast((Dt_t *) exnode->data.generate.array->
-						   data.variable.symbol->local.
-						   pointer); assoc;
+						   data.variable.symbol->local); assoc;
 		 		assoc = dtprev((Dt_t *) exnode->data.generate.array->
-						  data.variable.symbol->local.pointer,
+						  data.variable.symbol->local,
 						  assoc)) {
 				v.integer++;
 				if (n)
@@ -1332,7 +1330,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		}
 		return v;
 	case '#':
-		v.integer = dtsize ((Dt_t*)exnode->data.variable.symbol->local.pointer);
+		v.integer = dtsize((Dt_t *)exnode->data.variable.symbol->local);
 		return v;
 	case IN_OP:
 		v.integer = evaldyn (ex, exnode, env, 0);
@@ -1342,7 +1340,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = evaldyn (ex, exnode, env, 1);
 		}
 		else {
-			dtclear ((Dt_t*)exnode->data.variable.symbol->local.pointer);
+			dtclear((Dt_t *)exnode->data.variable.symbol->local);
 			v.integer = 0;
 		}
 		return v;
