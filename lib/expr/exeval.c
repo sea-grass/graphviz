@@ -1498,9 +1498,9 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 					break;
 				case RSH:
 #ifdef _WIN32
-					v.floating = (Sflong_t)((Sfulong_t)v.floating >> (Sflong_t)r.floating);
+					v.floating = (Sflong_t)((unsigned long long)v.floating >> (Sflong_t)r.floating);
 #else
-					v.floating = (Sfulong_t)v.floating >> (Sflong_t)r.floating;
+					v.floating = (unsigned long long)v.floating >> (Sflong_t)r.floating;
 #endif
 					break;
 				default:
@@ -1545,7 +1545,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 					v.integer <<= r.integer;
 					break;
 				case RSH:
-					v.integer = (Sfulong_t)v.integer >> r.integer;
+					v.integer = (unsigned long long)v.integer >> r.integer;
 					break;
 				default:
 					goto huh;
@@ -1703,10 +1703,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = v.floating > r.floating;
 			return v;
 		case LSH:
-			v.integer = (Sflong_t) ((Sfulong_t)v.floating << (Sflong_t)r.floating);
+			v.integer = (Sflong_t)((unsigned long long)v.floating << (Sflong_t)r.floating);
 			return v;
 		case RSH:
-			v.integer = (Sflong_t) ((Sfulong_t)v.floating >> (Sflong_t)r.floating);
+			v.integer = (Sflong_t)((unsigned long long)v.floating >> (Sflong_t)r.floating);
 			return v;
 		}
 		break;
@@ -1745,16 +1745,16 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		switch (exnode->op)
 		{
 		case '<':
-			v.integer = (Sfulong_t)v.integer < (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer < (unsigned long long)r.integer;
 			return v;
 		case LE:
-			v.integer = (Sfulong_t)v.integer <= (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer <= (unsigned long long)r.integer;
 			return v;
 		case GE:
-			v.integer = (Sfulong_t)v.integer >= (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer >= (unsigned long long)r.integer;
 			return v;
 		case '>':
-			v.integer = (Sfulong_t)v.integer > (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer > (unsigned long long)r.integer;
 			return v;
 		}
 		/*FALLTHROUGH*/
@@ -1767,7 +1767,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.floating = v.integer;
 #else
 			if (exnode->type == UNSIGNED)
-				v.floating = (Sfulong_t)v.integer;
+				v.floating = (unsigned long long)v.integer;
 			else
 				v.floating = v.integer;
 #endif
@@ -1850,7 +1850,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = v.integer << r.integer;
 			return v;
 		case RSH:
-			v.integer = (Sfulong_t)v.integer >> r.integer;
+			v.integer = (unsigned long long)v.integer >> r.integer;
 			return v;
 		case '<':
 			v.integer = v.integer < r.integer;

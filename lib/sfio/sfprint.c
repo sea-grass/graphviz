@@ -22,7 +22,7 @@
 */
 
 #define HIGHBITI	(~((~0u) >> 1))
-#define HIGHBITL	(~((~((Sfulong_t)0)) >> 1))
+#define HIGHBITL	(~((~0ull) >> 1))
 
 #define SFFMT_PREFIX	(SFFMT_MINUS|SFFMT_SIGN|SFFMT_BLANK)
 
@@ -524,22 +524,21 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    flags |= SFFMT_MINUS;
 		    if (lv == HIGHBITL) {	/* avoid overflow */
 			lv = (Sflong_t) (HIGHBITL / base);
-			*--sp = _Sfdigits[HIGHBITL -
-					  ((Sfulong_t) lv) * base];
+			*--sp = _Sfdigits[HIGHBITL - (unsigned long long)lv * base];
 		    } else
 			lv = -lv;
 		}
 		if (n_s < 0) {	/* base 10 */
 		    Sflong_t nv;
-		    sfucvt(lv, sp, nv, ssp, Sflong_t, Sfulong_t);
+		    sfucvt(lv, sp, nv, ssp, Sflong_t, unsigned long long);
 		} else if (n_s > 0) {	/* base power-of-2 */
 		    do {
 			*--sp = ssp[lv & n_s];
-		    } while ((lv = ((Sfulong_t) lv) >> n));
+		    } while ((lv = (unsigned long long)lv >> n));
 		} else {	/* general base */
 		    do {
-			*--sp = ssp[((Sfulong_t) lv) % base];
-		    } while ((lv = ((Sfulong_t) lv) / base));
+			*--sp = ssp[(unsigned long long)lv % base];
+		    } while ((lv = (unsigned long long)lv / base));
 		}
 	    } else
 	    if (sizeof(short) < sizeof(int)

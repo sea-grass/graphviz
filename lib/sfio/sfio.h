@@ -30,7 +30,6 @@ extern "C" {
 #include <stdio.h>
 
 #define Sflong_t	long long
-#define Sfulong_t	unsigned long long
 #define Sfdouble_t	long double
 
 /* formatting environment */

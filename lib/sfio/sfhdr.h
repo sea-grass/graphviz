@@ -73,7 +73,7 @@ extern "C" {
 	ulong ul;
 	ushort uh;
 	Sflong_t ll, *llp;
-	Sfulong_t lu;
+	unsigned long long lu;
 	Sfdouble_t ld;
 	double d;
 	float f;
