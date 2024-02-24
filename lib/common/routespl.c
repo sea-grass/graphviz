@@ -173,11 +173,7 @@ static bool debugleveln(edge_t* realedge, int i)
 }
 #endif  /* DEBUG */
 
-
-
-/* simpleSplineRoute:
- * Given a simple (ccw) polygon, route an edge from tp to hp.
- */
+/// Given a simple (ccw) polygon, route an edge from tp to hp.
 pointf*
 simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
     int polyline)
@@ -224,8 +220,7 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
     return ps;
 }
 
-/* routesplinesinit:
- * Data initialized once until matching call to routeplineterm
+/** Data initialized once until matching call to routeplineterm
  * Allows recursive calls to dot
  */
 int
@@ -948,10 +943,7 @@ static void bend(pointf spl[4], pointf centroid)
     spl[1].y = spl[2].y = a.y;
 }
 
-/* makeStraightEdge:
- *
- * FIX: handle ports on boundary?
- */
+// FIX: handle ports on boundary?
 void 
 makeStraightEdge(graph_t * g, edge_t * e, int et, splineInfo* sinfo)
 {
