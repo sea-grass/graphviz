@@ -13,8 +13,8 @@
 #include "smyrnadefs.h"
 
     extern glCompSet *glcreate_gl_topview_menu(void);
-    extern void switch2D3D(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t);
-    extern void menu_click_center(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t);
-    extern void menu_click_zoom_minus(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t);
-    extern void menu_click_zoom_plus(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t);
-    extern void menu_click_pan(glCompObj *obj, GLfloat x, GLfloat y, glMouseButtonType t);
+void switch2D3D(glCompObj *obj, float x, float y, glMouseButtonType t);
+void menu_click_center(glCompObj *obj, float x, float y, glMouseButtonType t);
+void menu_click_zoom_minus(glCompObj *obj, float x, float y, glMouseButtonType t);
+void menu_click_zoom_plus(glCompObj *obj, float x, float y, glMouseButtonType t);
+void menu_click_pan(glCompObj *obj, float x, float y, glMouseButtonType t);

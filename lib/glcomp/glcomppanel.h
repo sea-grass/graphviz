@@ -16,8 +16,8 @@
 extern "C" {
 #endif
 
-    extern glCompPanel *glCompPanelNew(glCompObj * parentObj, GLfloat x,
-				       GLfloat y, GLfloat w, GLfloat h);
+glCompPanel *glCompPanelNew(glCompObj *parentObj, float x, float y, float w,
+                            float h);
 
 /*events*/
     extern int glCompPanelDraw(glCompObj * o);

@@ -12,7 +12,7 @@
 
 #include "smyrnadefs.h"
 
-extern void pick_object_xyz(Agraph_t* g,topview* t,GLfloat x,GLfloat y,GLfloat z) ;
+void pick_object_xyz(Agraph_t *g, topview *t, float x, float y, float z);
 extern void initSmGraph(Agraph_t * g,topview* rv);
 extern void updateSmGraph(Agraph_t * g,topview* t);
 extern void renderSmGraph(topview* t);

@@ -55,7 +55,7 @@ static void cb_reshape(int width, int height)
     /* setup various opengl things that we need */
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    init_arcBall(view->arcball, (GLfloat) view->w, (GLfloat) view->h);
+    init_arcBall(view->arcball, (float)view->w, (float)view->h);
     if (view->w > view->h) {
 	aspect = (float) view->w / (float) view->h;
 	glOrtho(-aspect * GL_VIEWPORT_FACTOR, aspect * GL_VIEWPORT_FACTOR,
@@ -95,7 +95,7 @@ static void cb_mouseclick(int button, int state, int x, int y)
     begin_y = (float) y;
     if(state==GLUT_DOWN)
     {
-	view->widgets->common.functions.mousedown((glCompObj*)view->widgets,(GLfloat) x,(GLfloat)y,getGlCompMouseType(button));
+	view->widgets->common.functions.mousedown((glCompObj*)view->widgets, (float)x, (float)y, getGlCompMouseType(button));
 	if (button ==  GLUT_LEFT_BUTTON)
 	    appmouse_left_click_down(view,x,y);
         if (button ==  GLUT_RIGHT_BUTTON)
@@ -106,7 +106,7 @@ static void cb_mouseclick(int button, int state, int x, int y)
     else
     {
 	view->arcball->isDragging = 0;
-	view->widgets->common.functions.mouseup((glCompObj*)view->widgets,(GLfloat) x,(GLfloat) y,getGlCompMouseType(button));
+	view->widgets->common.functions.mouseup((glCompObj*)view->widgets, (float)x, (float)y, getGlCompMouseType(button));
 
 	if (button ==  GLUT_LEFT_BUTTON)
 	    appmouse_left_click_up(view,x,y);
@@ -129,7 +129,7 @@ static void cb_drag(int X, int Y)
     float y = (float) Y;
 
     if (view->widgets)
-	view->widgets->common.functions.mouseover((glCompObj*)view->widgets, (GLfloat) x,(GLfloat) y);
+	view->widgets->common.functions.mouseover((glCompObj*)view->widgets, x, y);
 
     dx = x - begin_x;
     dy = y - begin_y;

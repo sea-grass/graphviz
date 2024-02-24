@@ -96,23 +96,23 @@ extern "C" {
 
 /*call backs for widgets*/
     typedef void (*glcompdrawfunc_t) (void *obj);
-    typedef void (*glcompclickfunc_t) (glCompObj * obj, GLfloat x,
-				       GLfloat y, glMouseButtonType t);
-    typedef void (*glcompdoubleclickfunc_t) (glCompObj * obj, GLfloat x,
-					     GLfloat y,
+    typedef void (*glcompclickfunc_t)(glCompObj *obj, float x,
+				       float y, glMouseButtonType t);
+    typedef void (*glcompdoubleclickfunc_t) (glCompObj * obj, float x,
+					     float y,
 					     glMouseButtonType t);
-    typedef void (*glcompmouseoverfunc_t) (glCompObj * obj, GLfloat x,
-					   GLfloat y);
-    typedef void (*glcompmouseinfunc_t) (glCompObj * obj, GLfloat x,
-					 GLfloat y);
-    typedef void (*glcompmouseoutfunc_t) (glCompObj * obj, GLfloat x,
-					  GLfloat y);
-    typedef void (*glcompmousedownfunc_t) (glCompObj * obj, GLfloat x,
-					   GLfloat y, glMouseButtonType t);
-    typedef void (*glcompmouseupfunc_t) (glCompObj * obj, GLfloat x,
-					 GLfloat y, glMouseButtonType t);
-    typedef void (*glcompmousedragfunct_t) (glCompObj * obj, GLfloat dx,
-					    GLfloat dy,
+    typedef void (*glcompmouseoverfunc_t) (glCompObj * obj, float x,
+					   float y);
+    typedef void (*glcompmouseinfunc_t) (glCompObj * obj, float x,
+					 float y);
+    typedef void (*glcompmouseoutfunc_t) (glCompObj * obj, float x,
+					  float y);
+    typedef void (*glcompmousedownfunc_t) (glCompObj * obj, float x,
+					   float y, glMouseButtonType t);
+    typedef void (*glcompmouseupfunc_t) (glCompObj * obj, float x,
+					 float y, glMouseButtonType t);
+    typedef void (*glcompmousedragfunct_t) (glCompObj * obj, float dx,
+					    float dy,
 					    glMouseButtonType t);
 
 
@@ -124,10 +124,10 @@ extern "C" {
 	int rightAnchor;
 	int bottomAnchor;
 
-	GLfloat top;		/*anchor values */
-	GLfloat left;
-	GLfloat right;
-	GLfloat bottom;
+	float top;		/*anchor values */
+	float left;
+	float right;
+	float bottom;
 
 
     } glCompAnchor;
@@ -141,7 +141,7 @@ extern "C" {
 
 
     typedef struct _glCompPoint {
-	GLfloat x, y, z;
+	float x, y, z;
     } glCompPoint;
 
     typedef struct {
@@ -150,17 +150,17 @@ extern "C" {
     }glCompPoly;
 
     typedef struct {
-	GLfloat R;
-	GLfloat G;
-	GLfloat B;
-	GLfloat A;		//Alpha
+	float R;
+	float G;
+	float B;
+	float A;		//Alpha
     } glCompColor;
 
 
     typedef struct _glCompRect {
 	glCompPoint pos;
-	GLfloat w;
-	GLfloat h;
+	float w;
+	float h;
     } glCompRect;
 
     typedef struct _glCompTex {
@@ -212,8 +212,8 @@ extern "C" {
     typedef struct _glCompCommon {
 	glCompPoint pos;
 	glCompPoint refPos;	/*calculated pos after anchors and aligns */
-	GLfloat width, height;
-	GLfloat borderWidth;
+	float width, height;
+	float borderWidth;
 	glCompColor color;
 	int enabled;
 	int visible;
@@ -234,7 +234,7 @@ extern "C" {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
 	glCompTex *texture;
-	GLfloat width, height;  /* width and height in world coords */
+	float width, height;  /* width and height in world coords */
 	/* char *pngFile; */
 	int stretch;
     } glCompImage;
@@ -243,7 +243,7 @@ extern "C" {
     typedef struct _glCompPanel {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
-	GLfloat shadowwidth;
+	float shadowwidth;
 	glCompColor shadowcolor;
 	char *text;
 	glCompImage *image;
@@ -261,7 +261,7 @@ extern "C" {
     struct _glCompButton {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
-	GLfloat width, height;
+	float width, height;
 	glCompLabel *label;
 	int status;		//0 not pressed 1 pressed;
 	int refStatus;		//0 not pressed 1 pressed;
@@ -287,7 +287,7 @@ extern "C" {
 	glCompPoint GLinitPos;/*mouse button down pos*/
 	glCompPoint GLfinalPos;/*mouse button up pos*/
 
-	GLfloat dragX, dragY;/*GLpos - GLinitpos*/
+	float dragX, dragY;/*GLpos - GLinitpos*/
 	glCompObj *clickedObj;
 	glCompCallBacks callbacks;
 	glCompCallBacks functions;

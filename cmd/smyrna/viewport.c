@@ -126,38 +126,9 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     vi->selectedNodeColor.B = (float)cl.u.RGBA[2];
     vi->selectedNodeColor.A = (float)
 	atof(get_attribute_value("selectednodecoloralpha", vi, g));
-    //selected edge are drawn with this color
-    colorxlate(get_attribute_value("selectededgecolor", vi, g), &cl,
-	       RGBA_DOUBLE);
-    vi->selectedEdgeColor.R = (float)cl.u.RGBA[0];
-    vi->selectedEdgeColor.G = (float)cl.u.RGBA[1];
-    vi->selectedEdgeColor.B = (float)cl.u.RGBA[2];
-    vi->selectedEdgeColor.A = (float)
-	atof(get_attribute_value("selectededgecoloralpha", vi, g));
 
-    colorxlate(get_attribute_value("highlightednodecolor", vi, g), &cl,
-	       RGBA_DOUBLE);
-    vi->highlightedNodeColor.R = (float)cl.u.RGBA[0];
-    vi->highlightedNodeColor.G = (float)cl.u.RGBA[1];
-    vi->highlightedNodeColor.B = (float)cl.u.RGBA[2];
-    vi->highlightedNodeColor.A = (float)
-	atof(get_attribute_value("highlightednodecoloralpha", vi, g));
-
-    buf = agget(g, "highlightededgecolor");
-    colorxlate(get_attribute_value("highlightededgecolor", vi, g), &cl,
-	       RGBA_DOUBLE);
-    vi->highlightedEdgeColor.R = (float)cl.u.RGBA[0];
-    vi->highlightedEdgeColor.G = (float)cl.u.RGBA[1];
-    vi->highlightedEdgeColor.B = (float)cl.u.RGBA[2];
-    vi->highlightedEdgeColor.A = (float)
-	atof(get_attribute_value("highlightededgecoloralpha", vi, g));
     vi->defaultnodealpha = (float)
 	atof(get_attribute_value("defaultnodealpha", vi, g));
-
-    vi->defaultedgealpha = (float)
-	atof(get_attribute_value("defaultedgealpha", vi, g));
-
-
 
     /*default line width */
     vi->LineWidth =

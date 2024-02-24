@@ -71,9 +71,8 @@ static void select_edge(Agraph_t* g,Agedge_t*  obj,int reverse)
 
 }
 
-
-static void pick_objects_in_rect(Agraph_t* g,GLfloat x1,GLfloat y1,GLfloat x2,GLfloat y2)
-{
+static void pick_objects_in_rect(Agraph_t *g, float x1, float y1, float x2,
+                                 float y2) {
     Agnode_t *v;
     Agedge_t *e;
     glCompPoint posT;
@@ -114,9 +113,9 @@ static void* pick_object(Agraph_t* g,glCompPoint p)
     glCompPoint posN;
     int defaultNodeShape;
     float dist = FLT_MAX;
-    GLfloat nd; /*node distance to point*/
-    GLfloat ed; /*edge distance to point*/
-    GLfloat nodeSize=0;
+    float nd; // node distance to point
+    float ed; // edge distance to point
+    float nodeSize=0;
     void* rv=(void*)0;
 
     defaultNodeShape=getAttrBool(g,g,"defaultnodeshape",0);
@@ -151,8 +150,7 @@ static void* pick_object(Agraph_t* g,glCompPoint p)
     return rv;
 }
 
-void pick_object_xyz(Agraph_t* g,topview* t,GLfloat x,GLfloat y,GLfloat z) 
-{
+void pick_object_xyz(Agraph_t *g, topview *t, float x, float y, float z) {
     glCompPoint p;
     void* a;
     p.x=x;p.y=y;p.z=z;
@@ -175,11 +173,10 @@ void pick_object_xyz(Agraph_t* g,topview* t,GLfloat x,GLfloat y,GLfloat z)
 }
 void pick_objects_rect(Agraph_t* g) 
 {
-
-    GLfloat x1;
-    GLfloat y1;
-    GLfloat x2;
-    GLfloat y2;
+    float x1;
+    float y1;
+    float x2;
+    float y2;
     if(view->mouse.GLfinalPos.x > view->mouse.GLinitPos.x)
     {
         x1=view->mouse.GLinitPos.x;

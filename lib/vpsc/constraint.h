@@ -29,13 +29,12 @@ public:
 	Variable *right;
 	double gap;
 	double lm;
-	Constraint(Variable *left, Variable *right, double gap, bool equality=false);
+	Constraint(Variable *left, Variable *right, double gap);
 	~Constraint();
 	double slack() const { return right->position() - gap - left->position(); }
 	long timeStamp;
 	bool active;
 	bool visited;
-	bool equality;
 };
 #include <float.h>
 #include <vpsc/block.h>

@@ -18,19 +18,14 @@ extern "C" {
 
 /*events*/
     extern void glCompMouseInit(glCompMouse * m);
-    extern void glCompClick(glCompObj * o, GLfloat x, GLfloat y,
-			    glMouseButtonType t);
-    extern void glCompDoubleClick(glCompObj * obj, GLfloat x, GLfloat y,
-				  glMouseButtonType t);
-    extern void glCompMouseDown(glCompObj * obj, GLfloat x, GLfloat y,
-				glMouseButtonType t);
-    extern void glCompMouseIn(glCompObj * obj, GLfloat x, GLfloat y);
-    extern void glCompMouseOut(glCompObj * obj, GLfloat x, GLfloat y);
-    extern void glCompMouseOver(glCompObj * obj, GLfloat x, GLfloat y);
-    extern void glCompMouseUp(glCompObj * obj, GLfloat x, GLfloat y,
-			      glMouseButtonType t);
-    extern void glCompMouseDrag(glCompObj * obj, GLfloat dx, GLfloat dy,
-				glMouseButtonType t);
+void glCompClick(glCompObj *o, float x, float y, glMouseButtonType t);
+void glCompDoubleClick(glCompObj *obj, float x, float y, glMouseButtonType t);
+void glCompMouseDown(glCompObj *obj, float x, float y, glMouseButtonType t);
+void glCompMouseIn(glCompObj *obj, float x, float y);
+void glCompMouseOut(glCompObj *obj, float x, float y);
+void glCompMouseOver(glCompObj *obj, float x, float y);
+void glCompMouseUp(glCompObj *obj, float x, float y, glMouseButtonType t);
+void glCompMouseDrag(glCompObj *obj, float dx, float dy, glMouseButtonType t);
 
 #ifdef __cplusplus
 }

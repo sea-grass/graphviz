@@ -16,22 +16,19 @@
 extern "C" {
 #endif
 
-    extern glCompButton *glCompButtonNew(glCompObj * par, GLfloat x,
-					 GLfloat y, GLfloat w, GLfloat h,
-					 char *caption);
+glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
+                              float h, char *caption);
     extern void glCompButtonDraw(glCompButton * p);
     extern int glCompButtonAddPngGlyph(glCompButton * b, char *fileName);
-    extern void glCompButtonClick(glCompObj * o, GLfloat x, GLfloat y,
-				  glMouseButtonType t);
-    extern void glCompButtonDoubleClick(glCompObj * o, GLfloat x,
-					GLfloat y, glMouseButtonType t);
-    extern void glCompButtonMouseDown(glCompObj * o, GLfloat x, GLfloat y,
+void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t);
+void glCompButtonDoubleClick(glCompObj *o, float x, float y,
+                             glMouseButtonType t);
+void glCompButtonMouseDown(glCompObj *o, float x, float y,
 				      glMouseButtonType t);
-    extern void glCompButtonMouseIn(glCompObj * o, GLfloat x, GLfloat y);
-    extern void glCompButtonMouseOut(glCompObj * o, GLfloat x, GLfloat y);
-    extern void glCompButtonMouseOver(glCompObj * o, GLfloat x, GLfloat y);
-    extern void glCompButtonMouseUp(glCompObj * o, GLfloat x, GLfloat y,
-				    glMouseButtonType t);
+void glCompButtonMouseIn(glCompObj *o, float x, float y);
+void glCompButtonMouseOut(glCompObj *o, float x, float y);
+void glCompButtonMouseOver(glCompObj *o, float x, float y);
+void glCompButtonMouseUp(glCompObj *o, float x, float y, glMouseButtonType t);
     extern void glCompButtonHide(glCompButton * p);
     extern void glCompButtonShow(glCompButton * p);
 

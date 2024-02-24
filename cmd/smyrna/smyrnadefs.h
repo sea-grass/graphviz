@@ -284,22 +284,14 @@ typedef struct
 	glCompColor penColor;
 	/*default fill color */
 	glCompColor fillColor;
-	/*highlighted Node Color */
-	glCompColor highlightedNodeColor;
-	/*highlighted Edge Color */
-	glCompColor highlightedEdgeColor;
 	/*grid color */
 	glCompColor gridColor;	//grid color
 	/*border color */
 	glCompColor borderColor;
 	/*selected node color */
 	glCompColor selectedNodeColor;
-	/*selected edge color */
-	glCompColor selectedEdgeColor;
 	/*default node alpha */
 	float defaultnodealpha;
-	/*default edge alpha */
-	float defaultedgealpha;
 
 	/*default line width */
 	float LineWidth;

@@ -14,7 +14,6 @@
 #include <string.h>
 #ifdef _WIN32
 #include <glcomp/glpangofont.h>
-typedef float GLfloat;
 #endif
 #include <glcomp/opengl.h>
 #include <glcomp/glcompdefs.h>
@@ -24,16 +23,16 @@ typedef float GLfloat;
 extern "C" {
 #endif
 
-    void glprintfglut(void *font, GLfloat xpos, GLfloat ypos, GLfloat zpos, char *bf);
+    void glprintfglut(void *font, float xpos, float ypos, float zpos, char *bf);
 
     glCompFont *glNewFont(glCompSet * s, char *text, glCompColor * c,
                           char *fontdesc, int fs,int is2D);
     glCompFont *glNewFontFromParent(glCompObj * o, char *text);
     void glDeleteFont(glCompFont * f);
-    void glCompDrawText(glCompFont * f,GLfloat x,GLfloat y);
+    void glCompDrawText(glCompFont * f,float x,float y);
     void glCompRenderText(glCompFont * f, glCompObj * parentObj);
-    void glCompDrawText3D(glCompFont *f, GLfloat x, GLfloat y, double z,
-                          GLfloat w, GLfloat h);
+    void glCompDrawText3D(glCompFont *f, float x, float y, double z,
+                          float w, float h);
 
 #ifdef __cplusplus
 }

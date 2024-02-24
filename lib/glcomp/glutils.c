@@ -23,7 +23,7 @@ int GetOGLPosRef(int x, int y, float *X, float *Y) {
     GLint viewport[4];
     GLdouble modelview[16];
     GLdouble projection[16];
-    GLfloat winX, winY;
+    float winX, winY;
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
     glGetDoublev(GL_PROJECTION_MATRIX, projection);
     glGetIntegerv(GL_VIEWPORT, viewport);
@@ -60,7 +60,7 @@ float GetOGLDistance(int l)
     GLint viewport[4];
     GLdouble modelview[16];
     GLdouble projection[16];
-    GLfloat winX, winY;
+    float winX, winY;
 
     glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
     glGetDoublev(GL_PROJECTION_MATRIX, projection);
@@ -98,15 +98,14 @@ float GetOGLDistance(int l)
 
 */
 
-void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
-{
+void to3D(int x, int y, float *X, float *Y, float *Z) {
     int const WIDTH = 20;
 
     GLint viewport[4];
     GLdouble modelview[16];
     GLdouble projection[16];
-    GLfloat winX, winY;
-    GLfloat winZ[400];
+    float winX, winY;
+    float winZ[400];
     GLdouble posX, posY, posZ;
     int idx;
 
@@ -128,9 +127,9 @@ void to3D(int x, int y, GLfloat * X, GLfloat * Y, GLfloat * Z)
     gluUnProject(winX, winY, comp, modelview, projection, viewport, &posX,
 		 &posY, &posZ);
 
-    *X = (GLfloat) posX;
-    *Y = (GLfloat) posY;
-    *Z = (GLfloat) posZ;
+    *X = (float)posX;
+    *Y = (float)posY;
+    *Z = (float)posZ;
     return;
 }
 
@@ -198,7 +197,7 @@ void glCompCalcWidget(glCompCommon * parent, glCompCommon * child,
 		      glCompCommon * ref)
 {
     /*check alignments first , alignments overrides anchors */
-    GLfloat borderWidth;
+    float borderWidth;
     ref->height = child->height;
     ref->width = child->width;
     if(!parent)
@@ -307,12 +306,12 @@ void glCompDrawRectangle(glCompRect * r)
     glVertex3f(r->pos.x, r->pos.y + r->h, r->pos.z);
     glEnd();
 }
-void glCompDrawRectPrism(glCompPoint * p, GLfloat w, GLfloat h, GLfloat b,
-			 GLfloat d, glCompColor * c, int bumped)
-{
-    GLfloat color_fac;
+
+void glCompDrawRectPrism(glCompPoint *p, float w, float h, float b, float d,
+                         glCompColor *c, int bumped) {
+    float color_fac;
     glCompPoint A, B, C, D, E, F, G, H;
-    GLfloat dim = 1.00;
+    float dim = 1;
     if (!bumped) {
 	color_fac = 1.3f;
 	b = b - 2;
@@ -362,10 +361,8 @@ void glCompDrawRectPrism(glCompPoint * p, GLfloat w, GLfloat h, GLfloat b,
 
 }
 
-GLfloat distBetweenPts(glCompPoint A,glCompPoint B,float R)
-{
-    GLfloat rv=0;	
-    rv=(A.x-B.x)*(A.x-B.x) + (A.y-B.y)*(A.y-B.y) +(A.z-B.z)*(A.z-B.z);
+float distBetweenPts(glCompPoint A, glCompPoint B, float R) {
+    float rv = (A.x - B.x) * (A.x - B.x) + (A.y - B.y) * (A.y - B.y) + (A.z - B.z) * (A.z - B.z);
     rv=sqrtf(rv);
     if (rv <=R)
 	return 0;

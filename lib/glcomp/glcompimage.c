@@ -15,8 +15,7 @@
 #include <glcomp/glutils.h>
 #include <glcomp/glcomptexture.h>
 
-glCompImage *glCompImageNew(glCompObj * par, GLfloat x, GLfloat y)
-{
+glCompImage *glCompImageNew(glCompObj *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glImageObj;
@@ -33,7 +32,7 @@ glCompImage *glCompImageNew(glCompObj * par, GLfloat x, GLfloat y)
  * At present, we assume png input.
  * Return 0 on failure.
  */
-glCompImage *glCompImageNewFile(GLfloat x, GLfloat y, char *imgfile) {
+glCompImage *glCompImageNewFile(float x, float y, char *imgfile) {
     int imageWidth, imageHeight;
     unsigned char *data = glCompLoadPng (imgfile, &imageWidth, &imageHeight);
     glCompImage *p;
@@ -87,7 +86,7 @@ void glCompImageDraw(void *obj)
 {
     glCompImage *p = obj;
     glCompCommon ref = p->common;
-    GLfloat w,h,d;
+    float w,h,d;
 
     glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
     if (!p->common.visible)
@@ -104,7 +103,7 @@ void glCompImageDraw(void *obj)
     {
 	w = p->width;
 	h = p->height;
-	d=(GLfloat)p->common.layer * GLCOMPSET_BEVEL_DIFF;
+	d = (float)p->common.layer * GLCOMPSET_BEVEL_DIFF;
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
