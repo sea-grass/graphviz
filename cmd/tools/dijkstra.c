@@ -59,7 +59,6 @@ static double getlength(Agedge_t * e)
     return len;
 }
 
-#ifdef USE_FNS
 static double getdist(Agnode_t * n)
 {
     nodedata_t *data;
@@ -73,14 +72,11 @@ static void setdist(Agnode_t * n, double dist)
     data = (nodedata_t *) (n->base.data);
     data->dist = dist;
 }
-#else
-#define getdist(n) (((nodedata_t*)((n)->base.data))->dist)
-#define setdist(n,d) (((nodedata_t*)((n)->base.data))->dist = (d))
+
 #define getprev(n) (((nodedata_t*)((n)->base.data))->prev)
 #define setprev(n,p) (((nodedata_t*)((n)->base.data))->prev = (p))
 #define isDone(n) (((nodedata_t*)((n)->base.data))->done)
 #define setDone(n) (((nodedata_t*)((n)->base.data))->done = 1)
-#endif
 
 static int cmpf(Dt_t * d, void *key1, void *key2, Dtdisc_t * disc)
 {
