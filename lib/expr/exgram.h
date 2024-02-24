@@ -65,7 +65,6 @@ exnewnode(Expr_t* p, int op, int binary, int type, Exnode_t* left, Exnode_t* rig
 	x->op = op;
 	x->type = type;
 	x->binary = binary;
-	x->local.number = 0;
 	x->local.pointer = 0;
 	x->data.operand.left = left;
 	x->data.operand.right = right;

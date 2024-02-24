@@ -94,7 +94,6 @@ typedef void (*Exexit_f) (Expr_t *, Exdisc_t *, int);
 
 typedef struct Exlocal_s		/* user defined member type	*/
 {
-	long long number;
 	char*		pointer;
 } Exlocal_t;
 
