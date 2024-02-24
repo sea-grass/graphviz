@@ -228,7 +228,6 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 {
     int e_arrows;		/* graph has edges with end arrows */
     int s_arrows;		/* graph has edges with start arrows */
-    char buf[BUFSIZ];		/* Used only for small strings */
     node_t *n;
     edge_t *e;
     pointf ptf;
@@ -273,18 +272,17 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 	    }
 	    agset(n, "pos", agxbuse(&xb));
 	} else {
-	    snprintf(buf, sizeof(buf), "%.5g,%.5g", ND_coord(n).x,
-	             YDIR(ND_coord(n).y));
-	    agset(n, "pos", buf);
+	    agxbprint(&xb, "%.5g,%.5g", ND_coord(n).x, YDIR(ND_coord(n).y));
+	    agset(n, "pos", agxbuse(&xb));
 	}
-	snprintf(buf, sizeof(buf), "%.5g", PS2INCH(ND_ht(n)));
-	agxset(n, N_height, buf);
-	snprintf(buf, sizeof(buf), "%.5g", PS2INCH(ND_lw(n) + ND_rw(n)));
-	agxset(n, N_width, buf);
+	agxbprint(&xb, "%.5g", PS2INCH(ND_ht(n)));
+	agxset(n, N_height, agxbuse(&xb));
+	agxbprint(&xb, "%.5g", PS2INCH(ND_lw(n) + ND_rw(n)));
+	agxset(n, N_width, agxbuse(&xb));
 	if (ND_xlabel(n) && ND_xlabel(n)->set) {
 	    ptf = ND_xlabel(n)->pos;
-	    snprintf(buf, sizeof(buf), "%.5g,%.5g", ptf.x, YDIR(ptf.y));
-	    agset(n, "xlp", buf);
+	    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+	    agset(n, "xlp", agxbuse(&xb));
 	}
 	if (strcmp(ND_shape(n)->name, "record") == 0) {
 	    set_record_rects(n, ND_shape_info(n), &xb);
@@ -350,23 +348,23 @@ void attach_attrs_and_arrows(graph_t* g, int* sp, int* ep)
 		agset(e, "pos", agxbuse(&xb));
 		if (ED_label(e)) {
 		    ptf = ED_label(e)->pos;
-		    snprintf(buf, sizeof(buf), "%.5g,%.5g", ptf.x, YDIR(ptf.y));
-		    agset(e, "lp", buf);
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agset(e, "lp", agxbuse(&xb));
 		}
 		if (ED_xlabel(e) && ED_xlabel(e)->set) {
 		    ptf = ED_xlabel(e)->pos;
-		    snprintf(buf, sizeof(buf), "%.5g,%.5g", ptf.x, YDIR(ptf.y));
-		    agset(e, "xlp", buf);
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agset(e, "xlp", agxbuse(&xb));
 		}
 		if (ED_head_label(e)) {
 		    ptf = ED_head_label(e)->pos;
-		    snprintf(buf, sizeof(buf), "%.5g,%.5g", ptf.x, YDIR(ptf.y));
-		    agset(e, "head_lp", buf);
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agset(e, "head_lp", agxbuse(&xb));
 		}
 		if (ED_tail_label(e)) {
 		    ptf = ED_tail_label(e)->pos;
-		    snprintf(buf, sizeof(buf), "%.5g,%.5g", ptf.x, YDIR(ptf.y));
-		    agset(e, "tail_lp", buf);
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agset(e, "tail_lp", agxbuse(&xb));
 		}
 	    }
 	}
