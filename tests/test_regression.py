@@ -674,6 +674,29 @@ def test_1411():
     ), "error message did not identify correct location"
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1435"
+)
+def test_1435():
+    """
+    triangulation paths should be findable on this graph
+    https://gitlab.com/graphviz/graphviz/-/issues/1435
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1435.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # process it with Graphviz
+    err = subprocess.check_output(
+        ["dot", "-Tpng", "-o", os.devnull, input],
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+    assert err.strip() == "", "errors were printed"
+
+
 def test_1436():
     """
     test a segfault from https://gitlab.com/graphviz/graphviz/-/issues/1436 has
