@@ -52,7 +52,6 @@ extern "C" {
 
 #define EX_NAMELEN	32		/* default Exid_t.name length	*/
 
-/* previously known as EXID, but EXID is also defined by bison in y.tab.h */
 #define EX_ID(n,l,i,t,f)	{{0},(l),(i),(t),0,(f),0,0,0,n}
 
 #define DELETE_T		MINTOKEN		/* exexpr() delete `type'	*/
