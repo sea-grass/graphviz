@@ -53,8 +53,19 @@ int AdjustSaturation;
 double MinRankSaturation;
 double MaxRankSaturation;
 
-static int cmpf(Agnode_t ** n0, Agnode_t ** n1)
-{
+static int cmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  Agnode_t **n0 = (Agnode_t **)x;
+  Agnode_t **n1 = (Agnode_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
     double relrank0 = ND_relrank(*n0);
     double relrank1 = ND_relrank(*n1);
     if (relrank0 < relrank1)
@@ -166,8 +177,7 @@ static void color(Agraph_t * g)
 	    n = nlist[i];
 	    ND_relrank(n) = maxrank - ND_relrank(n);
 	}
-    qsort(nlist, nnodes, sizeof(Agnode_t *),
-	  (int (*)(const void *, const void *)) cmpf);
+    qsort(nlist, nnodes, sizeof(Agnode_t *), cmpf);
 
     /* this is the pass that pushes the colors through the edges */
     for (i = 0; i < nnodes; i++) {

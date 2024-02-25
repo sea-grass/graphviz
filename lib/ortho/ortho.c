@@ -1202,9 +1202,16 @@ edgeLen (Agedge_t* e)
     return (int)DIST2(p,q);
 }
 
-static int edgecmp(epair_t* e0, epair_t* e1)
-{
-    return e0->d - e1->d;
+static int edgecmp(const void *x, const void *y) {
+  const epair_t *e0 = x;
+  const epair_t *e1 = y;
+  if (e0->d > e1->d) {
+    return 1;
+  }
+  if (e0->d < e1->d) {
+    return -1;
+  }
+  return 0;
 }
 
 static bool spline_merge(node_t * n)
@@ -1309,7 +1316,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 
     route_list = gv_calloc(n_edges, sizeof(route));
 
-    qsort(es, n_edges, sizeof(epair_t), (qsort_cmpf) edgecmp);
+    qsort(es, n_edges, sizeof(epair_t), edgecmp);
 
     gstart = sg->nnodes;
     PQgen (sg->nnodes+2);

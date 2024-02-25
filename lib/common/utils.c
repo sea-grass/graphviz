@@ -1221,7 +1221,7 @@ htmlEntity (char** s)
 	    if (byte == ';') {
 		*p++ = '\0';
 		res = bsearch(entity_name_buf, entities, NR_OF_ENTITIES,
-		    sizeof(entities[0]), *comp_entities);
+		    sizeof(entities[0]), comp_entities);
 		if (res) {
 		    n = res->value;
 		    str += i+1;

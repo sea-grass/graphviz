@@ -39,7 +39,6 @@ static void check_cycles(graph_t * g);
 
 static graph_t *G;
 static size_t N_nodes, N_edges;
-static int Maxrank;
 static size_t S_i;			/* search index for enter_edge */
 static int Search_size;
 #define SEARCHSIZE 30
@@ -669,12 +668,11 @@ update(edge_t * e, edge_t * f)
     return 0;
 }
 
-static void scan_and_normalize(void)
-{
+static int scan_and_normalize(void) {
     node_t *n;
 
     int Minrank = INT_MAX;
-    Maxrank = -INT_MAX;
+    int Maxrank = INT_MIN;
     for (n = GD_nlist(G); n; n = ND_next(n)) {
 	if (ND_node_type(n) == NORMAL) {
 	    Minrank = MIN(Minrank, ND_rank(n));
@@ -684,6 +682,7 @@ static void scan_and_normalize(void)
     for (n = GD_nlist(G); n; n = ND_next(n))
 	ND_rank(n) -= Minrank;
     Maxrank -= Minrank;
+    return Maxrank;
 }
 
 static void reset_lists(void) {
@@ -730,7 +729,19 @@ static void LR_balance(void)
     freeTreeList (G);
 }
 
-static int decreasingrankcmpf(node_t **n0, node_t **n1) {
+static int decreasingrankcmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  node_t **n0 = (node_t**)x;
+  node_t **n1 = (node_t**)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   if (ND_rank(*n1) < ND_rank(*n0)) {
     return -1;
   }
@@ -740,7 +751,19 @@ static int decreasingrankcmpf(node_t **n0, node_t **n1) {
   return 0;
 }
 
-static int increasingrankcmpf(node_t **n0, node_t **n1) {
+static int increasingrankcmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  node_t **n0 = (node_t **)x;
+  node_t **n1 = (node_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   if (ND_rank(*n0) < ND_rank(*n1)) {
     return -1;
   }
@@ -759,12 +782,11 @@ static void TB_balance(void)
     int adj = 0;
     char *s;
 
-    scan_and_normalize();
+    const int Maxrank = scan_and_normalize();
 
     /* find nodes that are not tight and move to less populated ranks */
-    int *nrank = gv_calloc(Maxrank + 1, sizeof(int));
-    for (int i = 0; i <= Maxrank; i++)
-	nrank[i] = 0;
+    assert(Maxrank >= 0);
+    int *nrank = gv_calloc((size_t)Maxrank + 1, sizeof(int));
     if ( (s = agget(G,"TBbalance")) ) {
          if (streq(s,"min")) adj = 1;
          else if (streq(s,"max")) adj = 2;
@@ -784,8 +806,7 @@ static void TB_balance(void)
     }
     Tree_node.size = ii;
     qsort(Tree_node.list, Tree_node.size, sizeof(Tree_node.list[0]),
-        adj > 1? (int(*)(const void*,const void*))decreasingrankcmpf
-               : (int(*)(const void*,const void*))increasingrankcmpf);
+          adj > 1 ? decreasingrankcmpf: increasingrankcmpf);
     for (size_t i = 0; i < Tree_node.size; i++) {
         n = Tree_node.list[i];
         if (ND_node_type(n) == NORMAL)
@@ -964,7 +985,7 @@ int rank2(graph_t * g, int balance, int maxiter, int search_size)
 	LR_balance();
 	break;
     default:
-	scan_and_normalize();
+	(void)scan_and_normalize();
 	freeTreeList (G);
 	break;
     }

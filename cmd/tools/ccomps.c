@@ -466,10 +466,19 @@ static void unionNodes(Agraph_t * dg, Agraph_t * g)
     }
 }
 
-typedef int (*qsort_cmpf) (const void *, const void *);
-
-static int cmp(Agraph_t** p0, Agraph_t** p1)
-{
+static int cmp(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because `agnnodes` uses
+// non-const pointers.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  Agraph_t **p0 = (Agraph_t **)x;
+  Agraph_t **p1 = (Agraph_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   const int n0 = agnnodes(*p0);
   const int n1 = agnnodes(*p1);
   if (n0 < n1) {
@@ -493,7 +502,7 @@ printSorted (Agraph_t* root, int c_cnt)
 	    ccs[i++] = subg;
     }
     /* sort by component size, largest first */
-    qsort (ccs, c_cnt, sizeof(Agraph_t*), (qsort_cmpf)cmp);
+    qsort(ccs, c_cnt, sizeof(Agraph_t *), cmp);
 
     if (sortIndex >= 0) {
 	if (x_mode == BY_INDEX) {

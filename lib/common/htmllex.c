@@ -108,7 +108,8 @@ typedef struct {
 /* icmp:
  * Compare an attr_item. Used in bsearch
  */
-static int icmp(const char *name, attr_item *j) {
+static int icmp(const void *name, const void *item) {
+  const attr_item *j = item;
   return strcasecmp(name, j->name);
 }
 
@@ -558,7 +559,7 @@ static void doAttrs(void *tp, attr_item *items, size_t nel, char **atts,
 
     while ((name = *atts++) != NULL) {
 	val = *atts++;
-	ip = bsearch(name, items, nel, ISIZE, (bcmpfn)icmp);
+	ip = bsearch(name, items, nel, ISIZE, icmp);
 	if (ip)
 	    state.warn |= ip->action(tp, val);
 	else {

@@ -42,8 +42,8 @@ struct adjmatrix_t {
 
 	/* forward declarations */
 static bool medians(graph_t * g, int r0, int r1);
-static int nodeposcmpf(node_t ** n0, node_t ** n1);
-static int edgeidcmpf(edge_t ** e0, edge_t ** e1);
+static int nodeposcmpf(const void *, const void *);
+static int edgeidcmpf(const void *, const void *);
 static void flat_breakcycles(graph_t * g);
 static void flat_reorder(graph_t * g);
 static void flat_search(graph_t * g, node_t * v);
@@ -59,7 +59,7 @@ static void save_best(graph_t * g);
 static void restore_best(graph_t * g);
 static adjmatrix_t *new_matrix(size_t i, size_t j);
 static void free_matrix(adjmatrix_t * p);
-static int ordercmpf(int *i0, int *i1);
+static int ordercmpf(const void *, const void *);
 #ifdef DEBUG
 #if DEBUG > 1
 static int gd_minrank(Agraph_t *g) {return GD_minrank(g);}
@@ -276,7 +276,7 @@ fixLabelOrder (graph_t* g, rank_t* rk)
 	    int i, sz = agnnodes(sg);
 	    cnt = topsort (g, sg, arr);
 	    assert (cnt == sz);
-	    qsort(indices, cnt, sizeof(int), (qsort_cmpf)ordercmpf);
+	    qsort(indices, cnt, sizeof(int), ordercmpf);
 	    for (i = 0; i < sz; i++) {
 		ND_order(arr[i]) = indices[i];
 		rk->v[indices[i]] = arr[i];
@@ -455,7 +455,7 @@ static void do_ordering_node(graph_t *g, node_t *n, bool outflag) {
     /* write null terminator at end of list.
        requires +1 in TE_list alloccation */
     sortlist[ne] = 0;
-    qsort(sortlist, ne, sizeof(sortlist[0]), (qsort_cmpf) edgeidcmpf);
+    qsort(sortlist, ne, sizeof(sortlist[0]), edgeidcmpf);
     for (ne = 1; (f = sortlist[ne]); ne++) {
 	e = sortlist[ne - 1];
 	if (outflag) {
@@ -760,7 +760,7 @@ static void restore_best(graph_t * g)
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
 	GD_rank(Root)[r].valid = false;
 	qsort(GD_rank(g)[r].v, GD_rank(g)[r].n, sizeof(GD_rank(g)[0].v[0]),
-	      (qsort_cmpf) nodeposcmpf);
+	      nodeposcmpf);
     }
 }
 
@@ -1576,8 +1576,9 @@ int ncross(graph_t * g)
     return count;
 }
 
-static int ordercmpf(int *i0, int *i1)
-{
+static int ordercmpf(const void *x, const void *y) {
+  const int *i0 = x;
+  const int *i1 = y;
   if (*i0 < *i1) {
     return -1;
   }
@@ -1661,7 +1662,7 @@ static bool medians(graph_t * g, int r0, int r1)
 	    ND_mval(n) = (list[0] + list[1]) / 2;
 	    break;
 	default:
-	    qsort(list, j, sizeof(int), (qsort_cmpf) ordercmpf);
+	    qsort(list, j, sizeof(int), ordercmpf);
 	    if (j % 2)
 		ND_mval(n) = list[j / 2];
 	    else {
@@ -1687,8 +1688,19 @@ static bool medians(graph_t * g, int r0, int r1)
     return hasfixed;
 }
 
-static int nodeposcmpf(node_t ** n0, node_t ** n1)
-{
+static int nodeposcmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  node_t **n0 = (node_t **)x;
+  node_t **n1 = (node_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   if (ND_order(*n0) < ND_order(*n1)) {
     return -1;
   }
@@ -1698,8 +1710,19 @@ static int nodeposcmpf(node_t ** n0, node_t ** n1)
   return 0;
 }
 
-static int edgeidcmpf(edge_t ** e0, edge_t ** e1)
-{
+static int edgeidcmpf(const void *x, const void *y) {
+// Suppress Clang/GCC -Wcast-qual warning. Casting away const here is acceptable
+// as the later usage is const. We need the cast because the macros use
+// non-const pointers for genericity.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+  edge_t **e0 = (edge_t **)x;
+  edge_t **e1 = (edge_t **)y;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
   if (AGSEQ(*e0) < AGSEQ(*e1)) {
     return -1;
   }
