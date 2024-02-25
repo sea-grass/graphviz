@@ -24,11 +24,6 @@
 static int nedges, nboxes; /* total no. of edges and boxes used in routing */
 
 static int routeinit;
-/* static data used across multiple edges */
-static Ppoint_t *polypoints;  /* vertices of polygon defined by boxes */
-static int polypointn;        /* size of polypoints[] */
-static Pedge_t *edges;        /* polygon edges passed to Proutespline */
-static int edgen;             /* size of edges[] */
 
 static int checkpath(int, boxf*, path*);
 static void printpath(path * pp);
@@ -201,18 +196,19 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
     if (polyline)
 	make_polyline (pl, &spl);
     else {
-	if (poly.pn > edgen) {
-	    edges = ALLOC(poly.pn, edges, Pedge_t);
-	    edgen = poly.pn;
-	}
+	// polygon edges passed to Proutespline
+	Pedge_t *edges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (i = 0; i < poly.pn; i++) {
 	    edges[i].a = poly.ps[i];
 	    edges[i].b = poly.ps[(i + 1) % poly.pn];
 	}
 	    evs[0].x = evs[0].y = 0;
 	    evs[1].x = evs[1].y = 0;
-	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0)
+	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
+            free(edges);
             return NULL;
+	}
+	free(edges);
     }
 
     pointf *ps = calloc(spl.pn, sizeof(ps[0]));
@@ -297,8 +293,7 @@ limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
 #define INIT_DELTA 10 
 #define LOOP_TRIES 15  /* number of times to try to limiting boxes to regain space, using smaller divisions */
 
-/* routesplines:
- * Route a path using the path info in pp. This includes start and end points
+/** Route a path using the path info in pp. This includes start and end points
  * plus a collection of contiguous boxes contain the terminal points. The boxes
  * are converted into a containing polygon. A shortest path is constructed within
  * the polygon from between the terminal points. If polyline is true, this path
@@ -316,8 +311,7 @@ limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
  *
  * If a catastrophic error, return NULL and npoints is 0.
  */
-static pointf *_routesplines(path * pp, int *npoints, int polyline)
-{
+static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     Ppoly_t poly;
     Ppolyline_t pl, spl;
     int splinepi;
@@ -359,10 +353,8 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
     }
 #endif
 
-    if (boxn * 8 > polypointn) {
-	polypoints = ALLOC(boxn * 8, polypoints, Ppoint_t);
-	polypointn = boxn * 8;
-    }
+    // vertices of polygon defined by boxes
+    Ppoint_t *polypoints = gv_calloc(boxn * 8, sizeof(Ppoint_t));
 
     if (boxn > 1 && boxes[0].LL.y > boxes[1].LL.y) {
         flip = true;
@@ -404,6 +396,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	    } 
 	    else {
 		if (!(prev == -1 && next == -1)) {
+		    free(polypoints);
 		    agerr(AGERR, "in routesplines, illegal values of prev %d and next %d, line %d\n", prev, next, __LINE__);
 		    return NULL;
 		}
@@ -437,6 +430,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	    else {
 		if (!(prev == -1 && next == -1)) {
 		    /* it went badly, e.g. degenerate box in boxlist */
+		    free(polypoints);
 		    agerr(AGERR, "in routesplines, illegal values of prev %d and next %d, line %d\n", prev, next, __LINE__);
 		    return NULL; /* for correctness sake, it's best to just stop */
 		}
@@ -452,6 +446,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	}
     }
     else {
+	free(polypoints);
 	agerr(AGERR, "in routesplines, edge is a loop at %s\n", agnameof(aghead(realedge)));
 	return NULL;
     }
@@ -476,6 +471,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
     eps[0].x = pp->start.p.x, eps[0].y = pp->start.p.y;
     eps[1].x = pp->end.p.x, eps[1].y = pp->end.p.y;
     if (Pshortestpath(&poly, eps, &pl) < 0) {
+	free(polypoints);
 	agerr(AGERR, "in routesplines, Pshortestpath failed\n");
 	return NULL;
     }
@@ -490,10 +486,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	make_polyline (pl, &spl);
     }
     else {
-	if (poly.pn > edgen) {
-	    edges = ALLOC(poly.pn, edges, Pedge_t);
-	    edgen = poly.pn;
-	}
+	Pedge_t *edges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (edgei = 0; edgei < poly.pn; edgei++) {
 	    edges[edgei].a = polypoints[edgei];
 	    edges[edgei].b = polypoints[(edgei + 1) % poly.pn];
@@ -510,9 +503,12 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	    evs[1].x = evs[1].y = 0;
 
 	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
+	    free(edges);
+	    free(polypoints);
 	    agerr(AGERR, "in routesplines, Proutespline failed\n");
 	    return NULL;
 	}
+	free(edges);
 #ifdef DEBUG
 	if (debugleveln(realedge, 3)) {
 	    psprintspline(spl);
@@ -522,6 +518,7 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
     }
     pointf *ps = calloc(spl.pn, sizeof(ps[0]));
     if (ps == NULL) {
+	free(polypoints);
 	agerr(AGERR, "cannot allocate ps\n");
 	return NULL;  /* Bailout if no memory left */
     }
@@ -576,17 +573,18 @@ static pointf *_routesplines(path * pp, int *npoints, int polyline)
 	printboxes(boxn, boxes);
 #endif
 
+    free(polypoints);
     return ps;
 }
 
 pointf *routesplines(path * pp, int *npoints)
 {
-    return _routesplines (pp, npoints, 0);
+  return routesplines_(pp, npoints, 0);
 }
 
 pointf *routepolylines(path * pp, int *npoints)
 {
-    return _routesplines (pp, npoints, 1);
+  return routesplines_(pp, npoints, 1);
 }
 
 static double overlap(double i0, double i1, double j0, double j1) {

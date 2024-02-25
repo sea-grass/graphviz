@@ -245,15 +245,13 @@ setEdgeLabelPos (graph_t * g)
     }
 }
 
-/* _dot_splines:
- * Main spline routing code.
+/** Main spline routing code.
  * The normalize parameter allows this function to be called by the
  * recursive call in make_flat_edge without normalization occurring,
  * so that the edge will only be normalized once in the top level call
  * of dot_splines.
  */
-static void _dot_splines(graph_t * g, int normalize)
-{
+static void dot_splines_(graph_t *g, int normalize) {
     int i, j, k, n_nodes, n_edges, ind, cnt;
     node_t *n;
     Agedgeinfo_t fwdedgeai, fwdedgebi;
@@ -512,7 +510,7 @@ finish :
  */
 void dot_splines(graph_t * g)
 {
-    _dot_splines (g, 1);
+  dot_splines_(g, 1);
 }
 
 /* place_vnlabel:
@@ -1316,7 +1314,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	else ND_coord(n).y = midx;
     }
     dot_sameports(auxg);
-    _dot_splines(auxg, 0);
+    dot_splines_(auxg, 0);
     dotneato_postprocess(auxg);
 
        /* copy splines */

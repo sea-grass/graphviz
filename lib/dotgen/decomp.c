@@ -17,6 +17,7 @@
  * component.
  */
 
+#include <cgraph/alloc.h>
 #include <cgraph/stack.h>
 #include <dotgen/dot.h>
 #include <stddef.h>
@@ -51,7 +52,8 @@ static void
 end_component(graph_t* g)
 {
     size_t i = GD_comp(g).size++;
-    GD_comp(g).list = ALLOC(GD_comp(g).size, GD_comp(g).list, node_t *);
+    GD_comp(g).list = gv_recalloc(GD_comp(g).list, GD_comp(g).size - 1,
+                                  GD_comp(g).size, sizeof(node_t *));
     GD_comp(g).list[i] = GD_nlist(g);
 }
 
