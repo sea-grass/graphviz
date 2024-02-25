@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `packGraphs`, `packSubgraphs`, `pack_graph`, `shiftGraphs`, `ccomps`,
   `cccomps`, and `pccomps` now take the number of items they are operating on
   (`ng`) as a `size_t`.
-- **Breaking**: The `qsort_cmpf` typedef has been removed.
+- **Breaking**: The `bsearch_cmpf` and `qsort_cmpf` typedefs have been removed.
 
 ### Fixed
 
