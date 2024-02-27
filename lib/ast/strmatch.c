@@ -157,7 +157,6 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
     int pc;
     int sc;
     int n;
-    int icase;
     char *olds;
     char *oldp;
 
@@ -166,12 +165,9 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
     error(-1, "onematch g=%d s=%-.*s p=%s r=%p flags=%o", g, e - s, s, p,
 	  r, flags);
 #endif
-    icase = flags & STR_ICASE;
     do {
 	olds = s;
 	sc = getsource(s, e);
-	if (icase && gv_isupper(sc))
-	    sc = tolower(sc);
 	oldp = p;
 	switch (pc = mbgetchar(p)) {
 	case '(':
@@ -301,8 +297,6 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			    pc = *mp->current.beg[n];
 		    }
 		/*FALLTHROUGH*/ default:
-		    if (icase && gv_isupper(pc))
-			pc = tolower(pc);
 		    n = 0;
 		    break;
 		}
@@ -315,8 +309,6 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			RETURN(0);
 		    olds = s;
 		    sc = getsource(s, e);
-		    if ((flags & STR_ICASE) && gv_isupper(sc))
-			sc = tolower(sc);
 		}
 	    } else if (pc != '?' && pc != sc)
 		RETURN(0);
@@ -412,7 +404,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 				if (gv_isspace(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "upper")) {
-				if (icase ? gv_islower(sc) : gv_isupper(sc))
+				if (gv_isupper(sc))
 				    ok = 1;
 			    } else if (strview_str_eq(callee, "xdigit")) {
 				if (gv_isxdigit(sc))
@@ -442,11 +434,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		    else if (range)
 		    {
 		      getrange:
-			    if (icase && gv_isupper(pc))
-				pc = tolower(pc);
 			x = mbgetchar(range);
-			if (icase && gv_isupper(x))
-			    x = tolower(x);
 			if (sc == x || sc == pc || (sc > x && sc < pc))
 			    ok = 1;
 			if (*p == '-' && *(p + 1) != ']') {
@@ -460,8 +448,6 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			range = oldp;
 			n = 1;
 		    } else {
-			if (icase && gv_isupper(pc))
-			    pc = tolower(pc);
 			if (sc == pc)
 			    ok = 1;
 			n = pc;
@@ -491,8 +477,6 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		}
 	    }
 	/*FALLTHROUGH*/ default:
-	    if (icase && gv_isupper(pc))
-		pc = tolower(pc);
 	    if (pc != sc)
 		RETURN(0);
 	    break;

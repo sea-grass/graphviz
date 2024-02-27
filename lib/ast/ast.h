@@ -26,7 +26,6 @@ extern "C" {
 #define STR_MAXIMAL 01		/* maximal match        */
 #define STR_LEFT    02		/* implicit left anchor     */
 #define STR_RIGHT   04		/* implicit right anchor    */
-#define STR_ICASE   010		/* ignore case          */
 
 #define CC_bel      0007	/* bel character        */
 #define CC_esc      0033	/* esc character        */
