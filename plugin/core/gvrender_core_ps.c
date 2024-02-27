@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include <assert.h>
+#include <ctype.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +19,8 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/cgraph.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
 #include <common/utils.h>
 #include "ps.h"
@@ -273,6 +276,39 @@ static void ps_set_color(GVJ_t *job, gvcolor_t *color)
     }
 }
 
+/** check a font name abides by Adobe’s rules
+ *
+ * Adobe Technical Note #5088 “Font Naming Issues” §2.2:
+ *
+ *   For compatibility with the earliest versions of PostScript interpreters and
+ *   with the file systems in some operating systems, Adobe limits the number of
+ *   characters in the `FontName` to 29 characters.
+ *
+ *   As with any PostScript language name, a valid `FontName` must not contain
+ *   spaces, and may only use characters from the standard ASCII character set.
+ *
+ * @param fontname Font name to check
+ */
+static void check_fontname(const char *fontname) {
+
+  if (strlen(fontname) > 29) {
+    agerr(AGWARN,
+          "font name %s is longer than 29 characters which may be rejected by "
+          "some PS viewers\n",
+          fontname);
+  }
+
+  for (const char *p = fontname; *p != '\0'; ++p) {
+    if (!isascii((int)*p) || *p == ' ' || gv_iscntrl(*p)) {
+      agerr(AGWARN,
+            "font name %s contains characters that may not be accepted by some "
+            "PS viewers\n",
+            fontname);
+      break;
+    }
+  }
+}
+
 static void psgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 {
     char *str;
@@ -282,6 +318,7 @@ static void psgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 
     ps_set_color(job, &(job->obj->pencolor));
     gvprintdouble(job, span->font->size);
+    check_fontname(span->font->name);
     gvprintf(job, " /%s set_font\n", span->font->name);
     str = ps_string(span->str,isLatin1);
     switch (span->just) {

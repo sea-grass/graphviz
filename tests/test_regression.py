@@ -333,6 +333,26 @@ def test_191():
         assert p.returncode != 0, "syntax error was only a warning, not an error"
 
 
+def test_218():
+    """
+    out-of-spec font names should cause warnings in the core PS renderer
+    https://gitlab.com/graphviz/graphviz/-/issues/218
+    """
+
+    # a graph using a font name with a space in it
+    source = 'graph { a[fontname="PT Sans"]; }'
+
+    # render it to PS
+    warnings = subprocess.check_output(
+        ["dot", "-Tps", "-o", os.devnull],
+        stderr=subprocess.STDOUT,
+        input=source,
+        universal_newlines=True,
+    )
+
+    assert warnings.strip() != "", "no warning issued for a font name containing space"
+
+
 def test_358():
     """
     setting xdot version to 1.7 should enable font characteristics
