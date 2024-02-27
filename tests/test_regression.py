@@ -1086,19 +1086,20 @@ def test_1767():
     src = (Path(__file__).parent / "1767.dot").resolve()
     assert src.exists(), "missing test case"
 
-    _, _ = run_c(c_src, [src], link=["cgraph", "gvc"])
+    stdout, _ = run_c(c_src, [src], link=["cgraph", "gvc"])
 
-    # FIXME: uncomment this when #1767 is fixed
-    # assert stdout == "Loaded graph:clusters\n" \
-    #                  "cluster_0 contains 5 nodes\n" \
-    #                  "cluster_1 contains 1 nodes\n" \
-    #                  "cluster_2 contains 3 nodes\n" \
-    #                  "cluster_3 contains 3 nodes\n" \
-    #                  "Loaded graph:clusters\n" \
-    #                  "cluster_0 contains 5 nodes\n" \
-    #                  "cluster_1 contains 1 nodes\n" \
-    #                  "cluster_2 contains 3 nodes\n" \
-    #                  "cluster_3 contains 3 nodes\n"
+    assert stdout.splitlines() == [
+        "Loaded graph:clusters",
+        "cluster_0 contains 5 nodes",
+        "cluster_1 contains 1 nodes",
+        "cluster_2 contains 3 nodes",
+        "cluster_3 contains 3 nodes",
+        "Loaded graph:clusters",
+        "cluster_0 contains 5 nodes",
+        "cluster_1 contains 1 nodes",
+        "cluster_2 contains 3 nodes",
+        "cluster_3 contains 3 nodes",
+    ]
 
 
 @pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
