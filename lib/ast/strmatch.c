@@ -502,20 +502,19 @@ grpmatch(Match_t * mp, int g, char *s, char *p, char *e,
  * including s+sub[1]
  */
 
-int strgrpmatch(const char *b, const char *p, int *sub, int n, int flags)
-{
+int strgrpmatch(char *b, char *p, int *sub, int n, int flags) {
     int i;
     char *s;
     char *e;
     Match_t match;
 
-    s = (char *) b;
+    s = b;
     match.last_s = e = s + strlen(s);
     for (;;) {
 	match.best.next_s = 0;
 	match.current.groups = 0;
 	match.current.beg[0] = 0;
-	if ((i = grpmatch(&match, 0, s, (char *) p, e, flags)) || match.best.next_s) {
+	if ((i = grpmatch(&match, 0, s, p, e, flags)) || match.best.next_s) {
 	    if (!(flags & STR_RIGHT) || (match.current.next_s == e)) {
 		if (!i)
 		    match.current = match.best;
@@ -537,7 +536,7 @@ int strgrpmatch(const char *b, const char *p, int *sub, int n, int flags)
     if (!sub)
 	return 1;
     match.current.beg[0] = s;
-    s = (char *) b;
+    s = b;
     if (n > match.current.groups)
 	n = match.current.groups;
     for (i = 0; i < n; i++) {
@@ -552,7 +551,6 @@ int strgrpmatch(const char *b, const char *p, int *sub, int n, int flags)
  * returns 1 for match 0 otherwise
  */
 
-int strmatch(const char *s, const char *p)
-{
+int strmatch(char *s, char *p) {
   return strgrpmatch(s, p, NULL, 0, STR_LEFT | STR_RIGHT);
 }
