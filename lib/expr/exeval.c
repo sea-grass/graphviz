@@ -1223,9 +1223,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 							break;
 						continue;
 					case STRING:
-						if ((ex->disc->version >= 19981111L && ex->disc->matchf)
-						      ? ex->disc->matchf((*t)->string, v.string)
-						      : strmatch((*t)->string, v.string))
+						if (strmatch((*t)->string, v.string))
 							break;
 						continue;
 					case FLOATING:
@@ -1905,9 +1903,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		case EQ:
 		case NE:
 			v.integer = ((v.string && r.string)
-			              ? ((ex->disc->version >= 19981111L && ex->disc->matchf)
-			                ? ex->disc->matchf(v.string, r.string)
-			                : strmatch(v.string, r.string))
+			              ? strmatch(v.string, r.string)
 			              : (v.string == r.string)) == (exnode->op == EQ);
 			return v;
 		case '+':

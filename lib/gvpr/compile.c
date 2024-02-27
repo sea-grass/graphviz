@@ -2203,14 +2203,6 @@ static Extype_t keyval(Extype_t v, int type) {
     return v;
 }
 
-/* matchval:
- * Pattern match strings.
- */
-static int matchval(const char *str, const char *pat) {
-    return strgrpmatch(str, pat, NULL, 0,
-		       STR_MAXIMAL | STR_LEFT | STR_RIGHT);
-}
-
 /* a2t:
  * Convert type indices to symbolic name.
  */
@@ -2246,7 +2238,6 @@ static Exdisc_t *initDisc(Gpr_t * state)
     dp->getf = getval;
     dp->reff = refval;
     dp->setf = setval;
-    dp->matchf = matchval;
     dp->exitf = state->exitf;
     dp->types = a2t;
     dp->user = state;
