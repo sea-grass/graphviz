@@ -23,7 +23,6 @@ extern "C" {
  * strgrpmatch() flags
  */
 
-#define STR_MAXIMAL 01		/* maximal match        */
 #define STR_LEFT    02		/* implicit left anchor     */
 #define STR_RIGHT   04		/* implicit right anchor    */
 

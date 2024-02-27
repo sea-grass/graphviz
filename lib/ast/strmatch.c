@@ -264,16 +264,10 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		case '|':
 		case '&':
 		case ')':
-		    mp->current.next_s = (flags & STR_MAXIMAL) ? e : olds;
+		    mp->current.next_s = e;
 		    mp->next_p = oldp;
 		    mp->current.groups = g;
-		    if (!pc
-			&& (!mp->best.next_s
-			    || ((flags & STR_MAXIMAL)
-				&& mp->current.next_s > mp->best.next_s)
-			    || (!(flags & STR_MAXIMAL)
-				&& mp->current.next_s <
-				mp->best.next_s))) {
+		    if (!pc && (!mp->best.next_s || mp->current.next_s > mp->best.next_s)) {
 			mp->best = mp->current;
 #ifdef _DEBUG_MATCH
 			error(-3, "best#%d groups=%d next=\"%s\"",
@@ -314,9 +308,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		RETURN(0);
 	    break;
 	case 0:
-	    if (!(flags & STR_MAXIMAL))
-		sc = 0;
-	 /*FALLTHROUGH*/ case '|':
+	case '|':
 	case '&':
 	case ')':
 	    if (!sc) {
@@ -324,11 +316,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		mp->next_p = oldp;
 		mp->current.groups = g;
 	    }
-	    if (!pc
-		&& (!mp->best.next_s
-		    || ((flags & STR_MAXIMAL) && olds > mp->best.next_s)
-		    || (!(flags & STR_MAXIMAL)
-			&& olds < mp->best.next_s))) {
+	    if (!pc && (!mp->best.next_s || olds > mp->best.next_s)) {
 		mp->best = mp->current;
 		mp->best.next_s = olds;
 		mp->best.groups = g;
@@ -571,5 +559,5 @@ int strgrpmatch(const char *b, const char *p, int *sub, int n, int flags)
 
 int strmatch(const char *s, const char *p)
 {
-    return strgrpmatch(s, p, NULL, 0, STR_MAXIMAL | STR_LEFT | STR_RIGHT);
+  return strgrpmatch(s, p, NULL, 0, STR_LEFT | STR_RIGHT);
 }

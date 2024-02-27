@@ -904,7 +904,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 	char *s;
 	Extype_t v;
 	int sub[20];
-	int flags = STR_MAXIMAL;
+	int flags = 0;
 	int ng;
 
 	str = eval(ex, exnode->data.string.base, env).string;

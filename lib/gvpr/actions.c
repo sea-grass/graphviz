@@ -105,7 +105,7 @@ long rindexOf(char *s1, char *s2) {
 int match(char *str, char *pat) {
   int sub[2];
 
-  if (strgrpmatch(str, pat, sub, 1, STR_MAXIMAL)) {
+  if (strgrpmatch(str, pat, sub, 1, 0)) {
     return (sub[0]);
   } else
     return -1;
