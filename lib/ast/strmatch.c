@@ -205,8 +205,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		do {
 		    if (grpmatch(mp, n, olds, subp, s, flags) == pc) {
 			if (n < MAXGROUP) {
-			    if (!mp->current.beg[n]
-				|| mp->current.beg[n] > olds)
+			    if (!mp->current.beg[n] || mp->current.beg[n] > olds)
 				mp->current.beg[n] = olds;
 			    if (s > mp->current.end[n])
 				mp->current.end[n] = s;
@@ -220,8 +219,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			}
 			if (onematch(mp, sc, s, p, e, oldp, flags)) {
 			    if (p == oldp && n < MAXGROUP) {
-				if (!mp->current.beg[n]
-				    || mp->current.beg[n] > olds)
+				if (!mp->current.beg[n] || mp->current.beg[n] > olds)
 				    mp->current.beg[n] = olds;
 				if (s > mp->current.end[n])
 				    mp->current.end[n] = s;
@@ -296,8 +294,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		}
 		p = oldp;
 		for (;;) {
-		    if ((n || pc == sc)
-			&& onematch(mp, g, olds, p, e, NULL, flags))
+		    if ((n || pc == sc) && onematch(mp, g, olds, p, e, NULL, flags))
 			RETURN(1);
 		    if (!sc)
 			RETURN(0);
@@ -345,8 +342,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 		    oldp = p;
 		    if (!(pc = mbgetchar(p))) {
 			RETURN(0);
-		    } else if (pc == '['
-			       && (*p == ':' || *p == '=' || *p == '.')) {
+		    } else if (pc == '[' && (*p == ':' || *p == '=' || *p == '.')) {
 			n = mbgetchar(p);
 			oldp = p;
 			strview_t callee = {.data = oldp};
@@ -414,8 +410,7 @@ onematch(Match_t * mp, int g, char *s, char *p, char *e, char *r,
 			if (ok != invert)
 			    break;
 			RETURN(0);
-		    } else if (pc == '\\'
-			       && (oldp = p, !(pc = mbgetchar(p)))) {
+		    } else if (pc == '\\' && (oldp = p, !(pc = mbgetchar(p)))) {
 			RETURN(0);
 		    } else if (ok)
 			/*NOP*/;
