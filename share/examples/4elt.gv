@@ -1,3 +1,13 @@
+/** 4elt graph
+ *
+ * This graph accompanies the paper Gansner et al, “Topological Fisheye Views
+ * for Visualizing Large Graphs” in IEEE INFOVIS 2004:
+ *
+ *   This graph, of 15,606 nodes and 45,878 edges, is a mesh created to study
+ *   fluid flow around a 4 element airfoil. It exhibits extreme variations in
+ *   nodal density.
+ */
+
 strict graph chaco {
 	graph [TopView="1"];
 	1	 [pos="465.966318,438.649967"];

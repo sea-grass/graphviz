@@ -3376,6 +3376,37 @@ def test_2502():
     dot("dot", input)
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2516"
+)
+def test_2516():
+    """
+    errors in HTML labels should result in a message with correct line number
+    https://gitlab.com/graphviz/graphviz/-/issues/2516
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2516.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    proc = subprocess.run(
+        ["dot", "-Tsvg", "-o", os.devnull, input],
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    assert proc.returncode != 0, "malformed HTML label was accepted"
+
+    assert (
+        re.search(r"\bline 1\b", proc.stderr) is None
+    ), "incorrect line number in error message"
+
+    assert (
+        re.search(r"\bline 2\b", proc.stderr) is not None
+    ), "correct line number missing from error message"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
