@@ -3382,6 +3382,23 @@ def test_2493():
     ), "gv2gml did not emit LabelGraphics 'color' attribute"
 
 
+def test_2497():
+    """
+    graph rendering should be deterministic
+    https://gitlab.com/graphviz/graphviz/-/issues/2497
+    """
+
+    # get our baseline reference
+    input = Path(__file__).parent / "2497.dot"
+    assert input.exists(), "unexpectedly missing test case"
+    ref = dot("svg", input)
+
+    # now repeat this, expecting it not to change
+    for _ in range(20):
+        out = dot("svg", input)
+        assert ref == out, "repeated rendering changed output"
+
+
 def test_2502():
     """
     unicode labels should be usable

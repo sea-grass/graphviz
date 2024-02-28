@@ -3113,7 +3113,7 @@ static void point_init(node_t * n)
         i = sides;
     }
 
-    if (outp > peripheries) {
+    if (peripheries >= 1 && penwidth > 0 && outp > peripheries) {
       // add an outline at half the penwidth outside the outermost periphery
       P.x += penwidth / 2;
       P.y += penwidth / 2;
