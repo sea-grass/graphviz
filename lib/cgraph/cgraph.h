@@ -80,8 +80,11 @@ typedef struct Agclos_s Agclos_t;       ///< common fields for graph/subgs
 /// @}
 /// @ingroup cgraph_node
 typedef struct Agnode_s Agnode_t;       ///< node (atom)
-/// @ingroup cgraph_edge
+/// @addtogroup cgraph_edge
+/// @{
 typedef struct Agedge_s Agedge_t;       ///< node pair
+typedef struct Agedgepair_s Agedgepair_t; ///< the edge object
+/// @}
 /// @addtogroup cgraph_misc
 /// @{
 typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
@@ -96,7 +99,6 @@ typedef struct Agcbdisc_s Agcbdisc_t;   ///< client event callbacks
 typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for Agcbdisc_t
 /// @ingroup cgraph_attr
 typedef struct Agdatadict_s Agdatadict_t; ///< set of dictionaries per graph
-typedef struct Agedgepair_s Agedgepair_t; ///< the edge object
 typedef struct Agsubnode_s Agsubnode_t;
 /// @}
 
