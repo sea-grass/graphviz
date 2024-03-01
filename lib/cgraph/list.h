@@ -229,6 +229,31 @@
     }                                                                          \
   }                                                                            \
                                                                                \
+  /** is the given element in the list? */                                     \
+  static inline LIST_UNUSED bool name##_contains(                              \
+      const name##_t *haystack, const type needle,                             \
+      bool (*eq)(const type a, const type b)) {                                \
+    assert(haystack != NULL);                                                  \
+    assert(eq != NULL);                                                        \
+                                                                               \
+    for (size_t i = 0; i < haystack->size; ++i) {                              \
+      if (eq(haystack->data[i], needle)) {                                     \
+        return true;                                                           \
+      }                                                                        \
+    }                                                                          \
+    return false;                                                              \
+  }                                                                            \
+                                                                               \
+  /** replicate a list */                                                      \
+  static inline LIST_UNUSED name##_t name##_copy(const name##_t *source) {     \
+    assert(source != NULL);                                                    \
+                                                                               \
+    name##_t destination = {(type *)gv_calloc(source->capacity, sizeof(type)), \
+                            source->size, source->capacity};                   \
+    memcpy(destination.data, source->data, source->size * sizeof(type));       \
+    return destination;                                                        \
+  }                                                                            \
+                                                                               \
   /** sort the list using the given comparator */                              \
   static inline LIST_UNUSED void name##_sort(                                  \
       name##_t *list, int (*cmp)(const type *a, const type *b)) {              \
