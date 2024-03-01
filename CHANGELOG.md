@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   triangles and encountering only 2 points.
 - Using the `point` shape in combination with `peripheries=0` no longer causes
   out of bounds memory writes. This was a regression in Graphviz 7.0.0. #2497
+- Unsafe use of a dangling pointer in `ccomps` has been removed. This was a
+  regression in Graphviz 7.1.0.
 
 ## [10.0.1] – 2024-02-11
 
