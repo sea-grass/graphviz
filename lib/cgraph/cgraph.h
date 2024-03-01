@@ -81,11 +81,14 @@ typedef struct Agsubnode_s Agsubnode_t;
 typedef struct Agedge_s Agedge_t;       ///< node pair
 typedef struct Agedgepair_s Agedgepair_t; ///< the edge object
 /// @}
-/// @addtogroup cgraph_misc
+/// @addtogroup cgraph_disc
 /// @{
 typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
 typedef struct Agiodisc_s Agiodisc_t;   ///< IO services
 typedef struct Agdisc_s Agdisc_t;       ///< union of client discipline methods
+/// @}
+/// @addtogroup callbacks
+/// @{
 typedef struct Agcbdisc_s Agcbdisc_t;   ///< client event callbacks
 typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for Agcbdisc_t
 /// @}
