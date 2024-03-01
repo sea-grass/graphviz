@@ -71,20 +71,22 @@ typedef uint64_t IDTYPE;
 typedef struct Agtag_s Agtag_t;
 typedef struct Agobj_s Agobj_t;         ///< generic object header
 /// @}
-/// @ingroup cgraph_graph
+/// @addtogroup cgraph_graph
+/// @{
 typedef struct Agraph_s Agraph_t;       ///< graph, subgraph (or hyperedge)
+typedef struct Agdesc_s Agdesc_t;       ///< graph descriptor
+typedef struct Agdstate_s Agdstate_t;   ///< client state (closures)
+typedef struct Agclos_s Agclos_t;       ///< common fields for graph/subgs
+/// @}
 /// @ingroup cgraph_node
 typedef struct Agnode_s Agnode_t;       ///< node (atom)
 /// @ingroup cgraph_edge
 typedef struct Agedge_s Agedge_t;       ///< node pair
-/// @ingroup cgraph_graph
-typedef struct Agdesc_s Agdesc_t;       ///< graph descriptor
 /// @addtogroup cgraph_misc
 /// @{
 typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
 typedef struct Agiodisc_s Agiodisc_t;   ///< IO services
 typedef struct Agdisc_s Agdisc_t;       ///< union of client discipline methods
-typedef struct Agdstate_s Agdstate_t;   ///< client state (closures)
 /// @addtogroup cgraph_attr
 /// @{
 typedef struct Agsym_s Agsym_t;         ///< string attribute descriptors
@@ -92,7 +94,6 @@ typedef struct Agattr_s Agattr_t;       ///< string attribute container
 /// @}
 typedef struct Agcbdisc_s Agcbdisc_t;   ///< client event callbacks
 typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for Agcbdisc_t
-typedef struct Agclos_s Agclos_t;       ///< common fields for graph/subgs
 /// @ingroup cgraph_attr
 typedef struct Agdatadict_s Agdatadict_t; ///< set of dictionaries per graph
 typedef struct Agedgepair_s Agedgepair_t; ///< the edge object
