@@ -35,8 +35,6 @@
 extern "C" {
 #endif
 
-    typedef int (*qsort_cmpf) (const void *, const void *);
-    typedef int (*bsearch_cmpf) (const void *, const void *);
     typedef struct Agraph_s graph_t;
     typedef struct Agnode_s node_t;
     typedef struct Agedge_s edge_t;
