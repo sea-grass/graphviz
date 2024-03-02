@@ -88,7 +88,7 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 
 	v = eval(ex, exnode->data.variable.index, env);
 	if (exnode->data.variable.symbol->index_type == INTEGER) {
-		if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local.pointer, &v))) {
+		if (!(b = dtmatch(exnode->data.variable.symbol->local, &v))) {
 			return 0;
 		}
 	} 
@@ -103,13 +103,12 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 			keyname = buf;
 		} else
 			keyname = v.string;
-		if (!(b = dtmatch((Dt_t *)exnode->data.variable.
-			symbol->local.pointer, keyname))) {
+		if (!(b = dtmatch(exnode->data.variable.symbol->local, keyname))) {
 			return 0;
 		}
 	}
 	if (delete) {
-		dtdelete((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
+		dtdelete(exnode->data.variable.symbol->local, b);
 		free (b);
 	}
 	return 1;
@@ -132,12 +131,12 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 
 		v = eval(ex, exnode->data.variable.index, env);
 		if (exnode->data.variable.symbol->index_type == INTEGER) {
-			if (!(b = dtmatch((Dt_t *) exnode->data.variable.symbol->local.pointer, &v)))
+			if (!(b = dtmatch(exnode->data.variable.symbol->local, &v)))
 			{
 				if (!(b = calloc(1, sizeof(Exassoc_t))))
 					exnospace();
 				b->key = v;
-				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
+				dtinsert(exnode->data.variable.symbol->local, b);
 			}
 		} else {
 			int type = exnode->data.variable.index->type;
@@ -150,13 +149,13 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 				keyname = buf;
 			} else
 				keyname = v.string;
-			if (!(b = dtmatch((Dt_t *)exnode->data.variable.symbol->local.pointer, keyname)))
+			if (!(b = dtmatch(exnode->data.variable.symbol->local, keyname)))
 			{
 				if (!(b = calloc(1, sizeof(Exassoc_t) + strlen(keyname))))
 					exnospace();
 				strcpy(b->name, keyname);
 				b->key = v;
-				dtinsert((Dt_t *)exnode->data.variable.symbol->local.pointer, b);
+				dtinsert(exnode->data.variable.symbol->local, b);
 			}
 		}
 		*assoc = b;
@@ -269,8 +268,8 @@ prformat(void* vp, Sffmt_t* dp)
 		fmt->fmt.size = sizeof(double);
 		break;
 	default:
-		*(Sflong_t*)vp = fmt->value.integer;
-		dp->size = sizeof(Sflong_t);
+		*(long long *)vp = fmt->value.integer;
+		dp->size = sizeof(long long);
 		break;
 	}
 	strview_t txt = {0};
@@ -332,7 +331,7 @@ prformat(void* vp, Sffmt_t* dp)
 		break;
 	case 't':
 	case 'T':
-		if ((tm = *(Sflong_t*)vp) == -1)
+		if ((tm = *(long long *)vp) == -1)
 			tm = time(NULL);
         if (txt.data == NULL) {
             exerror("printf: no time format provided");
@@ -385,11 +384,11 @@ static int print(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 	if (!sp)
 	{
 		v = eval(ex, exnode->data.print.descriptor, env);
-		if (v.integer < 0 || (long long unsigned)v.integer >= elementsof(ex->file) ||
+		if (v.integer < 0 || v.integer >= (long long)elementsof(ex->file) ||
 		    (!(sp = ex->file[v.integer]) &&
 		    !(sp = ex->file[v.integer] = tmpfile())))
 		{
-			exerror("printf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
+			exerror("printf: %lld: invalid descriptor", v.integer);
 			return -1;
 		}
 	}
@@ -473,7 +472,7 @@ scformat(void* vp, Sffmt_t* dp)
 			exerror("scanf: %s: char variable address argument expected", node->data.variable.symbol->name);
 			return -1;
 		}
-		fmt->fmt.size = sizeof(Sflong_t);
+		fmt->fmt.size = sizeof(long long);
 		*((void **) vp) = &node->data.variable.symbol->value->data.constant.value;
 		break;
 	default:
@@ -482,7 +481,7 @@ scformat(void* vp, Sffmt_t* dp)
 			exerror("scanf: %s: integer variable address argument expected", node->data.variable.symbol->name);
 			return -1;
 		}
-		dp->size = sizeof(Sflong_t);
+		dp->size = sizeof(long long);
 		*(void**)vp = &node->data.variable.symbol->value->data.constant.value;
 		break;
 	}
@@ -511,9 +510,9 @@ static int scan(Expr_t *ex, Exnode_t *exnode, void *env, FILE *sp) {
 		}
 		else
 			v.integer = 0;
-		if (v.integer < 0 || (size_t)v.integer >= elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = tmpfile())))
+		if (v.integer < 0 || v.integer >= (long long)elementsof(ex->file) || (!(sp = ex->file[v.integer]) && !(sp = ex->file[v.integer] = tmpfile())))
 		{
-			exerror("scanf: %" PRIdMAX ": invalid descriptor", (intmax_t)v.integer);
+			exerror("scanf: %lld: invalid descriptor", v.integer);
 			return 0;
 		}
 	}
@@ -809,7 +808,7 @@ static Extype_t exsplit(Expr_t *ex, Exnode_t *exnode, void *env) {
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
+	Dt_t* arr = exnode->data.split.array->local;
 
 	str = eval(ex, exnode->data.split.string, env).string;
 	if (exnode->data.split.seps)
@@ -862,7 +861,7 @@ static Extype_t extokens(Expr_t *ex, Exnode_t *exnode, void *env) {
 	char *seps;
 	char *tok;
 	size_t sz;
-	Dt_t* arr = (Dt_t*)exnode->data.split.array->local.pointer;
+	Dt_t* arr = exnode->data.split.array->local;
 
 	str = eval(ex, exnode->data.split.string, env).string;
 	if (exnode->data.split.seps)
@@ -991,13 +990,12 @@ static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 	len = strlen(s.string);
 	i = eval(ex, exnode->data.string.pat, env);
 	if (i.integer < 0 || len < i.integer)
-		exerror("illegal start index in substr(%s,%" PRIdMAX ")", s.string,
-		        (intmax_t)i.integer);
+		exerror("illegal start index in substr(%s,%lld)", s.string, i.integer);
 	if (exnode->data.string.repl) {
 		l = eval(ex, exnode->data.string.repl, env);
 		if (l.integer < 0 || len - i.integer < l.integer)
-	    exerror("illegal length in substr(%s,%" PRIdMAX ",%" PRIdMAX ")",
-	            s.string, (intmax_t)i.integer, (intmax_t)l.integer);
+	    exerror("illegal length in substr(%s,%lld,%lld)",
+	            s.string, i.integer, l.integer);
 	} else
 		l.integer = len - i.integer;
 
@@ -1265,7 +1263,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		if (exnode->data.generate.array->op == DYNAMIC)
 		{
 			n = exnode->data.generate.index->type == STRING;
-			for (assoc = dtfirst((Dt_t*)exnode->data.generate.array->data.variable.symbol->local.pointer); assoc; assoc = dtnext((Dt_t*)exnode->data.generate.array->data.variable.symbol->local.pointer, assoc))
+			for (assoc = dtfirst(exnode->data.generate.array->data.variable.symbol->local); assoc; assoc = dtnext(exnode->data.generate.array->data.variable.symbol->local, assoc))
 			{
 				v.integer++;
 				if (n)
@@ -1301,11 +1299,9 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		v.integer = 0;
 		if (exnode->data.generate.array->op == DYNAMIC) {
 			n = exnode->data.generate.index->type == STRING;
-			for (assoc = dtlast((Dt_t *) exnode->data.generate.array->
-						   data.variable.symbol->local.
-						   pointer); assoc;
-		 		assoc = dtprev((Dt_t *) exnode->data.generate.array->
-						  data.variable.symbol->local.pointer,
+			for (assoc = dtlast(exnode->data.generate.array->
+						   data.variable.symbol->local); assoc;
+		 		assoc = dtprev(exnode->data.generate.array->data.variable.symbol->local,
 						  assoc)) {
 				v.integer++;
 				if (n)
@@ -1333,7 +1329,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		}
 		return v;
 	case '#':
-		v.integer = dtsize ((Dt_t*)exnode->data.variable.symbol->local.pointer);
+		v.integer = dtsize(exnode->data.variable.symbol->local);
 		return v;
 	case IN_OP:
 		v.integer = evaldyn (ex, exnode, env, 0);
@@ -1343,7 +1339,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = evaldyn (ex, exnode, env, 1);
 		}
 		else {
-			dtclear ((Dt_t*)exnode->data.variable.symbol->local.pointer);
+			dtclear(exnode->data.variable.symbol->local);
 			v.integer = 0;
 		}
 		return v;
@@ -1483,25 +1479,25 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 					if ((r.integer = r.floating) == 0)
 						exerror("floating 0 modulus");
 					else
-						v.floating = (Sflong_t)v.floating % r.integer;
+						v.floating = (long long)v.floating % r.integer;
 					break;
 				case '&':
-					v.floating = (Sflong_t)v.floating & (Sflong_t)r.floating;
+					v.floating = (long long)v.floating & (long long)r.floating;
 					break;
 				case '|':
-					v.floating = (Sflong_t)v.floating | (Sflong_t)r.floating;
+					v.floating = (long long)v.floating | (long long)r.floating;
 					break;
 				case '^':
-					v.floating = (Sflong_t)v.floating ^ (Sflong_t)r.floating;
+					v.floating = (long long)v.floating ^ (long long)r.floating;
 					break;
 				case LSH:
-					v.floating = (Sflong_t)v.floating << (Sflong_t)r.floating;
+					v.floating = (long long)v.floating << (long long)r.floating;
 					break;
 				case RSH:
 #ifdef _WIN32
-					v.floating = (Sflong_t)((Sfulong_t)v.floating >> (Sflong_t)r.floating);
+					v.floating = (long long)((unsigned long long)v.floating >> (long long)r.floating);
 #else
-					v.floating = (Sfulong_t)v.floating >> (Sflong_t)r.floating;
+					v.floating = (unsigned long long)v.floating >> (long long)r.floating;
 #endif
 					break;
 				default:
@@ -1546,7 +1542,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 					v.integer <<= r.integer;
 					break;
 				case RSH:
-					v.integer = (Sfulong_t)v.integer >> r.integer;
+					v.integer = (unsigned long long)v.integer >> r.integer;
 					break;
 				default:
 					goto huh;
@@ -1647,10 +1643,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			tmp.type = exnode->type;
 			return tmp.data.constant.value;
 		case '!':
-			v.floating = !(Sflong_t)v.floating;
+			v.floating = !(long long)v.floating;
 			return v;
 		case '~':
-			v.floating = ~(Sflong_t)v.floating;
+			v.floating = ~(long long)v.floating;
 			return v;
 		case '-':
 			if (x)
@@ -1662,13 +1658,13 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.floating += r.floating;
 			return v;
 		case '&':
-			v.floating = (Sflong_t)v.floating & (Sflong_t)r.floating;
+			v.floating = (long long)v.floating & (long long)r.floating;
 			return v;
 		case '|':
-			v.floating = (Sflong_t)v.floating | (Sflong_t)r.floating;
+			v.floating = (long long)v.floating | (long long)r.floating;
 			return v;
 		case '^':
-			v.floating = (Sflong_t)v.floating ^ (Sflong_t)r.floating;
+			v.floating = (long long)v.floating ^ (long long)r.floating;
 			return v;
 		case '*':
 			v.floating *= r.floating;
@@ -1683,7 +1679,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			if ((r.integer = r.floating) == 0)
 				exerror("floating 0 modulus");
 			else
-				v.floating = (Sflong_t)v.floating % r.integer;
+				v.floating = (long long)v.floating % r.integer;
 			return v;
 		case '<':
 			v.integer = v.floating < r.floating;
@@ -1704,10 +1700,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = v.floating > r.floating;
 			return v;
 		case LSH:
-			v.integer = (Sflong_t) ((Sfulong_t)v.floating << (Sflong_t)r.floating);
+			v.integer = (long long)((unsigned long long)v.floating << (long long)r.floating);
 			return v;
 		case RSH:
-			v.integer = (Sflong_t) ((Sfulong_t)v.floating >> (Sflong_t)r.floating);
+			v.integer = (long long)((unsigned long long)v.floating >> (long long)r.floating);
 			return v;
 		}
 		break;
@@ -1746,16 +1742,16 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		switch (exnode->op)
 		{
 		case '<':
-			v.integer = (Sfulong_t)v.integer < (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer < (unsigned long long)r.integer;
 			return v;
 		case LE:
-			v.integer = (Sfulong_t)v.integer <= (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer <= (unsigned long long)r.integer;
 			return v;
 		case GE:
-			v.integer = (Sfulong_t)v.integer >= (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer >= (unsigned long long)r.integer;
 			return v;
 		case '>':
-			v.integer = (Sfulong_t)v.integer > (Sfulong_t)r.integer;
+			v.integer = (unsigned long long)v.integer > (unsigned long long)r.integer;
 			return v;
 		}
 		/*FALLTHROUGH*/
@@ -1768,7 +1764,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.floating = v.integer;
 #else
 			if (exnode->type == UNSIGNED)
-				v.floating = (Sfulong_t)v.integer;
+				v.floating = (unsigned long long)v.integer;
 			else
 				v.floating = v.integer;
 #endif
@@ -1782,7 +1778,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 				if (exnode->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
 				else
-					str = exprintf(ex->ve, "%lld", (long long)v.integer);
+					str = exprintf(ex->ve, "%lld", v.integer);
 				tmp.data.constant.value.string = str;
 			}
 			else if (ex->disc->convertf(&tmp, STRING, 0)) {
@@ -1790,7 +1786,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 				if (exnode->data.operand.left->type == UNSIGNED)
 					str = exprintf(ex->ve, "%llu", (unsigned long long)v.integer);
 				else
-					str = exprintf(ex->ve, "%lld", (long long)v.integer);
+					str = exprintf(ex->ve, "%lld", v.integer);
 				tmp.data.constant.value.string = str;
 			}
 			tmp.type = STRING;
@@ -1848,10 +1844,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			v.integer = v.integer != r.integer;
 			return v;
 		case LSH:
-			v.integer = (Sflong_t)v.integer << (Sflong_t)r.integer;
+			v.integer = v.integer << r.integer;
 			return v;
 		case RSH:
-			v.integer = (Sfulong_t)v.integer >> (Sflong_t)r.integer;
+			v.integer = (unsigned long long)v.integer >> r.integer;
 			return v;
 		case '<':
 			v.integer = v.integer < r.integer;

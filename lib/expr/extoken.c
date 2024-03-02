@@ -95,7 +95,7 @@ trace(Expr_t* ex, int lev, char* op, int c)
 		break;
 	case INTEGER:
 		s = " INTEGER ";
-		snprintf(t = buf, sizeof(buf), "%lld", (long long)ex_lval.integer);
+		snprintf(t = buf, sizeof(buf), "%lld", ex_lval.integer);
 		break;
 	case LABEL:
 		s = " LABEL ";

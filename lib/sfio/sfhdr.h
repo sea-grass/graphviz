@@ -72,9 +72,9 @@ extern "C" {
 	unsigned ui;
 	ulong ul;
 	ushort uh;
-	Sflong_t ll, *llp;
-	Sfulong_t lu;
-	Sfdouble_t ld;
+	long long ll, *llp;
+	unsigned long long lu;
+	long double ld;
 	double d;
 	float f;
 	char c, *s, **sp;
@@ -135,8 +135,8 @@ extern "C" {
 #define _Sfcv64		(_Sftable.sf_cv64)
 #define _Sftype		(_Sftable.sf_type)
     typedef struct _sftab_ {
-	Sfdouble_t sf_pos10[SF_MAXEXP10];	/* positive powers of 10        */
-	Sfdouble_t sf_neg10[SF_MAXEXP10];	/* negative powers of 10        */
+	long double sf_pos10[SF_MAXEXP10]; ///< positive powers of 10
+	long double sf_neg10[SF_MAXEXP10]; ///< negative powers of 10
 	uchar sf_dec[200];	/* ascii reps of values < 100   */
 	char *sf_digits;	/* digits for general bases     */
 	int sf_cvinit;		/* initialization state         */

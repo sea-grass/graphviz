@@ -49,12 +49,12 @@ static int isedge(Agobj_t *obj) {
 
 #define BITS_PER_BYTE 8
 
-static void *int2ptr(Sflong_t i) {
+static void *int2ptr(long long i) {
   return (void*)(intptr_t)i;
 }
 
-static Sflong_t ptr2int(const void *p) {
-  return (Sflong_t)(intptr_t)p;
+static long long ptr2int(const void *p) {
+  return (long long)(intptr_t)p;
 }
 
 static int iofread(void *chan, char *buf, int bufsize)
@@ -2169,8 +2169,8 @@ static int convert(Exnode_t *x, int type, int arg) {
 	else if (validTVT(x->data.constant.value.integer))
 	    ret = 0;
 	else
-	    exerror("Integer value %" PRIdMAX " not legal for type tvtype_t",
-	            (intmax_t)x->data.constant.value.integer);
+	    exerror("Integer value %lld not legal for type tvtype_t",
+	            x->data.constant.value.integer);
     }
     /* in case libexpr hands us the trivial case */
     else if (x->type == type) {

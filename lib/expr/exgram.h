@@ -65,8 +65,7 @@ exnewnode(Expr_t* p, int op, int binary, int type, Exnode_t* left, Exnode_t* rig
 	x->op = op;
 	x->type = type;
 	x->binary = binary;
-	x->local.number = 0;
-	x->local.pointer = 0;
+	x->local = NULL;
 	x->data.operand.left = left;
 	x->data.operand.right = right;
 	return x;
@@ -99,25 +98,25 @@ exfreenode(Expr_t* p, Exnode_t* x)
 	case DYNAMIC:
 		if (x->data.variable.index)
 			exfreenode(p, x->data.variable.index);
-		if (x->data.variable.symbol->local.pointer)
+		if (x->data.variable.symbol->local)
 		{
-			dtclose((Dt_t*)x->data.variable.symbol->local.pointer);
-			x->data.variable.symbol->local.pointer = 0;
+			dtclose(x->data.variable.symbol->local);
+			x->data.variable.symbol->local = NULL;
 		}
 		break;
 	case '#':
-		if (x->data.variable.symbol->local.pointer) {
-			dtclose((Dt_t *) x->data.variable.symbol->local.pointer);
-			x->data.variable.symbol->local.pointer = 0;
+		if (x->data.variable.symbol->local) {
+			dtclose(x->data.variable.symbol->local);
+			x->data.variable.symbol->local = NULL;
 		}
 		break;
 //	case IN_OP:
 	case UNSET:
 		if (x->data.variable.index)
 			exfreenode(p, x->data.variable.index);
-		if (x->data.variable.symbol->local.pointer) {
-			dtclose((Dt_t *) x->data.variable.symbol->local.pointer);
-			x->data.variable.symbol->local.pointer = 0;
+		if (x->data.variable.symbol->local) {
+			dtclose(x->data.variable.symbol->local);
+			x->data.variable.symbol->local = NULL;
 		}
 		break;
 	case ITERATE:
@@ -148,9 +147,9 @@ exfreenode(Expr_t* p, Exnode_t* x)
 		if (x->data.split.seps)
 			exfreenode(p, x->data.split.seps);
 		exfreenode(p, x->data.split.string);
-		if (x->data.split.array->local.pointer) {
-			dtclose((Dt_t *) x->data.split.array->local.pointer);
-			x->data.split.array->local.pointer = 0;
+		if (x->data.split.array->local) {
+			dtclose(x->data.split.array->local);
+			x->data.split.array->local = NULL;
 		}
 		break;
 	case PRINT:
@@ -208,7 +207,7 @@ static Exnode_t *extract(Expr_t * p, Exnode_t ** argp, int type) {
 static Exnode_t *exnewsplit(Expr_t * p, int op, Exid_t* dyn, Exnode_t * s, Exnode_t* seps) {
 	Exnode_t *ss = 0;
 
-	if (dyn->local.pointer == 0)
+	if (dyn->local == NULL)
               	exerror("cannot use non-array %s in %s", dyn->name, exopname(op));
 	if ((dyn->index_type > 0) && (dyn->index_type != INTEGER))
             exerror("in %s, array %s must have integer index type, not %s", 
@@ -333,7 +332,7 @@ static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
 		break;
 	    case INTEGER:
 		x->data.constant.value.string =
-		  exprintf(p->vm, "%lld", (long long)x->data.constant.value.integer);
+		  exprintf(p->vm, "%lld", x->data.constant.value.integer);
 		break;
 	    default:
 		exerror("internal error: %d: unknown type", type);
@@ -513,7 +512,7 @@ excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
 			break;
 		case I2S:
 			x->data.constant.value.string =
-			  exprintf(p->vm, "%lld", (long long)x->data.constant.value.integer);
+			  exprintf(p->vm, "%lld", x->data.constant.value.integer);
 			break;
 		case S2F:
 			s =  x->data.constant.value.string;

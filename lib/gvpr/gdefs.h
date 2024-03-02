@@ -51,10 +51,10 @@ enum { MAXNAME = 0
 
 static Exid_t symbols[] = {
 #define X(prefix, name, str, type, subtype, ...) \
-  EX_ID(str, type, prefix##name, subtype, 0),
+  EX_ID(str, type, prefix##name, subtype),
 #include <gvpr/gprdata.inc>
 #undef X
-  EX_ID({0}, 0, 0, 0, 0),
+  EX_ID({0}, 0, 0, 0),
 };
 
 static char* typenames[] = {

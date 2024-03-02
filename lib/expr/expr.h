@@ -52,8 +52,7 @@ extern "C" {
 
 #define EX_NAMELEN	32		/* default Exid_t.name length	*/
 
-/* previously known as EXID, but EXID is also defined by bison in y.tab.h */
-#define EX_ID(n,l,i,t,f)	{{0},(l),(i),(t),0,(f),0,{0},0,n}
+#define EX_ID(n,l,i,t)	{{0},(l),(i),(t),0,0,0,0,0,n}
 
 #define DELETE_T		MINTOKEN		/* exexpr() delete `type'	*/
 
@@ -92,12 +91,6 @@ typedef struct Exref_s Exref_t;
 typedef void (*Exerror_f) (Expr_t *, Exdisc_t *, int, const char *, ...);
 typedef void (*Exexit_f) (Expr_t *, Exdisc_t *, int);
 
-typedef struct Exlocal_s		/* user defined member type	*/
-{
-	Sflong_t	number;
-	char*		pointer;
-} Exlocal_t;
-
 typedef struct Exid_s			/* id symbol table info		*/
 {
 	Dtlink_t	link;		/* symbol table link		*/
@@ -107,7 +100,7 @@ typedef struct Exid_s			/* id symbol table info		*/
 	long		index_type;	/* index type for arrays        */
 	long		flags;		/* user defined flags		*/
 	Exnode_t*	value;		/* value			*/
-	Exlocal_t	local;		/* user defined local stuff	*/
+	void *local; ///< user defined local stuff
 	long		isstatic;	/* static			*/
 	char		name[EX_NAMELEN];/* symbol name			*/
 } Exid_t;
@@ -161,11 +154,11 @@ struct Exnode_s				/* expression tree node		*/
 	int	type;		/* value type			*/
 	int	op;		/* operator			*/
 	int	binary;		/* data.operand.{left,right} ok	*/
-	Exlocal_t	local;		/* user defined local stuff	*/
+	void *local; ///< user defined local stuff
 	union
 	{
 	double	(*floating)(char**);	/* FLOATING return value	*/
-	Sflong_t(*integer)(char**);	/* INTEGER|UNSIGNED return value*/
+	long long (*integer)(char **); ///< INTEGER|UNSIGNED return value
 	char*	(*string)(char**);	/* STRING return value		*/
 	}		compiled;	/* compiled function pointer	*/
 	Exdata_t	data;		/* node data			*/
