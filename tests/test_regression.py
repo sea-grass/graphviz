@@ -3250,6 +3250,26 @@ def test_2454():
         assert p.returncode == 0, "gvpr failed"
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2458"
+)
+def test_2458():
+    """
+    `pack=true` should not result in edge labels disappearing
+    https://gitlab.com/graphviz/graphviz/-/issues/2458
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2458.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    output = dot("svg", input)
+
+    # the edge label should be present
+    assert re.search(r"\bconnected\b", output), "missing edge label"
+
+
 def test_2460():
     """
     labels involving back slashes should come out correctly in JSON
