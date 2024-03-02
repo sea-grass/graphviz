@@ -17,6 +17,7 @@
 #include <math.h>
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/sort.h>
 #include <cgraph/startswith.h>
 #include <cgraph/streq.h>
@@ -24,6 +25,7 @@
 #include <pack/pack.h>
 #include <common/pointset.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #define C 100			/* Max. avg. polyomino size */
 
@@ -39,7 +41,7 @@ typedef struct {
     int perim;			/* half size of bounding rectangle perimeter */
     point *cells;		/* cells in covering polyomino */
     int nc;			/* no. of cells */
-    int index;			/* index in original array */
+    size_t index; ///<  index in original array
 } ginfo;
 
 typedef struct {
@@ -51,17 +53,16 @@ typedef struct {
  * quadratic equation al^2 +bl + c, where a, b and
  * c are defined below.
  */
-static int computeStep(int ng, boxf* bbs, unsigned int margin)
-{
+static int computeStep(size_t ng, boxf *bbs, unsigned int margin) {
     double l1, l2;
     double a, b, c, d, r;
     double W, H;		/* width and height of graph, with margin */
-    int i, root;
+    int root;
 
-    a = C * ng - 1;
+    a = C * (double)ng - 1;
     c = 0;
     b = 0;
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	boxf bb = bbs[i];
 	W = bb.UR.x - bb.LL.x + 2 * margin;
 	H = bb.UR.y - bb.LL.y + 2 * margin;
@@ -480,10 +481,8 @@ placeFixed(ginfo * info, PointSet * ps, point * place, point center)
  * with bounding box origin at point.
  * First graph (i == 0) is centered on the origin if possible.
  */
-static void
-placeGraph(int i, ginfo * info, PointSet * ps, point * place, int step,
-	   unsigned int margin, boxf* bbs)
-{
+static void placeGraph(size_t i, ginfo *info, PointSet *ps, point *place,
+                       int step, unsigned int margin, boxf* bbs) {
     int x, y;
     int W, H;
     int bnd;
@@ -697,12 +696,9 @@ static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
     return places;
 }
 
-static point*
-polyRects(int ng, boxf* gs, pack_info * pinfo)
-{
+static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
     int stepSize;
     Dict_t *ps;
-    int i;
     point center;
 
     /* calculate grid size */
@@ -715,33 +711,33 @@ polyRects(int ng, boxf* gs, pack_info * pinfo)
     /* generate polyomino cover for the rectangles */
     center.x = center.y = 0;
     ginfo *info = gv_calloc(ng, sizeof(ginfo));
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	info[i].index = i;
 	genBox(gs[i], info + i, stepSize, pinfo->margin, center, "");
     }
 
     /* sort */
     ginfo **sinfo = gv_calloc(ng, sizeof(ginfo*));
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
     point *places = gv_calloc(ng, sizeof(point));
-    for (i = 0; i < ng; i++)
+    for (size_t i = 0; i < ng; i++)
 	placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, gs);
 
     free(sinfo);
-    for (i = 0; i < ng; i++)
+    for (size_t i = 0; i < ng; i++)
 	free(info[i].cells);
     free(info);
     freePS(ps);
 
     if (Verbose > 1)
-	for (i = 0; i < ng; i++)
-	    fprintf(stderr, "pos[%d] %d %d\n", i, places[i].x,
+	for (size_t i = 0; i < ng; i++)
+	    fprintf(stderr, "pos[%" PRISIZE_T "] %d %d\n", i, places[i].x,
 		    places[i].y);
 
     return places;
@@ -771,24 +767,22 @@ polyRects(int ng, boxf* gs, pack_info * pinfo)
  * FIX: Check CELL and GRID macros for negative coordinates 
  * FIX: Check width and height computation
  */
-static point*
-polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
-{
+static point *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
+                         pack_info *pinfo) {
     int stepSize;
     ginfo *info;
     Dict_t *ps;
-    int i;
     bool *fixed = pinfo->fixed;
     int fixed_cnt = 0;
     box bb, fixed_bb = { {0, 0}, {0, 0} };
     point center;
 
-    if (ng <= 0)
+    if (ng == 0)
 	return 0;
 
     /* update bounding box info for each graph */
     /* If fixed, compute bbox of fixed graphs */
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	Agraph_t *g = gs[i];
 	compute_bb(g);
 	if (fixed && fixed[i]) {
@@ -811,7 +805,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 
     /* calculate grid size */
     boxf *bbs = gv_calloc(ng, sizeof(boxf));
-    for (i = 0; i < ng; i++)
+    for (size_t i = 0; i < ng; i++)
 	bbs[i] = GD_bb(gs[i]);
     stepSize = computeStep(ng, bbs, pinfo->margin);
     if (Verbose)
@@ -828,7 +822,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     } else
 	center.x = center.y = 0;
     info = gv_calloc(ng, sizeof(ginfo));
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	Agraph_t *g = gs[i];
 	info[i].index = i;
 	if (pinfo->mode == l_graph)
@@ -841,7 +835,7 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
 
     /* sort */
     ginfo **sinfo = gv_calloc(ng, sizeof(ginfo*));
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	sinfo[i] = info + i;
     }
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
@@ -849,53 +843,50 @@ polyGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * pinfo)
     ps = newPS();
     point *places = gv_calloc(ng, sizeof(point));
     if (fixed) {
-	for (i = 0; i < ng; i++) {
+	for (size_t i = 0; i < ng; i++) {
 	    if (fixed[i])
 		placeFixed(sinfo[i], ps, places + sinfo[i]->index, center);
 	}
-	for (i = 0; i < ng; i++) {
+	for (size_t i = 0; i < ng; i++) {
 	    if (!fixed[i])
 		placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 			   stepSize, pinfo->margin, bbs);
 	}
     } else {
-	for (i = 0; i < ng; i++)
+	for (size_t i = 0; i < ng; i++)
 	    placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, bbs);
     }
 
     free(sinfo);
-    for (i = 0; i < ng; i++)
+    for (size_t i = 0; i < ng; i++)
 	free(info[i].cells);
     free(info);
     freePS(ps);
     free (bbs);
 
     if (Verbose > 1)
-	for (i = 0; i < ng; i++)
-	    fprintf(stderr, "pos[%d] %d %d\n", i, places[i].x,
+	for (size_t i = 0; i < ng; i++)
+	    fprintf(stderr, "pos[%" PRISIZE_T "] %d %d\n", i, places[i].x,
 		    places[i].y);
 
     return places;
 }
 
-point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
-		 pack_info * pinfo)
-{
+point *putGraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *pinfo) {
     int v;
     Agraph_t* g;
     point* pts = NULL;
     char* s;
 
-    if (ng <= 0) return NULL;
-    const size_t ng_s = (size_t)ng;
+    if (ng == 0) return NULL;
 
     if (pinfo->mode <= l_graph)
 	return polyGraphs (ng, gs, root, pinfo);
     
-    boxf *bbs = gv_calloc(ng_s, sizeof(boxf));
+    boxf *bbs = gv_calloc(ng, sizeof(boxf));
 
-    for (size_t i = 0; i < ng_s; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	g = gs[i];
 	compute_bb(g);
 	bbs[i] = GD_bb(g);
@@ -903,15 +894,15 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
 
     if (pinfo->mode == l_array) {
 	if (pinfo->flags & PK_USER_VALS) {
-	    pinfo->vals = gv_calloc(ng_s, sizeof(packval_t));
-	    for (size_t i = 0; i < ng_s; i++) {
+	    pinfo->vals = gv_calloc(ng, sizeof(packval_t));
+	    for (size_t i = 0; i < ng; i++) {
 		s = agget (gs[i], "sortv");
 		if (s && sscanf(s, "%d", &v) > 0 && v >= 0)
 		    pinfo->vals[i] = v;
 	    }
 
 	}
-	pts = arrayRects(ng_s, bbs, pinfo);
+	pts = arrayRects(ng, bbs, pinfo);
 	if (pinfo->flags & PK_USER_VALS)
 	    free (pinfo->vals);
     }
@@ -921,15 +912,13 @@ point *putGraphs(int ng, Agraph_t ** gs, Agraph_t * root,
     return pts;
 }
 
-point *
-putRects(int ng, boxf* bbs, pack_info* pinfo)
-{
-    if (ng <= 0) return NULL;
+point *putRects(size_t ng, boxf* bbs, pack_info* pinfo) {
+    if (ng == 0) return NULL;
     if (pinfo->mode == l_node || pinfo->mode == l_clust) return NULL;
     if (pinfo->mode == l_graph)
 	return polyRects (ng, bbs, pinfo);
     if (pinfo->mode == l_array)
-	return arrayRects((size_t)ng, bbs, pinfo);
+	return arrayRects(ng, bbs, pinfo);
     return NULL;
 }
 
@@ -942,22 +931,18 @@ putRects(int ng, boxf* bbs, pack_info* pinfo)
  *
  * Returns 0 on success.
  */
-int 
-packRects(int ng, boxf* bbs, pack_info* pinfo)
-{
-    int i;
+int packRects(size_t ng, boxf *bbs, pack_info *pinfo) {
     point *pp;
     boxf bb;
     point p;
 
-    if (ng < 0) return -1;
     if (ng <= 1) return 0;
 
     pp = putRects(ng, bbs, pinfo);
     if (!pp)
 	return 1;
 
-    for (i = 0; i < ng; i++) { 
+    for (size_t i = 0; i < ng; i++) {
 	bb = bbs[i];
 	p = pp[i];
 	bb.LL.x += p.x;
@@ -1042,10 +1027,8 @@ static void shiftGraph(Agraph_t * g, int dx, int dy)
  * the pos and coord fields in nodehinfo_t and
  * the spl field in Aedgeinfo_t.
  */
-int
-shiftGraphs(int ng, Agraph_t ** gs, point * pp, Agraph_t * root, bool doSplines)
-{
-    int i;
+int shiftGraphs(size_t ng, Agraph_t **gs, point *pp, Agraph_t *root,
+                bool doSplines) {
     int dx, dy;
     double fx, fy;
     point p;
@@ -1054,10 +1037,10 @@ shiftGraphs(int ng, Agraph_t ** gs, point * pp, Agraph_t * root, bool doSplines)
     Agnode_t *n;
     Agedge_t *e;
 
-    if (ng <= 0)
-	return abs(ng);
+    if (ng == 0)
+	return 0;
 
-    for (i = 0; i < ng; i++) {
+    for (size_t i = 0; i < ng; i++) {
 	g = gs[i];
 	if (root)
 	    eg = root;
@@ -1098,8 +1081,7 @@ shiftGraphs(int ng, Agraph_t ** gs, point * pp, Agraph_t * root, bool doSplines)
  *
  * Returns 0 on success.
  */
-int packGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
-{
+int packGraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *info) {
     int ret;
     point *pp = putGraphs(ng, gs, root, info);
 
@@ -1114,20 +1096,18 @@ int packGraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
  * Note that it does not recompute subgraph bounding boxes.
  * Cluster bounding boxes are recomputed in shiftGraphs.
  */
-int
-packSubgraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
-{
+int packSubgraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *info) {
     int ret;
 
     ret = packGraphs(ng, gs, root, info);
     if (ret == 0) {
-	int i, j;
+	int j;
 	boxf bb;
 	graph_t* g;
 
 	compute_bb(root);
 	bb = GD_bb(root);
-	for (i = 0; i < ng; i++) {
+	for (size_t i = 0; i < ng; i++) {
 	    g = gs[i];
 	    for (j = 1; j <= GD_n_cluster(g); j++) {
 		EXPANDBB(bb,GD_bb(GD_clust(g)[j]));
@@ -1139,9 +1119,7 @@ packSubgraphs(int ng, Agraph_t ** gs, Agraph_t * root, pack_info * info)
 }
 
 /// Pack subgraphs followed by postprocessing.
-int 
-pack_graph(int ng, Agraph_t** gs, Agraph_t* root, bool *fixed)
-{
+int pack_graph(size_t ng, Agraph_t **gs, Agraph_t *root, bool *fixed) {
     int ret;
     pack_info info;
 

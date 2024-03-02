@@ -395,20 +395,18 @@ copyCluster (Agraph_t* scl, Agraph_t* cl)
  * Copy cluster tree and info from components to main graph.
  * Note that the original clusters have no Agraphinfo_t at this time.
  */
-static void
-copyClusterInfo (int ncc, Agraph_t** ccs, Agraph_t* root)
-{
-    int j, i, nclust = 0;
+static void copyClusterInfo(size_t ncc, Agraph_t **ccs, Agraph_t *root) {
+    int j, nclust = 0;
     Agraph_t* sg;
     Agraph_t* cg;
 
-    for (i = 0; i < ncc; i++) 
+    for (size_t i = 0; i < ncc; i++)
 	nclust += GD_n_cluster(ccs[i]);
 
     GD_n_cluster(root) = nclust;
     GD_clust(root) = gv_calloc(nclust + 1, sizeof(Agraph_t*));
     nclust = 1;
-    for (i = 0; i < ncc; i++) {
+    for (size_t i = 0; i < ncc; i++) {
 	sg = ccs[i];
 	for (j = 1; j <= GD_n_cluster(sg); j++) {
 	    cg = mapClust(GD_clust(sg)[j]);
@@ -425,8 +423,6 @@ static void doDot (Agraph_t* g)
 {
     Agraph_t **ccs;
     Agraph_t *sg;
-    int ncc;
-    int i;
     pack_info pinfo;
     int Pack = getPack(g, -1, CL_OFFSET);
     pack_mode mode = getPackModeInfo (g, l_undef, &pinfo);
@@ -448,13 +444,14 @@ static void doDot (Agraph_t* g)
 	pinfo.fixed = NULL;
 
           /* components using clusters */
+	size_t ncc;
 	ccs = cccomps(g, &ncc, 0);
 	if (ncc == 1) {
 	    dotLayout(g);
 	} else if (GD_drawing(g)->ratio_kind == R_NONE) {
 	    pinfo.doSplines = true;
 
-	    for (i = 0; i < ncc; i++) {
+	    for (size_t i = 0; i < ncc; i++) {
 		sg = ccs[i];
 		initSubg (sg, g);
 		dotLayout (sg);
@@ -472,7 +469,7 @@ static void doDot (Agraph_t* g)
 	    dotLayout(g);
 	}
 
-	for (i = 0; i < ncc; i++) {
+	for (size_t i = 0; i < ncc; i++) {
 	    free (GD_drawing(ccs[i]));
 	    dot_cleanup_graph(ccs[i]);
 	    agdelete(g, ccs[i]);

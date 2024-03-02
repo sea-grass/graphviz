@@ -23,6 +23,7 @@
 #include    <neatogen/neatoprocs.h>
 #include    <pack/pack.h>
 #include    <stdbool.h>
+#include    <stddef.h>
 
 #define DFLT_SZ  18
 #define PARENT(n) ((Agraph_t*)ND_alg(n))
@@ -137,7 +138,8 @@ layout (Agraph_t* g, int depth)
     }
 
 	/* pack rectangles */
-    pts = putRects (total, gs, &pinfo);
+    assert(total >= 0);
+    pts = putRects((size_t)total, gs, &pinfo);
     free (pinfo.vals);
 
     rootbb.LL = (pointf){INT_MAX, INT_MAX};

@@ -312,9 +312,8 @@ static unsigned short versionStr2Version(const char *str) {
  * our drawing spec (and also "<" and ">"), so if you  start generating 
  * output with them, it could break what we have. 
  */
-static void
-xdot_begin_graph (graph_t *g, int s_arrows, int e_arrows, format_type id)
-{
+static void xdot_begin_graph(graph_t *g, bool s_arrows, bool e_arrows,
+                             format_type id) {
     int i;
     unsigned short us;
     char* s;
@@ -378,8 +377,6 @@ xdot_begin_graph (graph_t *g, int s_arrows, int e_arrows, format_type id)
 
 static void dot_begin_graph(GVJ_t *job)
 {
-    int e_arrows;            /* graph has edges with end arrows */
-    int s_arrows;            /* graph has edges with start arrows */
     graph_t *g = job->obj->u.g;
 
     switch (job->render.id) {
@@ -395,10 +392,13 @@ static void dot_begin_graph(GVJ_t *job)
 	    break;
 	case FORMAT_XDOT:
 	case FORMAT_XDOT12:
-	case FORMAT_XDOT14:
+	case FORMAT_XDOT14: {
+	    bool e_arrows; // graph has edges with end arrows
+	    bool s_arrows; // graph has edges with start arrows
 	    attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
 	    xdot_begin_graph(g, s_arrows, e_arrows, job->render.id);
 	    break;
+	}
 	default:
 	    UNREACHABLE();
     }

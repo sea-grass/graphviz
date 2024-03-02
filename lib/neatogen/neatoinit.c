@@ -1433,15 +1433,14 @@ void neato_layout(Agraph_t * g)
 	if (Pack >= 0) {
 	    graph_t *gc;
 	    graph_t **cc;
-	    int n_cc;
-	    int i;
+	    size_t n_cc;
 	    bool pin;
 
 	    cc = pccomps(g, &n_cc, cc_pfx, &pin);
 
 	    if (n_cc > 1) {
 		bool *bp;
-		for (i = 0; i < n_cc; i++) {
+		for (size_t i = 0; i < n_cc; i++) {
 		    gc = cc[i];
 		    (void)graphviz_node_induce(gc, NULL);
 		    neatoLayout(g, gc, layoutMode, model, &am);
@@ -1471,7 +1470,7 @@ void neato_layout(Agraph_t * g)
 	    addZ (g);
 
 	    /* cleanup and remove component subgraphs */
-	    for (i = 0; i < n_cc; i++) {
+	    for (size_t i = 0; i < n_cc; i++) {
 		gc = cc[i];
 		free_scan_graph(gc);
 		agdelrec (gc, "Agraphinfo_t");

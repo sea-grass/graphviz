@@ -33,10 +33,10 @@ int main(int argc, char *argv[]) {
   aginit(g, AGRAPH, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
   aginit(g, AGNODE, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 
-  int ncc;
+  size_t ncc;
   graph_t **cc = ccomps(g, &ncc, NULL);
 
-  for (int i = 0; i < ncc; i++) {
+  for (size_t i = 0; i < ncc; i++) {
     graph_t *sg = cc[i];
     (void)graphviz_node_induce(sg, NULL);
     gvLayout(gvc, sg, "neato");
@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
   gvRender(gvc, g, "ps", stdout);
 
-  for (int i = 0; i < ncc; i++) {
+  for (size_t i = 0; i < ncc; i++) {
     graph_t *sg = cc[i];
     gvFreeLayout(gvc, sg);
     agdelete(g, sg);

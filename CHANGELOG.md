@@ -26,6 +26,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   out-of-specification font name. To avoid this, use a more sophisticated output
   format like Cairo (`-Tps:cairo`) that does font name lookup and translation.
   #218
+- **Breaking**: The libpack functions `putRects`, `packRects`, `putGraphs`,
+  `packGraphs`, `packSubgraphs`, `pack_graph`, `shiftGraphs`, `ccomps`,
+  `cccomps`, and `pccomps` now take the number of items they are operating on
+  (`ng`) as a `size_t`.
 
 ### Fixed
 
