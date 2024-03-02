@@ -17,6 +17,7 @@
 #include <math.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>     /* for agerr() and friends */
+#include <cgraph/sort.h>
 #include <neatogen/delaunay.h>
 #include <common/memory.h>
 
@@ -314,13 +315,10 @@ static gint addEdge(void *edge, void *state) {
     return 0;
 }
 
-// when moving to C11, qsort_s should be used instead of having a global
-// variable
-static double* _vals;
-
-static int vcmp(const void *x, const void *y) {
+static int vcmp(const void *x, const void *y, void *values) {
     const int *a = x;
     const int *b = y;
+    const double *_vals = values;
     double va = _vals[*a];
     double vb = _vals[*b];
 
@@ -373,11 +371,7 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
 	for (i = 0; i < n; i++)
 	    vs[i] = i;
 
-	if (x[0] == x[1])  /* vertical line */ 
-	    _vals = y;
-	else              
-	    _vals = x;
-	qsort(vs, n, sizeof(int), vcmp);
+	gv_sort(vs, n, sizeof(int), vcmp, x[0] == x[1] /* vertical line? */ ? y : x);
 
 	tl = vs[0];
 	for (i = 1; i < n; i++) {
