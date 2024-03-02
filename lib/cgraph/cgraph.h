@@ -494,14 +494,21 @@ CGRAPH_API Agedge_t *agnxtedge(Agraph_t * g, Agedge_t * e, Agnode_t * n);
 
 CGRAPH_API Agraph_t *agraphof(void* obj);
 CGRAPH_API Agraph_t *agroot(void* obj);
-CGRAPH_API int agcontains(Agraph_t *, void *);
+///< takes any graph object (graph, subgraph, node, edge) and returns the root graph in which it lives
+
+CGRAPH_API int agcontains(Agraph_t *, void *obj);
+///< returns non-zero if **obj** is a member of (sub)graph
+
 CGRAPH_API char *agnameof(void *);
+///< returns a string descriptor for the object.
+
 CGRAPH_API int agrelabel_node(Agnode_t * n, char *newname);
 CGRAPH_API int agdelete(Agraph_t * g, void *obj);
 CGRAPH_API int agdelsubg(Agraph_t * g, Agraph_t * sub);	/* could be agclose */
 CGRAPH_API int agdelnode(Agraph_t * g, Agnode_t * arg_n);
 CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
-CGRAPH_API int agobjkind(void *);
+CGRAPH_API int agobjkind(void *obj);
+///< returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending on the type of the object. Synonym for @ref AGTYPE.
 /// @}
 
 /** @defgroup cgraph_string string utilities
@@ -614,7 +621,12 @@ CGRAPH_API Agsym_t *agattrsym(void *obj, char *name);
 ///< looks up a string attribute for a graph object given as an argument
 
 CGRAPH_API Agsym_t *agnxtattr(Agraph_t * g, int kind, Agsym_t * attr);
-CGRAPH_API int      agcopyattr(void *oldobj, void *newobj);
+CGRAPH_API int agcopyattr(void *oldobj, void *newobj);
+/**< @brief copies all of the attributes from one object to another
+ * @return fails and returns non-zero if argument objects are different kinds,
+ * or if all of the attributes of the source object have not been declared
+ * for the target object
+ */
 
 /// @addtogroup cgraph_rec
 /// @{

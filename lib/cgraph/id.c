@@ -135,7 +135,7 @@ void agfreeid(Agraph_t * g, int objtype, IDTYPE id)
     (AGDISC(g, id)->free) (AGCLOS(g, id), objtype, id);
 }
 
-/* agnameof:
+/**
  * Return string representation of object.
  * In general, returns the name of node or graph,
  * and the key of an edge. If edge is anonymous, returns NULL.
