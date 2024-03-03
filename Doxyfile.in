@@ -958,6 +958,7 @@ INPUT_FILE_ENCODING    =
 FILE_PATTERNS          = *.c \
                          *.cpp \
                          *.h \
+                         *.l \
                          *.y
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
