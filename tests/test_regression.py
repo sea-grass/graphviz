@@ -625,6 +625,31 @@ def test_1318():
     dot("svg", source=source)
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1328"
+)
+def test_1328():
+    """
+    a node with conflicting rank constraints should not cause a crash
+    https://gitlab.com/graphviz/graphviz/-/issues/1328
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1328.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    proc = subprocess.run(
+        ["dot", "-Tsvg", "-o", os.devnull, input],
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    assert proc.returncode in (0, 1), "multiple rank constraints caused a crash"
+    assert (
+        "trouble in init_rank" not in proc.stderr
+    ), "multiple rank constraints caused ranking failure"
+
+
 def test_1332():
     """
     Triangulation calculation on the associated example should succeed.
