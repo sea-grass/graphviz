@@ -11,7 +11,6 @@ include /usr/share/quilt/quilt.make
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
-UPSTREAM_VERSION  = $(shell dpkg-parsechangelog | perl -ne 'print $$1 if /^Version: (.*?)-(.*)$$/')
 PATHPLAN_SONAME   = 4
 GVC_SONAME        = 6
 CDT_SONAME        = 5
