@@ -196,7 +196,6 @@ struct Exdisc_s				/* discipline			*/
 					/* reference value function	*/
 	int		(*setf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, Extype_t);
 					/* set value function		*/
-	int		(*matchf)(const char*, const char*);
 	/* exit function           */
 	Exexit_f	exitf;
 	int*		types;

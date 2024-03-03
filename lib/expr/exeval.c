@@ -904,7 +904,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 	char *s;
 	Extype_t v;
 	int sub[20];
-	int flags = STR_MAXIMAL;
+	int flags = 0;
 	int ng;
 
 	str = eval(ex, exnode->data.string.base, env).string;
@@ -1223,9 +1223,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 							break;
 						continue;
 					case STRING:
-						if ((ex->disc->version >= 19981111L && ex->disc->matchf)
-						      ? ex->disc->matchf((*t)->string, v.string)
-						      : strmatch((*t)->string, v.string))
+						if (strmatch((*t)->string, v.string))
 							break;
 						continue;
 					case FLOATING:
@@ -1905,9 +1903,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		case EQ:
 		case NE:
 			v.integer = ((v.string && r.string)
-			              ? ((ex->disc->version >= 19981111L && ex->disc->matchf)
-			                ? ex->disc->matchf(v.string, r.string)
-			                : strmatch(v.string, r.string))
+			              ? strmatch(v.string, r.string)
 			              : (v.string == r.string)) == (exnode->op == EQ);
 			return v;
 		case '+':
