@@ -800,6 +800,24 @@ def test_1449():
     assert stderr.strip() == "", "SVG color scheme use caused warnings"
 
 
+@pytest.mark.xfail(
+    strict=platform.system() != "Linux",
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/1453",
+)
+def test_1453():
+    """
+    `splines=curved` should not result in segfaults
+    https://gitlab.com/graphviz/graphviz/-/issues/1453
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1453.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("svg", input)
+
+
 def test_1554():
     """
     small distances between nodes should not cause a crash in majorization
