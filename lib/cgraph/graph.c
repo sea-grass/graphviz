@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @ingroup cgraph_core
+ * @ingroup cgraph_graph
+ */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -279,4 +284,20 @@ Agdisc_t AgDefaultDisc = { &AgIdDisc, &AgIoDisc };
  * @brief abstract graph C library, API cgraph.h
  *
  * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
+ *
+ * See @ref cgraph
+ *
+ * @defgroup cgraph Cgraph
+ * @brief abstract graph C library, API: @ref cgraph_api
+ *
+ * Public API of the library: @ref cgraph_api
+ *
+ * Layers:
+ *
+ * * middle layer: @ref cgraph_core - highly cohesive core
+ *
+ * @{
+ * @defgroup cgraph_core core
+ * @brief highly cohesive core
+ * @}
  */

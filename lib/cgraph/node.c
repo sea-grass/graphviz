@@ -1,4 +1,5 @@
 /// @file
+/// @ingroup cgraph_core
 /// @ingroup cgraph_node
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
