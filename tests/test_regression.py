@@ -843,6 +843,23 @@ def test_1453():
     dot("svg", input)
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1472"
+)
+def test_1472():
+    """
+    processing a malformed graph found by Google Autofuzz should not crash
+    https://gitlab.com/graphviz/graphviz/-/issues/1472
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1472.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("svg", input)
+
+
 def test_1554():
     """
     small distances between nodes should not cause a crash in majorization
