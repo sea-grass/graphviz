@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @ingroup cgraph_app
+ */
 #include <assert.h>
 #include <cgraph/cghdr.h>
 #include <stddef.h>
