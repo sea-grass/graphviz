@@ -296,6 +296,7 @@ Agdisc_t AgDefaultDisc = { &AgIdDisc, &AgIoDisc };
  *
  * * top layer: @ref cgraph_app - uncoupled application specific functions
  * * middle layer: @ref cgraph_core - highly cohesive core
+ * * bottom layer: @ref cgraph_utils
  *
  * @{
  * @defgroup cgraph_core core

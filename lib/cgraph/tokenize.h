@@ -1,5 +1,6 @@
 /// \file
 /// \brief String tokenization
+/// \ingroup cgraph_utils
 ///
 /// This is essentially equivalent to `strtok` but with two main improvements:
 ///

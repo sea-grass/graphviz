@@ -1,5 +1,6 @@
 /// \file
 /// \brief replacements for ctype.h functions
+/// \ingroup cgraph_utils
 ///
 /// The behavior of the ctype.h functions is locale-dependent, while Graphviz
 /// code typically wants to ask about character data specifically interpreted as

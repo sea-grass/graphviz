@@ -1,4 +1,5 @@
 /// \file
+/// \ingroup cgraph_utils
 /// \brief Non-owning string references
 ///
 /// This is similar to C++17’s `std::string_view`. Instances of `strview_t`

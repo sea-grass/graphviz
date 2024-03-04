@@ -1,5 +1,6 @@
 /// \file
 /// \brief \p qsort with carried along context
+/// \ingroup cgraph_utils
 ///
 /// The non-standard \p qsort_r, Windows’ \p qsort_s, and C11’s \p qsort_s
 /// provide a \p qsort alternative with an extra state parameter. Unfortunately

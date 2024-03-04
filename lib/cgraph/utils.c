@@ -1,3 +1,8 @@
+/**
+ * @file
+ * @brief API cghdr.h
+ * @ingroup cgraph_utils
+ */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -58,3 +63,6 @@ void agdtdisc(Agraph_t * g, Dict_t * dict, Dtdisc_t * disc)
     }
     /* else unchanged, disc is same as old disc */
 }
+/// @defgroup cgraph_utils utilities
+/// @brief low level cgraph utilities
+/// @ingroup cgraph

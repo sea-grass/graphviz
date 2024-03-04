@@ -1,4 +1,6 @@
-// platform abstraction for case-insensitive string functions
+/// @file
+/// @brief platform abstraction for case-insensitive string functions
+/// @ingroup cgraph_utils
 
 #pragma once
 
