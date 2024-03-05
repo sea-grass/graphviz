@@ -8,8 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-/* This is the public header for the callers of libgvc */
-
 #pragma once
 
 #include <stdbool.h>
