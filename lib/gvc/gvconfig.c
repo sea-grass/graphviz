@@ -255,7 +255,7 @@ static void gvconfig_write_library_config(GVC_t *gvc, char *lib_path,
         fprintf(f, "\t%s {\n", gvplugin_api_name(apis->api));
 	for (i = 0; types[i].type; i++) {
 	    /* verify that dependencies are available */
-            if (! (gvplugin_load(gvc, apis->api, types[i].type)))
+            if (!gvplugin_load(gvc, apis->api, types[i].type))
 		fprintf(f, "#FAILS");
 	    fprintf(f, "\t\t%s %d\n", types[i].type, types[i].quality);
 	}
