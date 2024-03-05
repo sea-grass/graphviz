@@ -19,13 +19,14 @@
 #include <gvc/gvcint.h>
 #include <gvc/gvcproc.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 int gvtextlayout_select(GVC_t * gvc)
 {
     gvplugin_available_t *plugin;
     gvplugin_installed_t *typeptr;
 
-    plugin = gvplugin_load(gvc, API_textlayout, "textlayout");
+    plugin = gvplugin_load(gvc, API_textlayout, "textlayout", NULL);
     if (plugin) {
 	typeptr = plugin->typeptr;
 	gvc->textlayout.engine = typeptr->engine;

@@ -44,7 +44,7 @@ int gvrender_select(GVJ_t * job, const char *str)
     gvplugin_available_t *plugin;
     gvplugin_installed_t *typeptr;
 
-    gvplugin_load(gvc, API_device, str);
+    gvplugin_load(gvc, API_device, str, NULL);
 
     /* When job is created, it is zeroed out.
      * Some flags, such as OUTPUT_NOT_REQUIRED, may already be set,
