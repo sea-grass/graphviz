@@ -67,15 +67,6 @@ typedef struct {
   /* Position of the start and end points. */
     double x1, y1, x2, y2;
 
-  /* x of the leftmost point of the arc. */
-    double xLeft;
-
-  /* y of the highest point of the arc. */
-    double yUp;
-
-  /* Horizontal width and vertical height of the arc. */
-    double width, height;
-
     double f, e2, g, g2;
 } ellipse_t;
 
@@ -94,36 +85,6 @@ static void computeEndPoints(ellipse_t * ep)
     // end point
     ep->x2 = ep->cx + aCosEta2;
     ep->y2 = ep->cy + bSinEta2;
-}
-
-  /* Compute the bounding box. */
-static void computeBounds(ellipse_t * ep)
-{
-    double etaXMin, etaXMax, etaYMin, etaYMax;
-
-    etaXMax = 0;
-    etaXMin = etaXMax - M_PI;
-    etaYMax = 0.5 * M_PI;
-    etaYMin = etaYMax - M_PI;
-
-    etaXMin -= TWOPI * floor((etaXMin - ep->eta1) / TWOPI);
-    etaYMin -= TWOPI * floor((etaYMin - ep->eta1) / TWOPI);
-    etaXMax -= TWOPI * floor((etaXMax - ep->eta1) / TWOPI);
-    etaYMax -= TWOPI * floor((etaYMax - ep->eta1) / TWOPI);
-
-    ep->xLeft = (etaXMin <= ep->eta2)
-	? (ep->cx + ep->a * cos(etaXMin))
-	: fmin(ep->x1, ep->x2);
-    ep->yUp = (etaYMin <= ep->eta2)
-	? (ep->cy + ep->b * sin(etaYMin))
-	: fmin(ep->y1, ep->y2);
-    ep->width = ((etaXMax <= ep->eta2)
-		 ? (ep->cx + ep->a * cos(etaXMax))
-		 : fmax(ep->x1, ep->x2)) - ep->xLeft;
-    ep->height = ((etaYMax <= ep->eta2)
-		  ? (ep->cy + ep->b * sin(etaYMax))
-		  : fmax(ep->y1, ep->y2)) - ep->yUp;
-
 }
 
 static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
@@ -146,7 +107,6 @@ static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
     }
 
     computeEndPoints(ep);
-    computeBounds(ep);
 
     /* Flatness parameters */
     ep->f = (ep->a - ep->b) / ep->a;
