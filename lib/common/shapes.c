@@ -183,12 +183,18 @@ static polygon_t p_larrow = {.peripheries = 1, .sides = 4, .option = LARROW};
 static polygon_t p_lpromoter = {
     .peripheries = 1, .sides = 4, .option = LPROMOTER};
 
-#define IS_BOX(n) (ND_shape(n)->polygon == &p_box)
-#define IS_PLAIN(n) (ND_shape(n)->polygon == &p_plain)
+static bool IS_BOX(node_t *n) {
+  return ND_shape(n)->polygon == &p_box;
+}
 
-/* True if style requires processing through round_corners. */
-#define SPECIAL_CORNERS(style) ((style) & (ROUNDED | DIAGONALS | SHAPE_MASK))
+static bool IS_PLAIN(node_t *n) {
+  return ND_shape(n)->polygon == &p_plain;
+}
 
+/// True if style requires processing through round_corners.
+static bool SPECIAL_CORNERS(int style) {
+  return (style & (ROUNDED | DIAGONALS | SHAPE_MASK)) != 0;
+}
 
 /*
  * every shape has these functions:
@@ -2812,7 +2818,9 @@ static port poly_port(node_t * n, char *portname, char *compass)
     return rv;
 }
 
-#define multicolor(f) (strchr(f,':'))
+static bool multicolor(const char *f) {
+  return strchr(f, ':') != NULL;
+}
 
 /* generic polygon gencode routine */
 static void poly_gencode(GVJ_t * job, node_t * n)
@@ -3261,7 +3269,9 @@ static void point_gencode(GVJ_t * job, node_t * n)
 #define INTEXT 8
 #define INPORT 16
 
-#define ISCTRL(c) ((c) == '{' || (c) == '}' || (c) == '|' || (c) == '<' || (c) == '>')
+static bool ISCTRL(int c) {
+  return c == '{' || c == '}' || c == '|' || c == '<' || c == '>';
+}
 
 static char *reclblp;
 
