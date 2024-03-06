@@ -114,13 +114,11 @@ static void computeEndPoints(ellipse_t * ep)
   /* Compute the bounding box. */
 static void computeBounds(ellipse_t * ep)
 {
-    double bOnA = ep->b / ep->a;
     double etaXMin, etaXMax, etaYMin, etaYMax;
 
-    double tanTheta = 0;
-    etaXMax = -atan(tanTheta * bOnA);
+    etaXMax = 0;
     etaXMin = etaXMax - M_PI;
-    etaYMax = 0.5 * M_PI - atan(tanTheta / bOnA);
+    etaYMax = 0.5 * M_PI;
     etaYMin = etaYMax - M_PI;
 
     etaXMin -= TWOPI * floor((etaXMin - ep->eta1) / TWOPI);
