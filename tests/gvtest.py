@@ -160,14 +160,16 @@ def is_cmake() -> bool:
     return os.getenv("build_system") == "cmake"
 
 
+def is_fedora() -> bool:
+    """is the current environment Fedora?"""
+    return freedesktop_os_release().get("ID") == "fedora"
+
+
 def is_fedora_38() -> bool:
     """
     is the current environment Fedora 38?
     """
-    return (
-        freedesktop_os_release().get("ID") == "fedora"
-        and freedesktop_os_release().get("VERSION_ID") == "38"
-    )
+    return is_fedora() and freedesktop_os_release().get("VERSION_ID") == "38"
 
 
 def is_macos() -> bool:
@@ -178,6 +180,11 @@ def is_macos() -> bool:
 def is_mingw() -> bool:
     """is the current platform MinGW?"""
     return "mingw" in sysconfig.get_platform()
+
+
+def is_ubuntu() -> bool:
+    """is the current environment Ubuntu?"""
+    return freedesktop_os_release().get("ID") == "ubuntu"
 
 
 def remove_xtype_warnings(s: str) -> str:
