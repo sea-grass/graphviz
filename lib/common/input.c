@@ -20,6 +20,7 @@
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
@@ -676,7 +677,13 @@ void graph_init(graph_t * g, bool use_rankdir)
 	xf = DEFAULT_RANKSEP;
     GD_ranksep(g) = POINTS(xf);
 
-    GD_showboxes(g) = late_int(g, agfindgraphattr(g, "showboxes"), 0, 0);
+    {
+	int showboxes = late_int(g, agfindgraphattr(g, "showboxes"), 0, 0);
+	if (showboxes > UCHAR_MAX) {
+	    showboxes = UCHAR_MAX;
+	}
+	GD_showboxes(g) = (unsigned char)showboxes;
+    }
     p = late_string(g, agfindgraphattr(g, "fontnames"), NULL);
     GD_fontnames(g) = maptoken(p, fontnamenames, fontnamecodes);
 

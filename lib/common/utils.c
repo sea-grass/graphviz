@@ -464,7 +464,13 @@ void common_init_node(node_t * n)
 	GD_has_labels(agraphof(n)) |= NODE_XLABEL;
     }
 
-    ND_showboxes(n) = late_int(n, N_showboxes, 0, 0);
+    {
+	int showboxes = late_int(n, N_showboxes, 0, 0);
+	if (showboxes > UCHAR_MAX) {
+	    showboxes = UCHAR_MAX;
+	}
+	ND_showboxes(n) = (unsigned char)showboxes;
+    }
     ND_shape(n)->fns->initfn(n);
 }
 
