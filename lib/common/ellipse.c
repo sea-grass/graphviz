@@ -88,48 +88,6 @@ static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
 typedef double erray_t[2][4][4];
 
   // coefficients for error estimation
-  // while using quadratic Bezier curves for approximation
-  // 0 < b/a < 1/4
-static erray_t coeffs2Low = {
-    {
-	{3.92478, -13.5822, -0.233377, 0.0128206},
-	{-1.08814, 0.859987, 0.000362265, 0.000229036},
-	{-0.942512, 0.390456, 0.0080909, 0.00723895},
-	{-0.736228, 0.20998, 0.0129867, 0.0103456}
-    }, 
-    {
-	{-0.395018, 6.82464, 0.0995293, 0.0122198},
-	{-0.545608, 0.0774863, 0.0267327, 0.0132482},
-	{0.0534754, -0.0884167, 0.012595, 0.0343396},
-	{0.209052, -0.0599987, -0.00723897, 0.00789976}
-    }
-};
-
-  // coefficients for error estimation
-  // while using quadratic Bezier curves for approximation
-  // 1/4 <= b/a <= 1
-static erray_t coeffs2High = {
-    {
-	{0.0863805, -11.5595, -2.68765, 0.181224},
-	{0.242856, -1.81073, 1.56876, 1.68544},
-	{0.233337, -0.455621, 0.222856, 0.403469},
-	{0.0612978, -0.104879, 0.0446799, 0.00867312}
-    }, 
-    {
-	{0.028973, 6.68407, 0.171472, 0.0211706},
-	{0.0307674, -0.0517815, 0.0216803, -0.0749348},
-	{-0.0471179, 0.1288, -0.0781702, 2.0},
-	{-0.0309683, 0.0531557, -0.0227191, 0.0434511}
-    }
-};
-
-  // safety factor to convert the "best" error approximation
-  // into a "max bound" error
-static double safety2[] = {
-    0.02, 2.83, 0.125, 0.01
-};
-
-  // coefficients for error estimation
   // while using cubic Bezier curves for approximation
   // 0 < b/a < 1/4
 static erray_t coeffs3Low = {
@@ -178,72 +136,36 @@ static double safety3[] = {
 #define RationalFunction(x,c) ((x * (x * c[0] + c[1]) + c[2]) / (x + c[3]))
 
 /* Estimate the approximation error for a sub-arc of the instance.
- * degree specifies degree of the Bezier curve to use (1, 2 or 3)
  * tA and tB give the start and end angle of the subarc
  * Returns upper bound of the approximation error between the Bezier
  * curve and the real ellipse
  */
-static double
-estimateError(ellipse_t * ep, int degree, double etaA, double etaB)
-{
+static double estimateError(ellipse_t *ep, double etaA, double etaB) {
     double c0, c1, eta = 0.5 * (etaA + etaB);
 
-    if (degree < 2) {
+    double x = ep->b / ep->a;
+    double dEta = etaB - etaA;
+    double cos2 = cos(2 * eta);
+    double cos4 = cos(4 * eta);
+    double cos6 = cos(6 * eta);
 
-	// start point
-	double aCosEtaA = ep->a * cos(etaA);
-	double bSinEtaA = ep->b * sin(etaA);
-	double xA = ep->cx + aCosEtaA;
-	double yA = ep->cy + bSinEtaA;
+    // select the right coefficient's set according to b/a
+    double (*coeffs)[4][4];
+    double *safety;
+    coeffs = x < 0.25 ? coeffs3Low : coeffs3High;
+    safety = safety3;
 
-	// end point
-	double aCosEtaB = ep->a * cos(etaB);
-	double bSinEtaB = ep->b * sin(etaB);
-	double xB = ep->cx + aCosEtaB;
-	double yB = ep->cy + bSinEtaB;
+    c0 = RationalFunction(x, coeffs[0][0])
+       + cos2 * RationalFunction(x, coeffs[0][1])
+       + cos4 * RationalFunction(x, coeffs[0][2])
+       + cos6 * RationalFunction(x, coeffs[0][3]);
 
-	// maximal error point
-	double aCosEta = ep->a * cos(eta);
-	double bSinEta = ep->b * sin(eta);
-	double x = ep->cx + aCosEta;
-	double y = ep->cy + bSinEta;
+    c1 = RationalFunction(x, coeffs[1][0])
+       + cos2 * RationalFunction(x, coeffs[1][1])
+       + cos4 * RationalFunction(x, coeffs[1][2])
+       + cos6 * RationalFunction(x, coeffs[1][3]);
 
-	double dx = xB - xA;
-	double dy = yB - yA;
-
-	return fabs(x * dy - y * dx + xB * yA - xA * yB) / hypot(dx, dy);
-
-    } else {
-
-	double x = ep->b / ep->a;
-	double dEta = etaB - etaA;
-	double cos2 = cos(2 * eta);
-	double cos4 = cos(4 * eta);
-	double cos6 = cos(6 * eta);
-
-	// select the right coefficient's set according to degree and b/a
-	double (*coeffs)[4][4];
-	double *safety;
-	if (degree == 2) {
-	    coeffs = x < 0.25 ? coeffs2Low : coeffs2High;
-	    safety = safety2;
-	} else {
-	    coeffs = x < 0.25 ? coeffs3Low : coeffs3High;
-	    safety = safety3;
-	}
-
-	c0 = RationalFunction(x, coeffs[0][0])
-	    + cos2 * RationalFunction(x, coeffs[0][1])
-	    + cos4 * RationalFunction(x, coeffs[0][2])
-	    + cos6 * RationalFunction(x, coeffs[0][3]);
-
-	c1 = RationalFunction(x, coeffs[1][0])
-	    + cos2 * RationalFunction(x, coeffs[1][1])
-	    + cos4 * RationalFunction(x, coeffs[1][2])
-	    + cos6 * RationalFunction(x, coeffs[1][3]);
-
-	return RationalFunction(x, safety) * ep->a * exp(c0 + c1 * dEta);
-    }
+    return RationalFunction(x, safety) * ep->a * exp(c0 + c1 * dEta);
 }
 
 DEFINE_LIST(bezier_path, pointf)
@@ -297,7 +219,6 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
     Ppolyline_t *polypath = gv_alloc(sizeof(Ppolyline_t));
 
     static const double THRESHOLD = 0.00001; // quality of approximation
-    static const int DEGREE = 3;
 
     // find the number of Bezier curves needed
     bool found = false;
@@ -310,7 +231,7 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
 	    for (i = 0; found && i < n; ++i) {
 		double etaA = etaOne;
 		etaOne += diffEta;
-		found = estimateError(ep, DEGREE, etaA, etaOne) <= THRESHOLD;
+		found = estimateError(ep, etaA, etaOne) <= THRESHOLD;
 	    }
 	}
 	n = n << 1;
