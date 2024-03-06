@@ -1854,7 +1854,6 @@ static void poly_init(node_t * n)
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
     double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
-    int isBox;
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
@@ -1982,7 +1981,7 @@ static void poly_init(node_t * n)
     else
 	ND_label(n)->valign = 'c';
 
-    isBox = sides == 4 && ROUND(orientation) % 90 == 0
+    const bool isBox = sides == 4 && ROUND(orientation) % 90 == 0
 	     && distortion == 0. && skew == 0.;
     if (isBox) {
 	/* for regular boxes the fit should be exact */
