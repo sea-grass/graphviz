@@ -63,8 +63,6 @@ typedef struct {
 
   /* Start and end angles of the arc. */
     double eta1, eta2;
-
-    double f;
 } ellipse_t;
 
 static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
@@ -85,9 +83,6 @@ static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
     if (lambda2 - lambda1 > M_PI && ep->eta2 - ep->eta1 < M_PI) {
 	ep->eta2 += TWOPI;
     }
-
-    /* Flatness parameters */
-    ep->f = (ep->a - ep->b) / ep->a;
 }
 
 typedef double erray_t[2][4][4];
