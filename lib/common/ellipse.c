@@ -67,9 +67,6 @@ typedef struct {
   /* Position of the start and end points. */
     double x1, y1, x2, y2;
 
-  /* Position of the foci. */
-    double xF1, yF1,  xF2, yF2;
-
   /* x of the leftmost point of the arc. */
     double xLeft;
 
@@ -81,18 +78,6 @@ typedef struct {
 
     double f, e2, g, g2;
 } ellipse_t;
-
-static void computeFoci(ellipse_t * ep)
-{
-    double d = sqrt(ep->a * ep->a - ep->b * ep->b);
-    double dx = d;
-    double dy = 0;
-
-    ep->xF1 = ep->cx - dx;
-    ep->yF1 = ep->cy - dy;
-    ep->xF2 = ep->cx + dx;
-    ep->yF2 = ep->cy + dy;
-}
 
   /* Compute the locations of the endpoints. */
 static void computeEndPoints(ellipse_t * ep)
@@ -160,7 +145,6 @@ static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
 	ep->eta2 += TWOPI;
     }
 
-    computeFoci(ep);
     computeEndPoints(ep);
     computeBounds(ep);
 
