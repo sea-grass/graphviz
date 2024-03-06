@@ -61,9 +61,6 @@ typedef struct {
     double cx, cy;		/* center */
     double a, b;		/* semi-major and -minor axes */
 
-  /* Orientation of the major axis with respect to the x axis. */
-    double sinTheta;
-
   /* Start and end angles of the arc. */
     double eta1, eta2;
 
@@ -89,7 +86,7 @@ static void computeFoci(ellipse_t * ep)
 {
     double d = sqrt(ep->a * ep->a - ep->b * ep->b);
     double dx = d;
-    double dy = d * ep->sinTheta;
+    double dy = 0;
 
     ep->xF1 = ep->cx - dx;
     ep->yF1 = ep->cy - dy;
@@ -106,12 +103,12 @@ static void computeEndPoints(ellipse_t * ep)
     double bSinEta2 = ep->b * sin(ep->eta2);
 
     // start point
-    ep->x1 = ep->cx + aCosEta1 - bSinEta1 * ep->sinTheta;
-    ep->y1 = ep->cy + aCosEta1 * ep->sinTheta + bSinEta1;
+    ep->x1 = ep->cx + aCosEta1;
+    ep->y1 = ep->cy + bSinEta1;
 
     // end point
-    ep->x2 = ep->cx + aCosEta2 - bSinEta2 * ep->sinTheta;
-    ep->y2 = ep->cy + aCosEta2 * ep->sinTheta + bSinEta2;
+    ep->x2 = ep->cx + aCosEta2;
+    ep->y2 = ep->cy + bSinEta2;
 }
 
   /* Compute the bounding box. */
@@ -120,26 +117,11 @@ static void computeBounds(ellipse_t * ep)
     double bOnA = ep->b / ep->a;
     double etaXMin, etaXMax, etaYMin, etaYMax;
 
-    if (fabs(ep->sinTheta) < 0.1) {
-	double tanTheta = ep->sinTheta;
-	etaXMax = -atan(tanTheta * bOnA);
-	etaXMin = etaXMax - M_PI;
-	etaYMax = 0.5 * M_PI - atan(tanTheta / bOnA);
-	etaYMin = etaYMax - M_PI;
-    } else {
-	double invTanTheta = 1 / ep->sinTheta;
-	if (ep->sinTheta < 0) {
-	    etaXMax = 0.5 * M_PI + atan(invTanTheta / bOnA);
-	    etaXMin = etaXMax - M_PI;
-	    etaYMin = atan(invTanTheta * bOnA);
-	    etaYMax = etaYMin + M_PI;
-	} else {
-	    etaXMin = 0.5 * M_PI + atan(invTanTheta / bOnA);
-	    etaXMax = etaXMin + M_PI;
-	    etaYMax = atan(invTanTheta * bOnA);
-	    etaYMin = etaYMax - M_PI;
-	}
-    }
+    double tanTheta = 0;
+    etaXMax = -atan(tanTheta * bOnA);
+    etaXMin = etaXMax - M_PI;
+    etaYMax = 0.5 * M_PI - atan(tanTheta / bOnA);
+    etaYMin = etaYMax - M_PI;
 
     etaXMin -= TWOPI * floor((etaXMin - ep->eta1) / TWOPI);
     etaYMin -= TWOPI * floor((etaYMin - ep->eta1) / TWOPI);
@@ -147,18 +129,16 @@ static void computeBounds(ellipse_t * ep)
     etaYMax -= TWOPI * floor((etaYMax - ep->eta1) / TWOPI);
 
     ep->xLeft = (etaXMin <= ep->eta2)
-	? (ep->cx + ep->a * cos(etaXMin) - ep->b * sin(etaXMin) * ep->sinTheta)
+	? (ep->cx + ep->a * cos(etaXMin))
 	: fmin(ep->x1, ep->x2);
     ep->yUp = (etaYMin <= ep->eta2)
-	? (ep->cy + ep->a * cos(etaYMin) * ep->sinTheta + ep->b * sin(etaYMin))
+	? (ep->cy + ep->b * sin(etaYMin))
 	: fmin(ep->y1, ep->y2);
     ep->width = ((etaXMax <= ep->eta2)
-		 ? (ep->cx + ep->a * cos(etaXMax) -
-		    ep->b * sin(etaXMax) * ep->sinTheta)
+		 ? (ep->cx + ep->a * cos(etaXMax))
 		 : fmax(ep->x1, ep->x2)) - ep->xLeft;
     ep->height = ((etaYMax <= ep->eta2)
-		  ? (ep->cy + ep->a * cos(etaYMax) * ep->sinTheta +
-		     ep->b * sin(etaYMax))
+		  ? (ep->cy + ep->b * sin(etaYMax))
 		  : fmax(ep->y1, ep->y2)) - ep->yUp;
 
 }
@@ -172,7 +152,6 @@ static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
 
     ep->eta1 = atan2(sin(lambda1) / b, cos(lambda1) / a);
     ep->eta2 = atan2(sin(lambda2) / b, cos(lambda2) / a);
-    ep->sinTheta = 0;
 
     // make sure we have eta1 <= eta2 <= eta1 + 2*PI
     ep->eta2 -= TWOPI * floor((ep->eta2 - ep->eta1) / TWOPI);
@@ -302,20 +281,20 @@ estimateError(ellipse_t * ep, int degree, double etaA, double etaB)
 	// start point
 	double aCosEtaA = ep->a * cos(etaA);
 	double bSinEtaA = ep->b * sin(etaA);
-	double xA = ep->cx + aCosEtaA - bSinEtaA * ep->sinTheta;
-	double yA = ep->cy + aCosEtaA * ep->sinTheta + bSinEtaA;
+	double xA = ep->cx + aCosEtaA;
+	double yA = ep->cy + bSinEtaA;
 
 	// end point
 	double aCosEtaB = ep->a * cos(etaB);
 	double bSinEtaB = ep->b * sin(etaB);
-	double xB = ep->cx + aCosEtaB - bSinEtaB * ep->sinTheta;
-	double yB = ep->cy + aCosEtaB * ep->sinTheta + bSinEtaB;
+	double xB = ep->cx + aCosEtaB;
+	double yB = ep->cy + bSinEtaB;
 
 	// maximal error point
 	double aCosEta = ep->a * cos(eta);
 	double bSinEta = ep->b * sin(eta);
-	double x = ep->cx + aCosEta - bSinEta * ep->sinTheta;
-	double y = ep->cy + aCosEta * ep->sinTheta + bSinEta;
+	double x = ep->cx + aCosEta;
+	double y = ep->cy + bSinEta;
 
 	double dx = xB - xA;
 	double dy = yB - yA;
@@ -434,10 +413,10 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
     bSinEtaB = ep->b * sinEtaB;
     aSinEtaB = ep->a * sinEtaB;
     bCosEtaB = ep->b * cosEtaB;
-    xB = ep->cx + aCosEtaB - bSinEtaB * ep->sinTheta;
-    yB = ep->cy + aCosEtaB * ep->sinTheta + bSinEtaB;
-    xBDot = -aSinEtaB - bCosEtaB * ep->sinTheta;
-    yBDot = -aSinEtaB * ep->sinTheta + bCosEtaB;
+    xB = ep->cx + aCosEtaB;
+    yB = ep->cy + bSinEtaB;
+    xBDot = -aSinEtaB;
+    yBDot = bCosEtaB;
 
     bezier_path_t bezier_path = {0};
     moveTo(&bezier_path, ep->cx, ep->cy);
@@ -460,10 +439,10 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
 	bSinEtaB = ep->b * sinEtaB;
 	aSinEtaB = ep->a * sinEtaB;
 	bCosEtaB = ep->b * cosEtaB;
-	xB = ep->cx + aCosEtaB - bSinEtaB * ep->sinTheta;
-	yB = ep->cy + aCosEtaB * ep->sinTheta + bSinEtaB;
-	xBDot = -aSinEtaB - bCosEtaB * ep->sinTheta;
-	yBDot = -aSinEtaB * ep->sinTheta + bCosEtaB;
+	xB = ep->cx + aCosEtaB;
+	yB = ep->cy + bSinEtaB;
+	xBDot = -aSinEtaB;
+	yBDot = bCosEtaB;
 
 	curveTo(&bezier_path, xA + alpha * xADot, yA + alpha * yADot,
 	        xB - alpha * xBDot, yB - alpha * yBDot, xB, yB);
