@@ -46,7 +46,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/list.h>
+#include <limits.h>
 #include <math.h>
 #include <stdbool.h>
 #include <common/render.h>
@@ -370,50 +373,32 @@ estimateError(ellipse_t * ep, int degree, double etaA, double etaB)
     }
 }
 
-/* Non-reentrant code to append points to a Bezier path
+DEFINE_LIST(bezier_path, pointf)
+
+/* append points to a Bezier path
  * Assume initial call to moveTo to initialize, followed by
  * calls to curveTo and lineTo, and finished with endPath.
  */
-static int bufsize;
 
-static void moveTo(Ppolyline_t *polypath, double x, double y)
-{
-    bufsize = 100;
-    polypath->ps = gv_calloc(bufsize, sizeof(pointf));
-    polypath->ps[0].x = x;
-    polypath->ps[0].y = y;
-    polypath->pn = 1;
+static void moveTo(bezier_path_t *polypath, double x, double y) {
+  bezier_path_append(polypath, (pointf){.x = x, .y = y});
 }
 
-static void
-curveTo(Ppolyline_t *polypath, double x1, double y1,
-	double x2, double y2, double x3, double y3)
-{
-    if (polypath->pn + 3 >= bufsize) {
-	bufsize *= 2;
-	polypath->ps = realloc(polypath->ps, bufsize * sizeof(pointf));
-    }
-    polypath->ps[polypath->pn].x = x1;
-    polypath->ps[polypath->pn++].y = y1;
-    polypath->ps[polypath->pn].x = x2;
-    polypath->ps[polypath->pn++].y = y2;
-    polypath->ps[polypath->pn].x = x3;
-    polypath->ps[polypath->pn++].y = y3;
+static void curveTo(bezier_path_t *polypath, double x1, double y1, double x2,
+                    double y2, double x3, double y3) {
+  bezier_path_append(polypath, (pointf){.x = x1, .y = y1});
+  bezier_path_append(polypath, (pointf){.x = x2, .y = y2});
+  bezier_path_append(polypath, (pointf){.x = x3, .y = y3});
 }
 
-static void lineTo(Ppolyline_t *polypath, double x, double y)
-{
-    pointf curp = polypath->ps[polypath->pn - 1];
+static void lineTo(bezier_path_t *polypath, double x, double y) {
+    const pointf curp = bezier_path_get(polypath, bezier_path_size(polypath) - 1);
     curveTo(polypath, curp.x, curp.y, x, y, x, y);
 }
 
-static void endPath(Ppolyline_t *polypath)
-{
-    pointf p0 = polypath->ps[0];
+static void endPath(bezier_path_t *polypath) {
+    const pointf p0 = bezier_path_get(polypath, 0);
     lineTo(polypath, p0.x, p0.y);
-
-    polypath->ps = realloc(polypath->ps, polypath->pn * sizeof(pointf));
-    bufsize = 0;
 }
 
 /* genEllipticPath:
@@ -472,8 +457,9 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
     xBDot = -aSinEtaB * ep->cosTheta - bCosEtaB * ep->sinTheta;
     yBDot = -aSinEtaB * ep->sinTheta + bCosEtaB * ep->cosTheta;
 
-    moveTo(polypath, ep->cx, ep->cy);
-    lineTo(polypath, xB, yB);
+    bezier_path_t bezier_path = {0};
+    moveTo(&bezier_path, ep->cx, ep->cy);
+    lineTo(&bezier_path, xB, yB);
 
     t = tan(0.5 * dEta);
     alpha = sin(dEta) * (sqrt(4 + 3 * t * t) - 1) / 3;
@@ -497,11 +483,15 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
 	xBDot = -aSinEtaB * ep->cosTheta - bCosEtaB * ep->sinTheta;
 	yBDot = -aSinEtaB * ep->sinTheta + bCosEtaB * ep->cosTheta;
 
-	curveTo(polypath, xA + alpha * xADot, yA + alpha * yADot, xB - alpha * xBDot,
-	        yB - alpha * yBDot, xB, yB);
+	curveTo(&bezier_path, xA + alpha * xADot, yA + alpha * yADot,
+	        xB - alpha * xBDot, yB - alpha * yBDot, xB, yB);
     }
 
-    endPath(polypath);
+    endPath(&bezier_path);
+
+    assert(bezier_path_size(&bezier_path) <= INT_MAX);
+    polypath->pn = (int)bezier_path_size(&bezier_path);
+    polypath->ps = bezier_path_detach(&bezier_path);
 
     return polypath;
 }
