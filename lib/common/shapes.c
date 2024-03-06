@@ -2231,7 +2231,7 @@ static void poly_init(node_t * n)
 		    temp = GAP / sin(gamma);
 
 		    /*convert this distance to x and y */
-		    sincos((alpha - gamma), &sinx, &cosx);
+		    sincos(alpha - gamma, &sinx, &cosx);
 		    sinx *= temp;
 		    cosx *= temp;
 		}
