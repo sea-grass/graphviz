@@ -605,7 +605,6 @@ EXCLUDE = (
     "plugin/gtk/support.c",
     "plugin/gtk/support.h",
     "plugin/lasi/gvrender_lasi.cpp",
-    "plugin/neato_layout/gvlayout_neato_layout.c",
     "plugin/neato_layout/gvplugin_neato_layout.c",
     "plugin/pango/gvgetfontlist.h",
     "plugin/pango/gvgetfontlist_pango.c",
