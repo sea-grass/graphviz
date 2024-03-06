@@ -312,7 +312,6 @@ EXCLUDE = (
     "lib/gvc/gvcext.h",
     "lib/gvc/gvcint.h",
     "lib/gvc/gvcjob.h",
-    "lib/gvc/gvcommon.h",
     "lib/gvc/gvconfig.c",
     "lib/gvc/gvconfig.h",
     "lib/gvc/gvcontext.c",
