@@ -127,6 +127,6 @@ gvplugin_installed_t gvlayout_neato_types[] = {
     {LAYOUT_CLUSTER, "osage", 0, &osage_engine, &neatogen_features},
     {LAYOUT_NOP1, "nop", 0, &nop1gen_engine, &neatogen_features},
     {LAYOUT_NOP1, "nop1", 0, &nop1gen_engine, &neatogen_features},
-    {LAYOUT_NOP1, "nop2", 0, &nop2gen_engine, &neatogen_features},
+    {LAYOUT_NOP2, "nop2", 0, &nop2gen_engine, &neatogen_features},
     {0, NULL, 0, NULL, NULL}
 };
