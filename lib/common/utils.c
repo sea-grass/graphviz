@@ -97,8 +97,7 @@ double late_double(void *obj, attrsym_t *attr, double defaultValue,
     else return rv;
 }
 
-/* get_inputscale:
- * Return value for PSinputscale. If this is > 0, it has been set on the
+/** Return value for PSinputscale. If this is > 0, it has been set on the
  * command line and this value is used.
  * Otherwise, we check the graph's inputscale attribute. If this is not set
  * or has a bad value, we return -1.
@@ -198,7 +197,6 @@ pointf coord(node_t * n)
 #define W_DEGREE 5
 
 /*
- *  Bezier :
  *	Evaluate a Bezier curve at a particular parameter value
  *      Fill in control points for resulting sub-curves if "Left" and
  *	"Right" are non-null.
@@ -491,10 +489,7 @@ initFontLabelEdgeAttr(edge_t * e, struct fontinfo *fi,
     lfi->fontcolor = late_nnstring(e, E_labelfontcolor, fi->fontcolor);
 }
 
-/* noClip:
- * Return true if head/tail end of edge should not be clipped
- * to node.
- */
+/// Return true if head/tail end of edge should not be clipped to node.
 static bool
 noClip(edge_t *e, attrsym_t* sym)
 {
@@ -509,8 +504,6 @@ noClip(edge_t *e, attrsym_t* sym)
     return rv;
 }
 
-/*chkPort:
- */
 static port
 chkPort (port (*pf)(node_t*, char*, char*), node_t* n, char* s)
 {
@@ -597,8 +590,6 @@ int common_init_edge(edge_t * e)
     return r;
 }
 
-/* addLabelBB:
- */
 static boxf addLabelBB(boxf bb, textlabel_t * lp, bool flipxy)
 {
     double width, height;
@@ -630,8 +621,7 @@ static boxf addLabelBB(boxf bb, textlabel_t * lp, bool flipxy)
     return bb;
 }
 
-/* polyBB:
- * Compute the bounding box of a polygon.
+/** Compute the bounding box of a polygon.
  * We only need to use the outer periphery.
  */
 boxf
@@ -652,8 +642,7 @@ polyBB (polygon_t* poly)
     return bb;
 }
 
-/* updateBB:
- * Reset graph's bounding box to include bounding box of the given label.
+/** Reset graph's bounding box to include bounding box of the given label.
  * Assume the label's position has been set.
  */
 void updateBB(graph_t * g, textlabel_t * lp)
@@ -661,8 +650,7 @@ void updateBB(graph_t * g, textlabel_t * lp)
     GD_bb(g) = addLabelBB(GD_bb(g), lp, GD_flip(g));
 }
 
-/* compute_bb:
- * Compute bounding box of g using nodes, splines, and clusters.
+/** Compute bounding box of g using nodes, splines, and clusters.
  * Assumes bb of clusters already computed.
  * store in GD_bb.
  */
@@ -734,8 +722,7 @@ bool is_a_cluster (Agraph_t* g)
          mapbool(agget(g, "cluster"));
 }
 
-/* setAttr:
- * Sets object's name attribute to the given value.
+/** Sets object's name attribute to the given value.
  * Creates the attribute if not already set.
  */
 Agsym_t *setAttr(graph_t * g, void *obj, char *name, char *value,
@@ -758,8 +745,7 @@ Agsym_t *setAttr(graph_t * g, void *obj, char *name, char *value,
     return ap;
 }
 
-/* clustNode:
- * Generate a special cluster node representing the end node
+/** Generate a special cluster node representing the end node
  * of an edge to the cluster cg. n is a node whose name is the same
  * as the cluster cg. clg is the subgraph of all of
  * the original nodes, which will be deleted later.
@@ -811,8 +797,6 @@ static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
 	return 0;
 }
 
-/* newItem:
- */
 static void *newItem(item *objp, Dtdisc_t *disc) {
     item *newp = gv_alloc(sizeof(item));
 
@@ -825,8 +809,6 @@ static void *newItem(item *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-/* freeItem:
- */
 static void freeItem(item *obj, Dtdisc_t *disc) {
     (void)disc;
     free(obj);
@@ -841,9 +823,7 @@ static Dtdisc_t mapDisc = {
     .comparf = (Dtcompar_f)cmpItem,
 };
 
-/* cloneEdge:
- * Make a copy of e in e's graph but using ct and ch as nodes
- */
+/// Make a copy of e in e's graph but using ct and ch as nodes
 static edge_t *cloneEdge(edge_t * e, node_t * ct, node_t * ch)
 {
     graph_t *g = agraphof(ct);
@@ -855,8 +835,6 @@ static edge_t *cloneEdge(edge_t * e, node_t * ct, node_t * ch)
     return ce;
 }
 
-/* insertEdge:
- */
 static void insertEdge(Dt_t * map, void *t, void *h, edge_t * e)
 {
     item dummy;
@@ -874,10 +852,7 @@ static void insertEdge(Dt_t * map, void *t, void *h, edge_t * e)
     dtinsert(map, &dummy);
 }
 
-/* mapEdge:
- * Check if we already have cluster edge corresponding to t->h,
- * and return it.
- */
+/// Check if we already have cluster edge corresponding to t->h, and return it.
 static item *mapEdge(Dt_t * map, edge_t * e)
 {
     void *key[2];
@@ -887,8 +862,7 @@ static item *mapEdge(Dt_t * map, edge_t * e)
     return dtmatch(map, &key);
 }
 
-/* checkCompound:
- * If endpoint names a cluster, mark for temporary deletion and create
+/** If endpoint names a cluster, mark for temporary deletion and create
  * special node and insert into cluster. Then clone the edge. Real edge
  * will be deleted when we delete the original node.
  * Invariant: new edge has same sense as old. That is, given t->h with
@@ -987,8 +961,7 @@ num_clust_edges(graph_t * g)
 	return 0;
 }
 
-/* processClusterEdges:
- * Look for cluster edges. Replace cluster edge endpoints
+/** Look for cluster edges. Replace cluster edge endpoints
  * corresponding to a cluster with special cluster nodes.
  * Delete original nodes.
  * If cluster edges are found, a cl_edge_t record will be
@@ -1029,8 +1002,7 @@ void processClusterEdges(graph_t * g)
     dtclose(cmap);
 }
 
-/* mapN:
- * Convert cluster nodes back to ordinary nodes
+/** Convert cluster nodes back to ordinary nodes
  * If n is already ordinary, return it.
  * Otherwise, we know node's name is "__i:xxx"
  * where i is some number and xxx is the nodes's original name.
@@ -1090,8 +1062,7 @@ static void undoCompound(edge_t * e, graph_t * clg)
     gv_cleanup_edge(e);
 }
 
-/* undoClusterEdges:
- * Replace cluster nodes with originals. Make sure original has
+/** Replace cluster nodes with originals. Make sure original has
  * no attributes. Replace original edges. Delete cluster nodes,
  * which will also delete cluster edges.
  */
@@ -1126,8 +1097,7 @@ void undoClusterEdges(graph_t * g)
     agclose(clg);
 }
 
-/* safe_dcl:
- * Find the attribute belonging to graph g for objects like obj
+/** Find the attribute belonging to graph g for objects like obj
  * with given name. If one does not exist, create it with the
  * default value defaultValue.
  */
@@ -1144,8 +1114,7 @@ static int comp_entities(const void *e1, const void *e2) {
 
 #define MAXENTLEN 8
 
-/* scanEntity:
- * Scan non-numeric entity, convert to &#...; form and store in xbuf.
+/** Scan non-numeric entity, convert to &#...; form and store in xbuf.
  * t points to first char after '&'. Return after final semicolon.
  * If unknown, we return t and let libexpat flag the error.
  *     */
@@ -1168,9 +1137,7 @@ char* scanEntity (char* t, agxbuf* xb)
     return endp + 1;
 }
 
-
-/* htmlEntity:
- * Check for an HTML entity for a special character.
+/** Check for an HTML entity for a special character.
  * Assume *s points to first byte after '&'.
  * If successful, return the corresponding value and update s to
  * point after the terminating ';'.
@@ -1259,8 +1226,7 @@ cvtAndAppend (unsigned char c, agxbuf* xb)
     return c;
 }
 
-/* htmlEntityUTF8:
- * substitute html entities like: &#123; and: &amp; with the UTF8 equivalents
+/** substitute html entities like: &#123; and: &amp; with the UTF8 equivalents
  * check for invalid utf8. If found, treat a single byte as Latin-1, convert it to
  * utf8 and warn the user.
  */
@@ -1342,11 +1308,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
     return agxbdisown(&xb);
 }
 
-/* latin1ToUTF8:
- * Converts string from Latin1 encoding to utf8
- * Also translates HTML entities.
- *
- */
+/// Converts string from Latin1 encoding to utf8. Also translates HTML entities.
 char* latin1ToUTF8 (char* s)
 {
     agxbuf xb = {0};
@@ -1375,8 +1337,7 @@ char* latin1ToUTF8 (char* s)
     return agxbdisown(&xb);
 }
 
-/* utf8ToLatin1:
- * Converts string from utf8 encoding to Latin1
+/** Converts string from utf8 encoding to Latin1
  * Note that it does not attempt to reproduce HTML entities.
  * We assume the input string comes from latin1ToUTF8.
  */
@@ -1463,9 +1424,7 @@ bool overlap_edge(edge_t *e, boxf b)
     return false;
 }
 
-/* edgeType:
- * Convert string to edge type.
- */
+/// Convert string to edge type.
 static int edgeType(const char *s, int defaultValue) {
     if (s == NULL || strcmp(s, "") == 0) {
         return defaultValue;
@@ -1503,8 +1462,7 @@ static int edgeType(const char *s, int defaultValue) {
     return defaultValue;
 }
 
-/* setEdgeType:
- * Sets graph's edge type based on the "splines" attribute.
+/** Sets graph's edge type based on the "splines" attribute.
  * If the attribute is not defined, use defaultValue.
  * If the attribute is "", use NONE.
  * If attribute value matches (case indepedent), use match.
@@ -1531,8 +1489,7 @@ void setEdgeType(graph_t *g, int defaultValue) {
     GD_flags(g) |= et;
 }
 
-/* get_gradient_points
- * Evaluates the extreme points of an ellipse or polygon
+/** Evaluates the extreme points of an ellipse or polygon
  * Determines the point at the center of the extreme points
  * If isRadial is true,sets the inner radius to half the distance to the min point;
  * else uses the angle parameter to identify two points on a line that defines the
@@ -1687,8 +1644,7 @@ static void fillMap (Agraph_t* g, Dt_t* map)
     }
 }
 
-/* mkClustMap:
- * Generates a dictionary mapping cluster names to corresponding cluster.
+/** Generates a dictionary mapping cluster names to corresponding cluster.
  * Used with cgraph as the latter does not support a flat namespace of clusters.
  * Assumes G has already built a cluster tree using GD_n_cluster and GD_clust.
  */
