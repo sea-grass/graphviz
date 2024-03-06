@@ -409,16 +409,13 @@ static bool isBox(node_t *n) {
     return false;
 }
 
-static int
-isEllipse(node_t* n)
-{
+static bool isEllipse(node_t *n) {
     polygon_t *p;
 
     if ((p = ND_shape(n)->polygon)) {
 	return p->sides <= 2;
     }
-    else
-	return 0;
+    return false;
 }
 
 static char **checkStyle(node_t * n, int *flagp)
