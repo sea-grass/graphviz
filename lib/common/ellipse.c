@@ -64,28 +64,8 @@ typedef struct {
   /* Start and end angles of the arc. */
     double eta1, eta2;
 
-  /* Position of the start and end points. */
-    double x1, y1, x2, y2;
-
     double f, e2, g, g2;
 } ellipse_t;
-
-  /* Compute the locations of the endpoints. */
-static void computeEndPoints(ellipse_t * ep)
-{
-    double aCosEta1 = ep->a * cos(ep->eta1);
-    double bSinEta1 = ep->b * sin(ep->eta1);
-    double aCosEta2 = ep->a * cos(ep->eta2);
-    double bSinEta2 = ep->b * sin(ep->eta2);
-
-    // start point
-    ep->x1 = ep->cx + aCosEta1;
-    ep->y1 = ep->cy + bSinEta1;
-
-    // end point
-    ep->x2 = ep->cx + aCosEta2;
-    ep->y2 = ep->cy + bSinEta2;
-}
 
 static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
                         double b, double lambda1, double lambda2) {
@@ -105,8 +85,6 @@ static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
     if (lambda2 - lambda1 > M_PI && ep->eta2 - ep->eta1 < M_PI) {
 	ep->eta2 += TWOPI;
     }
-
-    computeEndPoints(ep);
 
     /* Flatness parameters */
     ep->f = (ep->a - ep->b) / ep->a;
