@@ -172,10 +172,8 @@ static void computeBounds(ellipse_t * ep)
 
 }
 
-static void
-initEllipse(ellipse_t * ep, double cx, double cy, double a, double b,
-	    double theta, double lambda1, double lambda2)
-{
+static void initEllipse(ellipse_t * ep, double cx, double cy, double a,
+                        double b, double lambda1, double lambda2) {
     ep->cx = cx;
     ep->cy = cy;
     ep->a = a;
@@ -183,8 +181,8 @@ initEllipse(ellipse_t * ep, double cx, double cy, double a, double b,
 
     ep->eta1 = atan2(sin(lambda1) / b, cos(lambda1) / a);
     ep->eta2 = atan2(sin(lambda2) / b, cos(lambda2) / a);
-    ep->cosTheta = cos(theta);
-    ep->sinTheta = sin(theta);
+    ep->cosTheta = 1;
+    ep->sinTheta = 0;
 
     // make sure we have eta1 <= eta2 <= eta1 + 2*PI
     ep->eta2 -= TWOPI * floor((ep->eta2 - ep->eta1) / TWOPI);
@@ -508,7 +506,7 @@ Ppolyline_t *ellipticWedge(pointf ctr, double xsemi, double ysemi,
     ellipse_t ell;
     Ppolyline_t *pp;
 
-    initEllipse(&ell, ctr.x, ctr.y, xsemi, ysemi, 0, angle0, angle1);
+    initEllipse(&ell, ctr.x, ctr.y, xsemi, ysemi, angle0, angle1);
     pp = genEllipticPath(&ell);
     return pp;
 }
