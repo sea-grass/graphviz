@@ -151,9 +151,7 @@ static double estimateError(ellipse_t *ep, double etaA, double etaB) {
 
     // select the right coefficient's set according to b/a
     double (*coeffs)[4][4];
-    double *safety;
     coeffs = x < 0.25 ? coeffs3Low : coeffs3High;
-    safety = safety3;
 
     c0 = RationalFunction(x, coeffs[0][0])
        + cos2 * RationalFunction(x, coeffs[0][1])
@@ -165,7 +163,7 @@ static double estimateError(ellipse_t *ep, double etaA, double etaB) {
        + cos4 * RationalFunction(x, coeffs[1][2])
        + cos6 * RationalFunction(x, coeffs[1][3]);
 
-    return RationalFunction(x, safety) * ep->a * exp(c0 + c1 * dEta);
+    return RationalFunction(x, safety3) * ep->a * exp(c0 + c1 * dEta);
 }
 
 DEFINE_LIST(bezier_path, pointf)
