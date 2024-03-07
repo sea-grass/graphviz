@@ -433,7 +433,6 @@ EXCLUDE = (
     "lib/neatogen/site.c",
     "lib/neatogen/site.h",
     "lib/neatogen/smart_ini_x.c",
-    "lib/neatogen/solve.c",
     "lib/neatogen/sparsegraph.h",
     "lib/neatogen/stress.c",
     "lib/neatogen/stress.h",
