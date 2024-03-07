@@ -21,6 +21,7 @@
 #define FDP_PRIVATE 1
 
 #include <cgraph/alloc.h>
+#include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/prisize_t.h>
 #include <fdpgen/fdp.h>
@@ -30,19 +31,16 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#define MARK(n) (marks[ND_id(n)])
-
-static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out, char *marks)
-{
+static void dfs(Agraph_t *g, Agnode_t *n, Agraph_t *out, bitarray_t *marks) {
     Agedge_t *e;
     Agnode_t *other;
 
-    MARK(n) = 1;
+    bitarray_set(marks, ND_id(n), true);
     agsubnode(out,n,1);
     for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	if ((other = agtail(e)) == n)
 	    other = aghead(e);
-	if (!MARK(other))
+	if (!bitarray_get(*marks, ND_id(other)))
 	    dfs(g, other, out, marks);
     }
 }
@@ -69,7 +67,8 @@ graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
     graph_t **cp;
     int pinflag = 0;
 
-    char *marks = gv_calloc(agnnodes(g), sizeof(char)); // freed below
+    assert(agnnodes(g) >= 0);
+    bitarray_t marks = bitarray_new((size_t)agnnodes(g));
 
     /* Create component based on port nodes */
     subg = 0;
@@ -81,16 +80,16 @@ graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
 	PORTS(subg) = pp;
 	NPORTS(subg) = NPORTS(g);
 	for (; pp->n; pp++) {
-	    if (MARK(pp->n))
+	    if (bitarray_get(marks, ND_id(pp->n)))
 		continue;
-	    dfs(g, pp->n, subg, marks);
+	    dfs(g, pp->n, subg, &marks);
 	}
     }
 
     /* Create/extend component based on pinned nodes */
     /* Note that ports cannot be pinned */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARK(n))
+	if (bitarray_get(marks, ND_id(n)))
 	    continue;
 	if (ND_pinned(n) != P_PIN)
 	    continue;
@@ -101,23 +100,23 @@ graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
 	    GD_alg(subg) = gv_alloc(sizeof(gdata));
 	}
 	pinflag = 1;
-	dfs(g, n, subg, marks);
+	dfs(g, n, subg, &marks);
     }
     if (subg)
 	(void)graphviz_node_induce(subg, NULL);
 
     /* Pick up remaining components */
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (MARK(n))
+	if (bitarray_get(marks, ND_id(n)))
 	    continue;
 	snprintf(name, sizeof(name), "cc%s+%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
 	subg = agsubg(g, name,1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	GD_alg(subg) = gv_alloc(sizeof(gdata));
-	dfs(g, n, subg, marks);
+	dfs(g, n, subg, &marks);
 	(void)graphviz_node_induce(subg, NULL);
     }
-    free(marks);
+    bitarray_reset(&marks);
     C_cnt += c_cnt;
 
     if (cnt)
