@@ -77,8 +77,8 @@ void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
     b[m] = c[m];
     const size_t mp = m + 1;
     for (size_t j = mp; j < n; j++)
-      b[m] = b[m] - a[m * n + j] * b[j];
-    b[m] = b[m] / a[m * n + m];
+      b[m] -= a[m * n + j] * b[j];
+    b[m] /= a[m * n + m];
   }
   /* restore original a,c */
   for (size_t i = 0; i < n; i++)
