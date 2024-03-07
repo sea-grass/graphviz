@@ -34,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `dot -c`, when constructing the config6 file, includes comments explaining
   any attempted actions that failed during plugin loading. #2456
 - **Breaking**: The `Ndim` global is now a `unsigned short`.
+- fdpgen no longer truncates graph names when inferring new names for connected
+  component subgraphs.
 
 ### Fixed
 

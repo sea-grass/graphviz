@@ -20,6 +20,7 @@
 /* use PRIVATE interface */
 #define FDP_PRIVATE 1
 
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
@@ -60,7 +61,7 @@ static size_t C_cnt = 0;
 graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
     node_t *n;
     graph_t *subg;
-    char name[128];
+    agxbuf name = {0};
     size_t c_cnt = 0;
     bport_t *pp;
     graph_t **comps;
@@ -73,8 +74,8 @@ graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
     /* Create component based on port nodes */
     subg = 0;
     if ((pp = PORTS(g))) {
-	snprintf(name, sizeof(name), "cc%s_%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
-	subg = agsubg(g, name,1);
+	agxbprint(&name, "cc%s_%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
+	subg = agsubg(g, agxbuse(&name), 1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_alg(subg) = gv_alloc(sizeof(gdata));
 	PORTS(subg) = pp;
@@ -94,8 +95,8 @@ graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
 	if (ND_pinned(n) != P_PIN)
 	    continue;
 	if (!subg) {
-	    snprintf(name, sizeof(name), "cc%s_%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
-	    subg = agsubg(g, name,1);
+	    agxbprint(&name, "cc%s_%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
+	    subg = agsubg(g, agxbuse(&name), 1);
 		agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = gv_alloc(sizeof(gdata));
 	}
@@ -109,14 +110,15 @@ graph_t **findCComp(graph_t *g, size_t *cnt, int *pinned) {
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (bitarray_get(marks, ND_id(n)))
 	    continue;
-	snprintf(name, sizeof(name), "cc%s+%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
-	subg = agsubg(g, name,1);
+	agxbprint(&name, "cc%s+%" PRISIZE_T, agnameof(g), c_cnt++ + C_cnt);
+	subg = agsubg(g, agxbuse(&name), 1);
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
 	GD_alg(subg) = gv_alloc(sizeof(gdata));
 	dfs(g, n, subg, &marks);
 	(void)graphviz_node_induce(subg, NULL);
     }
     bitarray_reset(&marks);
+    agxbfree(&name);
     C_cnt += c_cnt;
 
     if (cnt)
