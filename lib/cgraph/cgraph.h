@@ -39,6 +39,7 @@
 
 #include <inttypes.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include "cdt.h"
 #include <stddef.h>
