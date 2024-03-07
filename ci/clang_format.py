@@ -421,7 +421,6 @@ EXCLUDE = (
     "lib/neatogen/pca.h",
     "lib/neatogen/poly.c",
     "lib/neatogen/poly.h",
-    "lib/neatogen/printvis.c",
     "lib/neatogen/quad_prog_solve.c",
     "lib/neatogen/quad_prog_solver.h",
     "lib/neatogen/quad_prog_vpsc.c",
