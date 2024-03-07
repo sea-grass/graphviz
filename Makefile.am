@@ -12,9 +12,6 @@ dist_man_MANS = graphviz.7
 
 # $(subdirs) contains the list from: AC_CONFIG_SUBDIRS
 SUBDIRS = $(subdirs) lib plugin cmd tclpkg doc contrib share graphs tests
-if WITH_DARWIN
-SUBDIRS += macosx
-endif
 
 .PHONY: doxygen
 doxygen:
@@ -54,5 +51,9 @@ deb: dist
 	rm -rf graphviz-$(VERSION)
 	zcat graphviz-$(VERSION).tar.gz | tar xf -
 	(cd graphviz-$(VERSION); fakeroot make -f debian/rules binary)
+
+.PHONY: pkg
+pkg: dist
+	tar xzf graphviz-$(VERSION).tar.gz && make -C graphviz-$(VERSION)/macosx/build && mv graphviz-$(VERSION)/macosx/build/graphviz-*.pkg .
 
 DISTCLEANFILES = config.cache builddate.h FEATURE/* graphviz-$(VERSION)*
