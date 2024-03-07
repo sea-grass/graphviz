@@ -550,7 +550,8 @@ node_t *choose_node(graph_t * G, int nG)
 void move_node(graph_t * G, int nG, node_t * n)
 {
     int i, m;
-    static double b[MAXDIM], c[MAXDIM];
+    double b[MAXDIM] = {0};
+    double c[MAXDIM] = {0};
 
     m = ND_id(n);
     double *a = gv_calloc((size_t)Ndim * Ndim, sizeof(double));
