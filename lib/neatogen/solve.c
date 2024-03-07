@@ -29,8 +29,6 @@ void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
 
     assert(n >= 2);
 
-    double amax, dum, pivot;
-
     const size_t nsq = n * n;
     double *asave = gv_calloc(nsq, sizeof(double));
     double *csave = gv_calloc(n, sizeof(double));
@@ -43,10 +41,10 @@ void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
     const size_t nm = n - 1;
     for (size_t i = 0; i < nm; i++) {
 	/* find largest pivot */
-	amax = 0.;
+	double amax = 0.;
 	size_t istar = 0;
 	for (size_t ii = i; ii < n; ii++) {
-	    dum = fabs(asub(ii, i));
+	    const double dum = fabs(asub(ii, i));
 	    if (dum < amax)
 		continue;
 	    istar = ii;
@@ -64,7 +62,7 @@ void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
 	/*pivot */
 	const size_t ip = i + 1;
 	for (size_t ii = ip; ii < n; ii++) {
-	    pivot = a[ii * n + i] / a[i * n + i];
+	    const double pivot = a[ii * n + i] / a[i * n + i];
 	    c[ii] = c[ii] - pivot * c[i];
 	    for (size_t j = 0; j < n; j++)
 		a[ii * n + j] = a[ii * n + j] - pivot * a[i * n + j];
