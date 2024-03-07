@@ -14,6 +14,7 @@
 #include	<math.h>
 #include	<neatogen/neato.h>
 #include	<neatogen/stress.h>
+#include	<stdlib.h>
 #include	<time.h>
 #ifndef _WIN32
 #include	<unistd.h>
@@ -549,10 +550,10 @@ node_t *choose_node(graph_t * G, int nG)
 void move_node(graph_t * G, int nG, node_t * n)
 {
     int i, m;
-    static double *a, b[MAXDIM], c[MAXDIM];
+    static double b[MAXDIM], c[MAXDIM];
 
     m = ND_id(n);
-    a = ALLOC((size_t)Ndim * Ndim, a, double);
+    double *a = gv_calloc((size_t)Ndim * Ndim, sizeof(double));
     D2E(G, nG, m, a);
     for (i = 0; i < Ndim; i++)
 	c[i] = -GD_sum_t(G)[m][i];
@@ -571,6 +572,7 @@ void move_node(graph_t * G, int nG, node_t * n)
 	sum = sqrt(sum);
 	fprintf(stderr, "%s %.3f\n", agnameof(n), sum);
     }
+    free(a);
 }
 
 static node_t **Heap;
