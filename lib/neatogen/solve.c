@@ -19,6 +19,11 @@
 #include <neatogen/neatoprocs.h>
 #define asub(i,j) a[(i)*n + (j)]
 
+static void swap(double *x, double *y) {
+  const double temp = *x;
+  *x = *y;
+  *y = temp;
+}
 
 void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
 
@@ -53,13 +58,9 @@ void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
 	/* switch rows */
 	for (size_t j = i; j < n; j++) {
 	    const size_t t = istar * n + j;
-	    dum = a[t];
-	    a[t] = a[i * n + j];
-	    a[i * n + j] = dum;
+	    swap(&a[t], &a[i * n + j]);
 	}
-	dum = c[istar];
-	c[istar] = c[i];
-	c[i] = dum;
+	swap(&c[istar], &c[i]);
 	/*pivot */
 	const size_t ip = i + 1;
 	for (size_t ii = ip; ii < n; ii++) {
