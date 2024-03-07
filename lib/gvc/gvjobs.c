@@ -18,6 +18,7 @@
 #include        <gvc/gvcint.h>
 #include        <gvc/gvcproc.h>
 #include        <stdbool.h>
+#include        <stddef.h>
 
 static GVJ_t *output_filename_job;
 static GVJ_t *output_langname_job;
@@ -78,7 +79,7 @@ bool gvjobs_output_langname(GVC_t * gvc, const char *name)
     output_langname_job->gvc = gvc;
 
     /* load it now to check that it exists */
-    if (gvplugin_load(gvc, API_device, name))
+    if (gvplugin_load(gvc, API_device, name, NULL))
 	return true;
     return false;
 }

@@ -22,6 +22,7 @@
 #include <gvc/gvcproc.h>
 #include <gvc/gvc.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 extern void graph_init(Agraph_t *g, bool use_rankdir);
 extern void graph_cleanup(Agraph_t *g);
@@ -33,7 +34,7 @@ int gvlayout_select(GVC_t * gvc, const char *layout)
     gvplugin_available_t *plugin;
     gvplugin_installed_t *typeptr;
 
-    plugin = gvplugin_load(gvc, API_layout, layout);
+    plugin = gvplugin_load(gvc, API_layout, layout, NULL);
     if (plugin) {
 	typeptr = plugin->typeptr;
 	gvc->layout.type = typeptr->type;

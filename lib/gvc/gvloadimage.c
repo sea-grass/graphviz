@@ -24,13 +24,14 @@
 /* for agerr() */
 #include <cgraph/cgraph.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static int gvloadimage_select(GVJ_t * job, char *str)
 {
     gvplugin_available_t *plugin;
     gvplugin_installed_t *typeptr;
 
-    plugin = gvplugin_load(job->gvc, API_loadimage, str);
+    plugin = gvplugin_load(job->gvc, API_loadimage, str, NULL);
     if (plugin) {
         typeptr = plugin->typeptr;
         job->loadimage.engine = typeptr->engine;
