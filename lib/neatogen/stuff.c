@@ -552,7 +552,7 @@ void move_node(graph_t * G, int nG, node_t * n)
     static double *a, b[MAXDIM], c[MAXDIM];
 
     m = ND_id(n);
-    a = ALLOC(Ndim * Ndim, a, double);
+    a = ALLOC((size_t)Ndim * Ndim, a, double);
     D2E(G, nG, m, a);
     for (i = 0; i < Ndim; i++)
 	c[i] = -GD_sum_t(G)[m][i];

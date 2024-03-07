@@ -53,7 +53,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
     GLOBALS_API EXTERN bool Concentrate; /// if parallel edges should be merged
     GLOBALS_API EXTERN double Epsilon;	/* defined in input_graph */
     GLOBALS_API EXTERN int MaxIter;
-    GLOBALS_API EXTERN int Ndim;
+    GLOBALS_API EXTERN unsigned short Ndim;
     GLOBALS_API EXTERN int State;		/* last finished phase */
     GLOBALS_API EXTERN int EdgeLabelsDone;	/* true if edge labels have been positioned */
     GLOBALS_API EXTERN double Initial_dist;

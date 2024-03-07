@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `bsearch_cmpf` and `qsort_cmpf` typedefs have been removed.
 - `dot -c`, when constructing the config6 file, includes comments explaining
   any attempted actions that failed during plugin loading. #2456
+- **Breaking**: The `Ndim` global is now a `unsigned short`.
 
 ### Fixed
 
