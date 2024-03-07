@@ -10,6 +10,7 @@
 
 
 /* solves the system ab=c using gauss reduction */
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <math.h>
 #include <stdlib.h>
@@ -19,29 +20,27 @@
 #define asub(i,j) a[(i)*n + (j)]
 
 
-void solve(double *a, double *b, double *c, int n)
-{				/*a[n][n],b[n],c[n] */
-    double amax, dum, pivot;
-    int i, ii, j;
-    int k, m, mp;
-    int istar, ip;
-    int nm, nsq, t;
+void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
 
-    istar = 0;			/* quiet warnings */
-    nsq = n * n;
+    assert(n >= 2);
+
+    double amax, dum, pivot;
+
+    const size_t nsq = n * n;
     double *asave = gv_calloc(nsq, sizeof(double));
     double *csave = gv_calloc(n, sizeof(double));
 
-    for (i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
 	csave[i] = c[i];
-    for (i = 0; i < nsq; i++)
+    for (size_t i = 0; i < nsq; i++)
 	asave[i] = a[i];
     /* eliminate ith unknown */
-    nm = n - 1;
-    for (i = 0; i < nm; i++) {
+    const size_t nm = n - 1;
+    for (size_t i = 0; i < nm; i++) {
 	/* find largest pivot */
 	amax = 0.;
-	for (ii = i; ii < n; ii++) {
+	size_t istar = 0;
+	for (size_t ii = i; ii < n; ii++) {
 	    dum = fabs(asub(ii, i));
 	    if (dum < amax)
 		continue;
@@ -52,8 +51,8 @@ void solve(double *a, double *b, double *c, int n)
 	if (amax < 1.e-10)
 	    goto bad;
 	/* switch rows */
-	for (j = i; j < n; j++) {
-	    t = istar * n + j;
+	for (size_t j = i; j < n; j++) {
+	    const size_t t = istar * n + j;
 	    dum = a[t];
 	    a[t] = a[i * n + j];
 	    a[i * n + j] = dum;
@@ -62,11 +61,11 @@ void solve(double *a, double *b, double *c, int n)
 	c[istar] = c[i];
 	c[i] = dum;
 	/*pivot */
-	ip = i + 1;
-	for (ii = ip; ii < n; ii++) {
+	const size_t ip = i + 1;
+	for (size_t ii = ip; ii < n; ii++) {
 	    pivot = a[ii * n + i] / a[i * n + i];
 	    c[ii] = c[ii] - pivot * c[i];
-	    for (j = 0; j < n; j++)
+	    for (size_t j = 0; j < n; j++)
 		a[ii * n + j] = a[ii * n + j] - pivot * a[i * n + j];
 	}
     }
@@ -75,18 +74,18 @@ void solve(double *a, double *b, double *c, int n)
 	goto bad;
     b[n - 1] = c[n - 1] / a[n * n - 1];
     /* back substitute */
-    for (k = 0; k < nm; k++) {
-	m = n - k - 2;
+    for (size_t k = 0; k < nm; k++) {
+	const size_t m = n - k - 2;
 	b[m] = c[m];
-	mp = m + 1;
-	for (j = mp; j < n; j++)
+	const size_t mp = m + 1;
+	for (size_t j = mp; j < n; j++)
 	    b[m] = b[m] - a[m * n + j] * b[j];
 	b[m] = b[m] / a[m * n + m];
     }
     /* restore original a,c */
-    for (i = 0; i < n; i++)
+    for (size_t i = 0; i < n; i++)
 	c[i] = csave[i];
-    for (i = 0; i < nsq; i++)
+    for (size_t i = 0; i < nsq; i++)
 	a[i] = asave[i];
     free(asave);
     free(csave);

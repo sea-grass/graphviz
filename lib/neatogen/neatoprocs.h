@@ -11,6 +11,7 @@
 #pragma once
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,7 +54,7 @@ extern "C" {
     NEATOPROCS_API void free_scan_graph(graph_t *);
     NEATOPROCS_API int setSeed (graph_t*, int dflt, long* seedp);
     NEATOPROCS_API void shortest_path(graph_t *, int);
-    NEATOPROCS_API void solve(double *, double *, double *, int);
+    NEATOPROCS_API void solve(double *, double *, double *, size_t);
     NEATOPROCS_API void solve_model(graph_t *, int);
     NEATOPROCS_API int solveCircuit(int nG, double **Gm, double **Gm_inv);
     NEATOPROCS_API void spline_edges(Agraph_t *);
