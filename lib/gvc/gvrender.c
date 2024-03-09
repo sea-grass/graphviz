@@ -213,6 +213,7 @@ static void gvrender_resolve_color(gvrender_features_t * features,
 	    }
 	}
     }
+    free(tok);
 }
 
 void gvrender_begin_graph(GVJ_t *job) {

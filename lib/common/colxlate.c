@@ -138,26 +138,16 @@ static int colorcmpf(const void *p0, const void *p1)
 
 char *canontoken(char *str)
 {
-    static char *canon;
-    static size_t allocated;
-    char c, *p, *q;
-    size_t len;
+    agxbuf canon = {0};
+    char c, *p;
 
     p = str;
-    len = strlen(str);
-    if (len >= allocated) {
-	size_t new_allocated = len + 1 + 10;
-	canon = gv_recalloc(canon, allocated, new_allocated, sizeof(char));
-	allocated = new_allocated;
-    }
-    q = canon;
     while ((c = *p++)) {
 	if (gv_isupper(c))
 	    c = (char)tolower(c);
-	*q++ = c;
+	agxbputc(&canon, c);
     }
-    *q = '\0';
-    return canon;
+    return agxbdisown(&canon);
 }
 
 /* fullColor:
@@ -210,9 +200,9 @@ static char* resolveColor (char* str)
     char* ss;   /* second slash */
     char* c2;   /* second char */
 
-    if (!strcmp(str, "black")) return str;
-    if (!strcmp(str, "white")) return str;
-    if (!strcmp(str, "lightgrey")) return str;
+    if (!strcmp(str, "black")) return strdup(str);
+    if (!strcmp(str, "white")) return strdup(str);
+    if (!strcmp(str, "lightgrey")) return strdup(str);
     agxbuf xb = {0};
     if (*str == '/') {   /* if begins with '/' */
 	c2 = str+1;
@@ -231,9 +221,9 @@ static char* resolveColor (char* str)
     }
     else if (ISNONDFLT(colorscheme)) s = fullColor(&xb, colorscheme, str);
     else s = str;
-    s = canontoken(s);
+    char *on_heap = strdup(s);
     agxbfree(&xb);
-    return s;
+    return on_heap;
 }
 
 int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
@@ -382,10 +372,11 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     char *name = resolveColor(str);
     if (!name)
 	return COLOR_MALLOC_FAIL;
-    if (last == NULL || strcmp(last->name, name)) {
+    if (last == NULL || strcasecmp(last->name, name)) {
 	last = bsearch(name, color_lib, sizeof(color_lib) / sizeof(hsvrgbacolor_t),
 	               sizeof(color_lib[0]), colorcmpf);
     }
+    free(name);
     if (last != NULL) {
 	switch (target_type) {
 	case HSVA_DOUBLE:
