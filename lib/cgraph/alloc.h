@@ -1,4 +1,5 @@
 /// \file
+/// \ingroup cgraph_utils
 /// \brief Memory allocation wrappers that exit on failure
 ///
 /// Much Graphviz code is not in a position to gracefully handle failure of

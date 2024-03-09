@@ -1,5 +1,6 @@
 /// \file
 /// \brief Implementation of a dynamically expanding stack data structure
+/// \ingroup cgraph_utils
 
 #pragma once
 

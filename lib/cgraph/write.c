@@ -1,3 +1,11 @@
+/**
+ * @file
+ * @brief implements @ref agwrite, @ref agcanon, @ref agstrcanon,
+ * and @ref agcanonStr
+ *
+ * @ingroup cgraph_graph
+ * @ingroup cgraph_core
+ */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials

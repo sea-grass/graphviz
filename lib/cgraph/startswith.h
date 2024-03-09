@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup cgraph_utils
 #pragma once
 
 #include <assert.h>

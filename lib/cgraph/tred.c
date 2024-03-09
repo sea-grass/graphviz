@@ -1,6 +1,11 @@
 /**
  * @file
  * @brief transitive reduction filter for directed graphs
+ * filter for directed graphs, API: cgraph.h,
+ * implements @ref graphviz_tred,
+ * used in cmd/tools/tred.c
+ *
+ * @ingroup cgraph_app
  *
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
@@ -205,3 +210,8 @@ void graphviz_tred(Agraph_t *g, const graphviz_tred_options_t *opts) {
   agwrite(g, opts->out);
   fflush(opts->out);
 }
+/**
+ * @defgroup cgraph_app app
+ * @brief uncoupled application specific functions
+ * @ingroup cgraph
+ */

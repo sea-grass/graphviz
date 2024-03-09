@@ -1,3 +1,13 @@
+/**
+ * @file
+ * @brief supports user-supplied data
+ *
+ * The ingraphs library works with libcgraph with all user-supplied data.
+ * For this to work, the include file relies upon its context to supply
+ * a definition of @ref Agraph_t.
+ *
+ * @ingroup cgraph_app
+ */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -9,11 +19,6 @@
  *************************************************************************/
 
 #pragma once
-
-/* The ingraphs library works with libcgraph with all user-supplied data. For
- * this to work, the include file relies upon its context to supply a definition
- * of Agraph_t.
- */
 
 #include "config.h"
 #include <stdbool.h>

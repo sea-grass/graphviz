@@ -2,6 +2,7 @@
  * @file
  * @brief implementation of dynamic attributes
  * @ingroup cgraph_attr
+ * @ingroup cgraph_core
  */
  /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 

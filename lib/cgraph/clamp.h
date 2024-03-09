@@ -1,5 +1,6 @@
 /// \file
 /// \brief Arithmetic helper functions
+/// \ingroup cgraph_utils
 
 #pragma once
 

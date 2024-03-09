@@ -1,5 +1,6 @@
 /// \file
 /// \brief abstraction for squashing compiler warnings for unused symbols
+/// \ingroup cgraph_utils
 
 #pragma once
 
