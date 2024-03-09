@@ -59,7 +59,6 @@ perl-ExtUtils-Embed \
 # Language extension gv_php
 php-devel \
 openssl-devel \
-libxml2-devel \
 # Language extension gv_python3
 python3-devel \
 # Language extension gv_ruby
