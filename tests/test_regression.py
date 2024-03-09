@@ -580,12 +580,29 @@ def test_1276():
 )
 def test_1308():
     """
-    processing a malformed graph found by Google Autofuzz should not crash
+    processing a minimized graph found by Google Autofuzz should not crash
     https://gitlab.com/graphviz/graphviz/-/issues/1308
     """
 
     # locate our associated test case in this directory
     input = Path(__file__).parent / "1308.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("svg", input)
+
+
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1308"
+)
+def test_1308_1():
+    """
+    processing a malformed graph found by Google Autofuzz should not crash
+    https://gitlab.com/graphviz/graphviz/-/issues/1308
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "1308_1.dot"
     assert input.exists(), "unexpectedly missing test case"
 
     # run it through Graphviz
