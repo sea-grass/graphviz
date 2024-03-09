@@ -1273,8 +1273,7 @@ void build_ranks(graph_t * g, int pass)
 	    }
 	}
     }
-    if (dequeue(q))
-	agerr(AGERR, "surprise\n");
+    assert(dequeue(q) == NULL);
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	GD_rank(Root)[i].valid = false;
 	if (GD_flip(g) && GD_rank(g)[i].n > 0) {
