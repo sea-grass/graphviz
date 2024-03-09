@@ -1165,7 +1165,7 @@ void allocate_ranks(graph_t * g)
     }
     GD_rank(g) = gv_calloc(GD_maxrank(g) + 2, sizeof(rank_t));
     for (r = GD_minrank(g); r <= GD_maxrank(g); r++) {
-	GD_rank(g)[r].an = GD_rank(g)[r].n = cn[r];
+	GD_rank(g)[r].an = GD_rank(g)[r].n = cn[r] + 1;
 	GD_rank(g)[r].av = GD_rank(g)[r].v = gv_calloc(cn[r] + 1, sizeof(node_t*));
     }
     free(cn);

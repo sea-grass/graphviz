@@ -575,9 +575,6 @@ def test_1276():
     ), "escaped label not found in GML output"
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1308"
-)
 def test_1308():
     """
     processing a minimized graph found by Google Autofuzz should not crash
@@ -592,9 +589,6 @@ def test_1308():
     dot("svg", input)
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1308"
-)
 def test_1308_1():
     """
     processing a malformed graph found by Google Autofuzz should not crash
