@@ -59,9 +59,7 @@ char *aglasterr(void)
     return buf;
 }
 
-/* userout:
- * Report messages using a user-supplied write function 
- */
+/// Report messages using a user-supplied write function 
 static void
 userout (agerrlevel_t level, const char *fmt, va_list args)
 {

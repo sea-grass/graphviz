@@ -25,8 +25,7 @@
 #include <stdlib.h>
 
 
-/* nextFile:
- * Set next available file.
+/* Set next available file.
  * If Files is NULL, we just read from stdin.
  */
 static void nextFile(ingraph_state * sp)
@@ -56,8 +55,7 @@ static void nextFile(ingraph_state * sp)
     sp->fp = rv;
 }
 
-/* nextGraph:
- * Read and return next graph; return NULL if done.
+/* Read and return next graph; return NULL if done.
  * Read graph from currently open file. If none, open next file.
  */
 Agraph_t *nextGraph(ingraph_state * sp)
@@ -83,8 +81,7 @@ Agraph_t *nextGraph(ingraph_state * sp)
     return g;
 }
 
-/* new_ing:
- * Create new ingraph state. If sp is non-NULL, we
+/* Create new ingraph state. If sp is non-NULL, we
  * assume user is supplying memory.
  */
 static ingraph_state*
@@ -125,8 +122,7 @@ ingraph_state *newIng(ingraph_state *sp, char **files,
   return new_ing(sp, files, 0, readf);
 }
 
-/* newIngGraphs:
- * Create new ingraph state using supplied graphs. If sp is non-NULL, we
+/* Create new ingraph state using supplied graphs. If sp is non-NULL, we
  * assume user is supplying memory.
  */
 ingraph_state *newIngGraphs(ingraph_state *sp, Agraph_t **graphs,
@@ -138,16 +134,14 @@ static Agraph_t *dflt_read(void *fp) {
   return agread(fp, NULL);
 }
 
-/* newIngraph:
- * At present, we require opf to be non-NULL. In
+/* At present, we require opf to be non-NULL. In
  * theory, we could assume a function agread(FILE*,void*)
  */
 ingraph_state *newIngraph(ingraph_state * sp, char **files) {
   return newIng(sp, files, dflt_read);
 }
 
-/* closeIngraph:
- * Close any open files and free discipline
+/* Close any open files and free discipline
  * Free sp if necessary.
  */
 void closeIngraph(ingraph_state * sp)
@@ -158,9 +152,7 @@ void closeIngraph(ingraph_state * sp)
 	free(sp);
 }
 
-/* fileName:
- * Return name of current file being processed.
- */
+/// Return name of current file being processed.
 char *fileName(ingraph_state * sp)
 {
     char *fname;
