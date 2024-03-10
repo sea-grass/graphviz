@@ -1027,8 +1027,10 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     Dt_t *vmap;
 
     /* count number of triangles in path */
-    for (nxt = dad[t]; nxt != s; nxt = dad[nxt])
+    for (nxt = dad[t]; nxt != s; nxt = dad[nxt]) {
 	nt++;
+	assert (nxt != dad[nxt] && "infinite loop due to 'nxt' not changing");
+    }
 
     side_t *side1 = gv_calloc(nt + 4, sizeof(side_t));
     side_t *side2 = gv_calloc(nt + 4, sizeof(side_t));
