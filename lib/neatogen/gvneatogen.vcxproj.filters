@@ -209,9 +209,6 @@
     <ClCompile Include="poly.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="printvis.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="quad_prog_solve.c">
       <Filter>Source Files</Filter>
     </ClCompile>

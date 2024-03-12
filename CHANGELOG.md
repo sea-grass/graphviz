@@ -31,8 +31,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `cccomps`, and `pccomps` now take the number of items they are operating on
   (`ng`) as a `size_t`.
 - **Breaking**: The `bsearch_cmpf` and `qsort_cmpf` typedefs have been removed.
-- `dot -c`, when constructing the config6 file, includes comments explaining
+- `dot -c -v`, when constructing the config6 file, includes comments explaining
   any attempted actions that failed during plugin loading. #2456
+- **Breaking**: The `Ndim` global is now a `unsigned short`.
+- fdpgen no longer truncates graph names when inferring new names for connected
+  component subgraphs.
 
 ### Fixed
 

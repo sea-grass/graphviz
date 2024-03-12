@@ -67,7 +67,6 @@ set(SOURCES
   overlap.c
   pca.c
   poly.c
-  printvis.c
   quad_prog_solve.c
   site.c
   smart_ini_x.c

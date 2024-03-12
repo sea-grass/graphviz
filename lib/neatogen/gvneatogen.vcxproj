@@ -150,7 +150,6 @@
     <ClCompile Include="overlap.c" />
     <ClCompile Include="pca.c" />
     <ClCompile Include="poly.c" />
-    <ClCompile Include="printvis.c" />
     <ClCompile Include="quad_prog_solve.c" />
     <ClCompile Include="quad_prog_vpsc.c" />
     <ClCompile Include="randomkit.c" />
