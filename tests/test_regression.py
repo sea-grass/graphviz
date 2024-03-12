@@ -3880,7 +3880,6 @@ def test_pic_font_size():
 
 
 @pytest.mark.skipif(which("mm2gv") is None, reason="mm2gv not available")
-@pytest.mark.xfail()
 def test_mm_banner_overflow(tmp_path: Path):
     """mm2gv should be robust against files with a corrupted banner"""
 

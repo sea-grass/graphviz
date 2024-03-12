@@ -28,18 +28,19 @@
 int mm_read_banner(FILE * f, MM_typecode * matcode)
 {
     char line[MM_MAX_LINE_LENGTH];
-    char banner[MM_MAX_TOKEN_LENGTH];
-    char mtx[MM_MAX_TOKEN_LENGTH];
-    char crd[MM_MAX_TOKEN_LENGTH];
-    char data_type[MM_MAX_TOKEN_LENGTH];
-    char storage_scheme[MM_MAX_TOKEN_LENGTH];
+    char banner[MM_MAX_TOKEN_LENGTH] = {0};
+    char mtx[MM_MAX_TOKEN_LENGTH] = {0};
+    char crd[MM_MAX_TOKEN_LENGTH] = {0};
+    char data_type[MM_MAX_TOKEN_LENGTH] = {0};
+    char storage_scheme[MM_MAX_TOKEN_LENGTH] = {0};
 
     mm_clear_typecode(matcode);
 
     if (fgets(line, MM_MAX_LINE_LENGTH, f) == NULL)
 	return MM_PREMATURE_EOF;
 
-    if (sscanf(line, "%s %s %s %s %s", banner, mtx, crd, data_type,
+    // note: 63 == MM_MAX_TOKEN_LENGTH - 1
+    if (sscanf(line, "%63s %63s %63s %63s %63s", banner, mtx, crd, data_type,
 	       storage_scheme) != 5)
 	return MM_PREMATURE_EOF;
 
