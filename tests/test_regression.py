@@ -3877,3 +3877,19 @@ def test_pic_font_size():
     # confirm we got a non-1 font size
     m = re.search(r"^\.ps (\d+)", pic, flags=re.MULTILINE)
     assert int(m.group(1)) > 1, "font size clamped down to 1"
+
+
+@pytest.mark.skipif(which("mm2gv") is None, reason="mm2gv not available")
+@pytest.mark.xfail()
+def test_mm_banner_overflow(tmp_path: Path):
+    """mm2gv should be robust against files with a corrupted banner"""
+
+    # construct a file with a corrupted banner > MM_MAX_TOKEN_LENGTH and < MM_MAX_LINE_LENGTH
+    mm = tmp_path / "matrix.mm"
+    mm.write_text(f"%{'a' * 10000}", encoding="utf-8")
+
+    # run this through mm2gv
+    ret = subprocess.call(["mm2gv", "-o", os.devnull, mm])
+
+    assert ret in (0, 1), "mm2gv crashed when processing malformed input"
+    assert ret == 1, "mm2gv did not reject malformed input"
