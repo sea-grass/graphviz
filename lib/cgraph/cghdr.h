@@ -132,6 +132,8 @@ void agdeledgeimage(Agraph_t * g, Agedge_t * edge, void *ignored);
 CGHDR_API int agrename(Agobj_t * obj, char *newname);
 void agrecclose(Agobj_t * obj);
 
+/// @addtogroup cgraph_callback
+/// @{
 void agmethod_init(Agraph_t * g, void *obj);
 void agmethod_upd(Agraph_t * g, void *obj, Agsym_t * sym);
 void agmethod_delete(Agraph_t * g, void *obj);
@@ -139,3 +141,4 @@ void agmethod_delete(Agraph_t * g, void *obj);
 void aginitcb(Agraph_t * g, void *obj, Agcbstack_t * disc);
 void agupdcb(Agraph_t * g, void *obj, Agsym_t * sym, Agcbstack_t * disc);
 void agdelcb(Agraph_t * g, void *obj, Agcbstack_t * disc);
+/// @}
