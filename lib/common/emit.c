@@ -836,9 +836,9 @@ static void map_bspline_poly(pointf **pbs_p, int **pbs_n, int *pbs_poly_n, int n
         nump += (*pbs_n)[i];
 
     (*pbs_poly_n)++;
-    *pbs_n = grealloc(*pbs_n, (*pbs_poly_n) * sizeof(int));
+    *pbs_n = gv_recalloc(*pbs_n, *pbs_poly_n - 1, *pbs_poly_n, sizeof(int));
     (*pbs_n)[i] = 2*n;
-    *pbs_p = grealloc(*pbs_p, (nump + 2*n) * sizeof(pointf));
+    *pbs_p = gv_recalloc(*pbs_p, nump, nump + 2 * n, sizeof(pointf));
 
     for (i = 0; i < n; i++) {
         (*pbs_p)[nump+i] = p1[i];
