@@ -47,32 +47,26 @@ free_graph(rawgraph* g)
 }
  
 void insert_edge(rawgraph *g, size_t v1, size_t v2) {
-    assert(v2 <= INT_MAX);
-    intitem obj = {.id = (int)v2};
+    intitem obj = {.id = v2};
     dtinsert(g->vertices[v1].adj_list,&obj);
 }
 
 void remove_redge(rawgraph *g, size_t v1, size_t v2) {
-    assert(v1 <= INT_MAX);
-    assert(v2 <= INT_MAX);
-    intitem obj = {.id = (int)v2};
+    intitem obj = {.id = v2};
     dtdelete (g->vertices[v1].adj_list, &obj);
-    obj.id = (int)v1;
+    obj.id = v1;
     dtdelete (g->vertices[v2].adj_list, &obj);
 }
 
 bool edge_exists(rawgraph *g, size_t v1, size_t v2) {
-  assert(v2 <= INT_MAX);
-  int v2_int = (int)v2;
-  return dtmatch(g->vertices[v1].adj_list, &v2_int) != 0;
+  return dtmatch(g->vertices[v1].adj_list, &v2) != 0;
 }
 
-DEFINE_LIST(int_stack, int)
+DEFINE_LIST(int_stack, size_t)
 
-static int DFS_visit(rawgraph *g, int v, int time, int_stack_t *sp) {
+static int DFS_visit(rawgraph *g, size_t v, int time, int_stack_t *sp) {
     Dt_t* adj;
     Dtlink_t* link;
-    int id;
     vertex* vp;
 
     vp = g->vertices + v;
@@ -81,7 +75,7 @@ static int DFS_visit(rawgraph *g, int v, int time, int_stack_t *sp) {
     time = time + 1;
 
     for(link = dtflatten (adj); link; link = dtlink(adj,link)) {
-        id = ((intitem*)dtobj(adj,link))->id;
+        const size_t id = ((intitem *)dtobj(adj,link))->id;
         if(g->vertices[id].color == UNSCANNED)
             time = DFS_visit(g, id, time, sp);
     }
@@ -107,10 +101,10 @@ top_sort(rawgraph* g)
     int_stack_reserve(&sp, (size_t)g->nvs);
     for(i=0;i<g->nvs;i++) {
         if(g->vertices[i].color == UNSCANNED)
-            time = DFS_visit(g, i, time, &sp);
+            time = DFS_visit(g, (size_t)i, time, &sp);
     }
     while (!int_stack_is_empty(&sp)) {
-        int v = int_stack_pop(&sp);
+        const size_t v = int_stack_pop(&sp);
         g->vertices[v].topsort_order = count;
         count++;
     }
