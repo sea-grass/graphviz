@@ -258,7 +258,7 @@ static void freeChannel(channel *cp, Dtdisc_t *disc) {
     (void)disc;
 
     free_graph (cp->G);
-    free (cp->seg_list);
+    seg_list_free(&cp->seg_list);
     free (cp);
 }
 
@@ -415,9 +415,8 @@ extractVChans (maze* mp)
 static void
 insertChan (channel* chan, segment* seg)
 {
-    seg->ind_no = chan->cnt++;
-    chan->seg_list = ALLOC(chan->cnt, chan->seg_list, segment*);
-    chan->seg_list[chan->cnt-1] = seg;
+    seg->ind_no = seg_list_size(&chan->seg_list);
+    seg_list_append(&chan->seg_list, seg);
 }
 
 static channel*
@@ -533,20 +532,19 @@ static void putSeg (FILE* fp, segment* seg)
 }
 
 static DEBUG_FN void dumpChanG(channel *cp, int v) {
-  int k;
   intitem* ip;
   Dt_t* adj;
 
-  if (cp->cnt < 2) return;
+  if (seg_list_size(&cp->seg_list) < 2) return;
   fprintf (stderr, "channel %d (%f,%f)\n", v, cp->p.p1, cp->p.p2);
-  for (k=0;k<cp->cnt;k++) {
+  for (size_t k = 0; k < seg_list_size(&cp->seg_list); ++k) {
     adj = cp->G->vertices[k].adj_list;
     if (dtsize(adj) == 0) continue;
-    putSeg (stderr, cp->seg_list[k]);
+    putSeg(stderr, seg_list_get(&cp->seg_list, k));
     fputs (" ->\n", stderr);
     for (ip = dtfirst(adj); ip; ip = dtnext(adj, ip)) {
       fputs ("     ", stderr);
-      putSeg (stderr, cp->seg_list[ip->id]);
+      putSeg(stderr, seg_list_get(&cp->seg_list, ip->id));
       fputs ("\n", stderr);
     }
   }
@@ -559,19 +557,18 @@ assignTrackNo (Dt_t* chans)
     Dtlink_t* l1;
     Dtlink_t* l2;
     channel* cp;
-    int k;
 
     for (l1 = dtflatten (chans); l1; l1 = dtlink(chans,l1)) {
 	lp = ((chanItem*)l1)->chans;
 	for (l2 = dtflatten (lp); l2; l2 = dtlink(lp,l2)) {
 	    cp = (channel*)l2;
-	    if (cp->cnt) {
+	    if (!seg_list_is_empty(&cp->seg_list)) {
 #ifdef DEBUG
     if (odb_flags & ODB_CHANG) dumpChanG (cp, ((chanItem*)l1)->v);
 #endif
 		top_sort (cp->G);
-		for (k=0;k<cp->cnt;k++)
-		    cp->seg_list[k]->track_no = cp->G->vertices[k].topsort_order+1;
+		for (size_t k = 0; k < seg_list_size(&cp->seg_list); ++k)
+		    seg_list_get(&cp->seg_list, k)->track_no = cp->G->vertices[k].topsort_order+1;
 	    }
    	}
     }
@@ -589,7 +586,7 @@ create_graphs(Dt_t* chans)
 	lp = ((chanItem*)l1)->chans;
 	for (l2 = dtflatten (lp); l2; l2 = dtlink(lp,l2)) {
 	    cp = (channel*)l2;
-	    cp->G = make_graph (cp->cnt);
+	    cp->G = make_graph(seg_list_size(&cp->seg_list));
    	}
     }
 }
@@ -726,14 +723,14 @@ seg_cmp(segment* S1, segment* S2)
 static int
 add_edges_in_G(channel* cp)
 {
-    int x,y;
-    segment** seg_list = cp->seg_list;
-    int size = cp->cnt;
+    seg_list_t *seg_list = &cp->seg_list;
+    const size_t size = seg_list_size(&cp->seg_list);
     rawgraph* G = cp->G;
 
-    for(x=0;x+1<size;x++) {
-	for(y=x+1;y<size;y++) {
-	    int cmp = seg_cmp(seg_list[x],seg_list[y]);
+    for (size_t x = 0; x + 1 < size; ++x) {
+	for (size_t y = x + 1; y < size; ++y) {
+	    const int cmp = seg_cmp(seg_list_get(seg_list, x),
+	                            seg_list_get(seg_list, y));
 	    if (cmp == -2) {
 		return -1;
 	    } else if (cmp > 0) {
@@ -759,7 +756,7 @@ add_np_edges (Dt_t* chans)
 	lp = ((chanItem*)l1)->chans;
 	for (l2 = dtflatten (lp); l2; l2 = dtlink(lp,l2)) {
 	    cp = (channel*)l2;
-	    if (cp->cnt)
+	    if (!seg_list_is_empty(&cp->seg_list))
 		if (add_edges_in_G(cp)) {
 		  return -1;
 		}
@@ -975,7 +972,6 @@ removeEdge(segment* seg1, segment* seg2, int dir, maze* mp)
 static int
 addPEdges (channel* cp, maze* mp)
 {
-    int i,j;
     /* dir[1,2] are used to figure out whether we should use prev 
      * pointers or next pointers -- 0 : decrease, 1 : increase
      */
@@ -988,61 +984,74 @@ addPEdges (channel* cp, maze* mp)
     int prec1, prec2;
     pair p;
     rawgraph* G = cp->G;
-    segment** segs = cp->seg_list;
+    seg_list_t *segs = &cp->seg_list;
 
-    for(i=0;i+1<cp->cnt;i++) {
-	for(j=i+1;j<cp->cnt;j++) {
+    for(size_t i = 0; i + 1 < seg_list_size(&cp->seg_list); ++i) {
+	for(size_t j = i + 1; j < seg_list_size(&cp->seg_list); ++j) {
 	    if (!edge_exists(G,i,j) && !edge_exists(G,j,i)) {
-		if (is_parallel(segs[i], segs[j])) {
+		if (is_parallel(seg_list_get(segs, i), seg_list_get(segs, j))) {
 		/* get_directions */
-		    if(segs[i]->prev==0) {
-			if(segs[j]->prev==0)
+		    if (seg_list_get(segs, i)->prev == 0) {
+			if (seg_list_get(segs, j)->prev == 0)
 			    dir = 0;
 			else
 			    dir = 1;
 		    }
-		    else if(segs[j]->prev==0) {
+		    else if (seg_list_get(segs, j)->prev == 0) {
 			dir = 1;
 		    }
 		    else {
-			if(segs[i]->prev->comm_coord==segs[j]->prev->comm_coord)
+			if (seg_list_get(segs, i)->prev->comm_coord ==
+			    seg_list_get(segs, j)->prev->comm_coord)
 			    dir = 0;
 			else
 			    dir = 1;
 		    }
 
-		    if (decide_point(&p, segs[i], segs[j], 0, dir) != 0) {
+		    if (decide_point(&p, seg_list_get(segs, i), seg_list_get(segs, j), 0, dir)
+		        != 0) {
 			return -1;
 		    }
 		    hops.a = p.a;
 		    prec1 = p.b;
-		    if (decide_point(&p, segs[i], segs[j], 1, 1-dir) != 0) {
+		    if (decide_point(&p, seg_list_get(segs, i), seg_list_get(segs, j), 1,
+		                     1 - dir) != 0) {
 			return -1;
 		    }
 		    hops.b = p.a;
 		    prec2 = p.b;
 
 		    if (prec1 == -1) {
-			set_parallel_edges (segs[j], segs[i], dir, 0, hops.a, mp);
-			set_parallel_edges (segs[j], segs[i], 1-dir, 1, hops.b, mp);
+			set_parallel_edges(seg_list_get(segs, j), seg_list_get(segs, i), dir, 0,
+			                   hops.a, mp);
+			set_parallel_edges(seg_list_get(segs, j), seg_list_get(segs, i), 1 - dir, 1,
+			                   hops.b, mp);
 			if(prec2==1)
-			    removeEdge (segs[i], segs[j], 1-dir, mp);
+			    removeEdge(seg_list_get(segs, i), seg_list_get(segs, j), 1 - dir, mp);
 		    } else if (prec1 == 0) {
 			if (prec2 == -1) {
-			    set_parallel_edges (segs[j], segs[i], dir, 0, hops.a, mp);
-			    set_parallel_edges (segs[j], segs[i], 1-dir, 1, hops.b, mp);
+			    set_parallel_edges(seg_list_get(segs, j), seg_list_get(segs, i), dir, 0,
+			                       hops.a, mp);
+			    set_parallel_edges(seg_list_get(segs, j), seg_list_get(segs, i), 1 - dir,
+			                       1, hops.b, mp);
 			} else if (prec2 == 0) {
-			    set_parallel_edges (segs[i], segs[j], 0, dir, hops.a, mp);
-			    set_parallel_edges (segs[i], segs[j], 1, 1-dir, hops.b, mp);
+			    set_parallel_edges(seg_list_get(segs, i), seg_list_get(segs, j), 0, dir,
+			                       hops.a, mp);
+			    set_parallel_edges(seg_list_get(segs, i), seg_list_get(segs, j), 1,
+			                       1 - dir, hops.b, mp);
 			} else if (prec2 == 1) {
-			    set_parallel_edges (segs[i], segs[j], 0, dir, hops.a, mp);
-			    set_parallel_edges (segs[i], segs[j], 1, 1-dir, hops.b, mp);
+			    set_parallel_edges(seg_list_get(segs, i), seg_list_get(segs, j), 0, dir,
+			                       hops.a, mp);
+			    set_parallel_edges(seg_list_get(segs, i), seg_list_get(segs, j), 1,
+			                       1 - dir, hops.b, mp);
 			}
 		    } else if (prec1 == 1) {
-			set_parallel_edges (segs[i], segs[j], 0, dir, hops.a, mp);
-			set_parallel_edges (segs[i], segs[j], 1, 1-dir, hops.b, mp);
+			set_parallel_edges(seg_list_get(segs, i), seg_list_get(segs, j), 0, dir,
+			                   hops.a, mp);
+			set_parallel_edges(seg_list_get(segs, i), seg_list_get(segs, j), 1, 1 - dir,
+			                   hops.b, mp);
 			if(prec2==-1)
-			    removeEdge (segs[i], segs[j], 1-dir, mp);
+			    removeEdge(seg_list_get(segs, i), seg_list_get(segs, j), 1 - dir, mp);
 		    }
 		}
 	    }
@@ -1105,7 +1114,7 @@ static double
 vtrack (segment* seg, maze* m)
 {
   channel* chp = chanSearch(m->vchans, seg);
-  double f = ((double)seg->track_no)/(chp->cnt+1); 
+  const double f = (double)seg->track_no / ((double)seg_list_size(&chp->seg_list) + 1);
   double left = chp->cp->bb.LL.x;
   double right = chp->cp->bb.UR.x;
   return left + f*(right-left);
@@ -1115,7 +1124,7 @@ static int
 htrack (segment* seg, maze* m)
 {
   channel* chp = chanSearch(m->hchans, seg);
-  double f = 1.0 - ((double)seg->track_no)/(chp->cnt+1); 
+  double f = 1.0 - (double)seg->track_no / ((double)seg_list_size(&chp->seg_list) + 1);
   double lo = chp->cp->bb.LL.y;
   double hi = chp->cp->bb.UR.y;
   return lo + f*(hi-lo);

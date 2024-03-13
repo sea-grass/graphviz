@@ -11,10 +11,12 @@
  /* Implements graph.h  */
 
 #include "config.h"
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <ortho/rawgraph.h>
 #include <common/intset.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -22,14 +24,12 @@
 #define SCANNING  1
 #define SCANNED   2
 
-rawgraph*
-make_graph(int n)
-{
-    int i;
+rawgraph *make_graph(size_t n) {
     rawgraph* g = gv_alloc(sizeof(rawgraph));
-    g->nvs = n;
+    assert(n <= INT_MAX);
+    g->nvs = (int)n;
     g->vertices = gv_calloc(n, sizeof(vertex));
-    for(i=0;i<n;i++) {
+    for(size_t i = 0; i < n; ++i) {
         g->vertices[i].adj_list = openIntSet ();
         g->vertices[i].color = UNSCANNED;
     }
@@ -46,29 +46,25 @@ free_graph(rawgraph* g)
     free (g);
 }
  
-void 
-insert_edge(rawgraph* g, int v1, int v2)
-{
-    intitem obj;
-
-    obj.id = v2;
+void insert_edge(rawgraph *g, size_t v1, size_t v2) {
+    assert(v2 <= INT_MAX);
+    intitem obj = {.id = (int)v2};
     dtinsert(g->vertices[v1].adj_list,&obj);
 }
 
-void
-remove_redge(rawgraph* g, int v1, int v2)
-{
-    intitem obj;
-    obj.id = v2;
+void remove_redge(rawgraph *g, size_t v1, size_t v2) {
+    assert(v1 <= INT_MAX);
+    assert(v2 <= INT_MAX);
+    intitem obj = {.id = (int)v2};
     dtdelete (g->vertices[v1].adj_list, &obj);
-    obj.id = v1;
+    obj.id = (int)v1;
     dtdelete (g->vertices[v2].adj_list, &obj);
 }
 
-bool
-edge_exists(rawgraph* g, int v1, int v2)
-{
-    return dtmatch (g->vertices[v1].adj_list, &v2) != 0;
+bool edge_exists(rawgraph *g, size_t v1, size_t v2) {
+  assert(v2 <= INT_MAX);
+  int v2_int = (int)v2;
+  return dtmatch(g->vertices[v1].adj_list, &v2_int) != 0;
 }
 
 DEFINE_LIST(int_stack, int)

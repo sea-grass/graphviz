@@ -12,6 +12,7 @@
 
 #include "types.h"
 #include "cgraph.h"
+#include <cgraph/list.h>
 #include <ortho/rawgraph.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -38,7 +39,7 @@ typedef struct segment {
   double comm_coord;  /* the common coordinate */
   paird p;      /* end points */
   bend l1, l2; 
-  int ind_no;      /* index number of this segment in its channel */
+  size_t ind_no; ///< index number of this segment in its channel
   int track_no;    /* track number assigned in the channel */
   struct segment* prev;
   struct segment* next;
@@ -49,11 +50,12 @@ typedef struct {
   segment* segs;
 } route;
 
+DEFINE_LIST(seg_list, segment *)
+
 typedef struct {
   Dtlink_t link;
   paird p;   /* extrema of channel */
-  int cnt;   /* number of segments */
-  segment** seg_list; /* array of segment pointers */
+  seg_list_t seg_list; ///< segment pointers
   rawgraph* G;
   struct cell* cp;
 } channel;

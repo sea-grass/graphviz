@@ -12,6 +12,7 @@
 
 #include <cdt.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 typedef struct {
   int color;
@@ -24,13 +25,19 @@ typedef struct {
   vertex* vertices;
 } rawgraph;
 
-extern rawgraph* make_graph(int n);  /* makes a graph with n vertices, 0 edges */
+/// makes a graph with n vertices, 0 edges
+rawgraph *make_graph(size_t n);
+
 extern void free_graph(rawgraph*); 
-  /* inserts edge FROM v1 to v2 */
-extern void insert_edge(rawgraph*, int v1, int v2); 
-  /* removes any edge between v1 to v2 -- irrespective of direction */
-extern void remove_redge(rawgraph*, int v1, int v2);  
-  /* tests if there is an edge FROM v1 TO v2 */
-extern bool edge_exists(rawgraph*, int v1, int v2);
+
+/// inserts edge FROM v1 to v2
+void insert_edge(rawgraph *, size_t v1, size_t v2);
+
+/// removes any edge between v1 to v2 -- irrespective of direction
+void remove_redge(rawgraph *, size_t v1, size_t v2);
+
+/// tests if there is an edge FROM v1 TO v2
+bool edge_exists(rawgraph *, size_t v1, size_t v2);
+
   /* topologically sorts the directed graph */
 extern void top_sort(rawgraph*); 
