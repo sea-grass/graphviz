@@ -338,7 +338,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 		    if (len < BSZ)
 			libdir = line;
 		    else
-		        libdir = gmalloc(len);
+		        libdir = gv_alloc(len);
 		    if (ind > 0) {
 		        memmove(libdir, p, ind);
 		    }
