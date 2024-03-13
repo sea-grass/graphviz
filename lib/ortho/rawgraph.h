@@ -21,7 +21,7 @@ typedef struct {
 } vertex;
 
 typedef struct {
-  int nvs;
+  size_t nvs;
   vertex* vertices;
 } rawgraph;
 

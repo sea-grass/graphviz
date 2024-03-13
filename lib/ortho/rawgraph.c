@@ -11,12 +11,10 @@
  /* Implements graph.h  */
 
 #include "config.h"
-#include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <ortho/rawgraph.h>
 #include <common/intset.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -26,8 +24,7 @@
 
 rawgraph *make_graph(size_t n) {
     rawgraph* g = gv_alloc(sizeof(rawgraph));
-    assert(n <= INT_MAX);
-    g->nvs = (int)n;
+    g->nvs = n;
     g->vertices = gv_calloc(n, sizeof(vertex));
     for(size_t i = 0; i < n; ++i) {
         g->vertices[i].adj_list = openIntSet ();
@@ -39,8 +36,7 @@ rawgraph *make_graph(size_t n) {
 void
 free_graph(rawgraph* g)
 {
-    int i;
-    for(i=0;i<g->nvs;i++)
+    for(size_t i = 0; i < g->nvs; ++i)
         dtclose(g->vertices[i].adj_list);
     free (g->vertices);
     free (g);
@@ -87,7 +83,6 @@ static int DFS_visit(rawgraph *g, size_t v, int time, int_stack_t *sp) {
 void
 top_sort(rawgraph* g)
 {
-    int i;
     int time = 0;
     int count = 0;
 
@@ -98,10 +93,10 @@ top_sort(rawgraph* g)
 	}
 
     int_stack_t sp = {0};
-    int_stack_reserve(&sp, (size_t)g->nvs);
-    for(i=0;i<g->nvs;i++) {
+    int_stack_reserve(&sp, g->nvs);
+    for(size_t i = 0; i < g->nvs; ++i) {
         if(g->vertices[i].color == UNSCANNED)
-            time = DFS_visit(g, (size_t)i, time, &sp);
+            time = DFS_visit(g, i, time, &sp);
     }
     while (!int_stack_is_empty(&sp)) {
         const size_t v = int_stack_pop(&sp);
