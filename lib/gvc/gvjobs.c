@@ -105,8 +105,8 @@ GVJ_t *gvjobs_next(GVC_t * gvc)
 void gv_argvlist_set_item(gv_argvlist_t *list, int index, char *item)
 {
     if (index >= list->alloc) {
+	list->argv = gv_recalloc(list->argv, list->alloc, index + 10, sizeof(char *));
 	list->alloc = index + 10;
-	list->argv = grealloc(list->argv, (list->alloc)*(sizeof(char*)));
     }
     list->argv[index] = item;
 }
