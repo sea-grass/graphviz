@@ -184,12 +184,12 @@ flat_node(edge_t * e)
 static void abomination(graph_t * g)
 {
     int r;
-    rank_t *rptr;
 
     assert(GD_minrank(g) == 0);
     /* 3 = one for new rank, one for sentinel, one for off-by-one */
     r = GD_maxrank(g) + 3;
-    rptr = ALLOC(r, GD_rank(g), rank_t);
+    rank_t *rptr = gv_recalloc(GD_rank(g), GD_maxrank(g) + 1, r,
+                               sizeof(rank_t));
     GD_rank(g) = rptr + 1;
     for (r = GD_maxrank(g); r >= 0; r--)
 	GD_rank(g)[r] = GD_rank(g)[r - 1];
