@@ -264,7 +264,6 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 {
     char *pos;
     int i, n, npts, nc;
-    pointf *ps = 0;
     pointf *pp;
     double x, y;
     int sflag = 0, eflag = 0;
@@ -308,7 +307,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    }
 	    return 0;
 	}
-	ps = ALLOC(n, 0, pointf);
+	pointf *ps = gv_calloc(n, sizeof(pointf));
 	pp = ps;
 	while (n) {
 	    i = sscanf(pos, "%lf,%lf%n", &x, &y, &nc);
