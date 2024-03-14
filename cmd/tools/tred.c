@@ -1,6 +1,8 @@
 /**
  * @file
- * @brief transitive reduction filter for directed graphs
+ * @brief
+ * [transitive reduction](https://en.wikipedia.org/wiki/Transitive_reduction)
+ * filter for directed graphs
  */
 
 /*************************************************************************

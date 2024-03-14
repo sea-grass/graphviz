@@ -1,6 +1,7 @@
 /**
  * @file
- * @brief transitive reduction filter for directed graphs
+ * @brief
+ * [transitive reduction](https://en.wikipedia.org/wiki/Transitive_reduction)
  * filter for directed graphs, API: cgraph.h,
  * implements @ref graphviz_tred,
  * used in cmd/tools/tred.c

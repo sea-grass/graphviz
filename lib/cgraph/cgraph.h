@@ -829,7 +829,8 @@ typedef struct {
   FILE *err; ///< stream to print warnings to
 } graphviz_tred_options_t;
 
-/// programmatic access to `tred`
+/// @brief programmatic access to `tred` -
+/// [transitive reduction](https://en.wikipedia.org/wiki/Transitive_reduction)
 ///
 /// See `man tred` for an explanation of the `tred` tool.
 ///
