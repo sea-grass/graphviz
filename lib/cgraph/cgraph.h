@@ -88,10 +88,10 @@ typedef struct Agiddisc_s Agiddisc_t;   ///< object ID allocator
 typedef struct Agiodisc_s Agiodisc_t;   ///< IO services
 typedef struct Agdisc_s Agdisc_t;       ///< union of client discipline methods
 /// @}
-/// @addtogroup callbacks
+/// @addtogroup cgraph_callback
 /// @{
 typedef struct Agcbdisc_s Agcbdisc_t;   ///< client event callbacks
-typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for Agcbdisc_t
+typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for @ref Agcbdisc_t
 /// @}
 
 /** @addtogroup cgraph_attr
@@ -350,6 +350,18 @@ typedef void (*agobjfn_t) (Agraph_t * g, Agobj_t * obj, void *arg);
 typedef void (*agobjupdfn_t) (Agraph_t * g, Agobj_t * obj, void *arg,
 			      Agsym_t * sym);
 
+/** @defgroup cgraph_callback callbacks
+ *  @brief virtual methods of initialization, modification, and finalization of graph objects
+ *
+ * An @ref Agcbdisc_t defines callbacks to be invoked by Libcgraph when
+ * initializing, modifying, or finalizing graph objects.
+ * Disciplines are kept on a stack.
+ * Libcgraph automatically calls the methods on the stack, top-down.
+ * Callbacks are installed with @ref agpushdisc, uninstalled with @ref agpopdisc.
+ *
+ * @{
+ */
+
 /// client event callbacks, used in Agcbstack_s
 struct Agcbdisc_s {
     struct {
@@ -367,6 +379,11 @@ struct Agcbstack_s {
     void *state;		/* closure */
     Agcbstack_t *prev;		/* kept in a stack, unlike other disciplines */
 };
+
+CGRAPH_API void agpushdisc(Agraph_t * g, Agcbdisc_t * disc, void *state);
+CGRAPH_API int agpopdisc(Agraph_t * g, Agcbdisc_t * disc);
+
+/// @}
 
 /// shared resources for Agraph_s
 struct Agclos_s {
@@ -392,9 +409,6 @@ struct Agraph_s {
     Agraph_t *parent, *root;	/* subgraphs - ancestors */
     Agclos_t *clos;		/* shared resources */
 };
-
-CGRAPH_API void agpushdisc(Agraph_t * g, Agcbdisc_t * disc, void *state);
-CGRAPH_API int agpopdisc(Agraph_t * g, Agcbdisc_t * disc);
 
 /* graphs */
 CGRAPH_API Agraph_t *agopen(char *name, Agdesc_t desc, Agdisc_t * disc);
