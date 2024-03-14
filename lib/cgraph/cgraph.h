@@ -802,6 +802,9 @@ and edges are embedded in main graph objects but allocated separately in subgrap
 #define EDGEOF(sn,rep)		(AGSNMAIN(sn)?((Agedge_t*)((unsigned char*)(rep) - offsetof(Agedge_t,seq_link))) : ((Dthold_t*)(rep))->obj)
 /// @}
 
+/// @addtogroup cgraph_app
+/// @{
+
 /// options for passing to `graphviz_acyclic`
 typedef struct {
   FILE *outFile;
@@ -868,6 +871,7 @@ CGRAPH_API void graphviz_unflatten(Agraph_t *g,
  * \return Number of edges added
  */
 CGRAPH_API size_t graphviz_node_induce(Agraph_t *g, Agraph_t *edgeset);
+/// @}
 
 #ifdef __cplusplus
 }
