@@ -64,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `nop2` layout engine provided by the neato layout plugin is now equivalent
   to `neato -n2` as intended instead of mistakenly being equivalent to
   `nop`/`nop1`/`neato -n1`.
+- An off-by-one error in rank installation was corrected. Previously, an unusual
+  `rank=same` constraint could cause a crash when installing ranks. #1308
 
 ## [10.0.1] – 2024-02-11
 
