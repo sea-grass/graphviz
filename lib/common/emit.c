@@ -1222,8 +1222,7 @@ static void nextlayer(GVJ_t *job, int** listp)
 
 static point pagecode(GVJ_t *job, char c)
 {
-    point rv;
-    rv.x = rv.y = 0;
+    point rv = {0};
     switch (c) {
     case 'T':
 	job->pagesArrayFirst.y = job->pagesArraySize.y - 1;
@@ -1252,7 +1251,7 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
     pointf pageSize;	/* page size for the graph - points*/
     pointf imageSize;	/* image size on one page of the graph - points */
     pointf margin;	/* margin for a page of the graph - points */
-    pointf centering = {0.0, 0.0}; /* centering offset - points */
+    pointf centering = {0}; // centering offset - points
 
     /* unpaginated image size - in points - in graph orientation */
     imageSize = job->view;
@@ -1312,9 +1311,9 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
     job->height = ROUND((pageSize.y + 2*margin.y) * job->dpi.y / POINTS_PER_INCH);
 
     /* set up pagedir */
-    job->pagesArrayMajor.x = job->pagesArrayMajor.y 
-		= job->pagesArrayMinor.x = job->pagesArrayMinor.y = 0;
-    job->pagesArrayFirst.x = job->pagesArrayFirst.y = 0;
+    job->pagesArrayMajor = (point){0};
+    job->pagesArrayMinor = (point){0};
+    job->pagesArrayFirst = (point){0};
     job->pagesArrayMajor = pagecode(job, gvc->pagedir[0]);
     job->pagesArrayMinor = pagecode(job, gvc->pagedir[1]);
     if (abs(job->pagesArrayMajor.x + job->pagesArrayMinor.x) != 1
