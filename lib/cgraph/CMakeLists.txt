@@ -26,6 +26,7 @@ add_library(cgraph
   list.h
   overflow.h
   prisize_t.h
+  queue.h
   sort.h
   stack.h
   startswith.h
