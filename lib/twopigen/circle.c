@@ -11,6 +11,7 @@
 #include    <assert.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/gv_ctype.h>
+#include    <cgraph/queue.h>
 #include    <cgraph/streq.h>
 #include    <twopigen/circle.h>
 #include    <inttypes.h>
@@ -111,50 +112,15 @@ static Agnode_t *findCenterNode(Agraph_t * g)
     return center;
 }
 
-typedef struct item_s {
-    void* p;
-    struct item_s* s;
-} item_t;
-typedef struct {
-    item_t* head;
-    item_t* tail;
-} queue;
-static void push(queue* q, void* p)
-{
-    item_t* ip = gv_alloc(sizeof(item_t));
-    ip->p = p;
-    if (q->tail) {  /* non-empty q */
-	q->tail->s = ip;
-	q->tail = ip;
-    }
-    else
-	q->tail = q->head = ip;
-}
-static void* pull(queue* q)
-{
-    item_t* ip;
-    if ((ip = q->head)) {
-	void *p = ip->p;
-	q->head = ip->s;
-	free (ip);
-	if (!q->head)
-	    q->tail = NULL; 
-	return p;
-    }
-    else
-	return NULL;
-}
-
 /* bfs to create tree structure */
 static void setNStepsToCenter(Agraph_t * g, Agnode_t * n)
 {
     Agnode_t *next;
     Agsym_t* wt = agfindedgeattr(g,"weight");
-    queue qd = {0};
-    queue* q = &qd;
+    queue_t q = {0};
 
-    push(q,n);
-    while ((n = pull(q))) {
+    queue_push(&q,n);
+    while ((n = queue_pop(&q))) {
 	uint64_t nsteps = SCENTER(n) + 1;
 	for (Agedge_t *ep = agfstedge(g, n); ep; ep = agnxtedge(g, ep, n)) {
 	    if (wt && streq(ag_xget(ep,wt),"0")) continue;
@@ -164,10 +130,11 @@ static void setNStepsToCenter(Agraph_t * g, Agnode_t * n)
 		SCENTER(next) = nsteps;
 		SPARENT(next) = n;
 		NCHILD(n)++;
-		push (q, next);
+		queue_push(&q, next);
 	    }
 	}
     }
+    queue_free(&q);
 }
 
 /*
