@@ -178,13 +178,6 @@ typedef union inside_t {
 
 #include "usershape.h"		/* usershapes needed by gvc */
 
-    typedef struct nodequeue {
-	node_t **store;
-	node_t **limit;
-	node_t **head;
-	node_t **tail;
-    } nodequeue;
-
     typedef struct adjmatrix_t adjmatrix_t;
 
     typedef struct rank_t {

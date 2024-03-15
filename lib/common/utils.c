@@ -27,45 +27,6 @@
 #include <stdint.h>
 #include <unistd.h>
 
-/*
- *  a queue of nodes
- */
-nodequeue *new_queue(size_t sz) {
-    nodequeue *q = gv_alloc(sizeof(nodequeue));
-
-    if (sz <= 1)
-	sz = 2;
-    q->head = q->tail = q->store = gv_calloc(sz, sizeof(node_t*));
-    q->limit = q->store + sz;
-    return q;
-}
-
-void free_queue(nodequeue * q)
-{
-    free(q->store);
-    free(q);
-}
-
-void enqueue(nodequeue * q, node_t * n)
-{
-    *q->tail++ = n;
-    if (q->tail >= q->limit)
-	q->tail = q->store;
-}
-
-node_t *dequeue(nodequeue * q)
-{
-    node_t *n;
-    if (q->head == q->tail)
-	n = NULL;
-    else {
-	n = *q->head++;
-	if (q->head >= q->limit)
-	    q->head = q->store;
-    }
-    return n;
-}
-
 int late_int(void *obj, attrsym_t *attr, int defaultValue, int minimum) {
     if (attr == NULL)
         return defaultValue;
