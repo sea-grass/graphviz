@@ -104,8 +104,6 @@ obj_state_t* push_obj_state(GVJ_t *job)
 	obj->stopcolor = parent->stopcolor;
     }
     else {
-	/* obj->pencolor = NULL */
-	/* obj->fillcolor = NULL */
 	obj->pen = PEN_SOLID;
 	obj->fill = FILL_NONE;
 	obj->penwidth = PENWIDTH_NORMAL;
@@ -644,7 +642,6 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     for (colorseg_t *s = segs.segs; s->color; s++) {
 	if (!(s->t > 0)) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
-	/* gvrender_polygon(job, pts, 4, FILL | NO_POLY); */
 	if (s[1].color == NULL) 
 	    pts[1].x = pts[2].x = lastx;
 	else
@@ -1331,7 +1328,6 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
     }
 
     /* initial window size */
-//fprintf(stderr,"page=%g,%g dpi=%g,%g zoom=%g\n", pageSize.x, pageSize.y, job->dpi.x, job->dpi.y, job->zoom);
     job->width = ROUND((pageSize.x + 2*margin.x) * job->dpi.x / POINTS_PER_INCH);
     job->height = ROUND((pageSize.y + 2*margin.y) * job->dpi.y / POINTS_PER_INCH);
 
@@ -3408,7 +3404,6 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	emit_map_rect(job, job->clip);
 	gvrender_begin_anchor(job, obj->url, obj->tooltip, obj->target, obj->id);
     }
-    /* if (numPhysicalLayers(job) == 1) */
 	emit_background(job, g);
     if (GD_label(g))
 	emit_label(job, EMIT_GLABEL, GD_label(g));
