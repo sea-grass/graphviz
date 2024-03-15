@@ -343,8 +343,6 @@ EXCLUDE = (
     "lib/gvpr/gvpr.h",
     "lib/gvpr/parse.c",
     "lib/gvpr/parse.h",
-    "lib/gvpr/queue.c",
-    "lib/gvpr/queue.h",
     "lib/gvpr/trie.c",
     "lib/gvpr/trieFA.h",
     "lib/label/index.c",

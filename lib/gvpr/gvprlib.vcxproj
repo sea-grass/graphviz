@@ -105,7 +105,6 @@
     <ClInclude Include="gprstate.h" />
     <ClInclude Include="gvpr.h" />
     <ClInclude Include="parse.h" />
-    <ClInclude Include="queue.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="actions.c" />
@@ -113,7 +112,6 @@
     <ClCompile Include="gprstate.c" />
     <ClCompile Include="gvpr.c" />
     <ClCompile Include="parse.c" />
-    <ClCompile Include="queue.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\cgraph\cgraph.vcxproj">
