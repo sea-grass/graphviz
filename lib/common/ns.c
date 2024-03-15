@@ -18,6 +18,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/overflow.h>
 #include <cgraph/prisize_t.h>
+#include <cgraph/queue.h>
 #include <cgraph/streq.h>
 #include <common/render.h>
 #include <limits.h>
@@ -144,26 +145,25 @@ static
 void init_rank(void)
 {
     int i;
-    nodequeue *Q;
     node_t *v;
     edge_t *e;
 
-    Q = new_queue(N_nodes);
+    queue_t Q = queue_new(N_nodes);
     size_t ctr = 0;
 
     for (v = GD_nlist(G); v; v = ND_next(v)) {
 	if (ND_priority(v) == 0)
-	    enqueue(Q, v);
+	    queue_push(&Q, v);
     }
 
-    while ((v = dequeue(Q))) {
+    while ((v = queue_pop(&Q))) {
 	ND_rank(v) = 0;
 	ctr++;
 	for (i = 0; (e = ND_in(v).list[i]); i++)
 	    ND_rank(v) = MAX(ND_rank(v), ND_rank(agtail(e)) + ED_minlen(e));
 	for (i = 0; (e = ND_out(v).list[i]); i++) {
 	    if (--ND_priority(aghead(e)) <= 0)
-		enqueue(Q, aghead(e));
+		queue_push(&Q, aghead(e));
 	}
     }
     if (ctr != N_nodes) {
@@ -172,7 +172,7 @@ void init_rank(void)
 	    if (ND_priority(v))
 		agerr(AGPREV, "\t%s %d\n", agnameof(v), ND_priority(v));
     }
-    free_queue(Q);
+    queue_free(&Q);
 }
 
 static edge_t *leave_edge(void)
