@@ -18,7 +18,7 @@ extern "C" {
 
     extern int initHTMLlexer(char *, agxbuf *, htmlenv_t *);
     extern int htmllex(void);
-    extern int htmllineno(void);
+    extern unsigned long htmllineno(void);
     extern int clearHTMLlexer(void);
     void htmlerror(const char *);
 

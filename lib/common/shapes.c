@@ -183,12 +183,18 @@ static polygon_t p_larrow = {.peripheries = 1, .sides = 4, .option = LARROW};
 static polygon_t p_lpromoter = {
     .peripheries = 1, .sides = 4, .option = LPROMOTER};
 
-#define IS_BOX(n) (ND_shape(n)->polygon == &p_box)
-#define IS_PLAIN(n) (ND_shape(n)->polygon == &p_plain)
+static bool IS_BOX(node_t *n) {
+  return ND_shape(n)->polygon == &p_box;
+}
 
-/* True if style requires processing through round_corners. */
-#define SPECIAL_CORNERS(style) ((style) & (ROUNDED | DIAGONALS | SHAPE_MASK))
+static bool IS_PLAIN(node_t *n) {
+  return ND_shape(n)->polygon == &p_plain;
+}
 
+/// True if style requires processing through round_corners.
+static bool SPECIAL_CORNERS(int style) {
+  return (style & (ROUNDED | DIAGONALS | SHAPE_MASK)) != 0;
+}
 
 /*
  * every shape has these functions:
@@ -394,28 +400,22 @@ char *findFill(node_t * n)
     return findFillDflt(n, DEFAULT_FILL);
 }
 
-static int
-isBox (node_t* n)
-{
+static bool isBox(node_t *n) {
     polygon_t *p;
 
     if ((p = ND_shape(n)->polygon)) {
 	return p->sides == 4 && ROUND(p->orientation) % 90 == 0 && p->distortion == 0. && p->skew == 0.;
     }
-    else
-	return 0;
+    return false;
 }
 
-static int
-isEllipse(node_t* n)
-{
+static bool isEllipse(node_t *n) {
     polygon_t *p;
 
     if ((p = ND_shape(n)->polygon)) {
 	return p->sides <= 2;
     }
-    else
-	return 0;
+    return false;
 }
 
 static char **checkStyle(node_t * n, int *flagp)
@@ -1844,7 +1844,7 @@ bool isPolygon(node_t * n)
 
 static void poly_init(node_t * n)
 {
-    pointf dimen, min_bb, bb;
+    pointf dimen, min_bb;
     pointf outline_bb;
     point imagesize;
     pointf *vertices;
@@ -1854,7 +1854,6 @@ static void poly_init(node_t * n)
     double sectorangle, sidelength, skewdist, gdistortion, gskew;
     double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
     double width, height, marginx, marginy, spacex;
-    int isBox;
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
 
@@ -1966,8 +1965,7 @@ static void poly_init(node_t * n)
     }
 
     /* initialize node bb to labelsize */
-    bb.x = MAX(dimen.x, imagesize.x);
-    bb.y = MAX(dimen.y, imagesize.y);
+    pointf bb = {.x = MAX(dimen.x, imagesize.x), .y = MAX(dimen.y, imagesize.y)};
 
     /* I don't know how to distort or skew ellipses in postscript */
     /* Convert request to a polygon with a large number of sides */
@@ -1982,7 +1980,7 @@ static void poly_init(node_t * n)
     else
 	ND_label(n)->valign = 'c';
 
-    isBox = sides == 4 && ROUND(orientation) % 90 == 0
+    const bool isBox = sides == 4 && ROUND(orientation) % 90 == 0
 	     && distortion == 0. && skew == 0.;
     if (isBox) {
 	/* for regular boxes the fit should be exact */
@@ -2021,8 +2019,7 @@ static void poly_init(node_t * n)
     /* increase node size to width/height if needed */
     fxd = late_string(n, N_fixed, "false");
     if (*fxd == 's' && streq(fxd,"shape")) {
-	bb.x = width;
-	bb.y = height;
+	bb = (pointf){.x = width, .y = height};
 	poly->option |= FIXEDSHAPE;
     } else if (mapbool(fxd)) {
 	/* check only label, as images we can scale to fit */
@@ -2030,8 +2027,7 @@ static void poly_init(node_t * n)
 	    agerr(AGWARN,
 		  "node '%s', graph '%s' size too small for label\n",
 		  agnameof(n), agnameof(agraphof(n)));
-	bb.x = width;
-	bb.y = height;
+	bb = (pointf){.x = width, .y = height};
     } else {
 	bb.x = width = MAX(width, bb.x);
 	bb.y = height = MAX(height, bb.y);
@@ -2081,21 +2077,16 @@ static void poly_init(node_t * n)
     if (sides < 3) {		/* ellipses */
 	sides = 2;
 	vertices = gv_calloc(outp * sides, sizeof(pointf));
-	pointf P;
-	P.x = bb.x / 2.;
-	P.y = bb.y / 2.;
-	vertices[0].x = -P.x;
-	vertices[0].y = -P.y;
+	pointf P = {.x = bb.x / 2., .y = bb.y / 2.};
+	vertices[0] = (pointf){.x = -P.x, .y = -P.y};
 	vertices[1] = P;
 	if (peripheries > 1) {
 	    for (size_t j = 1, i = 2; j < peripheries; j++) {
 		P.x += GAP;
 		P.y += GAP;
-		vertices[i].x = -P.x;
-		vertices[i].y = -P.y;
+		vertices[i] = (pointf){.x = -P.x, .y = -P.y};
 		i++;
-		vertices[i].x = P.x;
-		vertices[i].y = P.y;
+		vertices[i] = P;
 		i++;
 	    }
 	    bb.x = 2. * P.x;
@@ -2107,11 +2098,9 @@ static void poly_init(node_t * n)
 	  P.x += penwidth / 2;
 	  P.y += penwidth / 2;
 	  size_t i = sides * peripheries;
-	  vertices[i].x = -P.x;
-	  vertices[i].y = -P.y;
+	  vertices[i] = (pointf){.x = -P.x, .y = -P.y};
 	  i++;
-	  vertices[i].x = P.x;
-	  vertices[i].y = P.y;
+	  vertices[i] = P;
 	  i++;
 	  outline_bb.x = 2. * P.x;
 	  outline_bb.y = 2. * P.y;
@@ -2145,9 +2134,7 @@ static void poly_init(node_t * n)
 	    gskew = skew / 2.;
 	    angle = (sectorangle - M_PI) / 2.;
 	    sincos(angle, &sinx, &cosx);
-	    pointf R;
-	    R.x = .5 * cosx;
-	    R.y = .5 * sinx;
+	    pointf R = {.x = .5 * cosx, .y = .5 * sinx};
 	    xmax = ymax = 0.;
 	    angle += (M_PI - sectorangle) / 2.;
 	    for (size_t i = 0; i < sides; i++) {
@@ -2159,9 +2146,9 @@ static void poly_init(node_t * n)
 		R.y += sidelength * sinx;
 
 	    /*distort and skew */
-		pointf P;
-		P.x = R.x * (skewdist + R.y * gdistortion) + R.y * gskew;
-		P.y = R.y;
+		pointf P = {
+		  .x = R.x * (skewdist + R.y * gdistortion) + R.y * gskew,
+		  .y = R.y};
 
 	    /*orient P.x,P.y */
 		alpha = RADIANS(orientation) + atan2(P.y, P.x);
@@ -2181,12 +2168,9 @@ static void poly_init(node_t * n)
 	    /* store result in array of points */
 		vertices[i] = P;
 		if (isBox) { /* enforce exact symmetry of box */
-		    vertices[1].x = -P.x;
-		    vertices[1].y = P.y;
-		    vertices[2].x = -P.x;
-		    vertices[2].y = -P.y;
-		    vertices[3].x = P.x;
-		    vertices[3].y = -P.y;
+		    vertices[1] = (pointf){.x = -P.x, .y = P.y};
+		    vertices[2] = (pointf){.x = -P.x, .y = -P.y};
+		    vertices[3] = (pointf){.x = P.x, .y = -P.y};
 		    break;
 		}
 	    }
@@ -2195,8 +2179,7 @@ static void poly_init(node_t * n)
 	/* apply minimum dimensions */
 	xmax *= 2.;
 	ymax *= 2.;
-	bb.x = MAX(width, xmax);
-	bb.y = MAX(height, ymax);
+	bb = (pointf){.x = MAX(width, xmax), .y = MAX(height, ymax)};
 	outline_bb = bb;
 
 	scalex = bb.x / xmax;
@@ -2251,7 +2234,7 @@ static void poly_init(node_t * n)
 		    temp = GAP / sin(gamma);
 
 		    /*convert this distance to x and y */
-		    sincos((alpha - gamma), &sinx, &cosx);
+		    sincos(alpha - gamma, &sinx, &cosx);
 		    sinx *= temp;
 		    cosx *= temp;
 		}
@@ -2274,11 +2257,11 @@ static void poly_init(node_t * n)
 	    }
 	    for (i = 0; i < sides; i++) {
 		pointf P = vertices[i + (peripheries - 1) * sides];
-		bb.x = MAX(2. * fabs(P.x), bb.x);
-		bb.y = MAX(2. * fabs(P.y), bb.y);
+		bb = (pointf){.x = MAX(2. * fabs(P.x), bb.x),
+		              .y = MAX(2. * fabs(P.y), bb.y)};
 		Q = vertices[i + (outp - 1) * sides];
-		outline_bb.x = MAX(2. * fabs(Q.x), outline_bb.x);
-		outline_bb.y = MAX(2. * fabs(Q.y), outline_bb.y);
+		outline_bb = (pointf){.x = MAX(2. * fabs(Q.x), outline_bb.x),
+		                      .y = MAX(2. * fabs(Q.y), outline_bb.y)};
 	    }
 	}
     }
@@ -2832,7 +2815,9 @@ static port poly_port(node_t * n, char *portname, char *compass)
     return rv;
 }
 
-#define multicolor(f) (strchr(f,':'))
+static bool multicolor(const char *f) {
+  return strchr(f, ':') != NULL;
+}
 
 /* generic polygon gencode routine */
 static void poly_gencode(GVJ_t * job, node_t * n)
@@ -3281,7 +3266,9 @@ static void point_gencode(GVJ_t * job, node_t * n)
 #define INTEXT 8
 #define INPORT 16
 
-#define ISCTRL(c) ((c) == '{' || (c) == '}' || (c) == '|' || (c) == '<' || (c) == '>')
+static bool ISCTRL(int c) {
+  return c == '{' || c == '}' || c == '|' || c == '<' || c == '>';
+}
 
 static char *reclblp;
 

@@ -78,7 +78,7 @@ void htmlerror(const char *msg)
     if (state.error)
 	return;
     state.error = 1;
-    agerr(AGERR, "%s in line %d \n", msg, htmllineno());
+    agerr(AGERR, "%s in line %lu \n", msg, htmllineno());
     error_context();
 }
 
@@ -90,8 +90,7 @@ static void lexerror(const char *name)
 {
     state.tok = T_error;
     state.error = 1;
-    agerr(AGERR, "Unknown HTML element <%s> on line %d \n",
-	  name, htmllineno());
+    agerr(AGERR, "Unknown HTML element <%s> on line %lu \n", name, htmllineno());
 }
 
 typedef int (*attrFn) (void *, char *);
@@ -915,8 +914,7 @@ static void protect_rsqb(agxbuf *xb) {
 }
 #endif
 
-int htmllineno(void)
-{
+unsigned long htmllineno(void) {
 #ifdef HAVE_EXPAT
     return XML_GetCurrentLineNumber(state.parser);
 #else
@@ -1104,9 +1102,8 @@ int htmllex(void)
 	}
 	if (rv == XML_STATUS_ERROR) {
 	    if (!state.error) {
-		agerr(AGERR, "%s in line %d \n",
-		      XML_ErrorString(XML_GetErrorCode(state.parser)),
-		      htmllineno());
+		agerr(AGERR, "%s in line %lu \n",
+		      XML_ErrorString(XML_GetErrorCode(state.parser)), htmllineno());
 		error_context();
 		state.error = 1;
 		state.tok = T_error;

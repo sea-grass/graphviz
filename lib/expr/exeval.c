@@ -1425,7 +1425,10 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		if (v.string == NULL) {
 			v.string = exnospace();
 		} else {
-			fread(v.string, size, 1, buffer);
+			if (fread(v.string, size, 1, buffer) < 1) {
+				fprintf(stderr, "failed to read back temporary file\n");
+				graphviz_exit(EXIT_FAILURE);
+			}
 			v.string[size] = '\0';
 		}
 		fclose(buffer);

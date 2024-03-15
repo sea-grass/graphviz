@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,60 +8,53 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-/*
- *  neato layout plugin
- *
- */
-
-
 #include "config.h"
 
 #include <stdio.h>
 
 #include <gvc/gvplugin_layout.h>
 
-/* FIXME - globals.h is needed for Nop */
+// FIXME - globals.h is needed for Nop
 #include <common/globals.h>
 
-typedef enum { LAYOUT_NEATO,
-		LAYOUT_FDP,
-		LAYOUT_SFDP,
-		LAYOUT_TWOPI,
-		LAYOUT_CIRCO,
-		LAYOUT_PATCHWORK,
-		LAYOUT_CLUSTER,
-		LAYOUT_NOP1,
-		LAYOUT_NOP2,
-	} layout_type;
+typedef enum {
+  LAYOUT_NEATO,
+  LAYOUT_FDP,
+  LAYOUT_SFDP,
+  LAYOUT_TWOPI,
+  LAYOUT_CIRCO,
+  LAYOUT_PATCHWORK,
+  LAYOUT_CLUSTER,
+  LAYOUT_NOP1,
+  LAYOUT_NOP2,
+} layout_type;
 
-extern void neato_layout(graph_t * g);
-extern void fdp_layout(graph_t * g);
-extern void sfdp_layout(graph_t * g);
-extern void twopi_layout(graph_t * g);
-extern void circo_layout(graph_t * g);
-extern void patchwork_layout(graph_t * g);
-extern void osage_layout(graph_t * g);
+extern void neato_layout(graph_t *g);
+extern void fdp_layout(graph_t *g);
+extern void sfdp_layout(graph_t *g);
+extern void twopi_layout(graph_t *g);
+extern void circo_layout(graph_t *g);
+extern void patchwork_layout(graph_t *g);
+extern void osage_layout(graph_t *g);
 
-extern void neato_cleanup(graph_t * g);
-extern void fdp_cleanup(graph_t * g);
-extern void sfdp_cleanup(graph_t * g);
-extern void twopi_cleanup(graph_t * g);
-extern void circo_cleanup(graph_t * g);
-extern void patchwork_cleanup(graph_t * g);
-extern void osage_cleanup(graph_t * g);
+extern void neato_cleanup(graph_t *g);
+extern void fdp_cleanup(graph_t *g);
+extern void sfdp_cleanup(graph_t *g);
+extern void twopi_cleanup(graph_t *g);
+extern void circo_cleanup(graph_t *g);
+extern void patchwork_cleanup(graph_t *g);
+extern void osage_cleanup(graph_t *g);
 
-static void nop1_layout(graph_t * g)
-{
-    Nop = 1;
-    neato_layout(g);
-    Nop = 0;
+static void nop1_layout(graph_t *g) {
+  Nop = 1;
+  neato_layout(g);
+  Nop = 0;
 }
 
-static void nop2_layout(graph_t * g)
-{
-    Nop = 2;
-    neato_layout(g);
-    Nop = 0;
+static void nop2_layout(graph_t *g) {
+  Nop = 2;
+  neato_layout(g);
+  Nop = 0;
 }
 
 gvlayout_engine_t neatogen_engine = {
@@ -112,7 +105,7 @@ gvlayout_engine_t osage_engine = {
 };
 
 gvlayout_features_t neatogen_features = {
-        0,
+    0,
 };
 
 gvplugin_installed_t gvlayout_neato_types[] = {
@@ -127,6 +120,5 @@ gvplugin_installed_t gvlayout_neato_types[] = {
     {LAYOUT_CLUSTER, "osage", 0, &osage_engine, &neatogen_features},
     {LAYOUT_NOP1, "nop", 0, &nop1gen_engine, &neatogen_features},
     {LAYOUT_NOP1, "nop1", 0, &nop1gen_engine, &neatogen_features},
-    {LAYOUT_NOP1, "nop2", 0, &nop2gen_engine, &neatogen_features},
-    {0, NULL, 0, NULL, NULL}
-};
+    {LAYOUT_NOP2, "nop2", 0, &nop2gen_engine, &neatogen_features},
+    {0, NULL, 0, NULL, NULL}};

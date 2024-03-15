@@ -61,6 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Interleaving calls to `colorxlate` and `gvrender_resolve_color` no longer
   confuse internal caching mechanisms. Callers should now get the correct color
   back.
+- The `nop2` layout engine provided by the neato layout plugin is now equivalent
+  to `neato -n2` as intended instead of mistakenly being equivalent to
+  `nop`/`nop1`/`neato -n1`.
 
 ## [10.0.1] – 2024-02-11
 
