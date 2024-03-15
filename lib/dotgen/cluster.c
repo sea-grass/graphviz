@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/queue.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 
@@ -384,8 +385,7 @@ void build_skeleton(graph_t * g, graph_t * subg)
     }
 }
 
-void install_cluster(graph_t * g, node_t * n, int pass, nodequeue * q)
-{
+void install_cluster(graph_t *g, node_t *n, int pass, queue_t *q) {
     int r;
     graph_t *clust;
 
