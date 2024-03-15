@@ -745,8 +745,46 @@ CGRAPH_API void aginternalmapclearlocalnames(Agraph_t * g);
 
 /// @endcond
 
-/// @defgroup cgraph_err error handling
-/// @{
+/** @defgroup cgraph_err error handling
+ *
+ * The library provides a variety of mechanisms to control
+ * the reporting of errors and warnings.
+ * A message is only written if its type has higher priority than
+ * a programmer-controlled minimum, which is @ref AGWARN by default.
+ * The programmer can set this value using @ref agseterr,
+ * which returns the previous value.
+ * Calling `agseterr(AGMAX)` turns off the writing of messages.
+ *
+ * The function @ref agerr is the main entry point for reporting an anomaly.
+ * The first argument indicates the type of message.
+ * Usually, the first argument is @ref AGWARN or @ref AGERR
+ * to indicate warnings and errors, respectively.
+ * Sometimes additional context information is only available in functions
+ * calling the function where the error is actually caught.
+ * In this case, the calling function can indicate that it is continuing
+ * the current error by using @ref AGPREV as the first argument.
+ * The remaining arguments to @ref agerr are the same as
+ * the arguments to `printf`.
+ *
+ * The functions @ref agwarningf and @ref agerrorf are shorthand for
+ * `agerr(AGWARN,...)` and `agerr(AGERR,...)`, respectively.
+ *
+ * Some applications desire to directly control the writing of messages.
+ * Such an application can use the function @ref agseterrf to register
+ * the function that the library should call to actually write the message.
+ * The previous error function is returned.
+ * By default, the message is written to `stderr`.
+ *
+ * Errors not written are stored in a log file.
+ * The last recorded error can be retrieved by calling @ref aglasterr.
+ * Unless the printing of error messages has been completely disabled
+ * by a call to `agseterr(AGMAX)`, standard error must not be wide-oriented,
+ * even if a user-provided error printing function is provided.
+ *
+ * The function @ref agerrors returns non-zero if errors have been reported.
+ *
+ * @{
+ */
 typedef enum { AGWARN, AGERR, AGMAX, AGPREV } agerrlevel_t;
 typedef int (*agusererrf) (char*);
 CGRAPH_API agerrlevel_t agseterr(agerrlevel_t);
