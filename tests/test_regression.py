@@ -3561,14 +3561,15 @@ def test_2516():
 @pytest.mark.xfail(
     strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2521"
 )
-def test_2521():
+@pytest.mark.parametrize("testcase", ("705.dot", "2521.dot"))
+def test_2521(testcase: str):
     """
     `newrank=false` should reset to the default behavior
     https://gitlab.com/graphviz/graphviz/-/issues/2521
     """
 
     # locate our associated test case in this directory
-    input = Path(__file__).parent / "2521.dot"
+    input = Path(__file__).parent / testcase
     assert input.exists(), "unexpectedly missing test case"
 
     # process this with and without `newrank=true`
