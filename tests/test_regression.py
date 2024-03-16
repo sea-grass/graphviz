@@ -3558,10 +3558,20 @@ def test_2516():
     ), "correct line number missing from error message"
 
 
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2521"
+@pytest.mark.parametrize(
+    "testcase",
+    (
+        "705.dot",
+        pytest.param(
+            "2521.dot",
+            marks=pytest.mark.xfail(
+                strict=False,
+                reason="https://gitlab.com/graphviz/graphviz/-/issues/2521",
+            ),
+        ),
+        "2521_1.dot",
+    ),
 )
-@pytest.mark.parametrize("testcase", ("705.dot", "2521.dot", "2521_1.dot"))
 def test_2521(testcase: str):
     """
     `newrank=false` should reset to the default behavior
