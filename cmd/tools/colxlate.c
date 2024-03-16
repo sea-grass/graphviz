@@ -35,9 +35,7 @@ static void canoncolor(const char *orig, agxbuf *out) {
     while ((c = *orig++)) {
 	if (!gv_isalnum(c))
 	    continue;
-	if (gv_isupper(c))
-	    c = (char)tolower(c);
-	agxbputc(out, c);
+	agxbputc(out, (char)tolower(c));
     }
 }
 

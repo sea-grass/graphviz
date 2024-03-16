@@ -77,3 +77,9 @@ static inline bool gv_isxdigit(int c) {
     return true;
   return false;
 }
+
+static inline char gv_tolower(int c) {
+  if (gv_isupper(c))
+    return (char)c - 'A' + 'a';
+  return (char)c;
+}

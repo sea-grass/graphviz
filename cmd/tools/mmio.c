@@ -16,6 +16,7 @@
 */
 
 #include <cgraph/startswith.h>
+#include <cgraph/strcasecmp.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,8 +33,6 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     char crd[MM_MAX_TOKEN_LENGTH];
     char data_type[MM_MAX_TOKEN_LENGTH];
     char storage_scheme[MM_MAX_TOKEN_LENGTH];
-    char *p;
-
 
     mm_clear_typecode(matcode);
 
@@ -44,18 +43,12 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
 	       storage_scheme) != 5)
 	return MM_PREMATURE_EOF;
 
-    // convert to lower case
-    for (p = mtx; *p != '\0'; *p = (char)tolower((int)*p), p++);
-    for (p = crd; *p != '\0'; *p = (char)tolower((int)*p), p++);
-    for (p = data_type; *p != '\0'; *p = (char)tolower((int)*p), p++);
-    for (p = storage_scheme; *p != '\0'; *p = (char)tolower((int)*p), p++);
-
     /* check for banner */
     if (!startswith(banner, MatrixMarketBanner))
 	return MM_NO_HEADER;
 
     /* first field should be "mtx" */
-    if (strcmp(mtx, MM_MTX_STR) != 0)
+    if (strcasecmp(mtx, MM_MTX_STR) != 0)
 	return MM_UNSUPPORTED_TYPE;
     mm_set_matrix(matcode);
 
@@ -64,9 +57,9 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
        storgae) or a dense array */
 
 
-    if (strcmp(crd, MM_SPARSE_STR) == 0)
+    if (strcasecmp(crd, MM_SPARSE_STR) == 0)
 	mm_set_sparse(matcode);
-    else if (strcmp(crd, MM_DENSE_STR) == 0)
+    else if (strcasecmp(crd, MM_DENSE_STR) == 0)
 	mm_set_dense(matcode);
     else
 	return MM_UNSUPPORTED_TYPE;
@@ -74,13 +67,13 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
 
     /* third field */
 
-    if (strcmp(data_type, MM_REAL_STR) == 0)
+    if (strcasecmp(data_type, MM_REAL_STR) == 0)
 	mm_set_real(matcode);
-    else if (strcmp(data_type, MM_COMPLEX_STR) == 0)
+    else if (strcasecmp(data_type, MM_COMPLEX_STR) == 0)
 	mm_set_complex(matcode);
-    else if (strcmp(data_type, MM_PATTERN_STR) == 0)
+    else if (strcasecmp(data_type, MM_PATTERN_STR) == 0)
 	mm_set_pattern(matcode);
-    else if (strcmp(data_type, MM_INT_STR) == 0)
+    else if (strcasecmp(data_type, MM_INT_STR) == 0)
 	mm_set_integer(matcode);
     else
 	return MM_UNSUPPORTED_TYPE;
@@ -88,13 +81,13 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
 
     /* fourth field */
 
-    if (strcmp(storage_scheme, MM_GENERAL_STR) == 0)
+    if (strcasecmp(storage_scheme, MM_GENERAL_STR) == 0)
 	mm_set_general(matcode);
-    else if (strcmp(storage_scheme, MM_SYMM_STR) == 0)
+    else if (strcasecmp(storage_scheme, MM_SYMM_STR) == 0)
 	mm_set_symmetric(matcode);
-    else if (strcmp(storage_scheme, MM_HERM_STR) == 0)
+    else if (strcasecmp(storage_scheme, MM_HERM_STR) == 0)
 	mm_set_hermitian(matcode);
-    else if (strcmp(storage_scheme, MM_SKEW_STR) == 0)
+    else if (strcasecmp(storage_scheme, MM_SKEW_STR) == 0)
 	mm_set_skew(matcode);
     else
 	return MM_UNSUPPORTED_TYPE;
