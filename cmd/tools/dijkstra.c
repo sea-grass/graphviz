@@ -40,7 +40,7 @@ typedef struct {
     Agrec_t hdr;
     double dist;		/* always positive for scanned nodes */
     Agnode_t* prev;
-    int done;                   /* > 0 if finished */
+    bool done; ///< true if finished
 } nodedata_t;
 
 static double getlength(Agedge_t * e)
@@ -59,7 +59,6 @@ static double getlength(Agedge_t * e)
     return len;
 }
 
-#ifdef USE_FNS
 static double getdist(Agnode_t * n)
 {
     nodedata_t *data;
@@ -73,22 +72,19 @@ static void setdist(Agnode_t * n, double dist)
     data = (nodedata_t *) (n->base.data);
     data->dist = dist;
 }
-#else
-#define getdist(n) (((nodedata_t*)((n)->base.data))->dist)
-#define setdist(n,d) (((nodedata_t*)((n)->base.data))->dist = (d))
+
 #define getprev(n) (((nodedata_t*)((n)->base.data))->prev)
 #define setprev(n,p) (((nodedata_t*)((n)->base.data))->prev = (p))
 #define isDone(n) (((nodedata_t*)((n)->base.data))->done)
-#define setDone(n) (((nodedata_t*)((n)->base.data))->done = 1)
-#endif
+#define setDone(n) (((nodedata_t*)((n)->base.data))->done = true)
 
 static int cmpf(Dt_t * d, void *key1, void *key2, Dtdisc_t * disc)
 {
     (void)d;
     (void)disc;
 
-    double dist1 = getdist((Agnode_t *) key1);
-    double dist2 = getdist((Agnode_t *) key2);
+    const double dist1 = getdist(key1);
+    const double dist2 = getdist(key2);
     if (dist1 < dist2)
 	return -1;
     if (dist1 > dist2)
