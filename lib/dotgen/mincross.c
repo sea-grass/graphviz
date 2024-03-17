@@ -1226,7 +1226,7 @@ void build_ranks(graph_t * g, int pass)
     int i, j;
     node_t *n, *n0, *ns;
     edge_t **otheredges;
-    queue_t q = queue_new(GD_n_nodes(g));
+    queue_t q = {0};
     for (n = GD_nlist(g); n; n = ND_next(n))
 	MARK(n) = false;
 
