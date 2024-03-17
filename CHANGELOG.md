@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - fdpgen no longer truncates graph names when inferring new names for connected
   component subgraphs.
 - **Breaking**: The `nodequeue` type has been removed.
+- **Breaking**: The field `Agraphinfo_t.n_nodes` has been removed. The function
+  `agnnodes` is a more robust way of retrieving the number of nodes.
 
 ### Fixed
 

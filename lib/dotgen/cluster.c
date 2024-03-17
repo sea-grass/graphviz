@@ -248,7 +248,6 @@ merge_ranks(graph_t * subg)
 		v->root = agroot(root);
 	    delete_fast_node(subg, v);
 	    fast_node(root, v);
-	    GD_n_nodes(root)++;
 	}
 	GD_rank(subg)[r].v = GD_rank(root)[r].v + ipos;
 	GD_rank(root)[r].valid = false;

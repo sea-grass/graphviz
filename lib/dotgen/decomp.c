@@ -35,7 +35,6 @@ begin_component(graph_t* g)
 static void 
 add_to_component(graph_t* g, node_t * n)
 {
-    GD_n_nodes(g)++;
     ND_mark(n) = Cmark;
     if (Last_node) {
 	ND_prev(n) = Last_node;
@@ -118,7 +117,6 @@ void decompose(graph_t * g, int pass)
 
     if (++Cmark == 0)
 	Cmark = 1;
-    GD_n_nodes(g) = 0;
     GD_comp(g).size = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	v = n;

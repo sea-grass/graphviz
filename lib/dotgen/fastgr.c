@@ -211,7 +211,6 @@ node_t *virtual_node(graph_t *g) {
     alloc_elist(4, ND_in(n));
     alloc_elist(4, ND_out(n));
     fast_node(g, n);
-    GD_n_nodes(g)++;
     return n;
 }
 
