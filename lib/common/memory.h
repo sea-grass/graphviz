@@ -16,7 +16,6 @@
 extern "C" {
 #endif
 
-#define ALLOC(size,ptr,type) (ptr? (type*)grealloc(ptr,(size)*sizeof(type)):(type*)gmalloc((size)*sizeof(type)))
 #ifdef GVDLL
 #ifdef GVC_EXPORTS
 #define MEMORY_API __declspec(dllexport)

@@ -11,12 +11,13 @@
 #pragma once
 
 #include <cdt.h>
+#include <stddef.h>
 
 typedef struct {
-    int       id;
+    size_t       id;
     Dtlink_t  link;
 } intitem;
 
 extern Dt_t* openIntSet (void);
-extern void addIntSet (Dt_t*, int);
-extern int inIntSet (Dt_t*, int);
+void addIntSet(Dt_t *, size_t);
+int inIntSet(Dt_t *, size_t);

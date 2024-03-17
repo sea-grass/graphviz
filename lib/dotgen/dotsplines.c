@@ -88,7 +88,10 @@ static int straight_len(Agnode_t *);
 static Agedge_t *straight_path(Agedge_t*, int, points_t*);
 static Agedge_t *top_bound(Agedge_t *, int);
 
-#define GROWEDGES (edges = ALLOC (n_edges + CHUNK, edges, edge_t*))
+#define GROWEDGES                                                              \
+  do {                                                                         \
+    edges = gv_recalloc(edges, n_edges, n_edges + CHUNK, sizeof(edge_t *));    \
+  } while (0)
 
 static edge_t*
 getmainedge(edge_t * e)

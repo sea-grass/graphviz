@@ -22,14 +22,11 @@
 #define SCANNING  1
 #define SCANNED   2
 
-rawgraph*
-make_graph(int n)
-{
-    int i;
+rawgraph *make_graph(size_t n) {
     rawgraph* g = gv_alloc(sizeof(rawgraph));
     g->nvs = n;
     g->vertices = gv_calloc(n, sizeof(vertex));
-    for(i=0;i<n;i++) {
+    for(size_t i = 0; i < n; ++i) {
         g->vertices[i].adj_list = openIntSet ();
         g->vertices[i].color = UNSCANNED;
     }
@@ -39,44 +36,33 @@ make_graph(int n)
 void
 free_graph(rawgraph* g)
 {
-    int i;
-    for(i=0;i<g->nvs;i++)
+    for(size_t i = 0; i < g->nvs; ++i)
         dtclose(g->vertices[i].adj_list);
     free (g->vertices);
     free (g);
 }
  
-void 
-insert_edge(rawgraph* g, int v1, int v2)
-{
-    intitem obj;
-
-    obj.id = v2;
+void insert_edge(rawgraph *g, size_t v1, size_t v2) {
+    intitem obj = {.id = v2};
     dtinsert(g->vertices[v1].adj_list,&obj);
 }
 
-void
-remove_redge(rawgraph* g, int v1, int v2)
-{
-    intitem obj;
-    obj.id = v2;
+void remove_redge(rawgraph *g, size_t v1, size_t v2) {
+    intitem obj = {.id = v2};
     dtdelete (g->vertices[v1].adj_list, &obj);
     obj.id = v1;
     dtdelete (g->vertices[v2].adj_list, &obj);
 }
 
-bool
-edge_exists(rawgraph* g, int v1, int v2)
-{
-    return dtmatch (g->vertices[v1].adj_list, &v2) != 0;
+bool edge_exists(rawgraph *g, size_t v1, size_t v2) {
+  return dtmatch(g->vertices[v1].adj_list, &v2) != 0;
 }
 
-DEFINE_LIST(int_stack, int)
+DEFINE_LIST(int_stack, size_t)
 
-static int DFS_visit(rawgraph *g, int v, int time, int_stack_t *sp) {
+static int DFS_visit(rawgraph *g, size_t v, int time, int_stack_t *sp) {
     Dt_t* adj;
     Dtlink_t* link;
-    int id;
     vertex* vp;
 
     vp = g->vertices + v;
@@ -85,7 +71,7 @@ static int DFS_visit(rawgraph *g, int v, int time, int_stack_t *sp) {
     time = time + 1;
 
     for(link = dtflatten (adj); link; link = dtlink(adj,link)) {
-        id = ((intitem*)dtobj(adj,link))->id;
+        const size_t id = ((intitem *)dtobj(adj,link))->id;
         if(g->vertices[id].color == UNSCANNED)
             time = DFS_visit(g, id, time, sp);
     }
@@ -97,7 +83,6 @@ static int DFS_visit(rawgraph *g, int v, int time, int_stack_t *sp) {
 void
 top_sort(rawgraph* g)
 {
-    int i;
     int time = 0;
     int count = 0;
 
@@ -108,13 +93,13 @@ top_sort(rawgraph* g)
 	}
 
     int_stack_t sp = {0};
-    int_stack_reserve(&sp, (size_t)g->nvs);
-    for(i=0;i<g->nvs;i++) {
+    int_stack_reserve(&sp, g->nvs);
+    for(size_t i = 0; i < g->nvs; ++i) {
         if(g->vertices[i].color == UNSCANNED)
             time = DFS_visit(g, i, time, &sp);
     }
     while (!int_stack_is_empty(&sp)) {
-        int v = int_stack_pop(&sp);
+        const size_t v = int_stack_pop(&sp);
         g->vertices[v].topsort_order = count;
         count++;
     }

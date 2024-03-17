@@ -27,9 +27,7 @@ static void freeIntItem(intitem *obj, Dtdisc_t *disc) {
     free (obj);
 }
 
-static int
-cmpid(Dt_t* d, int* key1, int* key2, Dtdisc_t* disc)
-{
+static int cmpid(Dt_t *d, size_t *key1, size_t *key2, Dtdisc_t *disc) {
   (void)d;
   (void)disc;
 
@@ -53,18 +51,14 @@ openIntSet (void)
     return dtopen(&intSetDisc,Dtoset);
 }
 
-void 
-addIntSet (Dt_t* is, int v)
-{
+void addIntSet(Dt_t *is, size_t v) {
     intitem obj;
 
     obj.id = v;
     dtinsert(is, &obj);
 }
 
-int 
-inIntSet (Dt_t* is, int v)
-{
+int inIntSet(Dt_t *is, size_t v) {
     return (dtmatch (is, &v) != 0);
 }
 

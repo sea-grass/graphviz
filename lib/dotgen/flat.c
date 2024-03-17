@@ -18,8 +18,8 @@ static node_t *make_vn_slot(graph_t * g, int r, int pos)
     int i;
     node_t **v, *n;
 
-    v = GD_rank(g)[r].v =
-	ALLOC(GD_rank(g)[r].n + 2, GD_rank(g)[r].v, node_t *);
+    v = GD_rank(g)[r].v = gv_recalloc(GD_rank(g)[r].v, GD_rank(g)[r].n + 1,
+                                      GD_rank(g)[r].n + 2, sizeof(node_t *));
     for (i = GD_rank(g)[r].n; i > pos; i--) {
 	v[i] = v[i - 1];
 	ND_order(v[i])++;
@@ -184,12 +184,12 @@ flat_node(edge_t * e)
 static void abomination(graph_t * g)
 {
     int r;
-    rank_t *rptr;
 
     assert(GD_minrank(g) == 0);
     /* 3 = one for new rank, one for sentinel, one for off-by-one */
     r = GD_maxrank(g) + 3;
-    rptr = ALLOC(r, GD_rank(g), rank_t);
+    rank_t *rptr = gv_recalloc(GD_rank(g), GD_maxrank(g) + 1, r,
+                               sizeof(rank_t));
     GD_rank(g) = rptr + 1;
     for (r = GD_maxrank(g); r >= 0; r--)
 	GD_rank(g)[r] = GD_rank(g)[r - 1];
