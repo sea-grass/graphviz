@@ -25,8 +25,7 @@
 #include <fdpgen/fdp.h>
 #include <stdbool.h>
 
-/* neato_extra_args:
- * Handle special neato arguments.
+/* Handle special neato arguments.
  * Return number of unprocessed arguments; return < 0 on error.
  */
 static int neato_extra_args(int argc, char** argv) {
@@ -69,8 +68,7 @@ static int neato_extra_args(int argc, char** argv) {
   return cnt;
 }
 
-/* config_extra_args:
- * Handle special config arguments.
+/* Handle special config arguments.
  * Return number of unprocessed arguments; return < 0 on error.
  */
 static int
@@ -114,8 +112,7 @@ config_extra_args(GVC_t *gvc, int argc, char** argv)
   return cnt;
 }
 
-/* setDouble:
- * If arg is an double, value is stored in v
+/* If arg is an double, value is stored in v
  * and functions returns 0; otherwise, returns 1.
  */
 static int
@@ -133,8 +130,7 @@ setDouble (double* v, char* arg)
   return 0;
 }
 
-/* setInt:
- * If arg is an integer, value is stored in v
+/* If arg is an integer, value is stored in v
  * and functions returns 0; otherwise, returns 1.
  */
 static int
@@ -152,9 +148,7 @@ setInt (int* v, char* arg)
   return 0;
 }
 
-/* setFDPAttr:
- * Actions for fdp specific flags
- */
+/// Actions for fdp specific flags
 static int
 setFDPAttr (char* arg)
 {
@@ -189,8 +183,7 @@ setFDPAttr (char* arg)
   return 0;
 }
 
-/* fdp_extra_args:
- * Handle fdp specific arguments.
+/* Handle fdp specific arguments.
  * These have the form -L<name>=<value>.
  * Return number of unprocessed arguments; return < 0 on error.
  */
@@ -219,8 +212,7 @@ static int fdp_extra_args(int argc, char** argv) {
   return cnt;
 }
 
-/* gvParseArgs:
- * Return 0 on success.
+/* Return 0 on success.
  * Return x if calling function should call exit(x-1).
  */
 int gvParseArgs(GVC_t *gvc, int argc, char** argv)

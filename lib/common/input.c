@@ -66,8 +66,7 @@ static char *configItems = "\n\
                with available plugin information.  Needs write privilege.)\n\
  -?          - Print usage and exit\n";
 
-/* dotneato_usage:
- * Print usage information. If GvExitOnUsage is set, exit with
+/* Print usage information. If GvExitOnUsage is set, exit with
  * given exval, else return exval+1.
  */
 int dotneato_usage(int exval)
@@ -93,8 +92,7 @@ int dotneato_usage(int exval)
     return exval + 1;
 }
 
-/* getFlagOpt:
- * Look for flag parameter. idx is index of current argument.
+/* Look for flag parameter. idx is index of current argument.
  * We assume argv[*idx] has the form "-x..." If there are characters 
  * after the x, return
  * these, else if there are more arguments, return the next one,
@@ -118,8 +116,7 @@ static char *getFlagOpt(int argc, char **argv, int *idx)
     return 0;
 }
 
-/* dotneato_basename:
- * Partial implementation of real basename.
+/* Partial implementation of real basename.
  * Skip over any trailing slashes or backslashes; then
  * find next (back)slash moving left; return string to the right.
  * If no next slash is found, return the whole string.
@@ -209,8 +206,7 @@ graph_t *gvPluginsGraph(GVC_t *gvc)
     return P_graph;
 }
 
-/* dotneato_args_initialize"
- * Scan argv[] for allowed flags.
+/* Scan argv[] for allowed flags.
  * Return 0 on success; v+1 if calling function should call exit(v).
  * If -c is set, config file is created and we exit. 
  */
@@ -456,8 +452,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     return 0;
 }
 
-/* getdoubles2ptf:
- * converts a graph attribute in inches to a pointf in points.
+/* converts a graph attribute in inches to a pointf in points.
  * If only one number is given, it is used for both x and y.
  * Returns true if the attribute ends in '!'.
  */
@@ -539,8 +534,7 @@ graph_t *gvNextInputGraph(GVC_t *gvc)
     return g;
 }
 
-/* findCharset:
- * Check if the charset attribute is defined for the graph and, if
+/* Check if the charset attribute is defined for the graph and, if
  * so, return the corresponding internal value. If undefined, return
  * CHAR_UTF8
  */
@@ -566,9 +560,7 @@ static unsigned char findCharset(graph_t *g) {
     return CHAR_UTF8;
 }
 
-/* setRatio:
- * Checks "ratio" attribute, if any, and sets enum type.
- */
+/// Checks "ratio" attribute, if any, and sets enum type.
 static void setRatio(graph_t * g)
 {
     char *p;
@@ -805,10 +797,7 @@ void graph_cleanup(graph_t *g)
     agclean(g, AGRAPH,"Agraphinfo_t");
 }
 
-/* charsetToStr:
- * Given an internal charset value, return a canonical string
- * representation.
- */
+/// Given an internal charset value, return a canonical string representation.
 char*
 charsetToStr (int c)
 {
@@ -832,10 +821,7 @@ charsetToStr (int c)
    return s;
 }
 
-/* do_graph_label:
- * Set characteristics of graph label if it exists.
- * 
- */
+/// Set characteristics of graph label if it exists.
 void do_graph_label(graph_t * sg)
 {
     char *str, *pos, *just;
