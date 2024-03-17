@@ -139,8 +139,6 @@ setSeg (segment* sp, bool dir, double fix, double b1, double b2, int l1, int l2)
  * the two dummy nodes representing the center of the two real nodes,
  * and the two nodes on the boundary of the two real nodes.
  */
-#define PUSH(rte,P) (rte.p[rte.n++] = P)
-
 static route
 convertSPtoRoute (sgraph* g, snode* fst, snode* lst)
 {
