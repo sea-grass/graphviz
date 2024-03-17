@@ -70,6 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   name. This is a rare scenario that normal users should not encounter.
 - `mm2gv` no longer crashes or misbehaves when reading malformed Matrix Market
   files with non-ASCII bytes in the header.
+- A stack buffer overflow in `mm2gv` when processing malformed Matrix Market
+  files has been fixed.
 
 ## [10.0.1] – 2024-02-11
 
