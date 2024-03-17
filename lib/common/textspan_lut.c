@@ -775,6 +775,7 @@ get_metrics_for_font_family(const char *font_name) {
   if (emit_once(warning_text)) {
     agwarningf("%s", warning_text);
   }
+  agxbfree(&warning);
   return get_metrics_for_font_family("Times");
 }
 
