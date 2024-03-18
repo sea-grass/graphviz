@@ -1349,6 +1349,31 @@ def test_1880():
     dot("png", input)
 
 
+@pytest.mark.skipif(
+    os.getenv("build_system") == "msbuild",
+    reason="Windows MSBuild release does not contain any header files (#1777)",
+)
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/1887"
+)
+def test_1887():
+    """
+    empty strings as labels should be propagated to dot output
+    https://gitlab.com/graphviz/graphviz/-/issues/1887
+    """
+
+    # find co-located test source
+    c_src = (Path(__file__).parent / "1887.c").resolve()
+    assert c_src.exists(), "missing test case"
+
+    # generate a graph and pass it through dot
+    stdout, _ = run_c(c_src, link=["cgraph"])
+
+    assert (
+        re.search(r'label\s*=\s*""', stdout) is not None
+    ), "empty label missing in output"
+
+
 def test_1898():
     """
     test a segfault from https://gitlab.com/graphviz/graphviz/-/issues/1898 has
