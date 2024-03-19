@@ -54,6 +54,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The precision of `sep`- and `esep`-based calculations has been improved.
 - **Breaking**: Defines `AGRAPH`, `AGNODE`, `AGOUTEDGE`, `AGINEDGE`, and `AGEDGE` are
   replaced with `enum`.
+- **Breaking**: The `obj_state_t.url_bsplinemap_poly_n` field is now a `size_t`
+  and the `obj_state_t.url_bsplinemap_n` field is now a `size_t *`.
 
 ### Fixed
 
