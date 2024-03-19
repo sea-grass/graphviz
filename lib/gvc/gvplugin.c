@@ -21,7 +21,6 @@
 #endif
 
 #include	<cgraph/agxbuf.h>
-#include        <common/memory.h>
 #include        <common/types.h>
 #include        <gvc/gvc.h>
 #include        <gvc/gvplugin.h>

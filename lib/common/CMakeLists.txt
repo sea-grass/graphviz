@@ -54,7 +54,6 @@ add_library(common_obj OBJECT
   htmllex.h
   htmltable.h
   macros.h
-  memory.h
   pointset.h
   ps_font_equiv.h
   render.h
@@ -78,7 +77,6 @@ add_library(common_obj OBJECT
   intset.c
   labels.c
   ns.c
-  memory.c
   output.c
   pointset.c
   postproc.c

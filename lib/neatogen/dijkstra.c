@@ -20,7 +20,6 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
-#include <common/memory.h>
 #include <float.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>

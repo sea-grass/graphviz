@@ -18,14 +18,14 @@ endif
 BUILT_SOURCES = colortbl.h htmlparse.h
 
 pkginclude_HEADERS = arith.h geom.h color.h types.h textspan.h usershape.h
-noinst_HEADERS = boxes.h render.h utils.h memory.h \
+noinst_HEADERS = boxes.h render.h utils.h \
 	geomprocs.h colorprocs.h colortbl.h entities.h globals.h \
 	const.h macros.h htmllex.h htmltable.h pointset.h intset.h \
 	textspan_lut.h ps_font_equiv.h
 noinst_LTLIBRARIES = libcommon_C.la
 
 libcommon_C_la_SOURCES = arrows.c colxlate.c ellipse.c textspan.c textspan_lut.c \
-	args.c memory.c globals.c htmllex.c htmlparse.y htmltable.c input.c \
+	args.c globals.c htmllex.c htmlparse.y htmltable.c input.c \
 	pointset.c intset.c postproc.c routespl.c splines.c psusershape.c \
 	timing.c labels.c ns.c shapes.c utils.c geom.c taper.c \
 	output.c emit.c xml.c \

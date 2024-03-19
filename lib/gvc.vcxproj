@@ -125,7 +125,6 @@ python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\colo
     <ClInclude Include="common\htmlparse.h" />
     <ClInclude Include="common\htmltable.h" />
     <ClInclude Include="common\macros.h" />
-    <ClInclude Include="common\memory.h" />
     <ClInclude Include="common\pointset.h" />
     <ClInclude Include="common\ps_font_equiv.h" />
     <ClInclude Include="common\render.h" />
@@ -163,7 +162,6 @@ python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\colo
     <ClCompile Include="common\input.c" />
     <ClCompile Include="common\intset.c" />
     <ClCompile Include="common\labels.c" />
-    <ClCompile Include="common\memory.c" />
     <ClCompile Include="common\ns.c" />
     <ClCompile Include="common\output.c" />
     <ClCompile Include="common\pointset.c" />

@@ -207,8 +207,6 @@ EXCLUDE = (
     "lib/common/intset.h",
     "lib/common/labels.c",
     "lib/common/macros.h",
-    "lib/common/memory.c",
-    "lib/common/memory.h",
     "lib/common/ns.c",
     "lib/common/output.c",
     "lib/common/pointset.c",

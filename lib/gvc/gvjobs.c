@@ -11,7 +11,6 @@
 #include "config.h"
 
 #include	<cgraph/alloc.h>
-#include	<common/memory.h>
 #include	<common/types.h>
 #include        <gvc/gvplugin.h>
 #include        <gvc/gvcjob.h>

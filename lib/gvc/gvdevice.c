@@ -49,7 +49,6 @@ static uint64_t crc;
 #include <cgraph/startswith.h>
 #include <cgraph/exit.h>
 #include <common/const.h>
-#include <common/memory.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvcjob.h>
 #include <gvc/gvcint.h>
