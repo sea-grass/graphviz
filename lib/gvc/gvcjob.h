@@ -147,8 +147,8 @@ extern "C" {
 
     typedef struct gv_argvlist_s {
 	char **argv;
-	int argc;
-	int alloc;
+	size_t argc;
+	size_t alloc;
     } gv_argvlist_t;
     
     typedef struct gvdevice_callbacks_s {
