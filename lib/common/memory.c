@@ -15,19 +15,6 @@
 #include <stdlib.h>
 #include <common/memory.h>
 
-void *gmalloc(size_t nbytes)
-{
-    char *rv;
-    if (nbytes == 0)
-	return NULL;
-    rv = malloc(nbytes);
-    if (rv == NULL) {
-	fprintf(stderr, "out of memory\n");
-	graphviz_exit(EXIT_FAILURE);
-    }
-    return rv;
-}
-
 void *grealloc(void *ptr, size_t size)
 {
     void *p = realloc(ptr, size);
