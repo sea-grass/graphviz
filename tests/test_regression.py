@@ -3019,7 +3019,6 @@ def test_2355():
     dot("svg", source=graph.getvalue())
 
 
-@pytest.mark.xfail(strict=True)  # FIXME
 def test_2368():
     """
     routesplines should not corrupt its `prev` and `next` indices

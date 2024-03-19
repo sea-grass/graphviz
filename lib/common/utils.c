@@ -494,12 +494,15 @@ void common_init_edge(edge_t *e) {
 
     fi.fontname = NULL;
     lfi.fontname = NULL;
-    if (E_label && (str = agxget(e, E_label)) && str[0]) {
+    if (E_label && (str = agxget(e, E_label))) {
 	initFontEdgeAttr(e, &fi);
-	ED_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
+	const int kind = !streq(str, "") && aghtmlstr(str) ? LT_HTML : LT_NONE;
+	ED_label(e) = make_label(e, str, kind,
 				fi.fontsize, fi.fontname, fi.fontcolor);
-	GD_has_labels(sg) |= EDGE_LABEL;
-	ED_label_ontop(e) = mapbool(late_string(e, E_label_float, "false"));
+	if (!streq(str, "")) {
+	    GD_has_labels(sg) |= EDGE_LABEL;
+	    ED_label_ontop(e) = mapbool(late_string(e, E_label_float, "false"));
+	}
     }
 
     if (E_xlabel && (str = agxget(e, E_xlabel)) && str[0]) {
