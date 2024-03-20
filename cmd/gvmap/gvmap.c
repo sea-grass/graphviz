@@ -15,6 +15,7 @@
 
 #include "config.h"
 #include "../tools/openFile.h"
+#include <cgraph/unreachable.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -288,6 +289,8 @@ init(int argc, char **argv, params_t* pm)
         usage(cmd, 1);
       }
       break;
+    default:
+      UNREACHABLE();
     }
   }
 

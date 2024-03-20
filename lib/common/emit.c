@@ -104,8 +104,6 @@ obj_state_t* push_obj_state(GVJ_t *job)
 	obj->stopcolor = parent->stopcolor;
     }
     else {
-	/* obj->pencolor = NULL */
-	/* obj->fillcolor = NULL */
 	obj->pen = PEN_SOLID;
 	obj->fill = FILL_NONE;
 	obj->penwidth = PENWIDTH_NORMAL;
@@ -141,8 +139,7 @@ void pop_obj_state(GVJ_t *job)
     free(obj);
 }
 
-/* initMapData:
- * Store image map data into job, substituting for node, edge, etc.
+/* Store image map data into job, substituting for node, edge, etc.
  * names.
  * Return 1 if an assignment was made for url or tooltip or target.
  */
@@ -192,9 +189,7 @@ layerPagePrefix (GVJ_t* job, agxbuf* xb)
     }
 }
 
-/* genObjId:
- * Use id of root graph if any, plus kind and internal id of object
- */
+/// Use id of root graph if any, plus kind and internal id of object
 char*
 getObjId (GVJ_t* job, void* obj, agxbuf* xb)
 {
@@ -239,14 +234,12 @@ getObjId (GVJ_t* job, void* obj, agxbuf* xb)
     return agxbuse(xb);
 }
 
-/* interpretCRNL:
- * Map "\n" to ^J, "\r" to ^M and "\l" to ^J.
+/* Map "\n" to ^J, "\r" to ^M and "\l" to ^J.
  * Map "\\" to backslash.
  * Map "\x" to x.
  * Mapping is done in place.
  * Return input string.
  */
-
 static char*
 interpretCRNL (char* ins)
 {
@@ -282,8 +275,7 @@ interpretCRNL (char* ins)
     return rets;
 }
  
-/* preprocessTooltip:
- * Tooltips are a weak form of escString, so we expect object substitution
+/* Tooltips are a weak form of escString, so we expect object substitution
  * and newlines to be handled. The former occurs in initMapData. Here we
  * map "\r", "\l" and "\n" to newlines. (We don't try to handle alignment
  * as in real labels.) To make things uniform when the 
@@ -420,8 +412,7 @@ freeSegs (colorsegs_t* segs)
     free (segs->segs);
 }
 
-/* getSegLen:
- * Find semicolon in s, replace with '\0'.
+/* Find semicolon in s, replace with '\0'.
  * Convert remainder to float v.
  * Return 0 if no float given
  * Return -1 on failure
@@ -447,8 +438,7 @@ static double getSegLen (char* s)
 #define EPS 1E-5
 #define AEQ0(x) (((x) < EPS) && ((x) > -EPS))
 
-/* parseSegs:
- * Parse string of form color;float:color;float:...:color;float:color
+/* Parse string of form color;float:color;float:...:color;float:color
  * where the semicolon-floats are optional, nonnegative, sum to <= 1.
  * Store the values in an array of colorseg_t's and return the array in psegs.
  * If nseg == 0, count the number of colors.
@@ -551,8 +541,7 @@ static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
 
 #define THIN_LINE 0.5
 
-/* wedgedEllipse:
- * Fill an ellipse whose bounding box is given by 2 points in pf
+/* Fill an ellipse whose bounding box is given by 2 points in pf
  * with multiple wedges determined by the color spec in clrs.
  * clrs is a list of colon separated colors, with possible quantities. 
  * Thin boundaries are drawn.
@@ -602,8 +591,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
     return rv;
 }
 
-/* stripedBox:
- * Fill a rectangular box with vertical stripes of colors.
+/* Fill a rectangular box with vertical stripes of colors.
  * AF gives 4 corner points, with AF[0] the LL corner and the points ordered CCW.
  * clrs is a list of colon separated colors, with possible quantities. 
  * Thin boundaries are drawn.
@@ -644,7 +632,6 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     for (colorseg_t *s = segs.segs; s->color; s++) {
 	if (!(s->t > 0)) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
-	/* gvrender_polygon(job, pts, 4, FILL | NO_POLY); */
 	if (s[1].color == NULL) 
 	    pts[1].x = pts[2].x = lastx;
 	else
@@ -709,8 +696,7 @@ static void map_label(GVJ_t *job, textlabel_t *lab)
     }
 }
 
-/* isRect:
- * isRect function returns true when polygon has
+/* isRect function returns true when polygon has
  * regular rectangular shape. Rectangle is regular when
  * it is not skewed and distorted and orientation is almost zero
  */
@@ -740,8 +726,7 @@ static bool isFilled(node_t * n)
     return r;
 }
 
-/* pEllipse:
- * pEllipse function returns 'np' points from the circumference
+/* pEllipse function returns 'np' points from the circumference
  * of ellipse described by radii 'a' and 'b'.
  * Assumes 'np' is greater than zero.
  * 'np' should be at least 4 to sample polygon from ellipse
@@ -761,8 +746,7 @@ static pointf *pEllipse(double a, double b, size_t np) {
 
 #define HW 2.0   /* maximum distance away from line, in points */
 
-/* check_control_points:
- * check_control_points function checks the size of quadrilateral
+/* check_control_points function checks the size of quadrilateral
  * formed by four control points
  * returns true if four points are in line (or close to line)
  * else return false
@@ -840,8 +824,7 @@ static segitem_t* appendSeg (pointf p, segitem_t* lp)
     return s;
 }
 
-/* map_bspline_poly:
- * Output the polygon determined by the n points in p1, followed
+/* Output the polygon determined by the n points in p1, followed
  * by the n points in p2 in reverse order. Assumes n <= 50.
  */
 static void map_bspline_poly(pointf **pbs_p, int **pbs_n, int *pbs_poly_n, int n, pointf* p1, pointf* p2)
@@ -865,8 +848,7 @@ static void map_bspline_poly(pointf **pbs_p, int **pbs_n, int *pbs_poly_n, int n
 #endif
 }
 
-/* approx_bezier:
- * Approximate Bezier by line segments. If the four points are
+/* Approximate Bezier by line segments. If the four points are
  * almost colinear, as determined by check_control_points, we store
  * the segment cp[0]-cp[3]. Otherwise we split the Bezier into 2 and recurse. 
  * Since 2 contiguous segments share an endpoint, we actually store
@@ -890,8 +872,7 @@ static segitem_t* approx_bezier (pointf *cp, segitem_t* lp)
     return lp;
 }
 
-/* bisect:
- * Return the angle of the bisector between the two rays
+/* Return the angle of the bisector between the two rays
  * pp-cp and cp-np. The bisector returned is always to the
  * left of pp-cp-np.
  */
@@ -906,8 +887,7 @@ static double bisect (pointf pp, pointf cp, pointf np)
   return phi + ang / 2.0;
 }
 
-/* mkSegPts:
- * Determine polygon points related to 2 segments prv-cur and cur-nxt.
+/* Determine polygon points related to 2 segments prv-cur and cur-nxt.
  * The points lie on the bisector of the 2 segments, passing through cur,
  * and distance w2 from cur. The points are stored in p1 and p2.
  * If p1 is NULL, we use the normal to cur-nxt.
@@ -951,8 +931,7 @@ static void mkSegPts (segitem_t* prv, segitem_t* cur, segitem_t* nxt,
     *p2 = p;
 }
 
-/* map_output_bspline:
- * Construct and output a closed polygon approximating the input
+/* Construct and output a closed polygon approximating the input
  * B-spline bp. We do this by first approximating bp by a sequence
  * of line segments. We then use the sequence of segments to determine
  * the polygon.
@@ -1071,8 +1050,7 @@ static bool selectedlayer(GVJ_t *job, char *spec)
     return selectedLayer (job->gvc, job->layerNum, job->numLayers, spec);
 }
 
-/* parse_layerselect:
- * Parse the graph's layerselect attribute, which determines
+/* Parse the graph's layerselect attribute, which determines
  * which layers are emitted. The specification is the same used
  * by the layer attribute.
  *
@@ -1109,8 +1087,7 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
 
 DEFINE_LIST(layer_names, char*)
 
-/* parse_layers:
- * Split input string into tokens, with separators specified by
+/* Split input string into tokens, with separators specified by
  * the layersep attribute. Store the values in the gvc->layerIDs array,
  * starting at index 1, and return the count.
  * Note that there is no mechanism
@@ -1155,8 +1132,7 @@ static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
     return ntok;
 }
 
-/* chkOrder:
- * Determine order of output.
+/* Determine order of output.
  * Output usually in breadth first graph walk order
  */
 static int chkOrder(graph_t * g)
@@ -1192,9 +1168,7 @@ static void init_layering(GVC_t * gvc, graph_t * g)
     }
 }
 
-/* numPhysicalLayers:
- * Return number of physical layers to be emitted.
- */
+/// Return number of physical layers to be emitted.
 static int numPhysicalLayers (GVJ_t *job)
 {
     if (job->gvc->layerlist) {
@@ -1248,8 +1222,7 @@ static void nextlayer(GVJ_t *job, int** listp)
 
 static point pagecode(GVJ_t *job, char c)
 {
-    point rv;
-    rv.x = rv.y = 0;
+    point rv = {0};
     switch (c) {
     case 'T':
 	job->pagesArrayFirst.y = job->pagesArraySize.y - 1;
@@ -1265,6 +1238,9 @@ static point pagecode(GVJ_t *job, char c)
 	job->pagesArrayFirst.x = job->pagesArraySize.x - 1;
 	rv.x = -1;
 	break;
+    default:
+	// ignore; will trigger a warning later in our caller
+	break;
     }
     return rv;
 }
@@ -1275,7 +1251,7 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
     pointf pageSize;	/* page size for the graph - points*/
     pointf imageSize;	/* image size on one page of the graph - points */
     pointf margin;	/* margin for a page of the graph - points */
-    pointf centering = {0.0, 0.0}; /* centering offset - points */
+    pointf centering = {0}; // centering offset - points
 
     /* unpaginated image size - in points - in graph orientation */
     imageSize = job->view;
@@ -1331,14 +1307,13 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
     }
 
     /* initial window size */
-//fprintf(stderr,"page=%g,%g dpi=%g,%g zoom=%g\n", pageSize.x, pageSize.y, job->dpi.x, job->dpi.y, job->zoom);
     job->width = ROUND((pageSize.x + 2*margin.x) * job->dpi.x / POINTS_PER_INCH);
     job->height = ROUND((pageSize.y + 2*margin.y) * job->dpi.y / POINTS_PER_INCH);
 
     /* set up pagedir */
-    job->pagesArrayMajor.x = job->pagesArrayMajor.y 
-		= job->pagesArrayMinor.x = job->pagesArrayMinor.y = 0;
-    job->pagesArrayFirst.x = job->pagesArrayFirst.y = 0;
+    job->pagesArrayMajor = (point){0};
+    job->pagesArrayMinor = (point){0};
+    job->pagesArrayFirst = (point){0};
     job->pagesArrayMajor = pagecode(job, gvc->pagedir[0]);
     job->pagesArrayMinor = pagecode(job, gvc->pagedir[1]);
     if (abs(job->pagesArrayMajor.x + job->pagesArrayMinor.x) != 1
@@ -2011,8 +1986,6 @@ static char* default_pencolor(char *pencolor, char *deflt)
     return agxbuse(&buf);
 }
 
-/* approxLen:
- */
 static double approxLen (pointf* pts)
 {
     double d = DIST(pts[0],pts[1]);
@@ -2021,8 +1994,7 @@ static double approxLen (pointf* pts)
     return d;
 }
  
-/* splitBSpline:
- * Given B-spline bz and 0 < t < 1, split bz so that left corresponds to
+/* Given B-spline bz and 0 < t < 1, split bz so that left corresponds to
  * the fraction t of the arc length. The new parts are store in left and right.
  * The caller needs to free the allocated points.
  *
@@ -2081,8 +2053,7 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
     free (lens);
 }
 
-/* multicolor:
- * Draw an edge as a sequence of colors.
+/* Draw an edge as a sequence of colors.
  * Not sure how to handle multiple B-splines, so do a naive
  * implementation.
  * Return non-zero if color spec is incorrect
@@ -2681,8 +2652,7 @@ emit_edge_label(GVJ_t* job, textlabel_t* lbl, emit_state_t lkind, int explicit,
     job->obj->emit_state = old_emit_state;
 }
 
-/* nodeIntersect:
- * Common logic for setting hot spots at the beginning and end of 
+/* Common logic for setting hot spots at the beginning and end of 
  * an edge.
  * If we are given a value (url, tooltip, target) explicitly set for
  * the head/tail, we use that. 
@@ -3408,7 +3378,6 @@ static void emit_page(GVJ_t * job, graph_t * g)
 	emit_map_rect(job, job->clip);
 	gvrender_begin_anchor(job, obj->url, obj->tooltip, obj->target, obj->id);
     }
-    /* if (numPhysicalLayers(job) == 1) */
 	emit_background(job, g);
     if (GD_label(g))
 	emit_label(job, EMIT_GLABEL, GD_label(g));
@@ -3756,8 +3725,7 @@ static token_t style_token(char **s) {
 
 #define FUNLIMIT 64
 
-/* parse_style:
- * This is one of the worst internal designs in graphviz.
+/* This is one of the worst internal designs in graphviz.
  * The use of '\0' characters within strings seems cute but it
  * makes all of the standard functions useless if not dangerous.
  * Plus the function uses static memory for both the array and
@@ -3923,8 +3891,7 @@ extern gvevent_key_binding_t gvevent_key_binding[];
 extern int gvevent_key_binding_size;
 extern gvdevice_callbacks_t gvdevice_callbacks;
 
-/* gv_fixLocale:
- * Set LC_NUMERIC to "C" to get expected interpretation of %f
+/* Set LC_NUMERIC to "C" to get expected interpretation of %f
  * in printf functions. Languages like postscript and dot expect
  * floating point numbers to use a decimal point.
  * 
@@ -4071,8 +4038,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
     return 0;
 }
 
-/* findStopColor:
- * Check for colon in colorlist. If one exists, and not the first
+/* Check for colon in colorlist. If one exists, and not the first
  * character, store the characters before the colon in clrs[0] and
  * the characters after the colon (and before the next or end-of-string)
  * in clrs[1]. If there are no characters after the first colon, clrs[1]

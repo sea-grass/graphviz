@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include "../tools/openFile.h"
+#include <cgraph/unreachable.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define STANDALONE
@@ -91,6 +92,8 @@ static void init(int argc, char *argv[], opts_t* opts) {
 	usage(cmd, 1);
       }
       break;
+    default:
+      UNREACHABLE();
     }
   }
 

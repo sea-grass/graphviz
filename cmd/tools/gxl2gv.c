@@ -21,6 +21,7 @@
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/stack.h>
 #include    <cgraph/startswith.h>
+#include    <cgraph/unreachable.h>
 #include    <stdbool.h>
 #include    <stdio.h>
 #ifdef HAVE_EXPAT
@@ -589,6 +590,8 @@ static void endElementHandler(void *userData, const char *name)
 	case TAG_HTML_LIKE_STRING:
 	    setAttr(agxbuse(&new_name), value, ud, true);
 	    break;
+	default:
+	    UNREACHABLE();
 	}
 	agxbfree(&new_name);
 	ud->globalAttrType = TAG_NONE;
