@@ -72,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   files with non-ASCII bytes in the header.
 - A stack buffer overflow in `mm2gv` when processing malformed Matrix Market
   files has been fixed.
+- The `newrank` attribute is treated as a boolean instead of any value
+  (including `"false"`) being coerced into `"true"`. #2521
 
 ## [10.0.1] – 2024-02-11
 

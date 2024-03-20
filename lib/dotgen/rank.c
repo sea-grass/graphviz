@@ -447,7 +447,7 @@ static void dot1_rank(graph_t *g)
 }
 
 void dot_rank(graph_t *g) {
-    if (agget (g, "newrank")) {
+    if (mapbool(agget(g, "newrank"))) {
 	GD_flags(g) |= NEW_RANK;
 	dot2_rank(g);
     }

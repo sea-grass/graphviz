@@ -3558,6 +3558,41 @@ def test_2516():
     ), "correct line number missing from error message"
 
 
+@pytest.mark.parametrize(
+    "testcase",
+    (
+        "705.dot",
+        pytest.param(
+            "2521.dot",
+            marks=pytest.mark.xfail(
+                strict=False,
+                reason="https://gitlab.com/graphviz/graphviz/-/issues/2521",
+            ),
+        ),
+        "2521_1.dot",
+    ),
+)
+def test_2521(testcase: str):
+    """
+    `newrank=false` should reset to the default behavior
+    https://gitlab.com/graphviz/graphviz/-/issues/2521
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / testcase
+    assert input.exists(), "unexpectedly missing test case"
+
+    # process this with and without `newrank=true`
+    off = subprocess.check_output(["dot", "-Tpng", input])
+    on = subprocess.check_output(["dot", "-Gnewrank=true", "-Tpng", input])
+
+    assert off != on, "-Gnewrank=true had no effect"
+
+    # we should be able to reset `newrank` with an explicit setting
+    force_off = subprocess.check_output(["dot", "-Gnewrank=false", "-Tpng", input])
+    assert force_off == off, "-Gnewrank=false did not reset the default"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
