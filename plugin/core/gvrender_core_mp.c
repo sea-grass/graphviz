@@ -246,9 +246,10 @@ static void mp_textspan(GVJ_t * job, pointf p, textspan_t * span)
     }
 
     gvprintf(job,
-            "%d %d %d %d %d %d %.1f %.4f %d %.1f %.1f %d %d",
+            "%d %d %d %d %d %d %.1f %.4f %d %.1f %.1f %.0f %.0f",
             object_code, sub_type, color, depth, pen_style, font,
-            font_size, angle, font_flags, height, length, ROUND(p.x), ROUND(p.y));
+            font_size, angle, font_flags, height, length, round(p.x),
+            round(p.y));
     gvputs_nonascii(job, span->str);
     gvputs(job, "\\001\n");
 }
