@@ -13,7 +13,7 @@
  * \param scale Scale factor to apply
  * \return Clamped result
  */
-static int scale_clamp(int original, double scale) {
+static inline int scale_clamp(int original, double scale) {
   assert(original >= 0);
 
   if (scale < 0) {
