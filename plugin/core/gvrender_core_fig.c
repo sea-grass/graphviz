@@ -279,20 +279,20 @@ static void fig_ellipse(GVJ_t * job, pointf * A, int filled)
     double style_val;
     int direction = 0;
     double angle = 0.0;
-    int center_x, center_y, radius_x, radius_y;
-    int start_x, start_y, end_x, end_y;
+    double center_x, center_y;
 
     fig_line_style(obj, &line_style, &style_val);
 
-    start_x = center_x = ROUND(A[0].x);
-    start_y = center_y = ROUND(A[0].y);
-    radius_x = ROUND(A[1].x - A[0].x);
-    radius_y = ROUND(A[1].y - A[0].y);
-    end_x = ROUND(A[1].x);
-    end_y = ROUND(A[1].y);
+    const double start_x = center_x = round(A[0].x);
+    const double start_y = center_y = round(A[0].y);
+    const double radius_x = round(A[1].x - A[0].x);
+    const double radius_y = round(A[1].y - A[0].y);
+    const double end_x = round(A[1].x);
+    const double end_y = round(A[1].y);
 
     gvprintf(job,
-            "%d %d %d %.0f %d %d %d %d %d %.3f %d %.4f %d %d %d %d %d %d %d %d\n",
+            "%d %d %d %.0f %d %d %d %d %d %.3f %d %.4f %.0f %.0f %.0f %.0f "
+            "%.0f %.0f %.0f %.0f\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, direction,
             angle, center_x, center_y, radius_x, radius_y, start_x,
