@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `agnnodes` is a more robust way of retrieving the number of nodes.
 - The `-q` command line option will now suppress “no hard-coded metrics…”
   and other font lookup warnings. #2379
+- **Breaking**: The `SGN` macro has been removed.
 
 ### Fixed
 
