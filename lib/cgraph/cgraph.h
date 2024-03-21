@@ -680,9 +680,32 @@ CGRAPH_API int agsafeset(void* obj, char* name, const char* value,
                          const char* def);
 /// @}
 
-/// @defgroup cgraph_subgraph subgraphs
-/// @ingroup cgraph_graph
-/// @{
+/** @defgroup cgraph_subgraph subgraphs
+ *  @ingroup cgraph_graph
+ *
+ * A "main" or "root" graph defines a namespace for a collection of
+ * graph objects (subgraphs, nodes, edges) and their attributes.
+ * Objects may be named by unique strings or by integer IDs.
+ *
+ * @ref agsubg finds or creates a subgraph by name.
+ *
+ * @ref agidsubg allows a programmer to specify the subgraph by a unique integer ID.
+ *
+ * A new subgraph is initially empty and is of the same kind as its parent.
+ * Nested subgraph trees may be created.
+ * A subgraph's name is only interpreted relative to its parent.
+ *
+ * A program can scan subgraphs under a given graph
+ * using @ref agfstsubg and @ref agnxtsubg.
+ *
+ * A subgraph is deleted with @ref agdelsubg (or @ref agclose).
+ *
+ * The @ref agparent function returns the immediate parent graph of a subgraph,
+ * or itself if the graph is already a root graph.
+ *
+ * @{
+ */
+
 CGRAPH_API Agraph_t *agsubg(Agraph_t * g, char *name, int cflag);	/* constructor */
 CGRAPH_API Agraph_t *agidsubg(Agraph_t * g, IDTYPE id, int cflag);	/* constructor */
 CGRAPH_API Agraph_t *agfstsubg(Agraph_t * g);
