@@ -520,7 +520,6 @@ CGRAPH_API char *agnameof(void *);
 
 CGRAPH_API int agrelabel_node(Agnode_t * n, char *newname);
 CGRAPH_API int agdelete(Agraph_t * g, void *obj);
-CGRAPH_API int agdelsubg(Agraph_t * g, Agraph_t * sub);	/* could be agclose */
 CGRAPH_API int agdelnode(Agraph_t * g, Agnode_t * arg_n);
 CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *obj);
@@ -711,6 +710,7 @@ CGRAPH_API Agraph_t *agidsubg(Agraph_t * g, IDTYPE id, int cflag);	/* constructo
 CGRAPH_API Agraph_t *agfstsubg(Agraph_t * g);
 CGRAPH_API Agraph_t *agnxtsubg(Agraph_t * subg);
 CGRAPH_API Agraph_t *agparent(Agraph_t * g);
+CGRAPH_API int agdelsubg(Agraph_t * g, Agraph_t * sub);	/* could be agclose */
 /// @}
 
 /** @defgroup cgraph_misc miscellaneous
