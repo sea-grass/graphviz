@@ -10,6 +10,17 @@
 #include <math.h>
 #include <stdbool.h>
 
+/// comparator for doubles
+static inline int fcmp(double a, double b) {
+  if (a < b) {
+    return -1;
+  }
+  if (a > b) {
+    return 1;
+  }
+  return 0;
+}
+
 /** is a value approximately 0?
  *
  * This can be used for doing a floating point `== 0`, while accounting for

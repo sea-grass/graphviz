@@ -14,6 +14,7 @@
 
 #include	<cgraph/agxbuf.h>
 #include	<cgraph/alloc.h>
+#include	<cgraph/gv_math.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
 #include	<stddef.h>
@@ -98,7 +99,7 @@ static graph_t *getCluster(char *cluster_name, Dt_t *map) {
  * of Graphics Gems. In the code there, they use a SGN function to
  * count crossings. This doesn't seem to handle certain special cases,
  * as when the last point is on the line. It certainly didn't work
- * for us when we used int values; see bug 145. We needed to use CMP instead.
+ * for us when we used int values; see bug 145. We needed to use `fcmp` instead.
  *
  * Possibly unnecessary with double values, but harmless.
  */
@@ -113,12 +114,12 @@ static int countVertCross(pointf * pts, double xcoord)
     int sign, old_sign;
     int num_crossings = 0;
 
-    sign = CMP(pts[0].x, xcoord);
+    sign = fcmp(pts[0].x, xcoord);
     if (sign == 0)
 	num_crossings++;
     for (i = 1; i <= 3; i++) {
 	old_sign = sign;
-	sign = CMP(pts[i].x, xcoord);
+	sign = fcmp(pts[i].x, xcoord);
 	if (sign != old_sign && old_sign != 0)
 	    num_crossings++;
     }
@@ -135,12 +136,12 @@ static int countHorzCross(pointf * pts, double ycoord)
     int sign, old_sign;
     int num_crossings = 0;
 
-    sign = CMP(pts[0].y, ycoord);
+    sign = fcmp(pts[0].y, ycoord);
     if (sign == 0)
 	num_crossings++;
     for (i = 1; i <= 3; i++) {
 	old_sign = sign;
-	sign = CMP(pts[i].y, ycoord);
+	sign = fcmp(pts[i].y, ycoord);
 	if (sign != old_sign && old_sign != 0)
 	    num_crossings++;
     }
