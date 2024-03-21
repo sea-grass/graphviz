@@ -77,12 +77,8 @@ void insertPS(PointSet * ps, point pt)
 
 void addPS(PointSet * ps, int x, int y)
 {
-    point pt;
-    pair *pp;
-
-    pt.x = x;
-    pt.y = y;
-    pp = mkPair(pt);
+    const point pt = {.x = x, .y = y};
+    pair *pp = mkPair(pt);
     if (dtinsert(ps, pp) != pp)
         free(pp);
 }
