@@ -255,9 +255,10 @@ static void fig_textspan(GVJ_t * job, pointf p, textspan_t * span)
 	$A	\\in	M_0$\001
 */
     gvprintf(job,
-            "%d %d %d %d %d %d %.1f %.4f %d %.1f %.1f %d %d ",
+            "%d %d %d %d %d %d %.1f %.4f %d %.1f %.1f %.0f %.0f ",
             object_code, sub_type, color, depth, pen_style, font,
-            font_size, angle, font_flags, height, length, ROUND(p.x), ROUND((p.y-72.0)));
+            font_size, angle, font_flags, height, length, round(p.x),
+            round(p.y - 72.0));
     gvputs_nonascii(job, span->str);
     gvputs(job, "\\001\n");
 }
