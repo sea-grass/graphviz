@@ -406,7 +406,7 @@ static bool isBox(node_t *n) {
 
     if ((p = ND_shape(n)->polygon)) {
       return p->sides == 4 && is_zero(fmod(round(p->orientation), 90)) &&
-             p->distortion == 0 && p->skew == 0;
+             is_zero(p->distortion) && is_zero(p->skew);
     }
     return false;
 }
