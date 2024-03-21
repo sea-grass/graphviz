@@ -18,7 +18,7 @@
  */
 
 #include <cgraph/alloc.h>
-#include <cgraph/clamp.h>
+#include <cgraph/gv_math.h>
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
 #include <math.h>

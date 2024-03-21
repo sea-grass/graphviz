@@ -30,13 +30,13 @@
     <ClInclude Include="cgraph.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="clamp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gv_ctype.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gv_math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ingraphs.h">
