@@ -126,13 +126,11 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
     ay = abs(dy) << 1;
     sy = SGN(dy);
 
-/* fprintf (stderr, "fillLine %d %d - %d %d\n", x1,y1,x2,y2); */
     x = x1;
     y = y1;
     if (ax > ay) {              /* x dominant */
         d = ay - (ax >> 1);
         for (;;) {
-/* fprintf (stderr, "  addPS %d %d\n", x,y); */
             addPS(ps, x, y);
             if (x == x2)
                 return;
@@ -146,7 +144,6 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
     } else {                    /* y dominant */
         d = ax - (ay >> 1);
         for (;;) {
-/* fprintf (stderr, "  addPS %d %d\n", x,y); */
             addPS(ps, x, y);
             if (y == y2)
                 return;
