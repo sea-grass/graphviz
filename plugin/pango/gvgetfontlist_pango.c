@@ -15,6 +15,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 
@@ -415,7 +416,7 @@ static void copyUpper (agxbuf* xb, char* s)
     int c;
 
     while ((c = *s++))
-	(void)agxbputc (xb, (char)toupper(c));
+      (void)agxbputc(xb, gv_toupper(c));
 }
 
 /* Returns the font corresponding to a Graphviz PS font.

@@ -14,8 +14,8 @@
 #include "htmlparse.h"
 #include <common/htmllex.h>
 #include <cdt/cdt.h>
-#include <ctype.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
@@ -136,7 +136,7 @@ static int sidesfn(htmldata_t * p, char *v)
     char c;
 
     while ((c = *v++)) {
-	switch (tolower(c)) {
+	switch (gv_tolower(c)) {
 	case 'l' :
 	    flags |= BORDER_LEFT;
 	    break;
