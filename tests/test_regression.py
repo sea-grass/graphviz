@@ -3385,6 +3385,24 @@ def test_2460():
 
 
 @pytest.mark.xfail(
+    strict=not is_mingw(),
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2470",
+)
+def test_2470():
+    """
+    another “trouble in init_rank variant”
+    https://gitlab.com/graphviz/graphviz/-/issues/2470
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2470.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("ps", input)
+
+
+@pytest.mark.xfail(
     reason="https://gitlab.com/graphviz/graphviz/-/issues/2471",
     strict=True,
 )
