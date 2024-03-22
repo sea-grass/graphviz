@@ -96,10 +96,6 @@ static Agnode_t *findCenterNode(Agraph_t * g)
     Agnode_t *center = NULL;
     uint64_t maxNStepsToLeaf = 0;
 
-    /* With just 1 or 2 nodes, return anything. */
-    if (agnnodes(g) <= 2)
-	return agfstnode(g);
-
     /* dfs from each leaf node */
     for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (SLEAF(n) == 0)
@@ -107,7 +103,7 @@ static Agnode_t *findCenterNode(Agraph_t * g)
     }
 
     for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (SLEAF(n) > maxNStepsToLeaf) {
+	if (center == NULL || SLEAF(n) > maxNStepsToLeaf) {
 	    maxNStepsToLeaf = SLEAF(n);
 	    center = n;
 	}

@@ -3344,6 +3344,33 @@ def test_2454():
         assert p.returncode == 0, "gvpr failed"
 
 
+@pytest.mark.skipif(which("twopi") is None, reason="twopi not available")
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2457"
+)
+def test_2457():
+    """
+    node definition order should not affect twopi’s layout
+    https://gitlab.com/graphviz/graphviz/-/issues/2457
+    """
+
+    # locate our associated test cases in this directory
+    case1 = Path(__file__).parent / "2457_1.dot"
+    assert case1.exists(), "unexpectedly missing test case"
+    case2 = Path(__file__).parent / "2457_2.dot"
+    assert case2.exists(), "unexpectedly missing test case"
+
+    # tweak the environment to force deterministic PDF generation
+    env = os.environ.copy()
+    env["SOURCE_DATE_EPOCH"] = "0"
+
+    # generate PDFs
+    pdf1 = subprocess.check_output(["twopi", "-Tpdf", case1], env=env)
+    pdf2 = subprocess.check_output(["twopi", "-Tpdf", case2], env=env)
+
+    assert pdf1 == pdf2, "node definition order affected PDF generation"
+
+
 @pytest.mark.xfail(
     strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2458"
 )
