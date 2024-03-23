@@ -109,7 +109,6 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     int *block;
     int block_len;
     int first_next_level;
-    int *lev;
     int level = -1, max_in_level = 0;
     float *gap;
     float target_place;
@@ -133,7 +132,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
     /* current block (nodes connected by active constraints) */
     block = e->iArray1;
 
-    lev = e->iArray2;		/* level of each node */
+    int *lev = gv_calloc(n, sizeof(int)); // level of each node
     for (i = 0; i < n; i++) {
 	if (i >= max_in_level) {
 	    /* we are entering a new level */
@@ -406,6 +405,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 	}
 	orthog1f(n, place);	/* for numerical stability, keep ||place|| small */
     }
+    free(lev);
 }
 
 void deleteCMajEnv(CMajEnv * e)
@@ -417,7 +417,6 @@ void deleteCMajEnv(CMajEnv * e)
     free(e->fArray3);
     free(e->fArray4);
     free(e->iArray1);
-    free(e->iArray2);
     free(e);
 }
 
@@ -436,7 +435,6 @@ CMajEnv *initConstrainedMajorization(float *packedMat, int n,
     e->fArray3 = gv_calloc(n, sizeof(float));
     e->fArray4 = gv_calloc(n, sizeof(float));
     e->iArray1 = gv_calloc(n, sizeof(int));
-    e->iArray2 = gv_calloc(n, sizeof(int));
     return e;
 }
 #endif				/* DIGCOLA */
