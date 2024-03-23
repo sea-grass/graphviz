@@ -844,8 +844,7 @@ static vtx_data *makeGraphData(graph_t * g, int nv, int *nedges, int mode, int m
 		if (haveWt)
 		    graph[i].eweights[idx] += ED_factor(ep);
 		if (haveLen) {
-		    int curlen = graph[i].ewgts[idx];
-		    graph[i].ewgts[idx] = MAX(ED_dist(ep), curlen);
+		    graph[i].ewgts[idx] = fmax(graph[i].ewgts[idx], ED_dist(ep));
 		}
 	    } else {
 		node_t *vp = agtail(ep) == np ? aghead(ep) : agtail(ep);
