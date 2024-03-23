@@ -773,8 +773,9 @@ get_metrics_for_font_family(const char *font_name) {
             font_name);
   char *warning_text = agxbuse(&warning);
   if (emit_once(warning_text)) {
-    fputs(warning_text, stderr);
+    agwarningf("%s", warning_text);
   }
+  agxbfree(&warning);
   return get_metrics_for_font_family("Times");
 }
 
@@ -801,10 +802,10 @@ estimate_character_width_canonical(const short variant_metrics[128],
     static bool warning_already_reported = false;
     if (!warning_already_reported) { // stderr spam prevention
       warning_already_reported = true;
-      fprintf(stderr,
-              "Warning: no value for width of non-ASCII character %u. Falling "
-              "back to width of space character\n",
-              character);
+      agwarningf(
+          "Warning: no value for width of non-ASCII character %u. Falling "
+          "back to width of space character\n",
+          character);
     }
     character = ' ';
   }
@@ -813,10 +814,10 @@ estimate_character_width_canonical(const short variant_metrics[128],
     static bool warning_already_reported = false;
     if (!warning_already_reported) { // stderr spam prevention
       warning_already_reported = true;
-      fprintf(stderr,
-              "Warning: no value for width of ASCII character %u. Falling back "
-              "to 0\n",
-              character);
+      agwarningf(
+          "Warning: no value for width of ASCII character %u. Falling back "
+          "to 0\n",
+          character);
     }
     width = 0;
   }
