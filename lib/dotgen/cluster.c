@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <cgraph/queue.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 
@@ -247,7 +248,6 @@ merge_ranks(graph_t * subg)
 		v->root = agroot(root);
 	    delete_fast_node(subg, v);
 	    fast_node(root, v);
-	    GD_n_nodes(root)++;
 	}
 	GD_rank(subg)[r].v = GD_rank(root)[r].v + ipos;
 	GD_rank(root)[r].valid = false;
@@ -384,8 +384,7 @@ void build_skeleton(graph_t * g, graph_t * subg)
     }
 }
 
-void install_cluster(graph_t * g, node_t * n, int pass, nodequeue * q)
-{
+void install_cluster(graph_t *g, node_t *n, int pass, queue_t *q) {
     int r;
     graph_t *clust;
 

@@ -24,7 +24,7 @@ AM_CPPFLAGS = \
 
 pkginclude_HEADERS = gvpr.h
 noinst_HEADERS = actions.h compile.h gdefs.h gprdata.inc gprstate.h parse.h \
-	queue.h trieFA.h trie.c
+	trieFA.h trie.c
 noinst_LTLIBRARIES = libgvpr_C.la
 lib_LTLIBRARIES = libgvpr.la
 pkgconfig_DATA = libgvpr.pc
@@ -33,7 +33,7 @@ if ENABLE_MAN_PDFS
 pdf_DATA = gvpr.3.pdf
 endif
 
-libgvpr_C_la_SOURCES = actions.c compile.c gvpr.c gprstate.c parse.c queue.c
+libgvpr_C_la_SOURCES = actions.c compile.c gvpr.c gprstate.c parse.c
 libgvpr_C_la_DEPENDENCIES = \
 	$(top_builddir)/lib/expr/libexpr_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la

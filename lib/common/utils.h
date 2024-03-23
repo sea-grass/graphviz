@@ -44,10 +44,6 @@ typedef struct {
   unsigned utf8 : 1;
 } xml_flags_t;
 
-UTILS_API nodequeue *new_queue(size_t);
-UTILS_API void free_queue(nodequeue *);
-UTILS_API void enqueue(nodequeue *, Agnode_t *);
-UTILS_API Agnode_t *dequeue(nodequeue *);
 UTILS_API pointf Bezier(pointf *, double, pointf *, pointf *);
 UTILS_API void attach_attrs_and_arrows(graph_t *, bool *, bool *);
 

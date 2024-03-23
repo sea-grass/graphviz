@@ -9,7 +9,6 @@ add_library(gvpr STATIC
   gprstate.h
   gvpr.h
   parse.h
-  queue.h
   trieFA.h
 
   # Source files
@@ -18,7 +17,6 @@ add_library(gvpr STATIC
   gvpr.c
   gprstate.c
   parse.c
-  queue.c
 )
 
 target_include_directories(gvpr PRIVATE

@@ -25,10 +25,10 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/exit.h>
+#include <cgraph/queue.h>
 #include <cgraph/stack.h>
 #include <common/globals.h>
 #include <gvpr/compile.h>
-#include <gvpr/queue.h>
 #include <gvpr/gvpr.h>
 #include <gvpr/actions.h>
 #include <ast/error.h>
@@ -526,14 +526,13 @@ static trav_fns REVfns = { agfstin, (nxttedgefn_t) agnxtin, 0, 0 };
 static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 {
     nodestream nodes;
-    queue *q;
+    queue_t q = {0};
     ndata *nd;
     Agnode_t *n;
     Agedge_t *cure;
     Agedge_t *nxte;
     Agraph_t *g = state->curgraph;
 
-    q = mkQueue();
     nodes.oldroot = 0;
     nodes.prev = 0;
     while ((n = nextNode(state, &nodes))) {
@@ -541,8 +540,8 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 	if (MARKED(nd))
 	    continue;
 	PUSH(nd, 0);
-	push(q, n);
-	while ((n = pull(q))) {
+	queue_push(&q, n);
+	while ((n = queue_pop(&q))) {
 	    nd = nData(n);
 	    MARK(nd);
 	    POP(nd);
@@ -555,14 +554,14 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 		    continue;
 		if (!evalEdge(state, prog, xprog, cure)) continue;
 		if (!ONSTACK(nd)) {
-		    push(q, cure->node);
+		    queue_push(&q, cure->node);
 		    PUSH(nd,cure);
 		}
 	    }
 	}
     }
     state->tvedge = 0;
-    freeQ(q);
+    queue_free(&q);
 }
 
 static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * fns)

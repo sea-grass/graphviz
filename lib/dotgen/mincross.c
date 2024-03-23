@@ -22,6 +22,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/list.h>
+#include <cgraph/queue.h>
 #include <cgraph/streq.h>
 #include <dotgen/dot.h>
 #include <limits.h>
@@ -1225,9 +1226,7 @@ void build_ranks(graph_t * g, int pass)
     int i, j;
     node_t *n, *n0, *ns;
     edge_t **otheredges;
-    nodequeue *q;
-
-    q = new_queue(GD_n_nodes(g));
+    queue_t q = {0};
     for (n = GD_nlist(g); n; n = ND_next(n))
 	MARK(n) = false;
 
@@ -1262,18 +1261,18 @@ void build_ranks(graph_t * g, int pass)
 	    continue;
 	if (!MARK(n)) {
 	    MARK(n) = true;
-	    enqueue(q, n);
-	    while ((n0 = dequeue(q))) {
+	    queue_push(&q, n);
+	    while ((n0 = queue_pop(&q))) {
 		if (ND_ranktype(n0) != CLUSTER) {
 		    install_in_rank(g, n0);
-		    enqueue_neighbors(q, n0, pass);
+		    enqueue_neighbors(&q, n0, pass);
 		} else {
-		    install_cluster(g, n0, pass, q);
+		    install_cluster(g, n0, pass, &q);
 		}
 	    }
 	}
     }
-    assert(dequeue(q) == NULL);
+    assert(queue_pop(&q) == NULL);
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	GD_rank(Root)[i].valid = false;
 	if (GD_flip(g) && GD_rank(g)[i].n > 0) {
@@ -1287,11 +1286,10 @@ void build_ranks(graph_t * g, int pass)
 
     if (g == dot_root(g) && ncross(g) > 0)
 	transpose(g, false);
-    free_queue(q);
+    queue_free(&q);
 }
 
-void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
-{
+void enqueue_neighbors(queue_t *q, node_t *n0, int pass) {
     edge_t *e;
 
     if (pass == 0) {
@@ -1299,7 +1297,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
 	    e = ND_out(n0).list[i];
 	    if (!MARK(aghead(e))) {
 		MARK(aghead(e)) = true;
-		enqueue(q, aghead(e));
+		queue_push(q, aghead(e));
 	    }
 	}
     } else {
@@ -1307,7 +1305,7 @@ void enqueue_neighbors(nodequeue * q, node_t * n0, int pass)
 	    e = ND_in(n0).list[i];
 	    if (!MARK(agtail(e))) {
 		MARK(agtail(e)) = true;
-		enqueue(q, agtail(e));
+		queue_push(q, agtail(e));
 	    }
 	}
     }

@@ -165,8 +165,6 @@ void class2(graph_t * g)
 
     GD_nlist(g) = NULL;
 
-    GD_n_nodes(g) = 0;		/* new */
-
     mark_clusters(g);
     for (c = 1; c <= GD_n_cluster(g); c++)
 	build_skeleton(g, GD_clust(g)[c]);
@@ -181,7 +179,6 @@ void class2(graph_t * g)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (ND_clust(n) == NULL && n == UF_find(n)) {
 	    fast_node(g, n);
-	    GD_n_nodes(g)++;
 	}
 	prev = NULL;
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
