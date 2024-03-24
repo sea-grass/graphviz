@@ -60,7 +60,7 @@ dumpNS (graph_t * g)
 static double
 largeMinlen (double l)
 {
-  agerr(AGERR,
+  agerrorf(
         "Edge length %f larger than maximum %d allowed.\nCheck for overwide "
         "node(s).\n",
         l, INT_MAX);
@@ -1115,7 +1115,7 @@ static void contain_nodes(graph_t * g)
 	    continue;
 	v = GD_rank(g)[r].v[0];
 	if (v == NULL) {
-	    agerr(AGERR, "contain_nodes clust %s rank %d missing node\n",
+	    agerrorf("contain_nodes clust %s rank %d missing node\n",
 		  agnameof(g), r);
 	    continue;
 	}

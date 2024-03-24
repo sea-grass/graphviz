@@ -73,7 +73,7 @@ static Dict_t *agdictof(Agraph_t * g, int kind)
 	    dict = dd->dict.e;
 	    break;
 	default:
-	    agerr(AGERR,"agdictof: unknown kind %d\n", kind);
+	    agerrorf("agdictof: unknown kind %d\n", kind);
 	    dict = NULL;
 	    break;
     } else

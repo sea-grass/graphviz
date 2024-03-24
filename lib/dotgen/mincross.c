@@ -496,7 +496,7 @@ static void do_ordering_for_nodes(graph_t * g)
 	    else if (streq(ordering, "in"))
 		do_ordering_node(g, n, false);
 	    else if (ordering[0])
-		agerr(AGERR, "ordering '%s' not recognized for node '%s'.\n", ordering, agnameof(n));
+		agerrorf("ordering '%s' not recognized for node '%s'.\n", ordering, agnameof(n));
 	}
     }
 }
@@ -520,7 +520,7 @@ static void ordered_edges(graph_t * g)
 	else if (streq(ordering, "in"))
 	    do_ordering(g, false);
 	else if (ordering[0])
-	    agerr(AGERR, "ordering '%s' not recognized.\n", ordering);
+	    agerrorf("ordering '%s' not recognized.\n", ordering);
     }
     else
     {
@@ -1180,7 +1180,7 @@ void install_in_rank(graph_t * g, node_t * n)
     r = ND_rank(n);
     i = GD_rank(g)[r].n;
     if (GD_rank(g)[r].an <= 0) {
-	agerr(AGERR, "install_in_rank, line %d: %s %s rank %d i = %d an = 0\n",
+	agerrorf("install_in_rank, line %d: %s %s rank %d i = %d an = 0\n",
 	      __LINE__, agnameof(g), agnameof(n), r, i);
 	return;
     }
@@ -1200,18 +1200,18 @@ void install_in_rank(graph_t * g, node_t * n)
     }
 #endif
     if (ND_order(n) > GD_rank(Root)[r].an) {
-	agerr(AGERR, "install_in_rank, line %d: ND_order(%s) [%d] > GD_rank(Root)[%d].an [%d]\n",
+	agerrorf("install_in_rank, line %d: ND_order(%s) [%d] > GD_rank(Root)[%d].an [%d]\n",
 	      __LINE__, agnameof(n), ND_order(n), r, GD_rank(Root)[r].an);
 	return;
     }
     if (r < GD_minrank(g) || r > GD_maxrank(g)) {
-	agerr(AGERR, "install_in_rank, line %d: rank %d not in rank range [%d,%d]\n",
+	agerrorf("install_in_rank, line %d: rank %d not in rank range [%d,%d]\n",
 	      __LINE__, r, GD_minrank(g), GD_maxrank(g));
 	return;
     }
     if (GD_rank(g)[r].v + ND_order(n) >
 	GD_rank(g)[r].av + GD_rank(Root)[r].an) {
-	agerr(AGERR, "install_in_rank, line %d: GD_rank(g)[%d].v + ND_order(%s) [%d] > GD_rank(g)[%d].av + GD_rank(Root)[%d].an [%d]\n",
+	agerrorf("install_in_rank, line %d: GD_rank(g)[%d].v + ND_order(%s) [%d] > GD_rank(g)[%d].av + GD_rank(Root)[%d].an [%d]\n",
 	      __LINE__, r, agnameof(n),ND_order(n), r, r, GD_rank(Root)[r].an);
 	return;
     }
@@ -1763,7 +1763,7 @@ void virtual_weight(edge_t * e)
     /* check whether the upcoming computation will overflow */
     assert(t >= 0);
     if (INT_MAX / t < ED_weight(e)) {
-	agerr(AGERR, "overflow when calculating virtual weight of edge\n");
+	agerrorf("overflow when calculating virtual weight of edge\n");
 	graphviz_exit(EXIT_FAILURE);
     }
 

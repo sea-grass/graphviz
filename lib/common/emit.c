@@ -495,7 +495,7 @@ static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
 	}
 	else {
 	    if (doWarn) {
-		agerr (AGERR, "Illegal value in \"%s\" color attribute; float expected after ';'\n",
+		agerrorf("Illegal value in \"%s\" color attribute; float expected after ';'\n",
                     clrs);
 		doWarn = 0;
 		rval = 2;
@@ -3750,7 +3750,7 @@ char **parse_style(char *s)
 	switch (c.type) {
 	case '(':
 	    if (in_parens) {
-		agerr(AGERR, "nesting not allowed in style: %s\n", s);
+		agerrorf("nesting not allowed in style: %s\n", s);
 		parse[0] = NULL;
 		return parse;
 	    }
@@ -3759,7 +3759,7 @@ char **parse_style(char *s)
 
 	case ')':
 	    if (!in_parens) {
-		agerr(AGERR, "unmatched ')' in style: %s\n", s);
+		agerrorf("unmatched ')' in style: %s\n", s);
 		parse[0] = NULL;
 		return parse;
 	    }
@@ -3782,7 +3782,7 @@ char **parse_style(char *s)
     }
 
     if (in_parens) {
-	agerr(AGERR, "unmatched '(' in style: %s\n", s);
+	agerrorf("unmatched '(' in style: %s\n", s);
 	parse[0] = NULL;
 	return parse;
     }
@@ -3932,7 +3932,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
 	start_timer();
     
     if (!LAYOUT_DONE(g)) {
-        agerr (AGERR, "Layout was not done.  Missing layout plugins? \n");
+        agerrorf("Layout was not done.  Missing layout plugins? \n");
 	FINISH();
         return -1;
     }
@@ -3956,7 +3956,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
 	job->keybindings = gvevent_key_binding;
 	job->numkeys = gvevent_key_binding_size;
 	if (!GD_drawing(g)) {
-	    agerr (AGERR, "layout was not done\n");
+	    agerrorf("layout was not done\n");
 	    gv_fixLocale (0);
 	    FINISH();
 	    return -1;
@@ -3964,7 +3964,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
 
         job->output_lang = gvrender_select(job, job->output_langname);
         if (job->output_lang == NO_SUPPORT) {
-            agerr (AGERR, "renderer for %s is unavailable\n", job->output_langname);
+            agerrorf("renderer for %s is unavailable\n", job->output_langname);
 	    gv_fixLocale (0);
 	    FINISH();
             return -1;

@@ -75,7 +75,7 @@ int agapply(Agraph_t * g, Agobj_t * obj, agobjfn_t fn, void *arg,
 	objsearch = subedge_search;
 	break;
     default:
-	agerr(AGERR, "agapply: unknown object type %d\n", AGTYPE(obj));
+	agerrorf("agapply: unknown object type %d\n", AGTYPE(obj));
 	return FAILURE;
     }
     if ((subobj = objsearch(g, obj))) {

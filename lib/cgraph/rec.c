@@ -54,7 +54,7 @@ Agrec_t *aggetrec(void *obj, const char *name, int mtf)
 
     if (hdr->tag.mtflock) {
 	if (mtf && hdr->data != d)
-	    agerr(AGERR, "move to front lock inconsistency");
+	    agerrorf("move to front lock inconsistency");
     } else if (d != first || mtf != 0) {
 	set_data(hdr, d, mtf != 0);	/* Always optimize */
     }

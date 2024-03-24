@@ -78,7 +78,7 @@ void htmlerror(const char *msg)
     if (state.error)
 	return;
     state.error = 1;
-    agerr(AGERR, "%s in line %lu \n", msg, htmllineno());
+    agerrorf("%s in line %lu \n", msg, htmllineno());
     error_context();
 }
 
@@ -90,7 +90,7 @@ static void lexerror(const char *name)
 {
     state.tok = T_error;
     state.error = 1;
-    agerr(AGERR, "Unknown HTML element <%s> on line %lu \n", name, htmllineno());
+    agerrorf("Unknown HTML element <%s> on line %lu \n", name, htmllineno());
 }
 
 typedef int (*attrFn) (void *, char *);
@@ -1102,7 +1102,7 @@ int htmllex(void)
 	}
 	if (rv == XML_STATUS_ERROR) {
 	    if (!state.error) {
-		agerr(AGERR, "%s in line %lu \n",
+		agerrorf("%s in line %lu \n",
 		      XML_ErrorString(XML_GetErrorCode(state.parser)), htmllineno());
 		error_context();
 		state.error = 1;

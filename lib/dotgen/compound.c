@@ -61,7 +61,7 @@ static pointf boxIntersectf(pointf pp, pointf cp, boxf * bp)
     }
 
     /* failure */
-    agerr(AGERR,
+    agerrorf(
           "segment [(%.5g, %.5g),(%.5g,%.5g)] does not intersect box "
           "ll=(%.5g,%.5g),ur=(%.5g,%.5g)\n", pp.x, pp.y, cp.x, cp.y, ll.x, ll.y,
           ur.x, ur.y);

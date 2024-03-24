@@ -438,7 +438,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (!DNODE(n)) {
 	    if (PARENT(n) && PARENT(n) != GPARENT(g)) {
-		agerr (AGERR, "node \"%s\" is contained in two non-comparable clusters \"%s\" and \"%s\"\n", agnameof(n), agnameof(g), agnameof(PARENT(n)));
+		agerrorf("node \"%s\" is contained in two non-comparable clusters \"%s\" and \"%s\"\n", agnameof(n), agnameof(g), agnameof(PARENT(n)));
 		return NULL;
 	    }
 	    PARENT(n) = g;

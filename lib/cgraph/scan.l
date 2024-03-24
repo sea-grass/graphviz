@@ -257,7 +257,7 @@ void aagerror(const char *str)
 		break;
 	}
 	agxbputc (&xb, '\n');
-	agerr(AGERR, "%s", agxbuse(&xb));
+	agerrorf("%s", agxbuse(&xb));
 	agxbfree(&xb);
     BEGIN(INITIAL);
 }

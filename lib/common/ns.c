@@ -51,7 +51,7 @@ static int add_tree_edge(edge_t * e)
     node_t *n;
     //fprintf(stderr,"add tree edge %p %s ", (void*)e, agnameof(agtail(e))) ; fprintf(stderr,"%s\n", agnameof(aghead(e))) ;
     if (TREE_EDGE(e)) {
-	agerr(AGERR, "add_tree_edge: missing tree edge\n");
+	agerrorf("add_tree_edge: missing tree edge\n");
 	return -1;
     }
     assert(Tree_edge.size <= INT_MAX);
@@ -66,7 +66,7 @@ static int add_tree_edge(edge_t * e)
     ND_tree_out(n).list[ND_tree_out(n).size++] = e;
     ND_tree_out(n).list[ND_tree_out(n).size] = NULL;
     if (ND_out(n).list[ND_tree_out(n).size - 1] == 0) {
-	agerr(AGERR, "add_tree_edge: empty outedge list\n");
+	agerrorf("add_tree_edge: empty outedge list\n");
 	return -1;
     }
     n = aghead(e);
@@ -74,7 +74,7 @@ static int add_tree_edge(edge_t * e)
     ND_tree_in(n).list[ND_tree_in(n).size++] = e;
     ND_tree_in(n).list[ND_tree_in(n).size] = NULL;
     if (ND_in(n).list[ND_tree_in(n).size - 1] == 0) {
-	agerr(AGERR, "add_tree_edge: empty inedge list\n");
+	agerrorf("add_tree_edge: empty inedge list\n");
 	return -1;
     }
     return 0;
@@ -98,7 +98,7 @@ static void invalidate_path(node_t *lca, node_t *to_node) {
 
         if (ND_lim(to_node) >= ND_lim(lca)) {
           if (to_node != lca)
-            agerr(AGERR, "invalidate_path: skipped over LCA\n");
+            agerrorf("invalidate_path: skipped over LCA\n");
           break;
         }
 
@@ -167,7 +167,7 @@ void init_rank(void)
 	}
     }
     if (ctr != N_nodes) {
-	agerr(AGERR, "trouble in init_rank\n");
+	agerrorf("trouble in init_rank\n");
 	for (v = GD_nlist(G); v; v = ND_next(v))
 	    if (ND_priority(v))
 		agerr(AGPREV, "\t%s %d\n", agnameof(v), ND_priority(v));
@@ -652,7 +652,7 @@ update(edge_t * e, edge_t * f)
     cutvalue = ED_cutvalue(e);
     lca = treeupdate(agtail(f), aghead(f), cutvalue, 1);
     if (treeupdate(aghead(f), agtail(f), cutvalue, 0) != lca) {
-	agerr(AGERR, "update: mismatched lca in treeupdates\n");
+	agerrorf("update: mismatched lca in treeupdates\n");
 	return 2;
     }
 
@@ -1030,12 +1030,12 @@ static void x_cutval(edge_t * f)
     sum = 0;
     for (i = 0; (e = ND_out(v).list[i]); i++)
 	if (sadd_overflow(sum, x_val(e, v, dir), &sum)) {
-	    agerr(AGERR, "overflow when computing edge weight sum\n");
+	    agerrorf("overflow when computing edge weight sum\n");
 	    graphviz_exit(EXIT_FAILURE);
 	}
     for (i = 0; (e = ND_in(v).list[i]); i++)
 	if (sadd_overflow(sum, x_val(e, v, dir), &sum)) {
-	    agerr(AGERR, "overflow when computing edge weight sum\n");
+	    agerrorf("overflow when computing edge weight sum\n");
 	    graphviz_exit(EXIT_FAILURE);
 	}
     ED_cutvalue(f) = sum;

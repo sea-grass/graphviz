@@ -95,7 +95,7 @@ static void map_edge(edge_t * e)
 
     if (ED_spl(e) == NULL) {
 	if (!Concentrate && ED_edge_type(e) != IGNORED)
-	    agerr(AGERR, "lost %s %s edge\n", agnameof(agtail(e)),
+	    agerrorf("lost %s %s edge\n", agnameof(agtail(e)),
 		  agnameof(aghead(e)));
 	return;
     }

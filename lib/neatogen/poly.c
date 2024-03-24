@@ -201,7 +201,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    verts = genRound(n, &sides, xmargin, ymargin);
 	    break;
 	default:
-	    agerr(AGERR, "makeAddPoly: unknown shape type %s\n",
+	    agerrorf("makeAddPoly: unknown shape type %s\n",
 		  ND_shape(n)->name);
 	    return 1;
 	}
@@ -273,7 +273,7 @@ int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
 	    verts = genRound(n, &sides, 0, 0);
 	    break;
 	default:
-	    agerr(AGERR, "makePoly: unknown shape type %s\n",
+	    agerrorf("makePoly: unknown shape type %s\n",
 		  ND_shape(n)->name);
 	    return 1;
 	}

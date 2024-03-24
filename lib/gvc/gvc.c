@@ -55,7 +55,7 @@ int gvLayout(GVC_t *gvc, graph_t *g, const char *engine)
 
     rc = gvlayout_select(gvc, engine);
     if (rc == NO_SUPPORT) {
-        agerr (AGERR, "Layout type: \"%s\" not recognized. Use one of:%s\n",
+        agerrorf("Layout type: \"%s\" not recognized. Use one of:%s\n",
                 engine, gvplugin_list(gvc, API_layout, engine));
         return -1;
     }
@@ -89,7 +89,7 @@ int gvRender(GVC_t *gvc, graph_t *g, const char *format, FILE *out)
     bool r = gvjobs_output_langname(gvc, format);
     job = gvc->job;
     if (!r) {
-        agerr (AGERR, "Format: \"%s\" not recognized. Use one of:%s\n",
+        agerrorf("Format: \"%s\" not recognized. Use one of:%s\n",
                 format, gvplugin_list(gvc, API_device, format));
         return -1;
     }
@@ -119,7 +119,7 @@ int gvRenderFilename(GVC_t *gvc, graph_t *g, const char *format, const char *fil
     bool r = gvjobs_output_langname(gvc, format);
     job = gvc->job;
     if (!r) {
-	agerr(AGERR, "Format: \"%s\" not recognized. Use one of:%s\n",
+	agerrorf("Format: \"%s\" not recognized. Use one of:%s\n",
                 format, gvplugin_list(gvc, API_device, format));
 	return -1;
     }
@@ -148,7 +148,7 @@ int gvRenderContext(GVC_t *gvc, graph_t *g, const char *format, void *context)
     bool r = gvjobs_output_langname(gvc, format);
     job = gvc->job;
     if (!r) {
-		agerr(AGERR, "Format: \"%s\" not recognized. Use one of:%s\n",
+		agerrorf("Format: \"%s\" not recognized. Use one of:%s\n",
 			  format, gvplugin_list(gvc, API_device, format));
 		return -1;
     }
@@ -180,7 +180,7 @@ int gvRenderData(GVC_t *gvc, graph_t *g, const char *format, char **result, unsi
     bool r = gvjobs_output_langname(gvc, format);
     job = gvc->job;
     if (!r) {
-	agerr(AGERR, "Format: \"%s\" not recognized. Use one of:%s\n",
+	agerrorf("Format: \"%s\" not recognized. Use one of:%s\n",
                 format, gvplugin_list(gvc, API_device, format));
 	return -1;
     }
@@ -195,7 +195,7 @@ int gvRenderData(GVC_t *gvc, graph_t *g, const char *format, char **result, unsi
 #define OUTPUT_DATA_INITIAL_ALLOCATION 4096
 
     if(!result || !(*result = malloc(OUTPUT_DATA_INITIAL_ALLOCATION))) {
-	agerr(AGERR, "failure malloc'ing for result string");
+	agerrorf("failure malloc'ing for result string");
 	return -1;
     }
 

@@ -176,7 +176,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
     }
 
     if (lt_dlinit()) {
-        agerr(AGERR, "failed to init libltdl\n");
+        agerrorf("failed to init libltdl\n");
         agxbfree(&fullpath);
         return NULL;
     }
@@ -202,7 +202,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
 #else
     if (len < strlen("/libgvplugin_x")) {
 #endif
-        agerr(AGERR, "invalid plugin path \"%s\"\n", p);
+        agerrorf("invalid plugin path \"%s\"\n", p);
         agxbfree(&fullpath);
         return NULL;
     }
@@ -221,7 +221,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
 
     ptr = lt_dlsym(hndl, sym);
     if (!ptr) {
-        agerr(AGERR, "failed to resolve %s in %s\n", sym, p);
+        agerrorf("failed to resolve %s in %s\n", sym, p);
         free(sym);
         agxbfree(&fullpath);
         return NULL;
@@ -230,7 +230,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
     agxbfree(&fullpath);
     return (gvplugin_library_t *)ptr;
 #else
-    agerr(AGERR, "dynamic loading not available\n");
+    agerrorf("dynamic loading not available\n");
     return NULL;
 #endif
 }
@@ -427,7 +427,7 @@ char **gvPluginList(GVC_t *gvc, const char *kind, int *sz) {
             break;
     }
     if (api == ARRAY_SIZE(api_names)) {
-        agerr(AGERR, "unrecognized api name \"%s\"\n", kind);
+        agerrorf("unrecognized api name \"%s\"\n", kind);
         return NULL;
     }
 

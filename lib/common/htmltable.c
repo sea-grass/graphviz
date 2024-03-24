@@ -1092,7 +1092,7 @@ static int size_html_img(htmlimg_t * img, htmlenv_t * env)
     if (b.UR.x == -1 && b.UR.y == -1) {
 	rv = 1;
 	b.UR.x = b.UR.y = 0;
-	agerr(AGERR, "No or improper image file=\"%s\"\n", img->src);
+	agerrorf("No or improper image file=\"%s\"\n", img->src);
     } else {
 	rv = 0;
 	GD_has_images(env->g) = true;

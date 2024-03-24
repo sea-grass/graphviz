@@ -329,7 +329,7 @@ Agnode_t* circleLayout(Agraph_t * sg, Agnode_t * center)
 	fprintf(stderr, "root = %s max steps to root = %" PRIu64 "\n",
 	        agnameof(center), maxNStepsToCenter);
     if (maxNStepsToCenter == UINT64_MAX) {
-	agerr(AGERR, "twopi: use of weight=0 creates disconnected component.\n");
+	agerrorf("twopi: use of weight=0 creates disconnected component.\n");
 	return center;
     }
 

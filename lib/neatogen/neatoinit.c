@@ -114,7 +114,7 @@ bool user_pos(attrsym_t *posptr, attrsym_t *pinptr, node_t *np, int nG) {
 		ND_pinned(np) = P_PIN;
 	    return true;
 	} else
-	    agerr(AGERR, "node %s, position %s, expected two doubles\n",
+	    agerrorf("node %s, position %s, expected two doubles\n",
 		  agnameof(np), p);
     }
     return false;
@@ -550,7 +550,7 @@ int init_nop(Agraph_t * g, int adjust)
     scan_graph(g);		/* mainly to set up GD_neato_nlist */
     for (i = 0; (np = GD_neato_nlist(g)[i]); i++) {
 	if (!hasPos(np) && !startswith(agnameof(np), "cluster")) {
-	    agerr(AGERR, "node %s in graph %s has no position\n",
+	    agerrorf("node %s in graph %s has no position\n",
 		  agnameof(np), agnameof(g));
 	    return -1;
 	}

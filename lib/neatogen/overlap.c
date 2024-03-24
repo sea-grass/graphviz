@@ -664,7 +664,7 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
 
     if (once == 0) {
 	once = 1;
-	agerr(AGERR, "remove_overlap: Graphviz not built with triangulation library\n");
+	agerrorf("remove_overlap: Graphviz not built with triangulation library\n");
     }
 }
 #endif

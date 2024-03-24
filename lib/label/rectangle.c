@@ -74,7 +74,7 @@ uint64_t RectArea(const Rect_t *r) {
       unsigned int dim = r->boundary[i + NUMDIMS] - r->boundary[i];
       if (dim == 0) return 0;
       if (UINT64_MAX / dim < area) {
-	agerr (AGERR, "label: area too large for rtree\n");
+	agerrorf("label: area too large for rtree\n");
 	graphviz_exit(EXIT_FAILURE);
       }
       area *= dim;

@@ -19,7 +19,7 @@
 int agdelete(Agraph_t * g, void *obj)
 {
     if (AGTYPE(obj) == AGRAPH && g != agparent(obj)) {
-	agerr(AGERR, "agdelete on wrong graph");
+	agerrorf("agdelete on wrong graph");
 	return FAILURE;
     }
 
@@ -32,7 +32,7 @@ int agdelete(Agraph_t * g, void *obj)
     case AGRAPH:
 	return agclose(obj);
     default:
-	agerr(AGERR, "agdelete on bad object");
+	agerrorf("agdelete on bad object");
     }
     return SUCCESS;		/* not reached */
 }
@@ -171,7 +171,7 @@ Agraph_t *agroot(void* obj)
     case AGRAPH:
 	return ((Agraph_t *) obj)->root;
     default:			/* actually can't occur if only 2 bit tags */
-	agerr(AGERR, "agroot of a bad object");
+	agerrorf("agroot of a bad object");
 	return NULL;
     }
 }
@@ -187,7 +187,7 @@ Agraph_t *agraphof(void *obj)
     case AGRAPH:
 	return obj;
     default:			/* actually can't occur if only 2 bit tags */
-	agerr(AGERR, "agraphof a bad object");
+	agerrorf("agraphof a bad object");
 	return NULL;
     }
 }

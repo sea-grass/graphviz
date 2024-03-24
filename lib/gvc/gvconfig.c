@@ -191,7 +191,7 @@ static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
 	    const char *api = token(&nest, &s);
 	    const api_t gv_api = gvplugin_api(api);
 	    if (gv_api == (api_t)-1) {
-		agerr(AGERR, "config error: %s %s not found\n", package_path, api);
+		agerrorf("config error: %s %s not found\n", package_path, api);
 		return 0;
 	    }
 	    do {
@@ -203,7 +203,7 @@ static int gvconfig_plugin_install_from_config(GVC_t * gvc, char *s)
 		        quality = 0;
 		    bool rc = gvplugin_install(gvc, gv_api, type, quality, package, NULL);
 		    if (!rc) {
-		        agerr(AGERR, "config error: %s %s %s\n", package_path, api, type);
+		        agerrorf("config error: %s %s %s\n", package_path, api, type);
 		        return 0;
 		    }
 		}
@@ -300,17 +300,17 @@ char * gvconfig_libdir(GVC_t * gvc)
 		
 		MEMORY_BASIC_INFORMATION mbi;
 		if (VirtualQuery (&gvconfig_libdir, &mbi, sizeof(mbi)) == 0) {
-		agerr(AGERR,"failed to get handle for executable.\n");
+		agerrorf("failed to get handle for executable.\n");
 		return 0;
 	    }
 	    r = GetModuleFileName ((HMODULE)mbi.AllocationBase, line, BSZ);
 	    if (!r || (r == BSZ)) {
-		agerr(AGERR,"failed to get path for executable.\n");
+		agerrorf("failed to get path for executable.\n");
 		return 0;
 	    }
 	    s = strrchr(line,'\\');
 	    if (!s) {
-		agerr(AGERR,"no slash in path %s.\n", line);
+		agerrorf("no slash in path %s.\n", line);
 		return 0;
 	    }
 	    *s = '\0';
@@ -491,7 +491,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
     if (config_path) {
 	f = fopen(config_path,"w");
 	if (!f) {
-	    agerr(AGERR,"failed to open %s for write.\n", config_path);
+	    agerrorf("failed to open %s for write.\n", config_path);
 	    graphviz_exit(1);
 	}
 
@@ -597,17 +597,17 @@ void gvconfig(GVC_t * gvc, bool rescan)
         else {
     	    f = fopen(gvc->config_path,"r");
     	    if (!f) {
-    	        agerr (AGERR,"failed to open %s for read.\n", gvc->config_path);
+    	        agerrorf("failed to open %s for read.\n", gvc->config_path);
 		return;
     	    }
     	    else if (config_st.st_size == 0) {
-    	        agerr(AGERR, "%s is zero sized.\n", gvc->config_path);
+    	        agerrorf("%s is zero sized.\n", gvc->config_path);
     	    }
     	    else {
     	        config_text = gv_alloc((size_t)config_st.st_size + 1);
     	        size_t sz = fread(config_text, 1, (size_t)config_st.st_size, f);
     	        if (sz == 0) {
-    	            agerr(AGERR, "%s read error.\n", gvc->config_path);
+    	            agerrorf("%s read error.\n", gvc->config_path);
     	        }
     	        else {
     	            gvc->config_found = true;

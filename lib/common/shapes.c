@@ -3623,7 +3623,7 @@ static void record_init(node_t * n)
     len = MAX(MAX(len, 1), strlen("\\N"));
     char *textbuf = gv_calloc(len + 1, sizeof(char)); // temp buffer for storing labels
     if (!(info = parse_reclbl(n, flip, true, textbuf))) {
-	agerr(AGERR, "bad label format %s\n", ND_label(n)->text);
+	agerrorf("bad label format %s\n", ND_label(n)->text);
 	reclblp = "\\N";
 	info = parse_reclbl(n, flip, true, textbuf);
     }

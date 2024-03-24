@@ -209,7 +209,7 @@ static void gvrender_resolve_color(gvrender_features_t * features,
 		    agerr(AGWARN, "%s is not a known color.\n", name);
 		agxbfree(&missedcolor);
 	    } else {
-		agerr(AGERR, "error in colxlate()\n");
+		agerrorf("error in colxlate()\n");
 	    }
 	}
     }
