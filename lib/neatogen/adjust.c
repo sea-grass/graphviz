@@ -543,14 +543,13 @@ static void updateGraph(void)
 /// Set up array of half sizes in inches.
 double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
 {
-    Agnode_t *n;
     double *sizes = gv_calloc(Ndim * agnnodes(g), sizeof(double));
-    int i, nedge_nodes = 0;
+    int nedge_nodes = 0;
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (elabels && IS_LNODE(n)) nedge_nodes++;
 
-	i = ND_id(n);
+	const int i = ND_id(n);
 	sizes[i * Ndim] = ND_width(n) * .5 + pad.x;
 	sizes[i * Ndim + 1] = ND_height(n) * .5 + pad.y;
     }
@@ -558,7 +557,7 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
     if (elabels && nedge_nodes) {
 	int* elabs = gv_calloc(nedge_nodes, sizeof(int));
 	nedge_nodes = 0;
-	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (IS_LNODE(n))
 		elabs[nedge_nodes++] = ND_id(n);
 	}
