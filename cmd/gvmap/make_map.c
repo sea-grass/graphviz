@@ -1289,10 +1289,10 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
   bbox[2] = bbox[3] = x[1];
   
   for (i = 0; i < n; i++){
-    bbox[0] = MIN(bbox[0], x[i*dim] - width[i*dim]);
-    bbox[1] = MAX(bbox[1], x[i*dim] + width[i*dim]);
-    bbox[2] = MIN(bbox[2], x[i*dim + 1] - width[i*dim+1]);
-    bbox[3] = MAX(bbox[3], x[i*dim + 1] + width[i*dim+1]);
+    bbox[0] = fmin(bbox[0], x[i * dim] - width[i * dim]);
+    bbox[1] = fmax(bbox[1], x[i * dim] + width[i * dim]);
+    bbox[2] = fmin(bbox[2], x[i * dim + 1] - width[i * dim + 1]);
+    bbox[3] = fmax(bbox[3], x[i * dim + 1] + width[i * dim + 1]);
   }
 }
 
