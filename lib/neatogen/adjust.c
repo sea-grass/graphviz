@@ -123,8 +123,6 @@ static void chkBoundBox(Agraph_t * graph)
  /// For each node in the graph, create a Info data structure 
 static int makeInfo(Agraph_t * graph)
 {
-    Agnode_t *node;
-    expand_t pmargin;
     int (*polyf)(Poly *, Agnode_t *, double, double);
 
     assert(agnnodes(graph) >= 0);
@@ -133,9 +131,9 @@ static int makeInfo(Agraph_t * graph)
 
     nodeInfo = gv_calloc(nsites, sizeof(Info_t));
 
-    node = agfstnode(graph);
+    Agnode_t *node = agfstnode(graph);
 
-    pmargin = sepFactor (graph);
+    expand_t pmargin = sepFactor (graph);
 
     if (pmargin.doAdd) {
 	polyf = makeAddPoly;
