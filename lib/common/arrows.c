@@ -1141,10 +1141,10 @@ boxf arrow_bb(pointf p, pointf u, double arrowsize)
     dy = by + u.y;
 
     /* compute a right bb */
-    bb.UR.x = MAX(ax, MAX(bx, MAX(cx, dx)));
-    bb.UR.y = MAX(ay, MAX(by, MAX(cy, dy)));
-    bb.LL.x = MIN(ax, MIN(bx, MIN(cx, dx)));
-    bb.LL.y = MIN(ay, MIN(by, MIN(cy, dy)));
+    bb.UR.x = fmax(ax, fmax(bx, fmax(cx, dx)));
+    bb.UR.y = fmax(ay, fmax(by, fmax(cy, dy)));
+    bb.LL.x = fmin(ax, fmin(bx, fmin(cx, dx)));
+    bb.LL.y = fmin(ay, fmin(by, fmin(cy, dy)));
  
     return bb;
 }
