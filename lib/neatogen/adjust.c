@@ -339,18 +339,16 @@ static void centroidOf(Point a, Point b, Point c, double *x, double *y)
 static void newpos(Info_t * ip)
 {
     PtItem *anchor = ip->verts;
-    PtItem *p, *q;
     double totalArea = 0.0;
     double cx = 0.0;
     double cy = 0.0;
     double x;
     double y;
-    double area;
 
-    p = anchor->next;
-    q = p->next;
+    PtItem *p = anchor->next;
+    PtItem *q = p->next;
     while (q != NULL) {
-	area = areaOf(anchor->p, p->p, q->p);
+	const double area = areaOf(anchor->p, p->p, q->p);
 	centroidOf(anchor->p, p->p, q->p, &x, &y);
 	cx += area * x;
 	cy += area * y;
