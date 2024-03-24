@@ -247,7 +247,7 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
     if (length == 1) {
 	childAngle = 0;
 	d = pi->diameter/(2*M_PI);
-	childRadius = MAX(childRadius, d);
+	childRadius = fmax(childRadius, d);
 	d = 2*M_PI*childRadius - pi->diameter;
 	if (d > 0)
 	    min_dist += d/pi->childCount;
