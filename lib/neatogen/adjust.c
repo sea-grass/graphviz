@@ -674,17 +674,14 @@ vpscAdjust(graph_t* G)
     pointf *nsize = gv_calloc(nnodes, sizeof(pointf));
     float* coords[dim];
     float *f_storage = gv_calloc(dim * nnodes, sizeof(float));
-    int i, j;
-    Agnode_t* v;
-    expand_t exp_margin;
 
-    for (i = 0; i < dim; i++) {
+    for (size_t i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * nnodes;
     }
 
-    j = 0;
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; i < dim; i++) {
+    size_t j = 0;
+    for (Agnode_t *v = agfstnode(G); v; v = agnxtnode(G, v)) {
+	for (size_t i = 0; i < dim; i++) {
 	    coords[i][j] =  (float)ND_pos(v)[i];
 	}
 	nsize[j].x = ND_width(v);
@@ -696,7 +693,7 @@ vpscAdjust(graph_t* G)
     opt.edge_gap = 0;
     opt.noverlap = 2;
     opt.clusters = gv_alloc(sizeof(cluster_data));
-    exp_margin = sepFactor (G);
+    expand_t exp_margin = sepFactor (G);
  	/* Multiply by 2 since opt.gap is the gap size, not the margin */
     if (exp_margin.doAdd) {
 	opt.gap.x = 2.0*PS2INCH(exp_margin.x);
@@ -710,8 +707,8 @@ vpscAdjust(graph_t* G)
     removeoverlaps(nnodes, coords, &opt);
 
     j = 0;
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; i < dim; i++) {
+    for (Agnode_t *v = agfstnode(G); v; v = agnxtnode(G, v)) {
+	for (size_t i = 0; i < dim; i++) {
 	    ND_pos(v)[i] = coords[i][j];
 	}
 	j++;
