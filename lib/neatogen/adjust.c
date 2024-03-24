@@ -440,12 +440,10 @@ static void cleanup(void)
 static int vAdjust(void)
 {
     int iterCnt = 0;
-    int overlapCnt = 0;
     int badLevel = 0;
     int increaseCnt = 0;
-    int cnt;
 
-    overlapCnt = countOverlap(iterCnt);
+    int overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -457,7 +455,7 @@ static int vAdjust(void)
 	newPos();
 	iterCnt++;
 
-	cnt = countOverlap(iterCnt);
+	const int cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
 	if (cnt >= overlapCnt)
