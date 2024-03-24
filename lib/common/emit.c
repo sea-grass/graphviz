@@ -2573,7 +2573,7 @@ static void emit_begin_edge(GVJ_t *job, edge_t *e, char **styles) {
     if (ED_spl(e) && (obj->url || obj->tooltip) &&
         (flags & GVRENDER_DOES_MAP_POLYGON)) {
       splines *spl;
-      double w2 = MAX(job->obj->penwidth / 2.0, 2.0);
+      double w2 = fmax(job->obj->penwidth / 2.0, 2.0);
 
       spl = ED_spl(e);
       const size_t ns = spl->size; /* number of splines */
