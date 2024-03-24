@@ -572,38 +572,29 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
  * but not a->b and a->b
  */
 SparseMatrix makeMatrix(Agraph_t *g) {
-    SparseMatrix A = 0;
-    Agnode_t *n;
-    Agedge_t *e;
-    Agsym_t *sym;
-    int nnodes;
-    int nedges;
-    int i, row;
-    double v;
-    int type = MATRIX_TYPE_REAL;
-
     if (!g)
 	return NULL;
-    nnodes = agnnodes(g);
-    nedges = agnedges(g);
+    const int nnodes = agnnodes(g);
+    const int nedges = agnedges(g);
 
     /* Assign node ids */
-    i = 0;
-    for (n = agfstnode(g); n; n = agnxtnode(g, n))
+    int i = 0;
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n))
 	ND_id(n) = i++;
 
     int *I = gv_calloc(nedges, sizeof(int));
     int *J = gv_calloc(nedges, sizeof(int));
     double *val = gv_calloc(nedges, sizeof(double));
 
-    sym = agfindedgeattr(g, "weight");
+    Agsym_t *sym = agfindedgeattr(g, "weight");
 
     i = 0;
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	row = ND_id(n);
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	const int row = ND_id(n);
+	for (Agedge_t *e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    I[i] = row;
 	    J[i] = ND_id(aghead(e));
+	    double v;
 	    if (!sym || sscanf(agxget(e, sym), "%lf", &v) != 1)
 		v = 1;
 	    val[i] = v;
@@ -612,8 +603,10 @@ SparseMatrix makeMatrix(Agraph_t *g) {
 	}
     }
 
-    A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J,
-					    val, type, sizeof(double));
+    SparseMatrix A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes,
+                                                         I, J, val,
+                                                         MATRIX_TYPE_REAL,
+                                                         sizeof(double));
 
     free(I);
     free(J);
