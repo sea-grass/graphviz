@@ -503,10 +503,8 @@ static double rePos(void)
 static int sAdjust(void)
 {
     int iterCnt = 0;
-    int overlapCnt = 0;
-    int cnt;
 
-    overlapCnt = countOverlap(iterCnt);
+    int overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -516,7 +514,7 @@ static int sAdjust(void)
 	rePos();
 	iterCnt++;
 
-	cnt = countOverlap(iterCnt);
+	const int cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
     }
