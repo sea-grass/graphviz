@@ -68,9 +68,7 @@ static void setBoundBox(Point * ll, Point * ur)
     sw.y = se.y = pymin;
 }
 
- /* freeNodes:
-  * Free node resources.
-  */
+/// Free node resources.
 static void freeNodes(void)
 {
     for (size_t i = 0; i < nsites; i++) {
@@ -81,8 +79,7 @@ static void freeNodes(void)
     free(nodeInfo);
 }
 
-/* chkBoundBox:
- *   Compute extremes of graph, then set up bounding box.
+/*   Compute extremes of graph, then set up bounding box.
  *   If user supplied a bounding box, use that;
  *   else if "window" is a graph attribute, use that; 
  *   otherwise, define bounding box as a percentage expansion of
@@ -123,9 +120,7 @@ static void chkBoundBox(Agraph_t * graph)
     setBoundBox(&ll, &ur);
 }
 
- /* makeInfo:
-  * For each node in the graph, create a Info data structure 
-  */
+ /// For each node in the graph, create a Info data structure 
 static int makeInfo(Agraph_t * graph)
 {
     Agnode_t *node;
@@ -188,9 +183,7 @@ static int scomp(const void *S1, const void *S2)
     return 0;
 }
 
- /* sortSites:
-  * Fill array of pointer to sites and sort the sites using scomp
-  */
+ /// Fill array of pointer to sites and sort the sites using scomp
 static void sortSites(void)
 {
     if (sites == 0) {
@@ -241,10 +234,7 @@ static Site *nextOne(void)
 	return NULL;
 }
 
-/* rmEquality:
- * Check for nodes with identical positions and tweak
- * the positions.
- */
+/// Check for nodes with identical positions and tweak the positions.
 static void rmEquality(void)
 {
     int i, cnt;
@@ -298,9 +288,7 @@ static void rmEquality(void)
     }
 }
 
-/* countOverlap:
- * Count number of node-node overlaps at iteration iter.
- */
+/// Count number of node-node overlaps at iteration iter.
 static int countOverlap(int iter)
 {
     int count = 0;
@@ -346,30 +334,24 @@ static void increaseBoundBox(void)
     setBoundBox(&ll, &ur);
 }
 
- /* areaOf:
-  * Area of triangle whose vertices are a,b,c
-  */
+/// Area of triangle whose vertices are a,b,c
 static double areaOf(Point a, Point b, Point c)
 {
     return fabs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2;
 }
 
- /* centroidOf:
-  * Compute centroid of triangle with vertices a, b, c.
-  * Return coordinates in x and y.
-  */
+/* Compute centroid of triangle with vertices a, b, c.
+ * Return coordinates in x and y.
+ */
 static void centroidOf(Point a, Point b, Point c, double *x, double *y)
 {
     *x = (a.x + b.x + c.x) / 3;
     *y = (a.y + b.y + c.y) / 3;
 }
 
- /* newpos;
-  * The new position is the centroid of the
-  * voronoi polygon. This is the weighted sum of the
-  * centroids of a triangulation, normalized to the
-  * total area.
-  */
+/* The new position is the centroid of the voronoi polygon. This is the weighted
+ * sum of the centroids of a triangulation, normalized to the total area.
+ */
 static void newpos(Info_t * ip)
 {
     PtItem *anchor = ip->verts;
@@ -397,8 +379,7 @@ static void newpos(Info_t * ip)
     ip->site.coord.y = cy / totalArea;
 }
 
- /* addCorners:
-  * Add corners of clipping window to appropriate sites.
+ /* Add corners of clipping window to appropriate sites.
   * A site gets a corner if it is the closest site to that corner.
   */
 static void addCorners(void)
@@ -444,8 +425,7 @@ static void addCorners(void)
     addVertex(&nes->site, ne.x, ne.y);
 }
 
- /* newPos:
-  * Calculate the new position of a site as the centroid
+ /* Calculate the new position of a site as the centroid
   * of its voronoi polygon, if it overlaps other nodes.
   * The polygons are finite by being clipped to the clipping
   * window.
@@ -462,8 +442,7 @@ static void newPos(void)
     }
 }
 
-/* cleanup:
- * Cleanup voronoi memory.
+/* Cleanup voronoi memory.
  * Note that PQcleanup and ELcleanup rely on the number
  * of sites, so should at least be reset every time we use vAdjust.
  * This could be optimized, over multiple components or
@@ -570,9 +549,7 @@ static int sAdjust(void)
     return 1;
 }
 
- /* updateGraph:
-  * Enter new node positions into the graph
-  */
+/// Enter new node positions into the graph
 static void updateGraph(void)
 {
     for (size_t i = 0; i < nsites; i++) {
@@ -586,9 +563,7 @@ static void updateGraph(void)
   /* Return true if node name starts with ELS */
 #define IS_LNODE(n) startswith(agnameof(n), ELS)
 
-/* getSizes:
- * Set up array of half sizes in inches.
- */
+/// Set up array of half sizes in inches.
 double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
 {
     Agnode_t *n;
@@ -617,8 +592,7 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
     return sizes;
 }
 
-/* makeMatrix:
- * Assumes g is connected and simple, i.e., we can have a->b and b->a
+/* Assumes g is connected and simple, i.e., we can have a->b and b->a
  * but not a->b and a->b
  */
 SparseMatrix makeMatrix(Agraph_t *g) {
@@ -784,8 +758,7 @@ vpscAdjust(graph_t* G)
 }
 #endif
 
-/* angleSet:
- * Return true if "normalize" is defined and valid; return angle in phi.
+/* Return true if "normalize" is defined and valid; return angle in phi.
  * Read angle as degrees, convert to radians.
  * Guarantee -PI < phi <= PI.
  */
@@ -812,8 +785,7 @@ angleSet (graph_t* g, double* phi)
     return 1;
 }
 
-/* normalize:
- * If normalize is set, move first node to origin, then
+/* If normalize is set, move first node to origin, then
  * rotate graph so that the angle of the first edge is given
  * by the degrees from normalize.
  * FIX: Generalize to allow rotation determined by graph shape.
@@ -907,10 +879,7 @@ static const lookup_t adjustMode[] = {
     {AM_NONE, 0, 0, 0}
 };
 
-    
-/* setPrismValues:
- * Initialize and set prism values
- */
+/// Initialize and set prism values
 static void
 setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
 {
@@ -923,9 +892,7 @@ setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
     dp->scaling = late_double(g, agfindgraphattr(g, "overlap_scaling"), -4.0, -1.e10);
 }
 
-/* getAdjustMode:
- * Convert string value to internal value of adjustment mode.
- */
+/// Convert string value to internal value of adjustment mode.
 static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
     const lookup_t *ap = adjustMode + 1;
     if (s == NULL || *s == '\0') {
@@ -978,8 +945,6 @@ void graphAdjustMode(graph_t *G, adjust_data *dp, char *dflt) {
 
 #define ISZERO(d) (fabs(d) < 0.000000001)
 
-/* simpleScaling:
- */
 static int simpleScale (graph_t* g) 
 {
     pointf sc;
@@ -1005,8 +970,7 @@ static int simpleScale (graph_t* g)
     return 0;
 }
 
-/* removeOverlapWith:
- * Use adjust_data to determine if and how to remove
+/* Use adjust_data to determine if and how to remove
  * node overlaps.
  * Return non-zero if nodes are moved.
  */
@@ -1104,10 +1068,7 @@ removeOverlapWith (graph_t * G, adjust_data* am)
     return ret+nret;
 }
 
-/* removeOverlapAs:
- * Use flag value to determine if and how to remove
- * node overlaps.
- */
+/// Use flag value to determine if and how to remove node overlaps.
 int 
 removeOverlapAs(graph_t * G, char* flag)
 {
@@ -1119,8 +1080,7 @@ removeOverlapAs(graph_t * G, char* flag)
     return removeOverlapWith (G, &am);
 }
 
-/* adjustNodes:
- * Remove node overlap relying on graph's overlap attribute.
+/* Remove node overlap relying on graph's overlap attribute.
  * Return non-zero if graph has changed.
  */
 int adjustNodes(graph_t * G)
@@ -1128,8 +1088,7 @@ int adjustNodes(graph_t * G)
     return removeOverlapAs(G, agget(G, "overlap"));
 }
 
-/* parseFactor:
- * Convert "sep" attribute into expand_t.
+/* Convert "sep" attribute into expand_t.
  * Input "+x,y" becomes {x,y,true}
  * Input "x,y" becomes {1 + x/sepfact,1 + y/sepfact,false}
  * Return 1 on success, 0 on failure
@@ -1170,8 +1129,6 @@ static int parseFactor(char *s, expand_t *pp, double sepfact, double dflt) {
     else return 0;
 }
 
-/* sepFactor:
- */
 expand_t
 sepFactor(graph_t* g)
 {
@@ -1192,8 +1149,7 @@ sepFactor(graph_t* g)
     return pmargin;
 }
 
-/* esepFactor:
- * This value should be smaller than the sep value used to expand
+/* This value should be smaller than the sep value used to expand
  * nodes during adjustment. If not, when the adjustment pass produces
  * a fairly tight layout, the spline code will find that some nodes
  * still overlap.
