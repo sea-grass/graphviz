@@ -490,6 +490,32 @@ def test_797():
     assert "&amp; &amp;" in output
 
 
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/813"
+)
+def test_813():
+    """
+    nodes with multiple peripheries should still have a stable rendering
+    https://gitlab.com/graphviz/graphviz/-/issues/813
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "813.dot"
+    assert input.exists(), "unexpectedly mising test case"
+
+    # render this to dot
+    reference = dot("dot", input)
+
+    # run it through multiple passes
+    iterated = reference
+    for _ in range(4):
+        iterated = dot("dot", source=iterated)
+
+    assert (
+        reference == iterated
+    ), "rendering of shapes with multiple peripheries is unstable"
+
+
 def test_827():
     """
     Graphviz should not crash when processing the b15.gv example
