@@ -46,7 +46,7 @@ static double margin = 0.05;	/* Create initial bounding box by adding
 				 * margin * dimension around box enclosing
 				 * nodes.
 				 */
-static double incr = 0.05;	/* Increase bounding box by adding
+static const double incr = 0.05;	/* Increase bounding box by adding
 				 * incr * dimension around box.
 				 */
 static bool doAll = false; // Move all nodes, regardless of overlap
