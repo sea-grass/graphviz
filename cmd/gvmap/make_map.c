@@ -1041,8 +1041,8 @@ static void make_map_internal(bool include_OK_points,
 
   for (i = 0; i < n; i++){
     for (j = 0; j < dim2; j++) {
-      xmax[j] = MAX(xmax[j], x[i*dim+j]);
-      xmin[j] = MIN(xmin[j], x[i*dim+j]);
+      xmax[j] = fmax(xmax[j], x[i*dim+j]);
+      xmin[j] = fmin(xmin[j], x[i*dim+j]);
     }
   }
   boxsize[0] = xmax[0] - xmin[0];
@@ -1117,8 +1117,8 @@ static void make_map_internal(bool include_OK_points,
 	xmin[i] -= boxsize[i]*(-bounding_box_margin);
 	xmax[i] += boxsize[i]*(-bounding_box_margin);
       } else { // auto bounding box
-	xmin[i] -= MAX(boxsize[i]*0.2, 2.*shore_depth_tol);
-	xmax[i] += MAX(boxsize[i]*0.2, 2*shore_depth_tol);
+	xmin[i] -= fmax(boxsize[i] * 0.2, 2.* shore_depth_tol);
+	xmax[i] += fmax(boxsize[i] * 0.2, 2 * shore_depth_tol);
       }
     }
     if (Verbose) {
@@ -1128,14 +1128,15 @@ static void make_map_internal(bool include_OK_points,
       else if (bbm < 0)
 	fprintf (stderr, "bounding box margin: (%.06f * %.06f)", boxsize[0], -bbm);
       else
-	fprintf (stderr, "bounding box margin: %.06f", MAX(boxsize[0]*0.2, 2*shore_depth_tol));
+	fprintf(stderr, "bounding box margin: %.06f",
+	        fmax(boxsize[0] * 0.2, 2 * shore_depth_tol));
     }
     if (nrandom < 0) {
       double n1, n2, area2;
       area2 = (xmax[1] - xmin[1])*(xmax[0] - xmin[0]);
       n1 = (int) area2/(shore_depth_tol*shore_depth_tol);
       n2 = n*((int) area2/area);
-      nrandom = MAX(n1, n2);
+      nrandom = fmax(n1, n2);
     }
     srand(123);
     xran = gv_calloc((nrandom + 4) * dim2, sizeof(double));
