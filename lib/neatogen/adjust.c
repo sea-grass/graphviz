@@ -692,7 +692,7 @@ vpscAdjust(graph_t* G)
     opt.diredges = 0;
     opt.edge_gap = 0;
     opt.noverlap = 2;
-    opt.clusters = gv_alloc(sizeof(cluster_data));
+    opt.clusters = (cluster_data){0};
     expand_t exp_margin = sepFactor (G);
  	/* Multiply by 2 since opt.gap is the gap size, not the margin */
     if (exp_margin.doAdd) {
@@ -714,7 +714,6 @@ vpscAdjust(graph_t* G)
 	j++;
     }
 
-    free (opt.clusters);
     free (f_storage);
     free (nsize);
     return 0;

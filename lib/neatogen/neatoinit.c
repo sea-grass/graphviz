@@ -190,33 +190,32 @@ static void set_label(void* obj, textlabel_t * l, char *name)
 }
 
 #ifdef IPSEPCOLA
-static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
-{
+static cluster_data cluster_map(graph_t *mastergraph, graph_t *g) {
     graph_t *subg;
     node_t *n;
      /* array of arrays of node indices in each cluster */
     int **cs,*cn;
     int i,j,nclusters=0;
     bitarray_t assigned = bitarray_new(agnnodes(g));
-    cluster_data *cdata = gv_alloc(sizeof(cluster_data));
+    cluster_data cdata = {0};
 
-    cdata->ntoplevel = agnnodes(g);
+    cdata.ntoplevel = agnnodes(g);
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
         if (startswith(agnameof(subg), "cluster")) {
             nclusters++;
         }
     }
-    cdata->nvars=0;
-    cdata->nclusters = nclusters;
-    cs = cdata->clusters = gv_calloc(nclusters, sizeof(int*));
-    cn = cdata->clustersizes = gv_calloc(nclusters, sizeof(int));
+    cdata.nvars=0;
+    cdata.nclusters = nclusters;
+    cs = cdata.clusters = gv_calloc(nclusters, sizeof(int*));
+    cn = cdata.clustersizes = gv_calloc(nclusters, sizeof(int));
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
         /* clusters are processed by separate calls to ordered_edges */
         if (startswith(agnameof(subg), "cluster")) {
             int *c;
 
             *cn = agnnodes(subg);
-            cdata->nvars += *cn;
+            cdata.nvars += *cn;
             c = *cs++ = gv_calloc(*cn++, sizeof(int));
             for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
                 node_t *gn;
@@ -227,31 +226,30 @@ static cluster_data* cluster_map(graph_t *mastergraph, graph_t *g)
                 }
                 *c++=ind;
                 bitarray_set(&assigned, ind, true);
-                cdata->ntoplevel--;
+                cdata.ntoplevel--;
             }
         }
     }
-    cdata->bb = gv_calloc(cdata->nclusters, sizeof(boxf));
-    cdata->toplevel = gv_calloc(cdata->ntoplevel, sizeof(int));
+    cdata.bb = gv_calloc(cdata.nclusters, sizeof(boxf));
+    cdata.toplevel = gv_calloc(cdata.ntoplevel, sizeof(int));
     for(i=j=0;i<agnnodes(g);i++) {
         if(!bitarray_get(assigned, i)) {
-            cdata->toplevel[j++]=i;
+            cdata.toplevel[j++] = i;
         }
     }
-    assert(cdata->ntoplevel==agnnodes(g)-cdata->nvars);
+    assert(cdata.ntoplevel == agnnodes(g) - cdata.nvars);
     bitarray_reset(&assigned);
     return cdata;
 }
 
-static void freeClusterData(cluster_data *c) {
-    if(c->nclusters>0) {
-        free(c->clusters[0]);
-        free(c->clusters);
-        free(c->clustersizes);
-        free(c->toplevel);
-        free(c->bb);
+static void freeClusterData(cluster_data c) {
+    if (c.nclusters > 0) {
+        free(c.clusters[0]);
+        free(c.clusters);
+        free(c.clustersizes);
+        free(c.toplevel);
+        free(c.bb);
     }
-    free(c);
 }
 #endif
 
@@ -1164,7 +1162,7 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 	else {
             char* str;
             ipsep_options opt;
-	    cluster_data *cs = cluster_map(mg,g);
+	    cluster_data cs = cluster_map(mg,g);
             pointf *nsize = gv_calloc(nv, sizeof(pointf));
             opt.edge_gap = lgap;
             opt.nsize = nsize;

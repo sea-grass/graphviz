@@ -197,8 +197,8 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     /* compute off-diagonal entries */
     invert_vec(lap_length, lap2);
 
-    if (opt->clusters->nclusters > 0) {
-	int nn = n + opt->clusters->nclusters * 2;
+    if (opt->clusters.nclusters > 0) {
+	int nn = n + opt->clusters.nclusters * 2;
 	int clap_length = nn + nn * (nn - 1) / 2;
 	float *clap = gv_calloc(clap_length, sizeof(float));
 	int c0, c1;

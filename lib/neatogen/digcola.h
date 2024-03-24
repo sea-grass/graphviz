@@ -32,7 +32,7 @@ typedef struct ipsep_options {
                         /* 2=remove overlaps after layout */
     pointf gap;         /* hor and vert gap to enforce when removing overlap*/
     pointf* nsize;      /* node widths and heights */
-    cluster_data* clusters;
+    cluster_data clusters;
                         /* list of node indices for each cluster */
 } ipsep_options;
 
