@@ -486,23 +486,23 @@ chkPort (port (*pf)(node_t*, char*, char*), node_t* n, char* s)
 }
 
 /* return true if edge has label */
-int common_init_edge(edge_t * e)
-{
+void common_init_edge(edge_t *e) {
     char *str;
-    int r = 0;
     struct fontinfo fi;
     struct fontinfo lfi;
     graph_t *sg = agraphof(agtail(e));
 
     fi.fontname = NULL;
     lfi.fontname = NULL;
-    if (E_label && (str = agxget(e, E_label)) && str[0]) {
-	r = 1;
+    if (E_label && (str = agxget(e, E_label))) {
 	initFontEdgeAttr(e, &fi);
-	ED_label(e) = make_label(e, str, aghtmlstr(str) ? LT_HTML : LT_NONE,
+	const int kind = !streq(str, "") && aghtmlstr(str) ? LT_HTML : LT_NONE;
+	ED_label(e) = make_label(e, str, kind,
 				fi.fontsize, fi.fontname, fi.fontcolor);
-	GD_has_labels(sg) |= EDGE_LABEL;
-	ED_label_ontop(e) = mapbool(late_string(e, E_label_float, "false"));
+	if (!streq(str, "")) {
+	    GD_has_labels(sg) |= EDGE_LABEL;
+	    ED_label_ontop(e) = mapbool(late_string(e, E_label_float, "false"));
+	}
     }
 
     if (E_xlabel && (str = agxget(e, E_xlabel)) && str[0]) {
@@ -547,8 +547,6 @@ int common_init_edge(edge_t * e)
     ED_head_port(e) = chkPort(ND_shape(aghead(e))->fns->portfn, aghead(e), str);
     if (noClip(e, E_headclip))
 	ED_head_port(e).clip = false;
-
-    return r;
 }
 
 static boxf addLabelBB(boxf bb, textlabel_t * lp, bool flipxy)

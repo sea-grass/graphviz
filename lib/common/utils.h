@@ -94,7 +94,7 @@ UTILS_API bool findStopColor(char *colorlist, char *clrs[2], float *frac);
 UTILS_API int test_toggle(void);
 
 UTILS_API void common_init_node(node_t *n);
-UTILS_API int common_init_edge(edge_t *e);
+UTILS_API void common_init_edge(edge_t *e);
 
 UTILS_API void updateBB(graph_t *g, textlabel_t *lp);
 UTILS_API void compute_bb(Agraph_t *);
