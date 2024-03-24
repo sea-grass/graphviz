@@ -15,14 +15,6 @@
  *
  * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
  *
- * @defgroup cgraph_api Cgraph API
- * @brief Abstract graph C library. API cgraph.h
- * @ingroup public_apis
- *
- * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
- *
- * Main types @ref Agraph_t, @ref Agnode_t, @ref Agedge_t.
- * @{
  */
 
 /*************************************************************************
@@ -47,6 +39,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @defgroup cgraph_api Cgraph API
+ * @brief Abstract graph C library. API cgraph.h
+ * @ingroup public_apis
+ *
+ * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
+ *
+ * Main types @ref Agraph_t, @ref Agnode_t, @ref Agedge_t.
+ * @{
+ */
 
 /// @cond
 
