@@ -905,7 +905,6 @@ void graphAdjustMode(graph_t *G, adjust_data *dp, char *dflt) {
 static int simpleScale (graph_t* g) 
 {
     pointf sc;
-    node_t* n;
     int i;
     char* p;
 
@@ -917,7 +916,7 @@ static int simpleScale (graph_t* g)
 	    if (sc.y == 1 && sc.x == 1) return 0;
 	    if (Verbose)
 		fprintf (stderr, "scale = (%.03f,%.03f)\n", sc.x, sc.y);
-	    for (n = agfstnode(g); n; n = agnxtnode(g,n)) {
+	    for (node_t *n = agfstnode(g); n; n = agnxtnode(g,n)) {
 		ND_pos(n)[0] *= sc.x;
 		ND_pos(n)[1] *= sc.y;
 	    }
