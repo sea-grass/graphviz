@@ -15,14 +15,6 @@
  *
  * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
  *
- * @defgroup cgraph_api Cgraph API
- * @brief Abstract graph C library. API cgraph.h
- * @ingroup public_apis
- *
- * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
- *
- * Main types @ref Agraph_t, @ref Agnode_t, @ref Agedge_t.
- * @{
  */
 
 /*************************************************************************
@@ -47,6 +39,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * @defgroup cgraph_api Cgraph API
+ * @brief Abstract graph C library. API cgraph.h
+ * @ingroup public_apis
+ *
+ * [man 3 cgraph](https://graphviz.org/pdf/cgraph.3.pdf)
+ *
+ * Main types @ref Agraph_t, @ref Agnode_t, @ref Agedge_t.
+ * @{
+ */
 
 /// @cond
 
@@ -176,8 +179,8 @@ struct Agrec_s {
  *  @brief parent for @ref cgraph_graph, @ref cgraph_node, and @ref cgraph_edge.
  *  @ingroup cgraph_api
  *
- * Common parameter for functions:
- * @param obj generic pointer to @ref Agraph_t, @ref Agnode_t or @ref Agedge_t
+ * Common parameter for functions **obj** is generic pointer
+ * to @ref Agraph_t, @ref Agnode_t, or @ref Agedge_t
  * @{
  */
 
