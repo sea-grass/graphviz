@@ -375,11 +375,10 @@ static void addCorners(void)
     double nwd = dist_2(&ip->site.coord, &nw);
     double sed = dist_2(&ip->site.coord, &se);
     double ned = dist_2(&ip->site.coord, &ne);
-    double d;
 
     for (size_t i = 1; i < nsites; i++) {
 	ip = &nodeInfo[i];
-	d = dist_2(&ip->site.coord, &sw);
+	double d = dist_2(&ip->site.coord, &sw);
 	if (d < swd) {
 	    swd = d;
 	    sws = ip;
