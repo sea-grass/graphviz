@@ -619,10 +619,7 @@ SparseMatrix makeMatrix(Agraph_t *g) {
 static void fdpAdjust(graph_t *g, adjust_data *am) {
     SparseMatrix A0 = makeMatrix(g);
     SparseMatrix A = A0;
-    double *sizes;
     double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));
-    Agnode_t *n;
-    int i;
     expand_t sep = sepFactor(g);
     pointf pad;
 
@@ -633,11 +630,11 @@ static void fdpAdjust(graph_t *g, adjust_data *am) {
 	pad.x = PS2INCH(DFLT_MARGIN);
 	pad.y = PS2INCH(DFLT_MARGIN);
     }
-    sizes = getSizes(g, pad, NULL, NULL);
+    double *sizes = getSizes(g, pad, NULL, NULL);
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double* npos = pos + Ndim * ND_id(n);
-	for (i = 0; i < Ndim; i++) {
+	for (int i = 0; i < Ndim; i++) {
 	    npos[i] = ND_pos(n)[i];
 	}
     }
@@ -652,9 +649,9 @@ static void fdpAdjust(graph_t *g, adjust_data *am) {
                    ELSCHEME_NONE, 0, NULL, NULL,
                    mapBool(agget(g, "overlap_shrink"), true));
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double *npos = pos + Ndim * ND_id(n);
-	for (i = 0; i < Ndim; i++) {
+	for (int i = 0; i < Ndim; i++) {
 	    ND_pos(n)[i] = npos[i];
 	}
     }
