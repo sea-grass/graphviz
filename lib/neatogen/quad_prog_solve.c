@@ -346,8 +346,8 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 			    gap[ints_get(&block, ints_size(&block) - 1)];
 		    }
 		}
-		suffix_des_place = MIN(suffix_des_place, upper_bound);
-		prefix_des_place = MAX(prefix_des_place, lower_bound);
+		suffix_des_place = fminf(suffix_des_place, upper_bound);
+		prefix_des_place = fmaxf(prefix_des_place, lower_bound);
 
 		/* limit moves to ensure that the prefix is placed before the suffix */
 		if (suffix_des_place < prefix_des_place) {
