@@ -224,10 +224,10 @@ extern char* renderresult(Agraph_t *ing, const char *format);
 extern void renderresult(Agraph_t *g, const char *format, char *outdata);
 /*** Render to an open channel */
 extern bool renderchannel(Agraph_t *g, const char *format, const char *channelname);
+#endif
 /*** Render a layout to a malloc'ed string, to be free'd by the caller */
 /*** (deprecated - too easy to leak memory) */
 /*** (still needed for "eval [gv::renderdata $G tk]" ) */
-#endif
 extern char* renderdata(Agraph_t *g, const char *format);
 
 /*** Writing graph back to file */
