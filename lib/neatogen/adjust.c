@@ -933,12 +933,12 @@ static int simpleScale (graph_t* g)
 int 
 removeOverlapWith (graph_t * G, adjust_data* am)
 {
-    int ret, nret;
+    int ret;
 
     if (agnnodes(G) < 2)
 	return 0;
 
-    nret = normalize (G);
+    int nret = normalize (G);
     nret += simpleScale (G);
 
     if (am->mode == AM_NONE)
