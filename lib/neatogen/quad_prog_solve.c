@@ -387,8 +387,7 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 		for (int i = left; i < right; i++) {
 		    ordering[i] = ints_get(&block, i - (size_t)left);
 		}
-		converged = converged
-		    && fabs(prefix_des_place - cur_place) < quad_prog_tol
+		converged &= fabs(prefix_des_place - cur_place) < quad_prog_tol
 		    && fabs(suffix_des_place - cur_place) < quad_prog_tol;
 
 
