@@ -728,13 +728,12 @@ vpscAdjust(graph_t* G)
 static int
 angleSet (graph_t* g, double* phi)
 {
-    double ang;
     char* p;
     char* a = agget(g, "normalize");
 
     if (!a || *a == '\0')
 	return 0;
-    ang = strtod (a, &p);
+    double ang = strtod (a, &p);
     if (p == a) {  /* no number */
 	if (mapbool(a))
 	    ang = 0.0;
