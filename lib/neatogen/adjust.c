@@ -754,19 +754,14 @@ angleSet (graph_t* g, double* phi)
  */
 int normalize(graph_t * g)
 {
-    node_t *v;
-    edge_t *e;
     double phi;
-    double cosv, sinv;
-    pointf p, orig;
     int ret;
 
     if (!angleSet(g, &phi))
 	return 0;
 
-    v = agfstnode(g);
-    p.x = ND_pos(v)[0];
-    p.y = ND_pos(v)[1];
+    node_t *v = agfstnode(g);
+    pointf p = {.x = ND_pos(v)[0], .y = ND_pos(v)[1]};
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	ND_pos(v)[0] -= p.x;
 	ND_pos(v)[1] -= p.y;
@@ -774,7 +769,7 @@ int normalize(graph_t * g)
     if (p.x || p.y) ret = 1;
     else ret = 0;
 
-    e = NULL;
+    edge_t *e = NULL;
     for (v = agfstnode(g); v; v = agnxtnode(g, v))
 	if ((e = agfstout(g, v)))
 	    break;
@@ -786,10 +781,10 @@ int normalize(graph_t * g)
 		   ND_pos(aghead(e))[0] - ND_pos(agtail(e))[0]);
 
     if (phi) {
-	orig.x = ND_pos(agtail(e))[0];
-	orig.y = ND_pos(agtail(e))[1];
-	cosv = cos(phi);
-	sinv = sin(phi);
+	const pointf orig = {.x = ND_pos(agtail(e))[0],
+	                     .y = ND_pos(agtail(e))[1]};
+	const double cosv = cos(phi);
+	const double sinv = sin(phi);
 	for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	    p.x = ND_pos(v)[0] - orig.x;
 	    p.y = ND_pos(v)[1] - orig.y;
