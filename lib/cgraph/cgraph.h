@@ -179,8 +179,8 @@ struct Agrec_s {
  *  @brief parent for @ref cgraph_graph, @ref cgraph_node, and @ref cgraph_edge.
  *  @ingroup cgraph_api
  *
- * Common parameter for functions:
- * @param obj generic pointer to @ref Agraph_t, @ref Agnode_t or @ref Agedge_t
+ * Common parameter for functions **obj** is generic pointer
+ * to @ref Agraph_t, @ref Agnode_t, or @ref Agedge_t
  * @{
  */
 
