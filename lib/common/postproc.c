@@ -498,7 +498,7 @@ static void addXLabels(Agraph_t * gp)
 		    xlp++;
 		}
 		else {
-		    agerr(AGWARN, "no position for edge with label %s\n",
+		    agwarningf("no position for edge with label %s\n",
 			    ED_label(ep)->text);
 		    continue;
 		}
@@ -513,7 +513,7 @@ static void addXLabels(Agraph_t * gp)
 		    xlp++;
 		}
 		else {
-		    agerr(AGWARN, "no position for edge with tail label %s\n",
+		    agwarningf("no position for edge with tail label %s\n",
 			    ED_tail_label(ep)->text);
 		    continue;
 		}
@@ -528,7 +528,7 @@ static void addXLabels(Agraph_t * gp)
 		    xlp++;
 		}
 		else {
-		    agerr(AGWARN, "no position for edge with head label %s\n",
+		    agwarningf("no position for edge with head label %s\n",
 			    ED_head_label(ep)->text);
 		    continue;
 		}
@@ -543,7 +543,7 @@ static void addXLabels(Agraph_t * gp)
 		    xlp++;
 		}
 		else {
-		    agerr(AGWARN, "no position for edge with xlabel %s\n",
+		    agwarningf("no position for edge with xlabel %s\n",
 			    ED_xlabel(ep)->text);
 		    continue;
 		}
@@ -583,7 +583,7 @@ static void addXLabels(Agraph_t * gp)
 	fprintf(stderr, "%" PRISIZE_T " out of %" PRISIZE_T " labels positioned.\n",
 	        cnt, n_lbls);
     else if (cnt != n_lbls)
-	agerr(AGWARN, "%" PRISIZE_T " out of %" PRISIZE_T " exterior labels positioned.\n",
+	agwarningf("%" PRISIZE_T " out of %" PRISIZE_T " exterior labels positioned.\n",
 	      cnt, n_lbls);
     free(objs);
     free(lbls);

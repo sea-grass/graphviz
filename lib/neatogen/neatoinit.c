@@ -303,7 +303,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    gv_free_splines(e);
 	    if (!warned) {
 		warned = true;
-		agerr(AGWARN, "pos attribute for edge (%s,%s) doesn't have 3n+1 points\n", agnameof(agtail(e)), agnameof(aghead(e)));
+		agwarningf("pos attribute for edge (%s,%s) doesn't have 3n+1 points\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    }
 	    return 0;
 	}
@@ -314,7 +314,7 @@ static int user_spline(attrsym_t * E_pos, edge_t * e)
 	    if (i < 2) {
 		if (!warned) {
 		    warned = true;
-		    agerr(AGWARN, "syntax error in pos attribute for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
+		    agwarningf("syntax error in pos attribute for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 		}
 		free(ps);
 		gv_free_splines(e);
@@ -641,13 +641,13 @@ static int neatoModel(graph_t * g)
 	if (agattr(g, AGEDGE, "len", 0))
 	    return MODEL_MDS;
 	else {
-	    agerr(AGWARN,
+	    agwarningf(
 	        "edges in graph %s have no len attribute. Hence, the mds model\n", agnameof(g));
 	    agerr(AGPREV, "is inappropriate. Reverting to the shortest path model.\n");
 	    return MODEL_SHORTPATH;
 	}
     }
-    agerr(AGWARN,
+    agwarningf(
 	  "Unknown value %s for attribute \"model\" in graph %s - ignored\n",
 	  p, agnameof(g));
     return MODEL_SHORTPATH;
@@ -677,7 +677,7 @@ static int neatoMode(graph_t * g)
 #endif
 #endif
 	else
-	    agerr(AGWARN,
+	    agwarningf(
 		  "Illegal value %s for attribute \"mode\" in graph %s - ignored\n",
 		  str, agnameof(g));
     }
@@ -1000,7 +1000,7 @@ static int checkExp (graph_t * G)
 {
     int exp = late_int(G, agfindgraphattr(G, exp_name), 2, 0);
     if (exp == 0 || exp > 2) {
-	agerr (AGWARN, "%s attribute value must be 1 or 2 - ignoring\n", exp_name);
+	agwarningf("%s attribute value must be 1 or 2 - ignoring\n", exp_name);
 	exp = 2;
     }
     return exp;
@@ -1024,7 +1024,7 @@ int checkStart(graph_t * G, int nG, int dflt)
     seed = 1;
     init = setSeed (G, dflt, &seed);
     if (N_pos && init != INIT_RANDOM) {
-	agerr(AGWARN, "node positions are ignored unless start=random\n");
+	agwarningf("node positions are ignored unless start=random\n");
     }
     if (init == INIT_REGULAR) initRegular(G, nG);
     srand48(seed);
@@ -1290,7 +1290,7 @@ static void kkNeato(Agraph_t * g, int nG, int model)
 	subset_model(g, nG);
     } else if (model == MODEL_CIRCUIT) {
 	if (!circuit_model(g, nG)) {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "graph %s is disconnected. Hence, the circuit model\n",
 		  agnameof(g));
 	    agerr(AGPREV,

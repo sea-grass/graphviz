@@ -633,12 +633,12 @@ bool gvusershape_file_access(usershape_t *us)
 	fseek(us->f, 0, SEEK_SET);
     else {
         if (! (fn = safefile(us->name))) {
-	    agerr(AGWARN, "Filename \"%s\" is unsafe\n", us->name);
+	    agwarningf("Filename \"%s\" is unsafe\n", us->name);
 	    return false;
 	}
 	us->f = fopen(fn, "rb");
 	if (us->f == NULL) {
-	    agerr(AGWARN, "%s while opening %s\n", strerror(errno), fn);
+	    agwarningf("%s while opening %s\n", strerror(errno), fn);
 	    return false;
 	}
 	if (usershape_files_open_cnt >= MAX_USERSHAPE_FILES_OPEN)
@@ -689,7 +689,7 @@ static usershape_t *gvusershape_open (const char *name)
         switch(imagetype(us)) {
 	    case FT_NULL:
 		if (!(us->data = find_user_shape(us->name))) {
-		    agerr(AGWARN, "\"%s\" was not found as a file or as a shape library member\n", us->name);
+		    agwarningf("\"%s\" was not found as a file or as a shape library member\n", us->name);
 		    freeUsershape (us);
 		    return NULL;
 		}

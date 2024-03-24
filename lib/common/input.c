@@ -556,7 +556,7 @@ static unsigned char findCharset(graph_t *g) {
     if (!strcasecmp(p,"utf-8")
 	|| !strcasecmp(p,"utf8"))
       return CHAR_UTF8;
-    agerr(AGWARN, "Unsupported charset \"%s\" - assuming utf-8\n", p);
+    agwarningf("Unsupported charset \"%s\" - assuming utf-8\n", p);
     return CHAR_UTF8;
 }
 

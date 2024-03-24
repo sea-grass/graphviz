@@ -282,7 +282,7 @@ static unsigned short versionStr2Version(const char *str) {
     }
     unsigned short digit = (unsigned short)(str[i] - '0');
     if (us > (USHRT_MAX - digit) / 10) {
-      agerr(AGWARN, "xdot version \"%s\" too long", str);
+      agwarningf("xdot version \"%s\" too long", str);
       break;
     }
     us = (unsigned short)(us * 10 + digit);

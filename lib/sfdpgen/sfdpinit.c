@@ -205,7 +205,7 @@ tuneControl (graph_t* g, spring_electrical_control ctrl)
     seed = ctrl->random_seed;
     init = setSeed (g, INIT_RANDOM, &seed);
     if (init != INIT_RANDOM) {
-        agerr(AGWARN, "sfdp only supports start=random\n");
+        agwarningf("sfdp only supports start=random\n");
     }
     ctrl->random_seed = seed;
 
@@ -219,7 +219,7 @@ tuneControl (graph_t* g, spring_electrical_control ctrl)
     ctrl->rotation = late_double(g, agfindgraphattr(g, "rotation"), 0.0, -MAXDOUBLE);
     ctrl->edge_labeling_scheme = late_int(g, agfindgraphattr(g, "label_scheme"), 0, 0);
     if (ctrl->edge_labeling_scheme > 4) {
-	agerr (AGWARN, "label_scheme = %d > 4 : ignoring\n", ctrl->edge_labeling_scheme);
+	agwarningf("label_scheme = %d > 4 : ignoring\n", ctrl->edge_labeling_scheme);
 	ctrl->edge_labeling_scheme = 0;
     }
 }

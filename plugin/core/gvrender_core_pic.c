@@ -62,7 +62,7 @@ static const char picgen_msghdr[] = "dot pic plugin: ";
 
 static void unsupported(char *s)
 {
-    agerr(AGWARN, "%s%s unsupported\n", picgen_msghdr, s);
+    agwarningf("%s%s unsupported\n", picgen_msghdr, s);
 }
 
 /* troff font mapping */

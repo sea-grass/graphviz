@@ -227,7 +227,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		if (Plegal_arrangement(objlist_at(&objl, 0), (int)objlist_size(&objl))) {
 		    vconfig = Pobsopen(objlist_at(&objl, 0), (int)objlist_size(&objl));
 		    if (!vconfig) {
-			agerr(AGWARN, "compoundEdges: could not construct obstacles - falling back to straight line edges\n");
+			agwarningf("compoundEdges: could not construct obstacles - falling back to straight line edges\n");
 			rv = 1;
 			objlist_free(&objl);
 			continue;
@@ -237,7 +237,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		    if (rv == 0) {
 			expand_t margin = sepFactor(g);
 			int pack = getPack (g, CL_OFFSET, CL_OFFSET); 
-			agerr(AGWARN, "compoundEdges: nodes touch - falling back to straight line edges\n");
+			agwarningf("compoundEdges: nodes touch - falling back to straight line edges\n");
 			if (pack <= pm->x || pack <= pm->y)
 			    agerr(AGPREV, "pack value %d is smaller than esep (%.03f,%.03f)\n", pack, pm->x, pm->y);
 			else if (margin.x <= pm->x || margin.y <= pm->y)

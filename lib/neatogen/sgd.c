@@ -148,11 +148,11 @@ void sgd(graph_t *G, /* input graph */
         int model /* distance model */)
 {
     if (model == MODEL_CIRCUIT) {
-        agerr(AGWARN, "circuit model not yet supported in Gmode=sgd, reverting to shortpath model\n");
+        agwarningf("circuit model not yet supported in Gmode=sgd, reverting to shortpath model\n");
         model = MODEL_SHORTPATH;
     }
     if (model == MODEL_MDS) {
-        agerr(AGWARN, "mds model not yet supported in Gmode=sgd, reverting to shortpath model\n");
+        agwarningf("mds model not yet supported in Gmode=sgd, reverting to shortpath model\n");
         model = MODEL_SHORTPATH;
     }
     int n = agnnodes(G);

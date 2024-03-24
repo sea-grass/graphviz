@@ -562,9 +562,9 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
 	}
 	else {
 	    if (edgetype == EDGETYPE_ORTHO)
-		agerr(AGWARN, "the bounding boxes of some nodes touch - falling back to straight line edges\n");
+		agwarningf("the bounding boxes of some nodes touch - falling back to straight line edges\n");
 	    else 
-		agerr(AGWARN, "some nodes with margin (%.02f,%.02f) touch - falling back to straight line edges\n", pmargin->x, pmargin->y);
+		agwarningf("some nodes with margin (%.02f,%.02f) touch - falling back to straight line edges\n", pmargin->x, pmargin->y);
 	}
     }
 
@@ -740,7 +740,7 @@ void spline_edges0(graph_t *g, bool set_aspect) {
     if (et == EDGETYPE_NONE) return;
 #ifndef ORTHO
     if (et == EDGETYPE_ORTHO) {
-	agerr (AGWARN, "Orthogonal edges not yet supported\n");
+	agwarningf("Orthogonal edges not yet supported\n");
 	et = EDGETYPE_PLINE;
 	GD_flags(g->root) &= ~EDGETYPE_ORTHO;
 	GD_flags(g->root) |= EDGETYPE_PLINE;

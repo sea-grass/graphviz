@@ -116,7 +116,7 @@ static int lenattr(edge_t* e, Agsym_t* index, double* val)
     if (*s == '\0') return 1;
 
     if (sscanf(s, "%lf", val) < 1 || *val < 0 || (*val == 0 && !Nop)) {
-	agerr(AGWARN, "bad edge len \"%s\"", s);
+	agwarningf("bad edge len \"%s\"", s);
 	return 2;
     }
     else
@@ -343,7 +343,7 @@ void initial_positions(graph_t * G, int nG)
     if (init == INIT_REGULAR)
 	return;
     if (init == INIT_SELF && once == 0) {
-	agerr(AGWARN, "start=0 not supported with mode=self - ignored\n");
+	agwarningf("start=0 not supported with mode=self - ignored\n");
 	once = 1;
     }
 
@@ -445,7 +445,7 @@ void solve_model(graph_t * G, int nG)
 		elapsed_sec());
     }
     if (GD_move(G) == MaxIter)
-	agerr(AGWARN, "Max. iterations (%d) reached on graph %s\n",
+	agwarningf("Max. iterations (%d) reached on graph %s\n",
 	      MaxIter, agnameof(G));
 }
 

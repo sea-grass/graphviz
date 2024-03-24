@@ -290,7 +290,7 @@ static Agsym_t *setattr(Agraph_t * g, int kind, char *name, const char *value) {
     lsym = aglocaldictsym(ldict, name);
     if (lsym) {			/* update old local definition */
 	if (g != root && streq(name, "layout"))
-	    agerr(AGWARN, "layout attribute is invalid except on the root graph\n");
+	    agwarningf("layout attribute is invalid except on the root graph\n");
         if (kind == AGRAPH) {
 	    unviewsubgraphsattr(g,name);
         }

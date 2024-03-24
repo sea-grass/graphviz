@@ -199,7 +199,7 @@ static void arrow_match_name(char *name, uint32_t *flag) {
 	next = rest;
         rest = arrow_match_shape(next, &f);
 	if (f == ARR_TYPE_NONE) {
-	    agerr(AGWARN, "Arrow type \"%s\" unknown - ignoring\n", next);
+	    agwarningf("Arrow type \"%s\" unknown - ignoring\n", next);
 	    return;
 	}
 	if (f == ARR_TYPE_GAP && i == NUMB_OF_ARROW_HEADS - 1)

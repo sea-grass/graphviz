@@ -553,7 +553,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	 * loop and we can see the bad edge, and even use the showboxes scaffolding.
 	 */
 	Ppolyline_t polyspl;
-	agerr(AGWARN, "Unable to reclaim box space in spline routing for edge \"%s\" -> \"%s\". Something is probably seriously wrong.\n", agnameof(agtail(realedge)), agnameof(aghead(realedge)));
+	agwarningf("Unable to reclaim box space in spline routing for edge \"%s\" -> \"%s\". Something is probably seriously wrong.\n", agnameof(agtail(realedge)), agnameof(aghead(realedge)));
 	make_polyline (pl, &polyspl);
 	limitBoxes (boxes, boxn, polyspl.ps, polyspl.pn, INIT_DELTA);
     }

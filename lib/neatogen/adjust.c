@@ -936,7 +936,7 @@ static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
 	while (ap->attrib) {
 	    if (!strncasecmp(s, ap->attrib, ap->len)) {
 		if (ap->print == NULL) {
-		    agerr (AGWARN, "Overlap value \"%s\" unsupported - ignored\n", ap->attrib);
+		    agwarningf("Overlap value \"%s\" unsupported - ignored\n", ap->attrib);
 		    ap = &adjustMode[1];
 		}
 		dp->mode = ap->mode;
@@ -951,7 +951,7 @@ static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
 	    bool v = mapbool(s);
 	    bool unmappable = v != mapBool(s, true);
 	    if (unmappable) {
-		agerr (AGWARN, "Unrecognized overlap value \"%s\" - using false\n", s);
+		agwarningf("Unrecognized overlap value \"%s\" - using false\n", s);
 		v = false;
 	    }
 	    if (v) {
@@ -1071,7 +1071,7 @@ removeOverlapWith (graph_t * G, adjust_data* am)
 #endif
 	default:		/* to silence warnings */
 	    if (am->mode != AM_VOR && am->mode != AM_SCALE)
-		agerr(AGWARN, "Unhandled adjust option %s\n", am->print);
+		agwarningf("Unhandled adjust option %s\n", am->print);
 	    ret = 0;
 	    break;
 	}

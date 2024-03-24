@@ -756,7 +756,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     eps[0].x = trip->poly.ps[s].x, eps[0].y = trip->poly.ps[s].y;
     eps[1].x = trip->poly.ps[t].x, eps[1].y = trip->poly.ps[t].y;
     if (Pshortestpath(&(trip->poly), eps, &pl) < 0) {
-	agerr(AGWARN, "Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
+	agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	rv = 1;
 	goto finish;
     }
@@ -778,7 +778,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	}
 	tweakPath (poly, s, t, pl);
 	if (Proutespline(medges, poly.pn, pl, evs, &spl) < 0) {
-	    agerr(AGWARN, "Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
+	    agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    rv = 1;
 	    goto finish;
 	}
@@ -795,7 +795,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	cpts[i] =
 	    mkCtrlPts(t, mult+1, pl.ps[i], pl.ps[i + 1], pl.ps[i + 2], trip);
 	if (!cpts[i]) {
-	    agerr(AGWARN, "Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
+	    agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    rv = 1;
 	    goto finish;
 	}
@@ -814,7 +814,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    poly.ps[pn - j] = cpts[j - 1][i + 1];
 	}
 	if (Pshortestpath(&poly, eps, &mmpl) < 0) {
-	    agerr(AGWARN, "Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
+	    agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    rv = 1;
 	    goto finish;
 	}
@@ -830,7 +830,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    }
 	    tweakPath (poly, 0, pl.pn-1, mmpl);
 	    if (Proutespline(medges, poly.pn, mmpl, evs, &spl) < 0) {
-		agerr(AGWARN, "Could not create control points for multiple spline for edge (%s,%s)\n", 
+		agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", 
 		    agnameof(agtail(e)), agnameof(aghead(e)));
 		rv = 1;
 		goto finish;

@@ -150,7 +150,7 @@ static int sidesfn(htmldata_t * p, char *v)
 	    flags |= BORDER_BOTTOM;
 	    break;
 	default :
-	    agerr(AGWARN, "Unrecognized character '%c' (%d) in sides attribute\n", c, c);
+	    agwarningf("Unrecognized character '%c' (%d) in sides attribute\n", c, c);
 	    break;
 	}
     }
@@ -186,7 +186,7 @@ static int stylefn(htmldata_t * p, char *v)
 	else if (strview_case_str_eq(tk,"DOTTED")) p->style |= DOTTED;
 	else if (strview_case_str_eq(tk,"DASHED")) p->style |= DASHED;
 	else {
-	    agerr(AGWARN, "Illegal value %.*s for STYLE - ignored\n", (int)tk.size,
+	    agwarningf("Illegal value %.*s for STYLE - ignored\n", (int)tk.size,
 	          tk.data);
 	    rv = 1;
 	}
@@ -220,13 +220,13 @@ static int doInt(char *v, char *s, int min, int max, long *ul)
     long b = strtol(v, &ep, 10);
 
     if (ep == v) {
-	agerr(AGWARN, "Improper %s value %s - ignored", s, v);
+	agwarningf("Improper %s value %s - ignored", s, v);
 	rv = 1;
     } else if (b > max) {
-	agerr(AGWARN, "%s value %s > %d - too large - ignored", s, v, max);
+	agwarningf("%s value %s > %d - too large - ignored", s, v, max);
 	rv = 1;
     } else if (b < min) {
-	agerr(AGWARN, "%s value %s < %d - too small - ignored", s, v, min);
+	agwarningf("%s value %s < %d - too small - ignored", s, v, min);
 	rv = 1;
     } else
 	*ul = b;
@@ -291,7 +291,7 @@ static int cellborderfn(htmltbl_t * p, char *v)
 static int columnsfn(htmltbl_t * p, char *v)
 {
     if (*v != '*') {
-	agerr(AGWARN, "Unknown value %s for COLUMNS - ignored\n", v);
+	agwarningf("Unknown value %s for COLUMNS - ignored\n", v);
 	return 1;
     }
     p->vrule = true;
@@ -301,7 +301,7 @@ static int columnsfn(htmltbl_t * p, char *v)
 static int rowsfn(htmltbl_t * p, char *v)
 {
     if (*v != '*') {
-	agerr(AGWARN, "Unknown value %s for ROWS - ignored\n", v);
+	agwarningf("Unknown value %s for ROWS - ignored\n", v);
 	return 1;
     }
     p->hrule = true;
@@ -314,7 +314,7 @@ static int fixedsizefn(htmldata_t * p, char *v)
     if (!strcasecmp(v, "TRUE"))
 	p->flags |= FIXED_FLAG;
     else if (strcasecmp(v, "FALSE")) {
-	agerr(AGWARN, "Illegal value %s for FIXEDSIZE - ignored\n", v);
+	agwarningf("Illegal value %s for FIXEDSIZE - ignored\n", v);
 	rv = 1;
     }
     return rv;
@@ -328,7 +328,7 @@ static int valignfn(htmldata_t * p, char *v)
     else if (!strcasecmp(v, "TOP"))
 	p->flags |= VALIGN_TOP;
     else if (strcasecmp(v, "MIDDLE")) {
-	agerr(AGWARN, "Illegal value %s for VALIGN - ignored\n", v);
+	agwarningf("Illegal value %s for VALIGN - ignored\n", v);
 	rv = 1;
     }
     return rv;
@@ -342,7 +342,7 @@ static int halignfn(htmldata_t * p, char *v)
     else if (!strcasecmp(v, "RIGHT"))
 	p->flags |= HALIGN_RIGHT;
     else if (strcasecmp(v, "CENTER")) {
-	agerr(AGWARN, "Illegal value %s for ALIGN - ignored\n", v);
+	agwarningf("Illegal value %s for ALIGN - ignored\n", v);
 	rv = 1;
     }
     return rv;
@@ -360,7 +360,7 @@ static int cell_halignfn(htmldata_t * p, char *v)
     else if (strcasecmp(v, "CENTER"))
 	rv = 1;
     if (rv)
-	agerr(AGWARN, "Illegal value %s for ALIGN in TD - ignored\n", v);
+	agwarningf("Illegal value %s for ALIGN in TD - ignored\n", v);
     return rv;
 }
 
@@ -374,7 +374,7 @@ static int balignfn(htmldata_t * p, char *v)
     else if (strcasecmp(v, "CENTER"))
 	rv = 1;
     if (rv)
-	agerr(AGWARN, "Illegal value %s for BALIGN in TD - ignored\n", v);
+	agwarningf("Illegal value %s for BALIGN in TD - ignored\n", v);
     return rv;
 }
 
@@ -405,7 +405,7 @@ static int rowspanfn(htmlcell_t * p, char *v)
     if (doInt(v, "ROWSPAN", 0, UINT16_MAX, &u))
 	return 1;
     if (u == 0) {
-	agerr(AGWARN, "ROWSPAN value cannot be 0 - ignored\n");
+	agwarningf("ROWSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
     p->rowspan = (uint16_t)u;
@@ -419,7 +419,7 @@ static int colspanfn(htmlcell_t * p, char *v)
     if (doInt(v, "COLSPAN", 0, UINT16_MAX, &u))
 	return 1;
     if (u == 0) {
-	agerr(AGWARN, "COLSPAN value cannot be 0 - ignored\n");
+	agwarningf("COLSPAN value cannot be 0 - ignored\n");
 	return 1;
     }
     p->colspan = (uint16_t)u;
@@ -470,7 +470,7 @@ static int alignfn(int *p, char *v)
     else if (!strcasecmp(v, "CENTER"))
 	*p = 'n';
     else {
-	agerr(AGWARN, "Illegal value %s for ALIGN - ignored\n", v);
+	agwarningf("Illegal value %s for ALIGN - ignored\n", v);
 	rv = 1;
     }
     return rv;
@@ -562,7 +562,7 @@ static void doAttrs(void *tp, attr_item *items, size_t nel, char **atts,
 	if (ip)
 	    state.warn |= ip->action(tp, val);
 	else {
-	    agerr(AGWARN, "Illegal attribute %s in %s - ignored\n", name,
+	    agwarningf("Illegal attribute %s in %s - ignored\n", name,
 		  s);
 	    state.warn = 1;
 	}
@@ -779,7 +779,7 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
 #else
     static int first;
     if (!first) {
-	agerr(AGWARN,
+	agwarningf(
 	      "Not built with libexpat. Table formatting is not available.\n");
 	first++;
     }
@@ -831,7 +831,7 @@ static char *eatComment(char *p)
     if (*s) {
 	char *t = s - 2;
 	if (t < p || !startswith(t, "--")) {
-	    agerr(AGWARN, "Unclosed comment\n");
+	    agwarningf("Unclosed comment\n");
 	    state.warn = 1;
 	}
     }
@@ -854,7 +854,7 @@ static char *findNext(char *s, agxbuf* xb)
 	    while (*t && *t != '>')
 		t++;
 	if (*t != '>') {
-	    agerr(AGWARN, "Label closed before end of HTML element\n");
+	    agwarningf("Label closed before end of HTML element\n");
 	    state.warn = 1;
 	} else
 	    t++;

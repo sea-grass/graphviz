@@ -188,7 +188,7 @@ static int rebuild_vlists(graph_t * g)
 	    }
 	}
 	if (maxi == -1)
-	    agerr(AGWARN, "degenerate concentrated rank %s,%d\n", agnameof(g),
+	    agwarningf("degenerate concentrated rank %s,%d\n", agnameof(g),
 		  r);
 	GD_rank(g)[r].n = maxi + 1;
     }

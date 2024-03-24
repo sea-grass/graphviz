@@ -162,7 +162,7 @@ static int chkNum(void) {
 	else
 	    fname = "input";
 
-	agerr(AGWARN, "syntax ambiguity - badly delimited number '%s' in line %d of "
+	agwarningf("syntax ambiguity - badly delimited number '%s' in line %d of "
 	  "%s splits into two tokens\n", aagtext, line_num, fname);
 
 	return 1;

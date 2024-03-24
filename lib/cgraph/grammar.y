@@ -307,7 +307,7 @@ static void applyattrs(void *obj)
 
 static void nomacros(void)
 {
-	agerr(AGWARN,"attribute macros not implemented");
+  agwarningf("attribute macros not implemented");
 }
 
 /* attrstmt:

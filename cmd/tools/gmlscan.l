@@ -127,7 +127,7 @@ void gmlerror(const char *str)
     if (errors)
 	return;
     errors = 1;
-    agerr(AGWARN, " %s in line %d near '%s'\n", str,line_num,yytext);
+    agwarningf(" %s in line %d near '%s'\n", str,line_num,yytext);
 }
 
 int gmlerrors(void)

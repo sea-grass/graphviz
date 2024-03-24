@@ -184,10 +184,10 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
     hndl = lt_dlopen(p);
     if (!hndl) {
         if (access(p, R_OK) == 0) {
-            agerr(AGWARN, "Could not load \"%s\" - %s\n", p, "It was found, so perhaps one of its dependents was not.  Try ldd.");
+            agwarningf("Could not load \"%s\" - %s\n", p, "It was found, so perhaps one of its dependents was not.  Try ldd.");
         }
         else {
-            agerr(AGWARN, "Could not load \"%s\" - %s\n", p, lt_dlerror());
+            agwarningf("Could not load \"%s\" - %s\n", p, lt_dlerror());
         }
         agxbfree(&fullpath);
         return NULL;

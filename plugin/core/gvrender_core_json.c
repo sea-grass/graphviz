@@ -324,7 +324,7 @@ static void write_xdots (char * val, GVJ_t * job, state_t* sp)
 
     cmds = parseXDot(val);
     if (!cmds) {
-	agerr(AGWARN, "Could not parse xdot \"%s\"\n", val);
+	agwarningf("Could not parse xdot \"%s\"\n", val);
 	return;
     }
 
@@ -634,7 +634,7 @@ static void insert (Dt_t* map, char* name, int v)
 
     if (ip) {
 	if (ip->v != v)
-	    agerr(AGWARN, "Duplicate cluster name \"%s\"\n", name);
+	    agwarningf("Duplicate cluster name \"%s\"\n", name);
 	return;
     }
     ip = gv_alloc(sizeof(intm));

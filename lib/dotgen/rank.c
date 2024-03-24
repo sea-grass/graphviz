@@ -617,7 +617,7 @@ static void compile_samerank(graph_t * ug, graph_t * parent_clust)
     case NORANK:
 	break;
     default:			/* unrecognized - warn and do nothing */
-	agerr(AGWARN, "%s has unrecognized rank=%s", agnameof(ug),
+	agwarningf("%s has unrecognized rank=%s", agnameof(ug),
 	      agget(ug, "rank"));
     }
 

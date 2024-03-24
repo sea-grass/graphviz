@@ -1289,7 +1289,7 @@ orthoEdges (Agraph_t* g, int doLbls)
     }
 #endif
     if (doLbls) {
-	agerr(AGWARN, "Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
+	agwarningf("Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
 	doLbls = 0;
     }
     mp = mkMaze(g);

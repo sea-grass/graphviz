@@ -177,7 +177,7 @@ setFDPAttr (char* arg)
     }
     break;
   default :
-    agerr (AGWARN, "unknown flag -L%s - ignored\n", arg-1);
+    agwarningf("unknown flag -L%s - ignored\n", arg-1);
     break;
   }
   return 0;

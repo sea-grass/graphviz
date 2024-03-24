@@ -270,7 +270,7 @@ static void dot_splines_(graph_t *g, int normalize) {
     if (et == EDGETYPE_CURVED) {
 	resetRW (g);
 	if (GD_has_labels(g->root) & EDGE_LABEL) {
-	    agerr (AGWARN, "edge labels with splines=curved not supported in dot - use xlabels\n");
+	    agwarningf("edge labels with splines=curved not supported in dot - use xlabels\n");
 	}
     } 
 #ifdef ORTHO
@@ -1237,7 +1237,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     if (shapeOf(tn) == SH_RECORD || shapeOf(hn) == SH_RECORD) {
 	if (!warned) {
 	    warned = 1;
-	    agerr (AGWARN, "flat edge between adjacent nodes one of which has a record shape - replace records with HTML-like labels\n");
+	    agwarningf("flat edge between adjacent nodes one of which has a record shape - replace records with HTML-like labels\n");
 	    agerr(AGPREV, "  Edge %s %s %s\n",
                         agnameof(tn), agisdirected(g)?"->":"--", agnameof(hn));
 	    
