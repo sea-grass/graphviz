@@ -233,17 +233,10 @@ static Site *nextOne(void)
 /// Check for nodes with identical positions and tweak the positions.
 static void rmEquality(void)
 {
-    int i, cnt;
-    Site **ip;
-    Site **jp;
-    Site **kp;
-    double xdel;
-
     sortSites();
-    ip = sites;
 
-    while (ip < endSite) {
-	jp = ip + 1;
+    for (Site **ip = sites; ip < endSite; ) {
+	Site **jp = ip + 1;
 	if (jp >= endSite ||
 	    (*jp)->coord.x != (*ip)->coord.x ||
 	    (*jp)->coord.y != (*ip)->coord.y) {
@@ -252,8 +245,8 @@ static void rmEquality(void)
 	}
 
 	/* Find first node kp with position different from ip */
-	cnt = 2;
-	kp = jp + 1;
+	int cnt = 2;
+	Site **kp = jp + 1;
 	while (kp < endSite &&
 	       (*kp)->coord.x == (*ip)->coord.x &&
 	       (*kp)->coord.y == (*ip)->coord.y) {
@@ -264,8 +257,8 @@ static void rmEquality(void)
 
 	/* If next node exists and is on the same line */
 	if (kp < endSite && (*kp)->coord.y == (*ip)->coord.y) {
-	    xdel = ((*kp)->coord.x - (*ip)->coord.x) / cnt;
-	    i = 1;
+	    const double xdel = ((*kp)->coord.x - (*ip)->coord.x) / cnt;
+	    int i = 1;
 	    for (jp = ip + 1; jp < kp; jp++) {
 		(*jp)->coord.x += i * xdel;
 		i++;
@@ -274,7 +267,7 @@ static void rmEquality(void)
 	    Info_t *info;
 	    for (jp = ip + 1; jp < kp; ip++, jp++) {
 		info = nodeInfo + (*ip)->sitenbr;
-		xdel = info->poly.corner.x - info->poly.origin.x;
+		double xdel = info->poly.corner.x - info->poly.origin.x;
 		info = nodeInfo + (*jp)->sitenbr;
 		xdel += info->poly.corner.x - info->poly.origin.x;
 		(*jp)->coord.x = (*ip)->coord.x + xdel / 2;
