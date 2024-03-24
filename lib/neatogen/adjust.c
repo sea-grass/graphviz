@@ -304,16 +304,11 @@ static int countOverlap(int iter)
 
 static void increaseBoundBox(void)
 {
-    double ydelta, xdelta;
-    Point ll, ur;
+    Point ur = {.x = pxmax, .y = pymax};
+    Point ll = {.x = pxmin, .y = pymin};
 
-    ur.x = pxmax;
-    ur.y = pymax;
-    ll.x = pxmin;
-    ll.y = pymin;
-
-    ydelta = incr * (ur.y - ll.y);
-    xdelta = incr * (ur.x - ll.x);
+    const double ydelta = incr * (ur.y - ll.y);
+    const double xdelta = incr * (ur.x - ll.x);
 
     ur.x += xdelta;
     ur.y += ydelta;
