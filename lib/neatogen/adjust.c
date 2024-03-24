@@ -40,7 +40,7 @@
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
 
-#define SEPFACT         0.8f  /* default esep/sep */
+#define SEPFACT         0.8 // default esep/sep
 
 static double margin = 0.05;	/* Create initial bounding box by adding
 				 * margin * dimension around box enclosing
@@ -130,7 +130,7 @@ static int makeInfo(Agraph_t * graph)
 {
     Agnode_t *node;
     expand_t pmargin;
-    int (*polyf)(Poly *, Agnode_t *, float, float);
+    int (*polyf)(Poly *, Agnode_t *, double, double);
 
     assert(agnnodes(graph) >= 0);
     nsites = (size_t)agnnodes(graph);
@@ -1134,11 +1134,8 @@ int adjustNodes(graph_t * G)
  * Input "x,y" becomes {1 + x/sepfact,1 + y/sepfact,false}
  * Return 1 on success, 0 on failure
  */
-static int
-parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
-{
+static int parseFactor(char *s, expand_t *pp, double sepfact, double dflt) {
     int i;
-    float x, y;
 
     while (gv_isspace(*s)) s++;
     if (*s == '+') {
@@ -1147,16 +1144,17 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
     }
     else pp->doAdd = false;
 
-    if ((i = sscanf(s, "%f,%f", &x, &y))) {
+    double x, y;
+    if ((i = sscanf(s, "%lf,%lf", &x, &y))) {
 	if (i == 1) y = x;
 	if (pp->doAdd) {
 	    if (sepfact > 1) {
-		pp->x = fminf(dflt, x/sepfact);
-		pp->y = fminf(dflt, y/sepfact);
+		pp->x = fmin(dflt, x / sepfact);
+		pp->y = fmin(dflt, y / sepfact);
 	    }
 	    else if (sepfact < 1) {
-		pp->x = fmaxf(dflt, x/sepfact);
-		pp->y = fmaxf(dflt, y/sepfact);
+		pp->x = fmax(dflt, x / sepfact);
+		pp->y = fmax(dflt, y / sepfact);
 	    }
 	    else {
 		pp->x = x;
@@ -1164,8 +1162,8 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
 	    }
 	}
 	else {
-	    pp->x = 1.0f + x/sepfact;
-	    pp->y = 1.0f + y/sepfact;
+	    pp->x = 1.0 + x / sepfact;
+	    pp->y = 1.0 + y / sepfact;
 	}
 	return 1;
     }
@@ -1208,7 +1206,8 @@ esepFactor(graph_t* g)
 
     if ((marg = agget(g, "esep")) && parseFactor(marg, &pmargin, 1.0, 0)) {
     }
-    else if ((marg = agget(g, "sep")) && parseFactor(marg, &pmargin, 1.0f/SEPFACT, SEPFACT*DFLT_MARGIN)) {
+    else if ((marg = agget(g, "sep")) &&
+             parseFactor(marg, &pmargin, 1.0 / SEPFACT, SEPFACT * DFLT_MARGIN)) {
     }
     else {
 	pmargin.x = pmargin.y = SEPFACT*DFLT_MARGIN;

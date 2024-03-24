@@ -63,7 +63,8 @@ static void bbox(Point *verts, size_t cnt, Point *o, Point *c) {
     c->y = y_max;
 }
 
-static void inflatePts(Point *verts, size_t cnt, float xmargin, float ymargin) {
+static void inflatePts(Point *verts, size_t cnt, double xmargin,
+                       double ymargin) {
     Point *cur;
 
     cur = &verts[0];
@@ -87,8 +88,7 @@ static int isBox(Point *verts, size_t cnt) {
 		(verts[0].y == verts[3].y) && (verts[1].y == verts[2].y));
 }
 
-static Point makeScaledTransPoint(int x, int y, float dx, float dy)
-{
+static Point makeScaledTransPoint(int x, int y, double dx, double dy) {
     Point rv;
     rv.x = PS2INCH(x) + dx;
     rv.y = PS2INCH(y) + dy;
@@ -103,7 +103,7 @@ static Point makeScaledPoint(double x, double y)
     return rv;
 }
 
-static Point *genRound(Agnode_t *n, size_t *sidep, float xm, float ym) {
+static Point *genRound(Agnode_t *n, size_t *sidep, double xm, double ym) {
     size_t sides = 0;
     char *p = agget(n, "samplepoints");
 
@@ -124,8 +124,7 @@ static Point *genRound(Agnode_t *n, size_t *sidep, float xm, float ym) {
 
 #define PUTPT(P,X,Y) ((P).x=(X),(P).y=(Y))
 
-int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
-{
+int makeAddPoly(Poly *pp, Agnode_t *n, double xmargin, double ymargin) {
     size_t sides;
     Point *verts;
     polygon_t *poly;
@@ -215,8 +214,7 @@ int makeAddPoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
     return 0;
 }
 
-int makePoly(Poly * pp, Agnode_t * n, float xmargin, float ymargin)
-{
+int makePoly(Poly *pp, Agnode_t *n, double xmargin, double ymargin) {
     size_t sides;
     Point *verts;
     polygon_t *poly;

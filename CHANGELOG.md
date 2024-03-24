@@ -51,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   details and would be monitoring the Git commit history instead. This seems to
   not be the case, so in future side-effecting changes to any of the three build
   systems will be included here. #2527, #2528
+- The precision of `sep`- and `esep`-based calculations has been improved.
 
 ### Fixed
 
