@@ -97,7 +97,7 @@ extern void textfont_dict_open(GVC_t *gvc);
 static gvplugin_package_t * gvplugin_package_record(GVC_t * gvc,
                                                     const char *package_path,
                                                     const char *name) {
-    gvplugin_package_t *package = gmalloc(sizeof(gvplugin_package_t));
+    gvplugin_package_t *package = gv_alloc(sizeof(gvplugin_package_t));
     package->path = package_path ? gv_strdup(package_path) : NULL;
     package->name = gv_strdup(name);
     package->next = gvc->packages;
@@ -338,7 +338,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 		    if (len < BSZ)
 			libdir = line;
 		    else
-		        libdir = gmalloc(len);
+		        libdir = gv_alloc(len);
 		    if (ind > 0) {
 		        memmove(libdir, p, ind);
 		    }

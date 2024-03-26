@@ -28,7 +28,6 @@ extern "C" {
 #define MEMORY_API /* nothing */
 #endif
 
-    MEMORY_API void *gmalloc(size_t);
 	MEMORY_API void *grealloc(void *, size_t);
 #undef MEMORY_API
 

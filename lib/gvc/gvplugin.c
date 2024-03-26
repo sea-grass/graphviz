@@ -155,7 +155,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
 #ifdef ENABLE_LTDL
     lt_dlhandle hndl;
     lt_ptr ptr;
-    char *s, *sym;
+    char *s;
     size_t len;
     char *libdir;
     char *suffix = "_LTX_library";
@@ -206,7 +206,7 @@ gvplugin_library_t *gvplugin_library_load(GVC_t *gvc, const char *pathname) {
         agxbfree(&fullpath);
         return NULL;
     }
-    sym = gmalloc(len + strlen(suffix) + 1);
+    char *sym = gv_alloc(len + strlen(suffix) + 1);
 #if defined(_WIN32) && !defined(__MINGW32__) && !defined(__CYGWIN__)
     strcpy(sym, s + 1);         /* strip leading "/"  */
 #else
