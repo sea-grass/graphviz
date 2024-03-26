@@ -108,6 +108,11 @@ static int cmpf(const void *X, const void *Y)
     return 0;
 }
 
+/// `sgn`, as defined in Graphics Gems I, §11.8, pp. 99
+static int sgn(int x) {
+  return x > 0 ? 1 : -1;
+}
+
 /* Mark cells crossed by line from cell p to cell q.
  * Bresenham's algorithm, from Graphics Gems I, pp. 99-100.
  */
@@ -121,18 +126,16 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
 
     dx = x2 - x1;
     ax = abs(dx) << 1;
-    sx = SGN(dx);
+    sx = sgn(dx);
     dy = y2 - y1;
     ay = abs(dy) << 1;
-    sy = SGN(dy);
+    sy = sgn(dy);
 
-/* fprintf (stderr, "fillLine %d %d - %d %d\n", x1,y1,x2,y2); */
     x = x1;
     y = y1;
     if (ax > ay) {              /* x dominant */
         d = ay - (ax >> 1);
         for (;;) {
-/* fprintf (stderr, "  addPS %d %d\n", x,y); */
             addPS(ps, x, y);
             if (x == x2)
                 return;
@@ -146,7 +149,6 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
     } else {                    /* y dominant */
         d = ax - (ay >> 1);
         for (;;) {
-/* fprintf (stderr, "  addPS %d %d\n", x,y); */
             addPS(ps, x, y);
             if (y == y2)
                 return;

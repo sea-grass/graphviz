@@ -37,9 +37,6 @@ extern "C" {
 #endif
 #define MAX(a,b)	((a)>(b)?(a):(b))
 
-#define SGN(a)		(((a)<0)? -1 : 1)
-#define CMP(a,b)	(((a)<(b)) ? -1 : (((a)>(b)) ? 1 : 0))
-
 #ifndef MAXDOUBLE
 #define MAXDOUBLE	1.7976931348623157e+308
 #endif

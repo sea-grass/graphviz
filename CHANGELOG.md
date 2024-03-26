@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `agnnodes` is a more robust way of retrieving the number of nodes.
 - The `-q` command line option will now suppress “no hard-coded metrics…”
   and other font lookup warnings. #2379
+- **Breaking**: The `CMP` and `SGN` macros have been removed.
 
 ### Fixed
 
@@ -90,6 +91,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   strings in a GVPR program.
 - Some `routesplines` miscalculations that led to lost edges and fatal errors
   have been avoided. #2368
+- An inaccuracy involving an edge case when constructing lines within libpack
+  has been corrected.
 
 ## [10.0.1] – 2024-02-11
 

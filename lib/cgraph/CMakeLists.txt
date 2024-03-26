@@ -19,9 +19,9 @@ add_library(cgraph
   bitarray.h
   cghdr.h
   cgraph.h
-  clamp.h
   exit.h
   gv_ctype.h
+  gv_math.h
   ingraphs.h
   list.h
   overflow.h
