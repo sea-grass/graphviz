@@ -1982,7 +1982,7 @@ static void poly_init(node_t * n)
     else
 	ND_label(n)->valign = 'c';
 
-    const bool isBox = sides == 4 && ROUND(orientation) % 90 == 0
+    const bool isBox = sides == 4 && fabs(fmod(orientation, 90)) < 0.5
 	     && distortion == 0. && skew == 0.;
     if (isBox) {
 	/* for regular boxes the fit should be exact */
