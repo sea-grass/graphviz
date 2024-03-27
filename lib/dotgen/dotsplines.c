@@ -1010,7 +1010,7 @@ static int edgelblcmpfn(const void *x, const void *y) {
  */
 static void makeSimpleFlatLabels(node_t *tn, node_t *hn, edge_t **edges,
                                  unsigned ind, unsigned cnt, int et,
-                                 int n_lbls) {
+                                 unsigned n_lbls) {
     Ppoly_t poly;
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
@@ -1051,7 +1051,7 @@ static void makeSimpleFlatLabels(node_t *tn, node_t *hn, edge_t **edges,
     umaxx = ctrx + ED_label(e)->dimen.x / 2.0;
 
     unsigned i;
-    for (i = 1; i < (unsigned)n_lbls; i++) {
+    for (i = 1; i < n_lbls; i++) {
 	e = earray[i];
 	if (i%2) {  /* down */
 	    if (i == 1) {
@@ -1220,7 +1220,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, unsigned ind,
     node_t* n;
     node_t *tn, *hn;
     edge_t* e;
-    int labels = 0, ports = 0;
+    int ports = 0;
     graph_t* auxg;
     graph_t* subg;
     node_t *auxt, *auxh;
@@ -1241,6 +1241,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, unsigned ind,
 	}
 	return;
     }
+    unsigned labels = 0;
     for (unsigned i = 0; i < cnt; i++) {
 	e = edges[ind + i];
 	if (ED_label(e)) labels++;
