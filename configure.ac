@@ -293,11 +293,6 @@ then
   AX_CHECK_COMPILE_FLAG([-Wlogical-op],
     [save_CFLAGS="${save_CFLAGS} -Wlogical-op"],[],[-Werror])
   CFLAGS="${save_CFLAGS}"
-# if [test "${ac_cv_prog_cc_c99}" != "no"]
-# then
-    # FIXME - not available on centos[56]: gcc-4.1.2, gcc-4.4.7
-    # CFLAGS="${CFLAGS} -Wdouble-promotion"
-#  fi
 fi
 # Workaround for native compilers
 #  HP  : http://bugs.gnome.org/db/31/3163.html
