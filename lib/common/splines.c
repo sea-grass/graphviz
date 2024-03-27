@@ -992,7 +992,7 @@ static void selfTop(edge_t *edges[], int ind, size_t cnt, double sizex,
     }
 }
 
-static void selfRight(edge_t *edges[], int ind, size_t cnt, double stepx,
+static void selfRight(edge_t *edges[], size_t ind, size_t cnt, double stepx,
                       double sizey, splineInfo *sinfo) {
     int sgn, point_pair;
     double hx, tx, stepy, dx, dy, width;
@@ -1185,7 +1185,7 @@ void makeSelfEdge(edge_t *edges[], size_t ind, size_t cnt, double sizex,
          !(ED_head_port(e).side & LEFT) &&
           (ED_tail_port(e).side != ED_head_port(e).side ||
           !(ED_tail_port(e).side & (TOP|BOTTOM))))) {
-	selfRight(edges, (int)ind, cnt, sizex, sizey, sinfo);
+	selfRight(edges, ind, cnt, sizex, sizey, sinfo);
     }
 
     /* self edge with port on left side */
