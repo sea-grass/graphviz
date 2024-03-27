@@ -260,7 +260,7 @@ setEdgeLabelPos (graph_t * g)
  * of dot_splines.
  */
 static void dot_splines_(graph_t *g, int normalize) {
-    int i, j, k, n_nodes, n_edges;
+    int i, j, k, n_nodes;
     node_t *n;
     Agedgeinfo_t fwdedgeai, fwdedgebi;
     Agedgepair_t fwdedgea, fwdedgeb;
@@ -299,7 +299,8 @@ static void dot_splines_(graph_t *g, int normalize) {
     edges = gv_calloc(CHUNK, sizeof(edge_t*));
 
     /* compute boundaries and list of splines */
-    n_edges = n_nodes = 0;
+    unsigned n_edges = 0;
+    n_nodes = 0;
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	n_nodes += GD_rank(g)[i].n;
 	if ((n = GD_rank(g)[i].v[0]))
@@ -379,9 +380,9 @@ static void dot_splines_(graph_t *g, int normalize) {
 	}
     }
 
-    for (i = 0; i < n_edges;) {
-	const unsigned ind = (unsigned)i;
-	le0 = getmainedge((e0 = edges[i++]));
+    for (unsigned l = 0; l < n_edges;) {
+	const unsigned ind = l;
+	le0 = getmainedge((e0 = edges[l++]));
 	if (ED_tail_port(e0).defined || ED_head_port(e0).defined) {
 	    ea = e0;
 	} else {
@@ -392,8 +393,8 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    ea = &fwdedgea.out;
 	}
 	unsigned cnt;
-	for (cnt = 1; i < n_edges; cnt++, i++) {
-	    if (le0 != (le1 = getmainedge((e1 = edges[i]))))
+	for (cnt = 1; l < n_edges; cnt++, l++) {
+	    if (le0 != (le1 = getmainedge((e1 = edges[l]))))
 		break;
 	    if (ED_adjacent(e0)) continue; /* all flat adjacent edges at once */
 	    if (ED_tail_port(e1).defined || ED_head_port(e1).defined) {
@@ -412,7 +413,7 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    if ((ED_tree_index(e0) & EDGETYPEMASK) == FLATEDGE
 		&& ED_label(e0) != ED_label(e1))
 		break;
-	    if (ED_tree_index(edges[i]) & MAINGRAPH)	/* Aha! -C is on */
+	    if (ED_tree_index(edges[l]) & MAINGRAPH)	/* Aha! -C is on */
 		break;
 	}
 
