@@ -62,7 +62,6 @@ typedef struct {
 #define SVG_MAGIC  "<svg"
 #define RIFF_MAGIC "RIFF"
 #define WEBP_MAGIC "WEBP"
-//#define TIFF_MAGIC "II"
 #define ICO_MAGIC  "\x00\x00\x01\x00"
 
 static knowntype_t knowntypes[] = {
@@ -76,7 +75,6 @@ static knowntype_t knowntypes[] = {
     { XML_MAGIC,  sizeof(XML_MAGIC)-1,   FT_XML,  "xml",  },
     { RIFF_MAGIC, sizeof(RIFF_MAGIC)-1,  FT_RIFF, "riff", },
     { ICO_MAGIC,  sizeof(ICO_MAGIC)-1,   FT_ICO,  "ico",  },
-//    { TIFF_MAGIC, sizeof(TIFF_MAGIC)-1,  FT_TIFF, "tiff", },
 };
 
 static imagetype_t imagetype(usershape_t *us) {
