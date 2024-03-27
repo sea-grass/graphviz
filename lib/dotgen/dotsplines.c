@@ -1166,12 +1166,10 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     free (earray);
 }
 
-static void
-makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et)
-{
+static void makeSimpleFlat(node_t *tn, node_t *hn, edge_t **edges, int ind,
+                           unsigned cnt, int et) {
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
-    int i;
     double stepy, dy;
 
     tp = add_pointf(ND_coord(tn), ED_tail_port(e).p);
@@ -1180,8 +1178,8 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
     stepy = cnt > 1 ? ND_ht(tn) / (double)(cnt - 1) : 0.;
     dy = tp.y - (cnt > 1 ? ND_ht(tn) / 2. : 0.);
 
-    for (i = 0; i < cnt; i++) {
-	e = edges[ind + i];
+    for (unsigned i = 0; i < cnt; i++) {
+	e = edges[ind + (int)i];
 	size_t pointn = 0;
 	if (et == EDGETYPE_SPLINE || et == EDGETYPE_LINE) {
 	    points[pointn++] = tp;
@@ -1250,7 +1248,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
     if (ports == 0) {
 	/* flat edges without ports and labels can go straight left to right */
 	if (labels == 0) {
-	    makeSimpleFlat(tn, hn, edges, ind, (int)cnt, et);
+	    makeSimpleFlat(tn, hn, edges, ind, cnt, et);
 	}
 	/* flat edges without ports but with labels take more work */
 	else {
@@ -1591,7 +1589,7 @@ static void make_flat_edge(graph_t *g, spline_info_t *sp, path *P,
     }
 
     if (et == EDGETYPE_LINE) {
-	makeSimpleFlat(agtail(e), aghead(e), edges, ind, (int)cnt, et);
+	makeSimpleFlat(agtail(e), aghead(e), edges, ind, cnt, et);
 	return;
     }
 
