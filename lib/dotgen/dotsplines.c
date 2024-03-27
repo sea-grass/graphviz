@@ -1006,20 +1006,18 @@ static int edgelblcmpfn(const void *x, const void *y) {
  * to handle edges with ports. This usually works, but fails for
  * records because of their weird nature.
  */
-static void
-makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et, int n_lbls)
-{
+static void makeSimpleFlatLabels(node_t *tn, node_t *hn, edge_t **edges,
+                                 int ind, unsigned cnt, int et, int n_lbls) {
     Ppoly_t poly;
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
-    int i;
     double leftend, rightend, ctrx, ctry, miny, maxy;
     double uminx, umaxx;
     double lminx=0.0, lmaxx=0.0;
 
     edge_t** earray = gv_calloc(cnt, sizeof(edge_t*));
 
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	earray[i] = edges[ind + i];
     }
 
@@ -1049,7 +1047,8 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     uminx = ctrx - ED_label(e)->dimen.x / 2.0;
     umaxx = ctrx + ED_label(e)->dimen.x / 2.0;
 
-    for (i = 1; i < n_lbls; i++) {
+    unsigned i;
+    for (i = 1; i < (unsigned)n_lbls; i++) {
 	e = earray[i];
 	if (i%2) {  /* down */
 	    if (i == 1) {
@@ -1252,7 +1251,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
 	}
 	/* flat edges without ports but with labels take more work */
 	else {
-	    makeSimpleFlatLabels(tn, hn, edges, ind, (int)cnt, et, labels);
+	    makeSimpleFlatLabels(tn, hn, edges, ind, cnt, et, labels);
 	}
 	return;
     }
