@@ -1062,7 +1062,7 @@ static void selfRight(edge_t *edges[], size_t ind, size_t cnt, double stepx,
     }
 }
 
-static void selfLeft(edge_t *edges[], int ind, size_t cnt, double stepx,
+static void selfLeft(edge_t *edges[], size_t ind, size_t cnt, double stepx,
                      double sizey, splineInfo *sinfo) {
     int sgn,point_pair;
     double hx, tx, stepy, dx, dy, width;
@@ -1196,7 +1196,7 @@ void makeSelfEdge(edge_t *edges[], size_t ind, size_t cnt, double sizex,
 	    selfTop(edges, (int)ind, cnt, sizex, sizey, sinfo);
 	}
 	else {
-	    selfLeft(edges, (int)ind, cnt, sizex, sizey, sinfo);
+	    selfLeft(edges, ind, cnt, sizex, sizey, sinfo);
 	}
     }
 
