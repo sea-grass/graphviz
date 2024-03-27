@@ -260,7 +260,7 @@ setEdgeLabelPos (graph_t * g)
  * of dot_splines.
  */
 static void dot_splines_(graph_t *g, int normalize) {
-    int i, j, k, n_nodes, n_edges, ind;
+    int i, j, k, n_nodes, n_edges;
     node_t *n;
     Agedgeinfo_t fwdedgeai, fwdedgebi;
     Agedgepair_t fwdedgea, fwdedgeb;
@@ -380,7 +380,7 @@ static void dot_splines_(graph_t *g, int normalize) {
     }
 
     for (i = 0; i < n_edges;) {
-	ind = i;
+	const unsigned ind = (unsigned)i;
 	le0 = getmainedge((e0 = edges[i++]));
 	if (ED_tail_port(e0).defined || ED_head_port(e0).defined) {
 	    ea = e0;
@@ -445,16 +445,16 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    }
 	    makeSelfEdge(edges, ind, cnt, sd.Multisep, sizey / 2, &sinfo);
 	    for (unsigned b = 0; b < cnt; b++) {
-		e = edges[ind + (int)b];
+		e = edges[ind + b];
 		if (ED_label(e))
 		    updateBB(g, ED_label(e));
 	    }
 	}
 	else if (ND_rank(agtail(e0)) == ND_rank(aghead(e0))) {
-	    make_flat_edge(g, &sd, &P, edges, ind, cnt, et);
+	    make_flat_edge(g, &sd, &P, edges, (int)ind, cnt, et);
 	}
 	else
-	    make_regular_edge(g, &sd, &P, edges, ind, cnt, et);
+	    make_regular_edge(g, &sd, &P, edges, (int)ind, cnt, et);
     }
 
     /* place regular edge labels */
