@@ -223,7 +223,8 @@ static edge_t *equivEdge(Dt_t * map, edge_t * e)
  */
 void makeSelfArcs(edge_t * e, int stepx)
 {
-    int cnt = ED_count(e);
+    assert(ED_count(e) >= 0);
+    const size_t cnt = (size_t)ED_count(e);
 
     if (cnt == 1 || Concentrate) {
 	edge_t *edges1[1];
@@ -233,14 +234,13 @@ void makeSelfArcs(edge_t * e, int stepx)
 	    updateBB(agraphof(agtail(e)), ED_label(e));
 	makePortLabels(e);
     } else if (cnt > 1) {
-	int i;
 	edge_t **edges = gv_calloc(cnt, sizeof(edge_t*));
-	for (i = 0; i < cnt; i++) {
+	for (size_t i = 0; i < cnt; i++) {
 	    edges[i] = e;
 	    e = ED_to_virt(e);
 	}
-	makeSelfEdge(edges, 0, (size_t)cnt, stepx, stepx, &sinfo);
-	for (i = 0; i < cnt; i++) {
+	makeSelfEdge(edges, 0, cnt, stepx, stepx, &sinfo);
+	for (size_t i = 0; i < cnt; i++) {
 	    e = edges[i];
 	    if (ED_label(e))
 		updateBB(agraphof(agtail(e)), ED_label(e));
