@@ -1008,7 +1008,8 @@ static int edgelblcmpfn(const void *x, const void *y) {
  * records because of their weird nature.
  */
 static void makeSimpleFlatLabels(node_t *tn, node_t *hn, edge_t **edges,
-                                 int ind, unsigned cnt, int et, int n_lbls) {
+                                 unsigned ind, unsigned cnt, int et,
+                                 int n_lbls) {
     Ppoly_t poly;
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
@@ -1252,7 +1253,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, unsigned ind,
 	}
 	/* flat edges without ports but with labels take more work */
 	else {
-	    makeSimpleFlatLabels(tn, hn, edges, (int)ind, cnt, et, labels);
+	    makeSimpleFlatLabels(tn, hn, edges, ind, cnt, et, labels);
 	}
 	return;
     }
