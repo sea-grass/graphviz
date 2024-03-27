@@ -9,6 +9,7 @@
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>
+#include <string.h>
 
 /// comparator for doubles
 static inline int fcmp(double a, double b) {
@@ -31,6 +32,25 @@ static inline int fcmp(double a, double b) {
  * \param True if the value is close enough to 0 to be considered 0
  */
 static inline bool is_zero(double v) { return fabs(v) < DBL_EPSILON; }
+
+/** is a value precisely 0.0?
+ *
+ * This function should only be used when you know you want comparison with no
+ * tolerance, which is rare. Floating-point arithmetic accumulates imprecision,
+ * so equality comparisons should generally include a non-zero tolerance to
+ * account for this. Valid `double` representations even include -0.0, for which
+ * this function will return false. In general, this function is only applicable
+ * for checking things like “is this variable unchanged since a previous
+ * assignment from the literal `0`?” or “did this value we parsed from user
+ * input originate from the string "0.0"?”
+ *
+ * \param v Value to check
+ * \return True if the value is equal to exactly 0.0
+ */
+static inline bool is_exactly_zero(double v) {
+  const double ZERO = 0;
+  return memcmp(&v, &ZERO, sizeof(ZERO)) == 0;
+}
 
 /** scale up or down a non-negative integer, clamping to \p [0, INT_MAX]
  *
