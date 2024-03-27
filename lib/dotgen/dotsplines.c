@@ -290,7 +290,6 @@ static void dot_splines_(graph_t *g, int normalize) {
 
     mark_lowclusters(g);
     if (routesplinesinit()) return;
-    /* FlatHeight = 2 * GD_nodesep(g); */
     sd.Splinesep = GD_nodesep(g) / 4;
     sd.Multisep = GD_nodesep(g);
     edges = gv_calloc(CHUNK, sizeof(edge_t*));
