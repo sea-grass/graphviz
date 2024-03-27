@@ -77,7 +77,8 @@ extern "C" {
 						pointf p), pointf * sp, bool left_inside);
     RENDER_API shape_desc *bind_shape(char *name, node_t *);
     RENDER_API void makeStraightEdge(graph_t * g, edge_t * e, int edgetype, splineInfo * info);
-    RENDER_API void makeStraightEdges(graph_t* g, edge_t** edges, int e_cnt, int et, splineInfo* sinfo);
+    RENDER_API void makeStraightEdges(graph_t *g, edge_t **edges, size_t e_cnt,
+                                      int et, splineInfo* sinfo);
     RENDER_API void clip_and_install(edge_t * fe, node_t * hn,
                                      pointf *ps, size_t pn, splineInfo *info);
     RENDER_API char* charsetToStr (int c);

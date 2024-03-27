@@ -419,7 +419,7 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    edgelist[0] = getmainedge((edges+ind)[0]);
 	    for (unsigned ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
-	    makeStraightEdges(g, edgelist, (int)cnt, et, &sinfo);
+	    makeStraightEdges(g, edgelist, cnt, et, &sinfo);
 	    free(edgelist);
 	}
 	else if (agtail(e0) == aghead(e0)) {
