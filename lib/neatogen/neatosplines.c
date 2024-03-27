@@ -239,7 +239,7 @@ void makeSelfArcs(edge_t * e, int stepx)
 	    edges[i] = e;
 	    e = ED_to_virt(e);
 	}
-	makeSelfEdge(edges, 0, cnt, stepx, stepx, &sinfo);
+	makeSelfEdge(edges, 0, (size_t)cnt, stepx, stepx, &sinfo);
 	for (i = 0; i < cnt; i++) {
 	    e = edges[i];
 	    if (ED_label(e))
