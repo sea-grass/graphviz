@@ -258,7 +258,7 @@ setEdgeLabelPos (graph_t * g)
  * of dot_splines.
  */
 static void dot_splines_(graph_t *g, int normalize) {
-    int i, j, k, n_nodes, n_edges, ind, cnt;
+    int i, j, k, n_nodes, n_edges, ind;
     node_t *n;
     Agedgeinfo_t fwdedgeai, fwdedgebi;
     Agedgepair_t fwdedgea, fwdedgeb;
@@ -389,6 +389,7 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    MAKEFWDEDGE(&fwdedgea.out, ea);
 	    ea = &fwdedgea.out;
 	}
+	unsigned cnt;
 	for (cnt = 1; i < n_edges; cnt++, i++) {
 	    if (le0 != (le1 = getmainedge((e1 = edges[i]))))
 		break;
@@ -414,16 +415,15 @@ static void dot_splines_(graph_t *g, int normalize) {
 	}
 
 	if (et == EDGETYPE_CURVED) {
-	    int ii;
 	    edge_t** edgelist = gv_calloc(cnt, sizeof(edge_t*));
 	    edgelist[0] = getmainedge((edges+ind)[0]);
-	    for (ii = 1; ii < cnt; ii++)
+	    for (unsigned ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
-	    makeStraightEdges (g, edgelist, cnt, et, &sinfo);
+	    makeStraightEdges(g, edgelist, (int)cnt, et, &sinfo);
 	    free(edgelist);
 	}
 	else if (agtail(e0) == aghead(e0)) {
-	    int b, r;
+	    int r;
 	    double sizey;
 	    n = agtail(e0);
 	    r = ND_rank(n);
@@ -441,18 +441,18 @@ static void dot_splines_(graph_t *g, int normalize) {
 		double dwny = ND_coord(n).y - ND_coord(GD_rank(g)[r+1].v[0]).y;
 		sizey = MIN(upy, dwny);
 	    }
-	    makeSelfEdge(edges, ind, cnt, sd.Multisep, sizey / 2, &sinfo);
-	    for (b = 0; b < cnt; b++) {
-		e = edges[ind+b];
+	    makeSelfEdge(edges, ind, (int)cnt, sd.Multisep, sizey / 2, &sinfo);
+	    for (unsigned b = 0; b < cnt; b++) {
+		e = edges[ind + (int)b];
 		if (ED_label(e))
 		    updateBB(g, ED_label(e));
 	    }
 	}
 	else if (ND_rank(agtail(e0)) == ND_rank(aghead(e0))) {
-	    make_flat_edge(g, &sd, &P, edges, ind, cnt, et);
+	    make_flat_edge(g, &sd, &P, edges, ind, (int)cnt, et);
 	}
 	else
-	    make_regular_edge(g, &sd, &P, edges, ind, cnt, et);
+	    make_regular_edge(g, &sd, &P, edges, ind, (int)cnt, et);
     }
 
     /* place regular edge labels */
