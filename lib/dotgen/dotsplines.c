@@ -80,7 +80,7 @@ static int edgecmp(const void *, const void *);
 static void make_flat_edge(graph_t *, spline_info_t *, path *, Agedge_t **,
                            unsigned, unsigned, int);
 static void make_regular_edge(graph_t *g, spline_info_t *, path *, Agedge_t **,
-                              int, unsigned, int);
+                              unsigned, unsigned, int);
 static boxf makeregularend(boxf, int, double);
 static boxf maximal_bbox(graph_t* g, spline_info_t*, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agnode_t *neighbor(graph_t*, Agnode_t *, Agedge_t *, Agedge_t *, int);
@@ -454,7 +454,7 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    make_flat_edge(g, &sd, &P, edges, ind, cnt, et);
 	}
 	else
-	    make_regular_edge(g, &sd, &P, edges, (int)ind, cnt, et);
+	    make_regular_edge(g, &sd, &P, edges, ind, cnt, et);
     }
 
     /* place regular edge labels */
@@ -1753,7 +1753,8 @@ static int makeLineEdge(graph_t *g, edge_t *fe, points_t *points, node_t** hp) {
 }
 
 static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
-                              edge_t **edges, int ind, unsigned cnt, int et) {
+                              edge_t **edges, unsigned ind, unsigned cnt,
+                              int et) {
     node_t *tn, *hn;
     Agedgeinfo_t fwdedgeai, fwdedgebi, fwdedgei;
     Agedgepair_t fwdedgea, fwdedgeb, fwdedge;
@@ -1950,7 +1951,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
     clip_and_install(fe, hn, points_at(&pointfs2, 0),
                      points_size(&pointfs2), &sinfo);
     for (unsigned j = 1; j < cnt; j++) {
-	e = edges[ind + (int)j];
+	e = edges[ind + j];
 	if (ED_tree_index(e) & BWDEDGE) {
 	    MAKEFWDEDGE(&fwdedge.out, e);
 	    e = &fwdedge.out;
