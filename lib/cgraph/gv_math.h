@@ -20,6 +20,23 @@ static inline int fcmp(double a, double b) {
   return 0;
 }
 
+/** are two values precisely the same?
+ *
+ * This function should only be used when you know you want comparison with no
+ * tolerance, which is rare. Floating-point arithmetic accumulates imprecision,
+ * so equality comparisons should generally include a non-zero tolerance to
+ * account for this. In general, this function is only applicable for checking
+ * things like “is this variable unchanged since a previous assignment from a
+ * literal?”
+ *
+ * \param a First operand to comparison
+ * \param b Second operand to comparison
+ * \return True if the values are equal
+ */
+static inline bool is_exactly_equal(double a, double b) {
+  return memcmp(&a, &b, sizeof(a)) == 0;
+}
+
 /** is a value precisely 0.0?
  *
  * This function should only be used when you know you want comparison with no
@@ -34,10 +51,7 @@ static inline int fcmp(double a, double b) {
  * \param v Value to check
  * \return True if the value is equal to exactly 0.0
  */
-static inline bool is_exactly_zero(double v) {
-  const double ZERO = 0;
-  return memcmp(&v, &ZERO, sizeof(ZERO)) == 0;
-}
+static inline bool is_exactly_zero(double v) { return is_exactly_equal(v, 0); }
 
 /** scale up or down a non-negative integer, clamping to \p [0, INT_MAX]
  *

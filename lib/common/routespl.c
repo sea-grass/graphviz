@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/list.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
@@ -535,8 +536,8 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	for (bi = 0; bi < boxn; bi++) {
 	/* these fp equality tests are used only to detect if the
 	 * values have been changed since initialization - ok */
-	    if (memcmp(&boxes[bi].LL.x, &INITIAL_LLX, sizeof(boxes[bi].LL.x)) == 0 ||
-	        memcmp(&boxes[bi].UR.x, &INITIAL_URX, sizeof(boxes[bi].UR.x)) == 0) {
+	    if (is_exactly_equal(boxes[bi].LL.x, INITIAL_LLX) ||
+	        is_exactly_equal(boxes[bi].UR.x, INITIAL_URX)) {
 		delta *= 2; /* try again with a finer interval */
 		if (delta > INT_MAX/boxn) /* in limitBoxes, boxn*delta must fit in an int, so give up */
 		    loopcnt = LOOP_TRIES;
