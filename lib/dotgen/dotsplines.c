@@ -261,7 +261,6 @@ static void dot_splines_(graph_t *g, int normalize) {
     Agedgepair_t fwdedgea, fwdedgeb;
     edge_t *e, *e0, *e1, *ea, *eb, *le0, *le1, **edges = NULL;
     path P = {0};
-    spline_info_t sd;
     int et = EDGE_TYPE(g);
     fwdedgea.out.base.data = (Agrec_t*)&fwdedgeai;
     fwdedgeb.out.base.data = (Agrec_t*)&fwdedgebi;
@@ -290,12 +289,11 @@ static void dot_splines_(graph_t *g, int normalize) {
 
     mark_lowclusters(g);
     if (routesplinesinit()) return;
-    sd.Splinesep = GD_nodesep(g) / 4;
-    sd.Multisep = GD_nodesep(g);
+    spline_info_t sd = {.Splinesep = GD_nodesep(g) / 4,
+                        .Multisep = GD_nodesep(g)};
     edges = gv_calloc(CHUNK, sizeof(edge_t*));
 
     /* compute boundaries and list of splines */
-    sd.LeftBound = sd.RightBound = 0;
     n_edges = n_nodes = 0;
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	n_nodes += GD_rank(g)[i].n;
