@@ -79,7 +79,8 @@ static void completeregularpath(path *, Agedge_t *, Agedge_t *,
 static int edgecmp(const void *, const void *);
 static void make_flat_edge(graph_t *, spline_info_t *, path *, Agedge_t **, int,
                            unsigned, int);
-static void make_regular_edge(graph_t* g, spline_info_t*, path *, Agedge_t **, int, int, int);
+static void make_regular_edge(graph_t *g, spline_info_t *, path *, Agedge_t **,
+                              int, unsigned, int);
 static boxf makeregularend(boxf, int, double);
 static boxf maximal_bbox(graph_t* g, spline_info_t*, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agnode_t *neighbor(graph_t*, Agnode_t *, Agedge_t *, Agedge_t *, int);
@@ -453,7 +454,7 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    make_flat_edge(g, &sd, &P, edges, ind, cnt, et);
 	}
 	else
-	    make_regular_edge(g, &sd, &P, edges, ind, (int)cnt, et);
+	    make_regular_edge(g, &sd, &P, edges, ind, cnt, et);
     }
 
     /* place regular edge labels */
@@ -1753,16 +1754,15 @@ static int makeLineEdge(graph_t *g, edge_t *fe, points_t *points, node_t** hp) {
     return pn;
 }
 
-static void
-make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind, int cnt, int et)
-{
+static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
+                              edge_t **edges, int ind, unsigned cnt, int et) {
     node_t *tn, *hn;
     Agedgeinfo_t fwdedgeai, fwdedgebi, fwdedgei;
     Agedgepair_t fwdedgea, fwdedgeb, fwdedge;
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, j, longedge;
+    int sl, si, longedge;
     points_t pointfs = {0};
     points_t pointfs2 = {0};
 
@@ -1951,8 +1951,8 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	points_append(&pointfs2, points_get(&pointfs, k));
     clip_and_install(fe, hn, points_at(&pointfs2, 0),
                      points_size(&pointfs2), &sinfo);
-    for (j = 1; j < cnt; j++) {
-	e = edges[ind + j];
+    for (unsigned j = 1; j < cnt; j++) {
+	e = edges[ind + (int)j];
 	if (ED_tree_index(e) & BWDEDGE) {
 	    MAKEFWDEDGE(&fwdedge.out, e);
 	    e = &fwdedge.out;
