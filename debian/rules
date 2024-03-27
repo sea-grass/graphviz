@@ -160,11 +160,10 @@ install: build
 	# Note gv.py isn't really duplicated, it's just installed in a location
 	# where python-support will find it. Both being identical, python-support
 	# will just do the right thing.
-	PYTHON_MAJOR_VERSION=`echo ${PYTHON_VERSION} | sed 's/\..*//'`
 	install -d $(PYTHON_PACKAGE)/usr/lib/${PYTHON_VERSION}/site-packages
-	cp $(PYTHON_PACKAGE)/usr/lib/graphviz/${PYTHON_MAJOR_VERSION}/gv.py \
+	cp $(PYTHON_PACKAGE)/usr/lib/graphviz/python3/gv.py \
 			$(PYTHON_PACKAGE)/usr/lib/${PYTHON_VERSION}/site-packages
-	mv $(PYTHON_PACKAGE)/usr/lib/graphviz/${PYTHON_MAJOR_VERSION}/*.so \
+	mv $(PYTHON_PACKAGE)/usr/lib/graphviz/python3/*.so \
 			$(PYTHON_PACKAGE)/usr/lib/${PYTHON_VERSION}/site-packages
 	rm -rf $(PYTHON_PACKAGE)/usr/lib/graphviz
 
