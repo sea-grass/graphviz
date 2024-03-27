@@ -1213,7 +1213,7 @@ static void makeSimpleFlat(node_t *tn, node_t *hn, edge_t **edges, int ind,
  * This is probably to cute and fragile, and should be rewritten in a 
  * more straightforward and laborious fashion. 
  */
-static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
+static void make_flat_adj_edges(graph_t *g, edge_t **edges, unsigned ind,
                                 unsigned cnt, edge_t *e0, int et) {
     node_t* n;
     node_t *tn, *hn;
@@ -1240,7 +1240,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
 	return;
     }
     for (unsigned i = 0; i < cnt; i++) {
-	e = edges[ind + (int)i];
+	e = edges[ind + i];
 	if (ED_label(e)) labels++;
 	if (ED_tail_port(e).defined || ED_head_port(e).defined) ports = 1;
     }
@@ -1248,11 +1248,11 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
     if (ports == 0) {
 	/* flat edges without ports and labels can go straight left to right */
 	if (labels == 0) {
-	    makeSimpleFlat(tn, hn, edges, ind, cnt, et);
+	    makeSimpleFlat(tn, hn, edges, (int)ind, cnt, et);
 	}
 	/* flat edges without ports but with labels take more work */
 	else {
-	    makeSimpleFlatLabels(tn, hn, edges, ind, cnt, et, labels);
+	    makeSimpleFlatLabels(tn, hn, edges, (int)ind, cnt, et, labels);
 	}
 	return;
     }
@@ -1272,7 +1272,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
     auxt = cloneNode(subg, tn);
     auxh = cloneNode(auxg, hn);
     for (unsigned i = 0; i < cnt; i++) {
-	e = edges[ind + (int)i];
+	e = edges[ind + i];
 	for (; ED_edge_type(e) != NORMAL; e = ED_to_orig(e));
 	if (agtail(e) == tn)
 	    auxe = cloneEdge (auxg, auxt, auxh, e);
@@ -1328,7 +1328,7 @@ static void make_flat_adj_edges(graph_t *g, edge_t **edges, int ind,
 	bezier* auxbz;
 	bezier* bz;
 
-	e = edges[ind + (int)i];
+	e = edges[ind + i];
 	for (; ED_edge_type(e) != NORMAL; e = ED_to_orig(e));
 	auxe = ED_alg(e);
 	if ((auxe == hvye) & !ED_alg(auxe)) continue; /* pseudo-edge */
@@ -1579,7 +1579,7 @@ static void make_flat_edge(graph_t *g, spline_info_t *sp, path *P,
      * so check them all.
      */
     if (isAdjacent) {
-	make_flat_adj_edges(g, edges, (int)ind, cnt, e, et);
+	make_flat_adj_edges(g, edges, ind, cnt, e, et);
 	return;
     }
     if (ED_label(e)) {  /* edges with labels aren't multi-edges */
