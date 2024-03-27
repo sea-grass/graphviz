@@ -1171,7 +1171,7 @@ double selfRightSpace(edge_t *e) {
  * FIX: With this bias, labels tend to be placed on top of each other.
  * Perhaps for self-edges, the label should be centered.
  */
-void makeSelfEdge(edge_t *edges[], int ind, size_t cnt, double sizex,
+void makeSelfEdge(edge_t *edges[], size_t ind, size_t cnt, double sizex,
                   double sizey, splineInfo * sinfo) {
     edge_t *e = edges[ind];
 
@@ -1185,7 +1185,7 @@ void makeSelfEdge(edge_t *edges[], int ind, size_t cnt, double sizex,
          !(ED_head_port(e).side & LEFT) &&
           (ED_tail_port(e).side != ED_head_port(e).side ||
           !(ED_tail_port(e).side & (TOP|BOTTOM))))) {
-	selfRight(edges, ind, cnt, sizex, sizey, sinfo);
+	selfRight(edges, (int)ind, cnt, sizex, sizey, sinfo);
     }
 
     /* self edge with port on left side */
@@ -1193,19 +1193,19 @@ void makeSelfEdge(edge_t *edges[], int ind, size_t cnt, double sizex,
 
 	/* handle L-R specially */
 	if ((ED_tail_port(e).side & RIGHT) || (ED_head_port(e).side & RIGHT)) {
-	    selfTop(edges, ind, cnt, sizex, sizey, sinfo);
+	    selfTop(edges, (int)ind, cnt, sizex, sizey, sinfo);
 	}
 	else {
-	    selfLeft(edges, ind, cnt, sizex, sizey, sinfo);
+	    selfLeft(edges, (int)ind, cnt, sizex, sizey, sinfo);
 	}
     }
 
     /* self edge with both ports on top side */
     else if (ED_tail_port(e).side & TOP) {
-	selfTop(edges, ind, cnt, sizex, sizey, sinfo);
+	selfTop(edges, (int)ind, cnt, sizex, sizey, sinfo);
     }
     else if (ED_tail_port(e).side & BOTTOM) {
-	selfBottom(edges, ind, cnt, sizex, sizey, sinfo);
+	selfBottom(edges, (int)ind, cnt, sizex, sizey, sinfo);
     }
 
     else assert(0);
