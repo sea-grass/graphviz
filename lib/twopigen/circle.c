@@ -11,6 +11,7 @@
 #include    <assert.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/gv_ctype.h>
+#include    <cgraph/gv_math.h>
 #include    <cgraph/queue.h>
 #include    <cgraph/streq.h>
 #include    <twopigen/circle.h>
@@ -207,12 +208,7 @@ static void setSubtreeSpans(Agraph_t * sg, Agnode_t * center)
 }
 
 /// has the given value been assigned?
-static bool is_set(double a) {
-  // Compare exactly against our sentinel. No need for a tolerance or
-  // approximation because anything unset has been explicitly assigned `UNSET`.
-  const double unset = UNSET;
-  return memcmp(&a, &unset, sizeof(a)) != 0;
-}
+static bool is_set(double a) { return !is_exactly_equal(a, UNSET); }
 
  /* Set the node positions for the 2nd and later rings. */
 static void setChildPositions(Agraph_t * sg, Agnode_t * n)
