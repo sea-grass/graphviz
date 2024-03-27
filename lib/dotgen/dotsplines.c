@@ -61,7 +61,8 @@
 
 typedef struct {
     double LeftBound;
-    int RightBound, Splinesep, Multisep;
+    double RightBound;
+    int Splinesep, Multisep;
     boxf* Rank_box;
 } spline_info_t;
 
