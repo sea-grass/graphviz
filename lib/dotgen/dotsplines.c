@@ -1471,7 +1471,7 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
 }
 
 static void make_flat_bottom_edges(graph_t *g, spline_info_t *sp, path *P,
-                                   edge_t **edges, int ind, unsigned cnt,
+                                   edge_t **edges, unsigned ind, unsigned cnt,
                                    edge_t *e, bool use_splines) {
     node_t *tn, *hn;
     int j, r;
@@ -1596,7 +1596,7 @@ static void make_flat_edge(graph_t *g, spline_info_t *sp, path *P,
     hside = ED_head_port(e).side;
     if ((tside == BOTTOM && hside != TOP) ||
         (hside == BOTTOM && tside != TOP)) {
-	make_flat_bottom_edges(g, sp, P, edges, (int)ind, cnt, e, et == EDGETYPE_SPLINE);
+	make_flat_bottom_edges(g, sp, P, edges, ind, cnt, e, et == EDGETYPE_SPLINE);
 	return;
     }
 
