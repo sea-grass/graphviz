@@ -62,7 +62,8 @@
 typedef struct {
     double LeftBound;
     double RightBound;
-    int Splinesep, Multisep;
+    double Splinesep;
+    int Multisep;
     boxf* Rank_box;
 } spline_info_t;
 
@@ -2268,13 +2269,13 @@ static boxf maximal_bbox(graph_t* g, spline_info_t* sp, node_t* vn, edge_t* ie, 
     b = (double)(ND_coord(vn).x - ND_lw(vn) - FUDGE);
     if ((left = neighbor(g, vn, ie, oe, -1))) {
 	if ((left_cl = cl_bound(g, vn, left)))
-	    nb = GD_bb(left_cl).UR.x + (double)sp->Splinesep;
+	    nb = GD_bb(left_cl).UR.x + sp->Splinesep;
 	else {
 	    nb = (double)(ND_coord(left).x + ND_mval(left));
 	    if (ND_node_type(left) == NORMAL)
 		nb += GD_nodesep(g) / 2.;
 	    else
-		nb += (double)sp->Splinesep;
+		nb += sp->Splinesep;
 	}
 	if (nb < b)
 	    b = nb;
@@ -2289,13 +2290,13 @@ static boxf maximal_bbox(graph_t* g, spline_info_t* sp, node_t* vn, edge_t* ie, 
 	b = (double)(ND_coord(vn).x + ND_rw(vn) + FUDGE);
     if ((right = neighbor(g, vn, ie, oe, 1))) {
 	if ((right_cl = cl_bound(g, vn, right)))
-	    nb = GD_bb(right_cl).LL.x - (double)sp->Splinesep;
+	    nb = GD_bb(right_cl).LL.x - sp->Splinesep;
 	else {
 	    nb = ND_coord(right).x - ND_lw(right);
 	    if (ND_node_type(right) == NORMAL)
 		nb -= GD_nodesep(g) / 2.;
 	    else
-		nb -= (double)sp->Splinesep;
+		nb -= sp->Splinesep;
 	}
 	if (nb > b)
 	    b = nb;
