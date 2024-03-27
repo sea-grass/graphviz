@@ -704,7 +704,7 @@ static void map_label(GVJ_t *job, textlabel_t *lab)
 static bool isRect(polygon_t * p)
 {
   return p->sides == 4 && fabs(fmod(p->orientation, 90)) < 0.5
-         && p->distortion == 0.0 && is_exactly_zero(p->skew);
+         && is_exactly_zero(p->distortion) && is_exactly_zero(p->skew);
 }
 
 /*
@@ -1790,7 +1790,7 @@ static void emit_begin_node(GVJ_t * job, node_t * n)
             }
             /* circle or ellipse */
             else if (poly->sides < 3 && is_exactly_zero(poly->skew) &&
-                     poly->distortion == 0.0) {
+                     is_exactly_zero(poly->distortion)) {
                 if (poly->regular) {
                     obj->url_map_shape = MAP_CIRCLE;
                     nump = 2;              /* center of circle and top right corner of bb */
