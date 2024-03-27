@@ -63,7 +63,7 @@ typedef struct {
     double LeftBound;
     double RightBound;
     double Splinesep;
-    int Multisep;
+    double Multisep;
     boxf* Rank_box;
 } spline_info_t;
 
@@ -1495,7 +1495,7 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
     else {
 	vspace = GD_ranksep(g);
     }
-    stepx = ((double)sp->Multisep) / (cnt + 1); 
+    stepx = sp->Multisep / (cnt + 1);
     stepy = vspace / (cnt+1);
 
     makeBottomFlatEnd (g, sp, P, tn, e, &tend, true);
@@ -1620,7 +1620,7 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     else {
 	vspace = GD_ranksep(g);
     }
-    stepx = ((double)sp->Multisep) / (cnt+1); 
+    stepx = sp->Multisep / (cnt + 1);
     stepy = vspace / (cnt+1);
 
     makeFlatEnd (g, sp, P, tn, e, &tend, true);
@@ -1767,7 +1767,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, j, dx, longedge;
+    int sl, si, j, longedge;
     points_t pointfs = {0};
     points_t pointfs2 = {0};
 
@@ -1948,7 +1948,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	points_free(&pointfs2);
 	return;
     }
-    dx = sp->Multisep * (cnt - 1) / 2;
+    const double dx = sp->Multisep * (cnt - 1) / 2;
     for (size_t k = 1; k + 1 < points_size(&pointfs); k++)
 	points_at(&pointfs, k)->x -= dx;
 
