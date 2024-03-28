@@ -42,7 +42,6 @@ extern "C" {
     extern void initBlocklist(blocklist_t *);
     extern void appendBlock(blocklist_t * sp, block_t * sn);
     extern void insertBlock(blocklist_t * sp, block_t * sn);
-/* extern void freeBlocklist (blocklist_t* sp); */
 
 #ifdef DEBUG
     extern void printBlocklist(blocklist_t * snl);
