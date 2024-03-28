@@ -90,9 +90,7 @@ static int cmpDegree(const Agnode_t **a, const Agnode_t **b) {
   return 0;
 }
 
-/* fillList:
- * Add nodes to deg_list, storing them by descending degree.
- */
+/// Add nodes to deg_list, storing them by descending degree.
 static deglist_t getList(Agraph_t *g) {
     deglist_t dl = {0};
     Agnode_t *n;
