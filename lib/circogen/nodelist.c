@@ -51,17 +51,6 @@ void realignNodelist(nodelist_t *list, size_t np) {
   }
 }
 
-/* cloneNodelist:
- * Create a copy of list.
- */
-nodelist_t cloneNodelist(nodelist_t *list) {
-    nodelist_t newlist = {0};
-    for (size_t i = 0; i < nodelist_size(list); ++i) {
-      nodelist_append(&newlist, nodelist_get(list, i));
-    }
-    return newlist;
-}
-
 /* insertNodelist:
  * Remove cn. Then, insert cn before neighbor if pos == 0 and 
  * after neighbor otherwise.
