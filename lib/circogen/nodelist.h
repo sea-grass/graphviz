@@ -20,11 +20,17 @@ extern "C" {
 
     DEFINE_LIST(nodelist, node_t*)
 
+    /// Add node after one.
     extern void appendNodelist(nodelist_t*, size_t, Agnode_t *n);
 
+    /// Make np new front of list, with current last hooked to current first.
     extern void realignNodelist(nodelist_t *list, size_t np);
+
+    /// Remove cn. Then, insert cn before neighbor if pos == 0 and after
+    /// neighbor otherwise.
     extern void insertNodelist(nodelist_t *, Agnode_t *, Agnode_t *, int);
 
+    /// Create l1 @ (rev l2) Destroys and frees l2.
     extern void reverseAppend(nodelist_t *, nodelist_t *);
 
 #ifdef DEBUG

@@ -15,9 +15,6 @@
 #include	<stddef.h>
 #include	<string.h>
 
-/* appendNodelist:
- * Add node after one.
- */
 void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
   assert(one < nodelist_size(list));
 
@@ -34,10 +31,6 @@ void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
   nodelist_set(list, one + 1, n);
 }
 
-/* realignNodelist:
- * Make np new front of list, with current last hooked to
- * current first.
- */
 void realignNodelist(nodelist_t *list, size_t np) {
   assert(np < nodelist_size(list));
   for (size_t i = np; i != 0; --i) {
@@ -51,10 +44,6 @@ void realignNodelist(nodelist_t *list, size_t np) {
   }
 }
 
-/* insertNodelist:
- * Remove cn. Then, insert cn before neighbor if pos == 0 and 
- * after neighbor otherwise.
- */
 void
 insertNodelist(nodelist_t * list, Agnode_t * cn, Agnode_t * neighbor,
 	       int pos)
@@ -89,10 +78,6 @@ static void concatNodelist(nodelist_t * l1, nodelist_t * l2)
   }
 }
 
-/* reverse_append;
- * Create l1 @ (rev l2)
- * Destroys and frees l2.
- */
 void reverseAppend(nodelist_t * l1, nodelist_t * l2)
 {
     nodelist_reverse(l2);
