@@ -15,10 +15,6 @@
 #include	<stddef.h>
 #include	<string.h>
 
-nodelist_t mkNodelist(void) {
-  return (nodelist_t){0};
-}
-
 void freeNodelist(nodelist_t * list)
 {
     if (!list)
@@ -67,7 +63,7 @@ void realignNodelist(nodelist_t *list, size_t np) {
  * Create a copy of list.
  */
 nodelist_t cloneNodelist(nodelist_t *list) {
-    nodelist_t newlist = mkNodelist();
+    nodelist_t newlist = {0};
     for (size_t i = 0; i < nodelist_size(list); ++i) {
       nodelist_append(&newlist, nodelist_get(list, i));
     }

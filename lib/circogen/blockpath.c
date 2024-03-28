@@ -300,7 +300,7 @@ static nodelist_t find_longest_path(Agraph_t *tree) {
     int length;
 
     if (agnnodes(tree) == 1) {
-	nodelist_t beginPath = mkNodelist();
+	nodelist_t beginPath = {0};
 	n = agfstnode(tree);
 	nodelist_append(&beginPath, n);
 	SET_ONPATH(n);
@@ -325,7 +325,7 @@ static nodelist_t find_longest_path(Agraph_t *tree) {
 	}
     }
 
-    nodelist_t beginPath = mkNodelist();
+    nodelist_t beginPath = {0};
     for (n = LEAFONE(common); n != common; n = TPARENT(n)) {
 	nodelist_append(&beginPath, n);
 	SET_ONPATH(n);
@@ -334,7 +334,7 @@ static nodelist_t find_longest_path(Agraph_t *tree) {
     SET_ONPATH(common);
 
     if (DISTTWO(common)) {	/* 2nd path might be empty */
-	nodelist_t endPath = mkNodelist();
+	nodelist_t endPath = {0};
 	for (n = LEAFTWO(common); n != common; n = TPARENT(n)) {
 	    nodelist_append(&endPath, n);
 	    SET_ONPATH(n);
@@ -550,7 +550,7 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
 {
     Agedge_t *e;
     bool placed = false;
-    nodelist_t neighbors = mkNodelist();
+    nodelist_t neighbors = {0};
 
     for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	nodelist_append(&neighbors, aghead(e));
