@@ -94,10 +94,6 @@ def test_existence(binary: str):
         "vimdot",
     ]
 
-    tools_not_built_with_cmake = [
-        "dot_builtins",
-    ]
-
     os_id = freedesktop_os_release().get("ID")
 
     # FIXME: Remove skip when
@@ -109,10 +105,6 @@ def test_existence(binary: str):
     if os_id == "rocky" and binary == "mingle":
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip("mingle is not built for Rocky due to lacking libANN")
-
-    if is_cmake() and binary in tools_not_built_with_cmake:
-        check_that_tool_does_not_exist(binary, os_id)
-        pytest.skip(f"{binary} is not built with CMake")
 
     # FIXME: Remove skip when
     # https://gitlab.com/graphviz/graphviz/-/issues/1837 is fixed

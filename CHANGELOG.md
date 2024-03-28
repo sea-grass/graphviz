@@ -42,6 +42,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `-q` command line option will now suppress “no hard-coded metrics…”
   and other font lookup warnings. #2379
 - **Breaking**: The `CMP` and `SGN` macros have been removed.
+- The CMake build system no longer early-binds all enabled plugins into
+  `dot`/`dot.exe`. This early binding was a change introduced in 10.0.1, but was
+  not noted in this changelog. Traditionally, of the three Graphviz build
+  systems (Autotools, CMake, MS Build), only changes to the Autotools build
+  system were noted in this changelog under the assumption that packaging
+  ecosystems making use of the other two build systems would need finer grained
+  details and would be monitoring the Git commit history instead. This seems to
+  not be the case, so in future side-effecting changes to any of the three build
+  systems will be included here. #2527, #2528
 
 ### Fixed
 
