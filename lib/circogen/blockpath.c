@@ -493,13 +493,13 @@ static nodelist_t reduce(nodelist_t list, Agraph_t *subg, int *cnt) {
 		newCrossings = count_all_crossings(&list, subg);
 		if (newCrossings < crossings) {
 		    crossings = newCrossings;
-		    freeNodelist(&listCopy);
+		    nodelist_free(&listCopy);
 		    if (crossings == 0) {
 			*cnt = 0;
 			return list;
 		    }
 		} else {
-		    freeNodelist(&list);
+		    nodelist_free(&list);
 		    list = listCopy;
 		}
 	    }
@@ -594,7 +594,7 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
 
     for (size_t one = 0; one < nodelist_size(&neighbors); ++one)
 	UNSET_NEIGHBOR(nodelist_get(&neighbors, one));
-    freeNodelist(&neighbors);
+    nodelist_free(&neighbors);
 }
 
 /* place_residual_nodes:

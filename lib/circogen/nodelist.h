@@ -20,8 +20,6 @@ extern "C" {
 
     DEFINE_LIST(nodelist, node_t*)
 
-    extern void freeNodelist(nodelist_t *);
-
     extern void appendNodelist(nodelist_t*, size_t, Agnode_t *n);
 
     extern void realignNodelist(nodelist_t *list, size_t np);

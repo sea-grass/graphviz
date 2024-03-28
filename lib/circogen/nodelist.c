@@ -15,14 +15,6 @@
 #include	<stddef.h>
 #include	<string.h>
 
-void freeNodelist(nodelist_t * list)
-{
-    if (!list)
-	return;
-
-    nodelist_free(list);
-}
-
 /* appendNodelist:
  * Add node after one.
  */
@@ -116,7 +108,7 @@ void reverseAppend(nodelist_t * l1, nodelist_t * l2)
 {
     nodelist_reverse(l2);
     concatNodelist(l1, l2);
-    freeNodelist(l2);
+    nodelist_free(l2);
 }
 
 #ifdef DEBUG
