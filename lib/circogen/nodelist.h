@@ -20,7 +20,7 @@ extern "C" {
 
     DEFINE_LIST(nodelist, node_t*)
 
-    extern nodelist_t *mkNodelist(void);
+    extern nodelist_t mkNodelist(void);
     extern void freeNodelist(nodelist_t *);
 
     extern void appendNodelist(nodelist_t*, size_t, Agnode_t *n);
@@ -29,7 +29,7 @@ extern "C" {
     extern void insertNodelist(nodelist_t *, Agnode_t *, Agnode_t *, int);
 
     extern void reverseAppend(nodelist_t *, nodelist_t *);
-    extern nodelist_t *cloneNodelist(nodelist_t * list);
+    extern nodelist_t cloneNodelist(nodelist_t *list);
 
 #ifdef DEBUG
     extern void printNodelist(nodelist_t * list);

@@ -18,6 +18,7 @@
 
 #include	<circogen/blockpath.h>
 #include	<circogen/circpos.h>
+#include	<circogen/nodelist.h>
 #include	<math.h>
 #include	<stddef.h>
 
@@ -50,12 +51,11 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
     double mindist2;
     Agraph_t *subg;
     Agnode_t *n, *closest_node, *neighbor;
-    nodelist_t *list;
     double len2, newX, newY;
 
     subg = sn->sub_graph;
 
-    list = sn->circle_list;
+    nodelist_t *list = &sn->circle_list;
 
     if (sn->parent_pos >= 0) {
 	theta += M_PI - sn->parent_pos;
@@ -264,7 +264,7 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
     for (child = stp->cp; child; child = child->next) {
 	if (BLK_PARENT(child) != pi->n)
 	    continue;
-	if (nodelist_is_empty(child->circle_list))
+	if (nodelist_is_empty(&child->circle_list))
 	    continue;
 
 	incidentAngle = child->radius / childRadius;
@@ -418,7 +418,6 @@ static double position(size_t childCount, size_t length, nodelist_t *nodepath,
 static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
 {
     block_t *child;
-    nodelist_t *longest_path;
     double centerAngle = M_PI;
 
     /* layout child subtrees */
@@ -429,13 +428,13 @@ static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
     }
 
     /* layout this block */
-    longest_path = layout_block(g, sn, min_dist);
+    nodelist_t longest_path = layout_block(g, sn, min_dist);
     sn->circle_list = longest_path;
-    size_t length = nodelist_size(longest_path); // path contains everything in block
+    size_t length = nodelist_size(&longest_path); // path contains everything in block
 
     /* attach children */
     if (childCount > 0)
-	centerAngle = position(childCount, length, longest_path, sn, min_dist);
+	centerAngle = position(childCount, length, &longest_path, sn, min_dist);
 
     if (length == 1 && BLK_PARENT(sn)) {
 	sn->parent_pos = centerAngle;

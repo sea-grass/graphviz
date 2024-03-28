@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include	<cgraph/alloc.h>
 #include	<circogen/nodelist.h>
 #include	<circogen/circular.h>
 #include	<assert.h>
@@ -16,10 +15,8 @@
 #include	<stddef.h>
 #include	<string.h>
 
-nodelist_t *mkNodelist(void)
-{
-    nodelist_t *list = gv_alloc(sizeof(nodelist_t));
-    return list;
+nodelist_t mkNodelist(void) {
+  return (nodelist_t){0};
 }
 
 void freeNodelist(nodelist_t * list)
@@ -28,7 +25,6 @@ void freeNodelist(nodelist_t * list)
 	return;
 
     nodelist_free(list);
-    free(list);
 }
 
 /* appendNodelist:
@@ -70,11 +66,10 @@ void realignNodelist(nodelist_t *list, size_t np) {
 /* cloneNodelist:
  * Create a copy of list.
  */
-nodelist_t *cloneNodelist(nodelist_t * list)
-{
-    nodelist_t *newlist = mkNodelist();
+nodelist_t cloneNodelist(nodelist_t *list) {
+    nodelist_t newlist = mkNodelist();
     for (size_t i = 0; i < nodelist_size(list); ++i) {
-      nodelist_append(newlist, nodelist_get(list, i));
+      nodelist_append(&newlist, nodelist_get(list, i));
     }
     return newlist;
 }

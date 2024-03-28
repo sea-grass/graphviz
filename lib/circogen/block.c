@@ -32,7 +32,7 @@ void freeBlock(block_t * sp)
 {
     if (!sp)
 	return;
-    freeNodelist(sp->circle_list);
+    freeNodelist(&sp->circle_list);
     free(sp);
 }
 
