@@ -22,8 +22,7 @@
 #include	<math.h>
 #include	<stddef.h>
 
-/* getRotation:
- * The function determines how much the block should be rotated
+/* The function determines how much the block should be rotated
  * for best positioning with parent, assuming its center is at x and y
  * relative to the parent.
  * angle gives the angle of the new position, i.e., tan(angle) = y/x.
@@ -113,9 +112,7 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
     return theta;
 }
 
-
-/* applyDelta:
- * Recursively apply rotation rotate followed by translation (x,y)
+/* Recursively apply rotation rotate followed by translation (x,y)
  * to block sn and its children.
  */
 static void applyDelta(block_t * sn, double x, double y, double rotate)
@@ -186,9 +183,7 @@ typedef struct {
     int childCount;      /* no. of child blocks attached at n */
 } posinfo_t;
 
-/* getInfo:
- * get size info for blocks attached to the given node.
- */
+/// get size info for blocks attached to the given node.
 static double
 getInfo (posinfo_t* pi, posstate * stp, double min_dist)
 {
@@ -214,8 +209,6 @@ getInfo (posinfo_t* pi, posstate * stp, double min_dist)
     return maxRadius;
 }
 
-/* setInfo:
- */
 static void
 setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
 {
@@ -229,8 +222,6 @@ setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
     p1->scale = fmax(p1->scale, t);
 }
 
-/* positionChildren:
- */
 static void
 positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
 {
@@ -318,8 +309,7 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
     stp->lastAngle = lastAngle;
 }
 
-/* position:
- * Assume childCount > 0
+/* Assume childCount > 0
  * For each node in the block with children, getInfo is called, with the
  * information stored in the parents array.
  * This information is used by setInfo to compute the amount of space allocated
@@ -412,9 +402,7 @@ static double position(size_t childCount, size_t length, nodelist_t *nodepath,
     return angle;
 }
 
-/* doBlock:
- * Set positions of block sn and its child blocks.
- */
+/// Set positions of block sn and its child blocks.
 static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
 {
     block_t *child;

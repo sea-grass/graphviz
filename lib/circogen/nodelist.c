@@ -68,9 +68,7 @@ insertNodelist(nodelist_t * list, Agnode_t * cn, Agnode_t * neighbor,
   }
 }
 
-/* concatNodelist:
- * attach l2 to l1.
- */
+/// attach l2 to l1.
 static void concatNodelist(nodelist_t * l1, nodelist_t * l2)
 {
   for (size_t i = 0; i < nodelist_size(l2); ++i) {

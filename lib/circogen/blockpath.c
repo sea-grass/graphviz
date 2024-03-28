@@ -102,8 +102,6 @@ static deglist_t getList(Agraph_t *g) {
     return dl;
 }
 
-/* find_pair_edges:
- */
 static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 {
     Agedge_t *e;
@@ -199,10 +197,7 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
     free(neighbors_with);
 }
 
-/* remove_pair_edges:
- * Create layout skeleton of ing.
- * Why is returned graph connected?
- */
+/// Create layout skeleton of ing. Why is returned graph connected?
 static Agraph_t *remove_pair_edges(Agraph_t * ing)
 {
     int counter = 0;
@@ -287,9 +282,7 @@ measure_distance(Agnode_t * n, Agnode_t * ancestor, int dist,
     measure_distance(n, parent, dist, change);
 }
 
-/* find_longest_path:
- * Find and return longest path in tree.
- */
+/// Find and return longest path in tree.
 static nodelist_t find_longest_path(Agraph_t *tree) {
     Agnode_t *n;
     Agedge_t *e;
@@ -343,9 +336,7 @@ static nodelist_t find_longest_path(Agraph_t *tree) {
     return beginPath;
 }
 
-/* dfs:
- * Simple depth first search, adding traversed edges to tree.
- */
+/// Simple depth first search, adding traversed edges to tree.
 static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * tree)
 {
     Agedge_t *e;
@@ -366,9 +357,7 @@ static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * tree)
     }
 }
 
-/* spanning_tree:
- * Construct spanning forest of g as subgraph
- */
+/// Construct spanning forest of g as subgraph
 static Agraph_t *spanning_tree(Agraph_t * g)
 {
     Agnode_t *n;
@@ -398,9 +387,7 @@ static Agraph_t *spanning_tree(Agraph_t * g)
     return tree;
 }
 
-/* block_graph:
- * Add induced edges.
- */
+/// Add induced edges.
 static void block_graph(Agraph_t * g, block_t * sn)
 {
     Agnode_t *n;
@@ -464,8 +451,7 @@ static int count_all_crossings(nodelist_t * list, Agraph_t * subg)
 
 #define CROSS_ITER 10
 
-/* reduce:
- * Attempt to reduce edge crossings by moving nodes.
+/* Attempt to reduce edge crossings by moving nodes.
  * Original crossing count is in cnt; final count is returned there.
  * list is the original list; return the best list found.
  */
@@ -524,9 +510,7 @@ static nodelist_t reduce_edge_crossings(nodelist_t list, Agraph_t *subg) {
     return list;
 }
 
-/* largest_nodesize:
- * Return max dimension of nodes on list
- */
+/// Return max dimension of nodes on list
 static double largest_nodesize(nodelist_t * list)
 {
     double size = 0;
@@ -541,9 +525,7 @@ static double largest_nodesize(nodelist_t * list)
     return size;
 }
 
-/* place_node:
- * Add n to list. By construction, n is not in list at start.
- */
+/// Add n to list. By construction, n is not in list at start.
 static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
 {
     Agedge_t *e;
@@ -595,9 +577,7 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
     nodelist_free(&neighbors);
 }
 
-/* place_residual_nodes:
- * Add nodes not in list to list.
- */
+/// Add nodes not in list to list.
 static void place_residual_nodes(Agraph_t * g, nodelist_t * list)
 {
     Agnode_t *n;
