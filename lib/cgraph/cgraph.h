@@ -470,6 +470,9 @@ CGRAPH_API Agnode_t *agprvnode(Agraph_t * g, Agnode_t * n);
 
 CGRAPH_API Agsubnode_t *agsubrep(Agraph_t * g, Agnode_t * n);
 CGRAPH_API int agnodebefore(Agnode_t *u, Agnode_t *v); /* we have no shame */
+CGRAPH_API int agdelnode(Agraph_t * g, Agnode_t * arg_n);
+///< removes a node from a graph or subgraph.
+CGRAPH_API int agrelabel_node(Agnode_t * n, char *newname);
 /// @}
 
 /** @defgroup cgraph_edge edges
@@ -521,9 +524,7 @@ CGRAPH_API int agcontains(Agraph_t *, void *obj);
 CGRAPH_API char *agnameof(void *);
 ///< returns a string descriptor for the object.
 
-CGRAPH_API int agrelabel_node(Agnode_t * n, char *newname);
 CGRAPH_API int agdelete(Agraph_t * g, void *obj);
-CGRAPH_API int agdelnode(Agraph_t * g, Agnode_t * arg_n);
 CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *obj);
 ///< returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending on the type of the object. Synonym for @ref AGTYPE.
