@@ -826,7 +826,10 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 /// @}
 
 #undef PRINTF_LIKE
+/// @}
 
+/// @addtogroup cgraph_edge
+/// @{
 /* data access macros */
 /* this assumes that e[0] is out and e[1] is inedge, see @ref Agedgepair_s  */
 #define AGIN2OUT(inedge)		((inedge)-1) ///< Agedgepair_s.in -> Agedgepair_s.out
