@@ -507,6 +507,7 @@ CGRAPH_API Agedge_t *agfstout(Agraph_t * g, Agnode_t * n);
 CGRAPH_API Agedge_t *agnxtout(Agraph_t * g, Agedge_t * e);
 CGRAPH_API Agedge_t *agfstedge(Agraph_t * g, Agnode_t * n);
 CGRAPH_API Agedge_t *agnxtedge(Agraph_t * g, Agedge_t * e, Agnode_t * n);
+CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 /// @}
 
 /// @addtogroup cgraph_object
@@ -525,7 +526,6 @@ CGRAPH_API char *agnameof(void *);
 ///< returns a string descriptor for the object.
 
 CGRAPH_API int agdelete(Agraph_t * g, void *obj);
-CGRAPH_API int agdeledge(Agraph_t * g, Agedge_t * arg_e);
 CGRAPH_API int agobjkind(void *obj);
 ///< returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending on the type of the object. Synonym for @ref AGTYPE.
 /// @}
