@@ -222,9 +222,8 @@ setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
     p1->scale = fmax(p1->scale, t);
 }
 
-static void
-positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
-{
+static void positionChildren(posinfo_t *info, posstate *stp, size_t length,
+                             double min_dist) {
     block_t *child;
     double childAngle, childRadius, incidentAngle;
     double mindistAngle, rotateAngle, midAngle = 0.0;
@@ -234,26 +233,26 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
     double lastAngle = stp->lastAngle;
     double d, deltaX, deltaY;
 
-    childRadius = pi->scale * pi->minRadius;
+    childRadius = info->scale * info->minRadius;
     if (length == 1) {
 	childAngle = 0;
-	d = pi->diameter/(2*M_PI);
+	d = info->diameter / (2 * M_PI);
 	childRadius = fmax(childRadius, d);
-	d = 2*M_PI*childRadius - pi->diameter;
+	d = 2 * M_PI * childRadius - info->diameter;
 	if (d > 0)
-	    min_dist += d/pi->childCount;
+	    min_dist += d / info->childCount;
     }
     else
-	childAngle = pi->theta - pi->diameter/(2 * childRadius);
+	childAngle = info->theta - info->diameter / (2 * childRadius);
 
-    if ((childRadius + pi->maxRadius) > snRadius)
-	snRadius = childRadius + pi->maxRadius;
+    if ((childRadius + info->maxRadius) > snRadius)
+	snRadius = childRadius + info->maxRadius;
 
     mindistAngle = min_dist / childRadius;
 
-    midChild = (pi->childCount + 1) / 2;
+    midChild = (info->childCount + 1) / 2;
     for (child = stp->cp; child; child = child->next) {
-	if (BLK_PARENT(child) != pi->n)
+	if (BLK_PARENT(child) != info->n)
 	    continue;
 	if (nodelist_is_empty(&child->circle_list))
 	    continue;
@@ -261,7 +260,7 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
 	incidentAngle = child->radius / childRadius;
 	if (length == 1) {
 	    if (childAngle != 0) {
-		if (pi->childCount == 2)
+		if (info->childCount == 2)
 		    childAngle = M_PI;
 		else
 		    childAngle += incidentAngle;
@@ -272,8 +271,8 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
 
 	    lastAngle = childAngle;
 	} else {
-	    if (pi->childCount == 1) {
-		childAngle = pi->theta;
+	    if (info->childCount == 1) {
+		childAngle = info->theta;
 	    } else {
 		childAngle += incidentAngle + mindistAngle / 2;
 	    }
@@ -300,8 +299,8 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
 	    midAngle = childAngle;
     }
 
-    if (length > 1 && pi->n == stp->neighbor) {
-	PSI(pi->n) = midAngle;
+    if (length > 1 && info->n == stp->neighbor) {
+	PSI(info->n) = midAngle;
     }
 
     stp->subtreeR = snRadius;
