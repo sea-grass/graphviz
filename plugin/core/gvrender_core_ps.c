@@ -292,7 +292,7 @@ static void ps_set_color(GVJ_t *job, gvcolor_t *color)
 static void check_fontname(const char *fontname) {
 
   if (strlen(fontname) > 29) {
-    agerr(AGWARN,
+    agwarningf(
           "font name %s is longer than 29 characters which may be rejected by "
           "some PS viewers\n",
           fontname);
@@ -300,7 +300,7 @@ static void check_fontname(const char *fontname) {
 
   for (const char *p = fontname; *p != '\0'; ++p) {
     if (!isascii((int)*p) || *p == ' ' || gv_iscntrl(*p)) {
-      agerr(AGWARN,
+      agwarningf(
             "font name %s contains characters that may not be accepted by some "
             "PS viewers\n",
             fontname);

@@ -37,5 +37,5 @@ void setAspect(Agraph_t *g) {
     if (!p || ((r = sscanf (p, "%lf,%d", &rv, &passes)) <= 0)) {
 	return;
     }
-    agerr (AGWARN, "the aspect attribute has been disabled due to implementation flaws - attribute ignored.\n");
+    agwarningf("the aspect attribute has been disabled due to implementation flaws - attribute ignored.\n");
 }

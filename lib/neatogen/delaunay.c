@@ -733,42 +733,42 @@ static v_data *delaunay_triangulation(double *x, double *y, int n) {
 surface_t* 
 mkSurface (double *x, double *y, int n, int* segs, int nsegs)
 {
-    agerr (AGERR, "mkSurface not yet implemented using Triangle library\n");
+    agerrorf("mkSurface not yet implemented using Triangle library\n");
     assert (0);
     return 0;
 }
 void 
 freeSurface (surface_t* s)
 {
-    agerr (AGERR, "freeSurface not yet implemented using Triangle library\n");
+    agerrorf("freeSurface not yet implemented using Triangle library\n");
     assert (0);
 }
 #else
 static char* err = "Graphviz built without any triangulation library\n";
 int* get_triangles (double *x, int n, int* tris)
 {
-    agerr(AGERR, "get_triangles: %s\n", err);
+    agerrorf("get_triangles: %s\n", err);
     return 0;
 }
 static v_data *delaunay_triangulation(double *x, double *y, int n) {
-    agerr(AGERR, "delaunay_triangulation: %s\n", err);
+    agerrorf("delaunay_triangulation: %s\n", err);
     return 0;
 }
 int *delaunay_tri(double *x, double *y, int n, int* nedges)
 {
-    agerr(AGERR, "delaunay_tri: %s\n", err);
+    agerrorf("delaunay_tri: %s\n", err);
     return 0;
 }
 surface_t* 
 mkSurface (double *x, double *y, int n, int* segs, int nsegs)
 {
-    agerr(AGERR, "mkSurface: %s\n", err);
+    agerrorf("mkSurface: %s\n", err);
     return 0;
 }
 void 
 freeSurface (surface_t* s)
 {
-    agerr (AGERR, "freeSurface: %s\n", err);
+    agerrorf("freeSurface: %s\n", err);
 }
 #endif
 

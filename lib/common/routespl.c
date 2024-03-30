@@ -210,7 +210,7 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
 
     pointf *ps = calloc(spl.pn, sizeof(ps[0]));
     if (ps == NULL) {
-	agerr(AGERR, "cannot allocate ps\n");
+	agerrorf("cannot allocate ps\n");
 	return NULL;
     }
     for (i = 0; i < spl.pn; i++) {
@@ -330,7 +330,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	 realedge && ED_edge_type(realedge) != NORMAL;
 	 realedge = ED_to_orig(realedge));
     if (!realedge) {
-	agerr(AGERR, "in routesplines, cannot find NORMAL edge\n");
+	agerrorf("in routesplines, cannot find NORMAL edge\n");
 	return NULL;
     }
 
@@ -393,7 +393,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	    else {
 		if (!(prev == -1 && next == -1)) {
 		    free(polypoints);
-		    agerr(AGERR, "in routesplines, illegal values of prev %d and next %d, line %d\n", prev, next, __LINE__);
+		    agerrorf("in routesplines, illegal values of prev %d and next %d, line %d\n", prev, next, __LINE__);
 		    return NULL;
 		}
 	    }
@@ -427,7 +427,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 		if (!(prev == -1 && next == -1)) {
 		    /* it went badly, e.g. degenerate box in boxlist */
 		    free(polypoints);
-		    agerr(AGERR, "in routesplines, illegal values of prev %d and next %d, line %d\n", prev, next, __LINE__);
+		    agerrorf("in routesplines, illegal values of prev %d and next %d, line %d\n", prev, next, __LINE__);
 		    return NULL; /* for correctness sake, it's best to just stop */
 		}
 		polypoints[pi].x = boxes[bi].UR.x;
@@ -443,7 +443,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     }
     else {
 	free(polypoints);
-	agerr(AGERR, "in routesplines, edge is a loop at %s\n", agnameof(aghead(realedge)));
+	agerrorf("in routesplines, edge is a loop at %s\n", agnameof(aghead(realedge)));
 	return NULL;
     }
 
@@ -468,7 +468,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     eps[1].x = pp->end.p.x, eps[1].y = pp->end.p.y;
     if (Pshortestpath(&poly, eps, &pl) < 0) {
 	free(polypoints);
-	agerr(AGERR, "in routesplines, Pshortestpath failed\n");
+	agerrorf("in routesplines, Pshortestpath failed\n");
 	return NULL;
     }
 #ifdef DEBUG
@@ -501,7 +501,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
 	    free(edges);
 	    free(polypoints);
-	    agerr(AGERR, "in routesplines, Proutespline failed\n");
+	    agerrorf("in routesplines, Proutespline failed\n");
 	    return NULL;
 	}
 	free(edges);
@@ -515,7 +515,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     pointf *ps = calloc(spl.pn, sizeof(ps[0]));
     if (ps == NULL) {
 	free(polypoints);
-	agerr(AGERR, "cannot allocate ps\n");
+	agerrorf("cannot allocate ps\n");
 	return NULL;  /* Bailout if no memory left */
     }
 
@@ -553,7 +553,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	 * loop and we can see the bad edge, and even use the showboxes scaffolding.
 	 */
 	Ppolyline_t polyspl;
-	agerr(AGWARN, "Unable to reclaim box space in spline routing for edge \"%s\" -> \"%s\". Something is probably seriously wrong.\n", agnameof(agtail(realedge)), agnameof(aghead(realedge)));
+	agwarningf("Unable to reclaim box space in spline routing for edge \"%s\" -> \"%s\". Something is probably seriously wrong.\n", agnameof(agtail(realedge)), agnameof(aghead(realedge)));
 	make_polyline (pl, &polyspl);
 	limitBoxes (boxes, boxn, polyspl.ps, polyspl.pn, INIT_DELTA);
     }
@@ -631,14 +631,14 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 
     ba = &boxes[0];
     if (ba->LL.x > ba->UR.x || ba->LL.y > ba->UR.y) {
-	agerr(AGERR, "in checkpath, box 0 has LL coord > UR coord\n");
+	agerrorf("in checkpath, box 0 has LL coord > UR coord\n");
 	printpath(thepath);
 	return 1;
     }
     for (bi = 0; bi < boxn - 1; bi++) {
 	ba = &boxes[bi], bb = &boxes[bi + 1];
 	if (bb->LL.x > bb->UR.x || bb->LL.y > bb->UR.y) {
-	    agerr(AGERR, "in checkpath, box %d has LL coord > UR coord\n", bi + 1);
+	    agerrorf("in checkpath, box %d has LL coord > UR coord\n", bi + 1);
 	    printpath(thepath);
 	    return 1;
 	}

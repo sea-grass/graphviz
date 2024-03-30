@@ -45,7 +45,7 @@ static usershape_t *user_init(const char *str)
 	return us;
 
     if (!(fp = fopen(str, "r"))) {
-	agerr(AGWARN, "couldn't open epsf file %s\n", str);
+	agwarningf("couldn't open epsf file %s\n", str);
 	return NULL;
     }
     /* try to find size */
@@ -78,13 +78,13 @@ static usershape_t *user_init(const char *str)
             us->must_inline = must_inline;
         }
         else {
-            agerr(AGWARN, "couldn't read from epsf file %s\n", str);
+            agwarningf("couldn't read from epsf file %s\n", str);
             free(us->data);
             free(us);
             us = NULL;
         }
     } else {
-	agerr(AGWARN, "BoundingBox not found in epsf file %s\n", str);
+	agwarningf("BoundingBox not found in epsf file %s\n", str);
 	us = NULL;
     }
     fclose(fp);
@@ -109,7 +109,7 @@ void epsf_init(node_t * n)
 	desc->offset.x = -us->x - dx / 2;
 	desc->offset.y = -us->y - dy / 2;
     } else
-	agerr(AGWARN, "shapefile not set or not found for epsf node %s\n", agnameof(n));
+	agwarningf("shapefile not set or not found for epsf node %s\n", agnameof(n));
 }
 
 void epsf_free(node_t * n)
@@ -153,7 +153,7 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
                 continue;       /* ignore empty string */
             const char *safepath = safefile(p);    /* make sure filename is okay */
 	    if (!safepath) {
-		agerr(AGWARN, "can't find library file %s\n", p);
+		agwarningf("can't find library file %s\n", p);
 	    }
             else if ((fp = fopen(safepath, "r"))) {
                 while (true) {
@@ -167,7 +167,7 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
                 gvputs(job, "\n"); /* append a newline just in case */
 		fclose (fp);
             } else
-                agerr(AGWARN, "can't open library file %s\n", safepath);
+                agwarningf("can't open library file %s\n", safepath);
         }
     }
 }
@@ -271,7 +271,7 @@ char *ps_string(char *ins, int chset)
 	    break;
 	case NONLATIN :
 	    if (!warned) {
-		agerr (AGWARN, "UTF-8 input uses non-Latin1 characters which cannot be handled by this PostScript driver\n");
+		agwarningf("UTF-8 input uses non-Latin1 characters which cannot be handled by this PostScript driver\n");
 		warned = 1;
 	    }
 	    base = ins;

@@ -106,7 +106,7 @@ layout (Agraph_t* g, int depth)
 	if (cattr || vattr)
 	    pinfo.vals = gv_calloc(total, sizeof(packval_t));
 	else
-	    agerr (AGWARN, "Graph %s has array packing with user values but no \"sortv\" attributes are defined.",
+	    agwarningf("Graph %s has array packing with user values but no \"sortv\" attributes are defined.",
 		agnameof(g));
     }
 

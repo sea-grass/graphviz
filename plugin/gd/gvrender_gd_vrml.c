@@ -637,7 +637,7 @@ static void vrml_polygon(GVJ_t *job, pointf *A, size_t np, int filled) {
 	    static int flag;
 	    if (!flag) {
 		flag++;
-		agerr(AGWARN,
+		agwarningf(
 		  "vrml_polygon: non-triangle arrowheads not supported - ignoring\n");
 	    }
 	}

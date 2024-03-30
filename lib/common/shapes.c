@@ -343,7 +343,7 @@ static shape_desc Shapes[] = {	/* first entry is default for no such shape */
 
 static void unrecognized(node_t * n, char *p)
 {
-    agerr(AGWARN, "node %s, port %s unrecognized\n", agnameof(n), p);
+    agwarningf("node %s, port %s unrecognized\n", agnameof(n), p);
 }
 
 static double quant(double val, double q)
@@ -1942,7 +1942,7 @@ static void poly_init(node_t * n)
 	    sfile = agget(n, "shapefile");
 	    imagesize = gvusershape_size(agraphof(n), sfile);
 	    if (imagesize.x == -1 && imagesize.y == -1) {
-		agerr(AGWARN,
+		agwarningf(
 		      "No or improper shapefile=\"%s\" for node \"%s\"\n",
 		      sfile ? sfile : "<nil>", agnameof(n));
 		imagesize.x = imagesize.y = 0;
@@ -1955,7 +1955,7 @@ static void poly_init(node_t * n)
     } else if ((sfile = agget(n, "image")) && *sfile != '\0') {
 	imagesize = gvusershape_size(agraphof(n), sfile);
 	if (imagesize.x == -1 && imagesize.y == -1) {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "No or improper image=\"%s\" for node \"%s\"\n",
 		  sfile ? sfile : "<nil>", agnameof(n));
 	    imagesize.x = imagesize.y = 0;
@@ -2026,7 +2026,7 @@ static void poly_init(node_t * n)
     } else if (mapbool(fxd)) {
 	/* check only label, as images we can scale to fit */
 	if (width < ND_label(n)->dimen.x || height < ND_label(n)->dimen.y)
-	    agerr(AGWARN,
+	    agwarningf(
 		  "node '%s', graph '%s' size too small for label\n",
 		  agnameof(n), agnameof(agraphof(n)));
 	bb = (pointf){.x = width, .y = height};
@@ -2794,7 +2794,7 @@ static port poly_port(node_t * n, char *portname, char *compass)
     sides = BOTTOM | RIGHT | TOP | LEFT;
     if (ND_label(n)->html && (bp = html_port(n, portname, &sides))) {
 	if (compassPort(n, bp, &rv, compass, sides, NULL)) {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "node %s, port %s, unrecognized compass point '%s' - ignored\n",
 		  agnameof(n), portname, compass);
 	}
@@ -3623,7 +3623,7 @@ static void record_init(node_t * n)
     len = MAX(MAX(len, 1), strlen("\\N"));
     char *textbuf = gv_calloc(len + 1, sizeof(char)); // temp buffer for storing labels
     if (!(info = parse_reclbl(n, flip, true, textbuf))) {
-	agerr(AGERR, "bad label format %s\n", ND_label(n)->text);
+	agerrorf("bad label format %s\n", ND_label(n)->text);
 	reclblp = "\\N";
 	info = parse_reclbl(n, flip, true, textbuf);
     }
@@ -3634,7 +3634,7 @@ static void record_init(node_t * n)
     if (mapbool(late_string(n, N_fixed, "false"))) {
 	if (sz.x < info->size.x || sz.y < info->size.y) {
 /* should check that the record really won't fit, e.g., there may be no text.
-			agerr(AGWARN, "node '%s' size may be too small\n", agnameof(n));
+			agwarningf("node '%s' size may be too small\n", agnameof(n));
 */
 	}
     } else {
@@ -3688,7 +3688,7 @@ static port record_port(node_t * n, char *portname, char *compass)
     f = ND_shape_info(n);
     if ((subf = map_rec_port(f, portname))) {
 	if (compassPort(n, &subf->b, &rv, compass, subf->sides, NULL)) {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "node %s, port %s, unrecognized compass point '%s' - ignored\n",
 		  agnameof(n), portname, compass);
 	}
@@ -3902,7 +3902,7 @@ static shape_desc *user_shape(char *name)
     *p = Shapes[0];
     p->name = strdup(name);
     if (Lib == NULL && !streq(name, "custom")) {
-	agerr(AGWARN, "using %s for unknown shape %s\n", Shapes[0].name,
+	agwarningf("using %s for unknown shape %s\n", Shapes[0].name,
 	      p->name);
 	p->usershape = false;
     } else {

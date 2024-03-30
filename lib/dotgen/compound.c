@@ -61,7 +61,7 @@ static pointf boxIntersectf(pointf pp, pointf cp, boxf * bp)
     }
 
     /* failure */
-    agerr(AGERR,
+    agerrorf(
           "segment [(%.5g, %.5g),(%.5g,%.5g)] does not intersect box "
           "ll=(%.5g,%.5g),ur=(%.5g,%.5g)\n", pp.x, pp.y, cp.x, cp.y, ll.x, ll.y,
           ur.x, ur.y);
@@ -90,7 +90,7 @@ static graph_t *getCluster(char *cluster_name, Dt_t *map) {
 	return NULL;
     sg = findCluster (map, cluster_name);
     if (sg == NULL) {
-	agerr(AGWARN, "cluster named %s not found\n", cluster_name);
+	agwarningf("cluster named %s not found\n", cluster_name);
     }
     return sg;
 }
@@ -300,7 +300,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
 
     /* at present, we only handle single spline case */
     if (ED_spl(e)->size > 1) {
-	agerr(AGWARN, "%s -> %s: spline size > 1 not supported\n",
+	agwarningf("%s -> %s: spline size > 1 not supported\n",
 	      agnameof(agtail(e)), agnameof(aghead(e)));
 	return;
     }
@@ -328,7 +328,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
     if (lh) {
 	boxf *bb = &GD_bb(lh);
 	if (!inBoxf(ND_coord(head), bb)) {
-	    agerr(AGWARN, "%s -> %s: head not inside head cluster %s\n",
+	    agwarningf("%s -> %s: head not inside head cluster %s\n",
 		  agnameof(agtail(e)), agnameof(aghead(e)), agget(e, "lhead"));
 	} else {
 	    /* If first control point is in bb, degenerate case. Spline
@@ -338,7 +338,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
 	     */
 	    if (inBoxf(bez->list[0], bb)) {
 		if (inBoxf(ND_coord(tail), bb)) {
-		    agerr(AGWARN,
+		    agwarningf(
 			  "%s -> %s: tail is inside head cluster %s\n",
 			  agnameof(agtail(e)), agnameof(aghead(e)), agget(e, "lhead"));
 		} else {
@@ -388,7 +388,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
     if (lt) {
 	boxf *bb = &GD_bb(lt);
 	if (!inBoxf(ND_coord(tail), bb)) {
-	    agerr(AGWARN, "%s -> %s: tail not inside tail cluster %s\n",
+	    agwarningf("%s -> %s: tail not inside tail cluster %s\n",
 		agnameof(agtail(e)), agnameof(aghead(e)), agget(e, "ltail"));
 	} else {
 	    /* If last control point is in bb, degenerate case. Spline
@@ -398,7 +398,7 @@ static void makeCompoundEdge(edge_t *e, Dt_t *clustMap) {
 	     */
 	    if (inBoxf(bez->list[endi], bb)) {
 		if (inBoxf(ND_coord(head), bb)) {
-		    agerr(AGWARN,
+		    agwarningf(
 			"%s -> %s: head is inside tail cluster %s\n",
 		  	agnameof(agtail(e)), agnameof(aghead(e)), agget(e, "ltail"));
 		} else {

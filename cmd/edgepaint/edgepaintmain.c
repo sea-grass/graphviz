@@ -243,7 +243,7 @@ static int clarify(Agraph_t *g, double angle, double accuracy,
                    char *color_scheme, int *lightness) {
 
   if (checkG(g)) {
-    agerr (AGERR, "Graph %s contains loops or multiedges\n", agnameof(g));
+    agerrorf("Graph %s contains loops or multiedges\n", agnameof(g));
     return 1;
   }
 

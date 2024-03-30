@@ -330,7 +330,7 @@ static int find_ints(vertex vertex_list[], int nvertices) {
 	    case 1:		/* backward edge, delete        */
 
 		if ((tempa = templ->active) == 0) {
-		    agerr(AGERR, "trying to delete a non-line\n");
+		    agerrorf("trying to delete a non-line\n");
 		    return -1;
 		}
 		if (all.number == 1)

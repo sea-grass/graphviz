@@ -61,7 +61,7 @@ int conjugate_gradient
 
 	    r_r_new = vectors_inner_product(n, r, r);
 	    if (r_r == 0) {
-		agerr (AGERR, "conjugate_gradient: unexpected length 0 vector\n");
+		agerrorf("conjugate_gradient: unexpected length 0 vector\n");
 		rv = 1;
 		goto cleanup0;
 	    }
@@ -137,7 +137,7 @@ int conjugate_gradient_f
 	    r_r_new = vectors_inner_product(n, r, r);
 	    if (r_r == 0) {
 		rv = 1;
-		agerr (AGERR, "conjugate_gradient: unexpected length 0 vector\n");
+		agerrorf("conjugate_gradient: unexpected length 0 vector\n");
 		goto cleanup1;
 	    }
 	    beta = r_r_new / r_r;
@@ -213,7 +213,7 @@ conjugate_gradient_mkernel(float *A, float *x, float *b, int n,
 
 	    if (r_r == 0) {
 		rv = 1;
-		agerr (AGERR, "conjugate_gradient: unexpected length 0 vector\n");
+		agerrorf("conjugate_gradient: unexpected length 0 vector\n");
 		goto cleanup2;
 	    }
 	    beta = r_r_new / r_r;

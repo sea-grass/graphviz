@@ -55,7 +55,7 @@ void gvloadimage(GVJ_t * job, usershape_t *us, boxf b, bool filled, const char *
     char *type = agxbuse(&type_buf);
 
     if (gvloadimage_select(job, type) == NO_SUPPORT)
-	    agerr (AGWARN, "No loadimage plugin for \"%s\"\n", type);
+	    agwarningf("No loadimage plugin for \"%s\"\n", type);
 
     if ((gvli = job->loadimage.engine) && gvli->loadimage)
 	gvli->loadimage(job, us, b, filled);

@@ -387,7 +387,7 @@ void gvprintf(GVJ_t * job, const char *format, ...)
     int len = vagxbprint(&buf, format, argp);
     if (len < 0) {
 	va_end(argp);
-	agerr (AGERR, "gvprintf: %s\n", strerror(errno));
+	agerrorf("gvprintf: %s\n", strerror(errno));
 	return;
     }
     va_end(argp);

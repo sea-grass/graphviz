@@ -1092,7 +1092,7 @@ static int size_html_img(htmlimg_t * img, htmlenv_t * env)
     if (b.UR.x == -1 && b.UR.y == -1) {
 	rv = 1;
 	b.UR.x = b.UR.y = 0;
-	agerr(AGERR, "No or improper image file=\"%s\"\n", img->src);
+	agerrorf("No or improper image file=\"%s\"\n", img->src);
     } else {
 	rv = 0;
 	GD_has_images(env->g) = true;
@@ -1146,13 +1146,13 @@ size_html_cell(graph_t * g, htmlcell_t * cp, htmltbl_t * parent,
     if (cp->data.flags & FIXED_FLAG) {
 	if (cp->data.width && cp->data.height) {
 	    if ((cp->data.width < sz.x || cp->data.height < sz.y) && cp->child.kind != HTML_IMAGE) {
-		agerr(AGWARN, "cell size too small for content\n");
+		agwarningf("cell size too small for content\n");
 		rv = 1;
 	    }
 	    sz.x = sz.y = 0;
 
 	} else {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "fixed cell size with unspecified width or height\n");
 	    rv = 1;
 	}
@@ -1796,13 +1796,13 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
     if (tbl->data.flags & FIXED_FLAG) {
 	if (tbl->data.width && tbl->data.height) {
 	    if (tbl->data.width < wd || tbl->data.height < ht) {
-		agerr(AGWARN, "table size too small for content\n");
+		agwarningf("table size too small for content\n");
 		rv = 1;
 	    }
 	    wd = 0;
 	    ht = 0;
 	} else {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "fixed table size with unspecified width or height\n");
 	    rv = 1;
 	}

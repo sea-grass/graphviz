@@ -44,7 +44,7 @@ static int neato_extra_args(int argc, char** argv) {
         if (arg[2]) {
           Nop = atoi(arg+2);
           if (Nop <= 0) {
-            agerr (AGERR, "Invalid parameter \"%s\" for -n flag\n", arg+2);
+            agerrorf("Invalid parameter \"%s\" for -n flag\n", arg+2);
             dotneato_usage (1);
 	    return -1;
           }
@@ -123,7 +123,7 @@ setDouble (double* v, char* arg)
 
   d = strtod(arg,&p);
   if (p == arg) {
-    agerr (AGERR, "bad value in flag -L%s - ignored\n", arg-1);
+    agerrorf("bad value in flag -L%s - ignored\n", arg-1);
     return 1;
   }
   *v = d;
@@ -141,7 +141,7 @@ setInt (int* v, char* arg)
 
   i = (int)strtol(arg,&p,10);
   if (p == arg) {
-    agerr (AGERR, "bad value in flag -L%s - ignored\n", arg-1);
+    agerrorf("bad value in flag -L%s - ignored\n", arg-1);
     return 1;
   }
   *v = i;
@@ -177,7 +177,7 @@ setFDPAttr (char* arg)
     }
     break;
   default :
-    agerr (AGWARN, "unknown flag -L%s - ignored\n", arg-1);
+    agwarningf("unknown flag -L%s - ignored\n", arg-1);
     break;
   }
   return 0;

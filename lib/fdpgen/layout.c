@@ -339,7 +339,7 @@ static void chkPos(graph_t* g, node_t* n, layout_info* infop, boxf* bbp)
 		ND_pinned(n) = P_SET;
 	    *bbp = bb;
 	} else
-	    agerr(AGWARN, "graph %s, coord %s, expected four doubles\n",
+	    agwarningf("graph %s, coord %s, expected four doubles\n",
 		  agnameof(g), p);
     }
 }
@@ -438,7 +438,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (!DNODE(n)) {
 	    if (PARENT(n) && PARENT(n) != GPARENT(g)) {
-		agerr (AGERR, "node \"%s\" is contained in two non-comparable clusters \"%s\" and \"%s\"\n", agnameof(n), agnameof(g), agnameof(PARENT(n)));
+		agerrorf("node \"%s\" is contained in two non-comparable clusters \"%s\" and \"%s\"\n", agnameof(n), agnameof(g), agnameof(PARENT(n)));
 		return NULL;
 	    }
 	    PARENT(n) = g;
@@ -1067,7 +1067,7 @@ fdpSplines (graph_t * g)
 	}
 	if (trySplines || et != EDGETYPE_COMPOUND) {
 	    if (HAS_CLUST_EDGE(g)) {
-		agerr(AGWARN,
+		agwarningf(
 		      "splines and cluster edges not supported - using line segments\n");
 		et = EDGETYPE_LINE;
 	    } else {

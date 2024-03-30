@@ -62,7 +62,7 @@ static const char picgen_msghdr[] = "dot pic plugin: ";
 
 static void unsupported(char *s)
 {
-    agerr(AGWARN, "%s%s unsupported\n", picgen_msghdr, s);
+    agwarningf("%s%s unsupported\n", picgen_msghdr, s);
 }
 
 /* troff font mapping */
@@ -125,7 +125,7 @@ static const char *picfontname(strview_t psname) {
     for (size_t i = 0; i < fonttab_size; ++i)
         if (strview_str_eq(psname, fonttab[i].psname))
             return fonttab[i].trname;
-    agerr(AGERR, "%s%.*s is not a troff font\n", picgen_msghdr,
+    agerrorf("%s%.*s is not a troff font\n", picgen_msghdr,
           (int)psname.size, psname.data);
     /* try base font names, e.g. Helvetica-Outline-Oblique -> Helvetica-Outline -> Helvetica */
     const char *dash = memrchr(psname.data, '-', psname.size);

@@ -361,14 +361,13 @@ bundle (Agraph_t* g, opts_t* opts)
 	int rv = 0;
 
 	if (checkG(g)) {
-		agerr(AGERR, "Graph %s (%s) contains loops or multiedges\n", agnameof(g),
-		      fname);
+		agerrorf("Graph %s (%s) contains loops or multiedges\n", agnameof(g), fname);
 		return 1;
 	}
     initDotIO(g);
 	SparseMatrix A = SparseMatrix_import_dot(g, dim, &x, FORMAT_CSR);
 	if (!A){
-		agerr (AGERR, "Error: could not convert graph %s (%s) into matrix\n", agnameof(g), fname);
+		agerrorf("Error: could not convert graph %s (%s) into matrix\n", agnameof(g), fname);
 		return 1;
     }
     if (x == nullptr) {

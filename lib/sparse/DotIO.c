@@ -153,7 +153,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim,
 	  nitems = sscanf(pval, "%lf,%lf", &xx, &yy);
 	  if (nitems != 2) {
             has_positions = false;
-            agerr(AGERR, "Node \"%s\" pos has %d < 2 values", agnameof(n), nitems);
+            agerrorf("Node \"%s\" pos has %d < 2 values", agnameof(n), nitems);
 	  }
 	  (*x)[i*dim] = xx;
 	  (*x)[i*dim+1] = yy;
@@ -161,7 +161,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim,
 	  nitems = sscanf(pval, "%lf,%lf,%lf", &xx, &yy, &zz);
 	  if (nitems != 3) {
             has_positions = false;
-            agerr(AGERR, "Node \"%s\" pos has %d < 3 values", agnameof(n), nitems);
+            agerrorf("Node \"%s\" pos has %d < 3 values", agnameof(n), nitems);
 	  }
 	  (*x)[i*dim] = xx;
 	  (*x)[i*dim+1] = yy;
@@ -170,7 +170,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim,
 	  nitems = sscanf(pval, "%lf,%lf,%lf,%lf", &xx, &yy, &zz,&ww);
 	  if (nitems != 4) {
             has_positions = false;
-            agerr(AGERR, "Node \"%s\" pos has %d < 4 values", agnameof(n), nitems);
+            agerrorf("Node \"%s\" pos has %d < 4 values", agnameof(n), nitems);
 	  }
 	  (*x)[i*dim] = xx;
 	  (*x)[i*dim+1] = yy;
@@ -189,7 +189,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim,
 	}
       } else {
         has_positions = false;
-	agerr(AGERR, "Node \"%s\" lacks position info", agnameof(n));
+	agerrorf("Node \"%s\" lacks position info", agnameof(n));
       }
     }
     if (!has_positions) {
@@ -198,7 +198,7 @@ SparseMatrix SparseMatrix_import_dot(Agraph_t *g, int dim,
     }
   }
   else if (x)
-    agerr (AGERR, "Error: graph %s has missing \"pos\" information", agnameof(g));
+    agerrorf("Error: graph %s has missing \"pos\" information", agnameof(g));
 
   size_t sz = sizeof(double);
   if (format == FORMAT_CSR) A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J, val, type, sz);

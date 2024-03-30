@@ -80,7 +80,7 @@ int
 PQ_insert(snode* np)
 {
   if (PQcnt == PQsize) {
-    agerr (AGERR, "Heap overflow\n");
+    agerrorf("Heap overflow\n");
     return 1;
   }
   PQcnt++;

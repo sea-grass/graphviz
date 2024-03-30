@@ -22,7 +22,7 @@ void *agalloc(Agraph_t * g, size_t size)
 
     void *mem = calloc(1, size);
     if (mem == NULL)
-	 agerr(AGERR,"memory allocation failure");
+	 agerrorf("memory allocation failure");
     return mem;
 }
 
@@ -40,7 +40,7 @@ void *agrealloc(Agraph_t * g, void *ptr, size_t oldsize, size_t size)
 	    }
 	}
 	if (mem == NULL)
-	     agerr(AGERR,"memory re-allocation failure");
+	     agerrorf("memory re-allocation failure");
     } else
 	mem = NULL;
     return mem;

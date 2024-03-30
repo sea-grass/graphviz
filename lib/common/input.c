@@ -396,7 +396,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 		Y_invert = true;
 		break;
 	    default:
-		agerr(AGERR, "%s: option -%c unrecognized\n\n", gvc->common.cmdname,
+		agerrorf("%s: option -%c unrecognized\n\n", gvc->common.cmdname,
 			c);
 		return dotneato_usage(1);
 	    }
@@ -510,7 +510,7 @@ graph_t *gvNextInputGraph(GVC_t *gvc)
 	    }
 	    else {
 		while ((fn = gvc->input_filenames[gvc->fidx++]) && !(fp = fopen(fn, "r")))  {
-		    agerr(AGERR, "%s: can't open %s: %s\n", gvc->common.cmdname, fn, strerror(errno));
+		    agerrorf("%s: can't open %s: %s\n", gvc->common.cmdname, fn, strerror(errno));
 		    graphviz_errors++;
 		}
 	    }
@@ -556,7 +556,7 @@ static unsigned char findCharset(graph_t *g) {
     if (!strcasecmp(p,"utf-8")
 	|| !strcasecmp(p,"utf8"))
       return CHAR_UTF8;
-    agerr(AGWARN, "Unsupported charset \"%s\" - assuming utf-8\n", p);
+    agwarningf("Unsupported charset \"%s\" - assuming utf-8\n", p);
     return CHAR_UTF8;
 }
 
@@ -814,7 +814,7 @@ charsetToStr (int c)
 	s = "BIG-5";
 	break;
    default :
-	agerr(AGERR, "Unsupported charset value %d\n", c);
+	agerrorf("Unsupported charset value %d\n", c);
 	s = "UTF-8";
 	break;
    }

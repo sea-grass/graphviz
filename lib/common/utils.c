@@ -265,7 +265,7 @@ const char *safefile(const char *filename)
 
     if (HTTPServerEnVar) {   /* If used as a server */
 	if (onetime) {
-	    agerr(AGWARN,
+	    agwarningf(
 		      "file loading is disabled because the environment contains SERVER_NAME=\"%s\"\n",
 		      HTTPServerEnVar);
 	    onetime = false;
@@ -856,7 +856,7 @@ checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
     if (!tg && !hg)
 	return 0;
     if (tg == hg) {
-	agerr(AGWARN, "cluster cycle %s -- %s not supported\n", agnameof(t),
+	agwarningf("cluster cycle %s -- %s not supported\n", agnameof(t),
 	      agnameof(t));
 	return 0;
     }
@@ -869,12 +869,12 @@ checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
     if (hg) {
 	if (tg) {
 	    if (agcontains(hg, tg)) {
-		agerr(AGWARN, "tail cluster %s inside head cluster %s\n",
+		agwarningf("tail cluster %s inside head cluster %s\n",
 		      agnameof(tg), agnameof(hg));
 		return 0;
 	    }
 	    if (agcontains(tg, hg)) {
-		agerr(AGWARN, "head cluster %s inside tail cluster %s\n",
+		agwarningf("head cluster %s inside tail cluster %s\n",
 		      agnameof(hg),agnameof(tg));
 		return 0;
 	    }
@@ -884,7 +884,7 @@ checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
 	    insertEdge(map, t, h, ce);
 	} else {
 	    if (agcontains(hg, t)) {
-		agerr(AGWARN, "tail node %s inside head cluster %s\n",
+		agwarningf("tail node %s inside head cluster %s\n",
 		      agnameof(t), agnameof(hg));
 		return 0;
 	    }
@@ -894,7 +894,7 @@ checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
 	}
     } else {
 	if (agcontains(tg, h)) {
-	    agerr(AGWARN, "head node %s inside tail cluster %s\n", agnameof(h),
+	    agwarningf("head node %s inside tail cluster %s\n", agnameof(h),
 		  agnameof(tg));
 	    return 0;
 	}
@@ -1224,7 +1224,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
         else {
             uc = -1;
             if (!warned) {
-                agerr(AGWARN, "UTF8 codes > 4 bytes are not currently supported (graph %s) - treated as Latin-1. Perhaps \"-Gcharset=latin1\" is needed?\n", agnameof(g));
+                agwarningf("UTF8 codes > 4 bytes are not currently supported (graph %s) - treated as Latin-1. Perhaps \"-Gcharset=latin1\" is needed?\n", agnameof(g));
                 warned = true;
             }
             c = cvtAndAppend (c, &xb);
@@ -1256,7 +1256,7 @@ char* htmlEntityUTF8 (char* s, graph_t* g)
                 }
                 else {
 		            if (!warned) {
-		                agerr(AGWARN, "Invalid %d-byte UTF8 found in input of graph %s - treated as Latin-1. Perhaps \"-Gcharset=latin1\" is needed?\n", uc + 1, agnameof(g));
+		                agwarningf("Invalid %d-byte UTF8 found in input of graph %s - treated as Latin-1. Perhaps \"-Gcharset=latin1\" is needed?\n", uc + 1, agnameof(g));
 		                warned = true;
 		            }
 		            c = cvtAndAppend (c, &xb);
@@ -1417,7 +1417,7 @@ static int edgeType(const char *s, int defaultValue) {
 	return EDGETYPE_SPLINE;
     }
 
-    agerr(AGWARN, "Unknown \"splines\" value: \"%s\" - ignored\n", s);
+    agwarningf("Unknown \"splines\" value: \"%s\" - ignored\n", s);
     return defaultValue;
 }
 
@@ -1592,7 +1592,7 @@ static void fillMap (Agraph_t* g, Dt_t* map)
         Agraph_t *cl = GD_clust(g)[c];
         char *s = agnameof(cl);
         if (dtmatch(map, s)) {
-            agerr(AGWARN, "Two clusters named %s - the second will be ignored\n", s);
+            agwarningf("Two clusters named %s - the second will be ignored\n", s);
         } else {
             clust_t *ip = gv_alloc(sizeof(clust_t));
             ip->name = s;

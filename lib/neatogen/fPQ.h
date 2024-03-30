@@ -94,7 +94,7 @@ static int
 PQinsert(PQ* pq, PQTYPE np)
 {
     if (pq->PQcnt == pq->PQsize) {
-	agerr (AGERR, "Heap overflow\n");
+	agerrorf("Heap overflow\n");
 	return (1);
     }
     pq->PQcnt++;

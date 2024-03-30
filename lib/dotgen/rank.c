@@ -617,7 +617,7 @@ static void compile_samerank(graph_t * ug, graph_t * parent_clust)
     case NORANK:
 	break;
     default:			/* unrecognized - warn and do nothing */
-	agerr(AGWARN, "%s has unrecognized rank=%s", agnameof(ug),
+	agwarningf("%s has unrecognized rank=%s", agnameof(ug),
 	      agget(ug, "rank"));
     }
 
@@ -703,7 +703,7 @@ static void strong(graph_t * g, node_t * t, node_t * h, edge_t * orig)
 	(e = agfindedge(g, h, t)) || (e = agedge(g, t, h, 0, 1)))
 	merge(e, ED_minlen(orig), ED_weight(orig));
     else
-	agerr(AGERR, "ranking: failure to create strong constraint edge between nodes %s and %s\n", 
+	agerrorf("ranking: failure to create strong constraint edge between nodes %s and %s\n", 
 	    agnameof(t), agnameof(h));
 }
 

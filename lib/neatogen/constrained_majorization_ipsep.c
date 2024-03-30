@@ -129,7 +129,7 @@ int stress_majorization_cola(vtx_data * graph,	/* Input graph in sparse represen
     } else if (model == MODEL_CIRCUIT) {
 	Dij = circuitModel(graph, n);
 	if (!Dij) {
-	    agerr(AGWARN,
+	    agwarningf(
 		  "graph is disconnected. Hence, the circuit model\n");
 	    agerr(AGPREV,
 		  "is undefined. Reverting to the shortest path model.\n");

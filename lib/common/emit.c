@@ -66,7 +66,7 @@ void* init_xdot (Agraph_t* g)
     xd = parseXDotF (p, NULL, sizeof (exdot_op));
 
     if (!xd) {
-	agerr(AGWARN, "Could not parse \"_background\" attribute in graph %s\n", agnameof(g));
+	agwarningf("Could not parse \"_background\" attribute in graph %s\n", agnameof(g));
 	agerr(AGPREV, "  \"%s\"\n", p);
     }
 #ifdef DEBUG
@@ -482,7 +482,7 @@ static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
 	    double del = v - left;
 	    if (del > 0) {
 		if (doWarn && !AEQ0(del)) {
-		    agerr (AGWARN, "Total size > 1 in \"%s\" color spec ", clrs);
+		    agwarningf("Total size > 1 in \"%s\" color spec ", clrs);
 		    doWarn = 0;
 		    rval = 3;
 		}
@@ -495,7 +495,7 @@ static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
 	}
 	else {
 	    if (doWarn) {
-		agerr (AGERR, "Illegal value in \"%s\" color attribute; float expected after ';'\n",
+		agerrorf("Illegal value in \"%s\" color attribute; float expected after ';'\n",
                     clrs);
 		doWarn = 0;
 		rval = 2;
@@ -1078,7 +1078,7 @@ static int *parse_layerselect(GVC_t *gvc, char *p) {
 	laylist[cnt+1] = gvc->numLayers+1;
     }
     else {
-	agerr(AGWARN, "The layerselect attribute \"%s\" does not match any layer specifed by the layers attribute - ignored.\n", p);
+	agwarningf("The layerselect attribute \"%s\" does not match any layer specifed by the layers attribute - ignored.\n", p);
 	free (laylist);
 	laylist = NULL;
     }
@@ -1104,7 +1104,7 @@ static int parse_layers(GVC_t *gvc, graph_t * g, char *p)
     if (!gvc->layerListDelims)
         gvc->layerListDelims = DEFAULT_LAYERLISTSEP;
     if ((tok = strpbrk (gvc->layerDelims, gvc->layerListDelims))) { /* conflict in delimiter strings */
-	agerr(AGWARN, "The character \'%c\' appears in both the layersep and layerlistsep attributes - layerlistsep ignored.\n", *tok);
+	agwarningf("The character \'%c\' appears in both the layersep and layerlistsep attributes - layerlistsep ignored.\n", *tok);
         gvc->layerListDelims = "";
     }
 
@@ -1186,7 +1186,7 @@ static void firstlayer(GVJ_t *job, int** listp)
 	int *list = job->gvc->layerlist;
 	int cnt = *list++;
 	if (cnt > 1 && !(job->flags & GVDEVICE_DOES_LAYERS)) {
-	    agerr(AGWARN, "layers not supported in %s output\n",
+	    agwarningf("layers not supported in %s output\n",
 		job->output_langname);
 	    list[1] = job->numLayers + 1; /* only one layer printed */
 	}
@@ -1195,7 +1195,7 @@ static void firstlayer(GVJ_t *job, int** listp)
     }
     else {
 	if (job->numLayers > 1 && !(job->flags & GVDEVICE_DOES_LAYERS)) {
-	    agerr(AGWARN, "layers not supported in %s output\n",
+	    agwarningf("layers not supported in %s output\n",
 		job->output_langname);
 	    job->numLayers = 1;
 	}
@@ -1320,7 +1320,7 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
      || abs(job->pagesArrayMajor.y + job->pagesArrayMinor.y) != 1) {
 	job->pagesArrayMajor = pagecode(job, 'B');
 	job->pagesArrayMinor = pagecode(job, 'L');
-	agerr(AGWARN, "pagedir=%s ignored\n", gvc->pagedir);
+	agwarningf("pagedir=%s ignored\n", gvc->pagedir);
     }
 
     /* determine page box including centering */
@@ -1515,7 +1515,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	    }
 	    break;
 	case xd_grad_pen_color :
-	    agerr (AGWARN, "gradient pen colors not yet supported.\n");
+	    agwarningf("gradient pen colors not yet supported.\n");
 	    break;
 	case xd_font :
 	    /* fontsize and fontname already encoded via xdotBB */
@@ -1529,7 +1529,7 @@ static void emit_xdot (GVJ_t * job, xdot* xd)
 	    break;
 	case xd_image :
 	    if (image_warn) {
-	        agerr(AGWARN, "Images unsupported in \"background\" attribute\n");
+	        agwarningf("Images unsupported in \"background\" attribute\n");
 	        image_warn = 0;
 	    }
 	    break;
@@ -3750,7 +3750,7 @@ char **parse_style(char *s)
 	switch (c.type) {
 	case '(':
 	    if (in_parens) {
-		agerr(AGERR, "nesting not allowed in style: %s\n", s);
+		agerrorf("nesting not allowed in style: %s\n", s);
 		parse[0] = NULL;
 		return parse;
 	    }
@@ -3759,7 +3759,7 @@ char **parse_style(char *s)
 
 	case ')':
 	    if (!in_parens) {
-		agerr(AGERR, "unmatched ')' in style: %s\n", s);
+		agerrorf("unmatched ')' in style: %s\n", s);
 		parse[0] = NULL;
 		return parse;
 	    }
@@ -3769,7 +3769,7 @@ char **parse_style(char *s)
 	default:
 	    if (!in_parens) {
 		if (fun == FUNLIMIT - 1) {
-		    agerr(AGWARN, "truncating style '%s'\n", s);
+		    agwarningf("truncating style '%s'\n", s);
 		    parse[fun] = NULL;
 		    return parse;
 		}
@@ -3782,7 +3782,7 @@ char **parse_style(char *s)
     }
 
     if (in_parens) {
-	agerr(AGERR, "unmatched '(' in style: %s\n", s);
+	agerrorf("unmatched '(' in style: %s\n", s);
 	parse[0] = NULL;
 	return parse;
     }
@@ -3932,7 +3932,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
 	start_timer();
     
     if (!LAYOUT_DONE(g)) {
-        agerr (AGERR, "Layout was not done.  Missing layout plugins? \n");
+        agerrorf("Layout was not done.  Missing layout plugins? \n");
 	FINISH();
         return -1;
     }
@@ -3956,7 +3956,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
 	job->keybindings = gvevent_key_binding;
 	job->numkeys = gvevent_key_binding_size;
 	if (!GD_drawing(g)) {
-	    agerr (AGERR, "layout was not done\n");
+	    agerrorf("layout was not done\n");
 	    gv_fixLocale (0);
 	    FINISH();
 	    return -1;
@@ -3964,7 +3964,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
 
         job->output_lang = gvrender_select(job, job->output_langname);
         if (job->output_lang == NO_SUPPORT) {
-            agerr (AGERR, "renderer for %s is unavailable\n", job->output_langname);
+            agerrorf("renderer for %s is unavailable\n", job->output_langname);
 	    gv_fixLocale (0);
 	    FINISH();
             return -1;
@@ -4062,7 +4062,7 @@ bool findStopColor (char* colorlist, char* clrs[2], float* frac)
     }
 
     if (segs.numc > 2)
-	agerr (AGWARN, "More than 2 colors specified for a gradient - ignoring remaining\n");
+	agwarningf("More than 2 colors specified for a gradient - ignoring remaining\n");
 
     clrs[0] = gv_calloc(strlen(colorlist) + 1, sizeof(char));
     strcpy(clrs[0], segs.segs[0].color);

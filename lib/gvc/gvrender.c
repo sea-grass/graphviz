@@ -206,10 +206,10 @@ static void gvrender_resolve_color(gvrender_features_t * features,
 		agxbuf missedcolor = {0};
 		agxbprint(&missedcolor, "color %s", name);
 		if (emit_once(agxbuse(&missedcolor)))
-		    agerr(AGWARN, "%s is not a known color.\n", name);
+		    agwarningf("%s is not a known color.\n", name);
 		agxbfree(&missedcolor);
 	    } else {
-		agerr(AGERR, "error in colxlate()\n");
+		agerrorf("error in colxlate()\n");
 	    }
 	}
     }
@@ -513,7 +513,7 @@ void gvrender_set_style(GVJ_t * job, char **s)
 		    obj->fill = FILL_NONE;
 		else if (streq(line, "tapered"));
 		else {
-		    agerr(AGWARN,
+		    agwarningf(
 			  "gvrender_set_style: unsupported style %s - ignoring\n",
 			  line);
 		}

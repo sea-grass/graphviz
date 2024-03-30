@@ -160,7 +160,7 @@ static bool gd_textlayout(textspan_t * span, char **fontpath)
 #endif
 
 	if (err) {
-	    agerr(AGERR,"%s\n", err);
+	    agerrorf("%s\n", err);
 	    return false; /* indicate error */
 	}
 

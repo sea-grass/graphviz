@@ -183,7 +183,7 @@ void fdp_initParams(graph_t * g)
     T_seed = DFLT_seed;
     T_smode = setSeed (g, DFLT_smode, &T_seed);
     if (T_smode == INIT_SELF) {
-	agerr(AGWARN, "fdp does not support start=self - ignoring\n");
+	agwarningf("fdp does not support start=self - ignoring\n");
 	T_seed = DFLT_smode;
     }
 

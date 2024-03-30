@@ -1405,7 +1405,7 @@ splines *getsplinepoints(edge_t * e)
     for (le = e; !(sp = ED_spl(le)) && ED_edge_type(le) != NORMAL;
 	 le = ED_to_orig(le));
     if (sp == NULL)
-	agerr (AGERR, "getsplinepoints: no spline points available for edge (%s,%s)\n",
+	agerrorf("getsplinepoints: no spline points available for edge (%s,%s)\n",
 	    agnameof(agtail(e)), agnameof(aghead(e)));
     return sp;
 }

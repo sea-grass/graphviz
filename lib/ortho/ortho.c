@@ -709,7 +709,7 @@ static int
 seg_cmp(segment* S1, segment* S2)		
 {
     if(S1->isVert!=S2->isVert||S1->comm_coord!=S2->comm_coord) {
-	agerr (AGERR, "incomparable segments !! -- Aborting\n");
+	agerrorf("incomparable segments !! -- Aborting\n");
 	return -2;
     }
     if(S1->isVert)
@@ -1289,7 +1289,7 @@ orthoEdges (Agraph_t* g, int doLbls)
     }
 #endif
     if (doLbls) {
-	agerr(AGWARN, "Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
+	agwarningf("Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
 	doLbls = 0;
     }
     mp = mkMaze(g);
@@ -1436,7 +1436,7 @@ coordOf (cell* cp, snode* np)
 	p.x = cp->bb.UR.x;
     }
     else {
-	agerr (AGERR, "Node not adjacent to cell -- Aborting\n");
+	agerrorf("Node not adjacent to cell -- Aborting\n");
 	graphviz_exit(EXIT_FAILURE);
     }
     return p;

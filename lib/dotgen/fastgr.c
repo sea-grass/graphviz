@@ -291,7 +291,7 @@ void
 merge_oneway(edge_t * e, edge_t * rep)
 {
     if (rep == ED_to_virt(e) || e == ED_to_virt(rep)) {
-	agerr(AGWARN, "merge_oneway glitch\n");
+	agwarningf("merge_oneway glitch\n");
 	return;
     }
     assert(ED_to_virt(e) == NULL);
