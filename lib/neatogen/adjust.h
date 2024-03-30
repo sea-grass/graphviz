@@ -36,7 +36,7 @@ typedef struct {
 } adjust_data;
 
 typedef struct {
-    float x, y;
+    double x, y;
     bool doAdd;  /* if true, x and y are in points */
 } expand_t;
 

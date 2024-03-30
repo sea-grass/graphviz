@@ -40,13 +40,13 @@
 #include <cgraph/strcasecmp.h>
 #include <stddef.h>
 
-#define SEPFACT         0.8f  /* default esep/sep */
+#define SEPFACT         0.8 // default esep/sep
 
 static double margin = 0.05;	/* Create initial bounding box by adding
 				 * margin * dimension around box enclosing
 				 * nodes.
 				 */
-static double incr = 0.05;	/* Increase bounding box by adding
+static const double incr = 0.05;	/* Increase bounding box by adding
 				 * incr * dimension around box.
 				 */
 static bool doAll = false; // Move all nodes, regardless of overlap
@@ -68,9 +68,7 @@ static void setBoundBox(Point * ll, Point * ur)
     sw.y = se.y = pymin;
 }
 
- /* freeNodes:
-  * Free node resources.
-  */
+/// Free node resources.
 static void freeNodes(void)
 {
     for (size_t i = 0; i < nsites; i++) {
@@ -81,8 +79,7 @@ static void freeNodes(void)
     free(nodeInfo);
 }
 
-/* chkBoundBox:
- *   Compute extremes of graph, then set up bounding box.
+/*   Compute extremes of graph, then set up bounding box.
  *   If user supplied a bounding box, use that;
  *   else if "window" is a graph attribute, use that; 
  *   otherwise, define bounding box as a percentage expansion of
@@ -123,14 +120,10 @@ static void chkBoundBox(Agraph_t * graph)
     setBoundBox(&ll, &ur);
 }
 
- /* makeInfo:
-  * For each node in the graph, create a Info data structure 
-  */
+ /// For each node in the graph, create a Info data structure 
 static int makeInfo(Agraph_t * graph)
 {
-    Agnode_t *node;
-    expand_t pmargin;
-    int (*polyf)(Poly *, Agnode_t *, float, float);
+    int (*polyf)(Poly *, Agnode_t *, double, double);
 
     assert(agnnodes(graph) >= 0);
     nsites = (size_t)agnnodes(graph);
@@ -138,9 +131,9 @@ static int makeInfo(Agraph_t * graph)
 
     nodeInfo = gv_calloc(nsites, sizeof(Info_t));
 
-    node = agfstnode(graph);
+    Agnode_t *node = agfstnode(graph);
 
-    pmargin = sepFactor (graph);
+    expand_t pmargin = sepFactor (graph);
 
     if (pmargin.doAdd) {
 	polyf = makeAddPoly;
@@ -173,10 +166,8 @@ static int makeInfo(Agraph_t * graph)
 /* sort sites on y, then x, coord */
 static int scomp(const void *S1, const void *S2)
 {
-    const Site *s1, *s2;
-
-    s1 = *(Site *const *) S1;
-    s2 = *(Site *const *) S2;
+    const Site *s1 = *(Site *const *)S1;
+    const Site *s2 = *(Site *const *)S2;
     if (s1->coord.y < s2->coord.y)
 	return -1;
     if (s1->coord.y > s2->coord.y)
@@ -188,9 +179,7 @@ static int scomp(const void *S1, const void *S2)
     return 0;
 }
 
- /* sortSites:
-  * Fill array of pointer to sites and sort the sites using scomp
-  */
+ /// Fill array of pointer to sites and sort the sites using scomp
 static void sortSites(void)
 {
     if (sites == 0) {
@@ -241,23 +230,13 @@ static Site *nextOne(void)
 	return NULL;
 }
 
-/* rmEquality:
- * Check for nodes with identical positions and tweak
- * the positions.
- */
+/// Check for nodes with identical positions and tweak the positions.
 static void rmEquality(void)
 {
-    int i, cnt;
-    Site **ip;
-    Site **jp;
-    Site **kp;
-    double xdel;
-
     sortSites();
-    ip = sites;
 
-    while (ip < endSite) {
-	jp = ip + 1;
+    for (Site **ip = sites; ip < endSite; ) {
+	Site **jp = ip + 1;
 	if (jp >= endSite ||
 	    (*jp)->coord.x != (*ip)->coord.x ||
 	    (*jp)->coord.y != (*ip)->coord.y) {
@@ -266,8 +245,8 @@ static void rmEquality(void)
 	}
 
 	/* Find first node kp with position different from ip */
-	cnt = 2;
-	kp = jp + 1;
+	int cnt = 2;
+	Site **kp = jp + 1;
 	while (kp < endSite &&
 	       (*kp)->coord.x == (*ip)->coord.x &&
 	       (*kp)->coord.y == (*ip)->coord.y) {
@@ -278,8 +257,8 @@ static void rmEquality(void)
 
 	/* If next node exists and is on the same line */
 	if (kp < endSite && (*kp)->coord.y == (*ip)->coord.y) {
-	    xdel = ((*kp)->coord.x - (*ip)->coord.x) / cnt;
-	    i = 1;
+	    const double xdel = ((*kp)->coord.x - (*ip)->coord.x) / cnt;
+	    int i = 1;
 	    for (jp = ip + 1; jp < kp; jp++) {
 		(*jp)->coord.x += i * xdel;
 		i++;
@@ -288,7 +267,7 @@ static void rmEquality(void)
 	    Info_t *info;
 	    for (jp = ip + 1; jp < kp; ip++, jp++) {
 		info = nodeInfo + (*ip)->sitenbr;
-		xdel = info->poly.corner.x - info->poly.origin.x;
+		double xdel = info->poly.corner.x - info->poly.origin.x;
 		info = nodeInfo + (*jp)->sitenbr;
 		xdel += info->poly.corner.x - info->poly.origin.x;
 		(*jp)->coord.x = (*ip)->coord.x + xdel / 2;
@@ -298,9 +277,7 @@ static void rmEquality(void)
     }
 }
 
-/* countOverlap:
- * Count number of node-node overlaps at iteration iter.
- */
+/// Count number of node-node overlaps at iteration iter.
 static int countOverlap(int iter)
 {
     int count = 0;
@@ -327,16 +304,11 @@ static int countOverlap(int iter)
 
 static void increaseBoundBox(void)
 {
-    double ydelta, xdelta;
-    Point ll, ur;
+    Point ur = {.x = pxmax, .y = pymax};
+    Point ll = {.x = pxmin, .y = pymin};
 
-    ur.x = pxmax;
-    ur.y = pymax;
-    ll.x = pxmin;
-    ll.y = pymin;
-
-    ydelta = incr * (ur.y - ll.y);
-    xdelta = incr * (ur.x - ll.x);
+    const double ydelta = incr * (ur.y - ll.y);
+    const double xdelta = incr * (ur.x - ll.x);
 
     ur.x += xdelta;
     ur.y += ydelta;
@@ -346,45 +318,37 @@ static void increaseBoundBox(void)
     setBoundBox(&ll, &ur);
 }
 
- /* areaOf:
-  * Area of triangle whose vertices are a,b,c
-  */
+/// Area of triangle whose vertices are a,b,c
 static double areaOf(Point a, Point b, Point c)
 {
     return fabs(a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)) / 2;
 }
 
- /* centroidOf:
-  * Compute centroid of triangle with vertices a, b, c.
-  * Return coordinates in x and y.
-  */
+/* Compute centroid of triangle with vertices a, b, c.
+ * Return coordinates in x and y.
+ */
 static void centroidOf(Point a, Point b, Point c, double *x, double *y)
 {
     *x = (a.x + b.x + c.x) / 3;
     *y = (a.y + b.y + c.y) / 3;
 }
 
- /* newpos;
-  * The new position is the centroid of the
-  * voronoi polygon. This is the weighted sum of the
-  * centroids of a triangulation, normalized to the
-  * total area.
-  */
+/* The new position is the centroid of the voronoi polygon. This is the weighted
+ * sum of the centroids of a triangulation, normalized to the total area.
+ */
 static void newpos(Info_t * ip)
 {
     PtItem *anchor = ip->verts;
-    PtItem *p, *q;
     double totalArea = 0.0;
     double cx = 0.0;
     double cy = 0.0;
     double x;
     double y;
-    double area;
 
-    p = anchor->next;
-    q = p->next;
+    PtItem *p = anchor->next;
+    PtItem *q = p->next;
     while (q != NULL) {
-	area = areaOf(anchor->p, p->p, q->p);
+	const double area = areaOf(anchor->p, p->p, q->p);
 	centroidOf(anchor->p, p->p, q->p, &x, &y);
 	cx += area * x;
 	cy += area * y;
@@ -397,8 +361,7 @@ static void newpos(Info_t * ip)
     ip->site.coord.y = cy / totalArea;
 }
 
- /* addCorners:
-  * Add corners of clipping window to appropriate sites.
+ /* Add corners of clipping window to appropriate sites.
   * A site gets a corner if it is the closest site to that corner.
   */
 static void addCorners(void)
@@ -412,11 +375,10 @@ static void addCorners(void)
     double nwd = dist_2(&ip->site.coord, &nw);
     double sed = dist_2(&ip->site.coord, &se);
     double ned = dist_2(&ip->site.coord, &ne);
-    double d;
 
     for (size_t i = 1; i < nsites; i++) {
 	ip = &nodeInfo[i];
-	d = dist_2(&ip->site.coord, &sw);
+	double d = dist_2(&ip->site.coord, &sw);
 	if (d < swd) {
 	    swd = d;
 	    sws = ip;
@@ -444,8 +406,7 @@ static void addCorners(void)
     addVertex(&nes->site, ne.x, ne.y);
 }
 
- /* newPos:
-  * Calculate the new position of a site as the centroid
+ /* Calculate the new position of a site as the centroid
   * of its voronoi polygon, if it overlaps other nodes.
   * The polygons are finite by being clipped to the clipping
   * window.
@@ -462,8 +423,7 @@ static void newPos(void)
     }
 }
 
-/* cleanup:
- * Cleanup voronoi memory.
+/* Cleanup voronoi memory.
  * Note that PQcleanup and ELcleanup rely on the number
  * of sites, so should at least be reset every time we use vAdjust.
  * This could be optimized, over multiple components or
@@ -480,12 +440,10 @@ static void cleanup(void)
 static int vAdjust(void)
 {
     int iterCnt = 0;
-    int overlapCnt = 0;
     int badLevel = 0;
     int increaseCnt = 0;
-    int cnt;
 
-    overlapCnt = countOverlap(iterCnt);
+    int overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -497,7 +455,7 @@ static int vAdjust(void)
 	newPos();
 	iterCnt++;
 
-	cnt = countOverlap(iterCnt);
+	const int cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
 	if (cnt >= overlapCnt)
@@ -545,10 +503,8 @@ static double rePos(void)
 static int sAdjust(void)
 {
     int iterCnt = 0;
-    int overlapCnt = 0;
-    int cnt;
 
-    overlapCnt = countOverlap(iterCnt);
+    int overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -558,7 +514,7 @@ static int sAdjust(void)
 	rePos();
 	iterCnt++;
 
-	cnt = countOverlap(iterCnt);
+	const int cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
     }
@@ -570,9 +526,7 @@ static int sAdjust(void)
     return 1;
 }
 
- /* updateGraph:
-  * Enter new node positions into the graph
-  */
+/// Enter new node positions into the graph
 static void updateGraph(void)
 {
     for (size_t i = 0; i < nsites; i++) {
@@ -586,19 +540,16 @@ static void updateGraph(void)
   /* Return true if node name starts with ELS */
 #define IS_LNODE(n) startswith(agnameof(n), ELS)
 
-/* getSizes:
- * Set up array of half sizes in inches.
- */
+/// Set up array of half sizes in inches.
 double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
 {
-    Agnode_t *n;
     double *sizes = gv_calloc(Ndim * agnnodes(g), sizeof(double));
-    int i, nedge_nodes = 0;
+    int nedge_nodes = 0;
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (elabels && IS_LNODE(n)) nedge_nodes++;
 
-	i = ND_id(n);
+	const int i = ND_id(n);
 	sizes[i * Ndim] = ND_width(n) * .5 + pad.x;
 	sizes[i * Ndim + 1] = ND_height(n) * .5 + pad.y;
     }
@@ -606,7 +557,7 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
     if (elabels && nedge_nodes) {
 	int* elabs = gv_calloc(nedge_nodes, sizeof(int));
 	nedge_nodes = 0;
-	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (IS_LNODE(n))
 		elabs[nedge_nodes++] = ND_id(n);
 	}
@@ -617,43 +568,33 @@ double *getSizes(Agraph_t * g, pointf pad, int* n_elabels, int** elabels)
     return sizes;
 }
 
-/* makeMatrix:
- * Assumes g is connected and simple, i.e., we can have a->b and b->a
+/* Assumes g is connected and simple, i.e., we can have a->b and b->a
  * but not a->b and a->b
  */
 SparseMatrix makeMatrix(Agraph_t *g) {
-    SparseMatrix A = 0;
-    Agnode_t *n;
-    Agedge_t *e;
-    Agsym_t *sym;
-    int nnodes;
-    int nedges;
-    int i, row;
-    double v;
-    int type = MATRIX_TYPE_REAL;
-
     if (!g)
 	return NULL;
-    nnodes = agnnodes(g);
-    nedges = agnedges(g);
+    const int nnodes = agnnodes(g);
+    const int nedges = agnedges(g);
 
     /* Assign node ids */
-    i = 0;
-    for (n = agfstnode(g); n; n = agnxtnode(g, n))
+    int i = 0;
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n))
 	ND_id(n) = i++;
 
     int *I = gv_calloc(nedges, sizeof(int));
     int *J = gv_calloc(nedges, sizeof(int));
     double *val = gv_calloc(nedges, sizeof(double));
 
-    sym = agfindedgeattr(g, "weight");
+    Agsym_t *sym = agfindedgeattr(g, "weight");
 
     i = 0;
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	row = ND_id(n);
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	const int row = ND_id(n);
+	for (Agedge_t *e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    I[i] = row;
 	    J[i] = ND_id(aghead(e));
+	    double v;
 	    if (!sym || sscanf(agxget(e, sym), "%lf", &v) != 1)
 		v = 1;
 	    val[i] = v;
@@ -662,8 +603,10 @@ SparseMatrix makeMatrix(Agraph_t *g) {
 	}
     }
 
-    A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes, I, J,
-					    val, type, sizeof(double));
+    SparseMatrix A = SparseMatrix_from_coordinate_arrays(nedges, nnodes, nnodes,
+                                                         I, J, val,
+                                                         MATRIX_TYPE_REAL,
+                                                         sizeof(double));
 
     free(I);
     free(J);
@@ -676,10 +619,7 @@ SparseMatrix makeMatrix(Agraph_t *g) {
 static void fdpAdjust(graph_t *g, adjust_data *am) {
     SparseMatrix A0 = makeMatrix(g);
     SparseMatrix A = A0;
-    double *sizes;
     double *pos = gv_calloc(Ndim * agnnodes(g), sizeof(double));
-    Agnode_t *n;
-    int i;
     expand_t sep = sepFactor(g);
     pointf pad;
 
@@ -690,11 +630,11 @@ static void fdpAdjust(graph_t *g, adjust_data *am) {
 	pad.x = PS2INCH(DFLT_MARGIN);
 	pad.y = PS2INCH(DFLT_MARGIN);
     }
-    sizes = getSizes(g, pad, NULL, NULL);
+    double *sizes = getSizes(g, pad, NULL, NULL);
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double* npos = pos + Ndim * ND_id(n);
-	for (i = 0; i < Ndim; i++) {
+	for (int i = 0; i < Ndim; i++) {
 	    npos[i] = ND_pos(n)[i];
 	}
     }
@@ -709,9 +649,9 @@ static void fdpAdjust(graph_t *g, adjust_data *am) {
                    ELSCHEME_NONE, 0, NULL, NULL,
                    mapBool(agget(g, "overlap_shrink"), true));
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	double *npos = pos + Ndim * ND_id(n);
-	for (i = 0; i < Ndim; i++) {
+	for (int i = 0; i < Ndim; i++) {
 	    ND_pos(n)[i] = npos[i];
 	}
     }
@@ -734,17 +674,14 @@ vpscAdjust(graph_t* G)
     pointf *nsize = gv_calloc(nnodes, sizeof(pointf));
     float* coords[dim];
     float *f_storage = gv_calloc(dim * nnodes, sizeof(float));
-    int i, j;
-    Agnode_t* v;
-    expand_t exp_margin;
 
-    for (i = 0; i < dim; i++) {
+    for (size_t i = 0; i < dim; i++) {
 	coords[i] = f_storage + i * nnodes;
     }
 
-    j = 0;
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; i < dim; i++) {
+    size_t j = 0;
+    for (Agnode_t *v = agfstnode(G); v; v = agnxtnode(G, v)) {
+	for (size_t i = 0; i < dim; i++) {
 	    coords[i][j] =  (float)ND_pos(v)[i];
 	}
 	nsize[j].x = ND_width(v);
@@ -755,8 +692,8 @@ vpscAdjust(graph_t* G)
     opt.diredges = 0;
     opt.edge_gap = 0;
     opt.noverlap = 2;
-    opt.clusters = gv_alloc(sizeof(cluster_data));
-    exp_margin = sepFactor (G);
+    opt.clusters = (cluster_data){0};
+    expand_t exp_margin = sepFactor (G);
  	/* Multiply by 2 since opt.gap is the gap size, not the margin */
     if (exp_margin.doAdd) {
 	opt.gap.x = 2.0*PS2INCH(exp_margin.x);
@@ -770,35 +707,32 @@ vpscAdjust(graph_t* G)
     removeoverlaps(nnodes, coords, &opt);
 
     j = 0;
-    for (v = agfstnode(G); v; v = agnxtnode(G, v)) {
-	for (i = 0; i < dim; i++) {
+    for (Agnode_t *v = agfstnode(G); v; v = agnxtnode(G, v)) {
+	for (size_t i = 0; i < dim; i++) {
 	    ND_pos(v)[i] = coords[i][j];
 	}
 	j++;
     }
 
-    free (opt.clusters);
     free (f_storage);
     free (nsize);
     return 0;
 }
 #endif
 
-/* angleSet:
- * Return true if "normalize" is defined and valid; return angle in phi.
+/* Return true if "normalize" is defined and valid; return angle in phi.
  * Read angle as degrees, convert to radians.
  * Guarantee -PI < phi <= PI.
  */
 static int
 angleSet (graph_t* g, double* phi)
 {
-    double ang;
     char* p;
     char* a = agget(g, "normalize");
 
     if (!a || *a == '\0')
 	return 0;
-    ang = strtod (a, &p);
+    double ang = strtod (a, &p);
     if (p == a) {  /* no number */
 	if (mapbool(a))
 	    ang = 0.0;
@@ -812,27 +746,21 @@ angleSet (graph_t* g, double* phi)
     return 1;
 }
 
-/* normalize:
- * If normalize is set, move first node to origin, then
+/* If normalize is set, move first node to origin, then
  * rotate graph so that the angle of the first edge is given
  * by the degrees from normalize.
  * FIX: Generalize to allow rotation determined by graph shape.
  */
 int normalize(graph_t * g)
 {
-    node_t *v;
-    edge_t *e;
     double phi;
-    double cosv, sinv;
-    pointf p, orig;
     int ret;
 
     if (!angleSet(g, &phi))
 	return 0;
 
-    v = agfstnode(g);
-    p.x = ND_pos(v)[0];
-    p.y = ND_pos(v)[1];
+    node_t *v = agfstnode(g);
+    pointf p = {.x = ND_pos(v)[0], .y = ND_pos(v)[1]};
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	ND_pos(v)[0] -= p.x;
 	ND_pos(v)[1] -= p.y;
@@ -840,7 +768,7 @@ int normalize(graph_t * g)
     if (p.x || p.y) ret = 1;
     else ret = 0;
 
-    e = NULL;
+    edge_t *e = NULL;
     for (v = agfstnode(g); v; v = agnxtnode(g, v))
 	if ((e = agfstout(g, v)))
 	    break;
@@ -852,10 +780,10 @@ int normalize(graph_t * g)
 		   ND_pos(aghead(e))[0] - ND_pos(agtail(e))[0]);
 
     if (phi) {
-	orig.x = ND_pos(agtail(e))[0];
-	orig.y = ND_pos(agtail(e))[1];
-	cosv = cos(phi);
-	sinv = sin(phi);
+	const pointf orig = {.x = ND_pos(agtail(e))[0],
+	                     .y = ND_pos(agtail(e))[1]};
+	const double cosv = cos(phi);
+	const double sinv = sin(phi);
 	for (v = agfstnode(g); v; v = agnxtnode(g, v)) {
 	    p.x = ND_pos(v)[0] - orig.x;
 	    p.y = ND_pos(v)[1] - orig.y;
@@ -907,10 +835,7 @@ static const lookup_t adjustMode[] = {
     {AM_NONE, 0, 0, 0}
 };
 
-    
-/* setPrismValues:
- * Initialize and set prism values
- */
+/// Initialize and set prism values
 static void
 setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
 {
@@ -923,9 +848,7 @@ setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
     dp->scaling = late_double(g, agfindgraphattr(g, "overlap_scaling"), -4.0, -1.e10);
 }
 
-/* getAdjustMode:
- * Convert string value to internal value of adjustment mode.
- */
+/// Convert string value to internal value of adjustment mode.
 static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
     const lookup_t *ap = adjustMode + 1;
     if (s == NULL || *s == '\0') {
@@ -978,12 +901,9 @@ void graphAdjustMode(graph_t *G, adjust_data *dp, char *dflt) {
 
 #define ISZERO(d) (fabs(d) < 0.000000001)
 
-/* simpleScaling:
- */
 static int simpleScale (graph_t* g) 
 {
     pointf sc;
-    node_t* n;
     int i;
     char* p;
 
@@ -995,7 +915,7 @@ static int simpleScale (graph_t* g)
 	    if (sc.y == 1 && sc.x == 1) return 0;
 	    if (Verbose)
 		fprintf (stderr, "scale = (%.03f,%.03f)\n", sc.x, sc.y);
-	    for (n = agfstnode(g); n; n = agnxtnode(g,n)) {
+	    for (node_t *n = agfstnode(g); n; n = agnxtnode(g,n)) {
 		ND_pos(n)[0] *= sc.x;
 		ND_pos(n)[1] *= sc.y;
 	    }
@@ -1005,20 +925,19 @@ static int simpleScale (graph_t* g)
     return 0;
 }
 
-/* removeOverlapWith:
- * Use adjust_data to determine if and how to remove
+/* Use adjust_data to determine if and how to remove
  * node overlaps.
  * Return non-zero if nodes are moved.
  */
 int 
 removeOverlapWith (graph_t * G, adjust_data* am)
 {
-    int ret, nret;
+    int ret;
 
     if (agnnodes(G) < 2)
 	return 0;
 
-    nret = normalize (G);
+    int nret = normalize (G);
     nret += simpleScale (G);
 
     if (am->mode == AM_NONE)
@@ -1104,10 +1023,7 @@ removeOverlapWith (graph_t * G, adjust_data* am)
     return ret+nret;
 }
 
-/* removeOverlapAs:
- * Use flag value to determine if and how to remove
- * node overlaps.
- */
+/// Use flag value to determine if and how to remove node overlaps.
 int 
 removeOverlapAs(graph_t * G, char* flag)
 {
@@ -1119,8 +1035,7 @@ removeOverlapAs(graph_t * G, char* flag)
     return removeOverlapWith (G, &am);
 }
 
-/* adjustNodes:
- * Remove node overlap relying on graph's overlap attribute.
+/* Remove node overlap relying on graph's overlap attribute.
  * Return non-zero if graph has changed.
  */
 int adjustNodes(graph_t * G)
@@ -1128,17 +1043,13 @@ int adjustNodes(graph_t * G)
     return removeOverlapAs(G, agget(G, "overlap"));
 }
 
-/* parseFactor:
- * Convert "sep" attribute into expand_t.
+/* Convert "sep" attribute into expand_t.
  * Input "+x,y" becomes {x,y,true}
  * Input "x,y" becomes {1 + x/sepfact,1 + y/sepfact,false}
  * Return 1 on success, 0 on failure
  */
-static int
-parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
-{
+static int parseFactor(char *s, expand_t *pp, double sepfact, double dflt) {
     int i;
-    float x, y;
 
     while (gv_isspace(*s)) s++;
     if (*s == '+') {
@@ -1147,16 +1058,17 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
     }
     else pp->doAdd = false;
 
-    if ((i = sscanf(s, "%f,%f", &x, &y))) {
+    double x, y;
+    if ((i = sscanf(s, "%lf,%lf", &x, &y))) {
 	if (i == 1) y = x;
 	if (pp->doAdd) {
 	    if (sepfact > 1) {
-		pp->x = fminf(dflt, x/sepfact);
-		pp->y = fminf(dflt, y/sepfact);
+		pp->x = fmin(dflt, x / sepfact);
+		pp->y = fmin(dflt, y / sepfact);
 	    }
 	    else if (sepfact < 1) {
-		pp->x = fmaxf(dflt, x/sepfact);
-		pp->y = fmaxf(dflt, y/sepfact);
+		pp->x = fmax(dflt, x / sepfact);
+		pp->y = fmax(dflt, y / sepfact);
 	    }
 	    else {
 		pp->x = x;
@@ -1164,16 +1076,14 @@ parseFactor (char* s, expand_t* pp, float sepfact, float dflt)
 	    }
 	}
 	else {
-	    pp->x = 1.0f + x/sepfact;
-	    pp->y = 1.0f + y/sepfact;
+	    pp->x = 1.0 + x / sepfact;
+	    pp->y = 1.0 + y / sepfact;
 	}
 	return 1;
     }
     else return 0;
 }
 
-/* sepFactor:
- */
 expand_t
 sepFactor(graph_t* g)
 {
@@ -1194,8 +1104,7 @@ sepFactor(graph_t* g)
     return pmargin;
 }
 
-/* esepFactor:
- * This value should be smaller than the sep value used to expand
+/* This value should be smaller than the sep value used to expand
  * nodes during adjustment. If not, when the adjustment pass produces
  * a fairly tight layout, the spline code will find that some nodes
  * still overlap.
@@ -1208,7 +1117,8 @@ esepFactor(graph_t* g)
 
     if ((marg = agget(g, "esep")) && parseFactor(marg, &pmargin, 1.0, 0)) {
     }
-    else if ((marg = agget(g, "sep")) && parseFactor(marg, &pmargin, 1.0f/SEPFACT, SEPFACT*DFLT_MARGIN)) {
+    else if ((marg = agget(g, "sep")) &&
+             parseFactor(marg, &pmargin, 1.0 / SEPFACT, SEPFACT * DFLT_MARGIN)) {
     }
     else {
 	pmargin.x = pmargin.y = SEPFACT*DFLT_MARGIN;
