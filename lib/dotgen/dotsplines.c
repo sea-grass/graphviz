@@ -2282,9 +2282,9 @@ static boxf maximal_bbox(graph_t* g, spline_info_t* sp, node_t* vn, edge_t* ie, 
 	}
 	if (nb < b)
 	    b = nb;
-	rv.LL.x = ROUND(b);
+	rv.LL.x = round(b);
     } else
-	rv.LL.x = MIN(ROUND(b), sp->LeftBound);
+	rv.LL.x = fmin(round(b), sp->LeftBound);
 
     /* we have to leave room for our own label! */
     if (ND_node_type(vn) == VIRTUAL && ND_label(vn))
@@ -2303,9 +2303,9 @@ static boxf maximal_bbox(graph_t* g, spline_info_t* sp, node_t* vn, edge_t* ie, 
 	}
 	if (nb > b)
 	    b = nb;
-	rv.UR.x = ROUND(b);
+	rv.UR.x = round(b);
     } else
-	rv.UR.x = MAX(ROUND(b), sp->RightBound);
+	rv.UR.x = fmax(round(b), sp->RightBound);
 
     if (ND_node_type(vn) == VIRTUAL && ND_label(vn)) {
 	rv.UR.x -= ND_rw(vn);

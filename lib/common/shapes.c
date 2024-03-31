@@ -405,8 +405,8 @@ static bool isBox(node_t *n) {
     polygon_t *p;
 
     if ((p = ND_shape(n)->polygon)) {
-      return p->sides == 4 && is_zero(fmod(round(p->orientation), 90)) &&
-             is_zero(p->distortion) && is_zero(p->skew);
+      return p->sides == 4 && fabs(fmod(p->orientation, 90)) < 0.5 &&
+             is_exactly_zero(p->distortion) && is_exactly_zero(p->skew);
     }
     return false;
 }
@@ -1971,7 +1971,8 @@ static void poly_init(node_t * n)
 
     /* I don't know how to distort or skew ellipses in postscript */
     /* Convert request to a polygon with a large number of sides */
-    if (sides <= 2 && (distortion != 0. || skew != 0.)) {
+    if (sides <= 2 &&
+        (!is_exactly_zero(distortion) || !is_exactly_zero(skew))) {
 	sides = 120;
     }
 
@@ -1982,8 +1983,8 @@ static void poly_init(node_t * n)
     else
 	ND_label(n)->valign = 'c';
 
-    const bool isBox = sides == 4 && ROUND(orientation) % 90 == 0
-	     && distortion == 0. && skew == 0.;
+    const bool isBox = sides == 4 && fabs(fmod(orientation, 90)) < 0.5
+                    && is_exactly_zero(distortion) && is_exactly_zero(skew);
     if (isBox) {
 	/* for regular boxes the fit should be exact */
     } else if (ND_shape(n)->polygon->vertices) {
