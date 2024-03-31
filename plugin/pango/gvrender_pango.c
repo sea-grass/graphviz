@@ -184,9 +184,9 @@ static void cairogen_begin_page(GVJ_t * job)
 			job->width, job->height);
             if (job->common->verbose)
                 fprintf(stderr,
-                        "%s: allocating a %dK cairo image surface (%d x %d pixels)\n",
+                        "%s: allocating a %.0fK cairo image surface (%d x %d pixels)\n",
                         job->common->cmdname,
-			ROUND(job->width * job->height * 4 / 1024.),
+			round(job->width * job->height * 4 / 1024.),
 			job->width, job->height);
 	    break;
         }

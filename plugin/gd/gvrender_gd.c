@@ -14,6 +14,7 @@
 #include "gd_psfontResolve.h"
 #include <assert.h>
 #include <limits.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -104,17 +105,17 @@ static void gdgen_begin_page(GVJ_t * job)
 	if (truecolor_p) {
 	    if (job->common->verbose)
 		fprintf(stderr,
-			"%s: allocating a %dK TrueColor GD image (%d x %d pixels)\n",
+			"%s: allocating a %0.fK TrueColor GD image (%d x %d pixels)\n",
 			job->common->cmdname,
-			ROUND(job->width * job->height * 4 / 1024.),
+			round(job->width * job->height * 4 / 1024.),
 			job->width, job->height);
 	    im = gdImageCreateTrueColor(job->width, job->height);
 	} else {
 	    if (job->common->verbose)
 		fprintf(stderr,
-			"%s: allocating a %dK PaletteColor GD image (%d x %d pixels)\n",
+			"%s: allocating a %.0fK PaletteColor GD image (%d x %d pixels)\n",
 			job->common->cmdname,
-			ROUND(job->width * job->height / 1024.),
+			round(job->width * job->height / 1024.),
 			job->width, job->height);
 	    im = gdImageCreate(job->width, job->height);
 	}
