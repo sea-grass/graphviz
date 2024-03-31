@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @ingroup common_utils
+ */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials
@@ -26,6 +30,7 @@ extern "C" {
 #endif
 #endif
 
+/// @cond
 #ifndef GLOBALS_API
 #define GLOBALS_API /* nothing */
 #endif
@@ -33,6 +38,7 @@ extern "C" {
 #ifndef EXTERN
 #define EXTERN extern
 #endif
+/// @endcond
 
 DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 

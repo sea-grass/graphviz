@@ -1,5 +1,6 @@
 /**
  * @file
+ * @ingroup common_utils
  * @brief geometric functions (e.g. on points and boxes)
  *
  * with application to, but no specific dependence on graphs

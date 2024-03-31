@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup common_utils
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
@@ -1629,4 +1631,11 @@ findCluster (Dt_t* map, char* name)
 /**
  * @dir lib/common
  * @brief common code for layout engines
+ * @ingroup engines
+ *
+ * @ref common_utils
+ *
+ * @defgroup common_utils utilities
+ * @brief low level utilities for layout engines
+ * @ingroup engines
  */

@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup common_utils
 #if defined(_WIN32)
 #define TIMES "Times New Roman"
 #else

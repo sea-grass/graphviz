@@ -1,5 +1,6 @@
 /**
  * @file
+ * @ingroup common_utils
  * @brief @ref point containers @ref PointSet and @ref PointMap
  */
 

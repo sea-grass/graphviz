@@ -1,6 +1,7 @@
 /**
  * @file
  * @brief @ref xml_escape
+ * @ingroup common_utils
  */
 
 #include <cgraph/exit.h>
