@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup common_utils
 #pragma once
 
 #include <cgraph/list.h>

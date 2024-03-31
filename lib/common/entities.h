@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup common_utils
 /*
  * Generated file - do not edit directly.
  *
