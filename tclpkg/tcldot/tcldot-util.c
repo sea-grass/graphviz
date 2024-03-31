@@ -8,7 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <math.h>
 #include "tcldot.h"
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
@@ -256,13 +256,13 @@ void tcldot_layout(GVC_t *gvc, Agraph_t * g, char *engine)
  * doesn't yet include margins, scaling or page sizes because
  * those depend on the renderer being used. */
     if (GD_drawing(g)->landscape)
-	snprintf(buf, sizeof(buf), "%d %d %d %d",
-		ROUND(GD_bb(g).LL.y), ROUND(GD_bb(g).LL.x),
-		ROUND(GD_bb(g).UR.y), ROUND(GD_bb(g).UR.x));
+	snprintf(buf, sizeof(buf), "%.0f %.0f %.0f %.0f",
+		round(GD_bb(g).LL.y), round(GD_bb(g).LL.x),
+		round(GD_bb(g).UR.y), round(GD_bb(g).UR.x));
     else
-	snprintf(buf, sizeof(buf), "%d %d %d %d",
-		ROUND(GD_bb(g).LL.x), ROUND(GD_bb(g).LL.y),
-		ROUND(GD_bb(g).UR.x), ROUND(GD_bb(g).UR.y));
+	snprintf(buf, sizeof(buf), "%.0f %.0f %.0f %.0f",
+		round(GD_bb(g).LL.x), round(GD_bb(g).LL.y),
+		round(GD_bb(g).UR.x), round(GD_bb(g).UR.y));
     if (!(a = agattr(g, AGRAPH, "bb", NULL))) 
 	a = agattr(g, AGRAPH, "bb", "");
     agxset(g, a, buf);
