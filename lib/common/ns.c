@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 
 static void dfs_cutval(node_t * v, edge_t * par);
@@ -297,13 +298,13 @@ static void init_cutvalues(void)
 typedef struct subtree_s {
         node_t *rep;            /* some node in the tree */
         int    size;            /* total tight tree size */
-        int    heap_index;      /* required to find non-min elts when merged */
+        size_t    heap_index; ///< required to find non-min elts when merged
         struct subtree_s *par;  /* union find */
 } subtree_t;
 
 /// is this subtree stored in an STheap?
 static bool on_heap(const subtree_t *tree) {
-  return tree->heap_index > -1;
+  return tree->heap_index != SIZE_MAX;
 }
 
 /* find initial tight subtrees */
@@ -425,18 +426,14 @@ static Agedge_t *inter_tree_edge(subtree_t *tree)
     return rv;
 }
 
-static
-int STheapsize(STheap_t *heap) { return heap->size; }
+static size_t STheapsize(STheap_t *heap) { return heap->size; }
 
-static 
-void STheapify(STheap_t *heap, int i)
-{
-    int left, right, smallest;
+static void STheapify(STheap_t *heap, size_t i) {
     subtree_t **elt = heap->elt;
     do {
-        left = 2*(i+1)-1;
-        right = 2*(i+1);
-        smallest = i;
+        const size_t left = 2 * (i + 1) - 1;
+        const size_t right = 2 * (i + 1);
+        size_t smallest = i;
         if (left < heap->size && elt[left]->size < elt[smallest]->size) smallest = left;
         if (right < heap->size && elt[right]->size < elt[smallest]->size) smallest = right;
         if (smallest != i) {
@@ -452,15 +449,12 @@ void STheapify(STheap_t *heap, int i)
     } while (i < heap->size);
 }
 
-static
-STheap_t *STbuildheap(subtree_t **elt, int size)
-{
-    int     i;
+static STheap_t *STbuildheap(subtree_t **elt, size_t size) {
     STheap_t *heap = gv_alloc(sizeof(STheap_t));
     heap->elt = elt;
     heap->size = size;
-    for (i = 0; i < heap->size; i++) heap->elt[i]->heap_index = i;
-    for (i = heap->size/2; i >= 0; i--)
+    for (size_t i = 0; i < heap->size; i++) heap->elt[i]->heap_index = i;
+    for (size_t i = heap->size / 2; i != SIZE_MAX; i--)
         STheapify(heap,i);
     return heap;
 }
@@ -470,7 +464,8 @@ subtree_t *STextractmin(STheap_t *heap)
 {
     subtree_t *rv;
     rv = heap->elt[0];
-    rv->heap_index = -1; // mark this as not participating in the heap anymore
+    rv->heap_index = SIZE_MAX;
+      // mark this as not participating in the heap anymore
     heap->elt[0] = heap->elt[heap->size - 1];
     heap->elt[0]->heap_index = 0;
     heap->elt[heap->size -1] = rv;    /* needed to free storage later */
@@ -538,7 +533,7 @@ int feasible_tree(void)
   Agnode_t *n;
   Agedge_t *ee;
   subtree_t *tree0, *tree1;
-  int i, subtree_count = 0;
+  size_t subtree_count = 0;
   STheap_t *heap = NULL;
   int error = 0;
 
@@ -578,7 +573,7 @@ int feasible_tree(void)
 
 end:
   free(heap);
-  for (i = 0; i < subtree_count; i++) free(tree[i]);
+  for (size_t i = 0; i < subtree_count; i++) free(tree[i]);
   free(tree);
   if (error) return error;
   assert(Tree_edge.size == N_nodes - 1);
