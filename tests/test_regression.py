@@ -3166,7 +3166,6 @@ def test_2390():
     dot("xdot", source=input)
 
 
-@pytest.mark.xfail(strict=True)  # FIXME
 def test_2391():
     """
     `nslimit1=0` should not cause Graphviz to crash
@@ -3181,7 +3180,6 @@ def test_2391():
     dot("svg", input)
 
 
-@pytest.mark.xfail(strict=True)  # FIXME
 def test_2391_1():
     """
     `nslimit1=0` with a label should not cause Graphviz to crash

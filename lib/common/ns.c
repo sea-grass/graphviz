@@ -430,10 +430,9 @@ void STheapify(STheap_t *heap, int i)
     do {
         left = 2*(i+1)-1;
         right = 2*(i+1);
-        if (left < heap->size && elt[left]->size < elt[i]->size) smallest = left;
-        else smallest = i;
+        smallest = i;
+        if (left < heap->size && elt[left]->size < elt[smallest]->size) smallest = left;
         if (right < heap->size && elt[right]->size < elt[smallest]->size) smallest = right;
-        else smallest = i;
         if (smallest != i) {
             subtree_t *temp;
             temp = elt[i];
