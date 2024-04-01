@@ -426,7 +426,7 @@ static Agedge_t *inter_tree_edge(subtree_t *tree)
     return rv;
 }
 
-static size_t STheapsize(STheap_t *heap) { return heap->size; }
+static size_t STheapsize(const STheap_t *heap) { return heap->size; }
 
 static void STheapify(STheap_t *heap, size_t i) {
     subtree_t **elt = heap->elt;
