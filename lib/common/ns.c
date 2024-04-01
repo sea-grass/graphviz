@@ -530,21 +530,19 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
 static
 int feasible_tree(void)
 {
-  Agnode_t *n;
   Agedge_t *ee;
-  subtree_t *tree0, *tree1;
   size_t subtree_count = 0;
   STheap_t *heap = NULL;
   int error = 0;
 
   /* initialization */
-  for (n = GD_nlist(G); n; n = ND_next(n)) {
+  for (Agnode_t *n = GD_nlist(G); n != NULL; n = ND_next(n)) {
       ND_subtree_set(n,0);
   }
 
   subtree_t **tree = gv_calloc(N_nodes, sizeof(subtree_t *));
   /* given init_rank, find all tight subtrees */
-  for (n = GD_nlist(G); n; n = ND_next(n)) {
+  for (Agnode_t *n = GD_nlist(G); n != NULL; n = ND_next(n)) {
         if (ND_subtree(n) == 0) {
                 tree[subtree_count] = find_tight_subtree(n);
                 if (tree[subtree_count] == NULL) {
@@ -558,12 +556,12 @@ int feasible_tree(void)
   /* incrementally merge subtrees */
   heap = STbuildheap(tree,subtree_count);
   while (STheapsize(heap) > 1) {
-    tree0 = STextractmin(heap);
+    subtree_t *tree0 = STextractmin(heap);
     if (!(ee = inter_tree_edge(tree0))) {
       error = 1;
       break;
     }
-    tree1 = merge_trees(ee);
+    subtree_t *tree1 = merge_trees(ee);
     if (tree1 == NULL) {
       error = 2;
       break;
