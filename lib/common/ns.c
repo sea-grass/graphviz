@@ -509,8 +509,6 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
   t0 = STsetFind(agtail(e));
   t1 = STsetFind(aghead(e));
 
-  //fprintf(stderr,"merge trees of %d %d of %d, delta %d\n",t0->size,t1->size,N_nodes,delta);
-
   if (!on_heap(t0)) { // move t0
     delta = SLACK(e);
     if (delta != 0)
