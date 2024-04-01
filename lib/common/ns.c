@@ -50,7 +50,6 @@ static elist Tree_edge;
 static int add_tree_edge(edge_t * e)
 {
     node_t *n;
-    //fprintf(stderr,"add tree edge %p %s ", (void*)e, agnameof(agtail(e))) ; fprintf(stderr,"%s\n", agnameof(aghead(e))) ;
     if (TREE_EDGE(e)) {
 	agerrorf("add_tree_edge: missing tree edge\n");
 	return -1;
