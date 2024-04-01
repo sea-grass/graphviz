@@ -301,6 +301,11 @@ typedef struct subtree_s {
         struct subtree_s *par;  /* union find */
 } subtree_t;
 
+/// is this subtree stored in an STheap?
+static bool on_heap(const subtree_t *tree) {
+  return tree->heap_index > -1;
+}
+
 /* find initial tight subtrees */
 static int tight_subtree_search(Agnode_t *v, subtree_t *st)
 {
@@ -367,15 +372,15 @@ static subtree_t *STsetUnion(subtree_t *s0, subtree_t *s1)
   for (r0 = s0; r0->par && r0->par != r0; r0 = r0->par);
   for (r1 = s1; r1->par && r1->par != r1; r1 = r1->par);
   if (r0 == r1) return r0;  /* safety code but shouldn't happen */
-  assert(r0->heap_index > -1 || r1->heap_index > -1);
-  if (r1->heap_index == -1) r = r0;
-  else if (r0->heap_index == -1) r = r1;
+  assert(on_heap(r0) || on_heap(r1));
+  if (!on_heap(r1)) r = r0;
+  else if (!on_heap(r0)) r = r1;
   else if (r1->size < r0->size) r = r0;
   else r = r1;
 
   r0->par = r1->par = r;
   r->size = r0->size + r1->size;
-  assert(r->heap_index >= 0);
+  assert(on_heap(r));
   return r;
 }
 
@@ -465,7 +470,7 @@ subtree_t *STextractmin(STheap_t *heap)
 {
     subtree_t *rv;
     rv = heap->elt[0];
-    rv->heap_index = -1;
+    rv->heap_index = -1; // mark this as not participating in the heap anymore
     heap->elt[0] = heap->elt[heap->size - 1];
     heap->elt[0]->heap_index = 0;
     heap->elt[heap->size -1] = rv;    /* needed to free storage later */
@@ -506,7 +511,7 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
 
   //fprintf(stderr,"merge trees of %d %d of %d, delta %d\n",t0->size,t1->size,N_nodes,delta);
 
-  if (t0->heap_index == -1) {   // move t0
+  if (!on_heap(t0)) { // move t0
     delta = SLACK(e);
     if (delta != 0)
       tree_adjust(t0->rep,NULL,delta);
