@@ -125,6 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   algorithm has been corrected. This would previously cause certain runs to
   infer incorrect ordering or subtrees. This was a regression in Graphviz
   2.40.0. #2391, #2529
+- Compass points may be more accurately placed on the node boundary in some cases.
 
 ## [10.0.1] – 2024-02-11
 
