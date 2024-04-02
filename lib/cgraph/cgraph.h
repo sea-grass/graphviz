@@ -668,6 +668,10 @@ CGRAPH_API Agsym_t *agattrsym(void *obj, char *name);
 ///< looks up a string attribute for a graph object given as an argument
 
 CGRAPH_API Agsym_t *agnxtattr(Agraph_t *g, int kind, Agsym_t *attr);
+///< @brief permits traversing the list of attributes of a given type
+/// @param attr	if `NULL` the function returns the first attribute
+/// @returns the next one in succession or `NULL` at the end of the list.
+
 CGRAPH_API int agcopyattr(void *oldobj, void *newobj);
 /**< @brief copies all of the attributes from one object to another
  * @return fails and returns non-zero if argument objects are different kinds,
