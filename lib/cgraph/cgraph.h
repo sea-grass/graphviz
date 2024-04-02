@@ -543,6 +543,12 @@ CGRAPH_API char *agnameof(void *);
 ///< returns a string descriptor for the object.
 
 CGRAPH_API int agdelete(Agraph_t *g, void *obj);
+/**< @brief deletes object.
+ * Equivalent to @ref agclose, @ref agdelnode, and @ref agdeledge
+ * for **obj** being a graph, node or edge, respectively.
+ * @returns -1 if **obj** does not belong to graph **g**.
+ */
+
 CGRAPH_API int agobjkind(void *obj);
 ///< returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending on the type of
 ///< the object. Synonym for @ref AGTYPE.
