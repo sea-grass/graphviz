@@ -714,6 +714,9 @@ CGRAPH_API int agset(void *obj, char *name, const char *value);
 CGRAPH_API int agxset(void *obj, Agsym_t *sym, const char *value);
 CGRAPH_API int agsafeset(void *obj, char *name, const char *value,
                          const char *def);
+///< @brief ensures the given attribute is declared
+///  before setting it locally on an object
+
 /// @}
 
 /** @defgroup cgraph_subgraph subgraphs
