@@ -183,6 +183,9 @@ struct Agrec_s {
  *
  * Common parameter for functions **obj** is generic pointer
  * to @ref Agraph_t, @ref Agnode_t, or @ref Agedge_t
+ *
+ * @ref AGDATA, @ref AGID, @ref AGTYPE, and others are macros returning
+ * the specified fields of the argument object.
  * @{
  */
 
@@ -211,10 +214,17 @@ struct Agobj_s {
 
 #define AGTAG(obj) (((Agobj_t *)(obj))->tag)
 #define AGTYPE(obj) (AGTAG(obj).objtype)
+///< @brief returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending
+/// on the type of the object
+
 #define AGID(obj) (AGTAG(obj).id)
+///< returns the unique integer ID associated with the object
+
 #define AGSEQ(obj) (AGTAG(obj).seq)
 #define AGATTRWF(obj) (AGTAG(obj).attrwf)
 #define AGDATA(obj) (((Agobj_t *)(obj))->data)
+///< returns @ref Agrec_t
+
 /// @}
 /// @} cgraph_api
 
