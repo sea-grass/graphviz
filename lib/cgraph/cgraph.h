@@ -673,8 +673,9 @@ CGRAPH_API int agcopyattr(void *oldobj, void *newobj);
 /// @{
 CGRAPH_API void *agbindrec(void *obj, const char *name, unsigned int recsize,
                            int move_to_front);
-///< @brief attach a new record of the given size to the object
+///< @brief attaches a new record of the given size to the object
 /// @param recsize if 0, the call to @ref agbindrec is simply a lookup
+/// @returns pointer to `Agrec_t` and user data
 
 CGRAPH_API Agrec_t *aggetrec(void *obj, const char *name, int move_to_front);
 ///< find record in circular list and do optional move-to-front and lock
