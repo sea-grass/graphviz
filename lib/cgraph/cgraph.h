@@ -346,6 +346,13 @@ CGRAPH_API extern Agdisc_t AgDefaultDisc;
 
 /** @defgroup cgraph_graph graphs
  *  @ingroup cgraph_object
+ *
+ * The functions @ref agisdirected, @ref agisundirected,
+ * @ref agisstrict, and @ref agissimple
+ * can be used to query if a graph is directed, undirected,
+ * strict (at most one edge with a given tail and head),
+ * or simple (strict with no loops), respectively.
+ *
  *  @{
  */
 
