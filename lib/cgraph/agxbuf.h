@@ -73,24 +73,18 @@ static inline bool agxbuf_is_inline(const agxbuf *xb) {
   return xb->u.s.located < AGXBUF_ON_HEAP;
 }
 
-/* agxbfree:
- * Free any malloced resources.
- */
+/// free any malloced resources
 static inline void agxbfree(agxbuf *xb) {
   if (xb->u.s.located == AGXBUF_ON_HEAP)
     free(xb->u.s.buf);
 }
 
-/* agxbstart
- * Return pointer to beginning of buffer.
- */
+/// return pointer to beginning of buffer
 static inline char *agxbstart(agxbuf *xb) {
   return agxbuf_is_inline(xb) ? xb->u.store : xb->u.s.buf;
 }
 
-/* agxblen:
- * Return number of characters currently stored.
- */
+/// return number of characters currently stored
 static inline size_t agxblen(const agxbuf *xb) {
   if (agxbuf_is_inline(xb)) {
     return xb->u.s.located - AGXBUF_INLINE_SIZE_0;
@@ -112,9 +106,7 @@ static inline size_t agxbsizeof(const agxbuf *xb) {
   return xb->u.s.capacity;
 }
 
-/* agxbpop:
- * Removes last character added, if any.
- */
+/// removes last character added, if any
 static inline int agxbpop(agxbuf *xb) {
 
   size_t len = agxblen(xb);
@@ -134,9 +126,7 @@ static inline int agxbpop(agxbuf *xb) {
   return c;
 }
 
-/* agxbmore:
- * Expand buffer to hold at least ssz more bytes.
- */
+/// expand buffer to hold at least ssz more bytes
 static inline void agxbmore(agxbuf *xb, size_t ssz) {
   size_t cnt = 0;   // current no. of characters in buffer
   size_t size = 0;  // current buffer size
@@ -161,9 +151,7 @@ static inline void agxbmore(agxbuf *xb, size_t ssz) {
   xb->u.s.located = AGXBUF_ON_HEAP;
 }
 
-/* agxbnext
- * Next position for writing.
- */
+/// next position for writing
 static inline char *agxbnext(agxbuf *xb) {
   size_t len = agxblen(xb);
   return agxbuf_is_inline(xb) ? &xb->u.store[len] : &xb->u.s.buf[len];
@@ -221,9 +209,7 @@ static inline int vagxbprint(agxbuf *xb, const char *fmt, va_list ap) {
 #define PRINTF_LIKE(index, first) /* nothing */
 #endif
 
-/* agxbprint:
- * Printf-style output to an agxbuf
- */
+/// Printf-style output to an agxbuf
 static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
                                               ...) {
   va_list ap;
@@ -239,9 +225,7 @@ static inline PRINTF_LIKE(2, 3) int agxbprint(agxbuf *xb, const char *fmt,
 
 #undef PRINTF_LIKE
 
-/* agxbput_n:
- * Append string s of length ssz into xb
- */
+/// append string s of length ssz into xb
 static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
   if (ssz == 0) {
     return 0;
@@ -261,19 +245,14 @@ static inline size_t agxbput_n(agxbuf *xb, const char *s, size_t ssz) {
   return ssz;
 }
 
-/* agxbput:
- * Append string s into xb
- */
+/// append string s into xb
 static inline size_t agxbput(agxbuf *xb, const char *s) {
   size_t ssz = strlen(s);
 
   return agxbput_n(xb, s, ssz);
 }
 
-/* agxbputc:
- * Add character to buffer.
- *  int agxbputc(agxbuf*, char)
- */
+/// add character to buffer
 static inline int agxbputc(agxbuf *xb, char c) {
   if (agxblen(xb) >= agxbsizeof(xb)) {
     agxbmore(xb, 1);
@@ -290,9 +269,7 @@ static inline int agxbputc(agxbuf *xb, char c) {
   return 0;
 }
 
-/* agxbclear:
- * Resets pointer to data;
- */
+/// resets pointer to data
 static inline void agxbclear(agxbuf *xb) {
   if (agxbuf_is_inline(xb)) {
     xb->u.s.located = AGXBUF_INLINE_SIZE_0;
@@ -301,8 +278,7 @@ static inline void agxbclear(agxbuf *xb) {
   }
 }
 
-/* agxbuse:
- * Null-terminates buffer; resets and returns pointer to data. The buffer is
+/* Null-terminates buffer; resets and returns pointer to data. The buffer is
  * still associated with the agxbuf and will be overwritten on the next, e.g.,
  * agxbput. If you want to retrieve and disassociate the buffer, use agxbdisown
  * instead.
@@ -313,8 +289,7 @@ static inline char *agxbuse(agxbuf *xb) {
   return agxbstart(xb);
 }
 
-/* agxbdisown:
- * Disassociate the backing buffer from this agxbuf and return it. The buffer is
+/* Disassociate the backing buffer from this agxbuf and return it. The buffer is
  * NUL terminated before being returned. If the agxbuf is using stack memory,
  * this will first copy the data to a new heap buffer to then return. If you
  * want to temporarily access the string in the buffer, but have it overwritten
