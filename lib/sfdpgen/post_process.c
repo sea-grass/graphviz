@@ -19,7 +19,6 @@
 #include <cgraph/exit.h>
 #include <cgraph/unused.h>
 #include <common/types.h>
-#include <common/memory.h>
 #include <common/globals.h>
 
 #include <sfdpgen/sparse_solve.h>

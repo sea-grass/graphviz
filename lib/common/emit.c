@@ -798,11 +798,9 @@ void update_bb_bz(boxf *bb, pointf *cp)
 }
 
 #if defined(DEBUG) && DEBUG == 2
-static void psmapOutput (pointf* ps, int n)
-{
-   int i;
+static void psmapOutput(pointf* ps, size_t n) {
    fprintf (stdout, "newpath %f %f moveto\n", ps[0].x, ps[0].y);
-   for (i=1; i < n; i++)
+   for (size_t i = 1; i < n; i++)
         fprintf (stdout, "%f %f lineto\n", ps[i].x, ps[i].y);
    fprintf (stdout, "closepath stroke\n");
 }
@@ -828,17 +826,17 @@ static segitem_t* appendSeg (pointf p, segitem_t* lp)
 /* Output the polygon determined by the n points in p1, followed
  * by the n points in p2 in reverse order. Assumes n <= 50.
  */
-static void map_bspline_poly(pointf **pbs_p, int **pbs_n, int *pbs_poly_n, int n, pointf* p1, pointf* p2)
-{
-    int i = 0, nump = 0, last = 2*n-1;
+static void map_bspline_poly(pointf **pbs_p, size_t **pbs_n, size_t *pbs_poly_n,
+                             size_t n, pointf *p1, pointf *p2) {
+    size_t i = 0, nump = 0, last = 2 * n - 1;
 
     for ( ; i < *pbs_poly_n; i++)
         nump += (*pbs_n)[i];
 
     (*pbs_poly_n)++;
-    *pbs_n = grealloc(*pbs_n, (*pbs_poly_n) * sizeof(int));
+    *pbs_n = gv_recalloc(*pbs_n, *pbs_poly_n - 1, *pbs_poly_n, sizeof(size_t));
     (*pbs_n)[i] = 2*n;
-    *pbs_p = grealloc(*pbs_p, (nump + 2*n) * sizeof(pointf));
+    *pbs_p = gv_recalloc(*pbs_p, nump, nump + 2 * n, sizeof(pointf));
 
     for (i = 0; i < n; i++) {
         (*pbs_p)[nump+i] = p1[i];
@@ -939,13 +937,12 @@ static void mkSegPts (segitem_t* prv, segitem_t* cur, segitem_t* nxt,
  * In cmapx, polygons are limited to 100 points, so we output polygons
  * in chunks of 100.
  */
-static void map_output_bspline (pointf **pbs, int **pbs_n, int *pbs_poly_n, bezier* bp, double w2)
-{
+static void map_output_bspline(pointf **pbs, size_t **pbs_n, size_t *pbs_poly_n,
+                               bezier *bp, double w2) {
     segitem_t* segl = gv_alloc(sizeof(segitem_t));
     segitem_t* segp = segl;
     segitem_t* segprev;
     segitem_t* segnext;
-    int cnt;
     pointf pts[4], pt1[50], pt2[50];
 
     MARK_FIRST_SEG(segl);
@@ -959,7 +956,7 @@ static void map_output_bspline (pointf **pbs, int **pbs_n, int *pbs_poly_n, bezi
 
     segp = segl;
     segprev = 0;
-    cnt = 0;
+    size_t cnt = 0;
     while (segp) {
         segnext = segp->next;
         mkSegPts (segprev, segp, segnext, pt1+cnt, pt2+cnt, w2);
@@ -2432,7 +2429,7 @@ static void emit_begin_edge(GVJ_t *job, edge_t *e, char **styles) {
   char *s;
   textlabel_t *lab = NULL, *tlab = NULL, *hlab = NULL;
   pointf *pbs = NULL;
-  int *pbs_n = NULL, pbs_poly_n = 0;
+  size_t *pbs_n = NULL, pbs_poly_n = 0;
   char *dflt_url = NULL;
   char *dflt_target = NULL;
   double penwidth;
@@ -2584,19 +2581,16 @@ static void emit_begin_edge(GVJ_t *job, edge_t *e, char **styles) {
       obj->url_bsplinemap_poly_n = pbs_poly_n;
       obj->url_bsplinemap_n = pbs_n;
       if (!(flags & GVRENDER_DOES_TRANSFORM)) {
-        size_t nump;
-        int i;
-        for (nump = 0, i = 0; i < pbs_poly_n; i++) {
-          assert(pbs_n[i] >= 0);
-          nump += (size_t)pbs_n[i];
+        size_t nump = 0;
+        for (size_t i = 0; i < pbs_poly_n; i++) {
+          nump += pbs_n[i];
         }
         gvrender_ptf_A(job, pbs, pbs, nump);
       }
       obj->url_bsplinemap_p = pbs;
       obj->url_map_shape = MAP_POLYGON;
       obj->url_map_p = pbs;
-      assert(pbs_n[0] >= 0);
-      obj->url_map_n = (size_t)pbs_n[0];
+      obj->url_map_n = pbs_n[0];
     }
   }
 
@@ -2692,15 +2686,14 @@ static void emit_end_edge(GVJ_t * job)
 {
     obj_state_t *obj = job->obj;
     edge_t *e = obj->u.e;
-    int i, nump;
 
     if (obj->url || obj->explicit_tooltip) {
 	gvrender_end_anchor(job);
 	if (obj->url_bsplinemap_poly_n) {
-	    for ( nump = obj->url_bsplinemap_n[0], i = 1; i < obj->url_bsplinemap_poly_n; i++) {
+	    for (size_t nump = obj->url_bsplinemap_n[0], i = 1;
+	         i < obj->url_bsplinemap_poly_n; i++) {
 		/* additional polygon maps around remaining bezier pieces */
-		assert(obj->url_bsplinemap_n[i] >= 0);
-		obj->url_map_n = (size_t)obj->url_bsplinemap_n[i];
+		obj->url_map_n = obj->url_bsplinemap_n[i];
 		obj->url_map_p = &(obj->url_bsplinemap_p[nump]);
 		gvrender_begin_anchor(job,
 			obj->url, obj->tooltip, obj->target, obj->id);

@@ -32,7 +32,6 @@
 #include <time.h>
 #include <neatogen/matrix_ops.h>
 #include <neatogen/delaunay.h>
-#include <common/memory.h>
 #include <common/arith.h>
 
 static double *compute_densities(v_data *graph, size_t n, double *x, double *y)

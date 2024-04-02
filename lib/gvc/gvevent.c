@@ -43,12 +43,11 @@ static char *s_key = "key";
 
 static void gv_graph_state(GVJ_t *job, graph_t *g)
 {
-    int j;
     Agsym_t *a;
     gv_argvlist_t *list;
 
     list = &(job->selected_obj_type_name);
-    j = 0;
+    size_t j = 0;
     if (g == agroot(g)) {
 	if (agisdirected(g))
             gv_argvlist_set_item(list, j++, s_digraph);
@@ -79,13 +78,12 @@ static void gv_graph_state(GVJ_t *job, graph_t *g)
 
 static void gv_node_state(GVJ_t *job, node_t *n)
 {
-    int j;
     Agsym_t *a;
     Agraph_t *g;
     gv_argvlist_t *list;
 
     list = &(job->selected_obj_type_name);
-    j = 0;
+    size_t j = 0;
     gv_argvlist_set_item(list, j++, s_node);
     gv_argvlist_set_item(list, j++, agnameof(n));
     list->argc = j;
@@ -108,7 +106,6 @@ static void gv_node_state(GVJ_t *job, node_t *n)
 
 static void gv_edge_state(GVJ_t *job, edge_t *e)
 {
-    int j;
     Agsym_t *a;
     Agraph_t *g;
     gv_argvlist_t *nlist, *alist;
@@ -118,7 +115,7 @@ static void gv_edge_state(GVJ_t *job, edge_t *e)
     /* only tail, head, and key are strictly identifying properties,
      * but we commonly also use edge kind (e.g. "->") and tailport,headport
      * in edge names */
-    j = 0;
+    size_t j = 0;
     gv_argvlist_set_item(nlist, j++, s_edge);
     gv_argvlist_set_item(nlist, j++, agnameof(agtail(e)));
     j++; /* skip tailport slot for now */

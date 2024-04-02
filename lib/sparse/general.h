@@ -24,7 +24,6 @@
 #include "cgraph.h"
 #include "globals.h"
 #include "arith.h"
-#include <common/memory.h>
 #endif  /* STANDALONE */
 
 #ifdef __cplusplus

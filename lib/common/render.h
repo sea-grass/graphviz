@@ -30,7 +30,6 @@ extern "C" {
 #include "macros.h"
 #include "const.h"
 #include "globals.h"
-#include <common/memory.h>
 #include "colorprocs.h"		/* must follow color.h (in types.h) */
 #include "geomprocs.h"		/* must follow geom.h (in types.h) */
 #include "agxbuf.h"

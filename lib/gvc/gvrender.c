@@ -18,7 +18,6 @@
 
 #include <assert.h>
 #include <string.h>
-#include <common/memory.h>
 #include <common/const.h>
 #include <common/macros.h>
 #include <common/colorprocs.h>

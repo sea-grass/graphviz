@@ -23,7 +23,6 @@
 #include <common/color.h>
 #include <common/colorprocs.h>
 #include <common/colortbl.h>
-#include <common/memory.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>

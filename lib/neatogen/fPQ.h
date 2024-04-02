@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
-#include <common/memory.h>
 #include <stdio.h>
 
 /* Priority queue:

@@ -11,7 +11,6 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <sparse/SparseMatrix.h>
-#include <common/memory.h>
 #include <neatogen/delaunay.h>
 #include <stddef.h>
 #include <stdbool.h>

@@ -53,7 +53,6 @@ static int glob (GVC_t * gvc, char*, int, int (*errfunc)(const char *, int), glo
 #include <mach-o/dyld.h>
 #endif
 
-#include        <common/memory.h>
 #include        <common/const.h>
 #include        <common/types.h>
 
