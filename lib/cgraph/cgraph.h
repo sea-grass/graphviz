@@ -68,6 +68,12 @@ extern "C" {
 /// @endcond
 
 /* forward struct type declarations */
+/// @addtogroup cgraph_object
+/// @{
+typedef uint64_t IDTYPE; ///< unique per main graph ID
+typedef struct Agtag_s Agtag_t;
+typedef struct Agobj_s Agobj_t; ///< generic object header
+/// @}
 /// @addtogroup cgraph_graph
 /// @{
 typedef struct Agraph_s Agraph_t;     ///< graph, subgraph (or hyperedge)
@@ -156,10 +162,6 @@ typedef struct Agcbstack_s Agcbstack_t; ///< enclosing state for @ref Agcbdisc_t
  *
  */
 
-typedef uint64_t IDTYPE;
-
-typedef struct Agtag_s Agtag_t;
-typedef struct Agobj_s Agobj_t;           ///< generic object header
 typedef struct Agsym_s Agsym_t;           ///< string attribute descriptors
 typedef struct Agattr_s Agattr_t;         ///< string attribute container
 typedef struct Agdatadict_s Agdatadict_t; ///< set of dictionaries per graph
