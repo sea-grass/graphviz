@@ -16,16 +16,16 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <cgraph/alloc.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/streq.h>
 
 #define MAX(a,b)	((a)>(b)?(a):(b))
 static agerrlevel_t agerrno;		/* Last error level */
 static agerrlevel_t agerrlevel = AGWARN;	/* Report errors >= agerrlevel */
 static int agmaxerr;
 
-static long aglast;		/* Last message */
-static FILE *agerrout;		/* Message file */
+static agxbuf last; ///< last message
 static agusererrf usererrf;     /* User-set error function */
 
 agusererrf
@@ -45,18 +45,21 @@ agerrlevel_t agseterr(agerrlevel_t lvl)
 
 char *aglasterr(void)
 {
-    if (!agerrout)
-	return 0;
-    fflush(agerrout);
-    long endpos = ftell(agerrout);
-    size_t len = (size_t)(endpos - aglast);
-    char *buf = gv_alloc(len + 1);
-    fseek(agerrout, aglast, SEEK_SET);
-    len = fread(buf, sizeof(char), len, agerrout);
-    buf[len] = '\0';
-    fseek(agerrout, endpos, SEEK_SET);
+  // Extract a heap-allocated copy of the last message. Note that this resets
+  // `last` to an empty buffer ready to be written to again.
+  char *buf = agxbdisown(&last);
 
-    return buf;
+  // store the message back again so multiple calls to `aglasterr` can be made
+  // without losing the last error
+  agxbput(&last, buf);
+
+  // was there no last message?
+  if (streq(buf, "")) {
+    free(buf);
+    return NULL;
+  }
+
+  return buf;
 }
 
 /// Report messages using a user-supplied write function 
@@ -135,15 +138,9 @@ static int agerr_va(agerrlevel_t level, const char *fmt, va_list args)
 	return 0;
     }
 
-    if (!agerrout) {
-	agerrout = tmpfile();
-	if (!agerrout)
-	    return 1;
-    }
-
     if (level != AGPREV)
-	aglast = ftell(agerrout);
-    vfprintf(agerrout, fmt, args);
+	agxbclear(&last);
+    vagxbprint(&last, fmt, args);
     return 0;
 }
 
