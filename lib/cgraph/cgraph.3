@@ -454,34 +454,36 @@ object labeled with the given ID is about to go out of existence.
 \fImap\fP is called to create or look-up IDs by string name
 (if supported by the ID manager).  Returning TRUE (nonzero)
 in all cases means that the request succeeded (with a valid
-ID stored through \f5result\fP.  There are four cases:
-.PP
-\fIname != NULL\fP and \f5createflag == 1\fP:
+ID stored through \fIresult\fP.  There are four cases:
+.RS
+.IP \[bu] 2
+\fIname != NULL\fP and \fIcreateflag == 1\fP:
 This requests mapping a string (e.g. a name in a graph file) into a new ID.
 If the ID manager can comply, then it stores the result and returns TRUE.
-It is then also responsible for being able to \f5print\fP the ID again
+It is then also responsible for being able to \fIprint\fP the ID again
 as a string.  Otherwise the ID manager may return FALSE but it must
 implement the following (at least for graph file reading and writing to work):
-.PP
-\f5name == NULL\fP and \f5createflag == 1\fP:
+.IP \[bu]
+\fIname == NULL\fP and \fIcreateflag == 1\fP:
 The ID manager creates a unique new ID of its own choosing. 
 Although it may return FALSE if it does not support anonymous objects,
 but this is strongly discouraged (to support "local names" in graph files.)
-.PP
-\f5name != NULL\fP and \f5createflag == 0\fP:
+.IP \[bu]
+\fIname != NULL\fP and \fIcreateflag == 0\fP:
 This is a namespace probe.  If the name was previously mapped into
 an allocated ID by the ID manager, then the manager must return this ID.
 Otherwise, the ID manager may either return FALSE, or may store
 any unallocated ID into result. (This is convenient, for example,
 if names are known to be digit strings that are directly converted into integer values.)
+.IP \[bu]
+\fIname == NULL\fP and \fIcreateflag == 0\fP: forbidden.
+.RE
 .PP
-\f5name == NULL\fP and \f5createflag == 0\fP: forbidden.
-.PP
-\f5print\fP is allowed to return a pointer to a static buffer;
+\fIprint\fP is allowed to return a pointer to a static buffer;
 a caller must copy its value if needed past subsequent calls.
-\f5NULL\fP should be returned by ID managers that do not map names.
+\fINULL\fP should be returned by ID managers that do not map names.
 .PP
-The \f5map\fP and \f5alloc\fP calls do not pass a pointer to the
+The \fImap\fP and \fIalloc\fP calls do not pass a pointer to the
 newly allocated object.  If a client needs to install object
 pointers in a handle table, it can obtain them via 
 new object callbacks.
