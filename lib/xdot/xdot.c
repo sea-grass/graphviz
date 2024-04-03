@@ -701,6 +701,8 @@ static void jsonXDot_Op(xdot_op * op, pf print, void *info, int more)
 	jsonString(op->u.image.name, print, info);
 	print(info, "]");
 	break;
+    default: // invalid type; ignore
+	break;
     }
     if (more)
 	print(info, "},\n");
