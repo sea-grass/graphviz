@@ -97,6 +97,8 @@ void aginitcb(Agraph_t * g, void *obj, Agcbstack_t * cbstack)
     case AGEDGE:
 	fn = cbstack->f->edge.ins;
 	break;
+    default: // ignore
+	break;
     }
     if (fn)
 	fn(g, obj, cbstack->state);
