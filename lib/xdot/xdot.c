@@ -586,6 +586,8 @@ static void printXDot_Op(xdot_op * op, pf print, void *info, int more)
 	printRect(&op->u.image.pos, print, info);
 	printString(op->u.image.name, print, info);
 	break;
+    default: // invalid type; ignore
+	break;
     }
     if (more)
 	print(info, " ");
