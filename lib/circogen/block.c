@@ -32,7 +32,7 @@ void freeBlock(block_t * sp)
 {
     if (!sp)
 	return;
-    freeNodelist(sp->circle_list);
+    nodelist_free(&sp->circle_list);
     free(sp);
 }
 
@@ -41,9 +41,7 @@ int blockSize(block_t * sp)
     return agnnodes (sp->sub_graph);
 }
 
-/* appendBlock:
- * add block at end
- */
+/// add block at end
 void appendBlock(blocklist_t * bl, block_t * bp)
 {
     bp->next = NULL;
@@ -56,9 +54,7 @@ void appendBlock(blocklist_t * bl, block_t * bp)
     }
 }
 
-/* insertBlock:
- * add block at beginning
- */
+/// add block at beginning
 void insertBlock(blocklist_t * bl, block_t * bp)
 {
     if (bl->first) {

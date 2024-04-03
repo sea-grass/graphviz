@@ -15,8 +15,9 @@ extern "C" {
 #endif
 
 #include <circogen/circular.h>
+#include <circogen/nodelist.h>
 
-    extern nodelist_t *layout_block(Agraph_t * g, block_t * sn, double);
+nodelist_t layout_block(Agraph_t *g, block_t *sn, double);
 
 #ifdef DEBUG
     extern void prTree(Agraph_t * g);

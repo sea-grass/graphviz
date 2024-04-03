@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include	<cgraph/alloc.h>
 #include	<circogen/nodelist.h>
 #include	<circogen/circular.h>
 #include	<assert.h>
@@ -16,24 +15,6 @@
 #include	<stddef.h>
 #include	<string.h>
 
-nodelist_t *mkNodelist(void)
-{
-    nodelist_t *list = gv_alloc(sizeof(nodelist_t));
-    return list;
-}
-
-void freeNodelist(nodelist_t * list)
-{
-    if (!list)
-	return;
-
-    nodelist_free(list);
-    free(list);
-}
-
-/* appendNodelist:
- * Add node after one.
- */
 void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
   assert(one < nodelist_size(list));
 
@@ -50,10 +31,6 @@ void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
   nodelist_set(list, one + 1, n);
 }
 
-/* realignNodelist:
- * Make np new front of list, with current last hooked to
- * current first.
- */
 void realignNodelist(nodelist_t *list, size_t np) {
   assert(np < nodelist_size(list));
   for (size_t i = np; i != 0; --i) {
@@ -67,22 +44,6 @@ void realignNodelist(nodelist_t *list, size_t np) {
   }
 }
 
-/* cloneNodelist:
- * Create a copy of list.
- */
-nodelist_t *cloneNodelist(nodelist_t * list)
-{
-    nodelist_t *newlist = mkNodelist();
-    for (size_t i = 0; i < nodelist_size(list); ++i) {
-      nodelist_append(newlist, nodelist_get(list, i));
-    }
-    return newlist;
-}
-
-/* insertNodelist:
- * Remove cn. Then, insert cn before neighbor if pos == 0 and 
- * after neighbor otherwise.
- */
 void
 insertNodelist(nodelist_t * list, Agnode_t * cn, Agnode_t * neighbor,
 	       int pos)
@@ -107,9 +68,7 @@ insertNodelist(nodelist_t * list, Agnode_t * cn, Agnode_t * neighbor,
   }
 }
 
-/* concatNodelist:
- * attach l2 to l1.
- */
+/// attach l2 to l1.
 static void concatNodelist(nodelist_t * l1, nodelist_t * l2)
 {
   for (size_t i = 0; i < nodelist_size(l2); ++i) {
@@ -117,15 +76,11 @@ static void concatNodelist(nodelist_t * l1, nodelist_t * l2)
   }
 }
 
-/* reverse_append;
- * Create l1 @ (rev l2)
- * Destroys and frees l2.
- */
 void reverseAppend(nodelist_t * l1, nodelist_t * l2)
 {
     nodelist_reverse(l2);
     concatNodelist(l1, l2);
-    freeNodelist(l2);
+    nodelist_free(l2);
 }
 
 #ifdef DEBUG

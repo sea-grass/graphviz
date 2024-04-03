@@ -29,7 +29,7 @@ extern "C" {
 	Agraph_t *sub_graph;	/* nodes and edges in this block */
 	double radius;		/* radius of block and subblocks */
 	double rad0;		/* radius of block */
-	nodelist_t *circle_list;	/* ordered list of nodes in block */
+	nodelist_t circle_list;	/* ordered list of nodes in block */
 	blocklist_t children;	/* child blocks */
 	double parent_pos;	/* if block has 1 node, angle to place parent */
 	int flags;
@@ -42,7 +42,6 @@ extern "C" {
     extern void initBlocklist(blocklist_t *);
     extern void appendBlock(blocklist_t * sp, block_t * sn);
     extern void insertBlock(blocklist_t * sp, block_t * sn);
-/* extern void freeBlocklist (blocklist_t* sp); */
 
 #ifdef DEBUG
     extern void printBlocklist(blocklist_t * snl);

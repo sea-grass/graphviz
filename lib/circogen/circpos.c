@@ -18,11 +18,11 @@
 
 #include	<circogen/blockpath.h>
 #include	<circogen/circpos.h>
+#include	<circogen/nodelist.h>
 #include	<math.h>
 #include	<stddef.h>
 
-/* getRotation:
- * The function determines how much the block should be rotated
+/* The function determines how much the block should be rotated
  * for best positioning with parent, assuming its center is at x and y
  * relative to the parent.
  * angle gives the angle of the new position, i.e., tan(angle) = y/x.
@@ -50,12 +50,11 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
     double mindist2;
     Agraph_t *subg;
     Agnode_t *n, *closest_node, *neighbor;
-    nodelist_t *list;
     double len2, newX, newY;
 
     subg = sn->sub_graph;
 
-    list = sn->circle_list;
+    nodelist_t *list = &sn->circle_list;
 
     if (sn->parent_pos >= 0) {
 	theta += M_PI - sn->parent_pos;
@@ -113,9 +112,7 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
     return theta;
 }
 
-
-/* applyDelta:
- * Recursively apply rotation rotate followed by translation (x,y)
+/* Recursively apply rotation rotate followed by translation (x,y)
  * to block sn and its children.
  */
 static void applyDelta(block_t * sn, double x, double y, double rotate)
@@ -186,9 +183,7 @@ typedef struct {
     int childCount;      /* no. of child blocks attached at n */
 } posinfo_t;
 
-/* getInfo:
- * get size info for blocks attached to the given node.
- */
+/// get size info for blocks attached to the given node.
 static double
 getInfo (posinfo_t* pi, posstate * stp, double min_dist)
 {
@@ -214,8 +209,6 @@ getInfo (posinfo_t* pi, posstate * stp, double min_dist)
     return maxRadius;
 }
 
-/* setInfo:
- */
 static void
 setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
 {
@@ -229,8 +222,6 @@ setInfo (posinfo_t* p0, posinfo_t* p1, double delta)
     p1->scale = fmax(p1->scale, t);
 }
 
-/* positionChildren:
- */
 static void
 positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
 {
@@ -264,7 +255,7 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
     for (child = stp->cp; child; child = child->next) {
 	if (BLK_PARENT(child) != pi->n)
 	    continue;
-	if (nodelist_is_empty(child->circle_list))
+	if (nodelist_is_empty(&child->circle_list))
 	    continue;
 
 	incidentAngle = child->radius / childRadius;
@@ -318,8 +309,7 @@ positionChildren(posinfo_t *pi, posstate *stp, size_t length, double min_dist)
     stp->lastAngle = lastAngle;
 }
 
-/* position:
- * Assume childCount > 0
+/* Assume childCount > 0
  * For each node in the block with children, getInfo is called, with the
  * information stored in the parents array.
  * This information is used by setInfo to compute the amount of space allocated
@@ -412,13 +402,10 @@ static double position(size_t childCount, size_t length, nodelist_t *nodepath,
     return angle;
 }
 
-/* doBlock:
- * Set positions of block sn and its child blocks.
- */
+/// Set positions of block sn and its child blocks.
 static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
 {
     block_t *child;
-    nodelist_t *longest_path;
     double centerAngle = M_PI;
 
     /* layout child subtrees */
@@ -429,13 +416,13 @@ static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
     }
 
     /* layout this block */
-    longest_path = layout_block(g, sn, min_dist);
+    nodelist_t longest_path = layout_block(g, sn, min_dist);
     sn->circle_list = longest_path;
-    size_t length = nodelist_size(longest_path); // path contains everything in block
+    size_t length = nodelist_size(&longest_path); // path contains everything in block
 
     /* attach children */
     if (childCount > 0)
-	centerAngle = position(childCount, length, longest_path, sn, min_dist);
+	centerAngle = position(childCount, length, &longest_path, sn, min_dist);
 
     if (length == 1 && BLK_PARENT(sn)) {
 	sn->parent_pos = centerAngle;

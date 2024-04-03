@@ -15,8 +15,7 @@
 
 #define		MINDIST			1.0
 
-/* initGraphAttrs:
- * Set attributes based on original root graph.
+/* Set attributes based on original root graph.
  * This is obtained by taking a node of g, finding its node
  * in the original graph, and finding that node's graph.
  */
@@ -65,8 +64,7 @@ createOneBlock(Agraph_t * g, circ_state * state)
     return bp;
 }
 
-/* circularLayout:
- * Do circular layout of g.
+/* Do circular layout of g.
  * Assume g is strict.
  * g is a "connected" component of the derived graph of the
  * original graph.

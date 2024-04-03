@@ -90,9 +90,7 @@ static int cmpDegree(const Agnode_t **a, const Agnode_t **b) {
   return 0;
 }
 
-/* fillList:
- * Add nodes to deg_list, storing them by descending degree.
- */
+/// Add nodes to deg_list, storing them by descending degree.
 static deglist_t getList(Agraph_t *g) {
     deglist_t dl = {0};
     Agnode_t *n;
@@ -104,8 +102,6 @@ static deglist_t getList(Agraph_t *g) {
     return dl;
 }
 
-/* find_pair_edges:
- */
 static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 {
     Agedge_t *e;
@@ -201,10 +197,7 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
     free(neighbors_with);
 }
 
-/* remove_pair_edges:
- * Create layout skeleton of ing.
- * Why is returned graph connected?
- */
+/// Create layout skeleton of ing. Why is returned graph connected?
 static Agraph_t *remove_pair_edges(Agraph_t * ing)
 {
     int counter = 0;
@@ -289,22 +282,18 @@ measure_distance(Agnode_t * n, Agnode_t * ancestor, int dist,
     measure_distance(n, parent, dist, change);
 }
 
-/* find_longest_path:
- * Find and return longest path in tree.
- */
-static nodelist_t *find_longest_path(Agraph_t * tree)
-{
+/// Find and return longest path in tree.
+static nodelist_t find_longest_path(Agraph_t *tree) {
     Agnode_t *n;
     Agedge_t *e;
     Agnode_t *common = 0;
-    nodelist_t *endPath;
     int maxlength = 0;
     int length;
 
     if (agnnodes(tree) == 1) {
-	nodelist_t *beginPath = mkNodelist();
+	nodelist_t beginPath = {0};
 	n = agfstnode(tree);
-	nodelist_append(beginPath, n);
+	nodelist_append(&beginPath, n);
 	SET_ONPATH(n);
 	return beginPath;
     }
@@ -327,29 +316,27 @@ static nodelist_t *find_longest_path(Agraph_t * tree)
 	}
     }
 
-    nodelist_t *beginPath = mkNodelist();
+    nodelist_t beginPath = {0};
     for (n = LEAFONE(common); n != common; n = TPARENT(n)) {
-	nodelist_append(beginPath, n);
+	nodelist_append(&beginPath, n);
 	SET_ONPATH(n);
     }
-    nodelist_append(beginPath, common);
+    nodelist_append(&beginPath, common);
     SET_ONPATH(common);
 
     if (DISTTWO(common)) {	/* 2nd path might be empty */
-	endPath = mkNodelist();
+	nodelist_t endPath = {0};
 	for (n = LEAFTWO(common); n != common; n = TPARENT(n)) {
-	    nodelist_append(endPath, n);
+	    nodelist_append(&endPath, n);
 	    SET_ONPATH(n);
 	}
-	reverseAppend(beginPath, endPath);
+	reverseAppend(&beginPath, &endPath);
     }
 
     return beginPath;
 }
 
-/* dfs:
- * Simple depth first search, adding traversed edges to tree.
- */
+/// Simple depth first search, adding traversed edges to tree.
 static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * tree)
 {
     Agedge_t *e;
@@ -370,9 +357,7 @@ static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * tree)
     }
 }
 
-/* spanning_tree:
- * Construct spanning forest of g as subgraph
- */
+/// Construct spanning forest of g as subgraph
 static Agraph_t *spanning_tree(Agraph_t * g)
 {
     Agnode_t *n;
@@ -402,9 +387,7 @@ static Agraph_t *spanning_tree(Agraph_t * g)
     return tree;
 }
 
-/* block_graph:
- * Add induced edges.
- */
+/// Add induced edges.
 static void block_graph(Agraph_t * g, block_t * sn)
 {
     Agnode_t *n;
@@ -468,17 +451,14 @@ static int count_all_crossings(nodelist_t * list, Agraph_t * subg)
 
 #define CROSS_ITER 10
 
-/* reduce:
- * Attempt to reduce edge crossings by moving nodes.
+/* Attempt to reduce edge crossings by moving nodes.
  * Original crossing count is in cnt; final count is returned there.
  * list is the original list; return the best list found.
  */
-static nodelist_t *reduce(nodelist_t * list, Agraph_t * subg, int *cnt)
-{
+static nodelist_t reduce(nodelist_t list, Agraph_t *subg, int *cnt) {
     Agnode_t *curnode;
     Agedge_t *e;
     Agnode_t *neighbor;
-    nodelist_t *listCopy;
     int crossings, j, newCrossings;
 
     crossings = *cnt;
@@ -492,18 +472,18 @@ static nodelist_t *reduce(nodelist_t * list, Agraph_t * subg, int *cnt)
 		neighbor = aghead(e);
 
 	    for (j = 0; j < 2; j++) {
-		listCopy = cloneNodelist(list);
-		insertNodelist(list, curnode, neighbor, j);
-		newCrossings = count_all_crossings(list, subg);
+		nodelist_t listCopy = nodelist_copy(&list);
+		insertNodelist(&list, curnode, neighbor, j);
+		newCrossings = count_all_crossings(&list, subg);
 		if (newCrossings < crossings) {
 		    crossings = newCrossings;
-		    freeNodelist(listCopy);
+		    nodelist_free(&listCopy);
 		    if (crossings == 0) {
 			*cnt = 0;
 			return list;
 		    }
 		} else {
-		    freeNodelist(list);
+		    nodelist_free(&list);
 		    list = listCopy;
 		}
 	    }
@@ -513,12 +493,10 @@ static nodelist_t *reduce(nodelist_t * list, Agraph_t * subg, int *cnt)
     return list;
 }
 
-static nodelist_t *reduce_edge_crossings(nodelist_t * list,
-					 Agraph_t * subg)
-{
+static nodelist_t reduce_edge_crossings(nodelist_t list, Agraph_t *subg) {
     int i, crossings, origCrossings;
 
-    crossings = count_all_crossings(list, subg);
+    crossings = count_all_crossings(&list, subg);
     if (crossings == 0)
 	return list;
 
@@ -532,9 +510,7 @@ static nodelist_t *reduce_edge_crossings(nodelist_t * list,
     return list;
 }
 
-/* largest_nodesize:
- * Return max dimension of nodes on list
- */
+/// Return max dimension of nodes on list
 static double largest_nodesize(nodelist_t * list)
 {
     double size = 0;
@@ -549,26 +525,24 @@ static double largest_nodesize(nodelist_t * list)
     return size;
 }
 
-/* place_node:
- * Add n to list. By construction, n is not in list at start.
- */
+/// Add n to list. By construction, n is not in list at start.
 static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
 {
     Agedge_t *e;
     bool placed = false;
-    nodelist_t *neighbors = mkNodelist();
+    nodelist_t neighbors = {0};
 
     for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
-	nodelist_append(neighbors, aghead(e));
+	nodelist_append(&neighbors, aghead(e));
 	SET_NEIGHBOR(aghead(e));
     }
     for (e = agfstin(g, n); e; e = agnxtin(g, e)) {
-	nodelist_append(neighbors, agtail(e));
+	nodelist_append(&neighbors, agtail(e));
 	SET_NEIGHBOR(agtail(e));
     }
 
     /* Look for 2 neighbors consecutive on list */
-    if (nodelist_size(neighbors) >= 2) {
+    if (nodelist_size(&neighbors) >= 2) {
 	for (size_t two, one = 0; one < nodelist_size(list); ++one) {
 	    if (one == nodelist_size(list) - 1)
 		two = 0;
@@ -585,7 +559,7 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
     }
 
     /* Find any neighbor on list */
-    if (!placed && !nodelist_is_empty(neighbors)) {
+    if (!placed && !nodelist_is_empty(&neighbors)) {
 	for (size_t one = 0; one < nodelist_size(list); ++one) {
 	    if (NEIGHBOR(nodelist_get(list, one))) {
 		appendNodelist(list, one, n);
@@ -598,14 +572,12 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
     if (!placed)
 	nodelist_append(list, n);
 
-    for (size_t one = 0; one < nodelist_size(neighbors); ++one)
-	UNSET_NEIGHBOR(nodelist_get(neighbors, one));
-    freeNodelist(neighbors);
+    for (size_t one = 0; one < nodelist_size(&neighbors); ++one)
+	UNSET_NEIGHBOR(nodelist_get(&neighbors, one));
+    nodelist_free(&neighbors);
 }
 
-/* place_residual_nodes:
- * Add nodes not in list to list.
- */
+/// Add nodes not in list to list.
 static void place_residual_nodes(Agraph_t * g, nodelist_t * list)
 {
     Agnode_t *n;
@@ -616,10 +588,8 @@ static void place_residual_nodes(Agraph_t * g, nodelist_t * list)
     }
 }
 
-nodelist_t *layout_block(Agraph_t * g, block_t * sn, double min_dist)
-{
+nodelist_t layout_block(Agraph_t *g, block_t *sn, double min_dist) {
     Agraph_t *copyG, *tree, *subg;
-    nodelist_t *longest_path;
     int k;
     double theta, radius, largest_node;
     largest_node = 0;
@@ -630,33 +600,33 @@ nodelist_t *layout_block(Agraph_t * g, block_t * sn, double min_dist)
     copyG = remove_pair_edges(subg);
 
     tree = spanning_tree(copyG);
-    longest_path = find_longest_path(tree);
-    place_residual_nodes(subg, longest_path);
+    nodelist_t longest_path = find_longest_path(tree);
+    place_residual_nodes(subg, &longest_path);
     /* at this point, longest_path is a list of all nodes in the block */
 
     /* apply crossing reduction algorithms here */
     longest_path = reduce_edge_crossings(longest_path, subg);
 
-    size_t N = nodelist_size(longest_path);
-    largest_node = largest_nodesize(longest_path);
+    size_t N = nodelist_size(&longest_path);
+    largest_node = largest_nodesize(&longest_path);
     /* N*(min_dist+largest_node) is roughly circumference of required circle */
     if (N == 1)
 	radius = 0;
     else
 	radius = (double)N * (min_dist + largest_node) / (2 * M_PI);
 
-    for (size_t item = 0; item < nodelist_size(longest_path); ++item) {
-	Agnode_t *n = nodelist_get(longest_path, item);
+    for (size_t item = 0; item < nodelist_size(&longest_path); ++item) {
+	Agnode_t *n = nodelist_get(&longest_path, item);
 	if (ISPARENT(n)) {
 	    /* QUESTION: Why is only one parent realigned? */
-	    realignNodelist(longest_path, item);
+	    realignNodelist(&longest_path, item);
 	    break;
 	}
     }
 
     k = 0;
-    for (size_t item = 0; item < nodelist_size(longest_path); ++item) {
-	Agnode_t *n = nodelist_get(longest_path, item);
+    for (size_t item = 0; item < nodelist_size(&longest_path); ++item) {
+	Agnode_t *n = nodelist_get(&longest_path, item);
 	POSITION(n) = k;
 	PSI(n) = 0.0;
 	theta = k * (2.0 * M_PI / (double)N);

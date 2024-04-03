@@ -60,8 +60,7 @@ void circo_init_graph(graph_t * g)
     circular_init_node_edge(g);
 }
 
-/* makeDerivedNode:
- * Make a node in the derived graph, with the given name.
+/* Make a node in the derived graph, with the given name.
  * orig points to what it represents, either a real node or
  * a cluster. Copy size info from original node; needed for
  * adjustNodes and packSubgraphs.
@@ -83,8 +82,7 @@ static node_t *makeDerivedNode(graph_t * dg, char *name, int isNode,
     return n;
 }
 
-/* circomps:
- * Construct a strict, undirected graph with no loops from g.
+/* Construct a strict, undirected graph with no loops from g.
  * Construct the connected components with the provision that all
  * nodes in a block subgraph are considered connected.
  * Return array of components with number of components in cnt.
@@ -156,8 +154,6 @@ static Agraph_t **circomps(Agraph_t *g, size_t *cnt) {
     return ccs;
 }
 
-/* closeDerivedGraph:
- */
 static void closeDerivedGraph(graph_t * g)
 {
     node_t *n;
@@ -173,8 +169,7 @@ static void closeDerivedGraph(graph_t * g)
     agclose(g);
 }
 
-/* copyPosns:
- * Copy position of nodes in given subgraph of derived graph
+/* Copy position of nodes in given subgraph of derived graph
  * to corresponding node in original graph.
  * FIX: consider assigning from n directly to ORIG(n).
  */
@@ -190,8 +185,6 @@ static void copyPosns(graph_t * g)
     }
 }
 
-/* circoLayout:
- */
 void circoLayout(Agraph_t * g)
 {
     Agraph_t **ccs;
@@ -227,8 +220,6 @@ void circoLayout(Agraph_t * g)
     }
 }
 
-/* circo_layout:
- */
 void circo_layout(Agraph_t * g)
 {
     if (agnnodes(g) == 0) return;
@@ -240,9 +231,7 @@ void circo_layout(Agraph_t * g)
     dotneato_postprocess(g);
 }
 
-/* circo_cleanup:
- * ND_alg is freed in circo_layout
- */
+/// ND_alg is freed in circo_layout
 void circo_cleanup(graph_t * g)
 {
     node_t *n;

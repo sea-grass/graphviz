@@ -40,9 +40,7 @@ static block_t *makeBlock(Agraph_t * g, circ_state * state)
 
 DEFINE_LIST(estack, Agedge_t*)
 
-/* dfs:
- *
- * Current scheme adds articulation point to first non-trivial child
+/* Current scheme adds articulation point to first non-trivial child
  * block. If none exists, it will be added to its parent's block, if
  * non-trivial, or else given its own block.
  *
@@ -111,9 +109,6 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
     }
 }
 
-
-/* find_blocks:
- */
 static void find_blocks(Agraph_t * g, circ_state * state)
 {
     Agnode_t *n;
@@ -142,8 +137,7 @@ static void find_blocks(Agraph_t * g, circ_state * state)
     estack_free(&stk);
 }
 
-/* create_block_tree:
- * Construct block tree by peeling nodes from block list in state.
+/* Construct block tree by peeling nodes from block list in state.
  * When done, return root. The block list is empty
  * FIX: use largest block as root
  */
