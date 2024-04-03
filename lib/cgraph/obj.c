@@ -127,6 +127,8 @@ void agupdcb(Agraph_t * g, void *obj, Agsym_t * sym, Agcbstack_t * cbstack)
     case AGEDGE:
 	fn = cbstack->f->edge.mod;
 	break;
+    default: // ignore
+	break;
     }
     if (fn)
 	fn(g, obj, cbstack->state, sym);
