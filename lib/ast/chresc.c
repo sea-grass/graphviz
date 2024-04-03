@@ -125,7 +125,11 @@ int chresc(const char *s, char **p)
 	case 0:
 	    s--;
 	    break;
+	default:
+	    break;
 	}
+	break;
+    default:
 	break;
     }
     if (p)
