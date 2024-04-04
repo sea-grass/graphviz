@@ -24,7 +24,11 @@
 #include <neatogen/kkutils.h>
 #include <neatogen/quad_prog_solver.h>
 
-#define quad_prog_tol 1e-2
+/// are two values equal, within a reasonable tolerance?
+static bool equals(float a, float b) {
+  const float TOLERANCE = 1e-2;
+  return fabsf(a - b) < TOLERANCE;
+}
 
 float **unpackMatrix(float *packedMat, int n)
 {
@@ -387,8 +391,8 @@ constrained_majorization_new_with_gaps(CMajEnv * e, float *b,
 		for (int i = left; i < right; i++) {
 		    ordering[i] = ints_get(&block, i - (size_t)left);
 		}
-		converged &= fabs(prefix_des_place - cur_place) < quad_prog_tol
-		    && fabs(suffix_des_place - cur_place) < quad_prog_tol;
+		converged &= equals(prefix_des_place, cur_place)
+		    && equals(suffix_des_place, cur_place);
 
 
 	    } else {
