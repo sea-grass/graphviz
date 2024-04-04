@@ -183,6 +183,9 @@ struct Agrec_s {
  *
  * Common parameter for functions **obj** is generic pointer
  * to @ref Agraph_t, @ref Agnode_t, or @ref Agedge_t
+ *
+ * @ref AGDATA, @ref AGID, @ref AGTYPE, and others are macros returning
+ * the specified fields of the argument object.
  * @{
  */
 
@@ -211,10 +214,17 @@ struct Agobj_s {
 
 #define AGTAG(obj) (((Agobj_t *)(obj))->tag)
 #define AGTYPE(obj) (AGTAG(obj).objtype)
+///< @brief returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending
+/// on the type of the object
+
 #define AGID(obj) (AGTAG(obj).id)
+///< returns the unique integer ID associated with the object
+
 #define AGSEQ(obj) (AGTAG(obj).seq)
 #define AGATTRWF(obj) (AGTAG(obj).attrwf)
 #define AGDATA(obj) (((Agobj_t *)(obj))->data)
+///< returns @ref Agrec_t
+
 /// @}
 /// @} cgraph_api
 
@@ -336,6 +346,13 @@ CGRAPH_API extern Agdisc_t AgDefaultDisc;
 
 /** @defgroup cgraph_graph graphs
  *  @ingroup cgraph_object
+ *
+ * The functions @ref agisdirected, @ref agisundirected,
+ * @ref agisstrict, and @ref agissimple
+ * can be used to query if a graph is directed, undirected,
+ * strict (at most one edge with a given tail and head),
+ * or simple (strict with no loops), respectively.
+ *
  *  @{
  */
 
@@ -526,6 +543,12 @@ CGRAPH_API char *agnameof(void *);
 ///< returns a string descriptor for the object.
 
 CGRAPH_API int agdelete(Agraph_t *g, void *obj);
+/**< @brief deletes object.
+ * Equivalent to @ref agclose, @ref agdelnode, and @ref agdeledge
+ * for **obj** being a graph, node or edge, respectively.
+ * @returns -1 if **obj** does not belong to graph **g**.
+ */
+
 CGRAPH_API int agobjkind(void *obj);
 ///< returns @ref AGRAPH, @ref AGNODE, or @ref AGEDGE depending on the type of
 ///< the object. Synonym for @ref AGTYPE.
@@ -645,6 +668,10 @@ CGRAPH_API Agsym_t *agattrsym(void *obj, char *name);
 ///< looks up a string attribute for a graph object given as an argument
 
 CGRAPH_API Agsym_t *agnxtattr(Agraph_t *g, int kind, Agsym_t *attr);
+///< @brief permits traversing the list of attributes of a given type
+/// @param attr	if `NULL` the function returns the first attribute
+/// @returns the next one in succession or `NULL` at the end of the list.
+
 CGRAPH_API int agcopyattr(void *oldobj, void *newobj);
 /**< @brief copies all of the attributes from one object to another
  * @return fails and returns non-zero if argument objects are different kinds,
@@ -656,8 +683,9 @@ CGRAPH_API int agcopyattr(void *oldobj, void *newobj);
 /// @{
 CGRAPH_API void *agbindrec(void *obj, const char *name, unsigned int recsize,
                            int move_to_front);
-///< @brief attach a new record of the given size to the object
+///< @brief attaches a new record of the given size to the object
 /// @param recsize if 0, the call to @ref agbindrec is simply a lookup
+/// @returns pointer to `Agrec_t` and user data
 
 CGRAPH_API Agrec_t *aggetrec(void *obj, const char *name, int move_to_front);
 ///< find record in circular list and do optional move-to-front and lock
@@ -686,6 +714,9 @@ CGRAPH_API int agset(void *obj, char *name, const char *value);
 CGRAPH_API int agxset(void *obj, Agsym_t *sym, const char *value);
 CGRAPH_API int agsafeset(void *obj, char *name, const char *value,
                          const char *def);
+///< @brief ensures the given attribute is declared
+///  before setting it locally on an object
+
 /// @}
 
 /** @defgroup cgraph_subgraph subgraphs
