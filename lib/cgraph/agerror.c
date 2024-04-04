@@ -74,7 +74,6 @@ userout (agerrlevel_t level, const char *fmt, va_list args)
 	int rc = vsnprintf(NULL, 0, fmt, args2);
 	va_end(args2);
 	if (rc < 0) {
-	    va_end(args);
 	    fprintf(stderr, "%s: vsnprintf failure\n", __func__);
 	    return;
 	}
@@ -84,7 +83,6 @@ userout (agerrlevel_t level, const char *fmt, va_list args)
     // allocate a buffer for the string
     char *buf = malloc(bufsz);
     if (buf == NULL) {
-	va_end(args);
 	fprintf(stderr, "%s: could not allocate memory\n", __func__);
 	return;
     }
@@ -96,7 +94,6 @@ userout (agerrlevel_t level, const char *fmt, va_list args)
 
     // construct the full error in our buffer
     int rc = vsnprintf(buf, bufsz, fmt, args);
-    va_end(args);
     if (rc < 0) {
 	free(buf);
 	fprintf(stderr, "%s: vsnprintf failure\n", __func__);
@@ -133,7 +130,6 @@ static int agerr_va(agerrlevel_t level, const char *fmt, va_list args)
 	    if (level != AGPREV)
 		fprintf(stderr, "%s: ", (level == AGERR) ? "Error" : "Warning");
 	    vfprintf(stderr, fmt, args);
-	    va_end(args);
 	}
 	return 0;
     }
