@@ -18,9 +18,9 @@
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/streq.h>
 
-#define MAX(a,b)	((a)>(b)?(a):(b))
 static agerrlevel_t agerrno;		/* Last error level */
 static agerrlevel_t agerrlevel = AGWARN;	/* Report errors >= agerrlevel */
 static int agmaxerr;
@@ -118,7 +118,7 @@ static int agerr_va(agerrlevel_t level, const char *fmt, va_list args)
 
     /* store this error level */
     agerrno = lvl;
-    agmaxerr = MAX(agmaxerr, (int)agerrno);
+    agmaxerr = imax(agmaxerr, (int)agerrno);
 
     /* We report all messages whose level is bigger than the user set agerrlevel
      * Setting agerrlevel to AGMAX turns off immediate error reporting.

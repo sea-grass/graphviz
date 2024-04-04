@@ -20,6 +20,9 @@ static inline int fcmp(double a, double b) {
   return 0;
 }
 
+/// maximum of two integers
+static inline int imax(int a, int b) { return a > b ? a : b; }
+
 /**
  * \brief are two values precisely the same?
  *
