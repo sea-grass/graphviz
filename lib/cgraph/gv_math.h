@@ -20,7 +20,8 @@ static inline int fcmp(double a, double b) {
   return 0;
 }
 
-/** are two values precisely the same?
+/**
+ * \brief are two values precisely the same?
  *
  * This function should only be used when you know you want comparison with no
  * tolerance, which is rare. Floating-point arithmetic accumulates imprecision,
@@ -37,7 +38,8 @@ static inline bool is_exactly_equal(double a, double b) {
   return memcmp(&a, &b, sizeof(a)) == 0;
 }
 
-/** is a value precisely 0.0?
+/**
+ * \brief is a value precisely 0.0?
  *
  * This function should only be used when you know you want comparison with no
  * tolerance, which is rare. Floating-point arithmetic accumulates imprecision,
@@ -53,7 +55,8 @@ static inline bool is_exactly_equal(double a, double b) {
  */
 static inline bool is_exactly_zero(double v) { return is_exactly_equal(v, 0); }
 
-/** scale up or down a non-negative integer, clamping to \p [0, INT_MAX]
+/**
+ * \brief scale up or down a non-negative integer, clamping to \p [0, INT_MAX]
  *
  * \param original Value to scale
  * \param scale Scale factor to apply
