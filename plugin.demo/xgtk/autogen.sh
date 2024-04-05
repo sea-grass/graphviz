@@ -18,7 +18,7 @@ autoreconf -v --install --force || exit 1
 touch config/depcomp
 
 # ensure COPYING is based on epl-v10.txt
-#   epl-v10.txt was obtained from: http://www.eclipse.org/legal/epl-v10.html
+#   epl-v10.txt was obtained from: https://www.eclipse.org/legal/epl-v10.html
 #   by using lynx to print to .txt.
 rm -f COPYING
 cp epl-v10.txt COPYING
