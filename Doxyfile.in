@@ -2329,12 +2329,15 @@ INCLUDE_FILE_PATTERNS  =
 
 PREDEFINED             = "PRINTF_LIKE(x,y)=" \
                          CGRAPH_API \
+                         EXTERN \
+                         GLOBALS_API \
                          GVC_API \
                          GVPLUGIN_LOADIMAGE_API \
                          GVPR_API \
                          PACK_API \
                          PATHGEOM_API \
                          PATHPLAN_API \
+                         RENDER_API \
                          UTILS_API \
 			 CGHDR_API \
                          XDOT_API
