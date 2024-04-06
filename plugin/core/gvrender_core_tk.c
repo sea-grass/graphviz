@@ -10,6 +10,7 @@
 
 #include "config.h"
 #include <inttypes.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -155,14 +156,13 @@ static void tkgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
     obj_state_t *obj = job->obj;
     const char *font;
     PostscriptAlias *pA;
-    int size;
 
     if (obj->pen != PEN_NONE) {
 	/* determine font size */
 	/* round fontsize down, better too small than too big */
-	size = (int)(span->font->size * job->zoom);
+	const double size = trunc(span->font->size * job->zoom);
 	/* don't even bother if fontsize < 1 point */
-	if (size)  {
+	if (size > 0)  {
             tkgen_canvas(job);
             gvputs(job, " create text ");
             p.y -= size * 0.55; /* cl correction */
@@ -181,7 +181,7 @@ static void tkgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
             gvputs(job, font);
             gvputs(job, "\"");
 	    /* use -ve fontsize to indicate pixels  - see "man n font" */
-            gvprintf(job, " %d}", size);
+            gvprintf(job, " %.0f}", size);
             switch (span->just) {
             case 'l':
                 gvputs(job, " -anchor w");
