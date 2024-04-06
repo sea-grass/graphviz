@@ -17,6 +17,7 @@
 #include <gvc/gvcproc.h>
 #include <gvc/gvconfig.h>
 #include <gvc/gvio.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -67,13 +68,13 @@ int gvLayout(GVC_t *gvc, graph_t *g, const char *engine)
  * doesn't yet include margins, scaling or page sizes because
  * those depend on the renderer being used. */
     if (GD_drawing(g)->landscape)
-        snprintf(buf, sizeof(buf), "%d %d %d %d",
-                 ROUND(GD_bb(g).LL.y), ROUND(GD_bb(g).LL.x),
-                 ROUND(GD_bb(g).UR.y), ROUND(GD_bb(g).UR.x));
+        snprintf(buf, sizeof(buf), "%.0f %.0f %.0f %.0f",
+                 round(GD_bb(g).LL.y), round(GD_bb(g).LL.x),
+                 round(GD_bb(g).UR.y), round(GD_bb(g).UR.x));
     else
-        snprintf(buf, sizeof(buf), "%d %d %d %d",
-                 ROUND(GD_bb(g).LL.x), ROUND(GD_bb(g).LL.y),
-                 ROUND(GD_bb(g).UR.x), ROUND(GD_bb(g).UR.y));
+        snprintf(buf, sizeof(buf), "%.0f %.0f %.0f %.0f",
+                 round(GD_bb(g).LL.x), round(GD_bb(g).LL.y),
+                 round(GD_bb(g).UR.x), round(GD_bb(g).UR.y));
     agsafeset(g, "bb", buf, "");
 
     return 0;

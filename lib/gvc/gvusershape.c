@@ -9,7 +9,9 @@
  *************************************************************************/
 
 #include "config.h"
+#include <assert.h>
 #include <limits.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -168,19 +170,19 @@ static bool get_int_msb_first(FILE *f, size_t sz, int *val) {
     return true;
 }
 
-static int svg_units_convert(double n, char *u) {
+static double svg_units_convert(double n, char *u) {
     if (strcmp(u, "in") == 0)
-	return ROUND(n * POINTS_PER_INCH);
+	return round(n * POINTS_PER_INCH);
     if (strcmp(u, "px") == 0)
-        return ROUND(n * POINTS_PER_INCH / 96);
+        return round(n * POINTS_PER_INCH / 96);
     if (strcmp(u, "pc") == 0)
-        return ROUND(n * POINTS_PER_INCH / 6); 
+        return round(n * POINTS_PER_INCH / 6); 
     if (strcmp(u, "pt") == 0 || strcmp(u, "\"") == 0)   /* ugly!!  - if there are no inits then the %2s get the trailing '"' */
-        return ROUND(n);
+        return round(n);
     if (strcmp(u, "cm") == 0)
-        return ROUND(n * POINTS_PER_CM);
+        return round(n * POINTS_PER_CM);
     if (strcmp(u, "mm") == 0)
-        return ROUND(n * POINTS_PER_MM);
+        return round(n * POINTS_PER_MM);
     return 0;
 }
 
@@ -225,7 +227,7 @@ static int find_attribute(const char *s, match_t *result) {
 
 static void svg_size (usershape_t *us)
 {
-    int w = 0, h = 0;
+    double w = 0, h = 0;
     double n, x0, y0, x1, y1;
     char u[10];
     agxbuf line = {0};
@@ -294,8 +296,10 @@ static void svg_size (usershape_t *us)
 	}
     }
     us->dpi = 0;
-    us->w = w;
-    us->h = h;
+    assert(w >= 0 && w <= INT_MAX);
+    us->w = (int)w;
+    assert(h >= 0 && h <= INT_MAX);
+    us->h = (int)h;
     agxbfree(&line);
 }
 

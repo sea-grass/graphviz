@@ -78,7 +78,7 @@ static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
     attrsym_t * G_width = infop->G_width;
     attrsym_t * G_height = infop->G_height;
     graph_t *cg;
-    box b, bb;
+    boxf bb;
     boxf bbf;
     point pt;
     int margin;
@@ -90,7 +90,7 @@ static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
     /* compute graph bounding box in points */
     if (c_cnt) {
 	cg = *cp++;
-	BF2B(GD_bb(cg), bb);
+	bb = GD_bb(cg);
 	if (c_cnt > 1) {
 	    pt = *pp++;
 	    bb.LL.x += pt.x;
@@ -98,16 +98,16 @@ static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
 	    bb.UR.x += pt.x;
 	    bb.UR.y += pt.y;
 	    while ((cg = *cp++)) {
-		BF2B(GD_bb(cg), b);
+		boxf b = GD_bb(cg);
 		pt = *pp++;
 		b.LL.x += pt.x;
 		b.LL.y += pt.y;
 		b.UR.x += pt.x;
 		b.UR.y += pt.y;
-		bb.LL.x = MIN(bb.LL.x, b.LL.x);
-		bb.LL.y = MIN(bb.LL.y, b.LL.y);
-		bb.UR.x = MAX(bb.UR.x, b.UR.x);
-		bb.UR.y = MAX(bb.UR.y, b.UR.y);
+		bb.LL.x = fmin(bb.LL.x, b.LL.x);
+		bb.LL.y = fmin(bb.LL.y, b.LL.y);
+		bb.UR.x = fmax(bb.UR.x, b.UR.x);
+		bb.UR.y = fmax(bb.UR.y, b.UR.y);
 	    }
 	}
     } else {			/* empty graph */
@@ -120,11 +120,10 @@ static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
 
     if (GD_label(rg)) {
 	point p;
-	int d;
 
 	isEmpty = 0;
 	PF2P(GD_label(rg)->dimen, p);
-	d = p.x - (bb.UR.x - bb.LL.x);
+	double d = p.x - (bb.UR.x - bb.LL.x);
 	if (d > 0) {		/* height of label added below */
 	    d /= 2;
 	    bb.LL.x -= d;
