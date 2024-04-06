@@ -1,5 +1,6 @@
 /// \file
 /// \brief lookup table for textspan
+/// \ingroup common_render
 
 #pragma once
 

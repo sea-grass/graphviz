@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup common_render
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>

@@ -1,5 +1,6 @@
 /**
  * @file
+ * @ingroup common_render
  * @brief @ref textspan_size
  */
 

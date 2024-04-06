@@ -1,6 +1,7 @@
 /**
  * @file
  * @brief Network Simplex algorithm for ranking nodes of a DAG, @ref rank, @ref rank2
+ * @ingroup common_render
  */
 
 /*************************************************************************

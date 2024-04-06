@@ -1,3 +1,7 @@
+/**
+ * @file
+ * @ingroup common_render
+ */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
@@ -150,3 +154,8 @@ extern "C" {
 #ifdef __cplusplus
 }
 #endif
+/**
+ * @defgroup common_render rendering
+ * @brief rendering for layout engines
+ * @ingroup engines
+ */

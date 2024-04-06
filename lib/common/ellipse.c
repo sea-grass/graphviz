@@ -1,3 +1,5 @@
+/// @file
+/// @ingroup common_render
 /*************************************************************************
  * Copyright (c) 2012 AT&T Intellectual Property 
  * All rights reserved. This program and the accompanying materials

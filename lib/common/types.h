@@ -2,6 +2,7 @@
  * @file
  * @brief graphs, nodes and edges info: Agraphinfo_t, Agnodeinfo_t and Agedgeinfo_t
  * @ingroup public_apis
+ * @ingroup common_render
  */
 
 /*************************************************************************
