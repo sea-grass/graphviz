@@ -49,9 +49,7 @@ int GetOGLPosRef(int x, int y, float *X, float *Y) {
     return 1;
 }
 
-float GetOGLDistance(int l)
-{
-    int x, y;
+float GetOGLDistance(float l) {
     double wwinX;
     double wwinY;
     double wwinZ;
@@ -75,16 +73,15 @@ float GetOGLDistance(int l)
     glEnd();
     gluProject(10.0, 10.0, 1.00, modelview, projection, viewport, &wwinX,
 	       &wwinY, &wwinZ);
-    x = 50;
-    y = 50;
-    winX = (float) x;
-    winY = (float) viewport[3] - (float) y;
+    float x = 50.0f;
+    const float y = 50.0f;
+    winX = x;
+    winY = (float) viewport[3] - y;
     gluUnProject(winX, winY, wwinZ, modelview, projection, viewport, &posX,
 		 &posY, &posZ);
     x = x + l;
-    y = 50;
-    winX = (float) x;
-    winY = (float) viewport[3] - (float) y;
+    winX = x;
+    winY = (float) viewport[3] - y;
     gluUnProject(winX, winY, wwinZ, modelview, projection, viewport,
 		 &posXX, &posYY, &posZZ);
     return ((float) (posXX - posX));

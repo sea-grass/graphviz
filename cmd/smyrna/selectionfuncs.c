@@ -240,7 +240,7 @@ void clear_selpoly(glCompPoly* sp)
 static int close_poly(glCompPoly* selPoly,glCompPoint pt)
 {
     /* int i=0; */
-    float EPS=GetOGLDistance(3);
+    const float EPS = GetOGLDistance(3.0f);
     if (selPoly->cnt < 2)
 	return 0;
     if(
