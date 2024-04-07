@@ -1,6 +1,7 @@
 /**
  * @file
  * @brief graphics code generator
+ * @ingroup common_render
  */
 
 /*************************************************************************

@@ -1636,6 +1636,6 @@ findCluster (Dt_t* map, char* name)
  * @ref common_utils
  *
  * @defgroup common_utils utilities
- * @brief low level utilities for layout engines
+ * @brief low level utilities for layout engines and rendering
  * @ingroup engines
  */

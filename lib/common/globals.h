@@ -1,6 +1,7 @@
 /**
  * @file
  * @ingroup common_utils
+ * @ingroup common_render
  */
 /*************************************************************************
  * Copyright (c) 2011 AT&T Intellectual Property 
