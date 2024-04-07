@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -71,7 +73,8 @@ int Proutespline(Pedge_t *barriers, int n_barriers, Ppolyline_t input_route,
 
     /* unpack into previous format rather than modify legacy code */
     inps = input_route.ps;
-    inpn = input_route.pn;
+    assert(input_route.pn <= INT_MAX);
+    inpn = (int)input_route.pn;
 
     /* generate the splines */
     endpoint_slopes[0] = normv(endpoint_slopes[0]);
@@ -84,7 +87,7 @@ int Proutespline(Pedge_t *barriers, int n_barriers, Ppolyline_t input_route,
     if (reallyroutespline(barriers, n_barriers, inps, inpn, endpoint_slopes[0],
                           endpoint_slopes[1]) == -1)
 	return -1;
-    output_route->pn = opl;
+    output_route->pn = (size_t)opl;
     output_route->ps = ops;
 
     return 0;

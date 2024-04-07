@@ -35,6 +35,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
+#include <limits.h>
 #include "makecw.h"
 #include <math.h>
 #include <pathplan/pathutil.h>
@@ -254,18 +255,16 @@ static int scanpoint(Tcl_Interp * interp, char *argv[], point * p)
     return TCL_OK;
 }
 
-static point center(point vertex[], int n)
-{
-    int i;
+static point center(point vertex[], size_t n) {
     point c;
 
     c.x = c.y = 0;
-    for (i = 0; i < n; i++) {
+    for (size_t i = 0; i < n; i++) {
 	c.x += vertex[i].x;
 	c.y += vertex[i].y;
     }
-    c.x /= n;
-    c.y /= n;
+    c.x /= (int)n;
+    c.y /= (int)n;
     return c;
 }
 
@@ -340,7 +339,7 @@ static void
 make_barriers(vgpane_t * vgp, int pp, int qp, Pedge_t ** barriers,
 	      int *n_barriers)
 {
-    int j, k, n, b;
+    int n, b;
 
     n = 0;
     for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
@@ -348,7 +347,8 @@ make_barriers(vgpane_t * vgp, int pp, int qp, Pedge_t ** barriers,
 	    continue;
 	if (polys_get(&vgp->poly, i).id == qp)
 	    continue;
-	n = n + polys_get(&vgp->poly, i).boundary.pn;
+	assert(polys_get(&vgp->poly, i).boundary.pn <= INT_MAX);
+	n += (int)polys_get(&vgp->poly, i).boundary.pn;
     }
     Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
     b = 0;
@@ -357,8 +357,8 @@ make_barriers(vgpane_t * vgp, int pp, int qp, Pedge_t ** barriers,
 	    continue;
 	if (polys_get(&vgp->poly, i).id == qp)
 	    continue;
-	for (j = 0; j < polys_get(&vgp->poly, i).boundary.pn; j++) {
-	    k = j + 1;
+	for (size_t j = 0; j < polys_get(&vgp->poly, i).boundary.pn; j++) {
+	    size_t k = j + 1;
 	    if (k >= polys_get(&vgp->poly, i).boundary.pn)
 		k = 0;
 	    bar[b].a = polys_get(&vgp->poly, i).boundary.ps[j];
@@ -389,7 +389,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 {
     (void)clientData;
 
-    int vargc, j, n, result;
+    int vargc, result;
     char *s, **vargv, vbuf[30];
     vgpane_t *vgp, **vgpp;
     point p, q, *ps;
@@ -425,8 +425,8 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    /* find poly and return its coordinates */
 	    for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 		if (polys_get(&vgp->poly, i).id == polyid) {
-		    n = polys_get(&vgp->poly, i).boundary.pn;
-		    for (j = 0; j < n; j++) {
+		    const size_t n = polys_get(&vgp->poly, i).boundary.pn;
+		    for (size_t j = 0; j < n; j++) {
 			appendpoint(interp, polys_get(&vgp->poly, i).boundary.ps[j]);
 		    }
 		    return TCL_OK;
@@ -589,7 +589,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (vc_refresh(vgp)) {
 	    Pobspath(vgp->vc, p, POLYID_UNKNOWN, q, POLYID_UNKNOWN, &line);
 
-	    for (int i = 0; i < line.pn; i++) {
+	    for (size_t i = 0; i < line.pn; i++) {
 		appendpoint(interp, line.ps[i]);
 	    }
 	}
@@ -668,7 +668,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    slopes[1].x = slopes[1].y = 0.0;
 	    Proutespline(barriers, n_barriers, line, slopes, &spline);
 
-	    for (int i = 0; i < spline.pn; i++) {
+	    for (size_t i = 0; i < spline.pn; i++) {
 		appendpoint(interp, spline.ps[i]);
 	    }
 	}
@@ -689,7 +689,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 		Ppoly_t pp = polys_get(&vgp->poly, i).boundary;
 		point LL, UR;
 		LL = UR = pp.ps[0];
-		for (j = 1; j < pp.pn; j++) {
+		for (size_t j = 1; j < pp.pn; j++) {
 		    p = pp.ps[j];
 		    UR.x = fmax(UR.x, p.x);
 		    UR.y = fmax(UR.y, p.y);
@@ -760,10 +760,10 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	}
 	for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	    if (polys_get(&vgp->poly, i).id == polyid) {
-		n = polys_get(&vgp->poly, i).boundary.pn;
+		const size_t n = polys_get(&vgp->poly, i).boundary.pn;
 		ps = polys_get(&vgp->poly, i).boundary.ps;
 		p = center(ps, n);
-		for (j = 0; j < n; j++) {
+		for (size_t j = 0; j < n; j++) {
 		    appendpoint(interp, rotate(p, ps[j], alpha));
 		}
 		return TCL_OK;
@@ -788,9 +788,9 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	}
 	for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	    if (polys_get(&vgp->poly, i).id == polyid) {
-		n = polys_get(&vgp->poly, i).boundary.pn;
+		const size_t n = polys_get(&vgp->poly, i).boundary.pn;
 		ps = polys_get(&vgp->poly, i).boundary.ps;
-		for (j = 0; j < n; j++) {
+		for (size_t j = 0; j < n; j++) {
 		    appendpoint(interp, scale(p, ps[j], gain));
 		}
 		return TCL_OK;

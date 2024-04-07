@@ -283,8 +283,7 @@ static Ppolyline_t *genEllipticPath(ellipse_t * ep) {
 
     endPath(&bezier_path);
 
-    assert(bezier_path_size(&bezier_path) <= INT_MAX);
-    polypath->pn = (int)bezier_path_size(&bezier_path);
+    polypath->pn = bezier_path_size(&bezier_path);
     polypath->ps = bezier_path_detach(&bezier_path);
 
     return polypath;

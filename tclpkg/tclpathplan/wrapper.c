@@ -24,7 +24,7 @@ typedef struct Pxy_t Pvector_t;
 
 typedef struct Ppoly_t {
     Ppoint_t *ps;
-    int pn;
+    size_t pn;
 } Ppoly_t;
 
 typedef Ppoly_t Ppolyline_t;
@@ -36,7 +36,7 @@ typedef struct Pedge_t {
 
 int Plegal_arrangement(Ppoly_t **polys, size_t n_polys) {
 
-    int j, rv;
+    int rv;
 
     struct data input;
     struct intersection ilist[10000];
@@ -51,7 +51,7 @@ int Plegal_arrangement(Ppoly_t **polys, size_t n_polys) {
 
     for (size_t i = 0, vno = 0; i < n_polys; i++) {
 	polygon_list[i].start = &vertex_list[vno];
-	for (j = 0; j < polys[i]->pn; j++) {
+	for (size_t j = 0; j < polys[i]->pn; j++) {
 	    vertex_list[vno].pos.x = polys[i]->ps[j].x;
 	    vertex_list[vno].pos.y = polys[i]->ps[j].y;
 	    vertex_list[vno].poly = &polygon_list[i];

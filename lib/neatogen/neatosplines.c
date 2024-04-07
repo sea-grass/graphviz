@@ -12,6 +12,7 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
+#include <limits.h>
 #include <math.h>
 #include <neatogen/neato.h>
 #include <neatogen/adjust.h>
@@ -52,7 +53,8 @@ make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
 	    continue;
 	if (i == qp)
 	    continue;
-	n += poly[i]->pn;
+	assert(poly[i]->pn <= INT_MAX);
+	n += (int)poly[i]->pn;
     }
     Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
     b = 0;
@@ -61,9 +63,9 @@ make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
 	    continue;
 	if (i == qp)
 	    continue;
-	for (j = 0; j < poly[i]->pn; j++) {
+	for (j = 0; j < (int)poly[i]->pn; j++) {
 	    k = j + 1;
-	    if (k >= poly[i]->pn)
+	    if (k >= (int)poly[i]->pn)
 		k = 0;
 	    bar[b].a = poly[i]->ps[j];
 	    bar[b].b = poly[i]->ps[k];
@@ -321,7 +323,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	    sides = 8;
 	    adj = drand48() * .01;
 	}
-	obs->pn = (int)sides;
+	obs->pn = sides;
 	obs->ps = gv_calloc(sides, sizeof(Ppoint_t));
 	/* assuming polys are in CCW order, and pathplan needs CW */
 	for (size_t j = 0; j < sides; j++) {
@@ -458,8 +460,7 @@ static void makePolyline(edge_t * e) {
     make_polyline (line, &spl);
     if (Verbose > 1)
 	fprintf(stderr, "polyline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    assert(spl.pn >= 0);
-    clip_and_install(e, aghead(e), spl.ps, (size_t)spl.pn, &sinfo);
+    clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
     addEdgeLabels(e);
 }
 
@@ -505,8 +506,7 @@ void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
     /* north why did you ever use int coords */
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    assert(spline.pn >= 0);
-    clip_and_install(e, aghead(e), spline.ps, (size_t)spline.pn, &sinfo);
+    clip_and_install(e, aghead(e), spline.ps, spline.pn, &sinfo);
     free(barriers);
     addEdgeLabels(e);
 }

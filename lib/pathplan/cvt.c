@@ -37,8 +37,7 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     /* get storage */
     size_t n = 0;
     for (poly_i = 0; poly_i < n_obs; poly_i++) {
-	assert(obs[poly_i]->pn >= 0);
-	n += (size_t)obs[poly_i]->pn;
+	n += obs[poly_i]->pn;
     }
     if (n > INT_MAX) { // will this overflow rv->N?
 	free(rv);
@@ -69,8 +68,9 @@ vconfig_t *Pobsopen(Ppoly_t ** obs, int n_obs)
     for (poly_i = 0; poly_i < n_obs; poly_i++) {
 	start = i;
 	rv->start[poly_i] = start;
-	end = start + obs[poly_i]->pn - 1;
-	for (pt_i = 0; pt_i < obs[poly_i]->pn; pt_i++) {
+	assert(obs[poly_i]->pn <= INT_MAX);
+	end = start + (int)obs[poly_i]->pn - 1;
+	for (pt_i = 0; pt_i < (int)obs[poly_i]->pn; pt_i++) {
 	    rv->P[i] = obs[poly_i]->ps[pt_i];
 	    rv->next[i] = i + 1;
 	    rv->prev[i] = i - 1;
@@ -132,8 +132,7 @@ void Pobspath(vconfig_t *config, Ppoint_t p0, int poly0, Ppoint_t p1, int poly1,
     free(ptvis0);
     free(ptvis1);
 
-    assert(opn <= INT_MAX);
-    output_route->pn = (int)opn;
+    output_route->pn = opn;
     output_route->ps = ops;
     free(dad);
 }

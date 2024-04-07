@@ -581,8 +581,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	else
 	    angle1 = angle0 + 2 * M_PI * s->t;
 	pp = ellipticWedge (ctr, semi.x, semi.y, angle0, angle1);
-	assert(pp->pn >= 0);
-	gvrender_beziercurve(job, pp->ps, (size_t)pp->pn, 1);
+	gvrender_beziercurve(job, pp->ps, pp->pn, 1);
 	angle0 = angle1;
 	freePath (pp);
     }
