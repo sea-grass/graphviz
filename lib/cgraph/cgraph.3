@@ -573,9 +573,9 @@ type has higher priority than a programmer-controlled minimum, which is
 \fBagseterr\fP, which returns the previous value. Calling
 \fBagseterr(AGMAX)\fP turns off the writing of messages. 
 .PP
-The function \fBagerr\fP if the main entry point for reporting an
+The function \fBagerr\fP is the main entry point for reporting an
 anomaly. The first argument indicates the type of message. Usually,
-the first argument in \fBAGWARN\fP or \fBAGERR\fP to indicate warnings
+the first argument is \fBAGWARN\fP or \fBAGERR\fP to indicate warnings
 and errors, respectively. Sometimes additional context information is
 only available in functions calling the function where the error is
 actually caught. In this case, the calling function can indicate that
@@ -584,7 +584,7 @@ argument. The remaining arguments to \fBagerr\fP are the same as
 the arguments to \fBprintf\fP. 
 .PP
 The functions \fBagwarningf\fP and \fBagerrorf\fP are shorthand for
-\fBagerr(AGERR,...)\fP and \fBagerr(AGWARN,...)\fP, respectively.
+\fBagerr(AGWARN,...)\fP and \fBagerr(AGERR,...)\fP, respectively.
 .PP
 Some applications desire to directly control the writing of messages.
 Such an application can use the function \fBagseterrf\fP to register
@@ -593,7 +593,7 @@ The previous error function is returned. By default, the message is
 written to \fBstderr\fP.
 .PP
 Errors not written are stored in a log file. The last recorded error
-can be retreived by calling \fBaglasterr\fP.
+can be retrieved by calling \fBaglasterr\fP.
 Unless the printing of error messages has been completely disabled by a call
 to \fBagseterr(AGMAX)\fP, standard error must not be wide-oriented, even if
 a user-provided error printing function is provided.
