@@ -19,6 +19,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/streq.h>
+#include <cgraph/unreachable.h>
 #include <expr/exlib.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -433,6 +434,8 @@ extoken_fn(Expr_t* ex)
 			case '!':
 				c = NE;
 				break;
+			default:
+				UNREACHABLE();
 			}
 			else exunlex(ex, q);
 			return ex_lval.op = c;
