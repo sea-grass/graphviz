@@ -239,15 +239,14 @@ void routesplinesterm(void)
 		nedges, nboxes, elapsed_sec());
 }
 
-static void
-limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
-{
-    int bi, si, splinepi;
+static void limitBoxes(boxf *boxes, int boxn, const pointf *pps, size_t pn,
+                       int delta) {
+    int bi, si;
     double t;
     pointf sp[4];
     int num_div = delta * boxn;
 
-    for (splinepi = 0; splinepi + 3 < pn; splinepi += 3) {
+    for (size_t splinepi = 0; splinepi + 3 < pn; splinepi += 3) {
 	for (si = 0; si <= num_div; si++) {
 	    t = si / (double)num_div;
 	    sp[0] = pps[splinepi];
@@ -518,8 +517,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     }
 
     for (loopcnt = 0; unbounded && loopcnt < LOOP_TRIES; loopcnt++) {
-	assert(spl.pn <= INT_MAX);
-	limitBoxes(boxes, boxn, ps, (int)spl.pn, delta);
+	limitBoxes(boxes, boxn, ps, spl.pn, delta);
 
     /* The following check is necessary because if a box is not very 
      * high, it is possible that the sampling above might miss it.
@@ -549,8 +547,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	Ppolyline_t polyspl;
 	agwarningf("Unable to reclaim box space in spline routing for edge \"%s\" -> \"%s\". Something is probably seriously wrong.\n", agnameof(agtail(realedge)), agnameof(aghead(realedge)));
 	make_polyline (pl, &polyspl);
-	assert(polyspl.pn <= INT_MAX);
-	limitBoxes(boxes, boxn, polyspl.ps, (int)polyspl.pn, INIT_DELTA);
+	limitBoxes(boxes, boxn, polyspl.ps, polyspl.pn, INIT_DELTA);
     }
 
     assert(spl.pn <= INT_MAX);
