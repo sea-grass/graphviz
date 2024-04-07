@@ -947,10 +947,10 @@ static void set_aspect(graph_t *g) {
 		yf = GD_drawing(g)->size.y / sz.y;
 		if (xf < 1.0 || yf < 1.0) {
 		    if (xf < yf) {
-			yf = yf / xf;
+			yf /= xf;
 			xf = 1.0;
 		    } else {
-			xf = xf / yf;
+			xf /= yf;
 			yf = 1.0;
 		    }
 		}
