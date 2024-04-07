@@ -925,14 +925,13 @@ static void set_aspect(graph_t *g) {
     double xf = 0.0, yf = 0.0, actual, desired;
     node_t *n;
     bool filled;
-    point sz;
 
     rec_bb(g, g);
     if (GD_maxrank(g) > 0 && GD_drawing(g)->ratio_kind) {
-	sz.x = GD_bb(g).UR.x - GD_bb(g).LL.x;
-	sz.y = GD_bb(g).UR.y - GD_bb(g).LL.y;	/* normalize */
+	pointf sz = {.x = GD_bb(g).UR.x - GD_bb(g).LL.x,
+	             .y = GD_bb(g).UR.y - GD_bb(g).LL.y}; // normalize
 	if (GD_flip(g)) {
-	    sz = exch_xy(sz);
+	    sz = exch_xyf(sz);
 	}
 	bool scale_it = true;
 	if (GD_drawing(g)->ratio_kind == R_AUTO)
@@ -944,8 +943,8 @@ static void set_aspect(graph_t *g) {
 	    if (GD_drawing(g)->size.x <= 0)
 		scale_it = false;
 	    else {
-		xf = (double) GD_drawing(g)->size.x / (double) sz.x;
-		yf = (double) GD_drawing(g)->size.y / (double) sz.y;
+		xf = GD_drawing(g)->size.x / sz.x;
+		yf = GD_drawing(g)->size.y / sz.y;
 		if (xf < 1.0 || yf < 1.0) {
 		    if (xf < yf) {
 			yf = yf / xf;
@@ -972,7 +971,7 @@ static void set_aspect(graph_t *g) {
 	    }
 	} else if (GD_drawing(g)->ratio_kind == R_VALUE) {
 	    desired = GD_drawing(g)->ratio;
-	    actual = ((double) sz.y) / ((double) sz.x);
+	    actual = sz.y / sz.x;
 	    if (actual < desired) {
 		yf = desired / actual;
 		xf = 1.0;
