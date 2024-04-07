@@ -1287,8 +1287,8 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
 	job->numPages = job->pagesArraySize.x * job->pagesArraySize.y;
 
 	/* find the drawable size in points */
-	imageSize.x = MIN(imageSize.x, pageSize.x);
-	imageSize.y = MIN(imageSize.y, pageSize.y);
+	imageSize.x = fmin(imageSize.x, pageSize.x);
+	imageSize.y = fmin(imageSize.y, pageSize.y);
     } else {
 	/* page not set by user, use default from renderer */
 	if (job->render.features) {
