@@ -33,13 +33,13 @@ typedef struct tna_t {
 static Ppoint_t *ops;
 static int opn, opl;
 
-static int reallyroutespline(Pedge_t *, int,
+static int reallyroutespline(Pedge_t *, size_t,
 			     Ppoint_t *, int, Ppoint_t, Ppoint_t);
 static int mkspline(Ppoint_t *, int, tna_t *, Ppoint_t, Ppoint_t,
 		    Ppoint_t *, Ppoint_t *, Ppoint_t *, Ppoint_t *);
-static int splinefits(Pedge_t *, int, Ppoint_t, Pvector_t, Ppoint_t,
+static int splinefits(Pedge_t *, size_t, Ppoint_t, Pvector_t, Ppoint_t,
 		      Pvector_t, Ppoint_t *, int);
-static int splineisinside(Pedge_t *, int, Ppoint_t *);
+static int splineisinside(Pedge_t *, size_t, Ppoint_t *);
 static int splineintersectsline(Ppoint_t *, Ppoint_t *, double *);
 static void points2coeff(double, double, double, double, double *);
 static void addroot(double, double *, int *);
@@ -66,7 +66,7 @@ static double B23(double t);
  * fitting the input and endpoint vectors, and return in output_route.
  * Return 0 on success and -1 on failure, including no memory.
  */
-int Proutespline(Pedge_t *barriers, int n_barriers, Ppolyline_t input_route,
+int Proutespline(Pedge_t *barriers, size_t n_barriers, Ppolyline_t input_route,
                  Ppoint_t endpoint_slopes[2], Ppolyline_t *output_route) {
     Ppoint_t *inps;
     int inpn;
@@ -93,10 +93,8 @@ int Proutespline(Pedge_t *barriers, int n_barriers, Ppolyline_t input_route,
     return 0;
 }
 
-static int reallyroutespline(Pedge_t * edges, int edgen,
-			     Ppoint_t * inps, int inpn, Ppoint_t ev0,
-			     Ppoint_t ev1)
-{
+static int reallyroutespline(Pedge_t *edges, size_t edgen, Ppoint_t *inps,
+                             int inpn, Ppoint_t ev0, Ppoint_t ev1) {
     Ppoint_t p1, p2, cp1, cp2, p;
     Pvector_t v1, v2, splitv, splitv1, splitv2;
     double maxd, d, t;
@@ -206,10 +204,8 @@ static double dist_n(Ppoint_t * p, int n)
     return rv;
 }
 
-static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
-		      Pvector_t va, Ppoint_t pb, Pvector_t vb,
-		      Ppoint_t * inps, int inpn)
-{
+static int splinefits(Pedge_t *edges, size_t edgen, Ppoint_t pa, Pvector_t va,
+                      Ppoint_t pb, Pvector_t vb, Ppoint_t *inps, int inpn) {
     Ppoint_t sps[4];
     double a;
     int pi;
@@ -279,15 +275,13 @@ static int splinefits(Pedge_t * edges, int edgen, Ppoint_t pa,
     return 0;
 }
 
-static int splineisinside(Pedge_t * edges, int edgen, Ppoint_t * sps)
-{
+static int splineisinside(Pedge_t *edges, size_t edgen, Ppoint_t *sps) {
     double roots[4];
     int rooti, rootn;
-    int ei;
     Ppoint_t lps[2], ip;
     double t, ta, tb, tc, td;
 
-    for (ei = 0; ei < edgen; ei++) {
+    for (size_t ei = 0; ei < edgen; ei++) {
 	lps[0] = edges[ei].a, lps[1] = edges[ei].b;
 	if ((rootn = splineintersectsline(sps, lps, roots)) == 4)
 	    continue;

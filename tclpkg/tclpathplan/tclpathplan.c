@@ -662,7 +662,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    make_barriers(vgp, pp, qp, &barriers, &n_barriers);
 	    slopes[0].x = slopes[0].y = 0.0;
 	    slopes[1].x = slopes[1].y = 0.0;
-	    Proutespline(barriers, (int)n_barriers, line, slopes, &spline);
+	    Proutespline(barriers, n_barriers, line, slopes, &spline);
 
 	    for (size_t i = 0; i < spline.pn; i++) {
 		appendpoint(interp, spline.ps[i]);

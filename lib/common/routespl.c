@@ -196,8 +196,7 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
 	}
 	    evs[0].x = evs[0].y = 0;
 	    evs[1].x = evs[1].y = 0;
-	assert(poly.pn <= INT_MAX);
-	if (Proutespline(edges, (int)poly.pn, pl, evs, &spl) < 0) {
+	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
             free(edges);
             return NULL;
 	}
@@ -495,8 +494,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	} else
 	    evs[1].x = evs[1].y = 0;
 
-	assert(poly.pn <= INT_MAX);
-	if (Proutespline(edges, (int)poly.pn, pl, evs, &spl) < 0) {
+	if (Proutespline(edges, poly.pn, pl, evs, &spl) < 0) {
 	    free(edges);
 	    free(polypoints);
 	    agerrorf("in routesplines, Proutespline failed\n");

@@ -497,7 +497,7 @@ void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
     make_barriers(obs, npoly, pp, qp, &barriers, &n_barriers);
     slopes[0].x = slopes[0].y = 0.0;
     slopes[1].x = slopes[1].y = 0.0;
-    if (Proutespline(barriers, (int)n_barriers, line, slopes, &spline) < 0) {
+    if (Proutespline(barriers, n_barriers, line, slopes, &spline) < 0) {
 	agerrorf("makeSpline: failed to make spline edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	return;
     }
