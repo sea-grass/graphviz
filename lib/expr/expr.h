@@ -151,7 +151,7 @@ union Exdata_u
 
 struct Exnode_s				/* expression tree node		*/
 {
-	int	type;		/* value type			*/
+	long	type; ///< value type
 	int	op;		/* operator			*/
 	int	binary;		/* data.operand.{left,right} ok	*/
 	void *local; ///< user defined local stuff
@@ -179,15 +179,15 @@ struct Exdisc_s				/* discipline			*/
 	char*		type;		/* pathfind() type		*/
 	int		(*castf)(Expr_t*, Exnode_t*, const char*, int, Exid_t*, int, Exdisc_t*);
 					/* unknown cast function	*/
-	int		(*convertf)(Exnode_t*, int, int);
+	int (*convertf)(Exnode_t *, long, int);
 					/* type conversion function	*/
 	int		(*binaryf) (Exnode_t *, Exnode_t *, Exnode_t *, int);
 					/* binary operator function     */
-	char*		(*typename) (int);
+	char *(*typename)(long);
 					/* application type names       */
 	int		(*stringof) (Expr_t *, Exnode_t *, int);
 					/* value to string conversion   */
-	Extype_t	(*keyf) (Extype_t, int);
+	Extype_t (*keyf)(Extype_t, long);
 					/* dictionary key for external type objects     */
 	Exerror_f	errorf;		/* error function		*/
 	Extype_t	(*getf)(Expr_t*, Exnode_t*, Exid_t*, Exref_t*, void*, int, Exdisc_t*);
@@ -215,7 +215,7 @@ struct Expr_s				/* ex program state		*/
 
 };
 
-extern Exnode_t*	excast(Expr_t*, Exnode_t*, int, Exnode_t*, int);
+extern Exnode_t *excast(Expr_t *, Exnode_t *, long, Exnode_t *, int);
 extern Exnode_t*	exnoncast(Exnode_t *);
 extern void		exclose(Expr_t*, int);
 
@@ -247,7 +247,7 @@ extern void		exwarn(const char *, ...);
 extern Extype_t		exeval(Expr_t*, Exnode_t*, void*);
 extern Exnode_t*	exexpr(Expr_t*, const char*, Exid_t*, int);
 extern void		exfreenode(Expr_t*, Exnode_t*);
-extern Exnode_t*	exnewnode(Expr_t*, int, int, int, Exnode_t*, Exnode_t*);
+extern Exnode_t*	exnewnode(Expr_t*, int, int, long, Exnode_t*, Exnode_t*);
 extern char*		exnospace(void);
 extern Expr_t*		exopen(Exdisc_t*);
 extern int		expop(Expr_t*);
@@ -259,7 +259,7 @@ extern char* extype(long int);
 extern Extype_t exzero(long int);
 extern char*	exopname(int);
 extern void		exinit(void);
-extern char*	extypename(Expr_t * p, int);
+extern char *extypename(Expr_t *p, long);
 extern int		exisAssign(Exnode_t *);
 
 #undef	extern

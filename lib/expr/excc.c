@@ -191,7 +191,6 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 	Exnode_t*	y;
 	int		n;
 	int		m;
-	int		t;
 	char*			s;
 	Extype_t*		v;
 	Extype_t**		p;
@@ -358,8 +357,8 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 		}
 		agxbputc(cc->ccdisc->text, ')');
 		return;
-	case SWITCH:
-		t = x->type;
+	case SWITCH: {
+		long t = x->type;
 		agxbprint(cc->ccdisc->text, "{ %s %stmp_%d = ", extype(t), cc->id, ++cc->tmp);
 		gen(cc, x);
 		agxbputc(cc->ccdisc->text, ';');
@@ -417,6 +416,7 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 		}
 		agxbputc(cc->ccdisc->text, '}');
 		return;
+	}
 	case UNSET:
 		agxbprint(cc->ccdisc->text, "unset(%s", exnode->data.variable.symbol->name);
 		if (exnode->data.variable.index) {

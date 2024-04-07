@@ -40,12 +40,10 @@
 static Extype_t	eval(Expr_t*, Exnode_t*, void*);
 
 #define TOTNAME		4
-#define MAXNAME		23
+#define MAXNAME		32
 #define FRAME		64
 
-static const char*
-lexname(int op, int subop)
-{
+static const char *lexname(long op, int subop) {
 	char*	b;
 
 	static int	n;
@@ -66,11 +64,11 @@ lexname(int op, int subop)
 			snprintf(b, MAXNAME, "(%d)=", subop);
 	}
 	else if (subop < 0)
-		snprintf(b, MAXNAME, "(EXTERNAL:%d)", op);
+		snprintf(b, MAXNAME, "(EXTERNAL:%ld)", op);
 	else if (op > ' ' && op <= '~')
-		snprintf(b, MAXNAME, "%c", op);
+		snprintf(b, MAXNAME, "%c", (char)op);
 	else
-		snprintf(b, MAXNAME, "(%d)", op);
+		snprintf(b, MAXNAME, "(%ld)", op);
 	return b;
 }
 
@@ -93,7 +91,7 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 		}
 	} 
 	else {
-		int type = exnode->data.variable.index->type;
+		const long type = exnode->data.variable.index->type;
 		if (type != STRING) {
 			if (!BUILTIN(type)) {
 				key = ex->disc->keyf(v, type);
@@ -139,7 +137,7 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 				dtinsert(exnode->data.variable.symbol->local, b);
 			}
 		} else {
-			int type = exnode->data.variable.index->type;
+			const long type = exnode->data.variable.index->type;
 			if (type != STRING) {
 				if (!BUILTIN(type)) {
 					key = ex->disc->keyf(v, type);
@@ -192,8 +190,7 @@ prformat(void* vp, Sffmt_t* dp)
 	Fmt_t*		fmt = (Fmt_t*)dp;
 	Exnode_t*	node;
 	char*		s;
-	int			from;
-	int			to = 0;
+	long to = 0;
 	time_t			tm;
     struct tm *stm;
 
@@ -211,7 +208,7 @@ prformat(void* vp, Sffmt_t* dp)
 	else
 	{
 		node = fmt->actuals->data.operand.left;
-		from = node->type;
+		const long from = node->type;
 		switch (dp->fmt)
 		{
 		case 'f':
@@ -1007,7 +1004,7 @@ static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 /* xConvert:
  * Convert from external type.
  */
-static void xConvert(Expr_t *ex, Exnode_t *exnode, int type, Extype_t v,
+static void xConvert(Expr_t *ex, Exnode_t *exnode, long type, Extype_t v,
 	 Exnode_t * tmp)
 {
 	*tmp = *exnode->data.operand.left;

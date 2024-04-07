@@ -588,7 +588,7 @@ expr		:	'(' expr ')'
 		}
 		|	expr '<' expr
 		{
-			int	rel;
+			long rel;
 
 		relational:
 			rel = INTEGER;
