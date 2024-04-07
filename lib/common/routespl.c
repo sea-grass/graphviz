@@ -115,21 +115,19 @@ static void psprintline(Ppolyline_t pl)
 
 static void psprintpoly(Ppoly_t p)
 {
-    point tl, hd;
     int bi;
     char*  pfx;
 
     show_boxes_append(&Show_boxes, gv_strdup("%% poly list"));
     show_boxes_append(&Show_boxes, gv_strdup("gsave 0 1 0 setrgbcolor"));
     for (bi = 0; bi < p.pn; bi++) {
-	tl.x = (int)p.ps[bi].x;
-	tl.y = (int)p.ps[bi].y;
-	hd.x = (int)p.ps[(bi+1) % p.pn].x;
-	hd.y = (int)p.ps[(bi+1) % p.pn].y;
-	if (tl.x == hd.x && tl.y == hd.y) pfx = "%%";
+	const pointf tail = p.ps[bi];
+	const pointf head = p.ps[(bi + 1) % p.pn];
+	if (fabs(tail.x - head.x) < 1 && fabs(tail.y - head.y) < 1) pfx = "%%";
 	else pfx ="";
 	agxbuf buf = {0};
-	agxbprint(&buf, "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x, hd.y);
+	agxbprint(&buf, "%s%.0f %.0f %.0f %.0f makevec", pfx, tail.x, tail.y, head.x,
+	          head.y);
 	show_boxes_append(&Show_boxes, agxbdisown(&buf));
     }
     show_boxes_append(&Show_boxes, gv_strdup("grestore"));
