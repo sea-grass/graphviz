@@ -733,11 +733,10 @@ static void tweakPath(Ppoly_t poly, size_t s, size_t t, Ppolyline_t pl) {
 
 /* genroute:
  * Generate splines for e and cohorts.
- * Edges go from s to t.
+ * Edges go from 0 to t.
  * Return 0 on success.
  */
-static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
-{
+static int genroute(tripoly_t *trip, int t, edge_t *e, int doPolyline) {
     pointf eps[2];
     Pvector_t evs[2];
     pointf **cpts = NULL;		/* lists of control points */
@@ -751,7 +750,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 
     poly.ps = NULL;
     pl.pn = 0;
-    eps[0].x = trip->poly.ps[s].x, eps[0].y = trip->poly.ps[s].y;
+    eps[0].x = trip->poly.ps[0].x, eps[0].y = trip->poly.ps[0].y;
     eps[1].x = trip->poly.ps[t].x, eps[1].y = trip->poly.ps[t].y;
     if (Pshortestpath(&(trip->poly), eps, &pl) < 0) {
 	agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
@@ -774,9 +773,8 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    medges[j].a = poly.ps[j];
 	    medges[j].b = poly.ps[(j + 1) % poly.pn];
 	}
-	assert(s >= 0);
 	assert(t >= 0);
-	tweakPath (poly, (size_t)s, (size_t)t, pl);
+	tweakPath(poly, 0, (size_t)t, pl);
 	if (Proutespline(medges, poly.pn, pl, evs, &spl) < 0) {
 	    agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    rv = 1;
@@ -1265,7 +1263,7 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
 	free(sp);
 
 	/* Generate multiple splines using polygon */
-	ret = genroute(poly, 0, idx, e, doPolyline);
+	ret = genroute(poly, idx, e, doPolyline);
 	freeTripoly (poly);
     }
     else ret = -1;
