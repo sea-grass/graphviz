@@ -717,6 +717,8 @@ extoken_fn(Expr_t* ex)
 								continue;
 							}
 							break;
+						default: // ignore; keep consuming characters
+							break;
 						}
 						if (!b++)
 							goto eof;
