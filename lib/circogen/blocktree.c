@@ -54,12 +54,9 @@ DEFINE_LIST(estack, Agedge_t*)
  */
 static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
                 estack_t *stk) {
-    Agedge_t *e;
-    Agnode_t *v;
-
     LOWVAL(u) = VAL(u) = state->orderCount++;
-    for (e = agfstedge(g, u); e; e = agnxtedge(g, e, u)) {
-	v = aghead (e);
+    for (Agedge_t *e = agfstedge(g, u); e; e = agnxtedge(g, e, u)) {
+	Agnode_t *v = aghead (e);
 	if (v == u) {
             v = agtail(e);
 	    if (!EDGEORDER(e)) EDGEORDER(e) = -1;
