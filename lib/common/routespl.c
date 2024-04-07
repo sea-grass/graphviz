@@ -170,10 +170,8 @@ static bool debugleveln(edge_t* realedge, int i)
 #endif  /* DEBUG */
 
 /// Given a simple (ccw) polygon, route an edge from tp to hp.
-pointf*
-simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
-    int polyline)
-{
+pointf *simpleSplineRoute(pointf tp, pointf hp, Ppoly_t poly, size_t *n_spl_pts,
+                          int polyline) {
     Ppolyline_t pl, spl;
     Ppoint_t eps[2];
     Pvector_t evs[2];
@@ -211,8 +209,7 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
     for (size_t i = 0; i < spl.pn; i++) {
         ps[i] = spl.ps[i];
     }
-    assert(spl.pn <= INT_MAX);
-    *n_spl_pts = (int)spl.pn;
+    *n_spl_pts = spl.pn;
     return ps;
 }
 

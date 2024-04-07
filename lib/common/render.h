@@ -133,7 +133,7 @@ extern "C" {
     RENDER_API int routesplinesinit(void);
     RENDER_API pointf *routesplines(path *, int *);
     RENDER_API void routesplinesterm(void);
-    RENDER_API pointf* simpleSplineRoute (pointf, pointf, Ppoly_t, int*, int);
+    RENDER_API pointf* simpleSplineRoute(pointf, pointf, Ppoly_t, size_t *, int);
     RENDER_API pointf *routepolylines(path* pp, int* npoints);
     RENDER_API double selfRightSpace(edge_t *e);
     RENDER_API shape_kind shapeOf(node_t *);

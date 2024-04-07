@@ -1009,7 +1009,6 @@ static void
 makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et, int n_lbls)
 {
     Ppoly_t poly;
-    int pn;
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
     int i;
@@ -1094,6 +1093,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	}
 	poly.pn = 8;
 	poly.ps = (Ppoint_t*)points;
+	size_t pn;
 	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
 	if (ps == NULL || pn == 0) {
 	    free(ps);
@@ -1103,8 +1103,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	ED_label(e)->pos.x = ctrx;
 	ED_label(e)->pos.y = ctry;
 	ED_label(e)->set = true;
-	assert(pn >= 0);
-	clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
+	clip_and_install(e, aghead(e), ps, pn, &sinfo);
 	free(ps);
     }
 
@@ -1152,14 +1151,14 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
 	}
 	poly.pn = 8;
 	poly.ps = (Ppoint_t*)points;
+	size_t pn;
 	pointf *ps = simpleSplineRoute(tp, hp, poly, &pn, et == EDGETYPE_PLINE);
 	if (ps == NULL || pn == 0) {
 	    free(ps);
 	    free(earray);
 	    return;
 	}
-	assert(pn >= 0);
-	clip_and_install(e, aghead(e), ps, (size_t)pn, &sinfo);
+	clip_and_install(e, aghead(e), ps, pn, &sinfo);
 	free(ps);
     }
    
