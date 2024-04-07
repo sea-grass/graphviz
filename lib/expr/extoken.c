@@ -773,6 +773,8 @@ extoken_fn(Expr_t* ex)
 					case '[':
 						pc = ']';
 						break;
+					default:
+						UNREACHABLE();
 					}
 					n++;
 				}
