@@ -399,6 +399,68 @@ merge_trapezoids(int segnum, int tfirst, int tlast, int side, traps_t *tr,
 
 }
 
+static void update_trapezoid(segment_t *s, segment_t *seg, traps_t *tr, int t, int tn)
+{
+  if (tr->data[t].u0 > 0 && tr->data[t].u1 > 0)
+  {			/* continuation of a chain from abv. */
+    if (tr->data[t].usave > 0) /* three upper neighbours */
+    {
+      if (tr->data[t].uside == S_LEFT)
+      {
+	tr->data[tn].u0 = tr->data[t].u1;
+	tr->data[t].u1 = -1;
+	tr->data[tn].u1 = tr->data[t].usave;
+
+	tr->data[tr->data[t].u0].d0 = t;
+	tr->data[tr->data[tn].u0].d0 = tn;
+	tr->data[tr->data[tn].u1].d0 = tn;
+      }
+      else		/* intersects in the right */
+      {
+	tr->data[tn].u1 = -1;
+	tr->data[tn].u0 = tr->data[t].u1;
+	tr->data[t].u1 = tr->data[t].u0;
+	tr->data[t].u0 = tr->data[t].usave;
+
+	tr->data[tr->data[t].u0].d0 = t;
+	tr->data[tr->data[t].u1].d0 = t;
+	tr->data[tr->data[tn].u0].d0 = tn;
+      }
+
+      tr->data[t].usave = tr->data[tn].usave = 0;
+    }
+    else		/* No usave.... simple case */
+    {
+      tr->data[tn].u0 = tr->data[t].u1;
+      tr->data[t].u1 = tr->data[tn].u1 = -1;
+      tr->data[tr->data[tn].u0].d0 = tn;
+    }
+  }
+  else
+  {			/* fresh seg. or upward cusp */
+    int tmp_u = tr->data[t].u0;
+    int td0, td1;
+    if ((td0 = tr->data[tmp_u].d0) > 0 && (td1 = tr->data[tmp_u].d1) > 0)
+    {		/* upward cusp */
+      if (tr->data[td0].rseg > 0 && !is_left_of(tr->data[td0].rseg, seg, &s->v1))
+      {
+	tr->data[t].u0 = tr->data[t].u1 = tr->data[tn].u1 = -1;
+	tr->data[tr->data[tn].u0].d1 = tn;
+      }
+      else		/* cusp going leftwards */
+      {
+	tr->data[tn].u0 = tr->data[tn].u1 = tr->data[t].u1 = -1;
+	tr->data[tr->data[t].u0].d0 = t;
+      }
+    }
+    else		/* fresh segment */
+    {
+      tr->data[tr->data[t].u0].d0 = t;
+      tr->data[tr->data[t].u0].d1 = tn;
+    }
+  }
+}
+
 /* Add in the new segment into the trapezoidation and update Q and T
  * structures. First locate the two endpoints of the segment in the
  * Q-structure. Then start from the topmost trapezoid and go down to
@@ -596,64 +658,7 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 
       else if (tr->data[t].d0 > 0 && tr->data[t].d1 <= 0)
 	{			/* Only one trapezoid below */
-	  if (tr->data[t].u0 > 0 && tr->data[t].u1 > 0)
-	    {			/* continuation of a chain from abv. */
-	      if (tr->data[t].usave > 0) /* three upper neighbours */
-		{
-		  if (tr->data[t].uside == S_LEFT)
-		    {
-		      tr->data[tn].u0 = tr->data[t].u1;
-		      tr->data[t].u1 = -1;
-		      tr->data[tn].u1 = tr->data[t].usave;
-
-		      tr->data[tr->data[t].u0].d0 = t;
-		      tr->data[tr->data[tn].u0].d0 = tn;
-		      tr->data[tr->data[tn].u1].d0 = tn;
-		    }
-		  else		/* intersects in the right */
-		    {
-		      tr->data[tn].u1 = -1;
-		      tr->data[tn].u0 = tr->data[t].u1;
-		      tr->data[t].u1 = tr->data[t].u0;
-		      tr->data[t].u0 = tr->data[t].usave;
-
-		      tr->data[tr->data[t].u0].d0 = t;
-		      tr->data[tr->data[t].u1].d0 = t;
-		      tr->data[tr->data[tn].u0].d0 = tn;
-		    }
-
-		  tr->data[t].usave = tr->data[tn].usave = 0;
-		}
-	      else		/* No usave.... simple case */
-		{
-		  tr->data[tn].u0 = tr->data[t].u1;
-		  tr->data[t].u1 = tr->data[tn].u1 = -1;
-		  tr->data[tr->data[tn].u0].d0 = tn;
-		}
-	    }
-	  else
-	    {			/* fresh seg. or upward cusp */
-	      int tmp_u = tr->data[t].u0;
-	      int td0, td1;
-	      if ((td0 = tr->data[tmp_u].d0) > 0 && (td1 = tr->data[tmp_u].d1) > 0)
-		{		/* upward cusp */
-		  if (tr->data[td0].rseg > 0 && !is_left_of(tr->data[td0].rseg, seg, &s.v1))
-		    {
-		      tr->data[t].u0 = tr->data[t].u1 = tr->data[tn].u1 = -1;
-		      tr->data[tr->data[tn].u0].d1 = tn;
-		    }
-		  else		/* cusp going leftwards */
-		    {
-		      tr->data[tn].u0 = tr->data[tn].u1 = tr->data[t].u1 = -1;
-		      tr->data[tr->data[t].u0].d0 = t;
-		    }
-		}
-	      else		/* fresh segment */
-		{
-		  tr->data[tr->data[t].u0].d0 = t;
-		  tr->data[tr->data[t].u0].d1 = tn;
-		}
-	    }
+	  update_trapezoid(&s, seg, tr, t, tn);
 
 	  if (FP_EQUAL(tr->data[t].lo.y, tr->data[tlast].lo.y) &&
 	      FP_EQUAL(tr->data[t].lo.x, tr->data[tlast].lo.x) && tribot)
@@ -702,64 +707,7 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 
       else if (tr->data[t].d0 <= 0 && tr->data[t].d1 > 0)
 	{			/* Only one trapezoid below */
-	  if (tr->data[t].u0 > 0 && tr->data[t].u1 > 0)
-	    {			/* continuation of a chain from abv. */
-	      if (tr->data[t].usave > 0) /* three upper neighbours */
-		{
-		  if (tr->data[t].uside == S_LEFT)
-		    {
-		      tr->data[tn].u0 = tr->data[t].u1;
-		      tr->data[t].u1 = -1;
-		      tr->data[tn].u1 = tr->data[t].usave;
-
-		      tr->data[tr->data[t].u0].d0 = t;
-		      tr->data[tr->data[tn].u0].d0 = tn;
-		      tr->data[tr->data[tn].u1].d0 = tn;
-		    }
-		  else		/* intersects in the right */
-		    {
-		      tr->data[tn].u1 = -1;
-		      tr->data[tn].u0 = tr->data[t].u1;
-		      tr->data[t].u1 = tr->data[t].u0;
-		      tr->data[t].u0 = tr->data[t].usave;
-
-		      tr->data[tr->data[t].u0].d0 = t;
-		      tr->data[tr->data[t].u1].d0 = t;
-		      tr->data[tr->data[tn].u0].d0 = tn;
-		    }
-
-		  tr->data[t].usave = tr->data[tn].usave = 0;
-		}
-	      else		/* No usave.... simple case */
-		{
-		  tr->data[tn].u0 = tr->data[t].u1;
-		  tr->data[t].u1 = tr->data[tn].u1 = -1;
-		  tr->data[tr->data[tn].u0].d0 = tn;
-		}
-	    }
-	  else
-	    {			/* fresh seg. or upward cusp */
-	      int tmp_u = tr->data[t].u0;
-	      int td0, td1;
-	      if ((td0 = tr->data[tmp_u].d0) > 0 && (td1 = tr->data[tmp_u].d1) > 0)
-		{		/* upward cusp */
-		  if (tr->data[td0].rseg > 0 && !is_left_of(tr->data[td0].rseg, seg, &s.v1))
-		    {
-		      tr->data[t].u0 = tr->data[t].u1 = tr->data[tn].u1 = -1;
-		      tr->data[tr->data[tn].u0].d1 = tn;
-		    }
-		  else
-		    {
-		      tr->data[tn].u0 = tr->data[tn].u1 = tr->data[t].u1 = -1;
-		      tr->data[tr->data[t].u0].d0 = t;
-		    }
-		}
-	      else		/* fresh segment */
-		{
-		  tr->data[tr->data[t].u0].d0 = t;
-		  tr->data[tr->data[t].u0].d1 = tn;
-		}
-	    }
+	  update_trapezoid(&s, seg, tr, t, tn);
 
 	  if (FP_EQUAL(tr->data[t].lo.y, tr->data[tlast].lo.y) &&
 	      FP_EQUAL(tr->data[t].lo.x, tr->data[tlast].lo.x) && tribot)
@@ -838,65 +786,7 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 	  /* check continuity from the top so that the lower-neighbour */
 	  /* values are properly filled for the upper trapezoid */
 
-	  if (tr->data[t].u0 > 0 && tr->data[t].u1 > 0)
-	    {			/* continuation of a chain from abv. */
-	      if (tr->data[t].usave > 0) /* three upper neighbours */
-		{
-		  if (tr->data[t].uside == S_LEFT)
-		    {
-		      tr->data[tn].u0 = tr->data[t].u1;
-		      tr->data[t].u1 = -1;
-		      tr->data[tn].u1 = tr->data[t].usave;
-
-		      tr->data[tr->data[t].u0].d0 = t;
-		      tr->data[tr->data[tn].u0].d0 = tn;
-		      tr->data[tr->data[tn].u1].d0 = tn;
-		    }
-		  else		/* intersects in the right */
-		    {
-		      tr->data[tn].u1 = -1;
-		      tr->data[tn].u0 = tr->data[t].u1;
-		      tr->data[t].u1 = tr->data[t].u0;
-		      tr->data[t].u0 = tr->data[t].usave;
-
-		      tr->data[tr->data[t].u0].d0 = t;
-		      tr->data[tr->data[t].u1].d0 = t;
-		      tr->data[tr->data[tn].u0].d0 = tn;
-		    }
-
-		  tr->data[t].usave = tr->data[tn].usave = 0;
-		}
-	      else		/* No usave.... simple case */
-		{
-		  tr->data[tn].u0 = tr->data[t].u1;
-		  tr->data[tn].u1 = -1;
-		  tr->data[t].u1 = -1;
-		  tr->data[tr->data[tn].u0].d0 = tn;
-		}
-	    }
-	  else
-	    {			/* fresh seg. or upward cusp */
-	      int tmp_u = tr->data[t].u0;
-	      int td0, td1;
-	      if ((td0 = tr->data[tmp_u].d0) > 0 && (td1 = tr->data[tmp_u].d1) > 0)
-		{		/* upward cusp */
-		  if (tr->data[td0].rseg > 0 && !is_left_of(tr->data[td0].rseg, seg, &s.v1))
-		    {
-		      tr->data[t].u0 = tr->data[t].u1 = tr->data[tn].u1 = -1;
-		      tr->data[tr->data[tn].u0].d1 = tn;
-		    }
-		  else
-		    {
-		      tr->data[tn].u0 = tr->data[tn].u1 = tr->data[t].u1 = -1;
-		      tr->data[tr->data[t].u0].d0 = t;
-		    }
-		}
-	      else		/* fresh segment */
-		{
-		  tr->data[tr->data[t].u0].d0 = t;
-		  tr->data[tr->data[t].u0].d1 = tn;
-		}
-	    }
+	  update_trapezoid(&s, seg, tr, t, tn);
 
 	  if (FP_EQUAL(tr->data[t].lo.y, tr->data[tlast].lo.y) &&
 	      FP_EQUAL(tr->data[t].lo.x, tr->data[tlast].lo.x) && tribot)
