@@ -177,10 +177,7 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
 
 void freeBlocktree(block_t * bp)
 {
-    block_t *child;
-    block_t *next;
-
-    for (child = bp->children.first; child; child = next) {
+    for (block_t *child = bp->children.first, *next; child; child = next) {
 	next = child->next;
 	freeBlocktree(child);
     }
