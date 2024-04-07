@@ -108,7 +108,6 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 
 static void find_blocks(Agraph_t * g, circ_state * state)
 {
-    Agnode_t *n;
     Agnode_t *root = NULL;
 
     /*      check to see if there is a node which is set to be the root
@@ -117,7 +116,7 @@ static void find_blocks(Agraph_t * g, circ_state * state)
 	root = agfindnode(g, state->rootname);
     }
     if (!root && state->N_root) {
-	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (late_bool(ORIGN(n), state->N_root, false)) {
 		root = n;
 		break;
