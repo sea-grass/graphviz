@@ -335,23 +335,19 @@ insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, char *vargv[],
     return TCL_OK;
 }
 
-static void
-make_barriers(vgpane_t * vgp, int pp, int qp, Pedge_t ** barriers,
-	      int *n_barriers)
-{
-    int n, b;
+static void make_barriers(vgpane_t *vgp, int pp, int qp, Pedge_t **barriers,
+                          size_t *n_barriers) {
 
-    n = 0;
+    size_t n = 0;
     for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	if (polys_get(&vgp->poly, i).id == pp)
 	    continue;
 	if (polys_get(&vgp->poly, i).id == qp)
 	    continue;
-	assert(polys_get(&vgp->poly, i).boundary.pn <= INT_MAX);
-	n += (int)polys_get(&vgp->poly, i).boundary.pn;
+	n += polys_get(&vgp->poly, i).boundary.pn;
     }
     Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
-    b = 0;
+    size_t b = 0;
     for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	if (polys_get(&vgp->poly, i).id == pp)
 	    continue;
@@ -398,7 +394,6 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
     Ppolyline_t line, spline;
     int pp, qp;			/* polygon indices for p, q */
     Pedge_t *barriers;
-    int n_barriers;
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"",
@@ -663,10 +658,11 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 
 	if (vc_refresh(vgp)) {
 	    Pobspath(vgp->vc, p, POLYID_UNKNOWN, q, POLYID_UNKNOWN, &line);
+	    size_t n_barriers;
 	    make_barriers(vgp, pp, qp, &barriers, &n_barriers);
 	    slopes[0].x = slopes[0].y = 0.0;
 	    slopes[1].x = slopes[1].y = 0.0;
-	    Proutespline(barriers, n_barriers, line, slopes, &spline);
+	    Proutespline(barriers, (int)n_barriers, line, slopes, &spline);
 
 	    for (size_t i = 0; i < spline.pn; i++) {
 		appendpoint(interp, spline.ps[i]);

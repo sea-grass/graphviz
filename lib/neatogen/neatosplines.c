@@ -20,6 +20,7 @@
 #include <pathplan/vispath.h>
 #include <neatogen/multispline.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef ORTHO
 #include <ortho/ortho.h>
@@ -41,23 +42,20 @@ static bool swap_ends_p(edge_t * e)
 static splineInfo sinfo = {.swapEnds = swap_ends_p,
                            .splineMerge = spline_merge};
 
-static void
-make_barriers(Ppoly_t ** poly, int npoly, int pp, int qp,
-	      Pedge_t ** barriers, int *n_barriers)
-{
-    int i, j, k, n, b;
+static void make_barriers(Ppoly_t **poly, int npoly, int pp, int qp,
+                          Pedge_t **barriers, size_t *n_barriers) {
+    int i, j, k;
 
-    n = 0;
+    size_t n = 0;
     for (i = 0; i < npoly; i++) {
 	if (i == pp)
 	    continue;
 	if (i == qp)
 	    continue;
-	assert(poly[i]->pn <= INT_MAX);
-	n += (int)poly[i]->pn;
+	n += poly[i]->pn;
     }
     Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
-    b = 0;
+    size_t b = 0;
     for (i = 0; i < npoly; i++) {
 	if (i == pp)
 	    continue;
@@ -477,7 +475,7 @@ static void makePolyline(edge_t * e) {
 void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
     Ppolyline_t line, spline;
     Pvector_t slopes[2];
-    int i, n_barriers;
+    int i;
     int pp, qp;
     Ppoint_t p, q;
     Pedge_t *barriers;
@@ -495,10 +493,11 @@ void makeSpline(edge_t *e, Ppoly_t **obs, int npoly, bool chkPts) {
 		qp = i;
 	}
 
+    size_t n_barriers;
     make_barriers(obs, npoly, pp, qp, &barriers, &n_barriers);
     slopes[0].x = slopes[0].y = 0.0;
     slopes[1].x = slopes[1].y = 0.0;
-    if (Proutespline(barriers, n_barriers, line, slopes, &spline) < 0) {
+    if (Proutespline(barriers, (int)n_barriers, line, slopes, &spline) < 0) {
 	agerrorf("makeSpline: failed to make spline edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	return;
     }
