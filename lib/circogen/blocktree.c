@@ -148,7 +148,6 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
     block_t *next;
     block_t *root;
     int min;
-    /* int        ordercnt; */
 
     find_blocks(g, state);
 
@@ -158,7 +157,6 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
 
     /* Find node with minimum VAL value to find parent block */
     /* FIX: Should be some way to avoid search below.               */
-    /* ordercnt = state->orderCount;  */
     for (bp = bp->next; bp; bp = next) {
 	Agnode_t *n;
 	Agnode_t *parent;
