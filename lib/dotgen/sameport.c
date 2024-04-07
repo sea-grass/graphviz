@@ -124,7 +124,7 @@ static void sameport(node_t *u, edge_list_t l)
     /* (x1,y1),(x2,y2) is a segment that must cross the node boundary */
     x1 = ND_coord(u).x;
     y1 = ND_coord(u).y;	/* center of node */
-    r = MAX(ND_lw(u) + ND_rw(u), ND_ht(u) + GD_ranksep(agraphof(u)));	/* far away */
+    r = fmax(ND_lw(u) + ND_rw(u), ND_ht(u) + GD_ranksep(agraphof(u))); // far away
     x2 = x * r + ND_coord(u).x;
     y2 = y * r + ND_coord(u).y;
     {				/* now move (x1,y1) to the node boundary */
