@@ -3098,7 +3098,7 @@ static void init_job_viewport(GVJ_t * job, graph_t * g)
 	if (size.x < sz.x || size.y < sz.y /* drawing is too big (in either axis) ... */
 	    || (GD_drawing(g)->filled /* or ratio=filled requested and ... */
 		&& size.x > sz.x && size.y > sz.y)) /* drawing is too small (in both axes) ... */
-	    Z = MIN(size.x/sz.x, size.y/sz.y);
+	    Z = fmin(size.x / sz.x, size.y / sz.y);
     }
     
     /* default focus, in graph units = center of bb */
