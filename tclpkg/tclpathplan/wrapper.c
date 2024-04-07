@@ -27,8 +27,6 @@ typedef struct Ppoly_t {
     size_t pn;
 } Ppoly_t;
 
-typedef Ppoly_t Ppolyline_t;
-
 typedef struct Pedge_t {
     Ppoint_t a, b;
 } Pedge_t;
