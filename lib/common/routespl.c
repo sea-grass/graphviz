@@ -299,7 +299,7 @@ static void limitBoxes(boxf *boxes, int boxn, const pointf *pps, size_t pn,
  *
  * If a catastrophic error, return NULL and npoints is 0.
  */
-static pointf *routesplines_(path *pp, int *npoints, int polyline) {
+static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     Ppoly_t poly;
     Ppolyline_t pl, spl;
     Ppoint_t eps[2];
@@ -550,8 +550,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	limitBoxes(boxes, boxn, polyspl.ps, polyspl.pn, INIT_DELTA);
     }
 
-    assert(spl.pn <= INT_MAX);
-    *npoints = (int)spl.pn;
+    *npoints = spl.pn;
 
 #ifdef DEBUG
     if (GD_showboxes(agraphof(aghead(realedge))) == 2 ||
@@ -566,13 +565,11 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     return ps;
 }
 
-pointf *routesplines(path * pp, int *npoints)
-{
+pointf *routesplines(path *pp, size_t *npoints) {
   return routesplines_(pp, npoints, 0);
 }
 
-pointf *routepolylines(path * pp, int *npoints)
-{
+pointf *routepolylines(path *pp, size_t *npoints) {
   return routesplines_(pp, npoints, 1);
 }
 
