@@ -704,12 +704,11 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
  *
  * Otherwise, return p unchanged.
  */
-static Ppoint_t tweakEnd (Ppoly_t poly, int s, Ppoint_t q) {
+static Ppoint_t tweakEnd(Ppoly_t poly, size_t s, Ppoint_t q) {
     Ppoint_t prv, nxt, p;
 
     p = poly.ps[s];
-    assert(poly.pn <= INT_MAX);
-    nxt = poly.ps[(s + 1) % (int)poly.pn];
+    nxt = poly.ps[(s + 1) % poly.pn];
     if (s == 0)
 	prv = poly.ps[poly.pn-1];
     else
@@ -726,9 +725,7 @@ static Ppoint_t tweakEnd (Ppoly_t poly, int s, Ppoint_t q) {
     return p;
 }
 
-static void
-tweakPath (Ppoly_t poly, int s, int t, Ppolyline_t pl)
-{
+static void tweakPath(Ppoly_t poly, size_t s, size_t t, Ppolyline_t pl) {
     pl.ps[0] = tweakEnd (poly, s, pl.ps[1]);
     pl.ps[pl.pn-1] = tweakEnd (poly, t, pl.ps[pl.pn-2]);
 }
@@ -777,7 +774,9 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	    medges[j].a = poly.ps[j];
 	    medges[j].b = poly.ps[(j + 1) % poly.pn];
 	}
-	tweakPath (poly, s, t, pl);
+	assert(s >= 0);
+	assert(t >= 0);
+	tweakPath (poly, (size_t)s, (size_t)t, pl);
 	assert(poly.pn <= INT_MAX);
 	if (Proutespline(medges, (int)poly.pn, pl, evs, &spl) < 0) {
 	    agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
@@ -830,8 +829,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 		medges[j].a = poly.ps[j];
 		medges[j].b = poly.ps[(j + 1) % poly.pn];
 	    }
-	    assert(pl.pn <= INT_MAX);
-	    tweakPath(poly, 0, (int)pl.pn - 1, mmpl);
+	    tweakPath(poly, 0, pl.pn - 1, mmpl);
 	    assert(poly.pn <= INT_MAX);
 	    if (Proutespline(medges, (int)poly.pn, mmpl, evs, &spl) < 0) {
 		agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", 
