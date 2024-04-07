@@ -1283,6 +1283,8 @@ orthoEdges (Agraph_t* g, int doLbls)
 		case 's' :
 		    odb_flags |= ODB_SGRAPH;    // emit search graph 
 		    break;
+		default:
+		    break;
 		}
 	    }
 	}

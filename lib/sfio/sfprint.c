@@ -318,6 +318,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    size = -1;
 	    flags = (flags & ~SFFMT_TYPES) | SFFMT_TFLAG;
 	    goto loop_flags;
+	default: // continue with logic below
+	    break;
 	}
 
 	/* set the correct size */

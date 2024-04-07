@@ -111,6 +111,8 @@ exopname(int op)
 		return "||";
 	case RSH:
 		return ">>";
+	default:
+		break;
 	}
 	snprintf(buf, sizeof(buf) - 1, "(OP=%03o)", op);
 	return buf;
