@@ -194,20 +194,16 @@ static void indent(int i)
 
 void print_blocktree(block_t * sn, int depth)
 {
-    block_t *child;
-    Agnode_t *n;
-    Agraph_t *g;
-
     indent(depth);
-    g = sn->sub_graph;
+    Agraph_t *g = sn->sub_graph;
     fprintf(stderr, "%s:", agnameof(g));
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	fprintf(stderr, " %s", agnameof(n));
     }
     fputs("\n", stderr);
 
     depth++;
-    for (child = sn->children.first; child; child = child->next) {
+    for (block_t *child = sn->children.first; child; child = child->next) {
 	print_blocktree(child, depth);
     }
 }
