@@ -1248,19 +1248,17 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
 {
     GVC_t *gvc = job->gvc;
     pointf pageSize;	/* page size for the graph - points*/
-    pointf imageSize;	/* image size on one page of the graph - points */
-    pointf margin;	/* margin for a page of the graph - points */
     pointf centering = {0}; // centering offset - points
 
     /* unpaginated image size - in points - in graph orientation */
-    imageSize = job->view;
+    pointf imageSize = job->view; // image size on one page of the graph - points
 
     /* rotate imageSize to page orientation */
     if (job->rotation)
 	imageSize = exch_xyf(imageSize);
 
     /* margin - in points - in page orientation */
-    margin = job->margin;
+    pointf margin = job->margin; // margin for a page of the graph - points
 
     /* determine pagination */
     if (gvc->graph_sets_pageSize && (job->flags & GVDEVICE_DOES_PAGES)) {
