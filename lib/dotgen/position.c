@@ -959,10 +959,8 @@ static void set_aspect(graph_t *g) {
 	    if (GD_drawing(g)->size.x <= 0)
 		scale_it = false;
 	    else {
-		xf = (double) GD_drawing(g)->size.x /
-		    (double) GD_bb(g).UR.x;
-		yf = (double) GD_drawing(g)->size.y /
-		    (double) GD_bb(g).UR.y;
+		xf = GD_drawing(g)->size.x / GD_bb(g).UR.x;
+		yf = GD_drawing(g)->size.y / GD_bb(g).UR.y;
 		if ((xf > 1.0) && (yf > 1.0)) {
 		    double scale = MIN(xf, yf);
 		    xf = yf = scale;
