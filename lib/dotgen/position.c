@@ -17,6 +17,7 @@
  * created and correctly separated.
  */
 
+#include <common/geomprocs.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_math.h>
 #include <dotgen/dot.h>
@@ -931,9 +932,7 @@ static void set_aspect(graph_t *g) {
 	sz.x = GD_bb(g).UR.x - GD_bb(g).LL.x;
 	sz.y = GD_bb(g).UR.y - GD_bb(g).LL.y;	/* normalize */
 	if (GD_flip(g)) {
-	    int t = sz.x;
-	    sz.x = sz.y;
-	    sz.y = t;
+	    sz = exch_xy(sz);
 	}
 	bool scale_it = true;
 	if (GD_drawing(g)->ratio_kind == R_AUTO)
