@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_math.h>
 #include <circogen/blocktree.h>
 #include <stdbool.h>
 
@@ -72,7 +73,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 	    PARENT(v) = u;
             estack_push(stk, e);
             dfs(g, v, state, false, stk);
-            LOWVAL(u) = MIN(LOWVAL(u), LOWVAL(v));
+            LOWVAL(u) = imin(LOWVAL(u), LOWVAL(v));
             if (LOWVAL(v) >= VAL(u)) {       /* u is an articulation point */
 		block_t *block = NULL;
 		Agnode_t *np;
@@ -99,7 +100,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 		}
             }
         } else if (PARENT(u) != v) {
-            LOWVAL(u) = MIN(LOWVAL(u), VAL(v));
+            LOWVAL(u) = imin(LOWVAL(u), VAL(v));
         }
     }
     if (isRoot && !BLOCK(u)) {
