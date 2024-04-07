@@ -139,16 +139,13 @@ static void find_blocks(Agraph_t * g, circ_state * state)
  */
 block_t *createBlocktree(Agraph_t * g, circ_state * state)
 {
-    block_t *bp;
     block_t *next;
-    block_t *root;
-    int min;
 
     find_blocks(g, state);
 
-    bp = state->bl.first;	/* if root chosen, will be first */
+    block_t *bp = state->bl.first; // if root chosen, will be first
     /* Otherwise, just pick first as root */
-    root = bp;
+    block_t *root = bp;
 
     /* Find node with minimum VAL value to find parent block */
     /* FIX: Should be some way to avoid search below.               */
@@ -160,7 +157,7 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
 
 	child = n = agfstnode(subg);
 
-	min = VAL(n);
+	int min = VAL(n);
 	parent = PARENT(n);
 	for (n = agnxtnode(subg, n); n; n = agnxtnode(subg, n)) {
 	    if (VAL(n) < min) {
