@@ -1539,10 +1539,10 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 
 static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
                                route *route_list, epair_t es[]) {
-    boxf bb, absbb;
+    boxf bb;
 
-    absbb.LL.x = absbb.LL.y = MAXDOUBLE;
-    absbb.UR.x = absbb.UR.y = -MAXDOUBLE;
+    boxf absbb = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
+                  .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
 
     fprintf (fp, "%s", prolog2);
     fprintf (fp, "%d %d translate\n", TRANS, TRANS);
