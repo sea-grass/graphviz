@@ -461,13 +461,13 @@ maze *mkMaze(graph_t *g) {
     boxf* rects;
     cell* cp;
     double w2, h2;
-    boxf bb, BB;
+    boxf bb;
 
     mp->ngcells = agnnodes(g);
     cp = mp->gcells = gv_calloc(mp->ngcells, sizeof(cell));
 
-    BB.LL.x = BB.LL.y = MAXDOUBLE;
-    BB.UR.x = BB.UR.y = -MAXDOUBLE;
+    boxf BB = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
+               .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
     for (n = agfstnode (g); n; n = agnxtnode(g,n)) {
         w2 = fmax(1, ND_xsize(n) / 2.0);
         h2 = fmax(1, ND_ysize(n) / 2.0);
