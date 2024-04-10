@@ -121,7 +121,7 @@ static bool _less_than (pointf *v0, pointf *v1)
   return !_greater_than_equal_to(v0, v1);
 }
 
-/* Initilialise the query structure (Q) and the trapezoid table (T)
+/* Initialize the query structure (Q) and the trapezoid table (T)
  * when the first segment is added to start the trapezoidation. The
  * query-tree starts out with 4 trapezoids, one S-node and 2 Y-nodes
  *
@@ -211,7 +211,7 @@ init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   return root;
 }
 
-/* Retun TRUE if the vertex v is to the left of line segment no.
+/* Return true if the vertex v is to the left of line segment no.
  * segnum. Takes care of the degenerate cases when both the vertices
  * have the same y--cood, etc.
  */
