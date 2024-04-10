@@ -1237,11 +1237,11 @@ static splineInfo sinfo = { swap_ends_p, spline_merge, true, true };
 
 /* orthoEdges:
  * For edges without position information, construct an orthogonal routing.
- * If doLbls is true, use edge label info when available to guide routing, 
+ * If useLbls is true, use edge label info when available to guide routing, 
  * and set label pos for those edges for which this info is not available.
  */
 void
-orthoEdges (Agraph_t* g, int doLbls)
+orthoEdges (Agraph_t* g, int useLbls)
 {
     sgraph* sg;
     maze* mp;
@@ -1290,9 +1290,9 @@ orthoEdges (Agraph_t* g, int doLbls)
 	}
     }
 #endif
-    if (doLbls) {
+    if (useLbls) {
 	agwarningf("Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
-	doLbls = 0;
+	useLbls = 0;
     }
     mp = mkMaze(g);
     sg = mp->sg;
@@ -1339,7 +1339,7 @@ orthoEdges (Agraph_t* g, int doLbls)
         start = CELL(agtail(e));
         dest = CELL(aghead(e));
 
-	if (doLbls && (lbl = ED_label(e)) && lbl->set) {
+	if (useLbls && (lbl = ED_label(e)) && lbl->set) {
 	}
 	else {
 	    if (start == dest)
@@ -1364,7 +1364,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 #ifdef DEBUG
     if (odb_flags & ODB_ROUTE) emitGraph (stderr, mp, n_edges, route_list, es);
 #endif
-    attachOrthoEdges(mp, n_edges, route_list, &sinfo, es, doLbls);
+    attachOrthoEdges(mp, n_edges, route_list, &sinfo, es, useLbls);
 
 orthofinish:
     if (Concentrate)
