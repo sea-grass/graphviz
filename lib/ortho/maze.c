@@ -58,9 +58,8 @@ char* post = "showpage\n";
 static void
 psdump(cell *gcells, int n_gcells, boxf BB, boxf *rects, size_t nrect) {
     boxf bb;
-    box absbb;
+    box absbb = {.LL = {.y = 10, .x = 10}};
 
-    absbb.LL.y = absbb.LL.x = 10;
     absbb.UR.x = absbb.LL.x + BB.UR.x - BB.LL.x;
     absbb.UR.y = absbb.LL.y + BB.UR.y - BB.LL.y;
     fputs (pre, stderr);
