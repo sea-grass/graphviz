@@ -1565,10 +1565,10 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
       absbb.UR.y = MAX(absbb.UR.y, bb.UR.y);
     }
 
-    boxf bbox;
-    bbox.LL.x = absbb.LL.x + TRANS;
-    bbox.LL.y = absbb.LL.y + TRANS;
-    bbox.UR.x = absbb.UR.x + TRANS;
-    bbox.UR.y = absbb.UR.y + TRANS;
+    const boxf bbox = {
+      .LL = {.x = absbb.LL.x + TRANS,
+             .y = absbb.LL.y + TRANS},
+      .UR = {.x = absbb.UR.x + TRANS,
+             .y = absbb.UR.y + TRANS}};
     fprintf (fp, epilog2, bbox.LL.x, bbox.LL.y,  bbox.UR.x, bbox.UR.y);
 }
