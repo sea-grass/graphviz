@@ -1136,9 +1136,8 @@ addPoints(pointf p0, pointf p1)
     return p0;
 }
 
-static void
-attachOrthoEdges(maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo, epair_t es[], int doLbls)
-{
+static void attachOrthoEdges(maze *mp, size_t n_edges, route* route_list,
+                             splineInfo *sinfo, epair_t es[], bool doLbls) {
     int ipt;
     pointf* ispline = 0;
     size_t splsz = 0;
@@ -1240,9 +1239,7 @@ static splineInfo sinfo = { swap_ends_p, spline_merge, true, true };
  * If useLbls is true, use edge label info when available to guide routing, 
  * and set label pos for those edges for which this info is not available.
  */
-void
-orthoEdges (Agraph_t* g, int useLbls)
-{
+void orthoEdges(Agraph_t *g, bool useLbls) {
     sgraph* sg;
     maze* mp;
     route* route_list;
@@ -1292,7 +1289,7 @@ orthoEdges (Agraph_t* g, int useLbls)
 #endif
     if (useLbls) {
 	agwarningf("Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
-	useLbls = 0;
+	useLbls = false;
     }
     mp = mkMaze(g);
     sg = mp->sg;

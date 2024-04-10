@@ -583,7 +583,7 @@ static int _spline_edges(graph_t * g, expand_t* pmargin, int edgetype)
     }
 #ifdef ORTHO
     else if (legal && edgetype == EDGETYPE_ORTHO) {
-	orthoEdges (g, 0);
+	orthoEdges(g, false);
 	useEdges = 1;
     }
 #endif

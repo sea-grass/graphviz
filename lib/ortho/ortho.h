@@ -11,6 +11,7 @@
 #pragma once
 
 #include <render.h>
+#include <stdbool.h>
 
 #ifdef GVDLL
 #ifdef GVC_EXPORTS
@@ -24,4 +25,4 @@
 #define ORTHO_API /* nothing */
 #endif
 
-ORTHO_API void orthoEdges (Agraph_t* g, int useLbls);
+ORTHO_API void orthoEdges(Agraph_t *g, bool useLbls);

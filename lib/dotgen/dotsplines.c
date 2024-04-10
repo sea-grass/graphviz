@@ -278,10 +278,10 @@ static void dot_splines_(graph_t *g, int normalize) {
 	resetRW (g);
 	if (GD_has_labels(g->root) & EDGE_LABEL) {
 	    setEdgeLabelPos (g);
-	    orthoEdges (g, 1);
+	    orthoEdges(g, true);
 	}
 	else
-	    orthoEdges (g, 0);
+	    orthoEdges(g, false);
 	goto finish;
     } 
 #else
