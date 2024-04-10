@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/streq.h>
 
@@ -64,7 +65,23 @@ char *aglasterr(void)
 
 /// default error reporting implementation
 static int default_usererrf(char *message) {
-  return fputs(message, stderr);
+  // `fputs`, escaping characters that may interfere with a terminal
+  for (const char *p = message; *p != '\0'; ++p) {
+
+    if (gv_iscntrl(*p) && !gv_isspace(*p)) {
+      const int rc = fprintf(stderr, "\\%03o", (unsigned)*p);
+      if (rc < 0) {
+        return rc;
+      }
+      continue;
+    }
+
+    const int rc = putc(*p, stderr);
+    if (rc < 0) {
+      return rc;
+    }
+  }
+  return 0;
 }
 
 /// Report messages using a user-supplied or default write function

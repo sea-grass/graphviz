@@ -4058,7 +4058,6 @@ def test_mm_banner_overflow(tmp_path: Path):
     assert ret == 1, "mm2gv did not reject malformed input"
 
 
-@pytest.mark.xfail(strict=True)
 def test_control_characters_in_error():
     """
     malformed input should not result in misleading control data making it to the

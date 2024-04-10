@@ -68,6 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `GVJ_t.selected_obj_type_name` fields have been removed.
 - **Breaking**: The `gv_argvlist_t` type and functions that operate on it have
   been removed.
+- Control characters in some error messages are escaped, preventing certain
+  types of text injection that could cause user confusion.
 
 ### Fixed
 
