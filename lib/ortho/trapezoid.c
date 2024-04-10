@@ -182,25 +182,36 @@ init_query_structure(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
   t3 = newtrap(tr);		/* bottom-most */
   t4 = newtrap(tr);		/* topmost */
 
-  tr->data[t1].hi = tr->data[t2].hi = tr->data[t4].lo = qs->data[i1].yval;
-  tr->data[t1].lo = tr->data[t2].lo = tr->data[t3].hi = qs->data[i3].yval;
+  tr->data[t1].hi = qs->data[i1].yval;
+  tr->data[t2].hi = qs->data[i1].yval;
+  tr->data[t4].lo = qs->data[i1].yval;
+  tr->data[t1].lo = qs->data[i3].yval;
+  tr->data[t2].lo = qs->data[i3].yval;
+  tr->data[t3].hi = qs->data[i3].yval;
   tr->data[t4].hi.y = (double)(INF);
   tr->data[t4].hi.x = (double)(INF);
   tr->data[t3].lo.y = (double)-1 * (INF);
   tr->data[t3].lo.x = (double)-1 * (INF);
-  tr->data[t1].rseg = tr->data[t2].lseg = segnum;
-  tr->data[t1].u0 = tr->data[t2].u0 = t4;
-  tr->data[t1].d0 = tr->data[t2].d0 = t3;
-  tr->data[t4].d0 = tr->data[t3].u0 = t1;
-  tr->data[t4].d1 = tr->data[t3].u1 = t2;
+  tr->data[t1].rseg = segnum;
+  tr->data[t2].lseg = segnum;
+  tr->data[t1].u0 = t4;
+  tr->data[t2].u0 = t4;
+  tr->data[t1].d0 = t3;
+  tr->data[t2].d0 = t3;
+  tr->data[t4].d0 = t1;
+  tr->data[t3].u0 = t1;
+  tr->data[t4].d1 = t2;
+  tr->data[t3].u1 = t2;
 
   tr->data[t1].sink = i6;
   tr->data[t2].sink = i7;
   tr->data[t3].sink = i4;
   tr->data[t4].sink = i2;
 
-  tr->data[t1].state = tr->data[t2].state = ST_VALID;
-  tr->data[t3].state = tr->data[t4].state = ST_VALID;
+  tr->data[t1].state = ST_VALID;
+  tr->data[t2].state = ST_VALID;
+  tr->data[t3].state = ST_VALID;
+  tr->data[t4].state = ST_VALID;
 
   qs->data[i2].trnum = t4;
   qs->data[i4].trnum = t3;
@@ -427,12 +438,14 @@ static void update_trapezoid(segment_t *s, segment_t *seg, traps_t *tr, int t, i
 	tr->data[tr->data[tn].u0].d0 = tn;
       }
 
-      tr->data[t].usave = tr->data[tn].usave = 0;
+      tr->data[t].usave = 0;
+      tr->data[tn].usave = 0;
     }
     else		/* No usave.... simple case */
     {
       tr->data[tn].u0 = tr->data[t].u1;
-      tr->data[t].u1 = tr->data[tn].u1 = -1;
+      tr->data[t].u1 = -1;
+      tr->data[tn].u1 = -1;
       tr->data[tr->data[tn].u0].d0 = tn;
     }
   }
@@ -444,12 +457,16 @@ static void update_trapezoid(segment_t *s, segment_t *seg, traps_t *tr, int t, i
     {		/* upward cusp */
       if (tr->data[td0].rseg > 0 && !is_left_of(tr->data[td0].rseg, seg, &s->v1))
       {
-	tr->data[t].u0 = tr->data[t].u1 = tr->data[tn].u1 = -1;
+	tr->data[t].u0 = -1;
+	tr->data[t].u1 = -1;
+	tr->data[tn].u1 = -1;
 	tr->data[tr->data[tn].u0].d1 = tn;
       }
       else		/* cusp going leftwards */
       {
-	tr->data[tn].u0 = tr->data[tn].u1 = tr->data[t].u1 = -1;
+	tr->data[tn].u0 = -1;
+	tr->data[tn].u1 = -1;
+	tr->data[t].u1 = -1;
 	tr->data[tr->data[t].u0].d0 = t;
       }
     }
@@ -499,8 +516,10 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
       tl = newtrap(tr);		/* tl is the new lower trapezoid */
       tr->data[tl].state = ST_VALID;
       tr->data[tl] = tr->data[tu];
-      tr->data[tu].lo.y = tr->data[tl].hi.y = s.v0.y;
-      tr->data[tu].lo.x = tr->data[tl].hi.x = s.v0.x;
+      tr->data[tu].lo.y = s.v0.y;
+      tr->data[tl].hi.y = s.v0.y;
+      tr->data[tu].lo.x = s.v0.x;
+      tr->data[tl].hi.x = s.v0.x;
       tr->data[tu].d0 = tl;
       tr->data[tu].d1 = 0;
       tr->data[tl].u0 = tu;
@@ -673,13 +692,15 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 		{
 				/* L-R downward cusp */
 		  tr->data[tr->data[t].d0].u0 = t;
-		  tr->data[tn].d0 = tr->data[tn].d1 = -1;
+		  tr->data[tn].d0 = -1;
+		  tr->data[tn].d1 = -1;
 		}
 	      else
 		{
 				/* R-L downward cusp */
 		  tr->data[tr->data[tn].d0].u1 = tn;
-		  tr->data[t].d0 = tr->data[t].d1 = -1;
+		  tr->data[t].d0 = -1;
+		  tr->data[t].d1 = -1;
 		}
 	    }
 	  else
@@ -722,13 +743,15 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 		{
 		  /* L-R downward cusp */
 		  tr->data[tr->data[t].d1].u0 = t;
-		  tr->data[tn].d0 = tr->data[tn].d1 = -1;
+		  tr->data[tn].d0 = -1;
+		  tr->data[tn].d1 = -1;
 		}
 	      else
 		{
 		  /* R-L downward cusp */
 		  tr->data[tr->data[tn].d1].u1 = tn;
-		  tr->data[t].d0 = tr->data[t].d1 = -1;
+		  tr->data[t].d0 = -1;
+		  tr->data[t].d1 = -1;
 		}
 	    }
 	  else
@@ -801,7 +824,8 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 	      tr->data[tr->data[t].d1].u1 = -1;
 
 	      tr->data[tn].d0 = tr->data[t].d1;
-	      tr->data[t].d1 = tr->data[tn].d1 = -1;
+	      tr->data[t].d1 = -1;
+	      tr->data[tn].d1 = -1;
 
 	      tnext = tr->data[t].d1;
 	    }
@@ -839,7 +863,8 @@ static void add_segment(int segnum, segment_t *seg, traps_t *tr, qnodes_t *qs) {
 	  t = tnext;
 	}
 
-      tr->data[t_sav].rseg = tr->data[tn_sav].lseg  = segnum;
+      tr->data[t_sav].rseg = segnum;
+      tr->data[tn_sav].lseg = segnum;
     } /* end-while */
 
   /* Now combine those trapezoids which share common segments. We can */
