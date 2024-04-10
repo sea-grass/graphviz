@@ -1539,8 +1539,6 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 
 static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
                                route *route_list, epair_t es[]) {
-    boxf bb;
-
     boxf absbb = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
                   .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
 
@@ -1549,7 +1547,7 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
 
     fputs ("0 0 1 setrgbcolor\n", fp);
     for (int i = 0; i < mp->ngcells; i++) {
-      bb = mp->gcells[i].bb;
+      const boxf bb = mp->gcells[i].bb;
       fprintf (fp, "%f %f %f %f node\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
     }
 
@@ -1559,7 +1557,7 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
     
     fputs ("0.8 0.8 0.8 setrgbcolor\n", fp);
     for (int i = 0; i < mp->ncells; i++) {
-      bb = mp->cells[i].bb;
+      const boxf bb = mp->cells[i].bb;
       fprintf (fp, "%f %f %f %f cell\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
       absbb.LL.x = MIN(absbb.LL.x, bb.LL.x);
       absbb.LL.y = MIN(absbb.LL.y, bb.LL.y);
