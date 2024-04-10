@@ -437,7 +437,6 @@ EXCLUDE = (
     "lib/ortho/maze.c",
     "lib/ortho/maze.h",
     "lib/ortho/ortho.c",
-    "lib/ortho/ortho.h",
     "lib/ortho/partition.c",
     "lib/ortho/rawgraph.c",
     "lib/ortho/rawgraph.h",
