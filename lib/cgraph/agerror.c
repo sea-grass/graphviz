@@ -62,6 +62,11 @@ char *aglasterr(void)
   return buf;
 }
 
+/// default error reporting implementation
+static int default_usererrf(char *message) {
+  return fputs(message, stderr);
+}
+
 /// Report messages using a user-supplied write function 
 static void
 userout (agerrlevel_t level, const char *fmt, va_list args)
@@ -87,9 +92,12 @@ userout (agerrlevel_t level, const char *fmt, va_list args)
 	return;
     }
 
+    // determine how errors are to be reported
+    const agusererrf errf = usererrf ? usererrf : default_usererrf;
+
     if (level != AGPREV) {
-	usererrf ((level == AGERR) ? "Error" : "Warning");
-	usererrf (": ");
+	(void)errf(level == AGERR ? "Error" : "Warning");
+	(void)errf(": ");
     }
 
     // construct the full error in our buffer
@@ -101,7 +109,7 @@ userout (agerrlevel_t level, const char *fmt, va_list args)
     }
 
     // yield our constructed error
-    (void)usererrf(buf);
+    (void)errf(buf);
 
     free(buf);
 }
@@ -124,13 +132,7 @@ static int agerr_va(agerrlevel_t level, const char *fmt, va_list args)
      * Setting agerrlevel to AGMAX turns off immediate error reporting.
      */
     if (lvl >= agerrlevel) {
-	if (usererrf)
-	    userout (level, fmt, args);
-	else {
-	    if (level != AGPREV)
-		fprintf(stderr, "%s: ", (level == AGERR) ? "Error" : "Warning");
-	    vfprintf(stderr, fmt, args);
-	}
+	userout(level, fmt, args);
 	return 0;
     }
 
