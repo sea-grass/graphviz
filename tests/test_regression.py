@@ -2397,6 +2397,53 @@ def test_2361():
     dot("png", input)
 
 
+@pytest.mark.parametrize(
+    "arg",
+    (
+        pytest.param(
+            "--filepath",
+            marks=pytest.mark.xfail(
+                strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2396"
+            ),
+        ),
+        "-Gimagepath",
+    ),
+)
+def test_2396(arg: str):
+    """
+    `--filepath` should work as a replacement for `$GV_FILE_PATH`
+    https://gitlab.com/graphviz/graphviz/-/issues/2396
+    """
+
+    # use an arbitrary image we have in the tree
+    image = Path(__file__).parent / "../cmd/gvedit/images/save.png"
+    assert image.exists(), "missing test data"
+
+    # a graph that tries to use the image by relative path
+    slash = "/" if arg == "--filepath" else ""
+    source = f'graph {{ N[image="{slash}save.png"]; }}'
+
+    # run this through Graphviz
+    proc = subprocess.run(
+        ["dot", "-Tsvg", f"{arg}={image.parent}"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        input=source,
+        cwd=Path(__file__).parent,
+        universal_newlines=True,
+        check=True,
+    )
+
+    assert proc.stderr == "", "loading an image by relative path produced warnings"
+
+    # whether we used `imagepath` or `filepath` should affect whether we get a leading
+    # slash
+    if arg == "-Gimagepath":
+        assert '"save.png"' in proc.stdout, "incorrect relative path in output"
+    else:
+        assert '"/save.png"' in proc.stdout, "incorrect relative path in output"
+
+
 def test_2481():
     """
     `dot` should not exit with a syntax error if keywords are mixed-case
