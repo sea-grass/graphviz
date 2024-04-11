@@ -124,7 +124,6 @@ void gvjobs_delete(GVC_t * gvc)
     job = gvc->jobs;
     while ((j = job)) {
 	job = job->next;
-	gv_argvlist_reset(&(j->selected_obj_type_name));
 	free(j->active_tooltip);
 	free(j->selected_href);
 	free(j);

@@ -355,7 +355,6 @@ extern "C" {
 					/* (e.g. button 1 clicked on current obj) */
 	char *active_tooltip;		/* tooltip of active object - or NULL */
 	char *selected_href;		/* href of selected object - or NULL */
-	gv_argvlist_t selected_obj_type_name; /* (e.g. "edge" "node3" "e" "->" "node5" "") */
 
 	void *window;		/* display-specific data for gvrender plugin */
 
