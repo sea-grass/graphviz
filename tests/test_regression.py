@@ -2397,18 +2397,7 @@ def test_2361():
     dot("png", input)
 
 
-@pytest.mark.parametrize(
-    "arg",
-    (
-        pytest.param(
-            "--filepath",
-            marks=pytest.mark.xfail(
-                strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2396"
-            ),
-        ),
-        "-Gimagepath",
-    ),
-)
+@pytest.mark.parametrize("arg", ("--filepath", "-Gimagepath"))
 def test_2396(arg: str):
     """
     `--filepath` should work as a replacement for `$GV_FILE_PATH`

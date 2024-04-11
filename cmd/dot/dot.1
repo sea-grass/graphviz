@@ -590,6 +590,12 @@ The default is 1.0.
 \fB\-E\fP sets a default edge attribute.
 Example: \fB\-Gsize="7,8" \-Nshape=box \-Efontsize=8\fR
 .PP
+\fB\-\-filepath=\fIpath\fR uses \fIpath\fR as a prefix for locating externally
+referenced files. For example, using \fB\-\-filepath=bar/baz\fR would cause
+\fBfoo.png\fR in \fBimage="foo.png"\fR to be looked for on disk as
+\fBbar/baz/foo.png\fR. This overrides any \fBimagepath\fR set either on the
+command line or as an attribute within the input graph source.
+.PP
 \fB\-l\fIfile\fR loads custom PostScript library files.
 Usually these define custom shapes or styles.
 If \fB\-l\fP is given by itself, the standard library is omitted.
