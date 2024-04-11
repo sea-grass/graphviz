@@ -143,12 +143,6 @@ extern "C" {
 	int id;
 	const char *type;
     } gvplugin_active_loadimage_t;
-
-    typedef struct gv_argvlist_s {
-	char **argv;
-	size_t argc;
-	size_t alloc;
-    } gv_argvlist_t;
     
     typedef struct gvdevice_callbacks_s {
 	void (*refresh) (GVJ_t * job);
