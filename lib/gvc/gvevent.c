@@ -60,15 +60,6 @@ static void gv_graph_state(GVJ_t *job, graph_t *g)
     gv_argvlist_set_item(list, j++, agnameof(g));
     list->argc = j;
 
-    list = &(job->selected_obj_attributes);
-    a = NULL;
-    while ((a = agnxtattr(g, AGRAPH, a))) {
-        gv_argvlist_set_item(list, j++, a->name);
-        gv_argvlist_set_item(list, j++, agxget(g, a));
-        gv_argvlist_set_item(list, j++, NULL);
-    }
-    list->argc = j;
-
     a = agfindgraphattr(g, s_href);
     if (!a)
 	a = agfindgraphattr(g, s_URL);
@@ -79,22 +70,12 @@ static void gv_graph_state(GVJ_t *job, graph_t *g)
 static void gv_node_state(GVJ_t *job, node_t *n)
 {
     Agsym_t *a;
-    Agraph_t *g;
     gv_argvlist_t *list;
 
     list = &(job->selected_obj_type_name);
     size_t j = 0;
     gv_argvlist_set_item(list, j++, s_node);
     gv_argvlist_set_item(list, j++, agnameof(n));
-    list->argc = j;
-
-    list = &(job->selected_obj_attributes);
-    g = agroot(agraphof(n));
-    a = NULL;
-    while ((a = agnxtattr(g, AGNODE, a))) {
-        gv_argvlist_set_item(list, j++, a->name);
-        gv_argvlist_set_item(list, j++, agxget(n, a));
-    }
     list->argc = j;
 
     a = agfindnodeattr(agraphof(n), s_href);
@@ -108,7 +89,7 @@ static void gv_edge_state(GVJ_t *job, edge_t *e)
 {
     Agsym_t *a;
     Agraph_t *g;
-    gv_argvlist_t *nlist, *alist;
+    gv_argvlist_t *nlist;
 
     nlist = &(job->selected_obj_type_name);
 
@@ -125,7 +106,6 @@ static void gv_edge_state(GVJ_t *job, edge_t *e)
     j++; /* skip key slot for now */
     nlist->argc = j;
 
-    alist = &(job->selected_obj_attributes);
     g = agroot(agraphof(aghead(e)));
     a = NULL;
     while ((a = agnxtattr(g, AGEDGE, a))) {
@@ -145,11 +125,7 @@ static void gv_edge_state(GVJ_t *job, edge_t *e)
 	    gv_argvlist_set_item(nlist, 6, agxget(e, a));
 	    continue;
 	}
-
-        gv_argvlist_set_item(alist, j++, a->name);
-        gv_argvlist_set_item(alist, j++, agxget(e, a));
     }
-    alist->argc = j;
 
     a = agfindedgeattr(agraphof(aghead(e)), s_href);
     if (!a)

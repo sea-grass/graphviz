@@ -39,7 +39,6 @@ extern "C" {
 
 #define PENWIDTH_NORMAL 1.
 #define PENWIDTH_BOLD 2.
-    typedef enum { GVATTR_STRING, GVATTR_BOOL, GVATTR_COLOR } gvattr_t;
 
 /* The -T output formats listed below are examples only, they are not definitive or inclusive,
  other outputs may use the flags now, or in the future 
@@ -357,9 +356,6 @@ extern "C" {
 	char *active_tooltip;		/* tooltip of active object - or NULL */
 	char *selected_href;		/* href of selected object - or NULL */
 	gv_argvlist_t selected_obj_type_name; /* (e.g. "edge" "node3" "e" "->" "node5" "") */
-	gv_argvlist_t selected_obj_attributes; /* attribute triplets: name, value, type */
-				/* e.g. "color", "red", GVATTR_COLOR,
-					"style", "filled", GVATTR_BOOL, */
 
 	void *window;		/* display-specific data for gvrender plugin */
 

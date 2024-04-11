@@ -66,6 +66,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The `Ppoly_t.pn` (`Ppolyline_t.pn`) field is now a `size_t`.
 - **Breaking**: The `Proutespline` function takes its `n_barriers` parameter as
   a `size_t`.
+- **Breaking**: The `gvattr_t` type and the `GVJ_t.selected_obj_attributes`
+  field have been removed.
 
 ### Fixed
 
