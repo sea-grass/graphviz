@@ -21,7 +21,7 @@ static void get_local_12_norm(int n, int i, const int *ia, const int *ja,
   norm[0] = n; norm[1] = 0;
   for (j = ia[i]; j < ia[i+1]; j++){
     if (ja[j] == i) continue;
-    norm[0] = MIN(norm[0], abs(p[i] - p[ja[j]]));
+    norm[0] = fmin(norm[0], abs(p[i] - p[ja[j]]));
     nz++;
     norm[1] += abs(p[i] - p[ja[j]]);
   }
@@ -39,9 +39,9 @@ static void get_12_norm(int n, int *ia, int *ja, int *p, double *norm){
     tmp = n;
     for (j = ia[i]; j < ia[i+1]; j++){
       if (ja[j] == i) continue;
-      norm[0] = MIN(norm[0], abs(p[i] - p[ja[j]]));
+      norm[0] = fmin(norm[0], abs(p[i] - p[ja[j]]));
       norm[1] += abs(p[i] - p[ja[j]]);
-      tmp = MIN(tmp, abs(p[i] - p[ja[j]]));
+      tmp = fmin(tmp, abs(p[i] - p[ja[j]]));
       nz++;
     }
     norm[2] += tmp;

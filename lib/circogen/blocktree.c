@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_math.h>
 #include <circogen/blocktree.h>
 #include <stdbool.h>
 
@@ -21,10 +22,9 @@ static void addNode(block_t * bp, Agnode_t * n)
 static Agraph_t *makeBlockGraph(Agraph_t * g, circ_state * state)
 {
     agxbuf name = {0};
-    Agraph_t *subg;
 
     agxbprint(&name, "_block_%d", state->blockCount++);
-    subg = agsubg(g, agxbuse(&name), 1);
+    Agraph_t *subg = agsubg(g, agxbuse(&name), 1);
     agxbfree(&name);
     agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
     return subg;
@@ -54,12 +54,9 @@ DEFINE_LIST(estack, Agedge_t*)
  */
 static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
                 estack_t *stk) {
-    Agedge_t *e;
-    Agnode_t *v;
-
     LOWVAL(u) = VAL(u) = state->orderCount++;
-    for (e = agfstedge(g, u); e; e = agnxtedge(g, e, u)) {
-	v = aghead (e);
+    for (Agedge_t *e = agfstedge(g, u); e; e = agnxtedge(g, e, u)) {
+	Agnode_t *v = aghead (e);
 	if (v == u) {
             v = agtail(e);
 	    if (!EDGEORDER(e)) EDGEORDER(e) = -1;
@@ -72,7 +69,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 	    PARENT(v) = u;
             estack_push(stk, e);
             dfs(g, v, state, false, stk);
-            LOWVAL(u) = MIN(LOWVAL(u), LOWVAL(v));
+            LOWVAL(u) = imin(LOWVAL(u), LOWVAL(v));
             if (LOWVAL(v) >= VAL(u)) {       /* u is an articulation point */
 		block_t *block = NULL;
 		Agnode_t *np;
@@ -99,7 +96,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 		}
             }
         } else if (PARENT(u) != v) {
-            LOWVAL(u) = MIN(LOWVAL(u), VAL(v));
+            LOWVAL(u) = imin(LOWVAL(u), VAL(v));
         }
     }
     if (isRoot && !BLOCK(u)) {
@@ -111,7 +108,6 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 
 static void find_blocks(Agraph_t * g, circ_state * state)
 {
-    Agnode_t *n;
     Agnode_t *root = NULL;
 
     /*      check to see if there is a node which is set to be the root
@@ -120,7 +116,7 @@ static void find_blocks(Agraph_t * g, circ_state * state)
 	root = agfindnode(g, state->rootname);
     }
     if (!root && state->N_root) {
-	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+	for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	    if (late_bool(ORIGN(n), state->N_root, false)) {
 		root = n;
 		break;
@@ -143,21 +139,16 @@ static void find_blocks(Agraph_t * g, circ_state * state)
  */
 block_t *createBlocktree(Agraph_t * g, circ_state * state)
 {
-    block_t *bp;
     block_t *next;
-    block_t *root;
-    int min;
-    /* int        ordercnt; */
 
     find_blocks(g, state);
 
-    bp = state->bl.first;	/* if root chosen, will be first */
+    block_t *bp = state->bl.first; // if root chosen, will be first
     /* Otherwise, just pick first as root */
-    root = bp;
+    block_t *root = bp;
 
     /* Find node with minimum VAL value to find parent block */
     /* FIX: Should be some way to avoid search below.               */
-    /* ordercnt = state->orderCount;  */
     for (bp = bp->next; bp; bp = next) {
 	Agnode_t *n;
 	Agnode_t *parent;
@@ -166,7 +157,7 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
 
 	child = n = agfstnode(subg);
 
-	min = VAL(n);
+	int min = VAL(n);
 	parent = PARENT(n);
 	for (n = agnxtnode(subg, n); n; n = agnxtnode(subg, n)) {
 	    if (VAL(n) < min) {
@@ -186,10 +177,7 @@ block_t *createBlocktree(Agraph_t * g, circ_state * state)
 
 void freeBlocktree(block_t * bp)
 {
-    block_t *child;
-    block_t *next;
-
-    for (child = bp->children.first; child; child = next) {
+    for (block_t *child = bp->children.first, *next; child; child = next) {
 	next = child->next;
 	freeBlocktree(child);
     }
@@ -206,20 +194,16 @@ static void indent(int i)
 
 void print_blocktree(block_t * sn, int depth)
 {
-    block_t *child;
-    Agnode_t *n;
-    Agraph_t *g;
-
     indent(depth);
-    g = sn->sub_graph;
+    Agraph_t *g = sn->sub_graph;
     fprintf(stderr, "%s:", agnameof(g));
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	fprintf(stderr, " %s", agnameof(n));
     }
     fputs("\n", stderr);
 
     depth++;
-    for (child = sn->children.first; child; child = child->next) {
+    for (block_t *child = sn->children.first; child; child = child->next) {
 	print_blocktree(child, depth);
     }
 }

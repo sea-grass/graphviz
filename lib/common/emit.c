@@ -1248,19 +1248,17 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
 {
     GVC_t *gvc = job->gvc;
     pointf pageSize;	/* page size for the graph - points*/
-    pointf imageSize;	/* image size on one page of the graph - points */
-    pointf margin;	/* margin for a page of the graph - points */
     pointf centering = {0}; // centering offset - points
 
     /* unpaginated image size - in points - in graph orientation */
-    imageSize = job->view;
+    pointf imageSize = job->view; // image size on one page of the graph - points
 
     /* rotate imageSize to page orientation */
     if (job->rotation)
 	imageSize = exch_xyf(imageSize);
 
     /* margin - in points - in page orientation */
-    margin = job->margin;
+    pointf margin = job->margin; // margin for a page of the graph - points
 
     /* determine pagination */
     if (gvc->graph_sets_pageSize && (job->flags & GVDEVICE_DOES_PAGES)) {
@@ -1287,8 +1285,8 @@ static void init_job_pagination(GVJ_t * job, graph_t *g)
 	job->numPages = job->pagesArraySize.x * job->pagesArraySize.y;
 
 	/* find the drawable size in points */
-	imageSize.x = MIN(imageSize.x, pageSize.x);
-	imageSize.y = MIN(imageSize.y, pageSize.y);
+	imageSize.x = fmin(imageSize.x, pageSize.x);
+	imageSize.y = fmin(imageSize.y, pageSize.y);
     } else {
 	/* page not set by user, use default from renderer */
 	if (job->render.features) {
@@ -3095,12 +3093,12 @@ static void init_job_viewport(GVJ_t * job, graph_t * g)
     Z = 1.0;
     if (GD_drawing(g)->size.x > 0.001 && GD_drawing(g)->size.y > 0.001) { /* graph size was given by user... */
 	size = GD_drawing(g)->size;
-	if (sz.x == 0) sz.x = size.x;
-	if (sz.y == 0) sz.y = size.y;
+	if (sz.x <= 0.001) sz.x = size.x;
+	if (sz.y <= 0.001) sz.y = size.y;
 	if (size.x < sz.x || size.y < sz.y /* drawing is too big (in either axis) ... */
 	    || (GD_drawing(g)->filled /* or ratio=filled requested and ... */
 		&& size.x > sz.x && size.y > sz.y)) /* drawing is too small (in both axes) ... */
-	    Z = MIN(size.x/sz.x, size.y/sz.y);
+	    Z = fmin(size.x / sz.x, size.y / sz.y);
     }
     
     /* default focus, in graph units = center of bb */

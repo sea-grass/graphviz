@@ -101,7 +101,6 @@ static void sameport(node_t *u, edge_list_t l)
     node_t *v;
     edge_t *f;
     double x = 0, y = 0, x1, y1, x2, y2, r;
-    port prt;
 
     /* Compute the direction vector (x,y) of the average direction. We compute
        with direction vectors instead of angles because else we have to first
@@ -125,7 +124,7 @@ static void sameport(node_t *u, edge_list_t l)
     /* (x1,y1),(x2,y2) is a segment that must cross the node boundary */
     x1 = ND_coord(u).x;
     y1 = ND_coord(u).y;	/* center of node */
-    r = MAX(ND_lw(u) + ND_rw(u), ND_ht(u) + GD_ranksep(agraphof(u)));	/* far away */
+    r = fmax(ND_lw(u) + ND_rw(u), ND_ht(u) + GD_ranksep(agraphof(u))); // far away
     x2 = x * r + ND_coord(u).x;
     y2 = y * r + ND_coord(u).y;
     {				/* now move (x1,y1) to the node boundary */
@@ -145,8 +144,7 @@ static void sameport(node_t *u, edge_list_t l)
     }
 
     /* compute PORT on the boundary */
-    prt.p.x = ROUND(x1);
-    prt.p.y = ROUND(y1);
+    port prt = {.p = {.x = round(x1), .y = round(y1)}};
     prt.bp = 0;
     prt.order =
 	(MC_SCALE * (ND_lw(u) + prt.p.x)) / (ND_lw(u) + ND_rw(u));
