@@ -65,7 +65,7 @@ static void gv_graph_state(GVJ_t *job, graph_t *g)
     while ((a = agnxtattr(g, AGRAPH, a))) {
         gv_argvlist_set_item(list, j++, a->name);
         gv_argvlist_set_item(list, j++, agxget(g, a));
-        gv_argvlist_set_item(list, j++, (char*)GVATTR_STRING);
+        gv_argvlist_set_item(list, j++, NULL);
     }
     list->argc = j;
 
