@@ -25,6 +25,8 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
 
 static void dfs_cutval(node_t * v, edge_t * par);
 static int dfs_range_init(node_t * v, edge_t * par, int low);
@@ -50,7 +52,6 @@ static elist Tree_edge;
 static int add_tree_edge(edge_t * e)
 {
     node_t *n;
-    //fprintf(stderr,"add tree edge %p %s ", (void*)e, agnameof(agtail(e))) ; fprintf(stderr,"%s\n", agnameof(aghead(e))) ;
     if (TREE_EDGE(e)) {
 	agerrorf("add_tree_edge: missing tree edge\n");
 	return -1;
@@ -297,9 +298,14 @@ static void init_cutvalues(void)
 typedef struct subtree_s {
         node_t *rep;            /* some node in the tree */
         int    size;            /* total tight tree size */
-        int    heap_index;      /* required to find non-min elts when merged */
+        size_t    heap_index; ///< required to find non-min elts when merged
         struct subtree_s *par;  /* union find */
 } subtree_t;
+
+/// is this subtree stored in an STheap?
+static bool on_heap(const subtree_t *tree) {
+  return tree->heap_index != SIZE_MAX;
+}
 
 /* find initial tight subtrees */
 static int tight_subtree_search(Agnode_t *v, subtree_t *st)
@@ -367,15 +373,15 @@ static subtree_t *STsetUnion(subtree_t *s0, subtree_t *s1)
   for (r0 = s0; r0->par && r0->par != r0; r0 = r0->par);
   for (r1 = s1; r1->par && r1->par != r1; r1 = r1->par);
   if (r0 == r1) return r0;  /* safety code but shouldn't happen */
-  assert(r0->heap_index > -1 || r1->heap_index > -1);
-  if (r1->heap_index == -1) r = r0;
-  else if (r0->heap_index == -1) r = r1;
+  assert(on_heap(r0) || on_heap(r1));
+  if (!on_heap(r1)) r = r0;
+  else if (!on_heap(r0)) r = r1;
   else if (r1->size < r0->size) r = r0;
   else r = r1;
 
   r0->par = r1->par = r;
   r->size = r0->size + r1->size;
-  assert(r->heap_index >= 0);
+  assert(on_heap(r));
   return r;
 }
 
@@ -420,18 +426,14 @@ static Agedge_t *inter_tree_edge(subtree_t *tree)
     return rv;
 }
 
-static
-int STheapsize(STheap_t *heap) { return heap->size; }
+static size_t STheapsize(const STheap_t *heap) { return heap->size; }
 
-static 
-void STheapify(STheap_t *heap, int i)
-{
-    int left, right, smallest;
+static void STheapify(STheap_t *heap, size_t i) {
     subtree_t **elt = heap->elt;
     do {
-        left = 2*(i+1)-1;
-        right = 2*(i+1);
-        smallest = i;
+        const size_t left = 2 * (i + 1) - 1;
+        const size_t right = 2 * (i + 1);
+        size_t smallest = i;
         if (left < heap->size && elt[left]->size < elt[smallest]->size) smallest = left;
         if (right < heap->size && elt[right]->size < elt[smallest]->size) smallest = right;
         if (smallest != i) {
@@ -447,15 +449,12 @@ void STheapify(STheap_t *heap, int i)
     } while (i < heap->size);
 }
 
-static
-STheap_t *STbuildheap(subtree_t **elt, int size)
-{
-    int     i;
+static STheap_t *STbuildheap(subtree_t **elt, size_t size) {
     STheap_t *heap = gv_alloc(sizeof(STheap_t));
     heap->elt = elt;
     heap->size = size;
-    for (i = 0; i < heap->size; i++) heap->elt[i]->heap_index = i;
-    for (i = heap->size/2; i >= 0; i--)
+    for (size_t i = 0; i < heap->size; i++) heap->elt[i]->heap_index = i;
+    for (size_t i = heap->size / 2; i != SIZE_MAX; i--)
         STheapify(heap,i);
     return heap;
 }
@@ -465,7 +464,8 @@ subtree_t *STextractmin(STheap_t *heap)
 {
     subtree_t *rv;
     rv = heap->elt[0];
-    rv->heap_index = -1;
+    rv->heap_index = SIZE_MAX;
+      // mark this as not participating in the heap anymore
     heap->elt[0] = heap->elt[heap->size - 1];
     heap->elt[0]->heap_index = 0;
     heap->elt[heap->size -1] = rv;    /* needed to free storage later */
@@ -504,9 +504,7 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
   t0 = STsetFind(agtail(e));
   t1 = STsetFind(aghead(e));
 
-  //fprintf(stderr,"merge trees of %d %d of %d, delta %d\n",t0->size,t1->size,N_nodes,delta);
-
-  if (t0->heap_index == -1) {   // move t0
+  if (!on_heap(t0)) { // move t0
     delta = SLACK(e);
     if (delta != 0)
       tree_adjust(t0->rep,NULL,delta);
@@ -532,21 +530,19 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
 static
 int feasible_tree(void)
 {
-  Agnode_t *n;
   Agedge_t *ee;
-  subtree_t *tree0, *tree1;
-  int i, subtree_count = 0;
+  size_t subtree_count = 0;
   STheap_t *heap = NULL;
   int error = 0;
 
   /* initialization */
-  for (n = GD_nlist(G); n; n = ND_next(n)) {
+  for (Agnode_t *n = GD_nlist(G); n != NULL; n = ND_next(n)) {
       ND_subtree_set(n,0);
   }
 
   subtree_t **tree = gv_calloc(N_nodes, sizeof(subtree_t *));
   /* given init_rank, find all tight subtrees */
-  for (n = GD_nlist(G); n; n = ND_next(n)) {
+  for (Agnode_t *n = GD_nlist(G); n != NULL; n = ND_next(n)) {
         if (ND_subtree(n) == 0) {
                 tree[subtree_count] = find_tight_subtree(n);
                 if (tree[subtree_count] == NULL) {
@@ -560,12 +556,12 @@ int feasible_tree(void)
   /* incrementally merge subtrees */
   heap = STbuildheap(tree,subtree_count);
   while (STheapsize(heap) > 1) {
-    tree0 = STextractmin(heap);
+    subtree_t *tree0 = STextractmin(heap);
     if (!(ee = inter_tree_edge(tree0))) {
       error = 1;
       break;
     }
-    tree1 = merge_trees(ee);
+    subtree_t *tree1 = merge_trees(ee);
     if (tree1 == NULL) {
       error = 2;
       break;
@@ -575,7 +571,7 @@ int feasible_tree(void)
 
 end:
   free(heap);
-  for (i = 0; i < subtree_count; i++) free(tree[i]);
+  for (size_t i = 0; i < subtree_count; i++) free(tree[i]);
   free(tree);
   if (error) return error;
   assert(Tree_edge.size == N_nodes - 1);
@@ -1181,16 +1177,12 @@ void check_fast_node(node_t * n)
     assert(nptr != NULL);
 }
 
-static char* dump_node (node_t* n)
-{
-    static char buf[50];
-
+static void dump_node(FILE *sink, node_t *n) {
     if (ND_node_type(n)) {
-	snprintf(buf, sizeof(buf), "%p", n);
-	return buf;
+      fprintf(sink, "%p", n);
     }
     else
-	return agnameof(n);
+      fputs(agnameof(n), sink);
 }
 
 static void dump_graph (graph_t* g)
@@ -1201,13 +1193,19 @@ static void dump_graph (graph_t* g)
     FILE* fp = fopen ("ns.gv", "w");
     fprintf (fp, "digraph \"%s\" {\n", agnameof(g));
     for (n = GD_nlist(g); n; n = ND_next(n)) {
-	fprintf (fp, "  \"%s\"\n", dump_node(n));
+	fputs("  \"", fp);
+	dump_node(fp, n);
+	fputs("\"\n", fp);
     }
     for (n = GD_nlist(g); n; n = ND_next(n)) {
 	for (i = 0; (e = ND_out(n).list[i]); i++) {
-	    fprintf (fp, "  \"%s\"", dump_node(n));
+	    fputs("  \"", fp);
+	    dump_node(fp, n);
+	    fputs("\"", fp);
 	    w = aghead(e);
-	    fprintf (fp, " -> \"%s\"\n", dump_node(w));
+	    fputs(" -> \"", fp);
+	    dump_node(fp, w);
+	    fputs("\"\n", fp);
 	}
     }
 
