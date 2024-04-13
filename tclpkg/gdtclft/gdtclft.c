@@ -521,7 +521,6 @@ static int
 tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
     gdImagePtr im;
-    FILE *filePtr;
     ClientData clientdata;
     const char *cmd, *fname;
     int fileByName;
@@ -553,6 +552,7 @@ tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 
     /* Get the file reference. */
     fileByName = 0;		/* first try to get file from open channel */
+    FILE *filePtr = NULL;
     if (Tcl_GetOpenFile(interp, fname, 1, 1, &clientdata)
 	== TCL_OK) {
 	filePtr = (FILE *) clientdata;
