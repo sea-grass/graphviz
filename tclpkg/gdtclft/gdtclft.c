@@ -399,7 +399,6 @@ tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
     int w, h;
     gdImagePtr im = NULL;
-    FILE *filePtr;
     ClientData clientdata;
     char *cmd;
     Tcl_Obj *result;
@@ -440,6 +439,7 @@ tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     } else {
 	char *arg2 = Tcl_GetString(objv[2]);
 	fileByName = 0;		/* first try to get file from open channel */
+	FILE *filePtr = NULL;
 	if (Tcl_GetOpenFile(interp, arg2, 0, 1, &clientdata) == TCL_OK) {
 	    filePtr = (FILE *) clientdata;
 	} else {
