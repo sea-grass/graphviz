@@ -313,7 +313,7 @@ typedef struct
 	/*graph pointer to hold loaded graphs */
 	Agraph_t **g;
 	/*number of graphs loaded */
-	int graphCount;
+	size_t graphCount;
 	/*active graph */
 	int activeGraph;
 

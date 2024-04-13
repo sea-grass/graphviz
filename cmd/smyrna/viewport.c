@@ -11,12 +11,14 @@
 #include <windows.h>
 #include <io.h>
 #endif
+#include <assert.h>
 #include "viewport.h"
 #include "draw.h"
 #include <cgraph/alloc.h>
 #include <common/color.h>
 #include <glade/glade.h>
 #include "gui.h"
+#include <limits.h>
 #include "menucallbacks.h"
 #include <stddef.h>
 #include <stdbool.h>
@@ -439,8 +441,9 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 	view->g[view->graphCount - 1] = graph;
 
 	gtk_combo_box_append_text(view->graphComboBox, id);
-	gtk_combo_box_set_active(view->graphComboBox,view->graphCount-1);
-	activate(view->graphCount - 1);
+	assert(view->graphCount <= INT_MAX);
+	gtk_combo_box_set_active(view->graphComboBox, (int)view->graphCount - 1);
+	activate((int)view->graphCount - 1);
 	return 1;
     } else {
 	return 0;
@@ -449,7 +452,7 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 }
 void switch_graph(int graphId)
 {
-    if (graphId >= view->graphCount || graphId < 0)
+    if (graphId < 0 || (size_t)graphId >= view->graphCount)
 	return;			/*wrong entry */
     else
 	activate(graphId);
