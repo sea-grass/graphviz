@@ -525,13 +525,10 @@ void gvrender_ellipse(GVJ_t *job, pointf *pf, int filled) {
 
     if (gvre) {
 	if (gvre->ellipse && job->obj->pen != PEN_NONE) {
-	    pointf af[2];
-
-	    /* center */
-	    af[0].x = (pf[0].x + pf[1].x) / 2.;
-	    af[0].y = (pf[0].y + pf[1].y) / 2.;
-	    /* corner */
-	    af[1] = pf[1];
+	    pointf af[] = {
+		mid_pointf(pf[0], pf[1]), // center
+		pf[1] // corner
+	    };
 
 	    if (!(job->flags & GVRENDER_DOES_TRANSFORM))
 		gvrender_ptf_A(job, af, af, 2);
