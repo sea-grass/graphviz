@@ -15,6 +15,7 @@
 #include "hotkeymap.h"
 
 #include "selectionfuncs.h"
+#include <stdint.h>
 #include "topviewfuncs.h"
 
 static int lastAction;
@@ -24,7 +25,8 @@ static void apply_actions(ViewInfo* v,int x,int y)
     int a;
     gdouble seconds;
     a=get_mode(v);
-    if((a==MM_PAN) && (view->guiMode==GUI_FULLSCREEN) &&((v->active_camera >= 0)))
+    if (a == MM_PAN && view->guiMode == GUI_FULLSCREEN &&
+        v->active_camera != SIZE_MAX)
 	a=MM_ROTATE;	
     switch (a) {
     case MM_ROTATE :

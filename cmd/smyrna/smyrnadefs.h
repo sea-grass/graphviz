@@ -325,8 +325,8 @@ typedef struct
 //	selection Selection;
 
 	viewport_camera **cameras;
-	int camera_count;	//number of cameras
-	int active_camera;
+	size_t camera_count; /// <number of cameras
+	size_t active_camera;
 
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;

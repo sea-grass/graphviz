@@ -305,7 +305,7 @@ void init_viewport(ViewInfo *vi) {
     g_timeout_add_full(G_PRIORITY_DEFAULT, 100u, gl_main_expose, NULL, NULL);
     vi->cameras = NULL;
     vi->camera_count = 0;
-    vi->active_camera = -1;
+    vi->active_camera = SIZE_MAX;
     set_viewport_settings_from_template(vi, vi->systemGraphs.def_attrs);
     vi->Topview->Graphdata.GraphFileName = NULL;
     vi->colschms = NULL;

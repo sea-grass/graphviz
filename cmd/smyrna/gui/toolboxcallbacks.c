@@ -14,6 +14,7 @@
 #include "gltemplate.h"
 #include <glcomp/glutils.h>
 #include "glmotion.h"
+#include <stdint.h>
 
 void btnToolZoomOut_clicked(GtkWidget * widget, gpointer user_data)
 {
@@ -28,8 +29,9 @@ void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
     (void)widget;
     (void)user_data;
 
-    float z = view->active_camera >= 0 ? view->cameras[view->active_camera]->r
-                                       : -view->zoom;
+    float z = view->active_camera != SIZE_MAX
+            ? view->cameras[view->active_camera]->r
+            : -view->zoom;
 
     float GDX = view->bdxRight / z - view->bdxLeft / z;
     float SDX = view->clipX2 - view->clipX1;
@@ -37,13 +39,13 @@ void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
     float SDY = view->clipY2 - view->clipY1;
 
     if (SDX / GDX <= SDY / GDY) {
-        if (view->active_camera >= 0) {
+        if (view->active_camera != SIZE_MAX) {
             view->cameras[view->active_camera]->r /= SDX / GDX;
         } else {
             view->zoom /= SDX / GDX;
         }
     } else {
-        if (view->active_camera >= 0) {
+        if (view->active_camera != SIZE_MAX) {
             view->cameras[view->active_camera]->r /= SDY / GDY;
         } else {
             view->zoom /= SDY / GDY;
@@ -60,7 +62,7 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
 
     float scx, scy, gcx, gcy, z;
 
-    (view->active_camera >= 0)
+    (view->active_camera != SIZE_MAX)
 	? (z = view->cameras[view->active_camera]->r) : (z =
 							 view->zoom * -1);
 
@@ -69,7 +71,7 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
     gcy = view->bdyBottom / z + (view->bdyTop / z - view->bdyBottom / z) / 2.0f;
     scy = view->clipY1 + (view->clipY2 - view->clipY1) / 2.0f;
 
-    if (view->active_camera >= 0) {
+    if (view->active_camera != SIZE_MAX) {
 	view->cameras[view->active_camera]->targetx += (gcx - scx);
 	view->cameras[view->active_camera]->targety += (gcx - scy);
     } else {

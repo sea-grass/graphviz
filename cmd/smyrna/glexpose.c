@@ -16,6 +16,7 @@
 #include "arcball.h"
 #include "hotkeymap.h"
 #include "polytess.h"
+#include <stdint.h>
 
 static void drawRotatingAxis(void)
 {
@@ -68,7 +69,7 @@ static void drawRotatingAxis(void)
 */
 static int glupdatecamera(ViewInfo * vi)
 {
-    if (vi->active_camera == -1)
+    if (vi->active_camera == SIZE_MAX)
 	glTranslatef(-vi->panx, -vi->pany, vi->panz);
 
 
@@ -85,7 +86,7 @@ static int glupdatecamera(ViewInfo * vi)
     GetOGLPosRef(1, vi->h - 5, &(vi->clipX1), &(vi->clipY1));
     GetOGLPosRef(vi->w - 1, 1, &(vi->clipX2), &(vi->clipY2));
 
-    if (vi->active_camera == -1) {
+    if (vi->active_camera == SIZE_MAX) {
 	glScalef(1 / vi->zoom * -1, 1 / vi->zoom * -1,
 		 1 / vi->zoom * -1);
     } else {
