@@ -399,7 +399,6 @@ tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
     int w, h;
     gdImagePtr im = NULL;
-    ClientData clientdata;
     char *cmd;
     Tcl_Obj *result;
     int fileByName;
@@ -440,9 +439,13 @@ tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 	char *arg2 = Tcl_GetString(objv[2]);
 	fileByName = 0;		/* first try to get file from open channel */
 	FILE *filePtr = NULL;
+#if !defined(_WIN32)
+	ClientData clientdata;
 	if (Tcl_GetOpenFile(interp, arg2, 0, 1, &clientdata) == TCL_OK) {
 	    filePtr = (FILE *) clientdata;
-	} else {
+	}
+#endif
+	if (filePtr == NULL) {
 	    /* Not a channel, or Tcl_GetOpenFile() not supported.
 	     *   See if we can open directly.
 	     */
@@ -521,7 +524,6 @@ static int
 tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 {
     gdImagePtr im;
-    ClientData clientdata;
     const char *cmd, *fname;
     int fileByName;
     int arg4;
@@ -553,10 +555,14 @@ tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
     /* Get the file reference. */
     fileByName = 0;		/* first try to get file from open channel */
     FILE *filePtr = NULL;
+#if !defined(_WIN32)
+    ClientData clientdata;
     if (Tcl_GetOpenFile(interp, fname, 1, 1, &clientdata)
 	== TCL_OK) {
 	filePtr = (FILE *) clientdata;
-    } else {
+    }
+#endif
+    if (filePtr == NULL) {
 	/* Not a channel, or Tcl_GetOpenFile() not supported.
 	 *   See if we can open directly.
 	 */
