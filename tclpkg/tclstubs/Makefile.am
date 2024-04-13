@@ -2,7 +2,6 @@
 
 if WITH_TCL
 noinst_LTLIBRARIES = libtclstubs_C.la
-noinst_HEADERS = tclInt.h
 endif
 
 # tclStubLib.c is a dummy file just to fool automake

@@ -1980,8 +1980,6 @@ TCLINT_INCLUDES=""
 else
 if test -f "/usr/local/include/tclInt.h"; then
 TCLINT_INCLUDES="-I/usr/local/include"
-else
-TCLINT_INCLUDES='-I$(top_srcdir)/tclpkg/tclstubs'
 fi
 fi
 fi

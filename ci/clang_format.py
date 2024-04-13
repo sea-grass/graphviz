@@ -641,7 +641,6 @@ EXCLUDE = (
     "tclpkg/tclpathplan/simple.h",
     "tclpkg/tclpathplan/tclpathplan.c",
     "tclpkg/tclpathplan/wrapper.c",
-    "tclpkg/tclstubs/tclInt.h",
     "tclpkg/tclstubs/tclStubLib.c",
     "windows/gvedit/Application.h",
     "windows/gvedit/GraphX.cpp",
