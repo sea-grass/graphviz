@@ -83,12 +83,10 @@ static void psprintpointf(pointf p)
 
 static void psprintspline(Ppolyline_t spl)
 {
-    int i;
-
     show_boxes_append(&Show_boxes, gv_strdup("%%!"));
     show_boxes_append(&Show_boxes, gv_strdup("%% spline"));
     show_boxes_append(&Show_boxes, gv_strdup("gsave 1 0 0 setrgbcolor newpath"));
-    for (i = 0; i < spl.pn; i++) {
+    for (size_t i = 0; i < spl.pn; i++) {
 	agxbuf buf = {0};
 	agxbprint(&buf, "%f %f %s", spl.ps[i].x, spl.ps[i].y,
 	  i == 0 ?  "moveto" : (i % 3 == 0 ? "curveto" : ""));
@@ -99,12 +97,10 @@ static void psprintspline(Ppolyline_t spl)
 
 static void psprintline(Ppolyline_t pl)
 {
-    int i;
-
     show_boxes_append(&Show_boxes, gv_strdup("%%!"));
     show_boxes_append(&Show_boxes, gv_strdup("%% line"));
     show_boxes_append(&Show_boxes, gv_strdup("gsave 0 0 1 setrgbcolor newpath"));
-    for (i = 0; i < pl.pn; i++) {
+    for (size_t i = 0; i < pl.pn; i++) {
 	agxbuf buf = {0};
 	agxbprint(&buf, "%f %f %s", pl.ps[i].x, pl.ps[i].y,
 		i == 0 ? "moveto" : "lineto");
@@ -115,21 +111,18 @@ static void psprintline(Ppolyline_t pl)
 
 static void psprintpoly(Ppoly_t p)
 {
-    point tl, hd;
-    int bi;
     char*  pfx;
 
     show_boxes_append(&Show_boxes, gv_strdup("%% poly list"));
     show_boxes_append(&Show_boxes, gv_strdup("gsave 0 1 0 setrgbcolor"));
-    for (bi = 0; bi < p.pn; bi++) {
-	tl.x = (int)p.ps[bi].x;
-	tl.y = (int)p.ps[bi].y;
-	hd.x = (int)p.ps[(bi+1) % p.pn].x;
-	hd.y = (int)p.ps[(bi+1) % p.pn].y;
-	if (tl.x == hd.x && tl.y == hd.y) pfx = "%%";
+    for (size_t bi = 0; bi < p.pn; bi++) {
+	const pointf tail = p.ps[bi];
+	const pointf head = p.ps[(bi + 1) % p.pn];
+	if (fabs(tail.x - head.x) < 1 && fabs(tail.y - head.y) < 1) pfx = "%%";
 	else pfx ="";
 	agxbuf buf = {0};
-	agxbprint(&buf, "%s%d %d %d %d makevec", pfx, tl.x, tl.y, hd.x, hd.y);
+	agxbprint(&buf, "%s%.0f %.0f %.0f %.0f makevec", pfx, tail.x, tail.y, head.x,
+	          head.y);
 	show_boxes_append(&Show_boxes, agxbdisown(&buf));
     }
     show_boxes_append(&Show_boxes, gv_strdup("grestore"));
@@ -177,14 +170,11 @@ static bool debugleveln(edge_t* realedge, int i)
 #endif  /* DEBUG */
 
 /// Given a simple (ccw) polygon, route an edge from tp to hp.
-pointf*
-simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
-    int polyline)
-{
+pointf *simpleSplineRoute(pointf tp, pointf hp, Ppoly_t poly, size_t *n_spl_pts,
+                          int polyline) {
     Ppolyline_t pl, spl;
     Ppoint_t eps[2];
     Pvector_t evs[2];
-    int i;
 
     eps[0].x = tp.x;
     eps[0].y = tp.y;
@@ -198,7 +188,7 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
     else {
 	// polygon edges passed to Proutespline
 	Pedge_t *edges = gv_calloc(poly.pn, sizeof(Pedge_t));
-	for (i = 0; i < poly.pn; i++) {
+	for (size_t i = 0; i < poly.pn; i++) {
 	    edges[i].a = poly.ps[i];
 	    edges[i].b = poly.ps[(i + 1) % poly.pn];
 	}
@@ -216,7 +206,7 @@ simpleSplineRoute (pointf tp, pointf hp, Ppoly_t poly, int* n_spl_pts,
 	agerrorf("cannot allocate ps\n");
 	return NULL;
     }
-    for (i = 0; i < spl.pn; i++) {
+    for (size_t i = 0; i < spl.pn; i++) {
         ps[i] = spl.ps[i];
     }
     *n_spl_pts = spl.pn;
@@ -249,15 +239,14 @@ void routesplinesterm(void)
 		nedges, nboxes, elapsed_sec());
 }
 
-static void
-limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
-{
-    int bi, si, splinepi;
+static void limitBoxes(boxf *boxes, int boxn, const pointf *pps, size_t pn,
+                       int delta) {
+    int bi, si;
     double t;
     pointf sp[4];
     int num_div = delta * boxn;
 
-    for (splinepi = 0; splinepi + 3 < pn; splinepi += 3) {
+    for (size_t splinepi = 0; splinepi + 3 < pn; splinepi += 3) {
 	for (si = 0; si <= num_div; si++) {
 	    t = si / (double)num_div;
 	    sp[0] = pps[splinepi];
@@ -310,14 +299,13 @@ limitBoxes (boxf* boxes, int boxn, const pointf *pps, int pn, int delta)
  *
  * If a catastrophic error, return NULL and npoints is 0.
  */
-static pointf *routesplines_(path *pp, int *npoints, int polyline) {
+static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     Ppoly_t poly;
     Ppolyline_t pl, spl;
-    int splinepi;
     Ppoint_t eps[2];
     Pvector_t evs[2];
-    int edgei, prev, next;
-    int pi, bi;
+    int prev, next;
+    int bi;
     boxf *boxes;
     int boxn;
     edge_t* realedge;
@@ -365,6 +353,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     }
     else flip = false;
 
+    size_t pi;
     if (agtail(realedge) != aghead(realedge)) {
 	/* I assume that the path goes either down only or
 	   up - right - down */
@@ -456,7 +445,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	    boxes[bi].UR.y = -1*boxes[bi].LL.y;
 	    boxes[bi].LL.y = -v;
 	}
-	for (int i = 0; i < pi; i++)
+	for (size_t i = 0; i < pi; i++)
 	    polypoints[i].y *= -1;
     }
 
@@ -486,7 +475,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     }
     else {
 	Pedge_t *edges = gv_calloc(poly.pn, sizeof(Pedge_t));
-	for (edgei = 0; edgei < poly.pn; edgei++) {
+	for (size_t edgei = 0; edgei < poly.pn; edgei++) {
 	    edges[edgei].a = polypoints[edgei];
 	    edges[edgei].b = polypoints[(edgei + 1) % poly.pn];
 	}
@@ -523,12 +512,12 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     }
 
     unbounded = true;
-    for (splinepi = 0; splinepi < spl.pn; splinepi++) {
+    for (size_t splinepi = 0; splinepi < spl.pn; splinepi++) {
 	ps[splinepi] = spl.ps[splinepi];
     }
 
     for (loopcnt = 0; unbounded && loopcnt < LOOP_TRIES; loopcnt++) {
-	limitBoxes (boxes, boxn, ps, spl.pn, delta);
+	limitBoxes(boxes, boxn, ps, spl.pn, delta);
 
     /* The following check is necessary because if a box is not very 
      * high, it is possible that the sampling above might miss it.
@@ -558,7 +547,7 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
 	Ppolyline_t polyspl;
 	agwarningf("Unable to reclaim box space in spline routing for edge \"%s\" -> \"%s\". Something is probably seriously wrong.\n", agnameof(agtail(realedge)), agnameof(aghead(realedge)));
 	make_polyline (pl, &polyspl);
-	limitBoxes (boxes, boxn, polyspl.ps, polyspl.pn, INIT_DELTA);
+	limitBoxes(boxes, boxn, polyspl.ps, polyspl.pn, INIT_DELTA);
     }
 
     *npoints = spl.pn;
@@ -576,13 +565,11 @@ static pointf *routesplines_(path *pp, int *npoints, int polyline) {
     return ps;
 }
 
-pointf *routesplines(path * pp, int *npoints)
-{
+pointf *routesplines(path *pp, size_t *npoints) {
   return routesplines_(pp, npoints, 0);
 }
 
-pointf *routepolylines(path * pp, int *npoints)
-{
+pointf *routepolylines(path *pp, size_t *npoints) {
   return routesplines_(pp, npoints, 1);
 }
 

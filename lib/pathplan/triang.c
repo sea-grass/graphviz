@@ -8,7 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/alloc.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
@@ -35,18 +37,17 @@ static Ppoint_t point_indexer(void *base, int index) {
 int Ptriangulate(Ppoly_t * polygon, void (*fn) (void *, Ppoint_t *),
 		  void *vc)
 {
-    int i;
-    int pointn;
     Ppoint_t **pointp;
 
-    pointn = polygon->pn;
+    const size_t pointn = polygon->pn;
 
     pointp = gv_calloc(pointn, sizeof(Ppoint_t*));
 
-    for (i = 0; i < pointn; i++)
+    for (size_t i = 0; i < pointn; i++)
 	pointp[i] = &(polygon->ps[i]);
 
-    if (triangulate(pointp, pointn, fn, vc) != 0) {
+    assert(pointn <= INT_MAX);
+    if (triangulate(pointp, (int)pointn, fn, vc) != 0) {
 	free(pointp);
 	return 1;
     }

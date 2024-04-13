@@ -84,34 +84,30 @@ static Ppoint_t point_indexer(void *base, int index) {
  */
 int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 {
-    int pi, minpi;
+    size_t pi, minpi;
     double minx;
     Ppoint_t p1, p2, p3;
     size_t trii, trij, ftrii, ltrii;
     int ei;
     pointnlink_t epnls[2], *lpnlp, *rpnlp, *pnlp;
     triangle_t *trip;
-#ifdef DEBUG
-    int pnli;
-#endif
 
     /* make space */
-    assert(polyp->pn >= 0);
-    pointnlink_t *pnls = calloc((size_t)polyp->pn, sizeof(pnls[0]));
+    pointnlink_t *pnls = calloc(polyp->pn, sizeof(pnls[0]));
     if (polyp->pn > 0 && pnls == NULL) {
 	prerror("cannot realloc pnls");
 	return -2;
     }
-    pointnlink_t **pnlps = calloc((size_t)polyp->pn, sizeof(pnlps[0]));
+    pointnlink_t **pnlps = calloc(polyp->pn, sizeof(pnlps[0]));
     if (polyp->pn > 0 && pnlps == NULL) {
 	prerror("cannot realloc pnlps");
 	free(pnls);
 	return -2;
     }
-    int pnll = 0;
+    size_t pnll = 0;
     triangles_clear(&tris);
 
-    deque_t dq = {.pnlpn = (size_t)polyp->pn * 2};
+    deque_t dq = {.pnlpn = polyp->pn * 2};
     dq.pnlps = calloc(dq.pnlpn, POINTNLINKPSIZE);
     if (dq.pnlps == NULL) {
 	prerror("cannot realloc dq.pnls");
@@ -123,7 +119,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     dq.lpnlpi = dq.fpnlpi - 1;
 
     /* make sure polygon is CCW and load pnls array */
-    for (pi = 0, minx = HUGE_VAL, minpi = -1; pi < polyp->pn; pi++) {
+    for (pi = 0, minx = HUGE_VAL, minpi = SIZE_MAX; pi < polyp->pn; pi++) {
 	if (minx > polyp->ps[pi].x)
 	    minx = polyp->ps[pi].x, minpi = pi;
     }
@@ -132,7 +128,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     p3 = polyp->ps[(minpi == polyp->pn - 1) ? 0 : minpi + 1];
     if ((p1.x == p2.x && p2.x == p3.x && p3.y > p2.y) ||
 	ccw(p1, p2, p3) != ISCCW) {
-	for (pi = polyp->pn - 1; pi >= 0; pi--) {
+	for (pi = polyp->pn - 1; polyp->pn > 0 && pi != SIZE_MAX; pi--) {
 	    if (pi < polyp->pn - 1
 		&& polyp->ps[pi].x == polyp->ps[pi + 1].x
 		&& polyp->ps[pi].y == polyp->ps[pi + 1].y)
@@ -155,13 +151,14 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
     }
 
 #if defined(DEBUG) && DEBUG >= 1
-    fprintf(stderr, "points\n%d\n", pnll);
-    for (pnli = 0; pnli < pnll; pnli++)
+    fprintf(stderr, "points\n%" PRISIZE_T "\n", pnll);
+    for (size_t pnli = 0; pnli < pnll; pnli++)
 	fprintf(stderr, "%f %f\n", pnls[pnli].pp->x, pnls[pnli].pp->y);
 #endif
 
     /* generate list of triangles */
-    if (triangulate(pnlps, pnll)) {
+    assert(pnll <= INT_MAX);
+    if (triangulate(pnlps, (int)pnll)) {
 	free(dq.pnlps);
 	free(pnlps);
 	free(pnls);
@@ -310,8 +307,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 	free(pnls);
 	return -2;
     }
-    assert(i <= INT_MAX);
-    output->pn = (int)i;
+    output->pn = i;
     for (i = i - 1, pnlp = &epnls[1]; pnlp; i--, pnlp = pnlp->link)
 	ops[i] = *pnlp->pp;
     output->ps = ops;

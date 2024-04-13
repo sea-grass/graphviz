@@ -226,7 +226,7 @@ static int polyhit(vconfig_t * conf, Ppoint_t p)
 
     for (i = 0; i < conf->Npoly; i++) {
 	poly.ps = &(conf->P[conf->start[i]]);
-	poly.pn = conf->start[i + 1] - conf->start[i];
+	poly.pn = (size_t)(conf->start[i + 1] - conf->start[i]);
 	if (in_poly(poly, p))
 	    return i;
     }

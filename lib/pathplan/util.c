@@ -11,6 +11,7 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <pathplan/pathutil.h>
 
@@ -24,19 +25,21 @@ int Ppolybarriers(Ppoly_t ** polys, int npolys, Pedge_t ** barriers,
 		  int *n_barriers)
 {
     Ppoly_t pp;
-    int i, j, k, n, b;
+    int i, n, b;
 
     n = 0;
-    for (i = 0; i < npolys; i++)
-	n = n + polys[i]->pn;
+    for (i = 0; i < npolys; i++) {
+	assert(polys[i]->pn <= INT_MAX);
+	n += (int)polys[i]->pn;
+    }
 
     Pedge_t *bar = gv_calloc(n, sizeof(Pedge_t));
 
     b = 0;
     for (i = 0; i < npolys; i++) {
 	pp = *polys[i];
-	for (j = 0; j < pp.pn; j++) {
-	    k = j + 1;
+	for (size_t j = 0; j < pp.pn; j++) {
+	    size_t k = j + 1;
 	    if (k >= pp.pn)
 		k = 0;
 	    bar[b].a = pp.ps[j];
@@ -55,21 +58,21 @@ int Ppolybarriers(Ppoly_t ** polys, int npolys, Pedge_t ** barriers,
 void
 make_polyline(Ppolyline_t line, Ppolyline_t* sline)
 {
-    static int isz = 0;
+    static size_t isz = 0;
     static Ppoint_t* ispline = 0;
-    int i, j;
-    int npts = 4 + 3*(line.pn-2);
+    const size_t npts = 4 + 3 * (line.pn - 2);
 
     if (npts > isz) {
-	ispline = gv_recalloc(ispline, (size_t)isz, (size_t)npts, sizeof(Ppoint_t));
+	ispline = gv_recalloc(ispline, isz, npts, sizeof(Ppoint_t));
 	isz = npts;
     }
 
-    j = i = 0;
+    size_t j = 0;
+    size_t i = 0;
     ispline[j+1] = ispline[j] = line.ps[i];
     j += 2;
     i++;
-    for (; i < line.pn-1; i++) {
+    for (; i + 1 < line.pn; i++) {
 	ispline[j+2] = ispline[j+1] = ispline[j] = line.ps[i];
 	j += 3;
     }

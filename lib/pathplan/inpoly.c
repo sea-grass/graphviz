@@ -19,16 +19,15 @@
 #include <pathplan/vispath.h>
 #include <pathplan/pathutil.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 bool in_poly(Ppoly_t poly, Ppoint_t q) {
-    int i, i1;			/* point index; i1 = i-1 mod n */
-    int n;
     Ppoint_t *P;
 
     P = poly.ps;
-    n = poly.pn;
-    for (i = 0; i < n; i++) {
-	i1 = (i + n - 1) % n;
+    const size_t n = poly.pn;
+    for (size_t i = 0; i < n; i++) {
+	const size_t i1 = (i + n - 1) % n; // point index; i1 = i-1 mod n
 	if (wind(P[i1], P[i], q) == 1) return false;
     }
     return true;

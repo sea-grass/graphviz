@@ -8,8 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <float.h>
+#include <limits.h>
 #include <neatogen/multispline.h>
 #include <neatogen/delaunay.h>
 #include <neatogen/neatoprocs.h>
@@ -302,11 +304,12 @@ triPoint(tripoly_t * trip, int vx, pointf v, pointf w, pointf * ip)
 static int ctrlPtIdx(pointf v, Ppoly_t * polys)
 {
     pointf w;
-    int i;
-    for (i = 1; i < polys->pn; i++) {
+    for (size_t i = 1; i < polys->pn; i++) {
 	w = polys->ps[i];
-	if (w.x == v.x && w.y == v.y)
-	    return i;
+	if (w.x == v.x && w.y == v.y) {
+	    assert(i <= INT_MAX);
+	    return (int)i;
+	}
     }
     return -1;
 }
@@ -435,7 +438,7 @@ static pointf triCenter(pointf * pts, int *idxs)
 static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
 {
     boxf bb;
-    int i, j, cnt = 0;
+    int i, cnt = 0;
     pointf p;
     Ppoly_t* obs;
 
@@ -444,7 +447,7 @@ static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
 
     for (i = 0; i < npoly; i++) {
 	obs = *obsp++;
-	for (j = 0; j < obs->pn; j++) {
+	for (size_t j = 0; j < obs->pn; j++) {
 	    p = obs->ps[j];
 	    bb.LL.x = fmin(bb.LL.x, p.x);
 	    bb.UR.x = fmax(bb.UR.x, p.x);
@@ -605,7 +608,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     /* points in obstacle i have indices obsi[i] through obsi[i+1]-1 in pts
      */
     int *obsi = gv_calloc(npoly + 1, sizeof(int));
-    int i, j, ix = 4, six = 0;
+    int i, ix = 4, six = 0;
 
     bb = bbox(obsp, npoly, &npts);
     npts += 4;			/* 4 points of bounding box */
@@ -631,7 +634,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
     for (i = 0; i < npoly; i++) {
 	obsi[i] = ix;
         obs = *obsp++;
-	for (j = 1; j <= obs->pn; j++) {
+	for (size_t j = 1; j <= obs->pn; j++) {
 	    segs[six++] = ix;
 	    if (j < obs->pn)
 		segs[six++] = ix + 1;
@@ -672,7 +675,7 @@ router_t *mkRouter(Ppoly_t** obsp, int npoly)
  */
 static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
     if (flip) {
-	for (int j = 0; j < spl.pn / 2; j++) {
+	for (size_t j = 0; j < spl.pn / 2; j++) {
 	    pointf tmp = spl.ps[spl.pn - 1 - j];
 	    spl.ps[spl.pn - 1 - j] = spl.ps[j];
 	    spl.ps[j] = tmp;
@@ -680,8 +683,7 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
     }
     if (Verbose > 1)
 	fprintf(stderr, "spline %s %s\n", agnameof(agtail(e)), agnameof(aghead(e)));
-    assert(spl.pn >= 0);
-    clip_and_install(e, aghead(e), spl.ps, (size_t)spl.pn, &sinfo);
+    clip_and_install(e, aghead(e), spl.ps, spl.pn, &sinfo);
 
     addEdgeLabels(e);
 }
@@ -702,7 +704,7 @@ static void finishEdge(edge_t* e, Ppoly_t spl, int flip) {
  *
  * Otherwise, return p unchanged.
  */
-static Ppoint_t tweakEnd (Ppoly_t poly, int s, Ppoint_t q) {
+static Ppoint_t tweakEnd(Ppoly_t poly, size_t s, Ppoint_t q) {
     Ppoint_t prv, nxt, p;
 
     p = poly.ps[s];
@@ -723,37 +725,32 @@ static Ppoint_t tweakEnd (Ppoly_t poly, int s, Ppoint_t q) {
     return p;
 }
 
-static void
-tweakPath (Ppoly_t poly, int s, int t, Ppolyline_t pl)
-{
-    pl.ps[0] = tweakEnd (poly, s, pl.ps[1]);
+static void tweakPath(Ppoly_t poly, size_t t, Ppolyline_t pl) {
+    pl.ps[0] = tweakEnd(poly, 0, pl.ps[1]);
     pl.ps[pl.pn-1] = tweakEnd (poly, t, pl.ps[pl.pn-2]);
 }
 
 
 /* genroute:
  * Generate splines for e and cohorts.
- * Edges go from s to t.
+ * Edges go from 0 to t.
  * Return 0 on success.
  */
-static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
-{
+static int genroute(tripoly_t *trip, int t, edge_t *e, int doPolyline) {
     pointf eps[2];
     Pvector_t evs[2];
     pointf **cpts = NULL;		/* lists of control points */
     Ppoly_t poly;
     Ppolyline_t pl, spl;
-    int i, j;
     Ppolyline_t mmpl;
     Pedge_t *medges = NULL;
-    int pn;
     int mult = ED_count(e);
     node_t* head = aghead(e);
     int rv = 0;
 
     poly.ps = NULL;
     pl.pn = 0;
-    eps[0].x = trip->poly.ps[s].x, eps[0].y = trip->poly.ps[s].y;
+    eps[0].x = trip->poly.ps[0].x, eps[0].y = trip->poly.ps[0].y;
     eps[1].x = trip->poly.ps[t].x, eps[1].y = trip->poly.ps[t].y;
     if (Pshortestpath(&(trip->poly), eps, &pl) < 0) {
 	agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
@@ -772,11 +769,12 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     if (mult == 1 || Concentrate) {
 	poly = trip->poly;
 	medges = gv_calloc(poly.pn, sizeof(Pedge_t));
-	for (j = 0; j < poly.pn; j++) {
+	for (size_t j = 0; j < poly.pn; j++) {
 	    medges[j].a = poly.ps[j];
 	    medges[j].b = poly.ps[(j + 1) % poly.pn];
 	}
-	tweakPath (poly, s, t, pl);
+	assert(t >= 0);
+	tweakPath(poly, (size_t)t, pl);
 	if (Proutespline(medges, poly.pn, pl, evs, &spl) < 0) {
 	    agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", agnameof(agtail(e)), agnameof(aghead(e)));
 	    rv = 1;
@@ -788,10 +786,10 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	return 0;
     }
     
-    pn = 2 * (pl.pn - 1);
+    const size_t pn = 2 * (pl.pn - 1);
 
     cpts = gv_calloc(pl.pn - 2, sizeof(pointf *));
-    for (i = 0; i < pl.pn - 2; i++) {
+    for (size_t i = 0; i + 2 < pl.pn; i++) {
 	cpts[i] =
 	    mkCtrlPts(t, mult+1, pl.ps[i], pl.ps[i + 1], pl.ps[i + 2], trip);
 	if (!cpts[i]) {
@@ -804,13 +802,13 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
     poly.ps = gv_calloc(pn, sizeof(pointf));
     poly.pn = pn;
 
-    for (i = 0; i < mult; i++) {
+    for (int i = 0; i < mult; i++) {
 	poly.ps[0] = eps[0];
-	for (j = 1; j < pl.pn - 1; j++) {
+	for (size_t j = 1; j + 1 < pl.pn; j++) {
 	    poly.ps[j] = cpts[j - 1][i];
 	}
 	poly.ps[pl.pn - 1] = eps[1];
-	for (j = 1; j < pl.pn - 1; j++) {
+	for (size_t j = 1; j + 1 < pl.pn; j++) {
 	    poly.ps[pn - j] = cpts[j - 1][i + 1];
 	}
 	if (Pshortestpath(&poly, eps, &mmpl) < 0) {
@@ -824,11 +822,11 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 	}
 	else {
 	    medges = gv_calloc(poly.pn, sizeof(Pedge_t));
-	    for (j = 0; j < poly.pn; j++) {
+	    for (size_t j = 0; j < poly.pn; j++) {
 		medges[j].a = poly.ps[j];
 		medges[j].b = poly.ps[(j + 1) % poly.pn];
 	    }
-	    tweakPath (poly, 0, pl.pn-1, mmpl);
+	    tweakPath(poly, pl.pn - 1, mmpl);
 	    if (Proutespline(medges, poly.pn, mmpl, evs, &spl) < 0) {
 		agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", 
 		    agnameof(agtail(e)), agnameof(aghead(e)));
@@ -843,7 +841,7 @@ static int genroute(tripoly_t * trip, int s, int t, edge_t * e, int doPolyline)
 
 finish :
     if (cpts) {
-	for (i = 0; i < pl.pn - 2; i++)
+	for (size_t i = 0; i + 2 < pl.pn; i++)
 	    free(cpts[i]);
 	free(cpts);
     }
@@ -979,12 +977,11 @@ static ipair edgeToSeg(tgraph * tg, int i, int j)
 static void
 freeTripoly (tripoly_t* trip)
 {
-    int i;
     tri* tp;
     tri* nxt;
 
     free (trip->poly.ps);
-    for (i = 0; i < trip->poly.pn; i++) {
+    for (size_t i = 0; i < trip->poly.pn; i++) {
 	for (tp = trip->triMap[i]; tp; tp = nxt) {
 	    nxt = tp->nxttri;
 	    free (tp);
@@ -1018,8 +1015,8 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     tripoly_t *ps;
     int nxt;
     ipair p;
-    int nt = 0;
-    int i, idx;
+    size_t nt = 0;
+    int idx;
     int cnt1 = 0;
     int cnt2 = 0;
     pointf *pts;
@@ -1093,20 +1090,20 @@ static tripoly_t *mkPoly(router_t * rtr, int *dad, int s, int t,
     tri **trim = gv_calloc(nt + 4, sizeof(tri*));
     *pps++ = p_t;
     idx = 1;
-    for (i = 0; i < cnt1; i++) {
+    for (int i = 0; i < cnt1; i++) {
 	vmapAdd(vmap, side1[i].v, idx);
 	*pps++ = rtr->ps[side1[i].v];
 	trim[idx++] = side1[i].ts;
     }
     *pps++ = p_s;
     idx++;
-    for (i = cnt2 - 1; i >= 0; i--) {
+    for (int i = cnt2 - 1; i >= 0; i--) {
 	vmapAdd(vmap, side2[i].v, idx);
 	*pps++ = rtr->ps[side2[i].v];
 	trim[idx++] = side2[i].ts;
     }
 
-    for (i = 0; i < nt + 4; i++) {
+    for (size_t i = 0; i < nt + 4; i++) {
 	mapTri(vmap, trim[i]);
     }
 
@@ -1266,7 +1263,7 @@ int makeMultiSpline(edge_t* e, router_t * rtr, int doPolyline) {
 	free(sp);
 
 	/* Generate multiple splines using polygon */
-	ret = genroute(poly, 0, idx, e, doPolyline);
+	ret = genroute(poly, idx, e, doPolyline);
 	freeTripoly (poly);
     }
     else ret = -1;

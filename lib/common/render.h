@@ -131,10 +131,10 @@ extern "C" {
     RENDER_API void round_corners(GVJ_t *job, pointf *AF, size_t sides,
                                   int style, int filled);
     RENDER_API int routesplinesinit(void);
-    RENDER_API pointf *routesplines(path *, int *);
+    RENDER_API pointf *routesplines(path *, size_t *);
     RENDER_API void routesplinesterm(void);
-    RENDER_API pointf* simpleSplineRoute (pointf, pointf, Ppoly_t, int*, int);
-    RENDER_API pointf *routepolylines(path* pp, int* npoints);
+    RENDER_API pointf* simpleSplineRoute(pointf, pointf, Ppoly_t, size_t *, int);
+    RENDER_API pointf *routepolylines(path* pp, size_t* npoints);
     RENDER_API double selfRightSpace(edge_t *e);
     RENDER_API shape_kind shapeOf(node_t *);
     RENDER_API void shape_clip(node_t * n, pointf curve[4]);

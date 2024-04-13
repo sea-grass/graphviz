@@ -35,9 +35,8 @@ DEFINE_LIST(objlist, Ppoly_t*)
 #if defined(DEBUG) && DEBUG > 1
 static void dumpObj(Ppoly_t * p)
 {
-    int j;
     Ppoint_t pt;
-    for (j = 0; j < p->pn; j++) {
+    for (size_t j = 0; j < p->pn; j++) {
 	pt = p->ps[j];
 	fprintf(stderr, " %.5g %.5g", pt.x, pt.y);
     }

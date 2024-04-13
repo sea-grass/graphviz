@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -42,7 +44,7 @@ extern "C" {
 
     typedef struct Ppoly_t {
 	Ppoint_t *ps;
-	int pn;
+	size_t pn;
     } Ppoly_t;
 
     typedef Ppoly_t Ppolyline_t;

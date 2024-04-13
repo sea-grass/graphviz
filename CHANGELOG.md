@@ -58,6 +58,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and the `obj_state_t.url_bsplinemap_n` field is now a `size_t *`.
 - **Breaking**: The `gv_arglist_t.argc` and `gv_arglist_t.alloc` fields are now
   `size_t`s.
+- **Breaking**: The `Ppoly_t.pn` (`Ppolyline_t.pn`) field is now a `size_t`.
+- **Breaking**: The `Proutespline` function takes its `n_barriers` parameter as
+  a `size_t`.
 
 ### Fixed
 
