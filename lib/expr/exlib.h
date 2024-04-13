@@ -137,7 +137,7 @@ typedef struct Switch_s			/* switch parse state		*/
 	Extype_t**	cur;		/* current label pointer	*/
 	Extype_t**	last;		/* last label pointer		*/
 	int		def;		/* default label hit		*/
-	int		type;		/* switch test type		*/
+	long type; ///< switch test type
 } Switch_t;
 
 typedef struct Exassoc_s		/* associative array bucket	*/
@@ -151,7 +151,7 @@ typedef struct Exassoc_s		/* associative array bucket	*/
 typedef struct Exstate_s		/* ex global state		*/
 {
 	Exid_t*		id;		/* current declaration id	*/
-	int		declare;	/* current declaration type	*/
+	long declare; ///< current declaration type
 	int		nolabel;	/* <id>':' not a label		*/
 	Exinput_t	null;		/* null input			*/
 	Expr_t*		program;	/* current program		*/

@@ -15,6 +15,7 @@
  * expression library evaluator
  */
 
+#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
 #include <cgraph/exit.h>
@@ -39,39 +40,29 @@
 
 static Extype_t	eval(Expr_t*, Exnode_t*, void*);
 
-#define TOTNAME		4
-#define MAXNAME		23
 #define FRAME		64
 
-static const char*
-lexname(int op, int subop)
-{
-	char*	b;
-
-	static int	n;
-	static char	buf[TOTNAME][MAXNAME];
+static char *lexname(long op, int subop) {
+	agxbuf b = {0};
 
 	if (op > MINTOKEN && op < MAXTOKEN)
-		return exop((size_t)op - MINTOKEN);
-	if (++n >= TOTNAME)
-		n = 0;
-	b = buf[n];
+		return gv_strdup(exop((size_t)op - MINTOKEN));
 	if (op == '=')
 	{
 		if (subop > MINTOKEN && subop < MAXTOKEN)
-			snprintf(b, MAXNAME, "%s=", exop((size_t)subop - MINTOKEN));
+			agxbprint(&b, "%s=", exop((size_t)subop - MINTOKEN));
 		else if (subop > ' ' && subop <= '~')
-			snprintf(b, MAXNAME, "%c=", subop);
+			agxbprint(&b, "%c=", subop);
 		else
-			snprintf(b, MAXNAME, "(%d)=", subop);
+			agxbprint(&b, "(%d)=", subop);
 	}
 	else if (subop < 0)
-		snprintf(b, MAXNAME, "(EXTERNAL:%d)", op);
+		agxbprint(&b, "(EXTERNAL:%ld)", op);
 	else if (op > ' ' && op <= '~')
-		snprintf(b, MAXNAME, "%c", op);
+		agxbprint(&b, "%c", (char)op);
 	else
-		snprintf(b, MAXNAME, "(%d)", op);
-	return b;
+		agxbprint(&b, "(%ld)", op);
+	return agxbdisown(&b);
 }
 
 /* evaldyn:
@@ -93,7 +84,7 @@ static int evaldyn(Expr_t *ex, Exnode_t *exnode, void *env, int delete) {
 		}
 	} 
 	else {
-		int type = exnode->data.variable.index->type;
+		const long type = exnode->data.variable.index->type;
 		if (type != STRING) {
 			if (!BUILTIN(type)) {
 				key = ex->disc->keyf(v, type);
@@ -139,7 +130,7 @@ static Extype_t getdyn(Expr_t *ex, Exnode_t *exnode, void *env,
 				dtinsert(exnode->data.variable.symbol->local, b);
 			}
 		} else {
-			int type = exnode->data.variable.index->type;
+			const long type = exnode->data.variable.index->type;
 			if (type != STRING) {
 				if (!BUILTIN(type)) {
 					key = ex->disc->keyf(v, type);
@@ -192,8 +183,7 @@ prformat(void* vp, Sffmt_t* dp)
 	Fmt_t*		fmt = (Fmt_t*)dp;
 	Exnode_t*	node;
 	char*		s;
-	int			from;
-	int			to = 0;
+	long to = 0;
 	time_t			tm;
     struct tm *stm;
 
@@ -211,7 +201,7 @@ prformat(void* vp, Sffmt_t* dp)
 	else
 	{
 		node = fmt->actuals->data.operand.left;
-		from = node->type;
+		const long from = node->type;
 		switch (dp->fmt)
 		{
 		case 'f':
@@ -1007,7 +997,7 @@ static Extype_t exsubstr(Expr_t *ex, Exnode_t *exnode, void *env) {
 /* xConvert:
  * Convert from external type.
  */
-static void xConvert(Expr_t *ex, Exnode_t *exnode, int type, Extype_t v,
+static void xConvert(Expr_t *ex, Exnode_t *exnode, long type, Extype_t v,
 	 Exnode_t * tmp)
 {
 	*tmp = *exnode->data.operand.left;
@@ -1942,11 +1932,19 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		}
 		goto huh;
 	}
- huh:
-	if (exnode->binary)
-		exerror("operator %s %s %s not implemented", lexname(exnode->data.operand.left->type, -1), lexname(exnode->op, exnode->subop), exnode->data.operand.right ? lexname(exnode->data.operand.right->type, -1) : "UNARY");
-	else
-		exerror("operator %s %s not implemented", lexname(exnode->op, exnode->subop), lexname(exnode->data.operand.left->type, -1));
+ huh:;
+	char *left = lexname(exnode->data.operand.left->type, -1);
+	char *op = lexname(exnode->op, exnode->subop);
+	if (exnode->binary) {
+		char *right = exnode->data.operand.right
+		            ? lexname(exnode->data.operand.right->type, -1) : NULL;
+		exerror("operator %s %s %s not implemented", left, op,
+		        right ? right : "UNARY");
+		free(right);
+	} else
+		exerror("operator %s %s not implemented", op, left);
+	free(op);
+	free(left);
 	return exzero(exnode->type);
 }
 

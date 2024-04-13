@@ -43,8 +43,7 @@ static Switch_t		swstate;
 
 Exstate_t		expr;
 
-static int T(int t) 
-{
+static int T(long t) {
 	if (expr.program->disc->types)
 	    return expr.program->disc->types[t & TMASK];
 	else
@@ -55,9 +54,8 @@ static int T(int t)
  * allocate and initialize a new expression node in the current program
  */
 
-Exnode_t*
-exnewnode(Expr_t* p, int op, int binary, int type, Exnode_t* left, Exnode_t* right)
-{
+Exnode_t *exnewnode(Expr_t *p, int op, int binary, long type, Exnode_t *left,
+                    Exnode_t *right) {
 	Exnode_t*	x;
 
 	x = ALLOCATE(p, Exnode_t);
@@ -294,7 +292,7 @@ static Exnode_t *exnewsubstr(Expr_t * p, Exnode_t * args) {
  * Assume x->type != STRING
  */
 static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
-	int type = x->type;
+	const long type = x->type;
 	int cvt = 0;
 
 	if (!type) {
@@ -335,7 +333,7 @@ static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
 		  exprintf(p->vm, "%lld", x->data.constant.value.integer);
 		break;
 	    default:
-		exerror("internal error: %d: unknown type", type);
+		exerror("internal error: %ld: unknown type", type);
 		break;
 	    }
 	x->type = STRING;
@@ -370,7 +368,6 @@ static Exnode_t *exprint(Expr_t * p, Exid_t * ex, Exnode_t * args) {
 static Exnode_t *makeVar(Expr_t * prog, Exid_t * s, Exnode_t * idx,
 			     Exnode_t * dyna, Exref_t * refs) {
 	Exnode_t *nn;
-	int kind;
 	Exid_t *sym;
 
 	/* parse components */
@@ -385,10 +382,7 @@ static Exnode_t *makeVar(Expr_t * prog, Exid_t * s, Exnode_t * idx,
 	} else
 	    sym = s;
 
-	if (sym->type)
-	    kind = sym->type;
-	else
-	    kind = STRING;
+	const long kind = sym->type ? sym->type : STRING;
 
 	nn = exnewnode(prog, ID, 0, kind, NULL, NULL);
 	nn->data.variable.symbol = sym;
@@ -428,7 +422,7 @@ static int	typecast[6][6] =
 
 #define EXTERNAL(t)	((t)>=F2X)
 
-char *extypename(Expr_t * p, int type) {
+char *extypename(Expr_t *p, long type) {
 	if (BUILTIN(type))
 	    return TYPENAME(type);
 	return p->disc->typename(type);
@@ -443,9 +437,7 @@ Exnode_t *exnoncast(Exnode_t * x) {
 	return x;
 }
 
-Exnode_t*
-excast(Expr_t* p, Exnode_t* x, int type, Exnode_t* xref, int arg)
-{
+Exnode_t *excast(Expr_t *p, Exnode_t *x, long type, Exnode_t *xref, int arg) {
 	int	t2t;
 	char*		s;
 	char*		e;
@@ -736,12 +728,12 @@ preprint(Exnode_t* args)
 			{
 			case FLOATING:
 				if (x->arg->type != FLOATING)
-					x->arg = exnewnode(expr.program, x->arg->type == STRING ? S2F : INTEGRAL(x->arg->type) ? I2F : X2F, 0, FLOATING, x->arg, x->arg->op == ID ? x->arg : (Exnode_t*)0);
+					x->arg = exnewnode(expr.program, x->arg->type == STRING ? S2F : INTEGRAL(x->arg->type) ? I2F : X2F, 0, FLOATING, x->arg, x->arg->op == ID ? x->arg : NULL);
 				break;
 			case INTEGER:
 			case UNSIGNED:
 				if (!INTEGRAL(x->arg->type))
-					x->arg = exnewnode(expr.program, x->arg->type == STRING ? S2I : x->arg->type == FLOATING ? F2I : X2I, 0, INTEGER, x->arg, x->arg->op == ID ? x->arg : (Exnode_t*)0);
+					x->arg = exnewnode(expr.program, x->arg->type == STRING ? S2I : x->arg->type == FLOATING ? F2I : X2I, 0, INTEGER, x->arg, x->arg->op == ID ? x->arg : NULL);
 				x->arg->type = t;
 				break;
 			case STRING:
@@ -756,7 +748,7 @@ preprint(Exnode_t* args)
 					else if (!expr.program->disc->convertf || (x->arg->op != ID && x->arg->op != DYNAMIC && x->arg->op != F2X && x->arg->op != I2X && x->arg->op != S2X))
 						exerror("string format argument expected");
 					else
-						x->arg = exnewnode(expr.program, x->arg->type == FLOATING ? F2S : INTEGRAL(x->arg->type) ? I2S : X2S, 0, STRING, x->arg, x->arg->op == ID ? x->arg : (Exnode_t*)0);
+						x->arg = exnewnode(expr.program, x->arg->type == FLOATING ? F2S : INTEGRAL(x->arg->type) ? I2S : X2S, 0, STRING, x->arg, x->arg->op == ID ? x->arg : NULL);
 				}
 				break;
 			}

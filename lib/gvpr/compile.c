@@ -1595,7 +1595,7 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 
 #define MINTYPE (LAST_M+1)	/* First type occurs after last M_ */
 
-static char *typeName(int op) {
+static char *typeName(long op) {
     return typenames[op - MINTYPE];
 }
 
@@ -2119,7 +2119,7 @@ static int stringOf(Expr_t *prog, Exnode_t *x, int arg) {
  * If arg is != 0, conversion unnecessary; just report possibility.
  * In particular, assume x != 0 if arg == 0.
  */
-static int convert(Exnode_t *x, int type, int arg) {
+static int convert(Exnode_t *x, long type, int arg) {
     Agobj_t *objp;
     int ret = -1;
 
@@ -2196,7 +2196,7 @@ static int convert(Exnode_t *x, int type, int arg) {
  * Calculate unique key for object.
  * We use this to unify local copies of nodes and edges.
  */
-static Extype_t keyval(Extype_t v, int type) {
+static Extype_t keyval(Extype_t v, long type) {
     if (type <= T_obj) {
 	v.integer = AGID(int2ptr(v.integer));
     }
