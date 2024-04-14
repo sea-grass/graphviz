@@ -7,7 +7,7 @@
 lib=`sed -n "/dlname/s/^[^']*'\([^ ']*\).*$/\1/p" $1`
 if [ -z "$lib" ]
 then
-    libBaseName=`basename $1 .la`
+    libBaseName=$(basename $(basename $1 .la) .so)
     case `uname` in
         CYGWIN*) lib="${libBaseName}.dll"   ;;
         Darwin*) lib="${libBaseName}.dylib" ;;
