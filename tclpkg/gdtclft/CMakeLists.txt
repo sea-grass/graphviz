@@ -26,4 +26,24 @@ if(GD_FOUND)
     DEPENDS ../mkpkgindex.sh
     COMMENT "create gdtclft package index"
   )
+
+  if(GZIP)
+    add_custom_target(man-gdtclft ALL DEPENDS gdtclft.3tcl.gz
+                      COMMENT "gdtclft man page")
+    add_custom_command(
+      OUTPUT gdtclft.3tcl.gz
+      COMMAND ${GZIP} -9 --no-name --to-stdout gdtclft.3tcl
+        >"${CMAKE_CURRENT_BINARY_DIR}/gdtclft.3tcl.gz"
+      MAIN_DEPENDENCY gdtclft.3tcl
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMENT "compress gdtclft man page")
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/gdtclft.3tcl.gz
+      DESTINATION ${MAN_INSTALL_DIR}/man3)
+  else()
+    install(
+      FILES gdtclft.3tcl
+      DESTINATION ${MAN_INSTALL_DIR}/man3
+    )
+  endif()
 endif()
