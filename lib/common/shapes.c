@@ -525,9 +525,10 @@ static void Mcircle_hack(GVJ_t * job, node_t * n)
     gvrender_polyline(job, AF, 2);
 }
 
-/* round_corners:
- * Handle some special graphical cases, such as rounding the shape,
+/**
+ * @brief Handle some special graphical cases, such as rounding the shape,
  * adding diagonals at corners, or drawing certain non-simple figures.
+ *
  * Any drawing done here should assume fillcolors, pencolors, etc.
  * have been set by the calling routine. Normally, the drawing should
  * consist of a region, filled or unfilled, followed by additional line
