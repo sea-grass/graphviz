@@ -525,6 +525,41 @@ static void Mcircle_hack(GVJ_t * job, node_t * n)
 }
 
 /**
+ * @file
+ * ~~~~
+ *                y
+ *                 🡑
+ *                 │
+ *                 │
+ *                 │         line[1]
+ *                 │       ⟋
+ *           mid_y ┤   middle
+ *                 │   ⟋
+ *                 │line[0]         x
+ *                ─┼─────┬───────────🡒
+ *                      mid_x
+ * ~~~~
+ */
+
+/**
+ * @brief X coordinate of line midpoint
+ * @param line two points
+ * @returns X coordinate of midpoint
+ */
+static double mid_x(const pointf line[2]) {
+  return (line[0].x + line[1].x) / 2;
+}
+
+/**
+ * @brief Y coordinate of line midpoint
+ * @param line two points
+ * @returns Y coordinate of midpoint
+ */
+static double mid_y(const pointf line[2]) {
+  return (line[0].y + line[1].y) / 2;
+}
+
+/**
  * @brief Handle some special graphical cases, such as rounding the shape,
  * adding diagonals at corners, or drawing certain non-simple figures.
  *
@@ -809,22 +844,20 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 */
 	/* Add the tab edges. */
 				
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//the arrow's thickness is (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	D = gv_calloc(sides + 5, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (AF[0].x - AF[1].x)/8; //x_center + width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)*3/2; //D[4].y + width
-	D[1].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (AF[0].x - AF[1].x)/4; //x_center - 2*width
+	D[0].x = mid_x(AF) + (AF[0].x - AF[1].x)/8; //x_center + width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)*3/2; //D[4].y + width
+	D[1].x = mid_x(AF) - (AF[0].x - AF[1].x)/4; //x_center - 2*width
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
-	D[2].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	D[2].y = mid_y(&AF[1]);
 	D[3].x = D[2].x + (B[2].x - B[3].x)/2; //D[2].x + width
-	D[3].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	D[3].y = mid_y(&AF[1]);
 	D[4].x = D[3].x;
-	D[4].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y); //highest cds point 
+	D[4].y = mid_y(&AF[1]) + (B[3].y-B[4].y); //highest cds point
 	D[5].x = D[0].x;
 	D[5].y = D[4].y; //highest cds point
 	D[6].x = D[0].x;
@@ -837,7 +870,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -892,23 +925,21 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*	    |	    |     
 	*	    +-------+ D[0]
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 4, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center + width/2
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/4; //x_center + width/2
+	D[0].y = mid_y(&AF[1]);
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/2;
 	D[2].x = D[1].x + (B[2].x-B[3].x)/2;
 	D[2].y = D[1].y;
 	D[3].x = D[2].x;
 	D[3].y = D[2].y + (B[3].y-B[4].y)/2;
-	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4; //D[3].y mirrored across the center
+	D[4].x = mid_x(AF) - (B[2].x-B[3].x)*3/4; //D[3].y mirrored across the center
 	D[4].y = D[3].y;
 	D[5].x = D[4].x;
 	D[5].y = D[2].y;
-	D[6].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[1].x mirrored across the center
+	D[6].x = mid_x(AF) - (B[2].x-B[3].x)/4; //D[1].x mirrored across the center
 	D[6].y = D[1].y;
 	D[7].x = D[6].x;
 	D[7].y = D[0].y;
@@ -916,7 +947,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -939,19 +970,17 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *	
 	 *	          
 	 */
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 2, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)*3/4; //x_center+width	
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)*3/4; //x_center+width
+	D[0].y = mid_y(&AF[1]);
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/4; //D[0].y+width/2
-	D[2].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2
+	D[2].x = mid_x(AF) + (B[2].x-B[3].x)/4; //x_center+width/2
 	D[2].y = D[1].y + (B[3].y-B[4].y)/2; //D[1].y+width
-	D[3].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)/4; //D[2].x mirrored across the center
+	D[3].x = mid_x(AF) - (B[2].x-B[3].x)/4; //D[2].x mirrored across the center
 	D[3].y = D[2].y;
-	D[4].x = AF[1].x + (AF[0].x-AF[1].x)/2 - (B[2].x-B[3].x)*3/4;
+	D[4].x = mid_x(AF) - (B[2].x-B[3].x)*3/4;
 	D[4].y = D[1].y;
 	D[5].x = D[4].x;
 	D[5].y = D[0].y;
@@ -959,7 +988,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -980,19 +1009,17 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   --------------------------------
 	*  
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	D = gv_calloc(sides + 1, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x);//x_center + width*2
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;//y_center + 1/2 width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x);//x_center + width*2
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/4;//y_center + 1/2 width
 	D[1].x = D[0].x - (B[2].x-B[3].x); //x_center
 	D[1].y = D[0].y + (B[3].y-B[4].y);
 	D[2].x = D[1].x;
 	D[2].y = D[0].y + (B[3].y-B[4].y)/2;
-	D[3].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (AF[0].x - AF[1].x)/4;//x_center - 2*(scalable width)
+	D[3].x = mid_x(AF) - (AF[0].x - AF[1].x)/4;//x_center - 2*(scalable width)
 	D[3].y = D[2].y;
 	D[4].x = D[3].x;
 	D[4].y = D[0].y;
@@ -1000,7 +1027,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 				
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -1021,22 +1048,20 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   
 	*  
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	D = gv_calloc(sides + 4, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (AF[0].x - AF[1].x)/8 + (B[2].x-B[3].x)/2;//x_center + scalable_width + width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;//y_center + 1/2 width
-	D[1].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (AF[0].x - AF[1].x)/8; //x_center - width
+	D[0].x = mid_x(AF) + (AF[0].x - AF[1].x)/8 + (B[2].x-B[3].x)/2;//x_center + scalable_width + width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/4;//y_center + 1/2 width
+	D[1].x = mid_x(AF) - (AF[0].x - AF[1].x)/8; //x_center - width
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
 	D[2].y = D[1].y + (B[3].y-B[4].y)/2;
 	D[3].x = D[2].x - (B[2].x-B[3].x)/2; //D[2].x - width
 	D[3].y = D[2].y;
 	D[4].x = D[3].x;
-	D[4].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)/4; //y_center - 1/2(width)
+	D[4].y = mid_y(&AF[1]) - (B[3].y-B[4].y)/4; //y_center - 1/2(width)
 	D[5].x = D[0].x - (B[2].x-B[3].x)/2;
 	D[5].y = D[4].y;
 	D[6].x = D[5].x;
@@ -1047,14 +1072,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 				
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[4].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line right half*/
 	C[0].x = D[7].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);			    
@@ -1075,14 +1100,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   
 	*  
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	D = gv_calloc(sides, sizeof(pointf));
 	D[0].x = AF[1].x;//the very left edge
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/8;//y_center + 1/4 width
 	D[1].x = D[0].x + 2*(B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1095,7 +1118,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	free(D);
 	D = gv_calloc(sides, sizeof(pointf));
 	D[0].x = AF[1].x + (B[2].x-B[3].x);
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)*5/8; //y_center - 5/4 width
+	D[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)*5/8; //y_center - 5/4 width
 	D[1].x = D[0].x + (B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1106,7 +1129,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line right half*/
 	C[0].x = D[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);			    
@@ -1127,14 +1150,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   
 	*  
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	D = gv_calloc(sides, sizeof(pointf));
 	D[0].x = AF[0].x;//the very right edge
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/8;//y_center + 1/4 width
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/2;
 	D[2].x = D[1].x - 2*(B[3].y-B[4].y);
@@ -1147,7 +1168,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	free(D);
 	D = gv_calloc(sides, sizeof(pointf));
 	D[0].x = AF[0].x - (B[2].x-B[3].x);
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)*5/8; //y_center - 5/4 width
+	D[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)*5/8; //y_center - 5/4 width
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/2;
 	D[2].x = D[1].x - (B[3].y-B[4].y);
@@ -1158,7 +1179,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[3].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);			    
@@ -1180,15 +1201,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   
 	*  
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	/*upper left rectangle*/
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*9/8; //x_center - 2*width - 1/4*width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
+	D[0].x = mid_x(AF) - (B[2].x-B[3].x)*9/8; //x_center - 2*width - 1/4*width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/8;//y_center + 1/4 width
 	D[1].x = D[0].x + (B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1200,8 +1219,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*lower, left rectangle*/
 	free(D);
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*9/8; //x_center - 2*width - 1/4*width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)*5/8;//y_center - width - 1/4 width
+	D[0].x = mid_x(AF) - (B[2].x-B[3].x)*9/8; //x_center - 2*width - 1/4*width
+	D[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)*5/8;//y_center - width - 1/4 width
 	D[1].x = D[0].x + (B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1213,8 +1232,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*lower, right rectangle*/
 	free(D);
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center + 1/4*width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)*5/8;//y_center - width - 1/4 width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/8; //x_center + 1/4*width
+	D[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)*5/8;//y_center - width - 1/4 width
 	D[1].x = D[0].x + (B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1226,8 +1245,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*upper, right rectangle*/
 	free(D);
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center + 1/4*width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center - width - 1/4 width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/8; //x_center + 1/4*width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/8;//y_center - width - 1/4 width
 	D[1].x = D[0].x + (B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1238,14 +1257,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	
 	/*dsDNA line right half*/
 	C[0].x = D[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line left half*/
-	C[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*9/8; //D[0].x of of the left rectangles
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].x = mid_x(AF) - (B[2].x-B[3].x)*9/8; //D[0].x of of the left rectangles
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[1].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);			    
@@ -1265,14 +1284,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*     D[0]----------D[1]
 	*  
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x); //x_center - 2*width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8;//y_center + 1/4 width
+	D[0].x = mid_x(AF) - (B[2].x-B[3].x); //x_center - 2*width
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/8;//y_center + 1/4 width
 	D[1].x = D[0].x + 2*(B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1284,8 +1301,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*second, lower shape*/
 	free(D);
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x); //x_center - 2*width
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)*5/8;//y_center - width - 1/4 width
+	D[0].x = mid_x(AF) - (B[2].x-B[3].x); //x_center - 2*width
+	D[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)*5/8;//y_center - width - 1/4 width
 	D[1].x = D[0].x + 2*(B[2].x-B[3].x);
 	D[1].y = D[0].y;
 	D[2].x = D[1].x;
@@ -1296,14 +1313,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line right half*/
 	C[0].x = D[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);
@@ -1320,8 +1337,6 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   |_____________ |
 	*   +--------------+
 	*/
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2;
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
@@ -1338,14 +1353,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/* "\" of the X*/
 	C[0].x = AF[1].x + (B[2].x-B[3].x)/4;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/8; //y_center + 1/4 width
+	C[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/8; //y_center + 1/4 width
 	C[1].x = C[0].x + (B[2].x-B[3].x)/4;//C[0].x + width/2
 	C[1].y = C[0].y - (B[3].y-B[4].y)/4;//C[0].y - width/2
 	gvrender_polyline(job, C, 2);
 	
 	/*"/" of the X*/
 	C[0].x = AF[1].x + (B[2].x-B[3].x)/4;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[3].y-B[4].y)/8; //y_center - 1/4 width
+	C[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)/8; //y_center - 1/4 width
 	C[1].x = C[0].x + (B[2].x-B[3].x)/4;//C[0].x + width/2
 	C[1].y = C[0].y + (B[3].y-B[4].y)/4;//C[0].y + width/2
 	gvrender_polyline(job, C, 2);	
@@ -1369,15 +1384,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *  +-----+
 	 *	          
 	 */
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides, sizeof(pointf));
-	D[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x)/2; //x_center+width	
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[2].x-B[3].x)/2; //y_center
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/2; //x_center+width
+	D[0].y = mid_y(&AF[1]) + (B[2].x-B[3].x)/2;
 	D[1].x = D[0].x;
-	D[1].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[2].x-B[3].x)/2; //D[0].y- width
-	D[2].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)/2; //x_center-width
+	D[1].y = mid_y(&AF[1]) - (B[2].x-B[3].x)/2; //D[0].y- width
+	D[2].x = mid_x(AF) - (B[2].x-B[3].x)/2; //x_center-width
 	D[2].y = D[1].y;
 	D[3].x = D[2].x;
 	D[3].y = D[0].y;
@@ -1385,11 +1398,11 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	free(D);
 
 	/*outer square line*/
-	C[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x)*3/4; //x_center+1.5*width	
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[2].x-B[3].x)*3/4; //y_center
+	C[0].x = mid_x(AF) + (B[2].x-B[3].x)*3/4; //x_center+1.5*width
+	C[0].y = mid_y(&AF[1]) + (B[2].x-B[3].x)*3/4; //y_center
 	C[1].x = C[0].x;
-	C[1].y = AF[2].y + (AF[1].y - AF[2].y)/2 - (B[2].x-B[3].x)*3/4; //y_center- 1.5*width
-	C[2].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*3/4; //x_center-1.5*width
+	C[1].y = mid_y(&AF[1]) - (B[2].x-B[3].x)*3/4; //y_center- 1.5*width
+	C[2].x = mid_x(AF) - (B[2].x-B[3].x)*3/4; //x_center-1.5*width
 	C[2].y = C[1].y;
 	C[3].x = C[2].x;
 	C[3].y = C[0].y;
@@ -1397,16 +1410,16 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	gvrender_polyline(job, C, 5);		        
 	
 	/*dsDNA line right half*/
-	C[0].x = AF[1].x + (AF[0].x - AF[1].x)/2 + (B[2].x-B[3].x)*3/4;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].x = mid_x(AF) + (B[2].x-B[3].x)*3/4;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
-	C[1].x = AF[1].x + (AF[0].x - AF[1].x)/2 - (B[2].x-B[3].x)*3/4;
+	C[0].y = mid_y(&AF[1]);
+	C[1].x = mid_x(AF) - (B[2].x-B[3].x)*3/4;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);
 
@@ -1420,13 +1433,11 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *	     |
 	 *	------------          
 	 */
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
 	D = gv_calloc(sides + 12, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2 , lower right corner of the x
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/4; //x_center+width/2 , lower right corner of the x
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
 	D[2].x = D[0].x - (B[2].x-B[3].x)/8; //D[0].x- width/4 //right nook of the x
@@ -1437,7 +1448,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[4].y = D[3].y + (B[3].y-B[4].y)/8; //top right corner of the x
 	D[5].x = D[2].x;
 	D[5].y = D[4].y;
-	D[6].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
+	D[6].x = mid_x(AF);
 	D[6].y = D[3].y; //top nook
 	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrored across y
 	D[7].y = D[5].y;
@@ -1463,21 +1474,21 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*line below the x, bottom dash*/
 	C[0].x = D[14].x; //x_center
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = C[0].x;
 	C[1].y = C[0].y + (B[3].y-B[4].y)/8; //y_center + 1/4*width
 	gvrender_polyline(job, C, 2);
 
 	/*line below the x, top dash*/
 	C[0].x = D[14].x; //x_center
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;
+	C[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/4;
 	C[1].x = C[0].x;
 	C[1].y = C[0].y + (B[3].y-B[4].y)/8;
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -1493,13 +1504,11 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *	     |
 	 *	------------          
 	 */
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
 	D = gv_calloc(sides + 4, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center+width/8 , lower right corner of the hexagon
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/8; //x_center+width/8 , lower right corner of the hexagon
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x + (B[2].x-B[3].x)/8;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
 	D[2].x = D[1].x; //D[0].x- width/4
@@ -1519,15 +1528,15 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	//2-part dash line
 
 	/*line below the x, bottom dash*/
-	C[0].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	C[0].x = mid_x(AF);
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = C[0].x;
 	C[1].y = C[0].y + (B[3].y-B[4].y)/8; //y_center + 1/4*width
 	gvrender_polyline(job, C, 2);
 
 	/*line below the x, top dash*/
-	C[0].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/4;
+	C[0].x = mid_x(AF);
+	C[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/4;
 	C[1].x = C[0].x;
 	C[1].y = C[0].y + (B[3].y-B[4].y)/8;
 	gvrender_polyline(job, C, 2);
@@ -1536,7 +1545,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -1552,12 +1561,10 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *	     |
 	 *	------------          
 	 */
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 12, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2 , lower right corner of the x
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/4; //x_center+width/2 , lower right corner of the x
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
 	D[2].x = D[0].x - (B[2].x-B[3].x)/8; //D[0].x- width/4 //right nook of the x
@@ -1568,7 +1575,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[4].y = D[3].y + (B[3].y-B[4].y)/8; //top right corner of the x
 	D[5].x = D[2].x;
 	D[5].y = D[4].y;
-	D[6].x = AF[1].x + (AF[0].x - AF[1].x)/2; //x_center
+	D[6].x = mid_x(AF);
 	D[6].y = D[3].y; //top nook
 	D[7].x = D[6].x - (B[2].x-B[3].x)/8; //D[5] mirrored across y
 	D[7].y = D[5].y;
@@ -1594,12 +1601,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*line below the x*/
 	C[0] = D[14];
 	C[1].x = C[0].x;
-	C[1].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
@@ -1615,13 +1622,11 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *	     |
 	 *	------------          
 	 */
-	//x_center is AF[1].x + (AF[0].x - AF[1].x)/2
-	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
 	D = gv_calloc(sides + 4, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center+width/8 , lower right corner of the hexagon
-	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
+	D[0].x = mid_x(AF) + (B[2].x-B[3].x)/8; //x_center+width/8 , lower right corner of the hexagon
+	D[0].y = mid_y(&AF[1]) + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x + (B[2].x-B[3].x)/8;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
 	D[2].x = D[1].x; //D[0].x- width/4
@@ -1639,15 +1644,15 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	gvrender_polygon(job, D, sides + 4, filled);
 
 	/*line below the x*/
-	C[0].x = AF[1].x + (AF[0].x - AF[1].x)/2;
+	C[0].x = mid_x(AF);
 	C[0].y = D[0].y;
 	C[1].x = C[0].x;
-	C[1].y = AF[2].y + (AF[1].y - AF[2].y)/2; //y_center
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
-	C[0].y = AF[2].y + (AF[1].y - AF[2].y)/2;
+	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
 	gvrender_polyline(job, C, 2);				
