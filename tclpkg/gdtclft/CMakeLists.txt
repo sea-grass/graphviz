@@ -17,4 +17,13 @@ if(GD_FOUND)
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/tcl
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
   )
+
+  add_custom_command(
+    OUTPUT pkgIndex.tcl
+    COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh" libgdtclft.so
+      Gdtclft "${GRAPHVIZ_VERSION_STRING}"
+    MAIN_DEPENDENCY gdtclft
+    DEPENDS ../mkpkgindex.sh
+    COMMENT "create gdtclft package index"
+  )
 endif()
