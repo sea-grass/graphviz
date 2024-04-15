@@ -250,6 +250,74 @@ void makeSelfArcs(edge_t * e, int stepx)
     }
 }
 
+/** calculate the slope of the tangent of an ellipse
+ *
+ * The equation for the slope `m` of the tangent of an ellipse as a function of
+ * `x` * is given by:
+ *
+ *           bx
+ * m = ± ――――――――――
+ *          _______
+ *       a √ a²- x²
+ *
+ * or
+ *
+ * m = ± (b * x) / (a * sqrt(a * a - x * x))
+ *
+ * We know that the slope is negative in the first and third quadrant, i.e.,
+ * when the signs of x and y are the same, so we use that to select the correct
+ * slope.
+ *
+ * @param a Half the width of the ellipse, i.e., the maximum x value
+ * @param b Half the height of the ellipse, i.e., the maximum y value
+ * @param p A point on the ellipse periphery in which to calculate the slope of
+ * the tangent
+ * @return The slope of the tangent in point `p`
+ */
+static double ellipse_tangent_slope(double a, double b, pointf p) {
+  assert(p.x != a &&
+         "cannot handle ellipse tangent slope in horizontal extreme point");
+  const double sign_y = p.y >= 0 ? 1 : -1;
+  const double m = -sign_y * (b * p.x) / (a * sqrt(a * a - p.x * p.x));
+  assert(isfinite(m) && "ellipse tangent slope is infinite");
+  return m;
+}
+
+/** calculate the intersection of two lines
+ *
+ * @param l0 First line
+ * @param l1 Second line
+ * @return Intersection of the two lines
+ */
+static pointf line_intersection(linef l0, linef l1) {
+  const double x =
+      (l0.m * l0.p.x - l0.p.y - l1.m * l1.p.x + l1.p.y) / (l0.m - l1.m);
+  const double y = l0.p.y + l0.m * (x - l0.p.x);
+  return (pointf){x, y};
+}
+
+/** calculate a corner of a polygon circumscribed about an ellipse
+ *
+ * @param a Half the width of the ellipse, i.e., the maximum x value
+ * @param b Half the height of the ellipse, i.e., the maximum y value
+ * @param i Index of the polygon corner
+ * @param nsides Number of sides of the polygon
+ * @return Polygon corner at index `i`
+ */
+static pointf circumscribed_polygon_corner_about_ellipse(double a, double b,
+                                                         size_t i,
+                                                         size_t nsides) {
+  const double angle0 = 2.0 * M_PI * ((double)i - 0.5) / (double)nsides;
+  const double angle1 = 2.0 * M_PI * ((double)i + 0.5) / (double)nsides;
+  const pointf p0 = {a * cos(angle0), b * sin(angle0)};
+  const pointf p1 = {a * cos(angle1), b * sin(angle1)};
+  const double m0 = ellipse_tangent_slope(a, b, p0);
+  const double m1 = ellipse_tangent_slope(a, b, p1);
+  const linef line0 = {{p0.x, p0.y}, m0};
+  const linef line1 = {{p1.x, p1.y}, m1};
+  return line_intersection(line0, line1);
+}
+
 /* makeObstacle:
  * Given a node, return an obstacle reflecting the
  * node's geometry. pmargin specifies how much space to allow
@@ -361,17 +429,12 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 		    polyp.y = verts[j].y * margin.y;
 		}
 	    } else {
-		double c, s;
-		c = cos(2.0 * M_PI * (double)j / (double)sides);
-		s = sin(2.0 * M_PI * (double)j / (double)sides);
-		if (pmargin->doAdd) {
-		    polyp.x =  c*(ND_lw(n)+ND_rw(n)+pmargin->x) / 2.0;
-		    polyp.y =  s*(ND_ht(n)+pmargin->y) / 2.0;
-		}
-		else {
-		    polyp.x = pmargin->x * c * (ND_lw(n) + ND_rw(n)) / 2.0;
-		    polyp.y = pmargin->y * s * ND_ht(n) / 2.0;
-		}
+		const double width = ND_lw(n) + ND_rw(n);
+		const double height = ND_ht(n);
+		margin = pmargin->doAdd ? (pointf) {pmargin->x, pmargin->y} : (pointf) {0.0, 0.0};
+		const double ellipse_a = (width + margin.x) / 2.0;
+		const double ellipse_b = (height + margin.y) / 2.0;
+		polyp = circumscribed_polygon_corner_about_ellipse(ellipse_a, ellipse_b, j, sides);
 	    }
 	    obs->ps[sides - j - 1].x = polyp.x + ND_coord(n).x;
 	    obs->ps[sides - j - 1].y = polyp.y + ND_coord(n).y;
