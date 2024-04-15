@@ -266,7 +266,6 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 {
     Ppoly_t *obs;
     polygon_t *poly;
-    double adj = 0.0;
     size_t sides;
     pointf polyp;
     boxf b;
@@ -319,7 +318,6 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	} else {		/* ellipse */
 	    isPoly = false;
 	    sides = 8;
-	    adj = drand48() * .01;
 	}
 	obs->pn = sides;
 	obs->ps = gv_calloc(sides, sizeof(Ppoint_t));
@@ -364,8 +362,8 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 		}
 	    } else {
 		double c, s;
-		c = cos(2.0 * M_PI * (double)j / (double)sides + adj);
-		s = sin(2.0 * M_PI * (double)j / (double)sides + adj);
+		c = cos(2.0 * M_PI * (double)j / (double)sides);
+		s = sin(2.0 * M_PI * (double)j / (double)sides);
 		if (pmargin->doAdd) {
 		    polyp.x =  c*(ND_lw(n)+ND_rw(n)+pmargin->x) / 2.0;
 		    polyp.y =  s*(ND_ht(n)+pmargin->y) / 2.0;

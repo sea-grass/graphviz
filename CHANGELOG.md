@@ -126,6 +126,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   infer incorrect ordering or subtrees. This was a regression in Graphviz
   2.40.0. #2391, #2529
 - Compass points may be more accurately placed on the node boundary in some cases.
+- A very small random adjustment in the calculation of the space available for
+  edge routing around ellipse shaped nodes in fdp and neato layouts, has been
+  removed.
 
 ## [10.0.1] – 2024-02-11
 
