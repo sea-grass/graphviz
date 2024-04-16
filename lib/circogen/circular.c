@@ -71,7 +71,6 @@ createOneBlock(Agraph_t * g, circ_state * state)
  */
 void circularLayout(Agraph_t *g, Agraph_t *realg, int *blockCount) {
     block_t *root;
-    static circ_state state;
 
     if (agnnodes(g) == 1) {
 	Agnode_t *n = agfstnode(g);
@@ -80,7 +79,7 @@ void circularLayout(Agraph_t *g, Agraph_t *realg, int *blockCount) {
 	return;
     }
 
-    state.blockCount = *blockCount;
+    circ_state state = {.blockCount = *blockCount};
     initGraphAttrs(g, &state);
 
     if (mapbool(agget(realg, "oneblock")))
