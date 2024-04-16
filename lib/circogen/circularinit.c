@@ -194,8 +194,9 @@ void circoLayout(Agraph_t * g)
 	size_t ncc;
 	ccs = circomps(g, &ncc);
 
+	int blockCount = 0;
 	if (ncc == 1) {
-	    circularLayout(ccs[0], g);
+	    circularLayout(ccs[0], g, &blockCount);
 	    copyPosns(ccs[0]);
 	    adjustNodes(g);
 	} else {
@@ -205,7 +206,7 @@ void circoLayout(Agraph_t * g)
 
 	    for (size_t i = 0; i < ncc; i++) {
 		sg = ccs[i];
-		circularLayout(sg, g);
+		circularLayout(sg, g, &blockCount);
 		adjustNodes(sg);
 	    }
 	    /* FIX: splines have not been calculated for dg

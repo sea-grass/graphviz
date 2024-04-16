@@ -127,7 +127,7 @@ extern "C" {
     extern void prData(Agnode_t * n, int pass);
 #endif
 
-    extern void circularLayout(Agraph_t * sg, Agraph_t* rg);
+void circularLayout(Agraph_t *sg, Agraph_t *rg, int *blockCount);
 
 #ifdef __cplusplus
 }
