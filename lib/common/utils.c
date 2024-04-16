@@ -42,7 +42,7 @@ int late_int(void *obj, attrsym_t *attr, int defaultValue, int minimum) {
         return defaultValue; /* invalid int format */
     if (rv < minimum)
         return minimum;
-    else return (int)rv;
+    return (int)rv;
 }
 
 double late_double(void *obj, attrsym_t *attr, double defaultValue,
@@ -58,7 +58,7 @@ double late_double(void *obj, attrsym_t *attr, double defaultValue,
         return defaultValue; /* invalid double format */
     if (rv < minimum)
         return minimum;
-    else return rv;
+    return rv;
 }
 
 /** Return value for PSinputscale. If this is > 0, it has been set on the
@@ -72,7 +72,7 @@ double get_inputscale(graph_t *g) {
     if (PSinputscale > 0) return PSinputscale;  /* command line flag prevails */
     double d = late_double(g, agfindgraphattr(g, "inputscale"), -1, 0);
     if (is_exactly_zero(d)) return POINTS_PER_INCH;
-    else return d;
+    return d;
 }
 
 char *late_string(void *obj, attrsym_t *attr, char *defaultValue) {
@@ -204,8 +204,7 @@ edge_t *debug_getedge(graph_t * g, char *s0, char *s1)
     n1 = agfindnode(g, s1);
     if (n0 && n1)
 	return agfindedge(g, n0, n1);
-    else
-	return NULL;
+    return NULL;
 }
 Agraphinfo_t* GD_info(graph_t * g) { return ((Agraphinfo_t*)AGDATA(g));}
 Agnodeinfo_t* ND_info(node_t * n) { return ((Agnodeinfo_t*)AGDATA(n));}
@@ -331,8 +330,7 @@ bool mapBool(const char *p, bool defaultValue) {
 	return true;
     if (gv_isdigit(*p))
 	return atoi(p) != 0;
-    else
-        return defaultValue;
+    return defaultValue;
 }
 
 bool mapbool(const char *p)
@@ -767,14 +765,13 @@ static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
 
     if (p1[0] < p2[0])
 	return -1;
-    else if (p1[0] > p2[0])
+    if (p1[0] > p2[0])
 	return 1;
-    else if (p1[1] < p2[1])
+    if (p1[1] < p2[1])
 	return -1;
-    else if (p1[1] > p2[1])
+    if (p1[1] > p2[1])
 	return 1;
-    else
-	return 0;
+    return 0;
 }
 
 static void *newItem(item *objp, Dtdisc_t *disc) {
@@ -937,8 +934,7 @@ num_clust_edges(graph_t * g)
     cl_edge_t* cl_info = (cl_edge_t*)HAS_CLUST_EDGE(g);
     if (cl_info)
 	return cl_info->n_cluster_edges;
-    else
-	return 0;
+    return 0;
 }
 
 /** Look for cluster edges. Replace cluster edge endpoints
@@ -1643,8 +1639,7 @@ findCluster (Dt_t* map, char* name)
     clust_t* clp = dtmatch (map, name);
     if (clp)
 	return clp->clp;
-    else
-	return NULL;
+    return NULL;
 }
 
 /**
