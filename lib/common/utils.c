@@ -275,6 +275,24 @@ const char *safefile(const char *filename)
 	return NULL;
     }
 
+    if (Gvfilepath != NULL) {
+	if (pathlist == NULL) {
+	    free(dirs);
+	    pathlist = Gvfilepath;
+	    dirs = mkDirlist(pathlist);
+	}
+
+	const char *str = filename;
+	for (const char *sep = "/\\:"; *sep != '\0'; ++sep) {
+	    const char *p = strrchr(str, *sep);
+	    if (p != NULL) {
+	        str = ++p;
+	    }
+	}
+
+	return findPath(dirs, str);
+    }
+
     if (pathlist != Gvimagepath) {
 	free (dirs);
 	dirs = NULL;

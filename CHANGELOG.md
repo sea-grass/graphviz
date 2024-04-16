@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `gv2gml` gained a `-y` option to output the yWorks.com variant of GML instead
   of the default.
+- A new command line option, `--filepath=…` has been added to perform the
+  function previously served by the `$GV_FILE_PATH` environment variable, use of
+  which was removed in Graphviz 6.0.1. Unlike the old `$GV_FILE_PATH` mechanism,
+  `--filepath=…` takes effect regardless of the setting of the `$SERVER_NAME`
+  environment variable. #2396
 
 ### Changed
 

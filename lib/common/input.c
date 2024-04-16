@@ -24,7 +24,7 @@
 #include <cgraph/streq.h>
 #include <limits.h>
 #include <stdbool.h>
-#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
 static char *usageFmt =
@@ -266,6 +266,9 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 	} else if (argv[i] &&
 	    (startswith(argv[i], "-?") || strcmp(argv[i], "--help") == 0)) {
 	    return dotneato_usage(0);
+	} else if (argv[i] && startswith(argv[i], "--filepath=")) {
+	    free(Gvfilepath);
+	    Gvfilepath = gv_strdup(argv[i] + strlen("--filepath="));
 	} else if (argv[i] && argv[i][0] == '-') {
 	    rest = &argv[i][2];
 	    switch (c = argv[i][1]) {
@@ -623,6 +626,9 @@ void graph_init(graph_t * g, bool use_rankdir)
 
     if (!HTTPServerEnVar) {
 	Gvimagepath = agget (g, "imagepath");
+	if (!Gvimagepath) {
+	    Gvimagepath = Gvfilepath;
+	}
     }
 
     GD_drawing(g)->quantum =
