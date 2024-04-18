@@ -135,6 +135,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   large penwidths using fdp or neato, causing the same symptoms as #2168.
 - Incorrect edge splines for polygon shaped nodes with ports more than one
   periphery using fdp or neato, causing the same symptoms as #2168.
+- Adjust the space available for edge routing based on penwidth when
+  using fdp or neato and `splines=ortho`.
 
 ## [10.0.1] – 2024-02-11
 

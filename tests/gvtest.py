@@ -182,11 +182,6 @@ def is_mingw() -> bool:
     return "mingw" in sysconfig.get_platform()
 
 
-def is_ubuntu() -> bool:
-    """is the current environment Ubuntu?"""
-    return freedesktop_os_release().get("ID") == "ubuntu"
-
-
 def remove_xtype_warnings(s: str) -> str:
     """
     Remove macOS XType warnings from a string. These appear to be harmless, but

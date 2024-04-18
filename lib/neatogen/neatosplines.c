@@ -366,14 +366,19 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 		vs[3].x = b.LL.x;
 		vs[3].y = b.UR.y;
 	    } else {
-		p.x = -ND_lw(n);
-		p.y = -ND_ht(n)/2.0;
+		const double width = ND_lw(n) + ND_rw(n);
+		const double outline_width = INCH2PS(ND_outline_width(n));
+		// scale lw and rw proportionally to sum to outline width
+		const double outline_lw = ND_lw(n) * outline_width / width;
+		const double outline_ht = INCH2PS(ND_outline_height(n));
+		p.x = -outline_lw;
+		p.y = -outline_ht / 2.0;
 		vs[0] = p;
-		p.x = ND_lw(n);
+		p.x = outline_lw;
 		vs[1] = p;
-		p.y = ND_ht(n)/2.0;
+		p.y = outline_ht / 2.0;
 		vs[2] = p;
-		p.x = -ND_lw(n);
+		p.x = -outline_lw;
 		vs[3] = p;
 	    }
 	}

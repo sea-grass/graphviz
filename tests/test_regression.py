@@ -31,12 +31,9 @@ from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     gvpr,
     is_centos,
-    is_fedora,
     is_fedora_38,
-    is_macos,
     is_mingw,
     is_rocky_8,
-    is_ubuntu,
     remove_xtype_warnings,
     run_c,
     which,
@@ -2123,12 +2120,6 @@ def test_2168_4():
     subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
 
 
-@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
-@pytest.mark.xfail(
-    is_fedora() or is_macos() or is_mingw() or is_ubuntu(),
-    strict=True,
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2168",
-)
 def test_2168_5():
     """
     using spline routing should not cause fdp/neato to infinite loop
