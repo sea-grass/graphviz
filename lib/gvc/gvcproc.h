@@ -126,7 +126,3 @@ gvplugin_available_t *gvplugin_load(GVC_t *gvc, api_t api, const char *type,
 /* layout */
 
     int gvlayout_select(GVC_t * gvc, const char *str);
-
-/* argvlist */
-    void gv_argvlist_set_item(gv_argvlist_t *list, size_t index, char *item);
-    void gv_argvlist_reset(gv_argvlist_t *list);

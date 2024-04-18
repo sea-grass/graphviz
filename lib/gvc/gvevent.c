@@ -29,47 +29,13 @@ extern void graph_cleanup(graph_t *g);
 #define ZOOMFACTOR 1.1
 #define EPSILON .0001
 
-static char *s_digraph = "digraph";
-static char *s_graph = "graph";
-static char *s_subgraph = "subgraph";
-static char *s_node = "node";
-static char *s_edge = "edge";
 static char *s_tooltip = "tooltip";
 static char *s_href = "href";
 static char *s_URL = "URL";
-static char *s_tailport = "tailport";
-static char *s_headport = "headport";
-static char *s_key = "key";
 
 static void gv_graph_state(GVJ_t *job, graph_t *g)
 {
-    Agsym_t *a;
-    gv_argvlist_t *list;
-
-    list = &(job->selected_obj_type_name);
-    size_t j = 0;
-    if (g == agroot(g)) {
-	if (agisdirected(g))
-            gv_argvlist_set_item(list, j++, s_digraph);
-	else
-            gv_argvlist_set_item(list, j++, s_graph);
-    }
-    else {
-        gv_argvlist_set_item(list, j++, s_subgraph);
-    }
-    gv_argvlist_set_item(list, j++, agnameof(g));
-    list->argc = j;
-
-    list = &(job->selected_obj_attributes);
-    a = NULL;
-    while ((a = agnxtattr(g, AGRAPH, a))) {
-        gv_argvlist_set_item(list, j++, a->name);
-        gv_argvlist_set_item(list, j++, agxget(g, a));
-        gv_argvlist_set_item(list, j++, (char*)GVATTR_STRING);
-    }
-    list->argc = j;
-
-    a = agfindgraphattr(g, s_href);
+    Agsym_t *a = agfindgraphattr(g, s_href);
     if (!a)
 	a = agfindgraphattr(g, s_URL);
     if (a)
@@ -78,26 +44,7 @@ static void gv_graph_state(GVJ_t *job, graph_t *g)
 
 static void gv_node_state(GVJ_t *job, node_t *n)
 {
-    Agsym_t *a;
-    Agraph_t *g;
-    gv_argvlist_t *list;
-
-    list = &(job->selected_obj_type_name);
-    size_t j = 0;
-    gv_argvlist_set_item(list, j++, s_node);
-    gv_argvlist_set_item(list, j++, agnameof(n));
-    list->argc = j;
-
-    list = &(job->selected_obj_attributes);
-    g = agroot(agraphof(n));
-    a = NULL;
-    while ((a = agnxtattr(g, AGNODE, a))) {
-        gv_argvlist_set_item(list, j++, a->name);
-        gv_argvlist_set_item(list, j++, agxget(n, a));
-    }
-    list->argc = j;
-
-    a = agfindnodeattr(agraphof(n), s_href);
+    Agsym_t *a = agfindnodeattr(agraphof(n), s_href);
     if (!a)
         a = agfindnodeattr(agraphof(n), s_URL);
     if (a)
@@ -106,52 +53,7 @@ static void gv_node_state(GVJ_t *job, node_t *n)
 
 static void gv_edge_state(GVJ_t *job, edge_t *e)
 {
-    Agsym_t *a;
-    Agraph_t *g;
-    gv_argvlist_t *nlist, *alist;
-
-    nlist = &(job->selected_obj_type_name);
-
-    /* only tail, head, and key are strictly identifying properties,
-     * but we commonly also use edge kind (e.g. "->") and tailport,headport
-     * in edge names */
-    size_t j = 0;
-    gv_argvlist_set_item(nlist, j++, s_edge);
-    gv_argvlist_set_item(nlist, j++, agnameof(agtail(e)));
-    j++; /* skip tailport slot for now */
-    gv_argvlist_set_item(nlist, j++, agisdirected(agraphof(agtail(e)))?"->":"--");
-    gv_argvlist_set_item(nlist, j++, agnameof(aghead(e)));
-    j++; /* skip headport slot for now */
-    j++; /* skip key slot for now */
-    nlist->argc = j;
-
-    alist = &(job->selected_obj_attributes);
-    g = agroot(agraphof(aghead(e)));
-    a = NULL;
-    while ((a = agnxtattr(g, AGEDGE, a))) {
-
-	/* tailport and headport can be shown as part of the name, but they
-	 * are not identifying properties of the edge so we 
-	 * also list them as modifyable attributes. */
-        if (strcmp(a->name,s_tailport) == 0)
-	    gv_argvlist_set_item(nlist, 2, agxget(e, a));
-	else if (strcmp(a->name,s_headport) == 0)
-	    gv_argvlist_set_item(nlist, 5, agxget(e, a));
-
-	/* key is strictly an identifying property to distinguish multiple
-	 * edges between the same node pair.   Its non-writable, so
-	 * no need to list it as an attribute as well. */
-	else if (strcmp(a->name,s_key) == 0) {
-	    gv_argvlist_set_item(nlist, 6, agxget(e, a));
-	    continue;
-	}
-
-        gv_argvlist_set_item(alist, j++, a->name);
-        gv_argvlist_set_item(alist, j++, agxget(e, a));
-    }
-    alist->argc = j;
-
-    a = agfindedgeattr(agraphof(aghead(e)), s_href);
+    Agsym_t *a = agfindedgeattr(agraphof(aghead(e)), s_href);
     if (!a)
 	a = agfindedgeattr(agraphof(aghead(e)), s_URL);
     if (a)

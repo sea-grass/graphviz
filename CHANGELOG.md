@@ -61,11 +61,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   replaced with `enum`.
 - **Breaking**: The `obj_state_t.url_bsplinemap_poly_n` field is now a `size_t`
   and the `obj_state_t.url_bsplinemap_n` field is now a `size_t *`.
-- **Breaking**: The `gv_arglist_t.argc` and `gv_arglist_t.alloc` fields are now
-  `size_t`s.
 - **Breaking**: The `Ppoly_t.pn` (`Ppolyline_t.pn`) field is now a `size_t`.
 - **Breaking**: The `Proutespline` function takes its `n_barriers` parameter as
   a `size_t`.
+- **Breaking**: The `gvattr_t` type and the `GVJ_t.selected_obj_attributes` and
+  `GVJ_t.selected_obj_type_name` fields have been removed.
+- **Breaking**: The `gv_argvlist_t` type and functions that operate on it have
+  been removed.
 
 ### Fixed
 

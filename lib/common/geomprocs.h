@@ -18,6 +18,8 @@
 
 #pragma once
 
+#include <stdbool.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -121,8 +123,7 @@ static inline pointf exch_xyf(pointf p)
     return r;
 }
 
-static inline int boxf_overlap(boxf b0, boxf b1)
-{
+static inline bool boxf_overlap(boxf b0, boxf b1) {
     return OVERLAP(b0, b1);
 }
 

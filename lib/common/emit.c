@@ -1707,7 +1707,7 @@ static bool clust_in_layer(GVJ_t *job, graph_t * sg)
 
 static bool node_in_box(node_t *n, boxf b)
 {
-    return boxf_overlap(ND_bb(n), b) != 0;
+  return boxf_overlap(ND_bb(n), b);
 }
 
 static char *saved_color_scheme;

@@ -58,9 +58,8 @@ char* post = "showpage\n";
 static void
 psdump(cell *gcells, int n_gcells, boxf BB, boxf *rects, size_t nrect) {
     boxf bb;
-    box absbb;
+    box absbb = {.LL = {.y = 10, .x = 10}};
 
-    absbb.LL.y = absbb.LL.x = 10;
     absbb.UR.x = absbb.LL.x + BB.UR.x - BB.LL.x;
     absbb.UR.y = absbb.LL.y + BB.UR.y - BB.LL.y;
     fputs (pre, stderr);
@@ -462,13 +461,13 @@ maze *mkMaze(graph_t *g) {
     boxf* rects;
     cell* cp;
     double w2, h2;
-    boxf bb, BB;
+    boxf bb;
 
     mp->ngcells = agnnodes(g);
     cp = mp->gcells = gv_calloc(mp->ngcells, sizeof(cell));
 
-    BB.LL.x = BB.LL.y = MAXDOUBLE;
-    BB.UR.x = BB.UR.y = -MAXDOUBLE;
+    boxf BB = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
+               .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
     for (n = agfstnode (g); n; n = agnxtnode(g,n)) {
         w2 = fmax(1, ND_xsize(n) / 2.0);
         h2 = fmax(1, ND_ysize(n) / 2.0);

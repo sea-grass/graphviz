@@ -1136,9 +1136,8 @@ addPoints(pointf p0, pointf p1)
     return p0;
 }
 
-static void
-attachOrthoEdges(maze* mp, size_t n_edges, route* route_list, splineInfo *sinfo, epair_t es[], int doLbls)
-{
+static void attachOrthoEdges(maze *mp, size_t n_edges, route* route_list,
+                             splineInfo *sinfo, epair_t es[], bool doLbls) {
     int ipt;
     pointf* ispline = 0;
     size_t splsz = 0;
@@ -1237,12 +1236,10 @@ static splineInfo sinfo = { swap_ends_p, spline_merge, true, true };
 
 /* orthoEdges:
  * For edges without position information, construct an orthogonal routing.
- * If doLbls is true, use edge label info when available to guide routing, 
+ * If useLbls is true, use edge label info when available to guide routing, 
  * and set label pos for those edges for which this info is not available.
  */
-void
-orthoEdges (Agraph_t* g, int doLbls)
-{
+void orthoEdges(Agraph_t *g, bool useLbls) {
     sgraph* sg;
     maze* mp;
     route* route_list;
@@ -1290,9 +1287,9 @@ orthoEdges (Agraph_t* g, int doLbls)
 	}
     }
 #endif
-    if (doLbls) {
+    if (useLbls) {
 	agwarningf("Orthogonal edges do not currently handle edge labels. Try using xlabels.\n");
-	doLbls = 0;
+	useLbls = false;
     }
     mp = mkMaze(g);
     sg = mp->sg;
@@ -1339,7 +1336,7 @@ orthoEdges (Agraph_t* g, int doLbls)
         start = CELL(agtail(e));
         dest = CELL(aghead(e));
 
-	if (doLbls && (lbl = ED_label(e)) && lbl->set) {
+	if (useLbls && (lbl = ED_label(e)) && lbl->set) {
 	}
 	else {
 	    if (start == dest)
@@ -1364,7 +1361,7 @@ orthoEdges (Agraph_t* g, int doLbls)
 #ifdef DEBUG
     if (odb_flags & ODB_ROUTE) emitGraph (stderr, mp, n_edges, route_list, es);
 #endif
-    attachOrthoEdges(mp, n_edges, route_list, &sinfo, es, doLbls);
+    attachOrthoEdges(mp, n_edges, route_list, &sinfo, es, useLbls);
 
 orthofinish:
     if (Concentrate)
@@ -1539,17 +1536,15 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 
 static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
                                route *route_list, epair_t es[]) {
-    boxf bb, absbb;
-
-    absbb.LL.x = absbb.LL.y = MAXDOUBLE;
-    absbb.UR.x = absbb.UR.y = -MAXDOUBLE;
+    boxf absbb = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
+                  .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
 
     fprintf (fp, "%s", prolog2);
     fprintf (fp, "%d %d translate\n", TRANS, TRANS);
 
     fputs ("0 0 1 setrgbcolor\n", fp);
     for (int i = 0; i < mp->ngcells; i++) {
-      bb = mp->gcells[i].bb;
+      const boxf bb = mp->gcells[i].bb;
       fprintf (fp, "%f %f %f %f node\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
     }
 
@@ -1559,7 +1554,7 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
     
     fputs ("0.8 0.8 0.8 setrgbcolor\n", fp);
     for (int i = 0; i < mp->ncells; i++) {
-      bb = mp->cells[i].bb;
+      const boxf bb = mp->cells[i].bb;
       fprintf (fp, "%f %f %f %f cell\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
       absbb.LL.x = MIN(absbb.LL.x, bb.LL.x);
       absbb.LL.y = MIN(absbb.LL.y, bb.LL.y);
@@ -1567,10 +1562,10 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
       absbb.UR.y = MAX(absbb.UR.y, bb.UR.y);
     }
 
-    boxf bbox;
-    bbox.LL.x = absbb.LL.x + TRANS;
-    bbox.LL.y = absbb.LL.y + TRANS;
-    bbox.UR.x = absbb.UR.x + TRANS;
-    bbox.UR.y = absbb.UR.y + TRANS;
+    const boxf bbox = {
+      .LL = {.x = absbb.LL.x + TRANS,
+             .y = absbb.LL.y + TRANS},
+      .UR = {.x = absbb.UR.x + TRANS,
+             .y = absbb.UR.y + TRANS}};
     fprintf (fp, epilog2, bbox.LL.x, bbox.LL.y,  bbox.UR.x, bbox.UR.y);
 }
