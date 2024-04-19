@@ -16,13 +16,14 @@
 #include "draw.h"
 #include <glcomp/glutils.h>
 #include "hotkeymap.h"
+#include <stdint.h>
 
 /*real zoom in out is done here, all other functions send this one what they desire, it is not guranteed,*/
 static void graph_zoom(float real_zoom)
 {
     float old_zoom;
 
-    if (view->active_camera == -1)
+    if (view->active_camera == SIZE_MAX)
 		old_zoom = view->zoom;
     else
 		old_zoom = view->cameras[view->active_camera]->r;
@@ -31,7 +32,7 @@ static void graph_zoom(float real_zoom)
 		real_zoom = view->Topview->fitin_zoom * MAX_ZOOM;
     if (real_zoom > view->Topview->fitin_zoom * MIN_ZOOM)
 		real_zoom = view->Topview->fitin_zoom * MIN_ZOOM;
-    if (view->active_camera == -1)
+    if (view->active_camera == SIZE_MAX)
 		view->zoom = real_zoom;
     else
 		view->cameras[view->active_camera]->r = real_zoom * -1;
@@ -53,7 +54,7 @@ void glmotion_zoom_inc(int zoomin)
 void glmotion_zoom(void)
 {
     float real_zoom;
-    if (view->active_camera == -1) {
+    if (view->active_camera == SIZE_MAX) {
 	real_zoom =
 	    view->zoom + view->mouse.dragX / 10 * (view->zoom * -1 / 20);
     } else {
@@ -69,7 +70,7 @@ void glmotion_zoom(void)
 void glmotion_pan(ViewInfo * v)
 {
     float gldx, gldy;
-    if (v->active_camera == -1) {
+    if (v->active_camera == SIZE_MAX) {
 	gldx = GetOGLDistance(v->mouse.dragX) / v->zoom * -1;
 	gldy = GetOGLDistance(v->mouse.dragY) / v->zoom * -1;
 	v->panx = v->panx - gldx;

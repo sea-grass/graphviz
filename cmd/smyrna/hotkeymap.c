@@ -10,6 +10,7 @@
 
 #include <cgraph/alloc.h>
 #include "hotkeymap.h"
+#include <stdint.h>
 
 static int get_mouse_mode(const char *s)
 {
@@ -168,7 +169,7 @@ int get_mode(ViewInfo * v)
     int curDragging = v->mouse.dragX != 0 || v->mouse.dragY != 0;
     smyrna_view_mode view_mode;
     view_mode = smyrna_2D;
-    if (v->active_camera >= 0)
+    if (v->active_camera != SIZE_MAX)
 	view_mode = smyrna_3D;
     if (v->Topview->fisheyeParams.active)
 	view_mode = smyrna_fisheye;

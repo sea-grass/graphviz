@@ -313,7 +313,7 @@ typedef struct
 	/*graph pointer to hold loaded graphs */
 	Agraph_t **g;
 	/*number of graphs loaded */
-	int graphCount;
+	size_t graphCount;
 	/*active graph */
 	int activeGraph;
 
@@ -325,8 +325,8 @@ typedef struct
 //	selection Selection;
 
 	viewport_camera **cameras;
-	int camera_count;	//number of cameras
-	int active_camera;
+	size_t camera_count; /// <number of cameras
+	size_t active_camera;
 
 	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
 	GtkWidget *drawing_area;

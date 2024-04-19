@@ -20,7 +20,7 @@
 #include "toolboxcallbacks.h"
 #include "viewportcamera.h"
 #include "selectionfuncs.h"
-
+#include <stdint.h>
 #include "frmobjectui.h"
 
 static glCompPanel *sel = NULL;
@@ -100,7 +100,7 @@ void menu_click_center(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)y;
     (void)t;
 
-    if (view->active_camera == -1) {	/*2D mode */
+    if (view->active_camera == SIZE_MAX) { // 2D mode
 	btnToolZoomFit_clicked(NULL, NULL);
     } else {			/*there is active camera , adjust it to look at the center */
 
@@ -118,7 +118,7 @@ void switch2D3D(glCompObj *obj, float x, float y, glMouseButtonType t) {
 
     if (t == glMouseLeftButton) {
 
-	if (view->active_camera == -1) {
+	if (view->active_camera == SIZE_MAX) {
 
 	    if (view->camera_count == 0) {
 		menu_click_add_camera();
@@ -130,7 +130,7 @@ void switch2D3D(glCompObj *obj, float x, float y, glMouseButtonType t) {
 	    img3D->common.visible = 1;
 	} else {		/*switch to 2d */
 
-	    view->active_camera = -1;	/*set to camera */
+	    view->active_camera = SIZE_MAX; // set to camera
 	    glCompButtonShow(to3DBtn);
 	    glCompButtonHide(to2DBtn);
 	    panBtn->common.callbacks.click((glCompObj*)panBtn, 0.0f, 0.0f,

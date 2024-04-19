@@ -11,12 +11,14 @@
 #include <windows.h>
 #include <io.h>
 #endif
+#include <assert.h>
 #include "viewport.h"
 #include "draw.h"
 #include <cgraph/alloc.h>
 #include <common/color.h>
 #include <glade/glade.h>
 #include "gui.h"
+#include <limits.h>
 #include "menucallbacks.h"
 #include <stddef.h>
 #include <stdbool.h>
@@ -303,7 +305,7 @@ void init_viewport(ViewInfo *vi) {
     g_timeout_add_full(G_PRIORITY_DEFAULT, 100u, gl_main_expose, NULL, NULL);
     vi->cameras = NULL;
     vi->camera_count = 0;
-    vi->active_camera = -1;
+    vi->active_camera = SIZE_MAX;
     set_viewport_settings_from_template(vi, vi->systemGraphs.def_attrs);
     vi->Topview->Graphdata.GraphFileName = NULL;
     vi->colschms = NULL;
@@ -439,8 +441,9 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 	view->g[view->graphCount - 1] = graph;
 
 	gtk_combo_box_append_text(view->graphComboBox, id);
-	gtk_combo_box_set_active(view->graphComboBox,view->graphCount-1);
-	activate(view->graphCount - 1);
+	assert(view->graphCount <= INT_MAX);
+	gtk_combo_box_set_active(view->graphComboBox, (int)view->graphCount - 1);
+	activate((int)view->graphCount - 1);
 	return 1;
     } else {
 	return 0;
@@ -449,7 +452,7 @@ int add_graph_to_viewport(Agraph_t * graph, char *id)
 }
 void switch_graph(int graphId)
 {
-    if (graphId >= view->graphCount || graphId < 0)
+    if (graphId < 0 || (size_t)graphId >= view->graphCount)
 	return;			/*wrong entry */
     else
 	activate(graphId);
