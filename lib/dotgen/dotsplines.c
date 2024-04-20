@@ -60,7 +60,10 @@
 }
 
 typedef struct {
-    int LeftBound, RightBound, Splinesep, Multisep;
+    double LeftBound;
+    double RightBound;
+    double Splinesep;
+    double Multisep;
     boxf* Rank_box;
 } spline_info_t;
 
@@ -74,8 +77,10 @@ static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
 				pathend_t *, pathend_t *, boxf *, int, int);
 static int edgecmp(const void *, const void *);
-static void make_flat_edge(graph_t*, spline_info_t*, path *, Agedge_t **, int, int, int);
-static void make_regular_edge(graph_t* g, spline_info_t*, path *, Agedge_t **, int, int, int);
+static void make_flat_edge(graph_t *, spline_info_t *, path *, Agedge_t **,
+                           unsigned, unsigned, int);
+static void make_regular_edge(graph_t *g, spline_info_t *, path *, Agedge_t **,
+                              unsigned, unsigned, int);
 static boxf makeregularend(boxf, int, double);
 static boxf maximal_bbox(graph_t* g, spline_info_t*, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agnode_t *neighbor(graph_t*, Agnode_t *, Agedge_t *, Agedge_t *, int);
@@ -255,13 +260,12 @@ setEdgeLabelPos (graph_t * g)
  * of dot_splines.
  */
 static void dot_splines_(graph_t *g, int normalize) {
-    int i, j, k, n_nodes, n_edges, ind, cnt;
+    int i, j, k, n_nodes;
     node_t *n;
     Agedgeinfo_t fwdedgeai, fwdedgebi;
     Agedgepair_t fwdedgea, fwdedgeb;
     edge_t *e, *e0, *e1, *ea, *eb, *le0, *le1, **edges = NULL;
     path P = {0};
-    spline_info_t sd;
     int et = EDGE_TYPE(g);
     fwdedgea.out.base.data = (Agrec_t*)&fwdedgeai;
     fwdedgeb.out.base.data = (Agrec_t*)&fwdedgebi;
@@ -290,14 +294,13 @@ static void dot_splines_(graph_t *g, int normalize) {
 
     mark_lowclusters(g);
     if (routesplinesinit()) return;
-    /* FlatHeight = 2 * GD_nodesep(g); */
-    sd.Splinesep = GD_nodesep(g) / 4;
-    sd.Multisep = GD_nodesep(g);
+    spline_info_t sd = {.Splinesep = GD_nodesep(g) / 4,
+                        .Multisep = GD_nodesep(g)};
     edges = gv_calloc(CHUNK, sizeof(edge_t*));
 
     /* compute boundaries and list of splines */
-    sd.LeftBound = sd.RightBound = 0;
-    n_edges = n_nodes = 0;
+    unsigned n_edges = 0;
+    n_nodes = 0;
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	n_nodes += GD_rank(g)[i].n;
 	if ((n = GD_rank(g)[i].v[0]))
@@ -377,9 +380,9 @@ static void dot_splines_(graph_t *g, int normalize) {
 	}
     }
 
-    for (i = 0; i < n_edges;) {
-	ind = i;
-	le0 = getmainedge((e0 = edges[i++]));
+    for (unsigned l = 0; l < n_edges;) {
+	const unsigned ind = l;
+	le0 = getmainedge((e0 = edges[l++]));
 	if (ED_tail_port(e0).defined || ED_head_port(e0).defined) {
 	    ea = e0;
 	} else {
@@ -389,8 +392,9 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    MAKEFWDEDGE(&fwdedgea.out, ea);
 	    ea = &fwdedgea.out;
 	}
-	for (cnt = 1; i < n_edges; cnt++, i++) {
-	    if (le0 != (le1 = getmainedge((e1 = edges[i]))))
+	unsigned cnt;
+	for (cnt = 1; l < n_edges; cnt++, l++) {
+	    if (le0 != (le1 = getmainedge((e1 = edges[l]))))
 		break;
 	    if (ED_adjacent(e0)) continue; /* all flat adjacent edges at once */
 	    if (ED_tail_port(e1).defined || ED_head_port(e1).defined) {
@@ -409,21 +413,20 @@ static void dot_splines_(graph_t *g, int normalize) {
 	    if ((ED_tree_index(e0) & EDGETYPEMASK) == FLATEDGE
 		&& ED_label(e0) != ED_label(e1))
 		break;
-	    if (ED_tree_index(edges[i]) & MAINGRAPH)	/* Aha! -C is on */
+	    if (ED_tree_index(edges[l]) & MAINGRAPH)	/* Aha! -C is on */
 		break;
 	}
 
 	if (et == EDGETYPE_CURVED) {
-	    int ii;
 	    edge_t** edgelist = gv_calloc(cnt, sizeof(edge_t*));
 	    edgelist[0] = getmainedge((edges+ind)[0]);
-	    for (ii = 1; ii < cnt; ii++)
+	    for (unsigned ii = 1; ii < cnt; ii++)
 		edgelist[ii] = (edges+ind)[ii];
-	    makeStraightEdges (g, edgelist, cnt, et, &sinfo);
+	    makeStraightEdges(g, edgelist, cnt, et, &sinfo);
 	    free(edgelist);
 	}
 	else if (agtail(e0) == aghead(e0)) {
-	    int b, r;
+	    int r;
 	    double sizey;
 	    n = agtail(e0);
 	    r = ND_rank(n);
@@ -442,8 +445,8 @@ static void dot_splines_(graph_t *g, int normalize) {
 		sizey = MIN(upy, dwny);
 	    }
 	    makeSelfEdge(edges, ind, cnt, sd.Multisep, sizey / 2, &sinfo);
-	    for (b = 0; b < cnt; b++) {
-		e = edges[ind+b];
+	    for (unsigned b = 0; b < cnt; b++) {
+		e = edges[ind + b];
 		if (ED_label(e))
 		    updateBB(g, ED_label(e));
 	    }
@@ -1005,20 +1008,19 @@ static int edgelblcmpfn(const void *x, const void *y) {
  * to handle edges with ports. This usually works, but fails for
  * records because of their weird nature.
  */
-static void
-makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et, int n_lbls)
-{
+static void makeSimpleFlatLabels(node_t *tn, node_t *hn, edge_t **edges,
+                                 unsigned ind, unsigned cnt, int et,
+                                 unsigned n_lbls) {
     Ppoly_t poly;
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
-    int i;
     double leftend, rightend, ctrx, ctry, miny, maxy;
     double uminx, umaxx;
     double lminx=0.0, lmaxx=0.0;
 
     edge_t** earray = gv_calloc(cnt, sizeof(edge_t*));
 
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	earray[i] = edges[ind + i];
     }
 
@@ -1048,6 +1050,7 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     uminx = ctrx - ED_label(e)->dimen.x / 2.0;
     umaxx = ctrx + ED_label(e)->dimen.x / 2.0;
 
+    unsigned i;
     for (i = 1; i < n_lbls; i++) {
 	e = earray[i];
 	if (i%2) {  /* down */
@@ -1165,12 +1168,10 @@ makeSimpleFlatLabels (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, 
     free (earray);
 }
 
-static void
-makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et)
-{
+static void makeSimpleFlat(node_t *tn, node_t *hn, edge_t **edges, unsigned ind,
+                           unsigned cnt, int et) {
     edge_t* e = edges[ind];
     pointf points[10], tp, hp;
-    int i;
     double stepy, dy;
 
     tp = add_pointf(ND_coord(tn), ED_tail_port(e).p);
@@ -1179,7 +1180,7 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
     stepy = cnt > 1 ? ND_ht(tn) / (double)(cnt - 1) : 0.;
     dy = tp.y - (cnt > 1 ? ND_ht(tn) / 2. : 0.);
 
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	e = edges[ind + i];
 	size_t pointn = 0;
 	if (et == EDGETYPE_SPLINE || et == EDGETYPE_LINE) {
@@ -1214,19 +1215,16 @@ makeSimpleFlat (node_t* tn, node_t* hn, edge_t** edges, int ind, int cnt, int et
  * This is probably to cute and fragile, and should be rewritten in a 
  * more straightforward and laborious fashion. 
  */
-static void
-make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
-                    int et)
-{
+static void make_flat_adj_edges(graph_t *g, edge_t **edges, unsigned ind,
+                                unsigned cnt, edge_t *e0, int et) {
     node_t* n;
     node_t *tn, *hn;
     edge_t* e;
-    int labels = 0, ports = 0;
+    int ports = 0;
     graph_t* auxg;
     graph_t* subg;
     node_t *auxt, *auxh;
     edge_t* auxe;
-    int     i;
     double midx, midy, leftx, rightx;
     pointf   del;
     edge_t* hvye = NULL;
@@ -1243,7 +1241,8 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	}
 	return;
     }
-    for (i = 0; i < cnt; i++) {
+    unsigned labels = 0;
+    for (unsigned i = 0; i < cnt; i++) {
 	e = edges[ind + i];
 	if (ED_label(e)) labels++;
 	if (ED_tail_port(e).defined || ED_head_port(e).defined) ports = 1;
@@ -1252,11 +1251,11 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     if (ports == 0) {
 	/* flat edges without ports and labels can go straight left to right */
 	if (labels == 0) {
-	    makeSimpleFlat (tn, hn, edges, ind, cnt, et);
+	    makeSimpleFlat(tn, hn, edges, ind, cnt, et);
 	}
 	/* flat edges without ports but with labels take more work */
 	else {
-	    makeSimpleFlatLabels (tn, hn, edges, ind, cnt, et, labels);
+	    makeSimpleFlatLabels(tn, hn, edges, ind, cnt, et, labels);
 	}
 	return;
     }
@@ -1275,7 +1274,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
     }
     auxt = cloneNode(subg, tn);
     auxh = cloneNode(auxg, hn);
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	e = edges[ind + i];
 	for (; ED_edge_type(e) != NORMAL; e = ED_to_orig(e));
 	if (agtail(e) == tn)
@@ -1328,7 +1327,7 @@ make_flat_adj_edges(graph_t* g, edge_t** edges, int ind, int cnt, edge_t* e0,
 	del.x = ND_coord(tn).x - ND_coord(auxt).x;
 	del.y = ND_coord(tn).y - ND_coord(auxt).y;
     }
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	bezier* auxbz;
 	bezier* bz;
 
@@ -1474,12 +1473,11 @@ make_flat_labeled_edge(graph_t* g, spline_info_t* sp, path* P, edge_t* e, int et
 	free(ps);
 }
 
-static void
-make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
-	ind, int cnt, edge_t* e, bool use_splines)
-{
+static void make_flat_bottom_edges(graph_t *g, spline_info_t *sp, path *P,
+                                   edge_t **edges, unsigned ind, unsigned cnt,
+                                   edge_t *e, bool use_splines) {
     node_t *tn, *hn;
-    int j, i, r;
+    int j, r;
     double stepx, stepy, vspace;
     rank_t* nextr;
     pathend_t tend, hend;
@@ -1495,13 +1493,13 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
     else {
 	vspace = GD_ranksep(g);
     }
-    stepx = ((double)sp->Multisep) / (cnt + 1); 
+    stepx = sp->Multisep / (cnt + 1);
     stepy = vspace / (cnt+1);
 
     makeBottomFlatEnd (g, sp, P, tn, e, &tend, true);
     makeBottomFlatEnd (g, sp, P, hn, e, &hend, false);
 
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	boxf b;
 	e = edges[ind + i];
 	size_t boxn = 0;
@@ -1554,14 +1552,13 @@ make_flat_bottom_edges(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges,
  *     = connecting bottom to bottom/left/right - route along bottom
  *     = the rest - route along top
  */
-static void
-make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind, int cnt, int et)
-{
+static void make_flat_edge(graph_t *g, spline_info_t *sp, path *P,
+                           edge_t **edges, unsigned ind, unsigned cnt, int et) {
     node_t *tn, *hn;
     Agedgeinfo_t fwdedgei;
     Agedgepair_t fwdedge;
     edge_t *e;
-    int j, i, r, isAdjacent;
+    int j, r;
     double stepx, stepy, vspace;
     int tside, hside;
     pathend_t tend, hend;
@@ -1570,14 +1567,14 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
 
     /* Get sample edge; normalize to go from left to right */
     e = edges[ind];
-    isAdjacent = ED_adjacent(e);
+    bool isAdjacent = ED_adjacent(e) != 0;
     if (ED_tree_index(e) & BWDEDGE) {
 	MAKEFWDEDGE(&fwdedge.out, e);
 	e = &fwdedge.out;
     }
-    for (i = 1; i < cnt; i++) {
-	if (ED_adjacent(edges[ind+i])) {
-	    isAdjacent = 1;
+    for (unsigned i = 1; i < cnt; i++) {
+	if (ED_adjacent(edges[ind + i])) {
+	    isAdjacent = true;
 	    break;
 	}
     }
@@ -1594,7 +1591,7 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     }
 
     if (et == EDGETYPE_LINE) {
-	makeSimpleFlat (agtail(e), aghead(e), edges, ind, cnt, et);
+	makeSimpleFlat(agtail(e), aghead(e), edges, ind, cnt, et);
 	return;
     }
 
@@ -1602,7 +1599,7 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     hside = ED_head_port(e).side;
     if ((tside == BOTTOM && hside != TOP) ||
         (hside == BOTTOM && tside != TOP)) {
-	make_flat_bottom_edges (g, sp, P, edges, ind, cnt, e, et == EDGETYPE_SPLINE);
+	make_flat_bottom_edges(g, sp, P, edges, ind, cnt, e, et == EDGETYPE_SPLINE);
 	return;
     }
 
@@ -1620,13 +1617,13 @@ make_flat_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind
     else {
 	vspace = GD_ranksep(g);
     }
-    stepx = ((double)sp->Multisep) / (cnt+1); 
+    stepx = sp->Multisep / (cnt + 1);
     stepy = vspace / (cnt+1);
 
     makeFlatEnd (g, sp, P, tn, e, &tend, true);
     makeFlatEnd (g, sp, P, hn, e, &hend, false);
 
-    for (i = 0; i < cnt; i++) {
+    for (unsigned i = 0; i < cnt; i++) {
 	boxf b;
 	e = edges[ind + i];
 	size_t boxn = 0;
@@ -1758,16 +1755,16 @@ static int makeLineEdge(graph_t *g, edge_t *fe, points_t *points, node_t** hp) {
     return pn;
 }
 
-static void
-make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int ind, int cnt, int et)
-{
+static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
+                              edge_t **edges, unsigned ind, unsigned cnt,
+                              int et) {
     node_t *tn, *hn;
     Agedgeinfo_t fwdedgeai, fwdedgebi, fwdedgei;
     Agedgepair_t fwdedgea, fwdedgeb, fwdedge;
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, j, dx, longedge;
+    int sl, si, longedge;
     points_t pointfs = {0};
     points_t pointfs2 = {0};
 
@@ -1948,7 +1945,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	points_free(&pointfs2);
 	return;
     }
-    dx = sp->Multisep * (cnt - 1) / 2;
+    const double dx = sp->Multisep * (cnt - 1) / 2;
     for (size_t k = 1; k + 1 < points_size(&pointfs); k++)
 	points_at(&pointfs, k)->x -= dx;
 
@@ -1956,7 +1953,7 @@ make_regular_edge(graph_t* g, spline_info_t* sp, path * P, edge_t ** edges, int 
 	points_append(&pointfs2, points_get(&pointfs, k));
     clip_and_install(fe, hn, points_at(&pointfs2, 0),
                      points_size(&pointfs2), &sinfo);
-    for (j = 1; j < cnt; j++) {
+    for (unsigned j = 1; j < cnt; j++) {
 	e = edges[ind + j];
 	if (ED_tree_index(e) & BWDEDGE) {
 	    MAKEFWDEDGE(&fwdedge.out, e);
@@ -2269,13 +2266,13 @@ static boxf maximal_bbox(graph_t* g, spline_info_t* sp, node_t* vn, edge_t* ie, 
     b = (double)(ND_coord(vn).x - ND_lw(vn) - FUDGE);
     if ((left = neighbor(g, vn, ie, oe, -1))) {
 	if ((left_cl = cl_bound(g, vn, left)))
-	    nb = GD_bb(left_cl).UR.x + (double)sp->Splinesep;
+	    nb = GD_bb(left_cl).UR.x + sp->Splinesep;
 	else {
 	    nb = (double)(ND_coord(left).x + ND_mval(left));
 	    if (ND_node_type(left) == NORMAL)
 		nb += GD_nodesep(g) / 2.;
 	    else
-		nb += (double)sp->Splinesep;
+		nb += sp->Splinesep;
 	}
 	if (nb < b)
 	    b = nb;
@@ -2290,13 +2287,13 @@ static boxf maximal_bbox(graph_t* g, spline_info_t* sp, node_t* vn, edge_t* ie, 
 	b = (double)(ND_coord(vn).x + ND_rw(vn) + FUDGE);
     if ((right = neighbor(g, vn, ie, oe, 1))) {
 	if ((right_cl = cl_bound(g, vn, right)))
-	    nb = GD_bb(right_cl).LL.x - (double)sp->Splinesep;
+	    nb = GD_bb(right_cl).LL.x - sp->Splinesep;
 	else {
 	    nb = ND_coord(right).x - ND_lw(right);
 	    if (ND_node_type(right) == NORMAL)
 		nb -= GD_nodesep(g) / 2.;
 	    else
-		nb -= (double)sp->Splinesep;
+		nb -= sp->Splinesep;
 	}
 	if (nb > b)
 	    b = nb;

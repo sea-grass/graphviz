@@ -950,13 +950,12 @@ makeStraightEdge(graph_t * g, edge_t * e, int et, splineInfo* sinfo)
 	e0 = ED_to_virt(e0);
     }
     assert(e_cnt <= INT_MAX);
-    makeStraightEdges(g, edge_list, (int)e_cnt, et, sinfo);
+    makeStraightEdges(g, edge_list, e_cnt, et, sinfo);
     free(edge_list);
 }
 
-void 
-makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
-                  splineInfo *sinfo) {
+void makeStraightEdges(graph_t *g, edge_t **edge_list, size_t e_cnt, int et,
+                       splineInfo *sinfo) {
     pointf dumb[4];
     bool curved = et == EDGETYPE_CURVED;
     pointf del;
@@ -987,7 +986,8 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
         };
 	double l_perp = hypot(perp.x, perp.y);
 	int xstep = GD_nodesep(g->root);
-	int dx = xstep * (e_cnt - 1) / 2;
+	assert(e_cnt - 1 <= INT_MAX);
+	int dx = xstep * (int)(e_cnt - 1) / 2;
 	dumb[1].x = dumb[0].x + dx * perp.x / l_perp;
 	dumb[1].y = dumb[0].y + dx * perp.y / l_perp;
 	dumb[2].x = dumb[3].x + dx * perp.x / l_perp;
@@ -996,7 +996,7 @@ makeStraightEdges(graph_t *g, edge_t **edge_list, int e_cnt, int et,
 	del.y = -xstep * perp.y / l_perp;
     }
 
-    for (int i = 0; i < e_cnt; i++) {
+    for (size_t i = 0; i < e_cnt; i++) {
 	edge_t *e0 = edge_list[i];
 	pointf dumber[4];
 	if (aghead(e0) == head) {

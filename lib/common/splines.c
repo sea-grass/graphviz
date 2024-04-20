@@ -817,21 +817,19 @@ else
   return pair_a[tail_i][head_i];
 }
 
-
-static void selfBottom (edge_t* edges[], int ind, int cnt,
-	double sizex, double stepy, splineInfo* sinfo)
-{
+static void selfBottom(edge_t *edges[], size_t ind, size_t cnt, double sizex,
+                       double stepy, splineInfo *sinfo) {
     pointf tp, hp, np;
     node_t *n;
     edge_t *e;
-    int i, sgn, point_pair;
+    int sgn, point_pair;
     double hy, ty, stepx, dx, dy, height;
     pointf points[1000];
 
     e = edges[ind];
     n = agtail(e);
 
-    stepx = fmax(sizex / 2.0 / cnt, 2.0);
+    stepx = fmax(sizex / 2.0 / (double)cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -854,7 +852,7 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     }
     ty = fmin(dy, 3 * (tp.y + dy - np.y));
     hy = fmin(dy, 3 * (hp.y + dy - np.y));
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
         e = edges[ind++];
         dy += stepy;
         ty += stepy;
@@ -888,12 +886,9 @@ static void selfBottom (edge_t* edges[], int ind, int cnt,
     }
 }
 
-
-static void
-selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
-           splineInfo* sinfo)
-{
-    int i, sgn, point_pair;
+static void selfTop(edge_t *edges[], size_t ind, size_t cnt, double sizex,
+                    double stepy, splineInfo *sinfo) {
+    int sgn, point_pair;
     double hy, ty,  stepx, dx, dy, height;
     pointf tp, hp, np;
     node_t *n;
@@ -903,7 +898,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     e = edges[ind];
     n = agtail(e);
 
-    stepx = fmax(sizex / 2.0 / cnt, 2.0);
+    stepx = fmax(sizex / 2.0 / (double)cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -963,7 +958,7 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     }
     ty = fmin(dy, 3 * (np.y + dy - tp.y));
     hy = fmin(dy, 3 * (np.y + dy - hp.y));
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
         e = edges[ind++];
         dy += stepy;
         ty += stepy;
@@ -997,11 +992,9 @@ selfTop (edge_t* edges[], int ind, int cnt, double sizex, double stepy,
     }
 }
 
-static void
-selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
-           splineInfo* sinfo)
-{
-    int i, sgn, point_pair;
+static void selfRight(edge_t *edges[], size_t ind, size_t cnt, double stepx,
+                      double sizey, splineInfo *sinfo) {
+    int sgn, point_pair;
     double hx, tx, stepy, dx, dy, width;
     pointf tp, hp, np;
     node_t *n;
@@ -1011,7 +1004,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     e = edges[ind];
     n = agtail(e);
 
-    stepy = fmax(sizey / 2.0 / cnt, 2.0);
+    stepy = fmax(sizey / 2.0 / (double)cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -1035,7 +1028,7 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     }
     tx = fmin(dx, 3 * (np.x + dx - tp.x));
     hx = fmin(dx, 3 * (np.x + dx - hp.x));
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
         e = edges[ind++];
         dx += stepx;
         tx += stepx;
@@ -1069,11 +1062,9 @@ selfRight (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     }
 }
 
-static void
-selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
-          splineInfo* sinfo)
-{
-    int i, sgn,point_pair;
+static void selfLeft(edge_t *edges[], size_t ind, size_t cnt, double stepx,
+                     double sizey, splineInfo *sinfo) {
+    int sgn,point_pair;
     double hx, tx, stepy, dx, dy, width;
     pointf tp, hp, np;
     node_t *n;
@@ -1083,7 +1074,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     e = edges[ind];
     n = agtail(e);
 
-    stepy = fmax(sizey / 2.0 / cnt, 2.0);
+    stepy = fmax(sizey / 2.0 / (double)cnt, 2.0);
     np = ND_coord(n);
     tp = ED_tail_port(e).p;
     tp.x += np.x;
@@ -1110,7 +1101,7 @@ selfLeft (edge_t* edges[], int ind, int cnt, double stepx, double sizey,
     }
     tx = fmin(dx, 3 * (tp.x + dx - np.x));
     hx = fmin(dx, 3 * (hp.x + dx - np.x));
-    for (i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < cnt; i++) {
         e = edges[ind++];
         dx += stepx;
         tx += stepx;
@@ -1180,10 +1171,8 @@ double selfRightSpace(edge_t *e) {
  * FIX: With this bias, labels tend to be placed on top of each other.
  * Perhaps for self-edges, the label should be centered.
  */
-void
-makeSelfEdge(edge_t * edges[], int ind, int cnt, double sizex,
-	     double sizey, splineInfo * sinfo)
-{
+void makeSelfEdge(edge_t *edges[], size_t ind, size_t cnt, double sizex,
+                  double sizey, splineInfo * sinfo) {
     edge_t *e = edges[ind];
 
     /* self edge without ports or
