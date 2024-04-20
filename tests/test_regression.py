@@ -2153,6 +2153,34 @@ def test_2168_4():
     subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
 
 
+@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
+@pytest.mark.xfail(
+    is_fedora() or is_macos() or is_mingw() or is_ubuntu(),
+    strict=True,
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2168",
+)
+def test_2168_5():
+    """
+    using spline routing should not cause fdp/neato to infinite loop
+    https://gitlab.com/graphviz/graphviz/-/issues/2168
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2168_5.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    out = subprocess.check_output(
+        ["fdp", "-o", os.devnull, input],
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+    assert (
+        "Warning: the bounding boxes of some nodes touch - falling back to straight line edges"
+        in out
+    )
+
+
 def test_2179():
     """
     processing a label with an empty line should not yield a warning
