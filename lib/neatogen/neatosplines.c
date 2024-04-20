@@ -380,10 +380,15 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	else if (poly->sides >= 3) {
 	    isPoly = true;
 	    sides = poly->sides;
-	    const size_t vertices_offset = poly->peripheries >= 1 ? (poly->peripheries - 1) * sides : 0;
-	    verts = poly->vertices + vertices_offset;
-	    margin.x = pmargin->x;
-	    margin.y = pmargin->y;
+            const double penwidth = late_double(n, N_penwidth, 1.0, 0.0);
+            // possibly use extra vertices representing the outline, i.e., the
+            // outermost periphery with penwidth taken into account
+            const size_t extra_peripheries = poly->peripheries >= 1 && penwidth > 0.0 ? 1 : 0;
+            const size_t outline_periphery = poly->peripheries + extra_peripheries;
+            const size_t vertices_offset = outline_periphery >= 1 ? (outline_periphery - 1) * sides : 0;
+            verts = poly->vertices + vertices_offset;
+            margin.x = pmargin->x;
+            margin.y = pmargin->y;
 	} else {		/* ellipse */
 	    isPoly = false;
 	    sides = 8;
