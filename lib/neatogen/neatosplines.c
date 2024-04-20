@@ -380,7 +380,8 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 	else if (poly->sides >= 3) {
 	    isPoly = true;
 	    sides = poly->sides;
-	    verts = poly->vertices;
+	    const size_t vertices_offset = poly->peripheries >= 1 ? (poly->peripheries - 1) * sides : 0;
+	    verts = poly->vertices + vertices_offset;
 	    margin.x = pmargin->x;
 	    margin.y = pmargin->y;
 	} else {		/* ellipse */

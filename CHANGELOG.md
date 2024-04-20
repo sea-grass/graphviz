@@ -133,6 +133,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   neato. #2168
 - Incorrect edge splines for ellipse shaped nodes with ports and large
   penwidths using fdp or neato, causing the same symptoms as #2168.
+- Incorrect edge splines for polygon shaped nodes with ports more than one
+  periphery using fdp or neato, causing the same symptoms as #2168.
 
 ## [10.0.1] – 2024-02-11
 
