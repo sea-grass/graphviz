@@ -31,7 +31,7 @@ typedef struct tna_t {
 #define POINTSIZE sizeof (Ppoint_t)
 
 static Ppoint_t *ops;
-static int opn, opl;
+static size_t opn, opl;
 
 static int reallyroutespline(Pedge_t *, size_t,
 			     Ppoint_t *, int, Ppoint_t, Ppoint_t);
@@ -46,7 +46,7 @@ static void addroot(double, double *, int *);
 
 static Pvector_t normv(Pvector_t);
 
-static int growops(int);
+static int growops(size_t);
 
 static Ppoint_t add(Ppoint_t, Ppoint_t);
 static Ppoint_t sub(Ppoint_t, Ppoint_t);
@@ -87,7 +87,7 @@ int Proutespline(Pedge_t *barriers, size_t n_barriers, Ppolyline_t input_route,
     if (reallyroutespline(barriers, n_barriers, inps, inpn, endpoint_slopes[0],
                           endpoint_slopes[1]) == -1)
 	return -1;
-    output_route->pn = (size_t)opl;
+    output_route->pn = opl;
     output_route->ps = ops;
 
     return 0;
@@ -413,11 +413,10 @@ static Pvector_t normv(Pvector_t v)
     return v;
 }
 
-static int growops(int newopn)
-{
+static int growops(size_t newopn) {
     if (newopn <= opn)
 	return 0;
-    if (!(ops = realloc(ops, POINTSIZE * (size_t)newopn))) {
+    if (!(ops = realloc(ops, POINTSIZE * newopn))) {
 	return -1;
     }
     opn = newopn;
