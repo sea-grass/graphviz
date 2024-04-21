@@ -21,21 +21,12 @@
  */
 static void initGraphAttrs(Agraph_t * g, circ_state * state)
 {
-    static Agraph_t *rootg;
-    static attrsym_t *N_root;
-    static attrsym_t *G_mindist;
-    static char *rootname;
-    Agraph_t *rg;
     node_t *n = agfstnode(g);
 
-    rg = agraphof(ORIGN(n));
-    if (rg != rootg) {		/* new root graph */
-	state->blockCount = 0;
-	rootg = rg;
-	G_mindist = agattr(rootg,AGRAPH, "mindist", NULL);
-	N_root = agattr(rootg,AGNODE, "root", NULL);
-    }
-    rootname = agget(rootg, "root");
+    Agraph_t *rootg = agraphof(ORIGN(n));
+    attrsym_t *G_mindist = agattr(rootg, AGRAPH, "mindist", NULL);
+    attrsym_t *N_root = agattr(rootg, AGNODE, "root", NULL);
+    char *rootname = agget(rootg, "root");
     initBlocklist(&state->bl);
     state->orderCount = 1;
     state->min_dist = late_double(rootg, G_mindist, MINDIST, 0.0);
@@ -71,10 +62,8 @@ createOneBlock(Agraph_t * g, circ_state * state)
  * We make state static so that it keeps a record of block numbers used
  * in a graph; it gets reset when a new root graph is used.
  */
-void circularLayout(Agraph_t * g, Agraph_t* realg)
-{
+void circularLayout(Agraph_t *g, Agraph_t *realg, int *blockCount) {
     block_t *root;
-    static circ_state state;
 
     if (agnnodes(g) == 1) {
 	Agnode_t *n = agfstnode(g);
@@ -83,6 +72,7 @@ void circularLayout(Agraph_t * g, Agraph_t* realg)
 	return;
     }
 
+    circ_state state = {.blockCount = *blockCount};
     initGraphAttrs(g, &state);
 
     if (mapbool(agget(realg, "oneblock")))
@@ -97,6 +87,8 @@ void circularLayout(Agraph_t * g, Agraph_t* realg)
      * initial derived graph and will be freed when it is closed.
      */
     freeBlocktree(root);
+
+    *blockCount = state.blockCount;
 }
 
 #ifdef DEBUG
