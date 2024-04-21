@@ -4035,14 +4035,11 @@ static void star_vertices (pointf* vertices, pointf* bb)
 
 static bool star_inside(inside_t * inside_context, pointf p)
 {
-    static node_t *lastn;	/* last node argument */
-    static polygon_t *poly;
-    static size_t outp, sides;
-    static pointf *vertex;
+    size_t sides;
+    pointf *vertex;
     const pointf O = {0};
 
     if (!inside_context) {
-	lastn = NULL;
 	return false;
     }
     boxf *bp = inside_context->s.bp;
@@ -4058,28 +4055,33 @@ static bool star_inside(inside_t * inside_context, pointf p)
 	return INSIDE(P, bbox);
     }
 
-    if (n != lastn) {
-	poly = ND_shape_info(n);
-	vertex = poly->vertices;
-	sides = poly->sides;
+    if (n != inside_context->s.lastn) {
+	inside_context->s.last_poly = ND_shape_info(n);
+	vertex = inside_context->s.last_poly->vertices;
+	sides = inside_context->s.last_poly->sides;
 
 	const double penwidth = late_int(n, N_penwidth, DEFAULT_NODEPENWIDTH, MIN_NODEPENWIDTH);
-	if (poly->peripheries >= 1 && penwidth > 0) {
+	if (inside_context->s.last_poly->peripheries >= 1 && penwidth > 0) {
 	    /* index to outline, i.e., the outer-periphery with penwidth taken into account */
-	    outp = (poly->peripheries + 1 - 1) * sides;
-	} else if (poly->peripheries < 1) {
-	    outp = 0;
+	    inside_context->s.outp = (inside_context->s.last_poly->peripheries + 1 - 1)
+	                           * sides;
+	} else if (inside_context->s.last_poly->peripheries < 1) {
+	    inside_context->s.outp = 0;
 	} else {
 	    /* index to outer-periphery */
-	    outp = (poly->peripheries - 1) * sides;
+	    inside_context->s.outp = (inside_context->s.last_poly->peripheries - 1)
+	                           * sides;
 	}
-	lastn = n;
+	inside_context->s.lastn = n;
+    } else {
+	vertex = inside_context->s.last_poly->vertices;
+	sides = inside_context->s.last_poly->sides;
     }
 
     outcnt = 0;
     for (size_t i = 0; i < sides; i += 2) {
-	Q = vertex[i + outp];
-	R = vertex[((i+4) % sides) + outp];
+	Q = vertex[i + inside_context->s.outp];
+	R = vertex[(i + 4) % sides + inside_context->s.outp];
 	if (!(same_side(P, O, Q, R))) {
 	    outcnt++;
 	}
