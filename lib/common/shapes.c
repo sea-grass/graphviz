@@ -4292,6 +4292,5 @@ void resolvePorts(edge_t * e)
 void gv_initShapes(void)
 {
     pointf p = { 0, 0 };
-    point_inside(NULL, p);
     star_inside(NULL, p);
 }
