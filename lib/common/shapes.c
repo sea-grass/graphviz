@@ -4290,9 +4290,3 @@ void resolvePorts(edge_t * e)
 	ED_head_port(e) =
 	    resolvePort(aghead(e), agtail(e), &ED_head_port(e));
 }
-
-void gv_initShapes(void)
-{
-    pointf p = { 0, 0 };
-    star_inside(NULL, p);
-}
