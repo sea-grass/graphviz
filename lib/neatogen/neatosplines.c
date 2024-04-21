@@ -429,8 +429,8 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 		    polyp.y = verts[j].y * margin.y;
 		}
 	    } else {
-		const double width = ND_lw(n) + ND_rw(n);
-		const double height = ND_ht(n);
+		const double width = INCH2PS(ND_outline_width(n));
+		const double height = INCH2PS(ND_outline_height(n));
 		margin = pmargin->doAdd ? (pointf) {pmargin->x, pmargin->y} : (pointf) {0.0, 0.0};
 		const double ellipse_a = (width + margin.x) / 2.0;
 		const double ellipse_b = (height + margin.y) / 2.0;
