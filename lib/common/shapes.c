@@ -81,7 +81,6 @@ static poly_desc_t star_gen = {
 static pointf cylinder_size (pointf);
 static void cylinder_vertices (pointf*, pointf*);
 static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled);
-/* static boolean cylinder_inside(inside_t * inside_context, pointf p); */
 static poly_desc_t cylinder_gen = {
     cylinder_size,
     cylinder_vertices,
@@ -2917,7 +2916,6 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	}
 	else if (style & (STRIPED|WEDGED))  {
 	    fillcolor = findFill (n);
-            /* gvrender_set_fillcolor(job, fillcolor); */
 	    filled = 1;
 	}
 	else {
