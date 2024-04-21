@@ -4056,3 +4056,36 @@ def test_mm_banner_overflow(tmp_path: Path):
 
     assert ret in (0, 1), "mm2gv crashed when processing malformed input"
     assert ret == 1, "mm2gv did not reject malformed input"
+
+
+@pytest.mark.xfail(strict=True)
+def test_control_characters_in_error():
+    """
+    malformed input should not result in misleading control data making it to the
+    output terminal unfiltered
+    """
+
+    # Run something through Graphviz that will trigger an error where the error message
+    # will contain a color control sequence. This could be used to disrupt the user’s
+    # terminal in confusing ways.
+    src = 'graph { a[image="\033[31mfoo"]; }'
+    ret = subprocess.run(
+        ["dot", "-Tsvg", "-o", os.devnull],
+        input=src,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    assert "\033" not in ret.stderr, "control character appears in error message"
+
+    # Now try something more malicious. Use the backspace character to display a different
+    # filename in the error message to what was referenced.
+    src = 'graph { a[image="foo.svg\010\010\010png"]; }'
+    ret = subprocess.run(
+        ["dot", "-Tsvg", "-o", os.devnull],
+        input=src,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    assert "\010" not in ret.stderr, "control character appears in error message"
