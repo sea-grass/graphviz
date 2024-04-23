@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <limits.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -75,9 +76,9 @@ static void handle_configure_notify(GVJ_t * job, XConfigureEvent * cev)
     assert(cev->width >= 0 && "Xlib returned an event with negative width");
     assert(cev->height >= 0 && "Xlib returned an event with negative height");
 
-    job->zoom *= 1 + MIN(
-	((double) cev->width - (double) job->width) / (double) job->width,
-	((double) cev->height - (double) job->height) / (double) job->height);
+    job->zoom *= 1 + fmin(
+	((double)cev->width - job->width) / job->width,
+	((double)cev->height - job->height) / job->height);
     if ((unsigned)cev->width > job->width ||
         (unsigned)cev->height > job->height)
         job->has_grown = true;
@@ -302,8 +303,7 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     unsigned w = 480;    /* FIXME - w,h should be set by a --geometry commandline option */
     unsigned h = 325;
     
-    zoom_to_fit = MIN((double) w / (double) job->width,
-			(double) h / (double) job->height);
+    zoom_to_fit = fmin((double)w / job->width, (double)h / job->height);
     if (zoom_to_fit < 1.0) /* don't make bigger */
 	job->zoom *= zoom_to_fit;
 
