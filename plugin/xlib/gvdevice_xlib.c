@@ -42,6 +42,7 @@
 #endif
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/exit.h>
 #include <gvc/gvplugin_device.h>
@@ -552,14 +553,14 @@ static void xlib_finalize(GVJ_t *firstjob)
     	    wd = inotify_add_watch(inotify_fd, dirstr, IN_MODIFY);
 	    agxbfree(&dir);
 
-            numfds = MAX(inotify_fd, numfds);
+            numfds = imax(inotify_fd, numfds);
 #endif
 	}
     }
     else {
 	watching_stdin_p = true;
 	stdin_fd = fcntl(STDIN_FILENO, F_DUPFD, 0);
-	numfds = MAX(stdin_fd, numfds);
+	numfds = imax(stdin_fd, numfds);
     }
 
     for (job = firstjob; job; job = job->next_active)
