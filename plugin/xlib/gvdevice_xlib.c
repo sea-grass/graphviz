@@ -42,6 +42,7 @@
 #endif
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/exit.h>
 #include <gvc/gvplugin_device.h>
 
@@ -110,12 +111,10 @@ static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
 
 static bool handle_keypress(GVJ_t *job, XKeyEvent *kev)
 {
-    
-    int i;
     KeyCode *keycodes;
 
     keycodes = job->keycodes;
-    for (i=0; i < job->numkeys; i++) {
+    for (size_t i = 0; i < job->numkeys; i++) {
 	if (kev->keycode == keycodes[i])
 	    return job->keybindings[i].callback(job) != 0;
     }
@@ -467,7 +466,7 @@ static void xlib_initialize(GVJ_t *firstjob)
     KeySym keysym;
     KeyCode *keycodes;
     const char *display_name = NULL;
-    int i, scr;
+    int scr;
 
     dpy = XOpenDisplay(display_name);
     if (dpy == NULL) {
@@ -480,13 +479,13 @@ static void xlib_initialize(GVJ_t *firstjob)
     firstjob->display = dpy;
     firstjob->screen = scr;
 
-    assert(firstjob->numkeys >= 0);
-    keycodes = malloc((size_t)firstjob->numkeys * sizeof(KeyCode));
+    keycodes = malloc(firstjob->numkeys * sizeof(KeyCode));
     if (keycodes == NULL) {
-        fprintf(stderr, "Failed to malloc %d*KeyCode\n", firstjob->numkeys);
+        fprintf(stderr, "Failed to malloc %" PRISIZE_T "*KeyCode\n",
+                firstjob->numkeys);
         return;
     }
-    for (i = 0; i < firstjob->numkeys; i++) {
+    for (size_t i = 0; i < firstjob->numkeys; i++) {
         keysym = XStringToKeysym(firstjob->keybindings[i].keystring);
         if (keysym == NoSymbol)
             fprintf(stderr, "ERROR: No keysym for \"%s\"\n",

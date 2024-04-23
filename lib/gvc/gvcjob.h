@@ -354,7 +354,7 @@ extern "C" {
 
         /* keybindings for keyboard events */
 	gvevent_key_binding_t *keybindings;
-	int numkeys;
+	size_t numkeys;
 	void *keycodes;
     };
 

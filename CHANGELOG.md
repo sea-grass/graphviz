@@ -70,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   been removed.
 - Control characters in some error messages are escaped, preventing certain
   types of text injection that could cause user confusion.
+- **Breaking**: `GVJ_t.numkeys` is a `size_t`.
 
 ### Fixed
 
