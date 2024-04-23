@@ -4,7 +4,7 @@
 # - installation of manpage
 function(tool_defaults name)
   if(NOT HAVE_GETOPT_H)
-    target_link_libraries(${name} ${GETOPT_LINK_LIBRARIES})
+    target_link_libraries(${name} PRIVATE ${GETOPT_LINK_LIBRARIES})
   endif()
 
   install(
@@ -60,7 +60,7 @@ function(add_simple_tool name)
     )
   endif()
 
-  target_link_libraries(${name}
+  target_link_libraries(${name} PRIVATE
     cgraph
   )
 
@@ -73,7 +73,7 @@ add_simple_tool(ccomps)
 add_simple_tool(gc)
 add_simple_tool(nop)
 add_simple_tool(tred)
-target_link_libraries(tred gvc) # e.g. for start_timer
+target_link_libraries(tred PRIVATE gvc) # e.g. for start_timer
 add_simple_tool(unflatten)
 
 # ================================ complex tools ===============================
@@ -104,7 +104,7 @@ if(GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(dijkstra
+target_link_libraries(dijkstra PRIVATE
   cgraph
 )
 
@@ -151,7 +151,7 @@ if(GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(gml2gv
+target_link_libraries(gml2gv PRIVATE
   cgraph
 )
 
@@ -171,9 +171,9 @@ if(GETOPT_FOUND)
     ${GETOPT_INCLUDE_DIRS}
   )
 endif()
-target_link_libraries(gv2gml cgraph gvc)
+target_link_libraries(gv2gml PRIVATE cgraph gvc)
 if(NOT HAVE_GETOPT_H)
-  target_link_libraries(gv2gml ${GETOPT_LINK_LIBRARIES})
+  target_link_libraries(gv2gml PRIVATE ${GETOPT_LINK_LIBRARIES})
 endif()
 install(TARGETS gv2gml RUNTIME DESTINATION ${BINARY_INSTALL_DIR})
 
@@ -207,7 +207,7 @@ if(EXPAT_FOUND)
     )
   endif()
 
-  target_link_libraries(graphml2gv
+  target_link_libraries(graphml2gv PRIVATE
     cgraph
     ${EXPAT_LIBRARIES}
   )
@@ -244,7 +244,7 @@ if(GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(gvcolor
+target_link_libraries(gvcolor PRIVATE
   cgraph
 )
 
@@ -275,7 +275,7 @@ if (GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(gvgen cgraph)
+target_link_libraries(gvgen PRIVATE cgraph)
 
 tool_defaults(gvgen)
 
@@ -316,7 +316,7 @@ if(GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(gvpack
+target_link_libraries(gvpack PRIVATE
   cgraph
   gvc
   gvplugin_neato_layout
@@ -355,7 +355,7 @@ if(EXPAT_FOUND)
     )
   endif()
 
-  target_link_libraries(gxl2gv
+  target_link_libraries(gxl2gv PRIVATE
     cgraph
     gvc
     ${EXPAT_LIBRARIES}
@@ -422,7 +422,7 @@ if(GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(mm2gv
+target_link_libraries(mm2gv PRIVATE
   sparse
   cgraph
   gvc
@@ -454,7 +454,7 @@ if(GETOPT_FOUND)
   )
 endif()
 
-target_link_libraries(sccmap
+target_link_libraries(sccmap PRIVATE
   cgraph
 )
 

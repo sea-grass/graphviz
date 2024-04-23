@@ -19,7 +19,7 @@ if(with_sfdp AND ANN_FOUND)
     )
   endif()
 
-  target_link_libraries(mingle
+  target_link_libraries(mingle PRIVATE
     cdt
     cgraph
     common
@@ -31,7 +31,7 @@ if(with_sfdp AND ANN_FOUND)
     ${ANN_LIBRARIES}
   )
   if(NOT HAVE_GETOPT_H)
-    target_link_libraries(mingle ${GETOPT_LINK_LIBRARIES})
+    target_link_libraries(mingle PRIVATE ${GETOPT_LINK_LIBRARIES})
   endif()
 
   install(

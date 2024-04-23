@@ -42,7 +42,7 @@ if(WIN32 AND NOT MINGW)
   target_include_directories(gvpr PRIVATE ../../windows/include/unistd)
 endif()
 
-target_link_libraries(gvpr
+target_link_libraries(gvpr PUBLIC
   ast
   cgraph
   gvc
@@ -52,5 +52,5 @@ target_link_libraries(gvpr
 )
 
 if(NOT HAVE_GETOPT_H)
-  target_link_libraries(gvpr ${GETOPT_LINK_LIBRARIES})
+  target_link_libraries(gvpr PRIVATE ${GETOPT_LINK_LIBRARIES})
 endif()

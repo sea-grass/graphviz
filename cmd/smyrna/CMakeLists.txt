@@ -95,7 +95,7 @@ if(with_smyrna)
     ${XRENDER_INCLUDE_DIRS}
   )
 
-  target_link_libraries(smyrna
+  target_link_libraries(smyrna PRIVATE
     cdt
     cgraph
     expr

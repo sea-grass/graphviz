@@ -27,7 +27,7 @@ if(GD_FOUND)
     ${GD_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_gd
+  target_link_libraries(gvplugin_gd PRIVATE
     cgraph
     gvc
     pathplan
@@ -38,7 +38,7 @@ if(GD_FOUND)
     target_include_directories(gvplugin_gd SYSTEM PRIVATE
       ${CAIRO_INCLUDE_DIRS}
     )
-    target_link_libraries(gvplugin_gd
+    target_link_libraries(gvplugin_gd PRIVATE
       ${CAIRO_LINK_LIBRARIES}
     )
     if(PANGOCAIRO_FOUND)
@@ -46,7 +46,7 @@ if(GD_FOUND)
         ${PANGOCAIRO_INCLUDE_DIRS}
       )
 
-      target_link_libraries(gvplugin_gd
+      target_link_libraries(gvplugin_gd PRIVATE
         ${PANGOCAIRO_LINK_LIBRARIES}
       )
     endif()

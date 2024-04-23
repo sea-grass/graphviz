@@ -21,7 +21,7 @@ if(GDK_FOUND AND GDK_PIXBUF_FOUND AND PANGOCAIRO_FOUND)
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_gdk
+  target_link_libraries(gvplugin_gdk PRIVATE
     gvc
     ${GDK_LINK_LIBRARIES}
     ${GDK_PIXBUF_LINK_LIBRARIES}

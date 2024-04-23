@@ -14,7 +14,7 @@ target_include_directories(gvplugin_dot_layout PRIVATE
   ../../lib/pathplan
 )
 
-target_link_libraries(gvplugin_dot_layout
+target_link_libraries(gvplugin_dot_layout PRIVATE
   dotgen
   gvc
 )

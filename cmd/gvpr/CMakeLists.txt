@@ -12,7 +12,7 @@ target_include_directories(gvpr-bin PRIVATE
   ../../lib/gvpr
 )
 
-target_link_libraries(gvpr-bin
+target_link_libraries(gvpr-bin PRIVATE
   ast
   cgraph
   gvc

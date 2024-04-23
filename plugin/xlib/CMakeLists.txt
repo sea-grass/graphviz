@@ -20,7 +20,7 @@ if(PANGOCAIRO_FOUND AND X11_FOUND AND XRENDER_FOUND)
     ${XRENDER_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_xlib
+  target_link_libraries(gvplugin_xlib PRIVATE
     ${PANGOCAIRO_LINK_LIBRARIES}
     ${X11_LINK_LIBRARIES}
     ${XRENDER_LINK_LIBRARIES}

@@ -19,7 +19,7 @@ if(PANGOCAIRO_FOUND AND RSVG_FOUND)
     ${RSVG_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_rsvg
+  target_link_libraries(gvplugin_rsvg PRIVATE
     gvc
     ${PANGOCAIRO_LINK_LIBRARIES}
     ${RSVG_LINK_LIBRARIES}
