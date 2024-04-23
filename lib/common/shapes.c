@@ -81,7 +81,6 @@ static poly_desc_t star_gen = {
 static pointf cylinder_size (pointf);
 static void cylinder_vertices (pointf*, pointf*);
 static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled);
-/* static boolean cylinder_inside(inside_t * inside_context, pointf p); */
 static poly_desc_t cylinder_gen = {
     cylinder_size,
     cylinder_vertices,
@@ -1426,7 +1425,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
 	D = gv_calloc(sides + 12, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+widtht/2 , lower right corner of the x
+	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2 , lower right corner of the x
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
@@ -1499,7 +1498,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
 	D = gv_calloc(sides + 4, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center+widtht/8 , lower right corner of the hexagon
+	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center+width/8 , lower right corner of the hexagon
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x + (B[2].x-B[3].x)/8;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
@@ -1557,7 +1556,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	//y_center is AF[2].y + (AF[1].y - AF[2].y)/2;
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 12, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+widtht/2 , lower right corner of the x
+	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/4; //x_center+width/2 , lower right corner of the x
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
@@ -1621,7 +1620,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
 	D = gv_calloc(sides + 4, sizeof(pointf)); // 12-sided x
-	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center+widtht/8 , lower right corner of the hexagon
+	D[0].x = AF[1].x + (AF[0].x-AF[1].x)/2 + (B[2].x-B[3].x)/8; //x_center+width/8 , lower right corner of the hexagon
 	D[0].y = AF[2].y + (AF[1].y - AF[2].y)/2 + (B[3].y-B[4].y)/2; //y_center + width
 	D[1].x = D[0].x + (B[2].x-B[3].x)/8;
 	D[1].y = D[0].y + (B[3].y-B[4].y)/8; //D[0].y +width/4
@@ -2917,7 +2916,6 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	}
 	else if (style & (STRIPED|WEDGED))  {
 	    fillcolor = findFill (n);
-            /* gvrender_set_fillcolor(job, fillcolor); */
 	    filled = 1;
 	}
 	else {
