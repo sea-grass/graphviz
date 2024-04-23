@@ -38,7 +38,7 @@ portable-source:
       - docker_build_ubuntu-20.04
     stage: source
     tags:
-        - linux
+        - saas-linux-small-amd64
     image: "$CI_REGISTRY_IMAGE/ubuntu-20.04:$CI_COMMIT_SHA"
     script:
         - ./autogen.sh
@@ -286,7 +286,7 @@ centos7-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: centos7
 
@@ -298,7 +298,7 @@ rocky8-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky8
 
@@ -310,7 +310,7 @@ rocky9-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky9
 
@@ -322,7 +322,7 @@ fedora38-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora38
 
@@ -334,7 +334,7 @@ fedora39-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora39
 
@@ -349,7 +349,7 @@ ubuntu-20.04-debug-build:
         - export CFLAGS="-DDEBUG"
         - export CXXFLAGS="-DDEBUG"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-20.04
 
@@ -361,7 +361,7 @@ ubuntu-20.04-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-20.04
 
@@ -373,7 +373,7 @@ ubuntu-22.04-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -395,7 +395,7 @@ ubuntu-22.04-static-build:
         reports:
             metrics: metrics.txt
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -407,7 +407,7 @@ ubuntu-23.10-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-23.10
 
@@ -423,7 +423,7 @@ out-of-source-build:
         - job: portable-source
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -603,7 +603,7 @@ ubuntu-20.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-20.04
 
@@ -624,7 +624,7 @@ ubuntu-22.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -641,7 +641,7 @@ ubuntu-23.10-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-23.10
 
@@ -666,7 +666,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=OFF"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -718,7 +718,7 @@ ubuntu-22.04-cmake-ASan-build-for-ctest:
         reports:
             metrics: metrics.txt
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -737,7 +737,7 @@ centos7-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: centos7
 
@@ -756,7 +756,7 @@ rocky8-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky8
 
@@ -775,7 +775,7 @@ rocky9-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky9
 
@@ -795,7 +795,7 @@ fedora38-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora38
 
@@ -815,7 +815,7 @@ fedora39-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora39
 
@@ -996,7 +996,7 @@ ubuntu-20.04-test:
         - job: "ubuntu-20.04-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-20.04
 
@@ -1008,7 +1008,7 @@ ubuntu-22.04-test:
         - job: "ubuntu-22.04-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -1020,7 +1020,7 @@ ubuntu-23.10-test:
         - job: "ubuntu-23.10-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-23.10
 
@@ -1032,7 +1032,7 @@ centos7-test:
         - job: "centos7-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: centos7
 
@@ -1044,7 +1044,7 @@ rocky8-test:
         - job: "rocky8-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky8
 
@@ -1056,7 +1056,7 @@ rocky9-test:
         - job: "rocky9-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky9
 
@@ -1068,7 +1068,7 @@ fedora38-test:
         - job: "fedora38-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora38
 
@@ -1080,7 +1080,7 @@ fedora39-test:
         - job: "fedora39-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora39
 
@@ -1113,7 +1113,7 @@ ubuntu-20.04-cmake-test:
         - job: "ubuntu-20.04-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-20.04
 
@@ -1126,7 +1126,7 @@ ubuntu-22.04-cmake-test:
         - job: "ubuntu-22.04-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -1139,7 +1139,7 @@ ubuntu-23.10-cmake-test:
         - job: "ubuntu-23.10-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-23.10
 
@@ -1158,7 +1158,7 @@ ubuntu-22.04-cmake-ASan-test-including-ctest:
         - job: "ubuntu-22.04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
 
@@ -1173,7 +1173,7 @@ centos7-cmake-test:
         - job: "centos7-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: centos7
 
@@ -1186,7 +1186,7 @@ rocky8-cmake-test:
         - job: "rocky8-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky8
 
@@ -1199,7 +1199,7 @@ rocky9-cmake-test:
         - job: "rocky9-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: rocky9
 
@@ -1212,7 +1212,7 @@ fedora38-cmake-test:
         - job: "fedora38-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora38
 
@@ -1225,7 +1225,7 @@ fedora39-cmake-test:
         - job: "fedora39-cmake-build"
           artifacts: true
     tags:
-        - linux
+        - saas-linux-small-amd64
     variables:
       IMAGE: fedora39
 
