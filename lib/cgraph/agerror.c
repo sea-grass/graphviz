@@ -67,10 +67,8 @@ static int default_usererrf(char *message) {
   return fputs(message, stderr);
 }
 
-/// Report messages using a user-supplied write function 
-static void
-userout (agerrlevel_t level, const char *fmt, va_list args)
-{
+/// Report messages using a user-supplied or default write function
+static void out(agerrlevel_t level, const char *fmt, va_list args) {
     // find out how much space we need to construct this string
     size_t bufsz;
     {
@@ -132,7 +130,7 @@ static int agerr_va(agerrlevel_t level, const char *fmt, va_list args)
      * Setting agerrlevel to AGMAX turns off immediate error reporting.
      */
     if (lvl >= agerrlevel) {
-	userout(level, fmt, args);
+	out(level, fmt, args);
 	return 0;
     }
 
