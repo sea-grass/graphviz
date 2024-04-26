@@ -497,10 +497,9 @@ static void conn_comp(int n, SparseMatrix A, int *groups, SparseMatrix *poly_poi
 
 }
 
-static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
-                           int ncomps, int *comps_ptr, int *comps, int *groups,
-                           SparseMatrix *poly_lines, int **polys_groups,
-                           int GRP_RANDOM, int GRP_BBOX) {
+static void get_poly_lines(int nt, SparseMatrix E, int ncomps, int *comps_ptr,
+                           int *comps, int *groups, SparseMatrix *poly_lines,
+                           int **polys_groups, int GRP_RANDOM, int GRP_BBOX) {
   /*============================================================
 
     polygon outlines 
@@ -933,7 +932,7 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
     polygon outlines 
 
     ============================================================*/
-  get_poly_lines(nt, graph, E, ncomps, comps_ptr, comps, groups, poly_lines,
+  get_poly_lines(nt, E, ncomps, comps_ptr, comps, groups, poly_lines,
                  polys_groups, GRP_RANDOM, GRP_BBOX);
 
   /*============================================================
