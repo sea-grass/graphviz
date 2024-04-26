@@ -682,8 +682,9 @@ static int same_edge(int ecur, int elast, int *edge_table){
 	  || (edge_head(ecur) == edge_tail(elast) && edge_tail(ecur) == edge_head(elast));
 }
 
-static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			       int *mask, SparseMatrix *polys){
+static void get_polygon_solids(int nt, SparseMatrix E, int ncomps,
+                               int *comps_ptr, int *comps, SparseMatrix *polys)
+{
   /*============================================================
 
     polygon slids that will be colored
@@ -716,8 +717,6 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 
   ne = E->nz;
   edge_table = gv_calloc(ne * 2, sizeof(int));
-
-  for (i = 0; i < n; i++) mask[i] = -1;
 
   half_edges = SparseMatrix_new(n, n, 1, MATRIX_TYPE_INTEGER, FORMAT_COORD);
 
@@ -769,7 +768,6 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
     if (DEBUG_CYCLE) fprintf(stderr, "\n ============  comp %d has %d members\n",i, comps_ptr[i+1]-comps_ptr[i]);
     for (k = comps_ptr[i]; k < comps_ptr[i+1]; k++){
       ii = comps[k];
-      mask[ii] = i;
       duplicate = NO_DUPLICATE;
       if (DEBUG_CYCLE) fprintf(stderr,"member = %d has %d neighbors\n",ii, ie[ii+1]-ie[ii]);
       for (j = ie[ii]; j < ie[ii+1]; j++){
@@ -1001,7 +999,7 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
     polygon solids
 
     ============================================================*/
-  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, mask, polys);
+  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, polys);
 
   B = get_country_graph(n, E, groups, GRP_RANDOM, GRP_BBOX);
   *country_graph = B;
