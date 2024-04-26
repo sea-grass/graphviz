@@ -1433,7 +1433,6 @@ void make_map_from_rectangle_groups(bool include_OK_points,
     make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, nverts, x_poly, 
 			    poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
-    if (graph != graph0) SparseMatrix_delete(graph);
     free(groups);
     free(X);
   }
