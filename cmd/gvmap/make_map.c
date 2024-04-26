@@ -564,7 +564,6 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
       if (mask[t] != i){
 	cur = sta = t; mask[cur] = i;
 	next = neighbor(t, 1, edim, elist);
-	nlink = 1;
 	ipoly2 = ipoly;
 	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, cur, &ipoly2);
 	while (next != sta){
@@ -574,9 +573,7 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
 	  SparseMatrix_coordinate_form_add_entry(*poly_lines, i, next, &ipoly2);
 
 	  nn = neighbor(next, 0, edim, elist);
-	  nlink = 0;
 	  if (nn == cur) {
-	    nlink = 1;
 	    nn = neighbor(next, 1, edim, elist);
 	  }
 	  assert(nn != cur);
