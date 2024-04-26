@@ -1045,8 +1045,6 @@ static void make_map_internal(bool include_OK_points,
       qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
   }
-  graph = NULL;
-
 
   /* generate random points for lake/sea effect */
   if (nrandom != 0){
