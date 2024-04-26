@@ -2766,7 +2766,7 @@ compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
     else
 	pp->side = invflip_side(side, GD_rankdir(agraphof(n)));
     pp->bp = bp;
-    PF2P(p, pp->p);
+    pp->p = p;
     pp->theta = invflip_angle(theta, GD_rankdir(agraphof(n)));
     if (p.x == 0 && p.y == 0)
 	pp->order = MC_SCALE / 2;

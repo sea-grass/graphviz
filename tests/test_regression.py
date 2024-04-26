@@ -31,12 +31,9 @@ from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     gvpr,
     is_centos,
-    is_fedora,
     is_fedora_38,
-    is_macos,
     is_mingw,
     is_rocky_8,
-    is_ubuntu,
     remove_xtype_warnings,
     run_c,
     which,
@@ -2058,12 +2055,6 @@ def test_2138(examine: str):
         ), "token 012 not found or has trailing garbage"
 
 
-@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
-@pytest.mark.xfail(
-    is_fedora() or is_macos() or is_mingw() or is_ubuntu(),
-    strict=True,
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2168",
-)
 def test_2168():
     """
     using spline routing should not cause fdp/neato to infinite loop
@@ -2075,6 +2066,80 @@ def test_2168():
     assert input.exists(), "unexpectedly missing test case"
 
     subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
+
+
+def test_2168_1():
+    """
+    using spline routing should not cause fdp/neato to infinite loop
+    https://gitlab.com/graphviz/graphviz/-/issues/2168
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2168_1.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
+
+
+def test_2168_2():
+    """
+    using spline routing should not cause fdp/neato to infinite loop
+    https://gitlab.com/graphviz/graphviz/-/issues/2168
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2168_2.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
+
+
+def test_2168_3():
+    """
+    using spline routing should not cause fdp/neato to infinite loop
+    https://gitlab.com/graphviz/graphviz/-/issues/2168
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2168_3.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
+
+
+def test_2168_4():
+    """
+    using spline routing should not cause fdp/neato to infinite loop
+    https://gitlab.com/graphviz/graphviz/-/issues/2168
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2168_4.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    subprocess.check_call(["fdp", "-o", os.devnull, input], timeout=5)
+
+
+def test_2168_5():
+    """
+    using spline routing should not cause fdp/neato to infinite loop
+    https://gitlab.com/graphviz/graphviz/-/issues/2168
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2168_5.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    out = subprocess.check_output(
+        ["fdp", "-o", os.devnull, input],
+        stderr=subprocess.STDOUT,
+        universal_newlines=True,
+    )
+
+    assert (
+        "Warning: the bounding boxes of some nodes touch - falling back to straight line edges"
+        in out
+    )
 
 
 def test_2179():

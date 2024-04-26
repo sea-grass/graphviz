@@ -125,6 +125,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   algorithm has been corrected. This would previously cause certain runs to
   infer incorrect ordering or subtrees. This was a regression in Graphviz
   2.40.0. #2391, #2529
+- Compass points may be more accurately placed on the node boundary in some cases.
+- A very small random adjustment in the calculation of the space available for
+  edge routing around ellipse shaped nodes in fdp and neato layouts, has been
+  removed.
+- Incorrect edge splines for ellipse shaped nodes with ports using fdp or
+  neato. #2168
+- Incorrect edge splines for ellipse and polygon shaped nodes with ports and
+  large penwidths using fdp or neato, causing the same symptoms as #2168.
+- Incorrect edge splines for polygon shaped nodes with ports more than one
+  periphery using fdp or neato, causing the same symptoms as #2168.
+- Adjust the space available for edge routing based on penwidth when
+  using fdp or neato and `splines=ortho`.
 
 ## [10.0.1] – 2024-02-11
 

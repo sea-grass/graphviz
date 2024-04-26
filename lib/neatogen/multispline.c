@@ -948,6 +948,7 @@ static void addEndpoint(router_t * rtr, pointf p, node_t* v, int v_id, int sides
 	    continue;
 	addTriEdge(rtr->tg, v_id, t, seg);
     }
+    assert(rtr->tg->nodes[v_id].ne > 0 && "no edges were added");
 }
 
 /* edgeToSeg:
