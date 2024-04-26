@@ -1239,7 +1239,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
 
 void make_map_from_rectangle_groups(bool include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
-				   int *grouping, SparseMatrix graph0, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
+				   int *grouping, SparseMatrix graph, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
 				   int *nverts, double **x_poly, 
 				   SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
@@ -1306,7 +1306,6 @@ void make_map_from_rectangle_groups(bool include_OK_points,
   double point[2];
   int nadded[2];
   double delta[2];
-  SparseMatrix graph = graph0;
   double bbox[4];
 
   if (K < 0){
