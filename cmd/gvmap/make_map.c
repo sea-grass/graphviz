@@ -497,9 +497,10 @@ static void conn_comp(int n, SparseMatrix A, int *groups, SparseMatrix *poly_poi
 
 }
 
-static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			   int *groups, int *mask, SparseMatrix *poly_lines, int **polys_groups,
-			   int GRP_RANDOM, int GRP_BBOX){
+static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
+                           int ncomps, int *comps_ptr, int *comps, int *groups,
+                           SparseMatrix *poly_lines, int **polys_groups,
+                           int GRP_RANDOM, int GRP_BBOX) {
   /*============================================================
 
     polygon outlines 
@@ -524,6 +525,7 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
     edim = 5;/* we also store info about whether an edge of a polygon corresponds to a real edge or not. */
   }
 
+  int *mask = gv_calloc(nt, sizeof(int));
   for (i = 0; i < nt; i++) mask[i] = -1;
   /* loop over every point in each connected component */
   elist = gv_calloc(nt * edim, sizeof(int));
@@ -655,6 +657,7 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
 
   free(tlist);
   free(elist);
+  free(mask);
 }
 
 static void cycle_print(int head, int *cycle, int *edge_table){
@@ -938,7 +941,6 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
 			 int nt, struct Triangle *Tp, SparseMatrix E, int *nverts, double **x_poly, 
 			 SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, SparseMatrix *country_graph){
   int i, j;
-  int *mask;
   int *groups;
   int maxgrp;
   int *comps = NULL, *comps_ptr = NULL, ncomps;
@@ -964,7 +966,6 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
   }
   
   /* finding connected components: vertices that are connected in the triangle graph, as well as in the same group */
-  mask = gv_calloc(MAX(n + nrandom, 2 * nt), sizeof(int));
   conn_comp(n + nrandom, E, groups, poly_point_map);
 
   ncomps = (*poly_point_map)->m;
@@ -992,7 +993,8 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
     polygon outlines 
 
     ============================================================*/
-  get_poly_lines(nt, graph, E, ncomps, comps_ptr, comps, groups, mask, poly_lines, polys_groups, GRP_RANDOM, GRP_BBOX);
+  get_poly_lines(nt, graph, E, ncomps, comps_ptr, comps, groups, poly_lines,
+                 polys_groups, GRP_RANDOM, GRP_BBOX);
 
   /*============================================================
 
@@ -1005,7 +1007,6 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
   *country_graph = B;
 
   free(groups);
-  free(mask);
 }
 
 static void make_map_internal(bool include_OK_points,
