@@ -687,7 +687,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps,
 {
   /*============================================================
 
-    polygon slids that will be colored
+    polygon solids that will be colored
 
     ============================================================*/
   int *edge_table;/* a table of edges of the triangle graph. If two vertex u and v are connected and are adjacent to two triangles
@@ -704,7 +704,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps,
 	       cycle[e][1] gives the next edge
 	     */
   int *edge_cycle_map, NOT_ON_CYCLE = -1;/* map an edge e to its position on cycle, unless it does not exist (NOT_ON_CYCLE) */
-  int *emask;/* whether an edge is seens this iter */
+  int *emask;/* whether an edge is seen this iter */
   enum {NO_DUPLICATE = -1};
   int *elist, edim = 3;/* a list tell which edge a particular vertex is linked with when a voro cell has been visited,
 		since the surface is a cycle, each vertex can only link with 2 edges, the 3rd position is used to record how many links
