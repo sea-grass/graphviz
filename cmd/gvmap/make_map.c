@@ -590,19 +590,6 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
       }
     }/* done poly edges for this component i */
 
-
-    /* debugging*/
-#ifdef DEBUG
-    /*
-    for (j = 0; j < nnt; j++) {
-      if (elist[tlist[j]*edim + 2]%2 != 0){
-	printf("wrong: elist[%d*edim+2] = %d\n",j,elist[tlist[j]*edim + 2]%);
-	assert(0);
-      }
-    }
-    */
-#endif
-
     /* form one or more (if there is a hole) polygon outlines for this component  */
     for (j = 0; j < nnt; j++){
       t = tlist[j];
