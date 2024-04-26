@@ -510,20 +510,8 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
   int *elist, edim = 3;/* a list tell which vertex a particular vertex is linked with during poly construction.
 		since the surface is a cycle, each can only link with 2 others, the 3rd position is used to record how many links
 	      */
-  int *ie = E->ia, *je = E->ja, *e = E->a, n = E->m;
-  int *ia = NULL, *ja = NULL;
+  int *ie = E->ia, *je = E->ja, *e = E->a;
   SparseMatrix A;
-  int *gmask = NULL;
-
-
-  graph = NULL;/* we disable checking whether a polyline cross an edge for now due to issues with labels */
-  if (graph) {
-    assert(graph->m == n);
-    gmask = gv_calloc(n, sizeof(int));
-    for (i = 0; i < n; i++) gmask[i] = -1;
-    ia = graph->ia; ja = graph->ja;
-    edim = 5;/* we also store info about whether an edge of a polygon corresponds to a real edge or not. */
-  }
 
   int *mask = gv_calloc(nt, sizeof(int));
   for (i = 0; i < nt; i++) mask[i] = -1;
@@ -543,10 +531,6 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
     for (j = comps_ptr[i]; j < comps_ptr[i+1]; j++){
       ii = comps[j];
 
-      if (graph){
-	for (jj = ia[ii]; jj < ia[ii+1]; jj++) gmask[ja[jj]] = ii;
-      }
-
       (*polys_groups)[i] = groups[ii];/* assign the grouping of each poly */
 
       /* skip the country formed by random points */
@@ -562,27 +546,11 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
 
 	  nlink = elist[t1*edim + 2]%2;
 	  elist[t1*edim + nlink] = t2;/* t1->t2*/
-	  if (graph){
-	    if (gmask[je[jj]] == ii){/* a real edge */
-	      elist[t1*edim+nlink+3] = POLY_LINE_REAL_EDGE;
-	    } else {
-	      fprintf(stderr,"not real!!!\n");
-	      elist[t1*edim+nlink+3] = POLY_LINE_NOT_REAL_EDGE;
-	    }
-	  }
 	  elist[t1*edim + 2]++;
 
 	  nlink = elist[t2*edim + 2]%2;
 	  elist[t2*edim + nlink] = t1;/* t1->t2*/
 	  elist[t2*edim + 2]++;
-	  if (graph){
-	    if (gmask[je[jj]] == ii){/* a real edge */
-	      elist[t2*edim+nlink+3] = POLY_LINE_REAL_EDGE;
-	    } else {
-	      fprintf(stderr,"not real!!!\n");
-	      elist[t2*edim+nlink+3] = POLY_LINE_NOT_REAL_EDGE;
-	    }
-	  }
 
 	  tlist[nnt++] = t1; tlist[nnt++] = t2;
 	  jj++;
@@ -597,20 +565,12 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
 	cur = sta = t; mask[cur] = i;
 	next = neighbor(t, 1, edim, elist);
 	nlink = 1;
-	if (graph && neighbor(cur, 3, edim, elist) == POLY_LINE_NOT_REAL_EDGE){
-	  ipoly2 = - ipoly;
-	} else {
-	  ipoly2 = ipoly;
-	}
+	ipoly2 = ipoly;
 	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, cur, &ipoly2);
 	while (next != sta){
 	  mask[next] = i;
 	  
-	  if (graph && neighbor(cur, nlink + 3, edim, elist) == POLY_LINE_NOT_REAL_EDGE){
-	    ipoly2 = -ipoly;
-	  } else {
-	    ipoly2 = ipoly;
-	  }
+	  ipoly2 = ipoly;
 	  SparseMatrix_coordinate_form_add_entry(*poly_lines, i, next, &ipoly2);
 
 	  nn = neighbor(next, 0, edim, elist);
@@ -625,11 +585,7 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E,
 	  next = nn;
 	}
 
-	if (graph && neighbor(cur, nlink + 3, edim, elist) == POLY_LINE_NOT_REAL_EDGE){
-	  ipoly2 = -ipoly;
-	} else {
-	  ipoly2 = ipoly;
-	}
+	ipoly2 = ipoly;
 	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, sta, &ipoly2);/* complete a cycle by adding starting point */
 
 	ipoly++;
