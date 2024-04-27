@@ -535,9 +535,6 @@ static void get_poly_lines(int nt, SparseMatrix E, int ncomps, int *comps_ptr,
       /* skip the country formed by random points */
       if (groups[ii] == GRP_RANDOM || groups[ii] == GRP_BBOX) continue;
 
-      /* always skip bounding box */
-      if (groups[ii] == GRP_BBOX) continue;
-
       for (jj = ie[ii]; jj < ie[ii+1]; jj++){
 	if (groups[je[jj]] != groups[ii] && jj < nz - 1  && je[jj] == je[jj+1]){/* an triangle edge neighboring 2 triangles and two ends not in the same groups */
 	  t1 = e[jj];
