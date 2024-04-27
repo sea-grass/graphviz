@@ -1274,7 +1274,7 @@ SparseMatrix SparseMatrix_sum_repeat_entries(SparseMatrix A){
 }
 
 SparseMatrix SparseMatrix_coordinate_form_add_entry(SparseMatrix A, int irn,
-                                                    int jcn, void *val) {
+                                                    int jcn, const void *val) {
   int nz, nzmax;
 
   static const int nentries = 1;
