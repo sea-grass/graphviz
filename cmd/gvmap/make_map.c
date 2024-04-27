@@ -881,7 +881,6 @@ static void get_polygons(int n, int nrandom, int dim, int *grouping, int nt,
   int maxgrp;
   int *comps = NULL, *comps_ptr = NULL, ncomps;
   int GRP_RANDOM, GRP_BBOX;
-  SparseMatrix B;
 
   assert(dim == 2);
   *nverts = nt;
@@ -939,8 +938,7 @@ static void get_polygons(int n, int nrandom, int dim, int *grouping, int nt,
     ============================================================*/
   get_polygon_solids(nt, E, ncomps, comps_ptr, comps, polys);
 
-  B = get_country_graph(n, E, groups, GRP_RANDOM, GRP_BBOX);
-  *country_graph = B;
+  *country_graph = get_country_graph(n, E, groups, GRP_RANDOM, GRP_BBOX);
 
   free(groups);
 }
