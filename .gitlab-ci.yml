@@ -411,6 +411,18 @@ ubuntu-23.10-build:
     variables:
       IMAGE: ubuntu-23.10
 
+ubuntu-24.04-build:
+    <<: *deb_build_definition
+    needs:
+        - job: docker_build_ubuntu-24.04
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: ubuntu-24.04
+
 out-of-source-build:
     <<: *deb_build_definition
     script:
@@ -644,6 +656,22 @@ ubuntu-23.10-cmake-build:
         - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-23.10
+
+ubuntu-24.04-cmake-build:
+    <<: *deb_build_definition
+    needs:
+        - job: docker_build_ubuntu-24.04
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: ubuntu-24.04
 
 ubuntu-22.04-cmake-minimal-build:
     <<: *deb_build_definition
@@ -1024,6 +1052,18 @@ ubuntu-23.10-test:
     variables:
       IMAGE: ubuntu-23.10
 
+ubuntu-24.04-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "ubuntu-24.04-build"
+          artifacts: true
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: ubuntu-24.04
+
 centos7-test:
     <<: *linux_test_definition
     before_script:
@@ -1142,6 +1182,19 @@ ubuntu-23.10-cmake-test:
         - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-23.10
+
+ubuntu-24.04-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "ubuntu-24.04-cmake-build"
+          artifacts: true
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: ubuntu-24.04
 
 ubuntu-22.04-cmake-ASan-test-including-ctest:
     <<: *linux_test_definition_including_ctest
@@ -1399,6 +1452,11 @@ docker_build_ubuntu-23.10:
   variables:
     IMAGE: ubuntu-23.10
 
+docker_build_ubuntu-24.04:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: ubuntu-24.04
+
 docker_push_centos7:
   <<: *docker_push_definition
   variables:
@@ -1454,6 +1512,13 @@ docker_push_ubuntu-23.10:
     IMAGE: ubuntu-23.10
   needs:
     - docker_build_ubuntu-23.10
+
+docker_push_ubuntu-24.04:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: ubuntu-24.04
+  needs:
+    - docker_build_ubuntu-24.04
 
 lint_clang_format:
   image: "$CI_REGISTRY_IMAGE/ubuntu-23.10:$CI_COMMIT_SHA"
