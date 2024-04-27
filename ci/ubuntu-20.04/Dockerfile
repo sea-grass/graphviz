@@ -17,7 +17,6 @@ libtool \
 flex \
 ksh \
 # Debian build utilities
-quilt \
 d-shlibs \
 debhelper \
 fakeroot \

@@ -18,7 +18,6 @@ flex \
 ksh \
 doxygen \
 # Debian build utilities
-quilt \
 d-shlibs \
 debhelper \
 fakeroot \
