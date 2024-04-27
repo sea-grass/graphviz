@@ -505,7 +505,7 @@ static void get_poly_lines(int nt, SparseMatrix E, int ncomps, int *comps_ptr,
     polygon outlines 
 
     ============================================================*/
-  int i, *tlist, nz, ipoly, ipoly2, nnt, ii, jj, t1, t2, t, cur, next, nn, j, nlink, sta;
+  int i, *tlist, nz, ipoly, nnt, ii, jj, t1, t2, t, cur, next, nn, j, nlink, sta;
   int *elist, edim = 3;/* a list tell which vertex a particular vertex is linked with during poly construction.
 		since the surface is a cycle, each can only link with 2 others, the 3rd position is used to record how many links
 	      */
@@ -560,13 +560,11 @@ static void get_poly_lines(int nt, SparseMatrix E, int ncomps, int *comps_ptr,
       if (mask[t] != i){
 	cur = sta = t; mask[cur] = i;
 	next = neighbor(t, 1, edim, elist);
-	ipoly2 = ipoly;
-	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, cur, &ipoly2);
+	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, cur, &ipoly);
 	while (next != sta){
 	  mask[next] = i;
 	  
-	  ipoly2 = ipoly;
-	  SparseMatrix_coordinate_form_add_entry(*poly_lines, i, next, &ipoly2);
+	  SparseMatrix_coordinate_form_add_entry(*poly_lines, i, next, &ipoly);
 
 	  nn = neighbor(next, 0, edim, elist);
 	  if (nn == cur) {
@@ -578,8 +576,7 @@ static void get_poly_lines(int nt, SparseMatrix E, int ncomps, int *comps_ptr,
 	  next = nn;
 	}
 
-	ipoly2 = ipoly;
-	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, sta, &ipoly2);/* complete a cycle by adding starting point */
+	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, sta, &ipoly);/* complete a cycle by adding starting point */
 
 	ipoly++;
       }
