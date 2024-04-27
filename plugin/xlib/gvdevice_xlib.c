@@ -12,6 +12,7 @@
 
 #include <assert.h>
 #include <limits.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -42,6 +43,8 @@
 #endif
 
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_math.h>
+#include <cgraph/prisize_t.h>
 #include <cgraph/exit.h>
 #include <gvc/gvplugin_device.h>
 
@@ -73,9 +76,9 @@ static void handle_configure_notify(GVJ_t * job, XConfigureEvent * cev)
     assert(cev->width >= 0 && "Xlib returned an event with negative width");
     assert(cev->height >= 0 && "Xlib returned an event with negative height");
 
-    job->zoom *= 1 + MIN(
-	((double) cev->width - (double) job->width) / (double) job->width,
-	((double) cev->height - (double) job->height) / (double) job->height);
+    job->zoom *= 1 + fmin(
+	((double)cev->width - job->width) / job->width,
+	((double)cev->height - job->height) / job->height);
     if ((unsigned)cev->width > job->width ||
         (unsigned)cev->height > job->height)
         job->has_grown = true;
@@ -110,12 +113,10 @@ static void handle_client_message(GVJ_t * job, XClientMessageEvent * cmev)
 
 static bool handle_keypress(GVJ_t *job, XKeyEvent *kev)
 {
-    
-    int i;
     KeyCode *keycodes;
 
     keycodes = job->keycodes;
-    for (i=0; i < job->numkeys; i++) {
+    for (size_t i = 0; i < job->numkeys; i++) {
 	if (kev->keycode == keycodes[i])
 	    return job->keybindings[i].callback(job) != 0;
     }
@@ -302,8 +303,7 @@ static void init_window(GVJ_t *job, Display *dpy, int scr)
     unsigned w = 480;    /* FIXME - w,h should be set by a --geometry commandline option */
     unsigned h = 325;
     
-    zoom_to_fit = MIN((double) w / (double) job->width,
-			(double) h / (double) job->height);
+    zoom_to_fit = fmin((double)w / job->width, (double)h / job->height);
     if (zoom_to_fit < 1.0) /* don't make bigger */
 	job->zoom *= zoom_to_fit;
 
@@ -467,7 +467,7 @@ static void xlib_initialize(GVJ_t *firstjob)
     KeySym keysym;
     KeyCode *keycodes;
     const char *display_name = NULL;
-    int i, scr;
+    int scr;
 
     dpy = XOpenDisplay(display_name);
     if (dpy == NULL) {
@@ -480,13 +480,13 @@ static void xlib_initialize(GVJ_t *firstjob)
     firstjob->display = dpy;
     firstjob->screen = scr;
 
-    assert(firstjob->numkeys >= 0);
-    keycodes = malloc((size_t)firstjob->numkeys * sizeof(KeyCode));
+    keycodes = malloc(firstjob->numkeys * sizeof(KeyCode));
     if (keycodes == NULL) {
-        fprintf(stderr, "Failed to malloc %d*KeyCode\n", firstjob->numkeys);
+        fprintf(stderr, "Failed to malloc %" PRISIZE_T "*KeyCode\n",
+                firstjob->numkeys);
         return;
     }
-    for (i = 0; i < firstjob->numkeys; i++) {
+    for (size_t i = 0; i < firstjob->numkeys; i++) {
         keysym = XStringToKeysym(firstjob->keybindings[i].keystring);
         if (keysym == NoSymbol)
             fprintf(stderr, "ERROR: No keysym for \"%s\"\n",
@@ -553,14 +553,14 @@ static void xlib_finalize(GVJ_t *firstjob)
     	    wd = inotify_add_watch(inotify_fd, dirstr, IN_MODIFY);
 	    agxbfree(&dir);
 
-            numfds = MAX(inotify_fd, numfds);
+            numfds = imax(inotify_fd, numfds);
 #endif
 	}
     }
     else {
 	watching_stdin_p = true;
 	stdin_fd = fcntl(STDIN_FILENO, F_DUPFD, 0);
-	numfds = MAX(stdin_fd, numfds);
+	numfds = imax(stdin_fd, numfds);
     }
 
     for (job = firstjob; job; job = job->next_active)

@@ -3881,7 +3881,7 @@ static void init_bb(graph_t *g)
 }
 
 extern gvevent_key_binding_t gvevent_key_binding[];
-extern int gvevent_key_binding_size;
+extern const size_t gvevent_key_binding_size;
 extern gvdevice_callbacks_t gvdevice_callbacks;
 
 /* Set LC_NUMERIC to "C" to get expected interpretation of %f

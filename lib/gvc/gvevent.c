@@ -535,7 +535,8 @@ gvevent_key_binding_t gvevent_key_binding[] = {
     {"F", toggle_fit_cb},
 };
 
-int gvevent_key_binding_size = ARRAY_SIZE(gvevent_key_binding);
+const size_t gvevent_key_binding_size =
+  sizeof(gvevent_key_binding) / sizeof(gvevent_key_binding[0]);
 
 gvdevice_callbacks_t gvdevice_callbacks = {
     gvevent_refresh,
