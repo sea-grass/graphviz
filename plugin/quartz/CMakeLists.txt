@@ -20,7 +20,7 @@ if(IS_DIRECTORY "/System/Library/Frameworks/ApplicationServices.framework")
     ../../lib/pathplan
   )
 
-  target_link_libraries(gvplugin_quartz
+  target_link_libraries(gvplugin_quartz PRIVATE
     cgraph
     gvc
   )

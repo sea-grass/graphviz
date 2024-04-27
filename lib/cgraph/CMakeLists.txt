@@ -72,7 +72,7 @@ target_include_directories(cgraph PRIVATE
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
-target_link_libraries(cgraph cdt)
+target_link_libraries(cgraph PUBLIC cdt)
 
 # Installation location of library files
 install(

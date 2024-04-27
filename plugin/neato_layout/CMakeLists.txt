@@ -14,7 +14,7 @@ target_include_directories(gvplugin_neato_layout PRIVATE
   ../../lib/pathplan
 )
 
-target_link_libraries(gvplugin_neato_layout
+target_link_libraries(gvplugin_neato_layout PRIVATE
   circogen
   fdpgen
   gvc
@@ -27,11 +27,11 @@ target_link_libraries(gvplugin_neato_layout
 )
 
 if(with_ipsepcola)
-  target_link_libraries(gvplugin_neato_layout vpsc)
+  target_link_libraries(gvplugin_neato_layout PRIVATE vpsc)
 endif()
 
 if(with_sfdp)
-  target_link_libraries(gvplugin_neato_layout sfdpgen)
+  target_link_libraries(gvplugin_neato_layout PRIVATE sfdpgen)
 endif()
 
 # Installation location of library files

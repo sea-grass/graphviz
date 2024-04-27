@@ -21,7 +21,7 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_lasi
+  target_link_libraries(gvplugin_lasi PRIVATE
     ${FREETYPE_LIBRARIES}
     ${LASI_LIBRARIES}
     ${PANGOCAIRO_LIBRARIES}

@@ -12,7 +12,7 @@ target_include_directories(cgraph++ PRIVATE
   ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(cgraph++ cgraph)
+target_link_libraries(cgraph++ PUBLIC cgraph)
 
 install(
   TARGETS cgraph++

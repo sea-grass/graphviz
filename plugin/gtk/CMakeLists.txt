@@ -23,7 +23,7 @@ if(GTK2_FOUND)
     ${GTK2_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_gtk
+  target_link_libraries(gvplugin_gtk PRIVATE
     ${GTK2_LIBRARIES}
   )
 

@@ -29,7 +29,7 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
     ${PANGOCAIRO_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_pango
+  target_link_libraries(gvplugin_pango PRIVATE
     cgraph
     gvc
     ${CAIRO_LINK_LIBRARIES}

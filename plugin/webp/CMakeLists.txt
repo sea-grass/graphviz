@@ -19,7 +19,7 @@ if(WEBP_FOUND)
     ${WEBP_INCLUDE_DIRS}
   )
 
-  target_link_libraries(gvplugin_webp
+  target_link_libraries(gvplugin_webp PRIVATE
     gvc
     ${WEBP_LINK_LIBRARIES}
   )
@@ -28,7 +28,7 @@ if(WEBP_FOUND)
     target_include_directories(gvplugin_webp SYSTEM PRIVATE
       ${CAIRO_INCLUDE_DIRS}
     )
-    target_link_libraries(gvplugin_webp
+    target_link_libraries(gvplugin_webp PRIVATE
       ${CAIRO_LINK_LIBRARIES}
     )
     if(PANGOCAIRO_FOUND)
@@ -36,7 +36,7 @@ if(WEBP_FOUND)
         ${PANGOCAIRO_INCLUDE_DIRS}
       )
 
-      target_link_libraries(gvplugin_webp
+      target_link_libraries(gvplugin_webp PRIVATE
         ${PANGOCAIRO_LINK_LIBRARIES}
       )
     endif()

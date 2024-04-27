@@ -9,7 +9,7 @@ target_include_directories(gvplugin_vt PRIVATE
   ../../lib/pathplan
 )
 
-target_link_libraries(gvplugin_vt cgraph gvc xdot)
+target_link_libraries(gvplugin_vt PRIVATE cgraph gvc xdot)
 
 # Installation location of library files
 install(

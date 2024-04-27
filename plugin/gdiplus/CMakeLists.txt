@@ -22,7 +22,7 @@ if(WIN32)
     ../../lib/pathplan
   )
 
-  target_link_libraries(gvplugin_gdiplus
+  target_link_libraries(gvplugin_gdiplus PRIVATE
     gvc
     gdiplus
   )

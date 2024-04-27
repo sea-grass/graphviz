@@ -85,7 +85,7 @@ if(with_sfdp)
     )
   endif()
 
-  target_link_libraries(gvmap
+  target_link_libraries(gvmap PRIVATE
     cgraph
     edgepaintlib
     gvc
@@ -96,7 +96,7 @@ if(with_sfdp)
   )
 
   if(NOT HAVE_GETOPT_H)
-    target_link_libraries(gvmap ${GETOPT_LINK_LIBRARIES})
+    target_link_libraries(gvmap PRIVATE ${GETOPT_LINK_LIBRARIES})
   endif()
 
   find_program(GZIP gzip)
