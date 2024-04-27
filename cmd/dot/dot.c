@@ -85,3 +85,25 @@ int main(int argc, char **argv)
  * @dir .
  * @brief main rendering program for various layouts of graphs and output formats
  */
+
+/**
+ * @mainpage
+ *
+ * %Hierarchy:\n
+ * -# Applications
+ *   - @ref cmd/dot – main rendering application for various layouts of graphs and output formats
+ *   - @ref cmd – directory of applications
+ *   - @ref dot.demo "dot.demo" – demo programs
+ * -# @ref plugin – Plugins of graph layout engines and output formats
+ * -# Core libraries
+ *   -# @ref engines
+ *     -# @ref common_render – rendering for layout engines
+ *     -# @ref common_utils – low level utilities for layout engines
+ *   -# @ref lib – miscellaneous libraries
+ *   -# @ref cgraph – abstract graph C library
+ *     -# @ref cgraph_app – uncoupled application specific functions
+ *     -# @ref cgraph_core – highly cohesive core
+ * -# Low level utility libraries
+ *   - @ref cgraph_utils – low level cgraph utilities
+ *   - @ref lib/cdt – Container Data Types library
+ */
