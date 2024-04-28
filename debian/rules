@@ -5,8 +5,6 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-include /usr/share/quilt/quilt.make
-
 # Get build platform info
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
@@ -36,7 +34,7 @@ RUBY_PACKAGE      = $(CURDIR)/debian/libgv-ruby
 CONFIG_SCRIPTS=config/config.guess libltdl/config.guess \
 	       config/config.sub   libltdl/config.sub
 
-configure: patch configure-stamp
+configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
@@ -88,7 +86,7 @@ build-stamp:
 	$(MAKE)
 	touch build-stamp
 
-clean: clean-patched unpatch
+clean: clean-patched
 clean-patched:
 	dh_testdir
 	dh_testroot
