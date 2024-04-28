@@ -497,9 +497,9 @@ static void conn_comp(int n, SparseMatrix A, int *groups, SparseMatrix *poly_poi
 
 }
 
-static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			   int *groups, int *mask, SparseMatrix *poly_lines, int **polys_groups,
-			   int GRP_RANDOM, int GRP_BBOX){
+static void get_poly_lines(int nt, SparseMatrix E, int ncomps, int *comps_ptr,
+                           int *comps, int *groups, SparseMatrix *poly_lines,
+                           int **polys_groups, int GRP_RANDOM, int GRP_BBOX) {
   /*============================================================
 
     polygon outlines 
@@ -509,21 +509,10 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
   int *elist, edim = 3;/* a list tell which vertex a particular vertex is linked with during poly construction.
 		since the surface is a cycle, each can only link with 2 others, the 3rd position is used to record how many links
 	      */
-  int *ie = E->ia, *je = E->ja, *e = E->a, n = E->m;
-  int *ia = NULL, *ja = NULL;
+  int *ie = E->ia, *je = E->ja, *e = E->a;
   SparseMatrix A;
-  int *gmask = NULL;
 
-
-  graph = NULL;/* we disable checking whether a polyline cross an edge for now due to issues with labels */
-  if (graph) {
-    assert(graph->m == n);
-    gmask = gv_calloc(n, sizeof(int));
-    for (i = 0; i < n; i++) gmask[i] = -1;
-    ia = graph->ia; ja = graph->ja;
-    edim = 5;/* we also store info about whether an edge of a polygon corresponds to a real edge or not. */
-  }
-
+  int *mask = gv_calloc(nt, sizeof(int));
   for (i = 0; i < nt; i++) mask[i] = -1;
   /* loop over every point in each connected component */
   elist = gv_calloc(nt * edim, sizeof(int));
@@ -541,10 +530,6 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
     for (j = comps_ptr[i]; j < comps_ptr[i+1]; j++){
       ii = comps[j];
 
-      if (graph){
-	for (jj = ia[ii]; jj < ia[ii+1]; jj++) gmask[ja[jj]] = ii;
-      }
-
       (*polys_groups)[i] = groups[ii];/* assign the grouping of each poly */
 
       /* skip the country formed by random points */
@@ -560,27 +545,11 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
 
 	  nlink = elist[t1*edim + 2]%2;
 	  elist[t1*edim + nlink] = t2;/* t1->t2*/
-	  if (graph){
-	    if (gmask[je[jj]] == ii){/* a real edge */
-	      elist[t1*edim+nlink+3] = POLY_LINE_REAL_EDGE;
-	    } else {
-	      fprintf(stderr,"not real!!!\n");
-	      elist[t1*edim+nlink+3] = POLY_LINE_NOT_REAL_EDGE;
-	    }
-	  }
 	  elist[t1*edim + 2]++;
 
 	  nlink = elist[t2*edim + 2]%2;
 	  elist[t2*edim + nlink] = t1;/* t1->t2*/
 	  elist[t2*edim + 2]++;
-	  if (graph){
-	    if (gmask[je[jj]] == ii){/* a real edge */
-	      elist[t2*edim+nlink+3] = POLY_LINE_REAL_EDGE;
-	    } else {
-	      fprintf(stderr,"not real!!!\n");
-	      elist[t2*edim+nlink+3] = POLY_LINE_NOT_REAL_EDGE;
-	    }
-	  }
 
 	  tlist[nnt++] = t1; tlist[nnt++] = t2;
 	  jj++;
@@ -588,46 +557,22 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
       }
     }/* done poly edges for this component i */
 
-
-    /* debugging*/
-#ifdef DEBUG
-    /*
-    for (j = 0; j < nnt; j++) {
-      if (elist[tlist[j]*edim + 2]%2 != 0){
-	printf("wrong: elist[%d*edim+2] = %d\n",j,elist[tlist[j]*edim + 2]%);
-	assert(0);
-      }
-    }
-    */
-#endif
-
     /* form one or more (if there is a hole) polygon outlines for this component  */
     for (j = 0; j < nnt; j++){
       t = tlist[j];
       if (mask[t] != i){
 	cur = sta = t; mask[cur] = i;
 	next = neighbor(t, 1, edim, elist);
-	nlink = 1;
-	if (graph && neighbor(cur, 3, edim, elist) == POLY_LINE_NOT_REAL_EDGE){
-	  ipoly2 = - ipoly;
-	} else {
-	  ipoly2 = ipoly;
-	}
+	ipoly2 = ipoly;
 	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, cur, &ipoly2);
 	while (next != sta){
 	  mask[next] = i;
 	  
-	  if (graph && neighbor(cur, nlink + 3, edim, elist) == POLY_LINE_NOT_REAL_EDGE){
-	    ipoly2 = -ipoly;
-	  } else {
-	    ipoly2 = ipoly;
-	  }
+	  ipoly2 = ipoly;
 	  SparseMatrix_coordinate_form_add_entry(*poly_lines, i, next, &ipoly2);
 
 	  nn = neighbor(next, 0, edim, elist);
-	  nlink = 0;
 	  if (nn == cur) {
-	    nlink = 1;
 	    nn = neighbor(next, 1, edim, elist);
 	  }
 	  assert(nn != cur);
@@ -636,11 +581,7 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
 	  next = nn;
 	}
 
-	if (graph && neighbor(cur, nlink + 3, edim, elist) == POLY_LINE_NOT_REAL_EDGE){
-	  ipoly2 = -ipoly;
-	} else {
-	  ipoly2 = ipoly;
-	}
+	ipoly2 = ipoly;
 	SparseMatrix_coordinate_form_add_entry(*poly_lines, i, sta, &ipoly2);/* complete a cycle by adding starting point */
 
 	ipoly++;
@@ -655,6 +596,7 @@ static void get_poly_lines(int nt, SparseMatrix graph, SparseMatrix E, int ncomp
 
   free(tlist);
   free(elist);
+  free(mask);
 }
 
 static void cycle_print(int head, int *cycle, int *edge_table){
@@ -682,11 +624,12 @@ static int same_edge(int ecur, int elast, int *edge_table){
 	  || (edge_head(ecur) == edge_tail(elast) && edge_tail(ecur) == edge_head(elast));
 }
 
-static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_ptr, int *comps,
-			       int *mask, SparseMatrix *polys){
+static void get_polygon_solids(int nt, SparseMatrix E, int ncomps,
+                               int *comps_ptr, int *comps, SparseMatrix *polys)
+{
   /*============================================================
 
-    polygon slids that will be colored
+    polygon solids that will be colored
 
     ============================================================*/
   int *edge_table;/* a table of edges of the triangle graph. If two vertex u and v are connected and are adjacent to two triangles
@@ -703,7 +646,7 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 	       cycle[e][1] gives the next edge
 	     */
   int *edge_cycle_map, NOT_ON_CYCLE = -1;/* map an edge e to its position on cycle, unless it does not exist (NOT_ON_CYCLE) */
-  int *emask;/* whether an edge is seens this iter */
+  int *emask;/* whether an edge is seen this iter */
   enum {NO_DUPLICATE = -1};
   int *elist, edim = 3;/* a list tell which edge a particular vertex is linked with when a voro cell has been visited,
 		since the surface is a cycle, each vertex can only link with 2 edges, the 3rd position is used to record how many links
@@ -716,8 +659,6 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
 
   ne = E->nz;
   edge_table = gv_calloc(ne * 2, sizeof(int));
-
-  for (i = 0; i < n; i++) mask[i] = -1;
 
   half_edges = SparseMatrix_new(n, n, 1, MATRIX_TYPE_INTEGER, FORMAT_COORD);
 
@@ -769,7 +710,6 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
     if (DEBUG_CYCLE) fprintf(stderr, "\n ============  comp %d has %d members\n",i, comps_ptr[i+1]-comps_ptr[i]);
     for (k = comps_ptr[i]; k < comps_ptr[i+1]; k++){
       ii = comps[k];
-      mask[ii] = i;
       duplicate = NO_DUPLICATE;
       if (DEBUG_CYCLE) fprintf(stderr,"member = %d has %d neighbors\n",ii, ie[ii+1]-ie[ii]);
       for (j = ie[ii]; j < ie[ii+1]; j++){
@@ -936,11 +876,13 @@ static void get_polygon_solids(int nt, SparseMatrix E, int ncomps, int *comps_pt
   free(edge_table);
 }
 
-static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *grouping,
-			 int nt, struct Triangle *Tp, SparseMatrix E, int *nverts, double **x_poly, 
-			 SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, SparseMatrix *country_graph){
+static void get_polygons(int n, int nrandom, int dim, int *grouping, int nt,
+                         struct Triangle *Tp, SparseMatrix E, int *nverts,
+                         double **x_poly, SparseMatrix *poly_lines,
+                         SparseMatrix *polys, int **polys_groups,
+                         SparseMatrix *poly_point_map,
+                         SparseMatrix *country_graph) {
   int i, j;
-  int *mask;
   int *groups;
   int maxgrp;
   int *comps = NULL, *comps_ptr = NULL, ncomps;
@@ -966,7 +908,6 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
   }
   
   /* finding connected components: vertices that are connected in the triangle graph, as well as in the same group */
-  mask = gv_calloc(MAX(n + nrandom, 2 * nt), sizeof(int));
   conn_comp(n + nrandom, E, groups, poly_point_map);
 
   ncomps = (*poly_point_map)->m;
@@ -994,20 +935,20 @@ static void get_polygons(int n, int nrandom, int dim, SparseMatrix graph, int *g
     polygon outlines 
 
     ============================================================*/
-  get_poly_lines(nt, graph, E, ncomps, comps_ptr, comps, groups, mask, poly_lines, polys_groups, GRP_RANDOM, GRP_BBOX);
+  get_poly_lines(nt, E, ncomps, comps_ptr, comps, groups, poly_lines,
+                 polys_groups, GRP_RANDOM, GRP_BBOX);
 
   /*============================================================
 
     polygon solids
 
     ============================================================*/
-  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, mask, polys);
+  get_polygon_solids(nt, E, ncomps, comps_ptr, comps, polys);
 
   B = get_country_graph(n, E, groups, GRP_RANDOM, GRP_BBOX);
   *country_graph = B;
 
   free(groups);
-  free(mask);
 }
 
 static void make_map_internal(bool include_OK_points,
@@ -1104,8 +1045,6 @@ static void make_map_internal(bool include_OK_points,
       qt = QuadTree_new_from_point_list(dim, n, max_qtree_level, x);
     }
   }
-  graph = NULL;
-
 
   /* generate random points for lake/sea effect */
   if (nrandom != 0){
@@ -1256,8 +1195,8 @@ static void make_map_internal(bool include_OK_points,
   if (get_tri(n + nrandom, dim2, xcombined, &nt, &Tp, &E) != 0) {
     goto done;
   }
-  get_polygons(n, nrandom, dim2, graph, grouping, nt, Tp, E, nverts, x_poly, poly_lines, polys, polys_groups,
-	       poly_point_map, country_graph);
+  get_polygons(n, nrandom, dim2, grouping, nt, Tp, E, nverts, x_poly,
+               poly_lines, polys, polys_groups, poly_point_map, country_graph);
 
   SparseMatrix_delete(E);
   free(Tp);
@@ -1298,7 +1237,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
 
 void make_map_from_rectangle_groups(bool include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
-				   int *grouping, SparseMatrix graph0, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
+				   int *grouping, SparseMatrix graph, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
 				   int *nverts, double **x_poly, 
 				   SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map, 
@@ -1365,7 +1304,6 @@ void make_map_from_rectangle_groups(bool include_OK_points,
   double point[2];
   int nadded[2];
   double delta[2];
-  SparseMatrix graph = graph0;
   double bbox[4];
 
   if (K < 0){
@@ -1492,7 +1430,6 @@ void make_map_from_rectangle_groups(bool include_OK_points,
     make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
 			    shore_depth_tol, nverts, x_poly, 
 			    poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
-    if (graph != graph0) SparseMatrix_delete(graph);
     free(groups);
     free(X);
   }
