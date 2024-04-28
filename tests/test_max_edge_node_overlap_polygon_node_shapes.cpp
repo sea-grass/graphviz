@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <fmt/format.h>
 
 #include "test_edge_node_overlap_utilities.h"

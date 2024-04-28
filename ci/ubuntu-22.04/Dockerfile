@@ -83,11 +83,6 @@ python3-setuptools \
 gcovr \
 lcov \
 shellcheck \
-# Libraries used in test
-catch2 \
-libboost-dev \
-libfmt-dev \
-libsvgpp-dev \
 # install Python dependencies
 && python3 -m pip install --user --upgrade pip \
 && python3 -m pip install --user --requirement requirements.txt \

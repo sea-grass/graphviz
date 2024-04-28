@@ -1,6 +1,6 @@
 #include <string_view>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include "svg_analyzer.h"
 #include <cgraph++/AGraph.h>

@@ -1,6 +1,6 @@
 #include <string>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <fmt/format.h>
 
 #include <cgraph/cgraph.h>

@@ -131,10 +131,12 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         subprocess.check_call(
             ["gcovr"]
             + exclude_options
+            + [f"--gcov-exclude={f}" for f in generated_files]
             + [
                 "--xml-pretty",
                 "--html-details=coverage/gcovr/index.html",
                 "--exclude-unreachable-branches",
+                "--gcov-ignore-errors=no_working_dir_found",
                 "--print-summary",
                 "--output",
                 "coverage.xml",

@@ -2,7 +2,7 @@
 #include <string_view>
 #include <unordered_set>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <cmath>
 #include <fmt/format.h>
 #include <unordered_map>
