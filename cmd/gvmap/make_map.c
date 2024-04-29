@@ -275,11 +275,6 @@ static void dot_polygon(agxbuf *sbuff, doubles_t xp, doubles_t yp,
   }
 }
 
-static void dot_one_poly(agxbuf *sbuff, double line_width, bool fill,
-                         doubles_t xp, doubles_t yp, const char *cstring) {
-  dot_polygon(sbuff, xp, yp, line_width, fill, cstring);
-}
-
 static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               const char *line_color, SparseMatrix polys,
                               double *x_poly, int *polys_groups, float *r,
@@ -308,7 +303,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
 	          &cstring_buffer, opacity);
 	  cstring = agxbuse(&cstring_buffer);
 	}
-	dot_one_poly(sbuff, line_width, fill, xp, yp, cstring);
+	dot_polygon(sbuff, xp, yp, line_width, fill, cstring);
 	// start a new polygon
 	doubles_clear(&xp);
 	doubles_clear(&yp);
@@ -317,10 +312,10 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
       doubles_append(&yp, x_poly[2 * ja[j] + 1]);
     }
     if (use_line) {
-      dot_one_poly(sbuff, line_width, fill, xp, yp, line_color);
+      dot_polygon(sbuff, xp, yp, line_width, fill, line_color);
     } else {
       /* why set fill to polys_groups[i]?*/
-      dot_one_poly(sbuff, -1, true, xp, yp, cstring);
+      dot_polygon(sbuff, xp, yp, -1, true, cstring);
     }
   }
   agxbfree(&cstring_buffer);
