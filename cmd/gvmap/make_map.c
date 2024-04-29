@@ -286,7 +286,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
   const bool fill = false;
-  int use_line = (line_width >= 0);
+  const bool use_line = line_width >= 0;
   
   agxbuf cstring_buffer = {0};
   agxbput(&cstring_buffer, "#aaaaaaff");
