@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #define STANDALONE
+#include <assert.h>
 #include <sparse/SparseMatrix.h>
 #include <sparse/general.h>
 #include <math.h>
@@ -18,6 +19,7 @@
 #include <string.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
+#include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/cgraph.h>
 #include "make_map.h"
@@ -244,32 +246,38 @@ static void plot_dot_labels(FILE *f, int n, int dim, double *x, char **labels, f
 
 }
 
-static void dot_polygon(agxbuf *sbuff, int np, double *xp, double *yp,
+DEFINE_LIST(doubles, double)
+
+static void dot_polygon(agxbuf *sbuff, doubles_t xp, doubles_t yp,
                         double line_width, int fill, const char *cstring) {
 
-  if (np > 0){
+  assert(doubles_size(&xp) == doubles_size(&yp));
+  if (!doubles_is_empty(&xp)){
     if (fill >= 0){
-      agxbprint(sbuff, " c %" PRISIZE_T " -%s C %" PRISIZE_T " -%s P %d ",
-                strlen(cstring), cstring, strlen(cstring), cstring, np);
+      agxbprint(sbuff,
+                " c %" PRISIZE_T " -%s C %" PRISIZE_T " -%s P %" PRISIZE_T " ",
+                strlen(cstring), cstring, strlen(cstring), cstring,
+                doubles_size(&xp));
     } else {
       if (line_width > 0){
 	size_t len_swidth = (size_t)snprintf(NULL, 0, "%f", line_width);
 	agxbprint(sbuff, " c %" PRISIZE_T " -%s S %" PRISIZE_T
-	          " -setlinewidth(%f) L %d ", strlen(cstring), cstring,
-	          len_swidth + 14, line_width, np);
+	          " -setlinewidth(%f) L %" PRISIZE_T " ", strlen(cstring), cstring,
+	          len_swidth + 14, line_width, doubles_size(&xp));
       } else {
-	agxbprint(sbuff, " c %" PRISIZE_T " -%s L %d ", strlen(cstring), cstring, np);
+	agxbprint(sbuff, " c %" PRISIZE_T " -%s L %" PRISIZE_T " ", strlen(cstring),
+	          cstring, doubles_size(&xp));
       }
     }
-    for (int i = 0; i < np; i++){
-      agxbprint(sbuff, " %f %f",xp[i], yp[i]);
+    for (size_t i = 0; i < doubles_size(&xp); i++) {
+      agxbprint(sbuff, " %f %f", doubles_get(&xp, i), doubles_get(&yp, i));
     }
   }
 }
 
-static void dot_one_poly(agxbuf *sbuff, double line_width, int fill, int np,
-                         double *xp, double *yp, const char *cstring) {
-  dot_polygon(sbuff, np, xp, yp, line_width, fill, cstring);
+static void dot_one_poly(agxbuf *sbuff, double line_width, int fill,
+                         doubles_t xp, doubles_t yp, const char *cstring) {
+  dot_polygon(sbuff, xp, yp, line_width, fill, cstring);
 }
 
 static void plot_dot_polygons(agxbuf *sbuff, double line_width,
@@ -277,7 +285,6 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
-  int np = 0;
   int fill = -1;
   int use_line = (line_width >= 0);
   
@@ -285,21 +292,12 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
   agxbput(&cstring_buffer, "#aaaaaaff");
   char *cstring = agxbuse(&cstring_buffer);
 
-  size_t maxlen = 0;
-  for (i = 0; i < npolys; i++) {
-    int len = ia[i + 1] - ia[i];
-    if (len > 0 && (size_t)len > maxlen) {
-      maxlen = (size_t)len;
-    }
-  }
-
-  double *xp = gv_calloc(maxlen, sizeof(double));
-  double *yp = gv_calloc(maxlen, sizeof(double));
+  doubles_t xp = {0};
+  doubles_t yp = {0};
 
   if (Verbose) fprintf(stderr,"npolys = %d\n",npolys);
   first = abs(a[0]); ipoly = first + 1;
   for (i = 0; i < npolys; i++){
-    np = 0;
     for (j = ia[i]; j < ia[i+1]; j++){
       assert(ja[j] < nverts && ja[j] >= 0);
       (void)nverts;
@@ -310,21 +308,24 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
 	          &cstring_buffer, opacity);
 	  cstring = agxbuse(&cstring_buffer);
 	}
-	dot_one_poly(sbuff, line_width, fill, np, xp, yp, cstring);
-	np = 0;/* start a new polygon */
+	dot_one_poly(sbuff, line_width, fill, xp, yp, cstring);
+	// start a new polygon
+	doubles_clear(&xp);
+	doubles_clear(&yp);
       } 
-      xp[np] = x_poly[2*ja[j]]; yp[np++] = x_poly[2*ja[j]+1];
+      doubles_append(&xp, x_poly[2 * ja[j]]);
+      doubles_append(&yp, x_poly[2 * ja[j] + 1]);
     }
     if (use_line) {
-      dot_one_poly(sbuff, line_width, fill, np, xp, yp, line_color);
+      dot_one_poly(sbuff, line_width, fill, xp, yp, line_color);
     } else {
       /* why set fill to polys_groups[i]?*/
-      dot_one_poly(sbuff, -1, 1, np, xp, yp, cstring);
+      dot_one_poly(sbuff, -1, 1, xp, yp, cstring);
     }
   }
   agxbfree(&cstring_buffer);
-  free(xp);
-  free(yp);
+  doubles_free(&xp);
+  doubles_free(&yp);
 }
 
 void plot_dot_map(Agraph_t* gr, int n, int dim, double *x, SparseMatrix polys,
