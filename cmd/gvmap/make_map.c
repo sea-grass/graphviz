@@ -249,11 +249,11 @@ static void plot_dot_labels(FILE *f, int n, int dim, double *x, char **labels, f
 DEFINE_LIST(doubles, double)
 
 static void dot_polygon(agxbuf *sbuff, doubles_t xp, doubles_t yp,
-                        double line_width, int fill, const char *cstring) {
+                        double line_width, bool fill, const char *cstring) {
 
   assert(doubles_size(&xp) == doubles_size(&yp));
   if (!doubles_is_empty(&xp)){
-    if (fill >= 0){
+    if (fill) {
       agxbprint(sbuff,
                 " c %" PRISIZE_T " -%s C %" PRISIZE_T " -%s P %" PRISIZE_T " ",
                 strlen(cstring), cstring, strlen(cstring), cstring,
@@ -275,7 +275,7 @@ static void dot_polygon(agxbuf *sbuff, doubles_t xp, doubles_t yp,
   }
 }
 
-static void dot_one_poly(agxbuf *sbuff, double line_width, int fill,
+static void dot_one_poly(agxbuf *sbuff, double line_width, bool fill,
                          doubles_t xp, doubles_t yp, const char *cstring) {
   dot_polygon(sbuff, xp, yp, line_width, fill, cstring);
 }
@@ -285,7 +285,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
                               double *x_poly, int *polys_groups, float *r,
                               float *g, float *b, const char *opacity) {
   int i, j, *ia = polys->ia, *ja = polys->ja, *a = polys->a, npolys = polys->m, nverts = polys->n, ipoly,first;
-  int fill = -1;
+  const bool fill = false;
   int use_line = (line_width >= 0);
   
   agxbuf cstring_buffer = {0};
@@ -320,7 +320,7 @@ static void plot_dot_polygons(agxbuf *sbuff, double line_width,
       dot_one_poly(sbuff, line_width, fill, xp, yp, line_color);
     } else {
       /* why set fill to polys_groups[i]?*/
-      dot_one_poly(sbuff, -1, 1, xp, yp, cstring);
+      dot_one_poly(sbuff, -1, true, xp, yp, cstring);
     }
   }
   agxbfree(&cstring_buffer);
