@@ -2646,7 +2646,7 @@ compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
 	}
 	defined = false;
     }
-    maxv = MAX(b.UR.x,b.UR.y);
+    maxv = fmax(b.UR.x, b.UR.y);
     maxv *= 4.0;
     ctr = p;
     if (compass && *compass) {
