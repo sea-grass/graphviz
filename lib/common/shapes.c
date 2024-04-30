@@ -1824,7 +1824,7 @@ static double userSize(node_t * n)
     double w, h;
     w = late_double(n, N_width, 0.0, MIN_NODEWIDTH);
     h = late_double(n, N_height, 0.0, MIN_NODEHEIGHT);
-    return INCH2PS(MAX(w, h));
+    return INCH2PS(fmax(w, h));
 }
 
 shape_kind shapeOf(node_t * n)
