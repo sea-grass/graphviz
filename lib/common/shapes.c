@@ -3054,15 +3054,19 @@ static void point_init(node_t * n)
     size_t i, j;
     double w, h;
 
+    // a value outside of the range of `width`/`height` that we can use to
+    // detect when attributes have not been set
+    static const double UNSET = -1.0;
+
     /* set width and height, and make them equal
      * if user has set weight or height, use it.
      * if both are set, use smallest.
      * if neither, use default
      */
-    w = late_double(n, N_width, MAXDOUBLE, 0.0);
-    h = late_double(n, N_height, MAXDOUBLE, 0.0);
+    w = late_double(n, N_width, UNSET, 0.0);
+    h = late_double(n, N_height, UNSET, 0.0);
     w = fmin(w, h);
-    if (is_exactly_equal(w, MAXDOUBLE) && is_exactly_equal(h, MAXDOUBLE)) // neither defined
+    if (is_exactly_equal(w, UNSET) && is_exactly_equal(h, UNSET)) // neither defined
 	ND_width(n) = ND_height(n) = DEF_POINT;
     else {
 	w = fmin(w, h);
