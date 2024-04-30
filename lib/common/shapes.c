@@ -1975,7 +1975,8 @@ static void poly_init(node_t * n)
     }
 
     /* initialize node bb to labelsize */
-    pointf bb = {.x = MAX(dimen.x, imagesize.x), .y = MAX(dimen.y, imagesize.y)};
+    pointf bb = {.x = fmax(dimen.x, imagesize.x),
+                 .y = fmax(dimen.y, imagesize.y)};
 
     /* I don't know how to distort or skew ellipses in postscript */
     /* Convert request to a polygon with a large number of sides */
@@ -2040,25 +2041,25 @@ static void poly_init(node_t * n)
 		  agnameof(n), agnameof(agraphof(n)));
 	bb = (pointf){.x = width, .y = height};
     } else {
-	bb.x = width = MAX(width, bb.x);
-	bb.y = height = MAX(height, bb.y);
+	bb.x = width = fmax(width, bb.x);
+	bb.y = height = fmax(height, bb.y);
     }
 
     /* If regular, make dimensions the same.
      * Need this to guarantee final node size is regular.
      */
     if (regular) {
-	width = height = bb.x = bb.y = MAX(bb.x, bb.y);
+	width = height = bb.x = bb.y = fmax(bb.x, bb.y);
     }
 
     /* Compute space available for label.  Provides the justification borders */
     if (!mapbool(late_string(n, N_nojustify, "false"))) {
 	if (isBox) {
-	    ND_label(n)->space.x = MAX(dimen.x,bb.x) - spacex;
+	    ND_label(n)->space.x = fmax(dimen.x, bb.x) - spacex;
 	}
 	else if (dimen.y < bb.y) {
 	    temp = bb.x * sqrt(1.0 - SQR(dimen.y) / SQR(bb.y));
-	    ND_label(n)->space.x = MAX(dimen.x,temp) - spacex;
+	    ND_label(n)->space.x = fmax(dimen.x, temp) - spacex;
         }
 	else
 	    ND_label(n)->space.x = dimen.x - spacex;
@@ -2173,8 +2174,8 @@ static void poly_init(node_t * n)
 		P.y *= bb.y;
 
 	    /*find max for bounding box */
-		xmax = MAX(fabs(P.x), xmax);
-		ymax = MAX(fabs(P.y), ymax);
+		xmax = fmax(fabs(P.x), xmax);
+		ymax = fmax(fabs(P.y), ymax);
 
 	    /* store result in array of points */
 		vertices[i] = P;
@@ -2190,7 +2191,7 @@ static void poly_init(node_t * n)
 	/* apply minimum dimensions */
 	xmax *= 2.;
 	ymax *= 2.;
-	bb = (pointf){.x = MAX(width, xmax), .y = MAX(height, ymax)};
+	bb = (pointf){.x = fmax(width, xmax), .y = fmax(height, ymax)};
 	outline_bb = bb;
 
 	scalex = bb.x / xmax;
@@ -2268,11 +2269,11 @@ static void poly_init(node_t * n)
 	    }
 	    for (i = 0; i < sides; i++) {
 		pointf P = vertices[i + (peripheries - 1) * sides];
-		bb = (pointf){.x = MAX(2. * fabs(P.x), bb.x),
-		              .y = MAX(2. * fabs(P.y), bb.y)};
+		bb = (pointf){.x = fmax(2.0 * fabs(P.x), bb.x),
+		              .y = fmax(2.0 * fabs(P.y), bb.y)};
 		Q = vertices[i + (outp - 1) * sides];
-		outline_bb = (pointf){.x = MAX(2. * fabs(Q.x), outline_bb.x),
-		                      .y = MAX(2. * fabs(Q.y), outline_bb.y)};
+		outline_bb = (pointf){.x = fmax(2.0 * fabs(Q.x), outline_bb.x),
+		                      .y = fmax(2.0 * fabs(Q.y), outline_bb.y)};
 	    }
 	}
     }
@@ -2286,10 +2287,10 @@ static void poly_init(node_t * n)
 
     if (poly->option & FIXEDSHAPE) {
 	/* set width and height to reflect label and shape */
-	ND_width(n) = PS2INCH(MAX(dimen.x,bb.x));
-	ND_height(n) = PS2INCH(MAX(dimen.y,bb.y));
-	ND_outline_width(n) = PS2INCH(MAX(dimen.x, outline_bb.x));
-	ND_outline_height(n) = PS2INCH(MAX(dimen.y, outline_bb.y));
+	ND_width(n) = PS2INCH(fmax(dimen.x, bb.x));
+	ND_height(n) = PS2INCH(fmax(dimen.y, bb.y));
+	ND_outline_width(n) = PS2INCH(fmax(dimen.x, outline_bb.x));
+	ND_outline_height(n) = PS2INCH(fmax(dimen.y, outline_bb.y));
     } else {
 	ND_width(n) = PS2INCH(bb.x);
 	ND_height(n) = PS2INCH(bb.y);
