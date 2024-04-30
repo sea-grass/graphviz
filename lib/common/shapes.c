@@ -2545,6 +2545,8 @@ static double invflip_angle(double angle, int rankdir)
 	else if (angle == M_PI * -0.5)
 	    angle = M_PI;
 	break;
+    default:
+	UNREACHABLE();
     }
     return angle;
 }
