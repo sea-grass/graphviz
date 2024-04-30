@@ -41,10 +41,6 @@ extern "C" {
 #define ERROR_SYSTEM	0x0100	/* report system errno message  */
 #define ERROR_USAGE	0x0800	/* usage message                */
 
-#define error_info	_err_info
-#define error		_err_msg
-#define errorv		_err_msgv
-
 /* support for extra API misuse warnings if available */
 #ifdef __GNUC__
   #define PRINTF_LIKE(index, first) __attribute__((format(printf, index, first)))
