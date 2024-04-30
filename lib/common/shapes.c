@@ -3063,8 +3063,8 @@ static void point_init(node_t * n)
      * if both are set, use smallest.
      * if neither, use default
      */
-    w = late_double(n, N_width, UNSET, 0.0);
-    h = late_double(n, N_height, UNSET, 0.0);
+    w = late_double(n, N_width, UNSET, MIN_NODEWIDTH);
+    h = late_double(n, N_height, UNSET, MIN_NODEHEIGHT);
     w = fmin(w, h);
     if (is_exactly_equal(w, UNSET) && is_exactly_equal(h, UNSET)) // neither defined
 	ND_width(n) = ND_height(n) = DEF_POINT;
