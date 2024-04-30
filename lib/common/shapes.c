@@ -3062,7 +3062,7 @@ static void point_init(node_t * n)
     w = late_double(n, N_width, MAXDOUBLE, 0.0);
     h = late_double(n, N_height, MAXDOUBLE, 0.0);
     w = fmin(w, h);
-    if (w == MAXDOUBLE && h == MAXDOUBLE)	/* neither defined */
+    if (is_exactly_equal(w, MAXDOUBLE) && is_exactly_equal(h, MAXDOUBLE)) // neither defined
 	ND_width(n) = ND_height(n) = DEF_POINT;
     else {
 	w = fmin(w, h);
