@@ -2380,12 +2380,12 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	}
 
 	/* scale */
-	if (xsize == 0.0)
-	    xsize = 1.0;
-	if (ysize == 0.0)
-	    ysize = 1.0;
-	inside_context->s.scalex = n_width / xsize;
-	inside_context->s.scaley = n_height / ysize;
+	inside_context->s.scalex = n_width;
+	if (!is_exactly_zero(xsize))
+	    inside_context->s.scalex /= xsize;
+	inside_context->s.scaley = n_height;
+	if (!is_exactly_zero(ysize))
+	    inside_context->s.scaley /= ysize;
 	inside_context->s.box_URx = n_outline_width / 2;
 	inside_context->s.box_URy = n_outline_height / 2;
 
