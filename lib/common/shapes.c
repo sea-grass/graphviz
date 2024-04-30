@@ -2492,6 +2492,8 @@ static unsigned char invflip_side(unsigned char side, int rankdir) {
 	case RIGHT:
 	    side = BOTTOM;
 	    break;
+	default:
+	    break;
 	}
 	break;
     case RANKDIR_RL:
@@ -2507,6 +2509,8 @@ static unsigned char invflip_side(unsigned char side, int rankdir) {
 	    break;
 	case RIGHT:
 	    side = TOP;
+	    break;
+	default:
 	    break;
 	}
 	break;
