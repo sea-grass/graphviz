@@ -2209,18 +2209,18 @@ static void poly_init(node_t * n)
 	    pointf Q;
 	    for (size_t j = 1; j < sides; j++) {
 		Q = vertices[(i - j) % sides];
-		if (Q.x != R.x || Q.y != R.y) {
+		if (!is_exactly_equal(Q.x, R.x) || !is_exactly_equal(Q.y, R.y)) {
 		    break;
 		}
 	    }
-	    assert(R.x != Q.x || R.y != Q.y);
+	    assert(!is_exactly_equal(R.x, Q.x) || !is_exactly_equal(R.y, Q.y));
 	    beta = atan2(R.y - Q.y, R.x - Q.x);
 	    pointf Qprev = Q;
 	    for (i = 0; i < sides; i++) {
 
 		/*for each vertex find the bisector */
 		Q = vertices[i];
-		if (Q.x == Qprev.x && Q.y == Qprev.y) {
+		if (is_exactly_equal(Q.x, Qprev.x) && is_exactly_equal(Q.y, Qprev.y)) {
 		    // The vertex points for the side ending at Q are equal,
 		    // i.e. this side is actually a point and its angle is
 		    // undefined. Therefore we keep the same offset for the end
@@ -2231,11 +2231,11 @@ static void poly_init(node_t * n)
 		} else {
 		    for (size_t j = 1; j < sides; j++) {
 			R = vertices[(i + j) % sides];
-			if (R.x != Q.x || R.y != Q.y) {
+			if (!is_exactly_equal(R.x, Q.x) || !is_exactly_equal(R.y, Q.y)) {
 			    break;
 			}
 		    }
-		    assert(R.x != Q.x || R.y != Q.y);
+		    assert(!is_exactly_equal(R.x, Q.x) || !is_exactly_equal(R.y, Q.y));
 		    alpha = beta;
 		    beta = atan2(R.y - Q.y, R.x - Q.x);
 		    gamma = (alpha + M_PI - beta) / 2.;
