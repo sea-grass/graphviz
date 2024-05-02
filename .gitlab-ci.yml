@@ -1546,10 +1546,10 @@ lint_cmake_format:
     - tags
 
 lint_html:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-23.10:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-24.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-23.10
+    - docker_build_ubuntu-24.04
   script:
     - git ls-files -z -- '**/*.html' | xargs -0 -- xmllint --nonet --noout --html --valid
   except:
