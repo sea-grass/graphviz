@@ -22,10 +22,6 @@ extern "C" {
 #if !defined(_EXGRAM_H) && ( defined(MINTOKEN) || defined(YYTOKENTYPE) )
 #define _EXGRAM_H
 
-#if !defined(_EXPARSE_H)
-#define _EXPARSE_H
-#endif
-
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
 #include <expr/exlib.h>
