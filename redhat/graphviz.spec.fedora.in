@@ -583,23 +583,6 @@ Guile extension for graphviz.
 %{_mandir}/man3/*.3guile.*
 %endif
 
-#-- graphviz-lang-io rpm -----------------------------------------------
-%if 0%{?_IO}
-%package lang-io
-Group:          Applications/Multimedia
-Summary:        Io extension for graphviz
-Requires:       %{name} = %{version}-%{release}, io
-Obsoletes:      %{name}-io <= 2.41
-Provides:       %{name}-io = %{version}-%{release}
-
-%description lang-io
-Io extension for graphviz.
-
-%files lang-io
-%defattr(-,root,root,-)
-%{_mandir}/man3/*.3io.*
-%endif
-
 #-- graphviz-lang-java rpm ---------------------------------------------
 %if 0%{?JAVA}
 %package lang-java
