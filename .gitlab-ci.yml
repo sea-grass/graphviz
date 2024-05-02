@@ -338,6 +338,18 @@ fedora39-build:
     variables:
       IMAGE: fedora39
 
+fedora40-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora40
+          artifacts: false
+        - job: portable-source
+          artifacts: true
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: fedora40
+
 ubuntu-20.04-debug-build:
     <<: *deb_build_definition
     needs:
@@ -849,6 +861,26 @@ fedora39-cmake-build:
     variables:
       IMAGE: fedora39
 
+fedora40-cmake-build:
+    <<: *rpm_build_definition
+    needs:
+        - job: docker_build_fedora40
+          artifacts: false
+    before_script:
+        - export build_system="cmake"
+        # fail on any compiler warnings
+        - export CFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
+        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: fedora40
+
 macos-cmake-build:
     <<: *macos_build_definition
     before_script:
@@ -1122,6 +1154,18 @@ fedora39-test:
     variables:
       IMAGE: fedora39
 
+fedora40-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="autotools"
+    needs:
+        - job: "fedora40-build"
+          artifacts: true
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: fedora40
+
 macos-autotools-test:
     <<: *test_definition
     before_script:
@@ -1280,6 +1324,19 @@ fedora39-cmake-test:
     variables:
       IMAGE: fedora39
 
+fedora40-cmake-test:
+    <<: *linux_test_definition
+    before_script:
+        - export build_system="cmake"
+        - python3 gen_version.py --output GRAPHVIZ_VERSION
+    needs:
+        - job: "fedora40-cmake-build"
+          artifacts: true
+    tags:
+        - saas-linux-small-amd64
+    variables:
+      IMAGE: fedora40
+
 macos-cmake-test:
     <<: *test_definition
     before_script:
@@ -1435,6 +1492,11 @@ docker_build_fedora39:
   variables:
     IMAGE: fedora39
 
+docker_build_fedora40:
+  <<: *docker_build_definition
+  variables:
+    IMAGE: fedora40
+
 docker_build_ubuntu-20.04:
   <<: *docker_build_definition
   variables:
@@ -1489,6 +1551,13 @@ docker_push_fedora39:
     IMAGE: fedora39
   needs:
     - docker_build_fedora39
+
+docker_push_fedora40:
+  <<: *docker_push_definition
+  variables:
+    IMAGE: fedora40
+  needs:
+    - docker_build_fedora40
 
 docker_push_ubuntu-20.04:
   <<: *docker_push_definition

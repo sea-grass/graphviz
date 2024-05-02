@@ -30,6 +30,7 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global JAVA       1
 %global JAVASCRIPT 0
 %global LASI       1
+%global PHP        1
 %global WEBP       1
 %global PYTHON3    1
 %global QT5        1
@@ -54,6 +55,11 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global ANN        0
 %endif
 
+# Overrides for Fedora ≥ 40
+%if 0%{?fedora} >= 40
+%global PHP        0
+%endif
+
 # Plugins version
 %global pluginsver 6
 
@@ -65,7 +71,7 @@ BuildRequires: libXmu-devel libXext-devel libX11-devel gtk2-devel freeglut-devel
 BuildRequires: freetype-devel fontconfig-devel cairo-devel pango-devel
 BuildRequires: gmp-devel gd gd-devel librsvg2-devel
 BuildRequires: ghostscript ghostscript-devel poppler-glib-devel libtool-ltdl libtool-ltdl-devel
-BuildRequires: ruby ruby-devel php-devel lua-devel
+BuildRequires: ruby ruby-devel lua-devel
 BuildRequires: perl-devel perl-libs perl-ExtUtils-Embed tcl tcl-devel tk tk-devel
 
 %if %{ANN}
@@ -102,6 +108,9 @@ BuildRequires: java-devel
 %if %{LASI}
 BuildRequires: lasi-devel
 %endif
+%if %{PHP}
+BuildRequires: php-devel
+%endif
 %if %{PYTHON3}
 BuildRequires: python3 python3-devel
 %endif
@@ -115,6 +124,7 @@ BuildRequires: mono-core
 BuildRequires: libwebp-devel
 %endif
 
+%if %{PHP}
 # What a meal PHP makes of versioning !!!
 %define php_extdir %(php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
 %global php_apiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
@@ -131,6 +141,7 @@ BuildRequires: libwebp-devel
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%endif
 
 # Fix for the i386 extended precision (rhbz#772637)
 %ifarch i386 i686
@@ -658,6 +669,7 @@ Perl extension for graphviz.
 %exclude %{_libdir}/graphviz/perl/*.so
 %exclude %{_libdir}/graphviz/perl/*.pm
 
+%if %{PHP}
 #-- graphviz-lang-php rpm ----------------------------------------------
 %package lang-php
 Group:          Applications/Multimedia
@@ -681,6 +693,7 @@ PHP extension for graphviz.
 %exclude %{_libdir}/graphviz/php/*.so
 %if 0%{?fedora} < 38
 %exclude %{_libdir}/graphviz/php/*.php
+%endif
 %endif
 
 #-- graphviz-lang-python3 rpm -------------------------------------------
@@ -892,6 +905,9 @@ CFLAGS="$RPM_OPT_FLAGS" \
 %if ! %{LASI}
         --without-lasi \
 %endif
+%if ! %{PHP}
+        --disable-php \
+%endif
 %if ! %{GTS}
         --without-gts \
 %endif
@@ -932,12 +948,14 @@ find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
 cp -a %{buildroot}%{_docdir}/%{name} __doc
 rm -rf %{buildroot}%{_docdir}/%{name}
 
+%if %{PHP}
 # PHP configuration file
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
 %{__cat} << __EOF__ > %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
 ; Enable %{name} extension module
 extension=gv.so
 __EOF__
+%endif
 
 # Remove executable modes from demos
 find %{buildroot}%{_datadir}/%{name}/demo -type f -exec chmod a-x {} ';'
