@@ -17,7 +17,6 @@ extern "C" {
  * grammar support routines
  * stuffed in a header so exparse.y can work
  * with both yacc and bison
- * sometimes free stuff can cost a lot
  */
 
 #if !defined(_EXGRAM_H) && ( defined(MINTOKEN) || defined(YYTOKENTYPE) )
