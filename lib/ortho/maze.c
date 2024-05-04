@@ -14,6 +14,7 @@
 #define DEBUG
 
 #include <cgraph/alloc.h>
+#include <float.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
@@ -466,8 +467,8 @@ maze *mkMaze(graph_t *g) {
     mp->ngcells = agnnodes(g);
     cp = mp->gcells = gv_calloc(mp->ngcells, sizeof(cell));
 
-    boxf BB = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
-               .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
+    boxf BB = {.LL = {.x = DBL_MAX, .y = DBL_MAX},
+               .UR = {.x = -DBL_MAX, .y = -DBL_MAX}};
     for (n = agfstnode (g); n; n = agnxtnode(g,n)) {
         w2 = fmax(1, ND_xsize(n) / 2.0);
         h2 = fmax(1, ND_ysize(n) / 2.0);
