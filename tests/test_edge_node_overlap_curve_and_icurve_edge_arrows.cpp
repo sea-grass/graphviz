@@ -1,6 +1,6 @@
 #include <string>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"

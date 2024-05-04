@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (11.0.1)]
 
+### Changed
+
+- The Catch2-based test suite in the CMake build system has been ported from
+  Catch2 v2 to Catch2 v3. Support for Catch2 v2 has been removed. #2465
+
 ## [11.0.0] – 2024-04-28
 
 ### Added

@@ -9,7 +9,6 @@ enable_testing()
 # for convenience, make a library that depends on everything so each
 # separate test can be as small as possible
 add_library(test_common SHARED
-            catch2_main.cpp
             graphviz_edge.cpp
             graphviz_edge.h
             graphviz_graph.cpp
@@ -42,7 +41,6 @@ target_include_directories(test_common SYSTEM PRIVATE
   ${RAPIDXML_INCLUDE_DIRS}
   ${SVGPP_INCLUDE_DIRS}
 )
-target_link_libraries(test_common PUBLIC Catch2::Catch2)
 target_link_libraries(test_common PUBLIC
   gvplugin_core
   gvplugin_dot_layout
@@ -76,6 +74,7 @@ macro(CREATE_TEST testname)
   target_link_libraries(test_${testname} PRIVATE
     test_common
   )
+  target_link_libraries(test_${testname} PRIVATE Catch2::Catch2WithMain)
 endmacro()
 
 CREATE_TEST(AGraph_construction)

@@ -1,6 +1,6 @@
 #include <cstring>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 
 #include <cgraph++/AGraph.h>
 #include <gvc++/GVContext.h>

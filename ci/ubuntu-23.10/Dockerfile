@@ -83,10 +83,5 @@ python3-setuptools \
 gcovr \
 lcov \
 shellcheck \
-# Libraries used in test
-catch2 \
-libboost-dev \
-libfmt-dev \
-libsvgpp-dev \
 # Clean up
 && rm -rf /var/lib/apt/lists/*
