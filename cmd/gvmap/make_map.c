@@ -1342,7 +1342,7 @@ void make_map_from_rectangle_groups(bool include_OK_points,
     } else if (shore_depth_tol == 0){
       get_boundingbox(n, dim, x, sizes, bbox);
       const double area = (bbox[1] - bbox[0]) * (bbox[3] - bbox[2]);
-      shore_depth_tol = sqrt(area/(double) n); 
+      shore_depth_tol = sqrt(area / n);
       if (Verbose) fprintf(stderr,"setting shore length ======%f\n",shore_depth_tol);
     } else {
     }
