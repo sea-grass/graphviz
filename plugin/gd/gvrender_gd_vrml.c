@@ -12,6 +12,7 @@
 #include "config.h"
 #include "gdgen_text.h"
 #include <assert.h>
+#include <float.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -198,7 +199,7 @@ static void vrml_begin_page(GVJ_t *job)
     gvputs(job,   "#VRML V2.0 utf8\n");
 
     state->Saw_skycolor = false;
-    state->MinZ = MAXDOUBLE;
+    state->MinZ = DBL_MAX;
     gvputs(job,   "Group { children [\n"
                   "  Transform {\n");
     gvprintf(job, "    scale %.3f %.3f %.3f\n", .0278, .0278, .0278);
