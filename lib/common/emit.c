@@ -16,6 +16,7 @@
 
 #include "config.h"
 #include <assert.h>
+#include <float.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -2871,8 +2872,8 @@ boxf xdotBB (Agraph_t* g)
     if (!xd) return bb;
 
     if (bb.LL.x == bb.UR.x && bb.LL.y == bb.UR.y) {
-	bb.LL.x = bb.LL.y = MAXDOUBLE;
-	bb.UR.x = bb.UR.y = -MAXDOUBLE;
+	bb.LL.x = bb.LL.y = DBL_MAX;
+	bb.UR.x = bb.UR.y = -DBL_MAX;
     }
 
     op = (exdot_op*)xd->ops;
