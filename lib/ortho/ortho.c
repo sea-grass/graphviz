@@ -24,6 +24,7 @@
 #define DEBUG
 #include <assert.h>
 #include <float.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <ortho/maze.h>
@@ -1557,10 +1558,10 @@ static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
     for (int i = 0; i < mp->ncells; i++) {
       const boxf bb = mp->cells[i].bb;
       fprintf (fp, "%f %f %f %f cell\n", bb.LL.x, bb.LL.y, bb.UR.x, bb.UR.y);
-      absbb.LL.x = MIN(absbb.LL.x, bb.LL.x);
-      absbb.LL.y = MIN(absbb.LL.y, bb.LL.y);
-      absbb.UR.x = MAX(absbb.UR.x, bb.UR.x);
-      absbb.UR.y = MAX(absbb.UR.y, bb.UR.y);
+      absbb.LL.x = fmin(absbb.LL.x, bb.LL.x);
+      absbb.LL.y = fmin(absbb.LL.y, bb.LL.y);
+      absbb.UR.x = fmax(absbb.UR.x, bb.UR.x);
+      absbb.UR.y = fmax(absbb.UR.y, bb.UR.y);
     }
 
     const boxf bbox = {
