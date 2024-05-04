@@ -1824,7 +1824,7 @@ static double userSize(node_t * n)
     double w, h;
     w = late_double(n, N_width, 0.0, MIN_NODEWIDTH);
     h = late_double(n, N_height, 0.0, MIN_NODEHEIGHT);
-    return INCH2PS(MAX(w, h));
+    return INCH2PS(fmax(w, h));
 }
 
 shape_kind shapeOf(node_t * n)
@@ -1975,7 +1975,8 @@ static void poly_init(node_t * n)
     }
 
     /* initialize node bb to labelsize */
-    pointf bb = {.x = MAX(dimen.x, imagesize.x), .y = MAX(dimen.y, imagesize.y)};
+    pointf bb = {.x = fmax(dimen.x, imagesize.x),
+                 .y = fmax(dimen.y, imagesize.y)};
 
     /* I don't know how to distort or skew ellipses in postscript */
     /* Convert request to a polygon with a large number of sides */
@@ -2040,25 +2041,25 @@ static void poly_init(node_t * n)
 		  agnameof(n), agnameof(agraphof(n)));
 	bb = (pointf){.x = width, .y = height};
     } else {
-	bb.x = width = MAX(width, bb.x);
-	bb.y = height = MAX(height, bb.y);
+	bb.x = width = fmax(width, bb.x);
+	bb.y = height = fmax(height, bb.y);
     }
 
     /* If regular, make dimensions the same.
      * Need this to guarantee final node size is regular.
      */
     if (regular) {
-	width = height = bb.x = bb.y = MAX(bb.x, bb.y);
+	width = height = bb.x = bb.y = fmax(bb.x, bb.y);
     }
 
     /* Compute space available for label.  Provides the justification borders */
     if (!mapbool(late_string(n, N_nojustify, "false"))) {
 	if (isBox) {
-	    ND_label(n)->space.x = MAX(dimen.x,bb.x) - spacex;
+	    ND_label(n)->space.x = fmax(dimen.x, bb.x) - spacex;
 	}
 	else if (dimen.y < bb.y) {
 	    temp = bb.x * sqrt(1.0 - SQR(dimen.y) / SQR(bb.y));
-	    ND_label(n)->space.x = MAX(dimen.x,temp) - spacex;
+	    ND_label(n)->space.x = fmax(dimen.x, temp) - spacex;
         }
 	else
 	    ND_label(n)->space.x = dimen.x - spacex;
@@ -2173,8 +2174,8 @@ static void poly_init(node_t * n)
 		P.y *= bb.y;
 
 	    /*find max for bounding box */
-		xmax = MAX(fabs(P.x), xmax);
-		ymax = MAX(fabs(P.y), ymax);
+		xmax = fmax(fabs(P.x), xmax);
+		ymax = fmax(fabs(P.y), ymax);
 
 	    /* store result in array of points */
 		vertices[i] = P;
@@ -2190,7 +2191,7 @@ static void poly_init(node_t * n)
 	/* apply minimum dimensions */
 	xmax *= 2.;
 	ymax *= 2.;
-	bb = (pointf){.x = MAX(width, xmax), .y = MAX(height, ymax)};
+	bb = (pointf){.x = fmax(width, xmax), .y = fmax(height, ymax)};
 	outline_bb = bb;
 
 	scalex = bb.x / xmax;
@@ -2209,18 +2210,18 @@ static void poly_init(node_t * n)
 	    pointf Q;
 	    for (size_t j = 1; j < sides; j++) {
 		Q = vertices[(i - j) % sides];
-		if (Q.x != R.x || Q.y != R.y) {
+		if (!is_exactly_equal(Q.x, R.x) || !is_exactly_equal(Q.y, R.y)) {
 		    break;
 		}
 	    }
-	    assert(R.x != Q.x || R.y != Q.y);
+	    assert(!is_exactly_equal(R.x, Q.x) || !is_exactly_equal(R.y, Q.y));
 	    beta = atan2(R.y - Q.y, R.x - Q.x);
 	    pointf Qprev = Q;
 	    for (i = 0; i < sides; i++) {
 
 		/*for each vertex find the bisector */
 		Q = vertices[i];
-		if (Q.x == Qprev.x && Q.y == Qprev.y) {
+		if (is_exactly_equal(Q.x, Qprev.x) && is_exactly_equal(Q.y, Qprev.y)) {
 		    // The vertex points for the side ending at Q are equal,
 		    // i.e. this side is actually a point and its angle is
 		    // undefined. Therefore we keep the same offset for the end
@@ -2231,11 +2232,11 @@ static void poly_init(node_t * n)
 		} else {
 		    for (size_t j = 1; j < sides; j++) {
 			R = vertices[(i + j) % sides];
-			if (R.x != Q.x || R.y != Q.y) {
+			if (!is_exactly_equal(R.x, Q.x) || !is_exactly_equal(R.y, Q.y)) {
 			    break;
 			}
 		    }
-		    assert(R.x != Q.x || R.y != Q.y);
+		    assert(!is_exactly_equal(R.x, Q.x) || !is_exactly_equal(R.y, Q.y));
 		    alpha = beta;
 		    beta = atan2(R.y - Q.y, R.x - Q.x);
 		    gamma = (alpha + M_PI - beta) / 2.;
@@ -2268,11 +2269,11 @@ static void poly_init(node_t * n)
 	    }
 	    for (i = 0; i < sides; i++) {
 		pointf P = vertices[i + (peripheries - 1) * sides];
-		bb = (pointf){.x = MAX(2. * fabs(P.x), bb.x),
-		              .y = MAX(2. * fabs(P.y), bb.y)};
+		bb = (pointf){.x = fmax(2.0 * fabs(P.x), bb.x),
+		              .y = fmax(2.0 * fabs(P.y), bb.y)};
 		Q = vertices[i + (outp - 1) * sides];
-		outline_bb = (pointf){.x = MAX(2. * fabs(Q.x), outline_bb.x),
-		                      .y = MAX(2. * fabs(Q.y), outline_bb.y)};
+		outline_bb = (pointf){.x = fmax(2.0 * fabs(Q.x), outline_bb.x),
+		                      .y = fmax(2.0 * fabs(Q.y), outline_bb.y)};
 	    }
 	}
     }
@@ -2286,10 +2287,10 @@ static void poly_init(node_t * n)
 
     if (poly->option & FIXEDSHAPE) {
 	/* set width and height to reflect label and shape */
-	ND_width(n) = PS2INCH(MAX(dimen.x,bb.x));
-	ND_height(n) = PS2INCH(MAX(dimen.y,bb.y));
-	ND_outline_width(n) = PS2INCH(MAX(dimen.x, outline_bb.x));
-	ND_outline_height(n) = PS2INCH(MAX(dimen.y, outline_bb.y));
+	ND_width(n) = PS2INCH(fmax(dimen.x, bb.x));
+	ND_height(n) = PS2INCH(fmax(dimen.y, bb.y));
+	ND_outline_width(n) = PS2INCH(fmax(dimen.x, outline_bb.x));
+	ND_outline_height(n) = PS2INCH(fmax(dimen.y, outline_bb.y));
     } else {
 	ND_width(n) = PS2INCH(bb.x);
 	ND_height(n) = PS2INCH(bb.y);
@@ -2379,12 +2380,12 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	}
 
 	/* scale */
-	if (xsize == 0.0)
-	    xsize = 1.0;
-	if (ysize == 0.0)
-	    ysize = 1.0;
-	inside_context->s.scalex = n_width / xsize;
-	inside_context->s.scaley = n_height / ysize;
+	inside_context->s.scalex = n_width;
+	if (!is_exactly_zero(xsize))
+	    inside_context->s.scalex /= xsize;
+	inside_context->s.scaley = n_height;
+	if (!is_exactly_zero(ysize))
+	    inside_context->s.scaley /= ysize;
 	inside_context->s.box_URx = n_outline_width / 2;
 	inside_context->s.box_URy = n_outline_height / 2;
 
@@ -2491,6 +2492,8 @@ static unsigned char invflip_side(unsigned char side, int rankdir) {
 	case RIGHT:
 	    side = BOTTOM;
 	    break;
+	default:
+	    break;
 	}
 	break;
     case RANKDIR_RL:
@@ -2506,6 +2509,8 @@ static unsigned char invflip_side(unsigned char side, int rankdir) {
 	    break;
 	case RIGHT:
 	    side = TOP;
+	    break;
+	default:
 	    break;
 	}
 	break;
@@ -2540,6 +2545,8 @@ static double invflip_angle(double angle, int rankdir)
 	else if (angle == M_PI * -0.5)
 	    angle = M_PI;
 	break;
+    default:
+	UNREACHABLE();
     }
     return angle;
 }
@@ -2639,7 +2646,7 @@ compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
 	}
 	defined = false;
     }
-    maxv = MAX(b.UR.x,b.UR.y);
+    maxv = fmax(b.UR.x, b.UR.y);
     maxv *= 4.0;
     ctr = p;
     if (compass && *compass) {
@@ -3054,23 +3061,27 @@ static void point_init(node_t * n)
     size_t i, j;
     double w, h;
 
+    // a value outside of the range of `width`/`height` that we can use to
+    // detect when attributes have not been set
+    static const double UNSET = -1.0;
+
     /* set width and height, and make them equal
      * if user has set weight or height, use it.
      * if both are set, use smallest.
      * if neither, use default
      */
-    w = late_double(n, N_width, MAXDOUBLE, 0.0);
-    h = late_double(n, N_height, MAXDOUBLE, 0.0);
-    w = MIN(w, h);
-    if (w == MAXDOUBLE && h == MAXDOUBLE)	/* neither defined */
+    w = late_double(n, N_width, UNSET, MIN_NODEWIDTH);
+    h = late_double(n, N_height, UNSET, MIN_NODEHEIGHT);
+    w = fmin(w, h);
+    if (is_exactly_equal(w, UNSET) && is_exactly_equal(h, UNSET)) // neither defined
 	ND_width(n) = ND_height(n) = DEF_POINT;
     else {
-	w = MIN(w, h);
+	w = fmin(w, h);
 	/* If w == 0, use it; otherwise, make w no less than MIN_POINT due
          * to the restrictions mentioned above.
          */
 	if (w > 0.0) 
-	    w = MAX(w,MIN_POINT);
+	    w = fmax(w, MIN_POINT);
 	ND_width(n) = ND_height(n) = w;
     }
 
