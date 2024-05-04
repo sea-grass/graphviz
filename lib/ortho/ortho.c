@@ -23,6 +23,7 @@
 
 #define DEBUG
 #include <assert.h>
+#include <float.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <ortho/maze.h>
@@ -1536,8 +1537,8 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 
 static DEBUG_FN void emitGraph(FILE *fp, maze *mp, size_t n_edges,
                                route *route_list, epair_t es[]) {
-    boxf absbb = {.LL = {.x = MAXDOUBLE, .y = MAXDOUBLE},
-                  .UR = {.x = -MAXDOUBLE, .y = -MAXDOUBLE}};
+    boxf absbb = {.LL = {.x = DBL_MAX, .y = DBL_MAX},
+                  .UR = {.x = -DBL_MAX, .y = -DBL_MAX}};
 
     fprintf (fp, "%s", prolog2);
     fprintf (fp, "%d %d translate\n", TRANS, TRANS);
