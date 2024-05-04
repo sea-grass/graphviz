@@ -58,11 +58,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
 
     excluded_files = generated_files
 
-    exclude_options = [
-        arg
-        for exclude_option in [["--exclude", f] for f in excluded_files]
-        for arg in exclude_option
-    ]
+    exclude_options = [f"--exclude={f}" for f in excluded_files]
 
     if options.init:
         subprocess.check_call(
