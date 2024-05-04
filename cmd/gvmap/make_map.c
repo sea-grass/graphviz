@@ -1059,10 +1059,10 @@ static void make_map_internal(bool include_OK_points,
 	        fmax(boxsize[0] * 0.2, 2 * shore_depth_tol));
     }
     if (nrandom < 0) {
-      double n1, n2, area2;
+      double area2;
       area2 = (xmax[1] - xmin[1])*(xmax[0] - xmin[0]);
-      n1 = (int) area2/(shore_depth_tol*shore_depth_tol);
-      n2 = n*((int) area2/area);
+      const double n1 = floor(area2 / (shore_depth_tol * shore_depth_tol));
+      const double n2 = n * floor(area2 / area);
       nrandom = fmax(n1, n2);
     }
     srand(123);
