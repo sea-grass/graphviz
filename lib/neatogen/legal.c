@@ -432,10 +432,10 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 	for (size_t j = 0; j < polys[i]->pn; j++) {
 	    x = polys[i]->ps[j].x;
 	    y = polys[i]->ps[j].y;
-	    bb.LL.x = MIN(bb.LL.x,x);
-	    bb.LL.y = MIN(bb.LL.y,y);
-	    bb.UR.x = MAX(bb.UR.x,x);
-	    bb.UR.y = MAX(bb.UR.y,y);
+	    bb.LL.x = fmin(bb.LL.x,x);
+	    bb.LL.y = fmin(bb.LL.y,y);
+	    bb.UR.x = fmax(bb.UR.x,x);
+	    bb.UR.y = fmax(bb.UR.y,y);
 	    vertex_list[vno].pos.x = x;
 	    vertex_list[vno].pos.y = y;
 	    vertex_list[vno].poly = &polygon_list[i];
