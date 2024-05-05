@@ -95,7 +95,7 @@ static double getRotation(block_t *sn, double x, double y, double theta) {
 	double r = sn->radius - rho;
 	double n_x = ND_pos(neighbor)[0];
 	if (COALESCED(sn) && -r < n_x) {
-	    double R = LEN(x, y);
+	    const double R = hypot(x, y);
 	    double n_y = ND_pos(neighbor)[1];
 	    double phi = atan2(n_y, n_x + r);
 	    double l = r - rho / cos(phi);
