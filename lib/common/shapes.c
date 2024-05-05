@@ -1939,7 +1939,7 @@ static void poly_init(node_t * n)
 	else {
 	    width = ND_width(n);
 	    height = ND_height(n);
-	    width = height = INCH2PS(MIN(width, height));
+	    width = height = INCH2PS(fmin(width, height));
 	}
     } else {
 	width = INCH2PS(ND_width(n));
