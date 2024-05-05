@@ -26,7 +26,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global GOLANG     1
 %global GTS        1
 %global GTK        1
-%global GUILE      1
 %global JAVA       1
 %global JAVASCRIPT 0
 %global LASI       1
@@ -95,12 +94,10 @@ BuildRequires: libglade2-devel gtkglext-devel
 %if %{GTS}
 BuildRequires: gts-devel
 %endif
-%if %{GUILE}
 %if 0%{?fedora} > 0 || 0%{?rhel} >= 9
 BuildRequires: guile30-devel
 %else
 BuildRequires: guile-devel
-%endif
 %endif
 %if %{JAVA}
 BuildRequires: java-devel
@@ -569,7 +566,6 @@ Guile extension for graphviz.
 %endif
 
 #-- graphviz-lang-guile rpm --------------------------------------------
-%if %{GUILE}
 %package lang-guile
 Group:          Applications/Multimedia
 Summary:        Guile extension for graphviz
@@ -589,7 +585,6 @@ Guile extension for graphviz.
 %dir %{_libdir}/graphviz/guile
 %{_libdir}/graphviz/guile/*
 %{_mandir}/man3/*.3guile.*
-%endif
 
 #-- graphviz-lang-java rpm ---------------------------------------------
 %if 0%{?JAVA}
@@ -890,9 +885,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
 %endif
 %if ! %{JAVA}
         --disable-java \
-%endif
-%if ! %{GUILE}
-        --disable-guile \
 %endif
 %if ! %{LASI}
         --without-lasi \
