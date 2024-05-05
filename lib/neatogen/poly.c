@@ -174,7 +174,7 @@ int makeAddPoly(Poly *pp, Agnode_t *n, double xmargin, double ymargin) {
 		}
 		else {
 		    for (size_t i = 0; i < sides; i++) {
-                        double h = LEN(poly->vertices[i].x,poly->vertices[i].y);
+		        const double h = hypot(poly->vertices[i].x, poly->vertices[i].y);
 		        verts[i].x = poly->vertices[i].x * (1.0 + xmargin/h);
 		        verts[i].y = poly->vertices[i].y * (1.0 + ymargin/h);
 		        verts[i].x = PS2INCH(verts[i].x);
