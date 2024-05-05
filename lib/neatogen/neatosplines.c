@@ -430,7 +430,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 			polyp.y = verts[j].y + ymargin;
 		    }
 		    else {
-			double h = LEN(verts[j].x,verts[j].y);
+			const double h = hypot(verts[j].x, verts[j].y);
 			polyp.x = verts[j].x * (1.0 + margin.x/h);
 			polyp.y = verts[j].y * (1.0 + margin.y/h);
 		    }
