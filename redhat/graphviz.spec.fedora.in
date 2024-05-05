@@ -32,7 +32,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global LASI       1
 %global PHP        1
 %global WEBP       1
-%global PYTHON3    1
 %global QT5        1
 
 # Overrides for RHEL
@@ -73,6 +72,7 @@ BuildRequires: gmp-devel gd gd-devel librsvg2-devel
 BuildRequires: ghostscript ghostscript-devel poppler-glib-devel libtool-ltdl libtool-ltdl-devel
 BuildRequires: ruby ruby-devel lua-devel
 BuildRequires: perl-devel perl-libs perl-ExtUtils-Embed tcl tcl-devel tk tk-devel
+BuildRequires: python3 python3-devel
 
 %if %{ANN}
 BuildRequires: ann-devel
@@ -110,9 +110,6 @@ BuildRequires: lasi-devel
 %endif
 %if %{PHP}
 BuildRequires: php-devel
-%endif
-%if %{PYTHON3}
-BuildRequires: python3 python3-devel
 %endif
 %if %{QT5}
 BuildRequires: qt5-qtbase-devel
@@ -697,7 +694,6 @@ PHP extension for graphviz.
 %endif
 
 #-- graphviz-lang-python3 rpm -------------------------------------------
-%if %{PYTHON3}
 %package lang-python3
 Group:          Applications/Multimedia
 Summary:        Python extension for graphviz
@@ -715,7 +711,6 @@ Python extension for graphviz.
 %{_mandir}/man3/gv.3python.*
 %exclude %{_libdir}/graphviz/python3/*.so
 %exclude %{_libdir}/graphviz/python3/*.py*
-%endif
 
 #-- graphviz-lang-R rpm ---------------------------------------------
 %if %{ARRRR}
@@ -887,9 +882,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --without-ann \
 %endif
         --disable-python \
-%if ! %{PYTHON3}
-        --disable-python3 \
-%endif
 %if ! %{GOLANG}
         --disable-go \
 %endif
