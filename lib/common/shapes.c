@@ -3542,10 +3542,10 @@ static pointf size_reclbl(node_t * n, field_t * f)
 	    d0 = size_reclbl(n, f->fld[i]);
 	    if (f->LR) {
 		d.x += d0.x;
-		d.y = MAX(d.y, d0.y);
+		d.y = fmax(d.y, d0.y);
 	    } else {
 		d.y += d0.y;
-		d.x = MAX(d.x, d0.x);
+		d.x = fmax(d.x, d0.x);
 	    }
 	}
     }
