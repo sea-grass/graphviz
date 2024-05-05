@@ -442,8 +442,8 @@ static boxf bbox(Ppoly_t** obsp, int npoly, int *np)
     pointf p;
     Ppoly_t* obs;
 
-    bb.LL.x = bb.LL.y = MAXDOUBLE;
-    bb.UR.x = bb.UR.y = -MAXDOUBLE;
+    bb.LL.x = bb.LL.y = DBL_MAX;
+    bb.UR.x = bb.UR.y = -DBL_MAX;
 
     for (i = 0; i < npoly; i++) {
 	obs = *obsp++;

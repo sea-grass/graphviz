@@ -1059,10 +1059,9 @@ static void make_map_internal(bool include_OK_points,
 	        fmax(boxsize[0] * 0.2, 2 * shore_depth_tol));
     }
     if (nrandom < 0) {
-      double n1, n2, area2;
-      area2 = (xmax[1] - xmin[1])*(xmax[0] - xmin[0]);
-      n1 = (int) area2/(shore_depth_tol*shore_depth_tol);
-      n2 = n*((int) area2/area);
+      const double area2 = (xmax[1] - xmin[1]) * (xmax[0] - xmin[0]);
+      const double n1 = floor(area2 / (shore_depth_tol * shore_depth_tol));
+      const double n2 = n * floor(area2 / area);
       nrandom = fmax(n1, n2);
     }
     srand(123);
@@ -1341,10 +1340,9 @@ void make_map_from_rectangle_groups(bool include_OK_points,
     if (shore_depth_tol < 0) {
       shore_depth_tol = -(shore_depth_tol)*avgsz;
     } else if (shore_depth_tol == 0){
-      double area;
       get_boundingbox(n, dim, x, sizes, bbox);
-      area = (bbox[1] - bbox[0])*(bbox[3] - bbox[2]);
-      shore_depth_tol = sqrt(area/(double) n); 
+      const double area = (bbox[1] - bbox[0]) * (bbox[3] - bbox[2]);
+      shore_depth_tol = sqrt(area / n);
       if (Verbose) fprintf(stderr,"setting shore length ======%f\n",shore_depth_tol);
     } else {
     }

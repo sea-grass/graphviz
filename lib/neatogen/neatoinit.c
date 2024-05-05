@@ -39,6 +39,7 @@
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
+#include <float.h>
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -1153,7 +1154,7 @@ majorization(graph_t *mg, graph_t * g, int nv, int mode, int model, int dim, adj
 
 #ifdef DIGCOLA
     if (mode != MODE_MAJOR) {
-        double lgap = late_double(g, agfindgraphattr(g, "levelsgap"), 0.0, -MAXDOUBLE);
+        double lgap = late_double(g, agfindgraphattr(g, "levelsgap"), 0.0, -DBL_MAX);
         if (mode == MODE_HIER) {
             rv = stress_majorization_with_hierarchy(gp, nv, coords, nodes, Ndim,
                        opts, model, MaxIter, lgap);

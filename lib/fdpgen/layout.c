@@ -30,6 +30,7 @@
 
 #include "config.h"
 #include <assert.h>
+#include <float.h>
 #include <limits.h>
 #include <inttypes.h>
 #include <assert.h>
@@ -415,7 +416,7 @@ static graph_t *deriveGraph(graph_t * g, layout_info * infop)
 
     /* create derived nodes from clusters */
     for (i = 1; i <= GD_n_cluster(g); i++) {
-	boxf fix_bb = {{ MAXDOUBLE, MAXDOUBLE },{ -MAXDOUBLE, -MAXDOUBLE }};
+	boxf fix_bb = {{DBL_MAX, DBL_MAX}, {-DBL_MAX, -DBL_MAX}};
 	subg = GD_clust(g)[i];
 
 	do_graph_label(subg);

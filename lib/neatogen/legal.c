@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <float.h>
 #include <math.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
@@ -426,15 +427,15 @@ int Plegal_arrangement(Ppoly_t ** polys, int n_polys)
 
     for (i = vno = 0; i < n_polys; i++) {
 	polygon_list[i].start = &vertex_list[vno];
-	bb.LL.x = bb.LL.y = MAXDOUBLE;
-	bb.UR.x = bb.UR.y = -MAXDOUBLE;
+	bb.LL.x = bb.LL.y = DBL_MAX;
+	bb.UR.x = bb.UR.y = -DBL_MAX;
 	for (size_t j = 0; j < polys[i]->pn; j++) {
 	    x = polys[i]->ps[j].x;
 	    y = polys[i]->ps[j].y;
-	    bb.LL.x = MIN(bb.LL.x,x);
-	    bb.LL.y = MIN(bb.LL.y,y);
-	    bb.UR.x = MAX(bb.UR.x,x);
-	    bb.UR.y = MAX(bb.UR.y,y);
+	    bb.LL.x = fmin(bb.LL.x,x);
+	    bb.LL.y = fmin(bb.LL.y,y);
+	    bb.UR.x = fmax(bb.UR.x,x);
+	    bb.UR.y = fmax(bb.UR.y,y);
 	    vertex_list[vno].pos.x = x;
 	    vertex_list[vno].pos.y = y;
 	    vertex_list[vno].poly = &polygon_list[i];

@@ -10,6 +10,7 @@
 
 
 #include "config.h"
+#include <float.h>
 #include <limits.h>
 #include <sfdpgen/sfdp.h>
 #include <neatogen/neato.h>
@@ -216,7 +217,7 @@ tuneControl (graph_t* g, spring_electrical_control ctrl)
     ctrl->tscheme = late_quadtree_scheme(g, agfindgraphattr(g, "quadtree"), QUAD_TREE_NORMAL);
     ctrl->beautify_leaves = mapbool(agget(g, "beautify"));
     ctrl->do_shrinking = mapBool(agget(g, "overlap_shrink"), true);
-    ctrl->rotation = late_double(g, agfindgraphattr(g, "rotation"), 0.0, -MAXDOUBLE);
+    ctrl->rotation = late_double(g, agfindgraphattr(g, "rotation"), 0.0, -DBL_MAX);
     ctrl->edge_labeling_scheme = late_int(g, agfindgraphattr(g, "label_scheme"), 0, 0);
     if (ctrl->edge_labeling_scheme > 4) {
 	agwarningf("label_scheme = %d > 4 : ignoring\n", ctrl->edge_labeling_scheme);
