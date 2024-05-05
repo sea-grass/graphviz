@@ -647,7 +647,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
 	const double d = hypot(dx, dy);
-	rbconst = MIN(rbconst, d / 3.0);
+	rbconst = fmin(rbconst, d / 3.0);
     }
     for (size_t seg = 0; seg < sides; seg++) {
 	p0 = AF[seg];
