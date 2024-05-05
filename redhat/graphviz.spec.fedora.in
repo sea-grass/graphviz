@@ -26,7 +26,6 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global GOLANG     1
 %global GTS        1
 %global GTK        1
-%global JAVA       1
 %global JAVASCRIPT 0
 %global LASI       1
 %global PHP        1
@@ -63,6 +62,7 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires: java-devel
 BuildRequires: zlib-devel expat-devel ksh bison m4 flex swig gcc-c++
 BuildRequires: libXaw-devel libSM-devel libICE-devel libXpm-devel libXt-devel
 BuildRequires: libXmu-devel libXext-devel libX11-devel gtk2-devel freeglut-devel
@@ -98,9 +98,6 @@ BuildRequires: gts-devel
 BuildRequires: guile30-devel
 %else
 BuildRequires: guile-devel
-%endif
-%if %{JAVA}
-BuildRequires: java-devel
 %endif
 %if %{LASI}
 BuildRequires: lasi-devel
@@ -587,7 +584,6 @@ Guile extension for graphviz.
 %{_mandir}/man3/*.3guile.*
 
 #-- graphviz-lang-java rpm ---------------------------------------------
-%if 0%{?JAVA}
 %package lang-java
 Group:          Applications/Multimedia
 Summary:        Java extension for graphviz
@@ -603,7 +599,6 @@ Java extension for graphviz.
 %dir %{_libdir}/graphviz/java
 %{_libdir}/graphviz/java/*
 %{_mandir}/man3/*.3java.*
-%endif
 
 #-- graphviz-lang-javascript rpm ---------------------------------------------
 %if 0%{?JAVASCRIPT}
@@ -882,9 +877,6 @@ CFLAGS="$RPM_OPT_FLAGS" \
 %endif
 %if ! %{JAVASCRIPT}
         --disable-javascript \
-%endif
-%if ! %{JAVA}
-        --disable-java \
 %endif
 %if ! %{LASI}
         --without-lasi \
