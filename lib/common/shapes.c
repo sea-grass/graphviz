@@ -3703,8 +3703,8 @@ static void record_init(node_t * n)
 */
 	}
     } else {
-	sz.x = MAX(info->size.x, sz.x);
-	sz.y = MAX(info->size.y, sz.y);
+	sz.x = fmax(info->size.x, sz.x);
+	sz.y = fmax(info->size.y, sz.y);
     }
     resize_reclbl(info, sz, mapbool(late_string(n, N_nojustify, "false")));
     pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
