@@ -19,10 +19,11 @@
 #include <neatogen/mem.h>
 #include <stdbool.h>
 
-#define BOX 1
-#define ISBOX(p) ((p)->kind & BOX)
-#define CIRCLE 2
-#define ISCIRCLE(p) ((p)->kind & CIRCLE)
+static const int BOX = 1;
+static const int CIRCLE = 2;
+
+static bool ISBOX(const Poly *p) { return p->kind & BOX; }
+static bool ISCIRCLE(const Poly *p) { return p->kind & CIRCLE; }
 
 static size_t maxcnt = 0;
 static Point *tp1 = NULL;
