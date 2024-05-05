@@ -612,7 +612,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
     assert(memcmp(&style, &(graphviz_polygon_style_t){0}, sizeof(style)) != 0);
 
     pointf *B, C[5], *D, p0, p1;
-    double rbconst, dx, dy, t;
+    double dx, dy, t;
     pointf* pts;
 
     struct {
@@ -637,7 +637,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
      * It should be the same for every corner, and also never
      * bigger than one-third the length of a side.
      */
-    rbconst = RBCONST;
+    double rbconst = RBCONST;
     for (size_t seg = 0; seg < sides; seg++) {
 	p0 = AF[seg];
 	if (seg + 1 < sides)
