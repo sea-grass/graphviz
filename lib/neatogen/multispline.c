@@ -715,10 +715,9 @@ static Ppoint_t tweakEnd(Ppoly_t poly, size_t s, Ppoint_t q) {
 	prv = poly.ps[s - 1];
     if (EQPT(q, nxt) || EQPT(q, prv) ){
 	Ppoint_t m;
-	double d;
 	m.x = (nxt.x + prv.x)/2.0 - p.x;
 	m.y = (nxt.y + prv.y)/2.0 - p.y;
-	d = LEN(m.x,m.y);
+	const double d = hypot(m.x, m.y);
 	p.x += 0.1*m.x/d;
 	p.y += 0.1*m.y/d;
     }
