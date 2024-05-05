@@ -612,7 +612,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
     assert(memcmp(&style, &(graphviz_polygon_style_t){0}, sizeof(style)) != 0);
 
     pointf *B, C[5], *D, p0, p1;
-    double rbconst, d, dx, dy, t;
+    double rbconst, dx, dy, t;
     pointf* pts;
 
     struct {
@@ -646,7 +646,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	    p1 = AF[0];
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
-	d = hypot(dx, dy);
+	const double d = hypot(dx, dy);
 	rbconst = MIN(rbconst, d / 3.0);
     }
     for (size_t seg = 0; seg < sides; seg++) {
@@ -657,7 +657,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	    p1 = AF[0];
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
-	d = hypot(dx, dy);
+	const double d = hypot(dx, dy);
 	t = rbconst / d;
 	if (style.shape == BOX3D || style.shape == COMPONENT)
 	    t /= 3;
