@@ -107,7 +107,7 @@ typedef struct
     } colorschema;
 
     typedef struct {
-	int schemacount;       /* number of colors */
+	size_t schemacount; // number of colors
 	int smooth;            /* if true, interpolate */
 	colorschema *s;
     } colorschemaset;

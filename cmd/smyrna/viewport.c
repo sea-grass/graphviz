@@ -554,12 +554,12 @@ static float interpol(float minv, float maxv, float minc, float maxc, float x)
 void getcolorfromschema(colorschemaset * sc, float l, float maxl,
 			glCompColor * c)
 {
-    int ind;
+    size_t ind;
     float percl = l / maxl;
 
     if (sc->smooth) {
 	/* For smooth schemas, s[0].perc = 0, so we start with ind=1 */
-	for (ind = 1; ind < sc->schemacount-1; ind++) {
+	for (ind = 1; ind + 1 < sc->schemacount; ind++) {
 	    if (percl < sc->s[ind].perc)
 		break;
 	}
@@ -574,7 +574,7 @@ void getcolorfromschema(colorschemaset * sc, float l, float maxl,
 		     sc->s[ind - 1].c.B, sc->s[ind].c.B, percl);
     }
     else {
-	for (ind = 0; ind < sc->schemacount-1; ind++) {
+	for (ind = 0; ind + 1 < sc->schemacount; ind++) {
 	    if (percl < sc->s[ind].perc)
 		break;
 	}
@@ -591,20 +591,19 @@ void getcolorfromschema(colorschemaset * sc, float l, float maxl,
  */
 static void set_color_theme_color(colorschemaset * sc, char **colorstr)
 {
-    int ind;
-    int colorcnt = sc->schemacount;
+    const size_t colorcnt = sc->schemacount;
     gvcolor_t cl;
     float av_perc;
 
     sc->smooth = 1;
     av_perc = 1.0 / (float) (colorcnt-1);
-    for (ind = 0; ind < colorcnt; ind++) {
+    for (size_t ind = 0; ind < colorcnt; ind++) {
         colorxlate(colorstr[ind], &cl, RGBA_DOUBLE);
         sc->s[ind].c.R = cl.u.RGBA[0];
         sc->s[ind].c.G = cl.u.RGBA[1];
         sc->s[ind].c.B = cl.u.RGBA[2];
         sc->s[ind].c.A = cl.u.RGBA[3];
-        sc->s[ind].perc = ind * av_perc;
+        sc->s[ind].perc = (float)ind * av_perc;
     }
 }
 
@@ -628,7 +627,7 @@ static char *rain_forest[] = {
 };
 #define CSZ(x) (sizeof(x)/sizeof(char*))
 typedef struct {
-    int cnt;
+    size_t cnt;
     char **colors;
 } colordata;
 static colordata palette[] = {
