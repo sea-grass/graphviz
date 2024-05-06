@@ -154,10 +154,7 @@ void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
     }
     else {
 	if (p->groupid == -1) {
-	    if (!p->status)
-		p->status = true;
-	    else
-		p->status = false;
+	    p->status = !p->status;
 	} else
 	    p->status = false;
     }
