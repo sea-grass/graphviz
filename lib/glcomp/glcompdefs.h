@@ -282,7 +282,6 @@ extern "C" {
     };
 
     typedef struct _glCompMouse {
-	glCompMouseStatus status;
 	glMouseButtonType t;
 	glCompPoint pos; /*current mouse pos,*/
 	glCompPoint GLpos;/*3d converted opengl position*/
