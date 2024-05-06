@@ -394,8 +394,8 @@ static void cairogen_ellipse(GVJ_t * job, pointf * A, int filled)
     ry = A[1].y - A[0].y;
 
 #define RMIN 0.01
-if (rx < RMIN) rx = RMIN;
-if (ry < RMIN) ry = RMIN;
+    rx = fmax(rx, RMIN);
+    ry = fmax(ry, RMIN);
 
     cairo_translate(cr, A[0].x, -A[0].y);
     cairo_scale(cr, rx, ry);
