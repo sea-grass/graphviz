@@ -484,7 +484,7 @@ static void scale_to_edge_length(int dim, SparseMatrix A, double *x, double avg_
   if (Verbose) fprintf(stderr,"avg edge len=%f avg_label-size= %f\n", dist, avg_label_size);
 
 
-  dist = avg_label_size/MAX(dist, MACHINEACC);
+  dist = avg_label_size / fmax(dist, MACHINEACC);
 
   for (i = 0; i < dim*A->m; i++) x[i] *= dist;
 }
