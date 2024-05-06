@@ -11,6 +11,7 @@
 #pragma once
 
 #include <glcomp/glcompdefs.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -19,8 +20,8 @@ extern "C" {
     extern glCompImage *glCompImageNewFile(float x, float y, char *imgfile);
     extern glCompImage *glCompImageNew(glCompObj *par, float x, float y);
     extern void glCompImageDelete(glCompImage * p);
-    extern int glCompImageLoad(glCompImage * i, unsigned char *data,
-			       int width, int height,int is2D);
+    extern int glCompImageLoad(glCompImage *i, unsigned char *data, int width,
+                               int height, bool is2D);
     extern int glCompImageLoadPng(glCompImage *i, char *pngFile);
     extern void glCompImageDraw(void *obj);
 

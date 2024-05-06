@@ -17,6 +17,7 @@
 #ifdef _WIN32
 #include "windows.h"
 #endif
+#include <stdbool.h>
 #include <stdio.h>
 #include <glcomp/opengl.h>
 #include <glcomp/glcompdefs.h>
@@ -25,13 +26,10 @@
 extern "C" {
 #endif
 
-    extern glCompTex *glCompSetAddNewTexImage(glCompSet * s, int width,
-					      int height,
-					      unsigned char *data,
-					      int is2D);
-    extern glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def,
-					      int fs, char *text,
-					      int is2D);
+glCompTex *glCompSetAddNewTexImage(glCompSet *s, int width, int height,
+                                   unsigned char *data, bool is2D);
+glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
+                                   bool is2D);
 
     extern void glCompDeleteTexture(glCompTex * t);
 #ifdef __cplusplus

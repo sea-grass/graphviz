@@ -14,6 +14,7 @@
 #include <glcomp/glcompset.h>
 #include <glcomp/glutils.h>
 #include <glcomp/glcomptexture.h>
+#include <stdbool.h>
 
 glCompImage *glCompImageNew(glCompObj *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));
@@ -54,9 +55,8 @@ void glCompImageDelete(glCompImage * p)
     free(p);
 }
 
-int glCompImageLoad(glCompImage * i, unsigned char *data, int width,
-		    int height,int is2D)
-{
+int glCompImageLoad(glCompImage *i, unsigned char *data, int width, int height,
+                    bool is2D) {
     if (data != NULL) {		/*valid image data */
 	glCompDeleteTexture(i->texture);
 	i->texture =

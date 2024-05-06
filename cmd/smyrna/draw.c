@@ -21,6 +21,7 @@ XDOT DRAWING FUNCTIONS, maybe need to move them somewhere else
 #include "smyrna_utils.h"
 #include <glcomp/glutils.h>
 #include <math.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 #include <xdot/xdot.h>
@@ -357,7 +358,8 @@ static void EmbedText(sdot_op* o, int param)
 		(void)xml_escape(o->op.u.text.text, flags, put, ptr);
 
 		o->font = glNewFont(view->widgets, escaped, &view->penColor,
-		                    font_op->op.u.font.name, font_op->op.u.font.size, 0);
+		                    font_op->op.u.font.name, font_op->op.u.font.size,
+		                    false);
 
 		free(escaped);
 	}

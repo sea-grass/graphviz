@@ -13,11 +13,10 @@
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glpangofont.h>
 #include <stddef.h>
+#include <stdbool.h>
 
-static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
-					 int height, unsigned char *data,
-					 int is2D)
-{
+static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
+                                         unsigned char *data, bool is2D) {
     int Er, offset, ind;
     unsigned char *tarData;
     unsigned char *srcData;
@@ -84,9 +83,8 @@ static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 
 }
 
-glCompTex *glCompSetAddNewTexImage(glCompSet * s, int width, int height,
-				   unsigned char *data, int is2D)
-{
+glCompTex *glCompSetAddNewTexImage(glCompSet *s, int width, int height,
+                                   unsigned char *data, bool is2D) {
 
     glCompTex *t;
     if (!data)
@@ -99,9 +97,8 @@ glCompTex *glCompSetAddNewTexImage(glCompSet * s, int width, int height,
 
 }
 
-glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
-				   char *text, int is2D)
-{
+glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
+                                   bool is2D) {
     int Er, width, height;
     glCompTex *t;
     cairo_surface_t *surface = NULL;

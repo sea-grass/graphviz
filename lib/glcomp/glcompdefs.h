@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -188,7 +189,7 @@ extern "C" {
 	int size;
 	int reference;		/*if font has references to parent */
 	glCompJustify justify;
-	int is2D;
+	bool is2D;
 	int optimize;
     } glCompFont;
 
