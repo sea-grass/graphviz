@@ -499,8 +499,8 @@ static void print_bounding_box(int n, int dim, double *x){
 
   for (i = 0; i < n; i++){
     for (k = 0; k < dim; k++){
-      xmin[k] = MIN(xmin[k],x[i*dim+k]);
-      xmax[k] = MAX(xmax[k],x[i*dim+k]);
+      xmin[k] = fmin(xmin[k], x[i * dim + k]);
+      xmax[k] = fmax(xmax[k], x[i * dim + k]);
     }
   }
   fprintf(stderr,"bounding box = \n");
