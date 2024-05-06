@@ -15,6 +15,7 @@
 #include <glcomp/glcompfont.h>
 #include <glcomp/glutils.h>
 #include <glcomp/glcompset.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 #include <GL/glut.h>
@@ -35,7 +36,7 @@ glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
 
     p->common.width = w;
     p->common.height = h;
-    p->status = 0;		//0 not pressed 1 pressed;
+    p->status = false; // false not pressed, true pressed
     p->groupid = 0;
     p->common.callbacks.click = NULL;
     /*set event functions */
@@ -146,19 +147,19 @@ void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
 	    obj = s->obj[ind];
 	    if (obj->objType == glButtonObj && obj != o) {
 		if (((glCompButton *) obj)->groupid == p->groupid)
-		    ((glCompButton *) obj)->status = 0;
+		    ((glCompButton *) obj)->status = false;
 	    }
 	}
-	p->status = 1;
+	p->status = true;
     }
     else {
 	if (p->groupid == -1) {
-	    if (p->status == 0)
-		p->status = 1;
+	    if (!p->status)
+		p->status = true;
 	    else
-		p->status = 0;
+		p->status = false;
 	} else
-	    p->status = 0;
+	    p->status = false;
     }
     if (p->common.callbacks.click)
 	p->common.callbacks.click((glCompObj *) p, x, y, t);
@@ -179,7 +180,7 @@ void glCompButtonMouseDown(glCompObj *obj, float x, float y,
 
     
     ((glCompButton *) obj)->refStatus = ((glCompButton *) obj)->status;
-    ((glCompButton *) obj)->status = 1;
+    ((glCompButton *) obj)->status = true;
     if (((glCompButton *) obj)->common.callbacks.mousedown)
 	((glCompButton *) obj)->common.callbacks.mousedown(obj, x, y, t);
 }

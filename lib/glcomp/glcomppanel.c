@@ -14,6 +14,7 @@
 #include <glcomp/glcompset.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
+#include <stdbool.h>
 
 glCompPanel *glCompPanelNew(glCompObj *parentObj, float x, float y, float w,
                             float h) {
@@ -67,7 +68,7 @@ int glCompPanelDraw(glCompObj * o)
     glCompDrawRectangle(&r);
     /*draw panel */
     glCompDrawRectPrism(&ref.pos, ref.width, ref.height,
-			p->common.borderWidth, 0.01f, &ref.color, 1);
+			p->common.borderWidth, 0.01f, &ref.color, true);
     /*draw image if there is */
     if (p->image) {
 	p->image->common.callbacks.draw(p->image);

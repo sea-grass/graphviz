@@ -20,6 +20,7 @@
 #include "toolboxcallbacks.h"
 #include "viewportcamera.h"
 #include "selectionfuncs.h"
+#include <stdbool.h>
 #include <stdint.h>
 #include "frmobjectui.h"
 
@@ -271,7 +272,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "N");
     b->common.callbacks.click = (glcompclickfunc_t)selectnodes;
     b->groupid=-1;
-    b->status=1;
+    b->status = true;
 
     y=y+off;
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "E");

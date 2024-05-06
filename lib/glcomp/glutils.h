@@ -15,6 +15,7 @@
 #endif
 #include <glcomp/opengl.h>
 #include <glcomp/glcompdefs.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,7 +29,7 @@ void to3D(int x, int y, float *X, float *Y, float *Z);
 				 glCompCommon * child, glCompCommon * ref);
     extern void glCompDrawRectangle(glCompRect * r);
 void glCompDrawRectPrism(glCompPoint *p, float w, float h, float b, float d,
-                         glCompColor *c, int bumped);
+                         glCompColor *c, bool bumped);
     extern void glCompSetColor(glCompColor * c);
 
 float distBetweenPts(glCompPoint A, glCompPoint B, float R);

@@ -265,8 +265,8 @@ extern "C" {
 	glCompCommon common;
 	float width, height;
 	glCompLabel *label;
-	int status;		//0 not pressed 1 pressed;
-	int refStatus;		//0 not pressed 1 pressed;
+	bool status; ///< false not pressed, true pressed
+	bool refStatus; ///< false not pressed, true pressed
 	int groupid;
 	glCompImage *image;	/*glyph */
 	int data;
