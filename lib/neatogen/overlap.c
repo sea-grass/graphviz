@@ -75,14 +75,11 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 
 enum {INTV_OPEN, INTV_CLOSE};
 
-struct scan_point_struct{
+typedef struct {
   int node;
   double x;
   int status;
-};
-
-typedef struct scan_point_struct scan_point;
-
+} scan_point;
 
 static int comp_scan_points(const void *p, const void *q){
   const scan_point *pp = p;
