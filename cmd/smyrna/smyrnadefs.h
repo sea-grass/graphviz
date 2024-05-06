@@ -235,7 +235,7 @@ typedef struct
     } selection;
 
     typedef struct {
-	int Nodecount;
+	size_t Nodecount;
 	struct {
 	    int active;	//1 draw hierarchy 0 draw regular topview
 	    reposition_t repos;
