@@ -21,7 +21,7 @@ extern "C" {
     extern void glCompImageDelete(glCompImage * p);
     extern int glCompImageLoad(glCompImage * i, unsigned char *data,
 			       int width, int height,int is2D);
-    extern int glCompImageLoadPng(glCompImage * i, char *pngFile,int is2D);
+    extern int glCompImageLoadPng(glCompImage *i, char *pngFile);
     extern void glCompImageDraw(void *obj);
 
 #ifdef __cplusplus
