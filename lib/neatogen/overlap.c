@@ -55,13 +55,13 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 	} else if (dy < MACHINEACC*wy){
 	  t = wx/dx;
 	} else {
-	  t = MIN(wx/dx, wy/dy);
+	  t = fmin(wx / dx, wy / dy);
 	}
-	if (t > 1) t = MAX(t, 1.001);/* no point in things like t = 1.00000001 as this slow down convergence */
-	*tmax = MAX(*tmax, t);
-	*tmin = MIN(*tmin, t);
-	t = MIN(expandmax, t);
-	t = MAX(expandmin, t);
+	if (t > 1) t = fmax(t, 1.001);/* no point in things like t = 1.00000001 as this slow down convergence */
+	*tmax = fmax(*tmax, t);
+	*tmin = fmin(*tmin, t);
+	t = fmin(expandmax, t);
+	t = fmax(expandmin, t);
 	if (t > 1) {
 	  ideal_distance[j] = t*dist;
 	} else {
