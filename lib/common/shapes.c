@@ -4231,7 +4231,7 @@ static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled) {
     gvrender_beziercurve(job, vertices, 7, 0);
 }
 
-static char *side_port[] = { "s", "e", "n", "w" };
+static const char *side_port[] = {"s", "e", "n", "w"};
 
 static point cvtPt(pointf p, int rankdir)
 {
@@ -4272,15 +4272,14 @@ static point cvtPt(pointf p, int rankdir)
  *  - if line segment from port centers uses available sides, use these
  *     or center. (This latter may require spline routing to cooperate.)
  */
-static char *closestSide(node_t * n, node_t * other, port * oldport)
-{
+static const char *closestSide(node_t *n, node_t *other, port *oldport) {
     boxf b;
     int rkd = GD_rankdir(agraphof(n)->root);
     point p = { 0, 0 };
     point pt = cvtPt(ND_coord(n), rkd);
     point opt = cvtPt(ND_coord(other), rkd);
     int sides = oldport->side;
-    char *rv = NULL;
+    const char *rv = NULL;
     int i, d, mind = 0;
 
     if (sides == 0 || sides == (TOP | BOTTOM | LEFT | RIGHT))
@@ -4339,7 +4338,7 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 port resolvePort(node_t * n, node_t * other, port * oldport)
 {
     port rv;
-    char *compass = closestSide(n, other, oldport);
+    const char *compass = closestSide(n, other, oldport);
 
     /* transfer name pointer; all other necessary fields will be regenerated */
     rv.name = oldport->name;
