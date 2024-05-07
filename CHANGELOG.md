@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   been corrected.
 - Edges not rendering properly when using ports and the `crow` arrowhead/tail
   with Windows `Release` builds. #2490
+- A duplicate prototype of `aghtmlstr` has been removed.
 
 ## [11.0.0] – 2024-04-28
 
