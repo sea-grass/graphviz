@@ -4233,10 +4233,8 @@ static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled) {
 
 static const char *side_port[] = {"s", "e", "n", "w"};
 
-static point cvtPt(pointf p, int rankdir)
-{
+static pointf cvtPt(pointf p, int rankdir) {
     pointf q = { 0, 0 };
-    point Q;
 
     switch (rankdir) {
     case RANKDIR_TB:
@@ -4257,8 +4255,7 @@ static point cvtPt(pointf p, int rankdir)
     default:
 	UNREACHABLE();
     }
-    PF2P(q, Q);
-    return Q;
+    return q;
 }
 
 /* closestSide:
@@ -4276,8 +4273,8 @@ static const char *closestSide(node_t *n, node_t *other, port *oldport) {
     boxf b;
     int rkd = GD_rankdir(agraphof(n)->root);
     pointf p = {0};
-    point pt = cvtPt(ND_coord(n), rkd);
-    point opt = cvtPt(ND_coord(other), rkd);
+    const pointf pt = cvtPt(ND_coord(n), rkd);
+    const pointf opt = cvtPt(ND_coord(other), rkd);
     int sides = oldport->side;
     const char *rv = NULL;
 
