@@ -4305,19 +4305,19 @@ static const char *closestSide(node_t *n, node_t *other, port *oldport) {
 	if ((sides & (1 << i)) == 0)
 	    continue;
 	switch (i) {
-	case 0:
+	case BOTTOM_IX:
 	    p.y = b.LL.y;
 	    p.x = (b.LL.x + b.UR.x) / 2;
 	    break;
-	case 1:
+	case RIGHT_IX:
 	    p.x = b.UR.x;
 	    p.y = (b.LL.y + b.UR.y) / 2;
 	    break;
-	case 2:
+	case TOP_IX:
 	    p.y = b.UR.y;
 	    p.x = (b.LL.x + b.UR.x) / 2;
 	    break;
-	case 3:
+	case LEFT_IX:
 	    p.x = b.LL.x;
 	    p.y = (b.LL.y + b.UR.y) / 2;
 	    break;
