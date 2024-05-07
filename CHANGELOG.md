@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   libraries (`-DBUILD_SHARED_LIBS=ON`).
 - **Breaking**: the `polygon_t.style` member is now a struct.
 - **Breaking**: the `LEN` and `MAXDOUBLE` constants have been removed.
+- Accuracy in processing compass points has been improved.
 
 ### Fixed
 

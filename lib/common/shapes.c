@@ -4275,12 +4275,11 @@ static point cvtPt(pointf p, int rankdir)
 static const char *closestSide(node_t *n, node_t *other, port *oldport) {
     boxf b;
     int rkd = GD_rankdir(agraphof(n)->root);
-    point p = { 0, 0 };
+    pointf p = {0};
     point pt = cvtPt(ND_coord(n), rkd);
     point opt = cvtPt(ND_coord(other), rkd);
     int sides = oldport->side;
     const char *rv = NULL;
-    int i, d, mind = 0;
 
     if (sides == 0 || sides == (TOP | BOTTOM | LEFT | RIGHT))
 	return rv;		/* use center */
@@ -4301,7 +4300,8 @@ static const char *closestSide(node_t *n, node_t *other, port *oldport) {
 	}
     }
 
-    for (i = 0; i < 4; i++) {
+    double mind = 0;
+    for (int i = 0; i < 4; i++) {
 	if ((sides & (1 << i)) == 0)
 	    continue;
 	switch (i) {
@@ -4326,7 +4326,7 @@ static const char *closestSide(node_t *n, node_t *other, port *oldport) {
 	}
 	p.x += pt.x;
 	p.y += pt.y;
-	d = DIST2(p, opt);
+	const double d = DIST2(p, opt);
 	if (!rv || d < mind) {
 	    mind = d;
 	    rv = side_port[i];
