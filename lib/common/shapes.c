@@ -2667,10 +2667,8 @@ static pointf compassPoint(inside_t * ictxt, double y, double x)
  * the already adjusted ND_ht, ND_lw and ND_rw back to non-flipped values.
  *
  */
-static int
-compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
-	    inside_t * ictxt)
-{
+static int compassPort(node_t *n, boxf *bp, port *pp, const char *compass,
+                       unsigned char sides, inside_t * ictxt) {
     boxf b;
     pointf p, ctr;
     int rv = 0;
