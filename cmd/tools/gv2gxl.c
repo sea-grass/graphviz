@@ -486,7 +486,7 @@ static void writeSubgs(gxlstate_t * stp, Agraph_t * g, FILE * gxlFile)
     }
 }
 
-static bool writeEdgeName(Agedge_t *e, FILE *gxlFile) {
+static void writeEdgeName(Agedge_t *e, FILE *gxlFile) {
     char *p = agnameof(e);
     if (!(EMPTY(p))) {
 	tabover(gxlFile);
@@ -497,9 +497,7 @@ static bool writeEdgeName(Agedge_t *e, FILE *gxlFile) {
 	fprintf(gxlFile, "</string>\n");
 	tabover(gxlFile);
 	fprintf(gxlFile, "\t</attr>\n");
-	return true;
     }
-    return false;
 }
 
 
@@ -507,7 +505,7 @@ static void
 writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 {
     if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
-	(void)writeEdgeName(obj, gxlFile);
+	writeEdgeName(obj, gxlFile);
     }
     Agattr_t *data = agattrrec(obj);
     if (data) {
