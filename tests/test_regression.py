@@ -2488,7 +2488,10 @@ def test_2396(arg: str):
         check=True,
     )
 
-    assert proc.stderr == "", "loading an image by relative path produced warnings"
+    # work around macOS warnings
+    stderr = remove_xtype_warnings(proc.stderr).strip()
+
+    assert stderr == "", "loading an image by relative path produced warnings"
 
     # whether we used `imagepath` or `filepath` should affect whether we get a leading
     # slash
