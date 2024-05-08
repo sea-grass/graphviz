@@ -20,6 +20,7 @@ brew install automake || brew upgrade automake
 brew install cmake || brew upgrade cmake
 brew install bison || brew upgrade bison
 brew install devil || brew upgrade devil
+brew install gd || brew upgrade gd
 brew install gtk+ || brew upgrade gtk+
 brew install gts || brew upgrade gts
 

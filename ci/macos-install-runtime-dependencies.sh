@@ -18,6 +18,7 @@ brew update
 brew install pango || brew upgrade pango
 brew install qt5 || brew upgrade qt5
 brew install devil || brew upgrade devil
+brew install gd || brew upgrade gd
 brew install gtk+ || brew upgrade gtk+
 brew install gts || brew upgrade gts
 
