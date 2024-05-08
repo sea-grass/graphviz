@@ -3381,8 +3381,11 @@ def test_2413(source: str):
         universal_newlines=True,
     )
 
+    # work around macOS warnings
+    stderr = remove_xtype_warnings(proc.stderr).strip()
+
     # no warnings should have been generated
-    assert proc.stderr == "", "long edges resulted in a warning"
+    assert stderr == "", "long edges resulted in a warning"
 
 
 @pytest.mark.skipif(
