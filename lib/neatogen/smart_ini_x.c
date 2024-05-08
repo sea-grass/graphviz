@@ -66,9 +66,8 @@ static void
 power_iteration_orthog(float** square_mat, int n, int neigs, 
      double** eigs, double* evals, double* orthog, double p_iteration_threshold)
 {
-	/*
-	 * Power-Iteration with (I-orthog*orthog^T)*square_mat*(I-orthog*orthog^T)
-     */
+  // Power-Iteration with
+  //   (I - orthog × orthogᵀ) × square_mat × (I - orthog × orthogᵀ)
 
 	int i,j;
 	double *tmp_vec = gv_calloc(n, sizeof(double));
