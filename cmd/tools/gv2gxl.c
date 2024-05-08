@@ -506,11 +506,8 @@ static bool writeEdgeName(Agedge_t *e, FILE *gxlFile) {
 static void
 writeNondefaultAttr(void *obj, FILE * gxlFile, Dict_t * defdict)
 {
-    int cnt = 0;
-
     if (AGTYPE(obj) == AGINEDGE || AGTYPE(obj) == AGOUTEDGE) {
-	if (writeEdgeName(obj, gxlFile))
-	    cnt++;
+	(void)writeEdgeName(obj, gxlFile);
     }
     Agattr_t *data = agattrrec(obj);
     if (data) {
