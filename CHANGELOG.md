@@ -23,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The CMake build system now uses absolute paths to PangoCairo libraries during
   linking, resolving build problems on macOS.
+- The CMake build system’s path for third-party headers for the DevIL plugin has
+  been corrected.
 
 ## [11.0.0] – 2024-04-28
 
