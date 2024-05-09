@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Windows release artifacts are now built on Windows 2022 and Visual Studio
   2022 17 and toolset v143.
 
+### Fixed
+
+- The CMake build system now uses absolute paths to PangoCairo libraries during
+  linking, resolving build problems on macOS.
+
 ## [11.0.0] – 2024-04-28
 
 ### Added
