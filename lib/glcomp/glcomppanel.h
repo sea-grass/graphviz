@@ -19,9 +19,6 @@ extern "C" {
 glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
                             float h);
 
-/*events*/
-    extern int glCompPanelDraw(glCompObj * o);
-
 #ifdef __cplusplus
 }
 #endif

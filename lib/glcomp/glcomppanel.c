@@ -16,6 +16,42 @@
 #include <glcomp/glutils.h>
 #include <stdbool.h>
 
+static int glCompPanelDraw(glCompObj *o) {
+  glCompPanel *p;
+  glCompCommon ref;
+  glCompRect r;
+  p = (glCompPanel *)o;
+  ref = p->common;
+  glCompCalcWidget((glCompCommon *)p->common.parent, &p->common, &ref);
+  p->objType = glPanelObj;
+
+  if (!p->common.visible)
+    return 0;
+  /*draw shadow */
+  glColor4f(p->shadowcolor.R, p->shadowcolor.G, p->shadowcolor.B,
+            p->shadowcolor.A);
+  r.h = p->shadowwidth;
+  r.w = ref.width;
+  r.pos.x = ref.pos.x + p->shadowwidth;
+  r.pos.y = ref.pos.y - p->shadowwidth;
+  r.pos.z = -0.001f;
+  glCompDrawRectangle(&r);
+  r.h = ref.height;
+  r.w = p->shadowwidth;
+  r.pos.x = ref.pos.x + ref.width;
+  r.pos.y = ref.pos.y - p->shadowwidth;
+  r.pos.z = -0.001f;
+  glCompDrawRectangle(&r);
+  /*draw panel */
+  glCompDrawRectPrism(&ref.pos, ref.width, ref.height, p->common.borderWidth,
+                      0.01f, &ref.color, true);
+  /*draw image if there is */
+  if (p->image) {
+    p->image->common.callbacks.draw(p->image);
+  }
+  return 1;
+}
+
 glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
                             float h) {
     glCompPanel *p = gv_alloc(sizeof(glCompPanel));
@@ -37,41 +73,4 @@ glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
     p->common.functions.draw = (glcompdrawfunc_t)glCompPanelDraw;
     p->image = NULL;
     return p;
-}
-
-int glCompPanelDraw(glCompObj * o)
-{
-    glCompPanel *p;
-    glCompCommon ref;
-    glCompRect r;
-    p = (glCompPanel *) o;
-    ref = p->common;
-    glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
-    p->objType = glPanelObj;
-
-    if (!p->common.visible)
-	return 0;
-    /*draw shadow */
-    glColor4f(p->shadowcolor.R, p->shadowcolor.G, p->shadowcolor.B,
-              p->shadowcolor.A);
-    r.h = p->shadowwidth;
-    r.w = ref.width;
-    r.pos.x = ref.pos.x + p->shadowwidth;
-    r.pos.y = ref.pos.y - p->shadowwidth;
-    r.pos.z = -0.001f;
-    glCompDrawRectangle(&r);
-    r.h = ref.height;
-    r.w = p->shadowwidth;
-    r.pos.x = ref.pos.x + ref.width;
-    r.pos.y = ref.pos.y - p->shadowwidth;
-    r.pos.z = -0.001f;
-    glCompDrawRectangle(&r);
-    /*draw panel */
-    glCompDrawRectPrism(&ref.pos, ref.width, ref.height,
-			p->common.borderWidth, 0.01f, &ref.color, true);
-    /*draw image if there is */
-    if (p->image) {
-	p->image->common.callbacks.draw(p->image);
-    }
-    return 1;
 }
