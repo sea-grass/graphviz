@@ -195,10 +195,11 @@ static void glCompMouseMove(glCompObj *obj, float x, float y) {
     }
 }
 
-static void selectedges(glCompObj *obj, float x, float y) {
+static void selectedges(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)obj;
     (void)x;
     (void)y;
+    (void)t;
 
     if(view->Topview->sel.selectEdges==0)
 	view->Topview->sel.selectEdges=1;
@@ -277,7 +278,7 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     y=y+off;
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "E");
-    b->common.callbacks.click = (glcompclickfunc_t)selectedges;
+    b->common.callbacks.click = selectedges;
     b->groupid=-1;
 
     p = glCompPanelNew(p, 1, 325, 45, 180);
