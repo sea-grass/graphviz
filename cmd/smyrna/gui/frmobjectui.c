@@ -25,6 +25,7 @@
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
+#include <cgraph/unreachable.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -73,6 +74,8 @@ static attr_t *new_attr_with_ref(Agsym_t * sym)
 	a->objType[2] = 1;
 	a->defValE = safestrdup(sym->defval);
 	break;
+    default:
+	UNREACHABLE();
     }
     return a;
 }
