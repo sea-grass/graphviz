@@ -541,6 +541,8 @@ attr_list *load_attr_list(Agraph_t * g)
 		case 2:
 		    set_attr_object_type(a, attr->objType);
 		    break;
+		default:
+		    break;
 		}
 	    }
 	    attr_list_add(l, attr);
