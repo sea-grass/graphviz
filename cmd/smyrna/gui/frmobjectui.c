@@ -205,11 +205,9 @@ static void set_attr_object_type(const char *str, int *t) {
 
 static attr_t *binarySearch(attr_list * l, char *searchKey)
 {
-  const attr_t key = {.name = searchKey};
-  const attr_t *keyp = &key;
-  attr_t **attrp = bsearch(&keyp, attrs_at(&l->attributes, 0),
+  attr_t **attrp = bsearch(searchKey, attrs_at(&l->attributes, 0),
                            attrs_size(&l->attributes), sizeof(attr_t*),
-                           attr_compare);
+                           attr_compare_core);
   if (attrp != NULL) {
     return *attrp;
   }
