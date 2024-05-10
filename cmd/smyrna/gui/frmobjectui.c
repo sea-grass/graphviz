@@ -133,17 +133,15 @@ static int attr_compare_core(const void *key, const void *candidate) {
   return strcasecmp(k, (*c)->name);
 }
 
-static int attr_compare(const void *a, const void *b)
-{
-    const attr_t *a1 = *(attr_t *const *) a;
-    return attr_compare_core(a1->name, b);
+static int attr_compare(const attr_t **a, const attr_t **b) {
+  return attr_compare_core((*a)->name, b);
 }
 
 static void attr_list_add(attr_list *l, attr_t *a) {
     if (!l || !a)
 	return;
     attrs_append(&l->attributes, a);
-    attrs_sort(&l->attributes, (int(*)(const attr_t**, const attr_t**))attr_compare);
+    attrs_sort(&l->attributes, attr_compare);
     /*update indices */
     for (size_t id = 0; id < attrs_size(&l->attributes); ++id)
 	attrs_get(&l->attributes, id)->index = id;
