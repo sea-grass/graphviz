@@ -27,6 +27,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/queue.h>
 #include <cgraph/stack.h>
+#include <cgraph/unreachable.h>
 #include <common/globals.h>
 #include <gvpr/compile.h>
 #include <gvpr/gvpr.h>
@@ -814,6 +815,8 @@ static bool traverse(Gpr_t *state, Expr_t *prog, comp_block *bp, bool cleanup) {
 	travEdges(state, prog, bp);
 	travNodes(state, prog, bp);
 	break;
+    default:
+	UNREACHABLE();
     }
     return cleanup;
 }
