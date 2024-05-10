@@ -18,9 +18,6 @@ extern "C" {
 
 extern glCompLabel *glCompLabelNew(glCompObj *par, char *text);
 
-/*events*/
-    extern int glCompLabelDraw(glCompLabel * p);
-
 #ifdef __cplusplus
 }
 #endif

@@ -14,6 +14,25 @@
 #include <glcomp/glcompset.h>
 #include <glcomp/glutils.h>
 
+static int glCompLabelDraw(glCompLabel *p) {
+  glCompCommon ref;
+  ref = p->common;
+  glCompCalcWidget((glCompCommon *)p->common.parent, &p->common, &ref);
+  /*draw background */
+  if (!p->transparent) {
+    glCompSetColor(&p->common.color);
+    glBegin(GL_QUADS);
+    glVertex3d(ref.refPos.x, ref.refPos.y, ref.refPos.z);
+    glVertex3d(ref.refPos.x + ref.width, ref.refPos.y, ref.refPos.z);
+    glVertex3d(ref.refPos.x + ref.width, ref.refPos.y + ref.height,
+               ref.refPos.z);
+    glVertex3d(ref.refPos.x, ref.refPos.y + ref.height, ref.refPos.z);
+    glEnd();
+  }
+  glCompRenderText(p->common.font, (glCompObj *)p);
+  return 1;
+}
+
 glCompLabel *glCompLabelNew(glCompObj *par, char *text) {
     glCompLabel *p = gv_alloc(sizeof(glCompLabel));
     glCompInitCommon((glCompObj*)p, par, 0, 0);
@@ -25,27 +44,4 @@ glCompLabel *glCompLabelNew(glCompObj *par, char *text) {
     p->common.functions.draw = (glcompdrawfunc_t)glCompLabelDraw;
 
     return p;
-}
-
-
-int glCompLabelDraw(glCompLabel * p)
-{
-    glCompCommon ref;
-    ref = p->common;
-    glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
-    /*draw background */
-    if(!p->transparent)
-    {
-	glCompSetColor(&p->common.color);
-	glBegin(GL_QUADS);
-	glVertex3d(ref.refPos.x, ref.refPos.y, ref.refPos.z);
-	glVertex3d(ref.refPos.x + ref.width, ref.refPos.y, ref.refPos.z);
-	glVertex3d(ref.refPos.x + ref.width, ref.refPos.y + ref.height,
-	           ref.refPos.z);
-	glVertex3d(ref.refPos.x, ref.refPos.y + ref.height, ref.refPos.z);
-	glEnd();
-    }
-    glCompRenderText(p->common.font, (glCompObj *) p);
-    return 1;
-
 }
