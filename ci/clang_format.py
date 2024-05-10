@@ -291,7 +291,6 @@ EXCLUDE = (
     "lib/glcomp/glcompmouse.c",
     "lib/glcomp/glcompmouse.h",
     "lib/glcomp/glcomppanel.c",
-    "lib/glcomp/glcomppanel.h",
     "lib/glcomp/glcompset.c",
     "lib/glcomp/glcompset.h",
     "lib/glcomp/glcomptextpng.c",
