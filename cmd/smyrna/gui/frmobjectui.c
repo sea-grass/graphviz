@@ -84,7 +84,7 @@ static attr_t *new_attr_ref(attr_t * refAttr)
     a->defValG = safestrdup(refAttr->defValG);
     a->defValN = safestrdup(refAttr->defValN);
     a->defValE = safestrdup(refAttr->defValE);
-    a->name = safestrdup(refAttr->name);
+    a->name = gv_strdup(refAttr->name);
     a->value = safestrdup(refAttr->value);
     return a;
 }
