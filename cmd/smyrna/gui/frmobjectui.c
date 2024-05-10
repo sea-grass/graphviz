@@ -526,12 +526,12 @@ attr_list *load_attr_list(Agraph_t * g)
 
 		switch (idx) {
 		case 0:
-		    attr->name = safestrdup(a);
+		    attr->name = gv_strdup(a);
 		    break;
 		case 1:
-		    attr->defValG = safestrdup(a);
-		    attr->defValN = safestrdup(a);
-		    attr->defValE = safestrdup(a);
+		    attr->defValG = gv_strdup(a);
+		    attr->defValN = gv_strdup(a);
+		    attr->defValE = gv_strdup(a);
 		    break;
 		case 2:
 		    set_attr_object_type(a, attr->objType);
