@@ -127,11 +127,16 @@ static attr_list *attr_list_new(bool with_widgets) {
     return l;
 }
 
+static int attr_compare_core(const void *key, const void *candidate) {
+  const char *k = key;
+  const attr_t *const *c = candidate;
+  return strcasecmp(k, (*c)->name);
+}
+
 static int attr_compare(const void *a, const void *b)
 {
     const attr_t *a1 = *(attr_t *const *) a;
-    const attr_t *a2 = *(attr_t *const *) b;
-    return strcasecmp(a1->name, a2->name);
+    return attr_compare_core(a1->name, b);
 }
 
 static void attr_list_add(attr_list *l, attr_t *a) {
