@@ -165,6 +165,8 @@ static attr_data_type get_attr_data_type(char c)
     case 'I':
 	return attr_int;
 	break;
+    default:
+	break;
     }
     return attr_alpha;
 }
