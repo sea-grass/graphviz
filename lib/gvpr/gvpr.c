@@ -370,7 +370,6 @@ static void freeOpts(options opts) {
  * Parse command line options.
  */
 static options scanArgs(int argc, char **argv) {
-    int i, nfiles;
     char* arg;
     options opts = {0};
 
@@ -381,15 +380,15 @@ static options scanArgs(int argc, char **argv) {
     opts.verbose = 0;
 
     /* estimate number of file names */
-    nfiles = 0;
-    for (i = 1; i < argc; i++)
+    size_t nfiles = 0;
+    for (int i = 1; i < argc; i++)
 	if (argv[i] && argv[i][0] != '-')
 	    nfiles++;
     char** input_filenames = gv_calloc(nfiles + 1, sizeof(char*));
 
     /* loop over arguments */
     nfiles = 0;
-    for (i = 1; i < argc; ) {
+    for (int i = 1; i < argc; ) {
 	arg = argv[i++];
 	if (*arg == '-') {
 	    i = doFlags(arg+1, i, argc, argv, &opts);
@@ -409,7 +408,7 @@ static options scanArgs(int argc, char **argv) {
 	    opts.state = -1;
 	} else {
 	    opts.program = input_filenames[0];
-	    for (i = 1; i <= nfiles; i++)
+	    for (size_t i = 1; i <= nfiles; i++)
 		input_filenames[i-1] = input_filenames[i];
 	    nfiles--;
 	}
