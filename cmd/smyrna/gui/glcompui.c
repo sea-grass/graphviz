@@ -207,10 +207,11 @@ static void selectedges(glCompObj *obj, float x, float y) {
 
 }
 
-static void selectnodes(glCompObj *obj, float x, float y) {
+static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)obj;
     (void)x;
     (void)y;
+    (void)t;
 
     if(view->Topview->sel.selectNodes==0)
 	view->Topview->sel.selectNodes=1;
@@ -270,7 +271,7 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     y=y+off;
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "N");
-    b->common.callbacks.click = (glcompclickfunc_t)selectnodes;
+    b->common.callbacks.click = selectnodes;
     b->groupid=-1;
     b->status = true;
 
