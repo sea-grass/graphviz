@@ -59,7 +59,7 @@ static attr_t *new_attr(void) {
 static attr_t *new_attr_with_ref(Agsym_t * sym)
 {
     attr_t *a = new_attr();
-    a->name = safestrdup(sym->name);
+    a->name = gv_strdup(sym->name);
     switch (sym->kind) {
     case AGRAPH:
 	a->objType[0] = 1;
