@@ -214,10 +214,7 @@ static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)y;
     (void)t;
 
-    if(view->Topview->sel.selectNodes==0)
-	view->Topview->sel.selectNodes=1;
-    else
-	view->Topview->sel.selectNodes=0;
+    view->Topview->sel.selectNodes = !view->Topview->sel.selectNodes;
 }
 
 glCompSet *glcreate_gl_topview_menu(void)

@@ -81,8 +81,7 @@ static void pick_objects_in_rect(Agraph_t *g, float x1, float y1, float x2,
      
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
     {
-	if(view->Topview->sel.selectNodes==1)
-	{
+	if (view->Topview->sel.selectNodes) {
 	    posN = ND_A(v);
 	    if(!ND_visible(v))
 		continue;
