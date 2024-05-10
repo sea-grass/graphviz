@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-glCompPanel *glCompPanelNew(glCompObj *parentObj, float x, float y, float w,
+glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
                             float h);
 
 /*events*/

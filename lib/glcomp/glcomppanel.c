@@ -16,7 +16,7 @@
 #include <glcomp/glutils.h>
 #include <stdbool.h>
 
-glCompPanel *glCompPanelNew(glCompObj *parentObj, float x, float y, float w,
+glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
                             float h) {
     glCompPanel *p = gv_alloc(sizeof(glCompPanel));
     glCompInitCommon((glCompObj *) p, parentObj, x, y);
