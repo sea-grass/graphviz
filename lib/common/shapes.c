@@ -832,15 +832,15 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 * L-shaped arrow on a center line, scales in the x direction
 	 *
 	 *
-	 *      D[1]	          |\
+	 *      D[1]              |\
 	 *       +----------------+ \
-	 *       |	        D[0] \
+	 *       |              D[0] \
 	 *       |                    \
 	 *       |                    /
 	 *       |             D[5]  /
 	 *       |        +-------+ /
-	 *       |	  |       |/
-	 *	 +--------+
+	 *       |        |       |/
+	 *       +--------+
 	 */
 	/* Add the tab edges. */
 
@@ -885,12 +885,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *      D[1] = AF[1]
 	 *       +----------------+\
-	 *       |		D[0]\
+	 *       |              D[0]\
 	 *       |                   \
 	 *       |                   /
 	 *       |                  /
 	 *       +----------------+/
-	 *	  	          D[3]
+	 *                        D[3]
 	 *
 	 */
 	D = gv_calloc(sides + 1, sizeof(pointf));
@@ -917,13 +917,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*
 	*      D[4]
 	*       +----------------+
-	*       |		D[3]
+	*       |               D[3]
 	*       |                |
 	*       |                |
 	*       |  D[6]    D[1]  |
 	*   D[5]+---+       +----+ D[2]
-	*	    |	    |
-	*	    +-------+ D[0]
+	*           |       |
+	*           +-------+ D[0]
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 4, sizeof(pointf));
@@ -999,12 +999,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	* half arrow shape, scales in the x-direction
 	*                 D[1]
-	*		    |\
-	*		    | \
-	*		    |  \
-	*	------------    \
-	*	|		 \
-	*	------------------\ D[0]
+	*                   |\
+	*                   | \
+	*                   |  \
+	*       ------------    \
+	*       |                \
+	*       ------------------\ D[0]
 	*
 	*   --------------------------------
 	*
@@ -1042,7 +1042,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*   ----D[2]
 	*   |   |________ D[0]
 	*   |            |____
-	*   ----------	 |
+	*   ----------   |
 	*   D[4]      --- D[7]
 	*
 	*
@@ -1140,10 +1140,10 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	*  does not scale, on the right side
 	*
-	*	   D[2]------D[1]
-	*	   |          |
+	*          D[2]------D[1]
+	*          |          |
 	*----------D[3]------D[0]
-	*	   -----  D[1]
+	*          -----  D[1]
 	*          |    |
 	*          D[3]--D[0]
 	*
@@ -1194,7 +1194,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*     |          |      |          |
 	*  ---D[0]------D[1]   D[0]------D[1]----
 	*     D[3]------D[2]   D[3]------D[2]
-	*     |          |	|          |
+	*     |          |      |          |
 	*     D[0]------D[1]   D[0]------D[1]
 	*
 	*
@@ -1332,8 +1332,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	*
 	*
 	*   +--------------+
-	*   |		   |
-	*   |x		   |
+	*   |              |
+	*   |x             |
 	*   |_____________ |
 	*   +--------------+
 	*/
@@ -1430,8 +1430,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *
 	 *           X
-	 *	     |
-	 *	------------
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
@@ -1501,8 +1501,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *
 	 *           O
-	 *	     |
-	 *	------------
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
@@ -1558,8 +1558,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *
 	 *           X
-	 *	     |
-	 *	------------
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 12, sizeof(pointf)); // 12-sided x
@@ -1619,8 +1619,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *
 	 *           O
-	 *	     |
-	 *	------------
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
@@ -1667,13 +1667,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *      D[1] = AF[1]      |\
 	 *       +----------------+ \
-	 *       |	        D[0] \
+	 *       |              D[0] \
 	 *       |                    \
 	 *       |                    /
 	 *       |                   /
 	 *       |        +-------+ /
-	 *       |	  |       |/
-	 *	 +--------+
+	 *       |        |       |/
+	 *       +--------+
 	 */
 	/* Add the tab edges. */
 	D = gv_calloc(sides + 5, sizeof(pointf)); // 5 new points
@@ -1707,12 +1707,12 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *      D[1] = AF[1]      |\
 	 *       +----------------+ \
-	 *       |		D[0] \
+	 *       |              D[0] \
 	 *       |                    \
 	 *       |                    /
 	 *       |                   /
 	 *       +----------------+ /
-	 *	  	          |/
+	 *                        |/
 	 *
 	 */
 	/* Add the tab edges. */
@@ -1746,7 +1746,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *    /                   |
 	 *    \                   |
 	 *     \ +----------------+
-	 *	\|
+	 *      \|
 	 *
 	 */
 	/* Add the tab edges. */
@@ -1777,13 +1777,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *
 	 *      /|
 	 *     / +----------------+
-	 *    /   		D[0]
+	 *    /                 D[0]
 	 *   /                    |
 	 *   \                    |
 	 *    \                   |
 	 *     \ +--------+       +
-	 *	\| 	  |       |
-	 *	          +-------+
+	 *      \|        |       |
+	 *                +-------+
 	 */
 	/* Add the tab edges. */
 	D = gv_calloc(sides + 5, sizeof(pointf)); // 3 new points
