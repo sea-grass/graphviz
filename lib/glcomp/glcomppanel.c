@@ -16,17 +16,16 @@
 #include <glcomp/glutils.h>
 #include <stdbool.h>
 
-static int glCompPanelDraw(glCompObj *o) {
-  glCompPanel *p;
+static void glCompPanelDraw(void *o) {
+  glCompPanel *p = o;
   glCompCommon ref;
   glCompRect r;
-  p = (glCompPanel *)o;
   ref = p->common;
   glCompCalcWidget((glCompCommon *)p->common.parent, &p->common, &ref);
   p->objType = glPanelObj;
 
   if (!p->common.visible)
-    return 0;
+    return;
   /*draw shadow */
   glColor4f(p->shadowcolor.R, p->shadowcolor.G, p->shadowcolor.B,
             p->shadowcolor.A);
@@ -49,7 +48,6 @@ static int glCompPanelDraw(glCompObj *o) {
   if (p->image) {
     p->image->common.callbacks.draw(p->image);
   }
-  return 1;
 }
 
 glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
@@ -70,7 +68,7 @@ glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
 
     p->common.font = glNewFontFromParent((glCompObj *) p, NULL);
     p->text = NULL;
-    p->common.functions.draw = (glcompdrawfunc_t)glCompPanelDraw;
+    p->common.functions.draw = glCompPanelDraw;
     p->image = NULL;
     return p;
 }
