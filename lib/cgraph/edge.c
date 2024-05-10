@@ -447,6 +447,7 @@ and to expose them to foreign languages without C preprocessor. */
 #ifdef ageqedge
 #undef ageqedge
 #endif
+CGRAPH_API int ageqedge(Agedge_t *e, Agedge_t *f);
 CGRAPH_API int ageqedge(Agedge_t * e, Agedge_t * f)
 {
     return AGEQEDGE(e, f);
@@ -455,6 +456,7 @@ CGRAPH_API int ageqedge(Agedge_t * e, Agedge_t * f)
 #ifdef agmkout
 #undef agmkout
 #endif
+CGRAPH_API Agedge_t *agmkout(Agedge_t *e);
 CGRAPH_API Agedge_t *agmkout(Agedge_t * e)
 {
     return AGMKOUT(e);
@@ -463,6 +465,7 @@ CGRAPH_API Agedge_t *agmkout(Agedge_t * e)
 #ifdef agmkin
 #undef agmkin
 #endif
+CGRAPH_API Agedge_t *agmkin(Agedge_t *e);
 CGRAPH_API Agedge_t *agmkin(Agedge_t * e)
 {
     return AGMKIN(e);
@@ -471,6 +474,7 @@ CGRAPH_API Agedge_t *agmkin(Agedge_t * e)
 #ifdef agtail
 #undef agtail
 #endif
+CGRAPH_API Agnode_t *agtail(Agedge_t *e);
 CGRAPH_API Agnode_t *agtail(Agedge_t * e)
 {
     return AGTAIL(e);
@@ -479,6 +483,7 @@ CGRAPH_API Agnode_t *agtail(Agedge_t * e)
 #ifdef aghead
 #undef aghead
 #endif
+CGRAPH_API Agnode_t *aghead(Agedge_t *e);
 CGRAPH_API Agnode_t *aghead(Agedge_t * e)
 {
     return AGHEAD(e);
@@ -487,6 +492,7 @@ CGRAPH_API Agnode_t *aghead(Agedge_t * e)
 #ifdef agopp
 #undef agopp
 #endif
+CGRAPH_API Agedge_t *agopp(Agedge_t *e);
 CGRAPH_API Agedge_t *agopp(Agedge_t * e)
 {
     return AGOPP(e);
