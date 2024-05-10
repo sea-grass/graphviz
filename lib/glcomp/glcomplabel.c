@@ -14,7 +14,8 @@
 #include <glcomp/glcompset.h>
 #include <glcomp/glutils.h>
 
-static int glCompLabelDraw(glCompLabel *p) {
+static void glCompLabelDraw(void *label) {
+  glCompLabel *p = label;
   glCompCommon ref;
   ref = p->common;
   glCompCalcWidget((glCompCommon *)p->common.parent, &p->common, &ref);
@@ -30,7 +31,6 @@ static int glCompLabelDraw(glCompLabel *p) {
     glEnd();
   }
   glCompRenderText(p->common.font, (glCompObj *)p);
-  return 1;
 }
 
 glCompLabel *glCompLabelNew(glCompObj *par, char *text) {
@@ -41,7 +41,7 @@ glCompLabel *glCompLabelNew(glCompObj *par, char *text) {
 
     p->text = gv_strdup(text);
     p->common.font = glNewFontFromParent ((glCompObj*)p, text);
-    p->common.functions.draw = (glcompdrawfunc_t)glCompLabelDraw;
+    p->common.functions.draw = glCompLabelDraw;
 
     return p;
 }
