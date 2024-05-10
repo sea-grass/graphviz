@@ -166,7 +166,7 @@ portable-source:
             }
         # Test
         # Set up VCTools variables and import into PowerShell environment
-        - cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\VC\Auxiliary\Build\vcvarsall.bat`" $TARGET_ARCH && set > %temp%\vcvars.txt";
+        - cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat`" $TARGET_ARCH && set > %temp%\vcvars.txt";
         - >-
             Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
               if ($_ -match "^([A-Za-z0-9_()]*)=(.*)$") {
@@ -217,7 +217,7 @@ portable-source:
             metrics: metrics.txt
             junit: report.xml
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -470,7 +470,7 @@ windows-mingw32-build:
         paths:
             - GRAPHVIZ_VERSION
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -492,7 +492,7 @@ windows-mingw64-build:
         paths:
             - GRAPHVIZ_VERSION
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -515,7 +515,7 @@ windows-mingw64-static-build:
         paths:
             - GRAPHVIZ_VERSION
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -538,7 +538,7 @@ windows-mingw32-static-build:
         paths:
             - GRAPHVIZ_VERSION
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -568,7 +568,7 @@ windows-cygwin-build:
         paths:
             - ccache-cache
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -595,7 +595,7 @@ windows-cygwin-build-using-autogen:
         paths:
             - ccache-cache
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -923,7 +923,7 @@ windows-mingw32-cmake-build:
             - Packages/*/*/*.exe
             - Packages/*/*/*.zip
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -946,7 +946,7 @@ windows-mingw64-cmake-build:
             - Packages/*/*/*.exe
             - Packages/*/*/*.zip
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -964,7 +964,7 @@ windows-mingw64-cmake-release-build:
         - $Env:CMAKE_OPTIONS = "-DCMAKE_BUILD_TYPE=Release"
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -994,7 +994,7 @@ windows-cygwin-cmake-build:
         paths:
             - ccache-cache
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
 
@@ -1315,7 +1315,7 @@ windows-mingw32-cmake-test:
         - job: "windows-mingw32-cmake-build"
           artifacts: true
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
     artifacts:
@@ -1338,7 +1338,7 @@ windows-mingw64-cmake-test:
         - job: "windows-mingw64-cmake-build"
           artifacts: true
     tags:
-        - windows
+        - saas-windows-medium-amd64
     except:
         - tags
     artifacts:

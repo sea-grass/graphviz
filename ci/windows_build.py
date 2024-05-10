@@ -67,7 +67,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "cmake",
                 "--log-level=VERBOSE",
                 "-G",
-                "Visual Studio 16 2019",
+                "Visual Studio 17 2022",
                 "-A",
                 options.platform,
                 "-Dwith_cxx_api=ON",
