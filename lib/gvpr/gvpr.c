@@ -525,9 +525,15 @@ static Agedge_t *agnxtout_(Agraph_t *g, Agedge_t *e, Agnode_t *ignored) {
   return agnxtout(g, e);
 }
 
+/// `agnxtin` wrapper to tweak calling convention
+static Agedge_t *agnxtin_(Agraph_t *g, Agedge_t *e, Agnode_t *ignored) {
+  (void)ignored;
+  return agnxtin(g, e);
+}
+
 static trav_fns DFSfns = { agfstedge, agnxtedge, 1, 0 };
 static trav_fns FWDfns = { agfstout, agnxtout_, 0, 0 };
-static trav_fns REVfns = { agfstin, (nxttedgefn_t) agnxtin, 0, 0 };
+static trav_fns REVfns = { agfstin, agnxtin_, 0, 0 };
 
 static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 {
