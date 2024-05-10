@@ -870,7 +870,7 @@ void initSmGraph(Agraph_t * g,topview* rv)
     rv->cache.selnode_id = UINT_MAX;
     rv->cache.edge_id = UINT_MAX;
     rv->cache.seledge_id = UINT_MAX;
-    rv->sel.selectEdges=0;
+    rv->sel.selectEdges = false;
     rv->sel.selectNodes = true;
 
     updateSmGraph(g,rv);

@@ -201,11 +201,7 @@ static void selectedges(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)y;
     (void)t;
 
-    if(view->Topview->sel.selectEdges==0)
-	view->Topview->sel.selectEdges=1;
-    else
-	view->Topview->sel.selectEdges=0;
-
+    view->Topview->sel.selectEdges = !view->Topview->sel.selectEdges;
 }
 
 static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
