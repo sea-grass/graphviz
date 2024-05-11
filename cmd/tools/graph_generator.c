@@ -12,6 +12,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
 #include <cgraph/list.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -661,7 +662,7 @@ drand(void)
 static void genTree(int NN, int *T, int_stack_t *stack, tree_t *TREE) {
     double v;
     pair p;
-    int Z, D, N, J, TD, M, more;
+    int Z, D, N, J, TD, M;
 
     N = NN;
 
@@ -670,7 +671,7 @@ static void genTree(int NN, int *T, int_stack_t *stack, tree_t *TREE) {
 	    v = (N-1)*T[N];
 	    Z = v*drand();
 	    D = 0;
-	    more = 1;
+	    bool more = true;
 	    do {
 		D++;
 		TD = D*T[D];
@@ -681,7 +682,7 @@ static void genTree(int NN, int *T, int_stack_t *stack, tree_t *TREE) {
 		    M -= D;
 		    if (M < 1) break;
 		    Z -= T[M]*TD;
-		    if (Z < 0) more = 0;
+		    if (Z < 0) more = false;
 		} while (Z >= 0);
 	    } while (more);
 	    push(stack, J, D);
