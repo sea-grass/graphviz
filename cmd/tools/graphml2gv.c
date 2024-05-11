@@ -184,9 +184,8 @@ static int get_xml_attr(char *attrname, const char **atts)
 
 static char *defval = "";
 
-static void
-setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
-{
+static void setEdgeAttr(Agedge_t *ep, char *name, const char *value,
+                        userdata_t *ud) {
     Agsym_t *ap;
     char *attrname;
 
@@ -315,7 +314,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 
 	    pos = get_xml_attr("id", atts);
 	    if (pos > 0) {
-	        setEdgeAttr(E, GRAPHML_ID, (char *) atts[pos], ud);
+	        setEdgeAttr(E, GRAPHML_ID, atts[pos], ud);
 	    }
         }
     } else {
