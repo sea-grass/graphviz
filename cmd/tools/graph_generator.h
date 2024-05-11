@@ -10,29 +10,29 @@
 
 #pragma once
 
-typedef void (*edgefn)(int, int);
+typedef void (*edgefn)(unsigned, unsigned);
 
-extern void makeBall(int, int, edgefn);
-extern void makeCircle(int, edgefn);
-extern void makeComplete(int, edgefn);
-extern void makeCompleteB(int, int, edgefn);
-extern void makePath(int, edgefn);
-extern void makeStar(int, edgefn);
-extern void makeWheel (int, edgefn);
-extern void makeTorus(int, int, edgefn);
-extern void makeTwistedTorus(int, int, int, int, edgefn);
-extern void makeCylinder(int, int, edgefn);
-extern void makeRandom(int, int, edgefn);
-extern void makeSquareGrid(int, int, int, int, edgefn);
-extern void makeBinaryTree(int, edgefn);
-extern void makeSierpinski(int, edgefn);
-extern void makeTetrix(int, edgefn);
-extern void makeHypercube(int, edgefn);
-extern void makeTree(int, int, edgefn);
-extern void makeTriMesh(int, edgefn);
-extern void makeMobius(int, int, edgefn);
+extern void makeBall(unsigned, unsigned, edgefn);
+extern void makeCircle(unsigned, edgefn);
+extern void makeComplete(unsigned, edgefn);
+extern void makeCompleteB(unsigned, unsigned, edgefn);
+extern void makePath(unsigned, edgefn);
+extern void makeStar(unsigned, edgefn);
+extern void makeWheel(unsigned, edgefn);
+extern void makeTorus(unsigned, unsigned, edgefn);
+extern void makeTwistedTorus(unsigned, unsigned, unsigned, unsigned, edgefn);
+extern void makeCylinder(unsigned, unsigned, edgefn);
+extern void makeRandom(unsigned, unsigned, edgefn);
+extern void makeSquareGrid(unsigned, unsigned, int, int, edgefn);
+extern void makeBinaryTree(unsigned, edgefn);
+extern void makeSierpinski(unsigned, edgefn);
+extern void makeTetrix(unsigned, edgefn);
+extern void makeHypercube(unsigned, edgefn);
+extern void makeTree(unsigned, unsigned, edgefn);
+extern void makeTriMesh(unsigned, edgefn);
+extern void makeMobius(unsigned, unsigned, edgefn);
 
 typedef struct treegen_s treegen_t;
-extern treegen_t* makeTreeGen (int);
+extern treegen_t* makeTreeGen(unsigned);
 extern void makeRandomTree (treegen_t*, edgefn);
 extern void freeTreeGen(treegen_t*);

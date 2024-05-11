@@ -20,118 +20,95 @@
 #include <time.h>
 #include <graph_generator.h>
 
-void makePath(int n, edgefn ef)
-{
-    int i;
-
+void makePath(unsigned n, edgefn ef){
     if (n == 1) {
 	ef (1, 0);
 	return;
     }
-    for (i = 2; i <= n; i++)
+    for (unsigned i = 2; i <= n; i++)
 	ef (i - 1, i);
 }
 
-void makeComplete(int n, edgefn ef)
-{
-    int i, j;
-
+void makeComplete(unsigned n, edgefn ef) {
     if (n == 1) {
 	ef (1, 0);
 	return;
     }
-    for (i = 1; i < n; i++) {
-	for (j = i + 1; j <= n; j++) {
+    for (unsigned i = 1; i < n; i++) {
+	for (unsigned j = i + 1; j <= n; j++) {
 	    ef ( i, j);
 	}
     }
 }
 
-void makeCircle(int n, edgefn ef)
-{
-    int i;
-
+void makeCircle(unsigned n, edgefn ef) {
     if (n < 3) {
-	fprintf(stderr, "Warning: degenerate circle of %d vertices\n", n);
+	fprintf(stderr, "Warning: degenerate circle of %u vertices\n", n);
 	makePath(n, ef);
 	return;
     }
 
-    for (i = 1; i < n; i++)
+    for (unsigned i = 1; i < n; i++)
 	ef ( i, i + 1);
     ef (1, n);
 }
 
-void makeStar(int n, edgefn ef)
-{
-    int i;
-
+void makeStar(unsigned n, edgefn ef) {
     if (n < 3) {
-	fprintf(stderr, "Warning: degenerate star of %d vertices\n", n);
+	fprintf(stderr, "Warning: degenerate star of %u vertices\n", n);
 	makePath(n, ef);
 	return;
     }
 
-    for (i = 2; i <= n; i++)
+    for (unsigned i = 2; i <= n; i++)
 	ef (1, i);
 }
 
-void makeWheel(int n, edgefn ef)
-{
-    int i;
-
+void makeWheel(unsigned n, edgefn ef) {
     if (n < 4) {
-	fprintf(stderr, "Warning: degenerate wheel of %d vertices\n", n);
+	fprintf(stderr, "Warning: degenerate wheel of %u vertices\n", n);
 	makeComplete(n, ef);
 	return;
     }
 
     makeStar(n, ef);
 
-    for (i = 2; i < n; i++)
+    for (unsigned i = 2; i < n; i++)
 	ef( i, i + 1);
     ef (2, n);
 }
 
-void makeCompleteB(int dim1, int dim2, edgefn ef)
-{
-    int i, j;
-
-    for (i = 1; i <= dim1; i++) {
-	for (j = 1; j <= dim2; j++) {
+void makeCompleteB(unsigned dim1, unsigned dim2, edgefn ef) {
+    for (unsigned i = 1; i <= dim1; i++) {
+	for (unsigned j = 1; j <= dim2; j++) {
 	    ef ( i, dim1 + j);
 	}
     }
 }
 
-void makeTorus(int dim1, int dim2, edgefn ef)
-{
-    int i, j, n = 0;
-
-    for (i = 1; i <= dim1; i++) {
-	for (j = 1; j < dim2; j++) {
+void makeTorus(unsigned dim1, unsigned dim2, edgefn ef) {
+    for (unsigned i = 1, n = 0; i <= dim1; i++) {
+	for (unsigned j = 1; j < dim2; j++) {
 	    ef( n + j, n + j + 1);
 	}
 	ef( n + 1, n + dim2);
 	n += dim2;
     }
 
-    for (i = 1; i <= dim2; i++) {
-	for (j = 1; j < dim1; j++) {
+    for (unsigned i = 1; i <= dim2; i++) {
+	for (unsigned j = 1; j < dim1; j++) {
 	    ef( dim2 * (j - 1) + i, dim2 * j + i);
 	}
 	ef( i, dim2 * (dim1 - 1) + i);
     }
 }
 
-void makeTwistedTorus(int dim1, int dim2, int t1, int t2, edgefn ef)
-{
-    int i, j, li, lj;
-
-    for (i = 0; i < dim1; i++) {
-	for (j = 0; j < dim2; j++) {
-	    li = (i + t1) % dim1;
-	    lj = (j + 1) % dim2;
+void makeTwistedTorus(unsigned dim1, unsigned dim2, unsigned t1, unsigned t2,
+                      edgefn ef) {
+    for (unsigned i = 0; i < dim1; i++) {
+	for (unsigned j = 0; j < dim2; j++) {
+	    unsigned li = (i + t1) % dim1;
+	    unsigned lj = (j + 1) % dim2;
 	    ef (i+j*dim1+1, li+lj*dim1+1);
 
 	    li = (i + 1) % dim1;
@@ -141,20 +118,17 @@ void makeTwistedTorus(int dim1, int dim2, int t1, int t2, edgefn ef)
     }
 }
 
-void makeCylinder(int dim1, int dim2, edgefn ef)
-{
-    int i, j, n = 0;
-
-    for (i = 1; i <= dim1; i++) {
-	for (j = 1; j < dim2; j++) {
+void makeCylinder(unsigned dim1, unsigned dim2, edgefn ef) {
+    for (unsigned i = 1, n = 0; i <= dim1; i++) {
+	for (unsigned j = 1; j < dim2; j++) {
 	    ef( n + j, n + j + 1);
 	}
 	ef( n + 1, n + dim2);
 	n += dim2;
     }
 
-    for (i = 1; i <= dim2; i++) {
-	for (j = 1; j < dim1; j++) {
+    for (unsigned i = 1; i <= dim2; i++) {
+	for (unsigned j = 1; j < dim1; j++) {
 	    ef( dim2 * (j - 1) + i, dim2 * j + i);
 	}
     }
@@ -162,100 +136,78 @@ void makeCylinder(int dim1, int dim2, edgefn ef)
 
 #define OUTE(h) if (tl < (hd=(h))) ef( tl, hd)
 
-void
-makeSquareGrid(int dim1, int dim2, int connect_corners, int partial, edgefn ef)
+void makeSquareGrid(unsigned dim1, unsigned dim2, int connect_corners, int partial, edgefn ef)
 {
-    int i, j, tl, hd;
-
-    for (i = 0; i < dim1; i++)
-	for (j = 0; j < dim2; j++) {
+    for (unsigned i = 0; i < dim1; i++)
+	for (unsigned j = 0; j < dim2; j++) {
 	    // write the neighbors of the node i*dim2+j+1
-	    tl = i * dim2 + j + 1;
-	    if (j < dim2 - 1
+	    const unsigned tl = i * dim2 + j + 1;
+	    unsigned hd;
+	    if (j + 1 < dim2
 		&& (!partial || j < 2 * dim2 / 6 || j >= 4 * dim2 / 6
 		    || i <= 2 * dim1 / 6 || i > 4 * dim1 / 6)) {
 		ef(tl, i * dim2 + j + 2);
 	    }
-	    if (i < dim1 - 1) {
+	    if (i + 1 < dim1) {
 		ef(tl, (i + 1) * dim2 + j + 1);
 	    }
 	    if (connect_corners == 1) {
 		if (i == 0 && j == 0) {	// upper left
 		    OUTE((dim1 - 1) * dim2 + dim2);
-		} else if (i == dim1 - 1 && j == 0) {	// lower left
+		} else if (i + 1 == dim1 && j == 0) { // lower left
 		    OUTE(dim2);
-		} else if (i == 0 && j == dim2 - 1) {	// upper right
+		} else if (i == 0 && j + 1 == dim2) { // upper right
 		    OUTE((dim1 - 1) * dim2 + 1);
-		} else if (i == dim1 - 1 && j == dim2 - 1) {	// lower right
+		} else if (i + 1 == dim1 && j + 1 == dim2) { // lower right
 		    OUTE(1);
 		}
 	    } else if (connect_corners == 2) {
 		if (i == 0 && j == 0) {	// upper left
 		    OUTE(dim2);
-		} else if (i == dim1 - 1 && j == 0) {	// lower left
+		} else if (i + 1 == dim1 && j == 0) { // lower left
 		    OUTE((dim1 - 1) * dim2 + dim2);
-		} else if (i == 0 && j == dim2 - 1) {	// upper right
+		} else if (i == 0 && j + 1 == dim2) { // upper right
 		    OUTE(1);
-		} else if (i == dim1 - 1 && j == dim2 - 1) {	// lower right
+		} else if (i + 1 == dim1 && j + 1 == dim2) { // lower right
 		    OUTE((dim1 - 1) * dim2 + 1);
 		}
 	    }
 	}
 }
 
-static int
-ipow (int base, int power)
-{
-    int ip;
-    if (power == 0) return 1;
-    if (power == 1) return base;
+void makeTree(unsigned depth, unsigned nary, edgefn ef) {
+    const double n = (pow(nary, depth) - 1) / (nary - 1); // no. of non-leaf nodes
+    unsigned idx = 2;
 
-    ip = base;
-    power--;
-    while (power--) ip *= base;
-    return ip; 
-}
-
-void makeTree(int depth, int nary, edgefn ef)
-{
-    int n = (ipow(nary, depth) - 1) / (nary - 1); // no. of non-leaf nodes
-    int idx = 2;
-
-    for (int i = 1; i <= n; i++) {
-	for (int j = 0; j < nary; j++) {
+    for (unsigned i = 1; i <= n; i++) {
+	for (unsigned j = 0; j < nary; j++) {
 	    ef (i, idx++);
 	}
     }
 }
 
-void makeBinaryTree(int depth, edgefn ef)
-{
-    int i;
-    int n = (1 << depth) - 1;
+void makeBinaryTree(unsigned depth, edgefn ef) {
+    const unsigned n = (1u << depth) - 1;
 
-    for (i = 1; i <= n; i++) {
+    for (unsigned i = 1; i <= n; i++) {
 	ef( i, 2 * i);
 	ef( i, 2 * i + 1);
     }
 }
 
 typedef struct {
-  int     nedges;
-  int*    edges;
+  unsigned nedges;
+  unsigned *edges;
 } vtx_data;
 
-static void
-constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
-{
-    static int last_used_node_name = 3;
-    int v4, v5, v6;
-
-    int nedges;
+static void constructSierpinski(unsigned v1, unsigned v2, unsigned v3,
+                                unsigned depth, vtx_data *graph) {
+    static unsigned last_used_node_name = 3;
 
     if (depth > 0) {
-	v4 = ++last_used_node_name;
-	v5 = ++last_used_node_name;
-	v6 = ++last_used_node_name;
+	const unsigned v4 = ++last_used_node_name;
+	const unsigned v5 = ++last_used_node_name;
+	const unsigned v6 = ++last_used_node_name;
 	constructSierpinski(v1, v4, v5, depth - 1, graph);
 	constructSierpinski(v2, v5, v6, depth - 1, graph);
 	constructSierpinski(v3, v4, v6, depth - 1, graph);
@@ -263,7 +215,7 @@ constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
     }
     // depth==0, Construct graph:
 
-    nedges = graph[v1].nedges;
+    unsigned nedges = graph[v1].nedges;
     graph[v1].edges[nedges++] = v2;
     graph[v1].edges[nedges++] = v3;
     graph[v1].nedges = nedges;
@@ -279,20 +231,16 @@ constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
     graph[v3].nedges = nedges;
 }
 
-void makeSierpinski(int depth, edgefn ef)
-{
+void makeSierpinski(unsigned depth, edgefn ef) {
     vtx_data* graph;
-    int* edges;
-    int n;
-    int i, j;
 
     depth--;
-    n = 3 * (1 + ((int) (pow(3.0, (double) depth) + 0.5) - 1) / 2);
+    const unsigned n = 3 * (1 + ((unsigned)(pow(3.0, depth) + 0.5) - 1) / 2);
 
     graph = gv_calloc(n + 1, sizeof(vtx_data));
-    edges = gv_calloc(4 * n, sizeof(int));
+    unsigned *edges = gv_calloc(4 * n, sizeof(unsigned));
 
-    for (i = 1; i <= n; i++) {
+    for (unsigned i = 1; i <= n; i++) {
 	graph[i].edges = edges;
 	edges += 4;
 	graph[i].nedges = 0;
@@ -300,11 +248,10 @@ void makeSierpinski(int depth, edgefn ef)
 
     constructSierpinski(1, 2, 3, depth, graph);
 
-    for (i = 1; i <= n; i++) {
-	int nghbr;
+    for (unsigned i = 1; i <= n; i++) {
 	// write the neighbors of the node i
-	for (j = 0; j < graph[i].nedges; j++) {
-	    nghbr = graph[i].edges[j];
+	for (unsigned j = 0; j < graph[i].nedges; j++) {
+	    const unsigned nghbr = graph[i].edges[j];
 	    if (i < nghbr) ef( i, nghbr);
 	}
     }
@@ -313,21 +260,17 @@ void makeSierpinski(int depth, edgefn ef)
     free(graph);
 }
 
-static void
-constructTetrix(int v1, int v2, int v3, int v4, int depth, vtx_data* graph)
-{
-    static int last_used_node_name = 4;
-    int v5, v6, v7, v8, v9, v10;
-
-    int nedges;
+static void constructTetrix(unsigned v1, unsigned v2, unsigned v3, unsigned v4,
+                            unsigned depth, vtx_data* graph) {
+    static unsigned last_used_node_name = 4;
 
     if (depth > 0) {
-        v5 = ++last_used_node_name;
-        v6 = ++last_used_node_name;
-        v7 = ++last_used_node_name;
-        v8 = ++last_used_node_name;
-        v9 = ++last_used_node_name;
-        v10 = ++last_used_node_name;
+        const unsigned v5 = ++last_used_node_name;
+        const unsigned v6 = ++last_used_node_name;
+        const unsigned v7 = ++last_used_node_name;
+        const unsigned v8 = ++last_used_node_name;
+        const unsigned v9 = ++last_used_node_name;
+        const unsigned v10 = ++last_used_node_name;
         constructTetrix(v1, v5, v6, v8, depth - 1, graph);
         constructTetrix(v2, v6, v7, v9, depth - 1, graph);
         constructTetrix(v3, v5, v7, v10, depth - 1, graph);
@@ -335,7 +278,7 @@ constructTetrix(int v1, int v2, int v3, int v4, int depth, vtx_data* graph)
         return;
     }
     // depth==0, Construct graph:
-    nedges = graph[v1].nedges;
+    unsigned nedges = graph[v1].nedges;
     graph[v1].edges[nedges++] = v2;
     graph[v1].edges[nedges++] = v3;
     graph[v1].edges[nedges++] = v4;
@@ -360,20 +303,16 @@ constructTetrix(int v1, int v2, int v3, int v4, int depth, vtx_data* graph)
     graph[v4].nedges = nedges;
 }
 
-void makeTetrix(int depth, edgefn ef)
-{
+void makeTetrix(unsigned depth, edgefn ef) {
     vtx_data* graph;
-    int* edges;
-    int n;
-    int i, j;
 
     depth--;
-    n = 4 + 2 * (((int) (pow(4.0, (double) depth) + 0.5) - 1));
+    const unsigned n = 4 + 2 * (((unsigned)(pow(4.0, depth) + 0.5) - 1));
 
     graph = gv_calloc(n + 1, sizeof(vtx_data));
-    edges = gv_calloc(6 * n, sizeof(int));
+    unsigned *edges = gv_calloc(6 * n, sizeof(unsigned));
 
-    for (i = 1; i <= n; i++) {
+    for (unsigned i = 1; i <= n; i++) {
         graph[i].edges = edges;
         edges += 6;
         graph[i].nedges = 0;
@@ -381,11 +320,10 @@ void makeTetrix(int depth, edgefn ef)
 
     constructTetrix(1, 2, 3, 4, depth, graph);
 
-    for (i = 1; i <= n; i++) {
-        int nghbr;
+    for (unsigned i = 1; i <= n; i++) {
         // write the neighbors of the node i
-        for (j = 0; j < graph[i].nedges; j++) {
-            nghbr = graph[i].edges[j];
+        for (unsigned j = 0; j < graph[i].nedges; j++) {
+            const unsigned nghbr = graph[i].edges[j];
             if (i < nghbr) ef( i, nghbr);
         }
     }
@@ -394,35 +332,28 @@ void makeTetrix(int depth, edgefn ef)
     free(graph);
 }
 
-void makeHypercube(int dim, edgefn ef)
-{
-    int i, j, n;
-    int neighbor;
+void makeHypercube(unsigned dim, edgefn ef) {
+    const unsigned n = 1u << dim;
 
-    n = 1 << dim;
-
-    for (i = 0; i < n; i++) {
-	for (j = 0; j < dim; j++) {
-	    neighbor = (i ^ (1 << j)) + 1;
+    for (unsigned i = 0; i < n; i++) {
+	for (unsigned j = 0; j < dim; j++) {
+	    const unsigned neighbor = (i ^ (1u << j)) + 1;
 	    if (i < neighbor)
 		ef( i + 1, neighbor);
 	}
     }
 }
 
-void makeTriMesh(int sz, edgefn ef)
-{
-    int i, j, idx;
-
+void makeTriMesh(unsigned sz, edgefn ef) {
     if (sz == 1) {
 	ef (1, 0);
 	return;
     }
     ef(1,2);
     ef(1,3);
-    idx = 2;
-    for (i=2; i < sz; i++) {
-	for (j=1; j <= i; j++) {
+    unsigned idx = 2;
+    for (unsigned i = 2; i < sz; i++) {
+	for (unsigned j = 1; j <= i; j++) {
 	    ef(idx,idx+i);
 	    ef(idx,idx+i+1);
 	    if (j < i)
@@ -430,23 +361,20 @@ void makeTriMesh(int sz, edgefn ef)
 	    idx++;
 	}
     }
-    for (j=1; j < sz; j++) {
+    for (unsigned j = 1; j < sz; j++) {
 	ef (idx,idx+1);
 	idx++;
     }
 }
 
-void makeBall(int w, int h, edgefn ef)
-{
-    int i, cap;
-
+void makeBall(unsigned w, unsigned h, edgefn ef) {
     makeCylinder (w, h, ef);
 
-    for (i = 1; i <= h; i++)
+    for (unsigned i = 1; i <= h; i++)
 	ef (0, i);
 
-    cap = w*h+1;
-    for (i = (w-1)*h+1; i <= w*h; i++)
+    const unsigned cap = w * h + 1;
+    for (unsigned i = (w - 1) * h + 1; i <= w * h; i++)
 	ef (i, cap);
 
 }
@@ -454,21 +382,19 @@ void makeBall(int w, int h, edgefn ef)
 /* makeRandom:
  * No. of nodes is largest 2^n - 1 less than or equal to h.
  */
-void makeRandom(int h, int w, edgefn ef)
-{
-    int i, j, type, size, depth;
-
+void makeRandom(unsigned h, unsigned w, edgefn ef) {
     srand((unsigned)time(0));
-    type = rand() % 2;
+    const int type = rand() % 2;
 
-    size = depth = 0;
+    unsigned size = 0;
+    unsigned depth = 0;
     while (size <= h) {
-	size += 1 << depth;
+	size += 1u << depth;
 	depth++;
     }
     depth--;
     if (size > h) {
-	size -= 1 << depth;
+	size -= 1u << depth;
 	depth--;
     }
 
@@ -477,41 +403,38 @@ void makeRandom(int h, int w, edgefn ef)
     else
 	makePath (size, ef);
 
-    for (i=3; i<=size; i++) {
-	for (j=1; j<i-1; j++) {
-	    int th = rand()%(size*size);
-	    if ((th <= w * w && (i < 5 || (i > h - 4 && j > h - 4))) || th <= w)
+    for (unsigned i = 3; i <= size; i++) {
+	for (unsigned j = 1; j + 1 < i; j++) {
+	    const unsigned th = (unsigned)rand() % (size * size);
+	    if ((th <= w * w && (i < 5 || (i + 4 > h && j + 4 > h))) || th <= w)
 		ef(j,i);
 	}
     }
 }
 
-void makeMobius(int w, int h, edgefn ef)
-{
-    int i, j;
-
+void makeMobius(unsigned w, unsigned h, edgefn ef) {
     if (h == 1) {
-	fprintf(stderr, "Warning: degenerate Moebius strip of %d vertices\n", w);
+	fprintf(stderr, "Warning: degenerate Moebius strip of %u vertices\n", w);
 	makePath(w, ef);
 	return;
     }
     if (w == 1) {
-	fprintf(stderr, "Warning: degenerate Moebius strip of %d vertices\n", h);
+	fprintf(stderr, "Warning: degenerate Moebius strip of %u vertices\n", h);
 	makePath(h, ef);
 	return;
     }
 
-    for(i=0; i < w-1; i++) {
-        for(j = 1; j < h; j++){
+    for (unsigned i = 0; i + 1 < w; i++) {
+        for (unsigned j = 1; j < h; j++){
             ef(j + i*h, j + (i+1)*h);
             ef(j + i*h, j+1 + i*h);
         }
     }
 
-    for(i = 1; i < h; i++){
+    for (unsigned i = 1; i < h; i++){
         ef (i + (w-1)*h, i+1 + (w-1)*h);
     }
-    for(i=1; i < w; i++) {
+    for (unsigned i=1; i < w; i++) {
         ef(i*h , (i+1)*h);
         ef(i*h, (w-i)*h+1);
     }
@@ -520,21 +443,19 @@ void makeMobius(int w, int h, edgefn ef)
 }
 
 typedef struct {
-    int j, d;
+    unsigned j, d;
 } pair;
 
 typedef struct {
-    int top, root;
-    int* p; 
+    unsigned top, root;
+    unsigned* p; 
 } tree_t;
 
-static tree_t*
-mkTree (int sz)
-{
+static tree_t *mkTree(unsigned sz) {
     tree_t* tp = gv_alloc(sizeof(tree_t));
     tp->root = 0;
     tp->top = 0;
-    tp->p = gv_calloc(sz, sizeof(int));
+    tp->p = gv_calloc(sz, sizeof(unsigned));
     return tp;
 }
 
@@ -552,27 +473,19 @@ resetTree (tree_t* tp)
     tp->top = 0;
 }
 
-static int
-treeRoot (tree_t* tp)
-{
+static unsigned treeRoot(tree_t* tp) {
     return tp->root;
 }
 
-static int
-prevRoot (tree_t* tp)
-{
+static unsigned prevRoot(tree_t *tp) {
     return tp->p[tp->root];
 }
 
-static int
-treeSize (tree_t* tp)
-{
+static unsigned treeSize(tree_t *tp) {
     return tp->top - tp->root + 1;
 }
 
-static int
-treeTop (tree_t* tp)
-{
+static unsigned treeTop(tree_t *tp) {
     return tp->top;
 }
 
@@ -582,23 +495,19 @@ treePop (tree_t* tp)
     tp->root = prevRoot(tp);
 }
 
-static void
-addTree (tree_t* tp, int sz)
-{
+static void addTree(tree_t *tp, unsigned sz) {
 	tp->p[tp->top+1] = tp->root;
 	tp->root = tp->top+1;
 	tp->top += sz;
 	if (sz > 1) tp->p[tp->top] = tp->top-1;
 }
 
-static void 
-treeDup (tree_t* tp, int J)
-{
-    int M = treeSize(tp);
-    int L = treeRoot(tp);
-    int LL = prevRoot(tp);
-    int i, LS = L + (J-1)*M - 1;
-    for (i = L; i <= LS; i++) {
+static void treeDup(tree_t *tp, unsigned J) {
+    unsigned M = treeSize(tp);
+    unsigned L = treeRoot(tp);
+    unsigned LL = prevRoot(tp);
+    unsigned LS = L + (J-1)*M - 1;
+    for (unsigned i = L; i <= LS; i++) {
 	if ((i-L)%M == 0)  tp->p[i+M] = LL;
 	else tp->p[i+M] = tp->p[i] + M;
     }
@@ -607,9 +516,9 @@ treeDup (tree_t* tp, int J)
 
 /*****************/
 
-DEFINE_LIST(int_stack, int)
+DEFINE_LIST(int_stack, unsigned)
 
-static void push(int_stack_t *sp, int j, int d) {
+static void push(int_stack_t *sp, unsigned j, unsigned d) {
   int_stack_push(sp, j);
   int_stack_push(sp, d);
 }
@@ -617,30 +526,26 @@ static void push(int_stack_t *sp, int j, int d) {
 static pair pop(int_stack_t *sp) {
 
   // extract ints in the opposite order in which they were pushed
-  int d = int_stack_pop(sp);
-  int j = int_stack_pop(sp);
+  const unsigned d = int_stack_pop(sp);
+  const unsigned j = int_stack_pop(sp);
 
   return (pair){j, d};
 }
 
 /*****************/
 
-static int*
-genCnt(int NN)
-{
-    int* T = gv_calloc(NN + 1, sizeof(int));
-    int D, I, J, TD;
-    int SUM;
-    int NLAST = 1;
+static unsigned *genCnt(unsigned NN) {
+    unsigned* T = gv_calloc(NN + 1, sizeof(unsigned));
+    unsigned NLAST = 1;
     T[1] = 1;
     while (NN > NLAST) {
-	SUM = 0;
-	for (D = 1; D <= NLAST; D++) {
-	    I = NLAST+1;
-	    TD = T[D]*D;
-	    for (J = 1; J <= NLAST; J++) {
+	unsigned SUM = 0;
+	for (unsigned D = 1; D <= NLAST; D++) {
+	    unsigned I = NLAST + 1;
+	    const unsigned TD = T[D] * D;
+	    for (unsigned J = 1; J <= NLAST; J++) {
+		if (I <= D) break;
 		I = I-D;
-		if (I <= 0) break;
 		SUM += T[I]*TD;
 	    }
 	}
@@ -659,31 +564,36 @@ drand(void)
     return d;
 }
 
-static void genTree(int NN, int *T, int_stack_t *stack, tree_t *TREE) {
+static void genTree(unsigned NN, unsigned *T, int_stack_t *stack,
+                    tree_t *TREE) {
     double v;
     pair p;
-    int Z, D, N, J, TD, M;
+    unsigned J;
 
-    N = NN;
+    unsigned N = NN;
 
     while (1) {
 	while (N > 2) {
 	    v = (N-1)*T[N];
-	    Z = v*drand();
-	    D = 0;
+	    double Z = v * drand();
+	    unsigned D = 0;
 	    bool more = true;
+	    unsigned M;
 	    do {
 		D++;
-		TD = D*T[D];
+		const unsigned TD = D*T[D];
 		M = N;
 		J = 0;
 		do {
 		    J++;
 		    M -= D;
 		    if (M < 1) break;
+		    if (Z <= T[M] * TD) {
+                      more = false;
+                      break;
+                    }
 		    Z -= T[M]*TD;
-		    if (Z < 0) more = false;
-		} while (Z >= 0);
+		} while (true);
 	    } while (more);
 	    push(stack, J, D);
 	    N = M;
@@ -709,21 +619,18 @@ static void genTree(int NN, int *T, int_stack_t *stack, tree_t *TREE) {
 static void
 writeTree (tree_t* tp, edgefn ef)
 {
-    int i;
-    for (i = 2; i <= tp->top; i++)
+    for (unsigned i = 2; i <= tp->top; i++)
 	ef (tp->p[i], i);
 }
 
 struct treegen_s {
-    int N;
-    int* T;
+    unsigned N;
+    unsigned* T;
     int_stack_t sp;
     tree_t* tp;
 };
 
-treegen_t* 
-makeTreeGen (int N)
-{
+treegen_t *makeTreeGen(unsigned N) {
     treegen_t* tg = gv_alloc(sizeof(treegen_t));
 
     tg->N = N;
