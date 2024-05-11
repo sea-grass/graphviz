@@ -276,9 +276,6 @@ constructSierpinski(int v1, int v2, int v3, int depth, vtx_data* graph)
     graph[v3].edges[nedges++] = v1;
     graph[v3].edges[nedges++] = v2;
     graph[v3].nedges = nedges;
-
-    return;
-
 }
 
 void makeSierpinski(int depth, edgefn ef)
