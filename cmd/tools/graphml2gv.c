@@ -15,6 +15,7 @@
 
 
 #include    "convert.h"
+#include    <assert.h>
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
@@ -22,6 +23,7 @@
 #include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
+#include    <limits.h>
 #include    <stdbool.h>
 #include    <stdio.h>
 #include    <string.h>
@@ -363,7 +365,8 @@ static Agraph_t *graphml_to_gv(char *graphname, FILE *graphmlFile, int *rv) {
 	if (len == 0)
 	    break;
 	done = len < sizeof(buf);
-	if (XML_Parse(parser, buf, len, done) == XML_STATUS_ERROR) {
+	assert(len <= INT_MAX);
+	if (XML_Parse(parser, buf, (int)len, done) == XML_STATUS_ERROR) {
 	    fprintf(stderr,
 		    "%s at line %lu\n",
 		    XML_ErrorString(XML_GetErrorCode(parser)),
