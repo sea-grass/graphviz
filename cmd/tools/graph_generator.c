@@ -357,9 +357,6 @@ constructTetrix(int v1, int v2, int v3, int v4, int depth, vtx_data* graph)
     graph[v4].edges[nedges++] = v2;
     graph[v4].edges[nedges++] = v3;
     graph[v4].nedges = nedges;
-
-    return;
-
 }
 
 void makeTetrix(int depth, edgefn ef)
