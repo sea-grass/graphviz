@@ -764,6 +764,8 @@ centos7-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        # disable TCL components for which FindTCL.cmake triggers a -Wdev warning
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_tclpkg=OFF"
     tags:
         - saas-linux-small-amd64
     variables:

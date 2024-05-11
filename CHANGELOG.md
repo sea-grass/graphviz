@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (11.0.1)]
 
+### Added
+
+- Partial support for building the Graphviz TCL bindings has been integrated
+  into the CMake build system. This is controllable by the
+  `-Dwith_tclpkg={AUTO|ON|OFF}` option.
+
 ### Changed
 
 - The Catch2-based test suite in the CMake build system has been ported from

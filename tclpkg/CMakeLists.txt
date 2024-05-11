@@ -1,0 +1,5 @@
+if(with_tclpkg)
+  add_subdirectory(gdtclft)
+  add_subdirectory(tclhandle)
+  add_subdirectory(tclstubs)
+endif()
