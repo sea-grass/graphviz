@@ -96,7 +96,6 @@ typedef struct {
 static Agraph_t *root;		/* root graph */
 static int Current_class;	/* Current element type */
 static Agraph_t *G;		/* Current graph */
-static Agnode_t *N;		/* Set if Current_class == TAG_NODE */
 static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
 
 static gv_stack_t Gstack;
@@ -156,8 +155,7 @@ static Agraph_t *pop_subg(void)
 
 static Agnode_t *bind_node(const char *name)
 {
-    N = agnode(G, (char *) name, 1);
-    return N;
+  return agnode(G, (char *)name, 1);
 }
 
 static Agedge_t *bind_edge(const char *tail, const char *head)
@@ -346,7 +344,6 @@ static void endElementHandler(void *userData, const char *name)
 	}
 	popString(&ud->elements);
 	Current_class = TAG_GRAPH;
-	N = 0;
 	ud->closedElementType = TAG_NODE;
     } else if (strcmp(name, "edge") == 0) {
 	Current_class = TAG_GRAPH;
