@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,6 @@ extern void makeTriMesh(unsigned, edgefn);
 extern void makeMobius(unsigned, unsigned, edgefn);
 
 typedef struct treegen_s treegen_t;
-extern treegen_t* makeTreeGen(unsigned);
-extern void makeRandomTree (treegen_t*, edgefn);
-extern void freeTreeGen(treegen_t*);
+extern treegen_t *makeTreeGen(unsigned);
+extern void makeRandomTree(treegen_t *, edgefn);
+extern void freeTreeGen(treegen_t *);
