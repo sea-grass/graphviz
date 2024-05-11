@@ -94,9 +94,8 @@ typedef struct {
 } userdata_t;
 
 static Agraph_t *root;		/* root graph */
-static int Current_class;	/* Current element type */
 static Agraph_t *G;		/* Current graph */
-static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
+static Agedge_t *E; // current edge
 
 static gv_stack_t Gstack;
 
@@ -232,7 +231,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	Agdesc_t dir;
 	char buf[NAMEBUF];	/* holds % + number */
 
-	Current_class = TAG_GRAPH;
 	if (ud->closedElementType == TAG_GRAPH) {
 	    fprintf(stderr,
 		    "Warning: Node contains more than one graph.\n");
@@ -275,7 +273,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 
 	pushString(&ud->elements, id);
     } else if (strcmp(name, "node") == 0) {
-	Current_class = TAG_NODE;
 	pos = get_xml_attr("id", atts);
 	if (pos > 0) {
 	    const char *attrname;
@@ -293,7 +290,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	char *tname;
 	Agnode_t *t;
 
-	Current_class = TAG_EDGE;
 	pos = get_xml_attr("source", atts);
 	if (pos > 0)
 	    tail = atts[pos];
@@ -343,10 +339,8 @@ static void endElementHandler(void *userData, const char *name)
 	    if (node) agdelete(root, node);
 	}
 	popString(&ud->elements);
-	Current_class = TAG_GRAPH;
 	ud->closedElementType = TAG_NODE;
     } else if (strcmp(name, "edge") == 0) {
-	Current_class = TAG_GRAPH;
 	E = 0;
 	ud->closedElementType = TAG_EDGE;
 	ud->edgeinverted = false;
@@ -363,7 +357,6 @@ static Agraph_t *graphml_to_gv(char *graphname, FILE *graphmlFile, int *rv) {
     XML_SetUserData(parser, &udata);
     XML_SetElementHandler(parser, startElementHandler, endElementHandler);
 
-    Current_class = TAG_GRAPH;
     root = 0;
     do {
 	size_t len = fread(buf, 1, sizeof(buf), graphmlFile);
