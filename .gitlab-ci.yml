@@ -865,7 +865,6 @@ macos-cmake-build:
 windows-cmake-Win32-release-build:
     <<: *windows_build_definition
     before_script:
-        - $Env:generator = "Visual Studio 16 2019"
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Release"
         - $Env:build_system = "cmake"
@@ -873,7 +872,6 @@ windows-cmake-Win32-release-build:
 windows-cmake-Win32-debug-build:
     <<: *windows_build_definition
     before_script:
-        - $Env:generator = "Visual Studio 16 2019"
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Debug"
         - $Env:build_system = "cmake"
@@ -881,7 +879,6 @@ windows-cmake-Win32-debug-build:
 windows-cmake-x64-release-build:
     <<: *windows_build_definition
     before_script:
-        - $Env:generator = "Visual Studio 16 2019"
         - $Env:project_platform = "x64"
         - $Env:configuration = "Release"
         - $Env:build_system = "cmake"
@@ -889,7 +886,6 @@ windows-cmake-x64-release-build:
 windows-cmake-x64-debug-build:
     <<: *windows_build_definition
     before_script:
-        - $Env:generator = "Visual Studio 16 2019"
         - $Env:project_platform = "x64"
         - $Env:configuration = "Debug"
         - $Env:build_system = "cmake"
