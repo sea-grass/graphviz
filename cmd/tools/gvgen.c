@@ -116,9 +116,7 @@ static unsigned readPos(char *s, char **e) {
  * Return non-zero on error.
  */
 static int readOne(char *s, unsigned *ip) {
-    char *next;
-
-    const unsigned d = readPos(s, &next);
+    const unsigned d = readPos(s, &(char *){NULL});
     if (d > 0) {
 	*ip = d;
 	return 0;
@@ -152,7 +150,7 @@ static int setTwo(char *s, opts_t* opts)
     }
 
     s = next + 1;
-    d = readPos(s, &next);
+    d = readPos(s, &(char *){NULL});
     if (d > 1) {
 	opts->graphSize2 = d;
 	return 0;
@@ -222,7 +220,7 @@ static int setTwoOpt(char *s, opts_t *opts, unsigned dflt) {
     }
 
     s = next + 1;
-    d = readPos(s, &next);
+    d = readPos(s, &(char *){NULL});
     if (d > 1) {
 	opts->graphSize2 = d;
 	return 0;
