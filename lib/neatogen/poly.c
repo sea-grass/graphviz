@@ -19,10 +19,11 @@
 #include <neatogen/mem.h>
 #include <stdbool.h>
 
-#define BOX 1
-#define ISBOX(p) ((p)->kind & BOX)
-#define CIRCLE 2
-#define ISCIRCLE(p) ((p)->kind & CIRCLE)
+static const int BOX = 1;
+static const int CIRCLE = 2;
+
+static bool ISBOX(const Poly *p) { return p->kind & BOX; }
+static bool ISCIRCLE(const Poly *p) { return p->kind & CIRCLE; }
 
 static size_t maxcnt = 0;
 static Point *tp1 = NULL;
@@ -174,7 +175,7 @@ int makeAddPoly(Poly *pp, Agnode_t *n, double xmargin, double ymargin) {
 		}
 		else {
 		    for (size_t i = 0; i < sides; i++) {
-                        double h = LEN(poly->vertices[i].x,poly->vertices[i].y);
+		        const double h = hypot(poly->vertices[i].x, poly->vertices[i].y);
 		        verts[i].x = poly->vertices[i].x * (1.0 + xmargin/h);
 		        verts[i].y = poly->vertices[i].y * (1.0 + ymargin/h);
 		        verts[i].x = PS2INCH(verts[i].x);
