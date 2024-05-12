@@ -2,7 +2,7 @@
 /// @brief [node shapes](https://graphviz.org/doc/info/shapes.html)
 /// @ingroup common_render
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,7 +30,7 @@ typedef struct {
     pointf (*size_gen) (pointf);
     void (*vertex_gen) (pointf*, pointf*);
 } poly_desc_t;
- 
+
 static port Center = {.theta = -1, .clip = true};
 
 #define ATTR_SET(a,n) ((a) && (*(agxget(n,a->index)) != '\0'))
@@ -585,7 +585,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
     if (mode == CYLINDER) {
 	cylinder_draw(job, AF, sides, filled);
 	return;
-    } 
+    }
     B = gv_calloc(4 * sides + 4, sizeof(pointf));
     size_t i = 0;
     /* rbconst is distance offset from a corner of the polygon.
@@ -620,7 +620,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	    t /= 2;
 	if (mode != ROUNDED)
 	    B[i++] = p0;
-	else 
+	else
 	    B[i++] = interpolate_pointf(RBCURVE * t, p0, p1);
 	B[i++] = interpolate_pointf(t, p0, p1);
 	B[i++] = interpolate_pointf(1.0 - t, p0, p1);
@@ -647,7 +647,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	pts[i++] = pts[1];
 	gvrender_beziercurve(job, pts+1, i-1, filled);
 	free (pts);
-	
+
 	break;
     case DIAGONALS:
 	/* diagonals are weird.  rewrite someday. */
@@ -831,19 +831,19 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	 * L-shaped arrow on a center line, scales in the x direction
 	 *
-	 *  
-	 *      D[1]	          |\
+	 *
+	 *      D[1]              |\
 	 *       +----------------+ \
-	 *       |	        D[0] \
+	 *       |              D[0] \
 	 *       |                    \
-	 *       |                    /    
+	 *       |                    /
 	 *       |             D[5]  /
 	 *       |        +-------+ /
-	 *       |	  |       |/
-	 *	 +--------+
+	 *       |        |       |/
+	 *       +--------+
 	 */
 	/* Add the tab edges. */
-				
+
 	//the arrow's thickness is (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
 	// in the y with label length
@@ -861,7 +861,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[5].x = D[0].x;
 	D[5].y = D[4].y; //highest cds point
 	D[6].x = D[0].x;
-	D[6].y = D[4].y - (B[3].y-B[4].y)/4; //D[4].y - width/2 
+	D[6].y = D[4].y - (B[3].y-B[4].y)/4; //D[4].y - width/2
 	D[7].x = D[6].x + (B[2].x - B[3].x); //D[6].x + 2*width
 	D[7].y = D[6].y + (B[3].y - B[4].y)/2; //D[6].y + width
 	D[8].x = D[0].x;
@@ -873,25 +873,25 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
-	free(D);			
-			
+	gvrender_polyline(job, C, 2);
+	free(D);
+
 	break;
-				
+
     case CDS:
 	/*
 	 * arrow without the protrusions, scales normally
 	 *
-	 *  
-	 *      D[1] = AF[1]      
+	 *
+	 *      D[1] = AF[1]
 	 *       +----------------+\
-	 *       |		D[0]\
+	 *       |              D[0]\
 	 *       |                   \
-	 *       |                   /    
+	 *       |                   /
 	 *       |                  /
 	 *       +----------------+/
-	 *	  	          D[3]
-	 *	 
+	 *                        D[3]
+	 *
 	 */
 	D = gv_calloc(sides + 1, sizeof(pointf));
 	D[0].x = B[1].x;
@@ -904,7 +904,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[3].y = AF[2].y + (B[3].y - B[4].y)/2;
 	D[4].y = AF[0].y - (AF[0].y - AF[3].y)/2;
 	D[4].x = AF[0].x;
-				
+
 	gvrender_polygon(job, D, sides + 1, filled);
 	free(D);
 
@@ -914,16 +914,16 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	* T-shape, does not scale, always in the center
 	*
-	*  
-	*      D[4]      
+	*
+	*      D[4]
 	*       +----------------+
-	*       |		D[3]
+	*       |               D[3]
 	*       |                |
-	*       |                |    
+	*       |                |
 	*       |  D[6]    D[1]  |
 	*   D[5]+---+       +----+ D[2]
-	*	    |	    |     
-	*	    +-------+ D[0]
+	*           |       |
+	*           +-------+ D[0]
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 4, sizeof(pointf));
@@ -950,7 +950,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
 	break;
@@ -960,15 +960,15 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 * half-octagon with line, does not scale, always in center
 	 *
 	 *  D[3]
-	 *     _____  D[2] 
+	 *     _____  D[2]
 	 *    /     \
 	 *   /       \ D[1]
 	 *   |       |
 	 *   -----------
-	 *              D[0]   
-	 *      
-	 *	
-	 *	          
+	 *              D[0]
+	 *
+	 *
+	 *
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 2, sizeof(pointf));
@@ -991,7 +991,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
 	break;
@@ -999,15 +999,15 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	* half arrow shape, scales in the x-direction
 	*                 D[1]
-	*		    |\
-	*		    | \
-	*		    |  \
-	*	------------    \
-	*	|		 \
-	*	------------------\ D[0]			 
-	*				
+	*                   |\
+	*                   | \
+	*                   |  \
+	*       ------------    \
+	*       |                \
+	*       ------------------\ D[0]
+	*
 	*   --------------------------------
-	*  
+	*
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
@@ -1024,13 +1024,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[4].x = D[3].x;
 	D[4].y = D[0].y;
 	gvrender_polygon(job, D, sides + 1, filled);
-				
+
 	/*dsDNA line*/
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
 	break;
@@ -1038,15 +1038,15 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	* zigzag shape, scales in the x-direction (only the middle section)
 	*
-	*		 
-	*   ----D[2]	 
+	*
+	*   ----D[2]
 	*   |   |________ D[0]
 	*   |            |____
-	*   ----------	 |
+	*   ----------   |
 	*   D[4]      --- D[7]
-	*				
-	*   
-	*  
+	*
+	*
+	*
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
@@ -1069,7 +1069,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[7].x = D[0].x;
 	D[7].y = D[6].y;
 	gvrender_polygon(job, D, sides + 4, filled);
-				
+
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
@@ -1082,23 +1082,23 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);			    
+	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;	
+	break;
     case FIVEPOVERHANG:
 	/*
 	*  does not scale, on the left side
 	*
-	*  D[3]------D[2]	 
+	*  D[3]------D[2]
 	*  |          |
 	*  D[0]------D[1]
 	*        -----  ------------
 	*        |    |
 	*       D[0]--D[1]
-	*				
-	*   
-	*  
+	*
+	*
+	*
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
@@ -1132,23 +1132,23 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);			    
+	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;	
+	break;
     case THREEPOVERHANG:
 	/*
 	*  does not scale, on the right side
 	*
-	*	   D[2]------D[1]	 
-	*	   |          |
+	*          D[2]------D[1]
+	*          |          |
 	*----------D[3]------D[0]
-	*	   -----  D[1]
+	*          -----  D[1]
 	*          |    |
 	*          D[3]--D[0]
-	*				
-	*   
-	*  
+	*
+	*
+	*
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
@@ -1182,24 +1182,24 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[3].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);			    
+	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;	
+	break;
     case NOVERHANG:
 	/*
 	*  does not scale
 	*
-	*     D[3]------D[2]   D[3]------D[2]    
+	*     D[3]------D[2]   D[3]------D[2]
 	*     |          |      |          |
 	*  ---D[0]------D[1]   D[0]------D[1]----
-	*     D[3]------D[2]   D[3]------D[2]    
-	*     |          |	|          |
+	*     D[3]------D[2]   D[3]------D[2]
+	*     |          |      |          |
 	*     D[0]------D[1]   D[0]------D[1]
-	*        
-	*				
-	*   
-	*  
+	*
+	*
+	*
+	*
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
@@ -1254,7 +1254,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[3].x = D[0].x;
 	D[3].y = D[2].y;
 	gvrender_polygon(job, D, sides, filled);
-	
+
 	/*dsDNA line right half*/
 	C[0].x = D[1].x;
 	C[0].y = mid_y(&AF[1]);
@@ -1267,22 +1267,22 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[1].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);			    
+	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;	
+	break;
     case ASSEMBLY:
 	/*
 	*  does not scale
 	*
-	*      D[3]----------D[2]	 
+	*      D[3]----------D[2]
 	*      |               |
 	*     D[0]----------D[1]
 	* ----                  ---------
-	*      D[3]----------D[2]	 
+	*      D[3]----------D[2]
 	*      |               |
 	*     D[0]----------D[1]
-	*  
+	*
 	*/
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	// the thickness is substituted with (AF[0].x - AF[1].x)/8 to make it scalable
@@ -1326,14 +1326,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;	
+	break;
     case SIGNATURE:
 	/*
-	*   
-	* 
+	*
+	*
 	*   +--------------+
-	*   |		   |
-	*   |x		   |
+	*   |              |
+	*   |x             |
 	*   |_____________ |
 	*   +--------------+
 	*/
@@ -1357,13 +1357,13 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[1].x = C[0].x + (B[2].x-B[3].x)/4;//C[0].x + width/2
 	C[1].y = C[0].y - (B[3].y-B[4].y)/4;//C[0].y - width/2
 	gvrender_polyline(job, C, 2);
-	
+
 	/*"/" of the X*/
 	C[0].x = AF[1].x + (B[2].x-B[3].x)/4;
 	C[0].y = mid_y(&AF[1]) - (B[3].y-B[4].y)/8; //y_center - 1/4 width
 	C[1].x = C[0].x + (B[2].x-B[3].x)/4;//C[0].x + width/2
 	C[1].y = C[0].y + (B[3].y-B[4].y)/4;//C[0].y + width/2
-	gvrender_polyline(job, C, 2);	
+	gvrender_polyline(job, C, 2);
 
 	/*bottom line*/
 	C[0].x = AF[1].x + (B[2].x-B[3].x)/4;
@@ -1373,7 +1373,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;	
+	break;
     case INSULATOR:
 	/*
 	 * double square
@@ -1382,7 +1382,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	 *--| ___ |---
 	 *  | |_| |
 	 *  +-----+
-	 *	          
+	 *
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides, sizeof(pointf));
@@ -1407,8 +1407,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[3].x = C[2].x;
 	C[3].y = C[0].y;
 	C[4] = C[0];
-	gvrender_polyline(job, C, 5);		        
-	
+	gvrender_polyline(job, C, 5);
+
 	/*dsDNA line right half*/
 	C[0].x = mid_x(AF) + (B[2].x-B[3].x)*3/4;
 	C[0].y = mid_y(&AF[1]);
@@ -1427,11 +1427,11 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
     case RIBOSITE:
 	/*
 	 * X with a dashed line on the bottom
-	 * 
+	 *
 	 *
 	 *           X
-	 *	     |
-	 *	------------          
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
@@ -1491,18 +1491,18 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
 	break;
     case RNASTAB:
 	/*
 	 * hexagon with a dashed line on the bottom
-	 * 
+	 *
 	 *
 	 *           O
-	 *	     |
-	 *	------------          
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
@@ -1548,18 +1548,18 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
 	break;
     case PROTEASESITE:
 	/*
 	 * X with a solid line on the bottom
-	 * 
+	 *
 	 *
 	 *           X
-	 *	     |
-	 *	------------          
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 	D = gv_calloc(sides + 12, sizeof(pointf)); // 12-sided x
@@ -1609,18 +1609,18 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
 	break;
     case PROTEINSTAB:
 	/*
 	 * hexagon with a dashed line on the bottom
-	 * 
+	 *
 	 *
 	 *           O
-	 *	     |
-	 *	------------          
+	 *           |
+	 *      ------------
 	 */
 	//width units are (B[2].x-B[3].x)/2 or (B[3].y-B[4].y)/2;
 
@@ -1655,25 +1655,25 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
 	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
-	gvrender_polyline(job, C, 2);				
+	gvrender_polyline(job, C, 2);
 	free(D);
 
-	break;        
+	break;
 
     case RPROMOTER:
 	/*
 	 * Adjust the perimeter for the protrusions.
 	 *
-	 *  
+	 *
 	 *      D[1] = AF[1]      |\
 	 *       +----------------+ \
-	 *       |	        D[0] \
+	 *       |              D[0] \
 	 *       |                    \
-	 *       |                    /    
+	 *       |                    /
 	 *       |                   /
 	 *       |        +-------+ /
-	 *       |	  |       |/
-	 *	 +--------+
+	 *       |        |       |/
+	 *       +--------+
 	 */
 	/* Add the tab edges. */
 	D = gv_calloc(sides + 5, sizeof(pointf)); // 5 new points
@@ -1699,21 +1699,21 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	gvrender_polygon(job, D, sides + 5, filled);
 	free(D);
 	break;
-				
+
     case RARROW:
 	/*
 	 * Adjust the perimeter for the protrusions.
 	 *
-	 *  
+	 *
 	 *      D[1] = AF[1]      |\
 	 *       +----------------+ \
-	 *       |		D[0] \
+	 *       |              D[0] \
 	 *       |                    \
-	 *       |                    /    
+	 *       |                    /
 	 *       |                   /
 	 *       +----------------+ /
-	 *	  	          |/
-	 *	 
+	 *                        |/
+	 *
 	 */
 	/* Add the tab edges. */
 	D = gv_calloc(sides + 3, sizeof(pointf)); // 3 new points
@@ -1740,14 +1740,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	 * Adjust the perimeter for the protrusions.
 	 *
-	 *  
-	 *      /|     
-	 *     / +----------------+ 
-	 *    /                   |        
-	 *    \                   |   
-	 *     \ +----------------+ 
-	 *	\| 	          
-	 *	 
+	 *
+	 *      /|
+	 *     / +----------------+
+	 *    /                   |
+	 *    \                   |
+	 *     \ +----------------+
+	 *      \|
+	 *
 	 */
 	/* Add the tab edges. */
 	D = gv_calloc(sides + 3, sizeof(pointf)); // 3 new points
@@ -1774,16 +1774,16 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	/*
 	 * Adjust the perimeter for the protrusions.
 	 *
-	 *  
-	 *      /|     
-	 *     / +----------------+ 
-	 *    /   		D[0] 
-	 *   /                    |    
-	 *   \                    |        
-	 *    \                   |   
-	 *     \ +--------+       + 
-	 *	\| 	  |       |
-	 *	          +-------+
+	 *
+	 *      /|
+	 *     / +----------------+
+	 *    /                 D[0]
+	 *   /                    |
+	 *   \                    |
+	 *    \                   |
+	 *     \ +--------+       +
+	 *      \|        |       |
+	 *                +-------+
 	 */
 	/* Add the tab edges. */
 	D = gv_calloc(sides + 5, sizeof(pointf)); // 3 new points
@@ -1805,7 +1805,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	D[7].y = AF[3].y;
 	D[8].x = AF[3].x;
 	D[8].y = AF[3].y;
-				
+
 	gvrender_polygon(job, D, sides + 5, filled);
 	free(D);
 	break;
@@ -2129,7 +2129,7 @@ static void poly_init(node_t * n)
  *   boundaries clockwise, say),  and the two adjacent segments.
  *
  *   It needs to find the point where the two lines, parallel to
- *   the current segments, and outside by GAP distance, intersect.   
+ *   the current segments, and outside by GAP distance, intersect.
  */
 
 	vertices = gv_calloc(outp * sides, sizeof(pointf));
@@ -2608,9 +2608,9 @@ static pointf compassPoint(inside_t * ictxt, double y, double x)
  *
  * The code assumes the node has its unrotated shape to find the points,
  * angles, etc. At the end, the parameters are adjusted to take into account
- * the rankdir attribute. In particular, the first if-else statement flips 
- * the already adjusted ND_ht, ND_lw and ND_rw back to non-flipped values. 
- * 
+ * the rankdir attribute. In particular, the first if-else statement flips
+ * the already adjusted ND_ht, ND_lw and ND_rw back to non-flipped values.
+ *
  */
 static int
 compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
@@ -2912,9 +2912,9 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	    fillcolor = findFill (n);
 	    if (findStopColor (fillcolor, clrs, &frac)) {
         	gvrender_set_fillcolor(job, clrs[0]);
-		if (clrs[1]) 
+		if (clrs[1])
 		    gvrender_set_gradient_vals(job,clrs[1],late_int(n,N_gradientangle,0,0), frac);
-		else 
+		else
 		    gvrender_set_gradient_vals(job,DEFAULT_COLOR,late_int(n,N_gradientangle,0,0), frac);
 		if (style & RADIAL)
 		    filled = RGRADIENT;
@@ -3080,7 +3080,7 @@ static void point_init(node_t * n)
 	/* If w == 0, use it; otherwise, make w no less than MIN_POINT due
          * to the restrictions mentioned above.
          */
-	if (w > 0.0) 
+	if (w > 0.0)
 	    w = fmax(w, MIN_POINT);
 	ND_width(n) = ND_height(n) = w;
     }
@@ -3664,7 +3664,7 @@ static void record_init(node_t * n)
     pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
     pos_reclbl(info, ul, sides);
     ND_width(n) = PS2INCH(info->size.x);
-    ND_height(n) = PS2INCH(info->size.y + 1);	/* Kluge!!  +1 to fix rounding diff between layout and rendering 
+    ND_height(n) = PS2INCH(info->size.y + 1);	/* Kluge!!  +1 to fix rounding diff between layout and rendering
 						   otherwise we can get -1 coords in output */
     ND_shape_info(n) = info;
 }
@@ -3719,7 +3719,7 @@ static port record_port(node_t * n, char *portname, char *compass)
 }
 
 /* record_inside:
- * Note that this does not handle Mrecords correctly. It assumes 
+ * Note that this does not handle Mrecords correctly. It assumes
  * everything is a rectangle.
  */
 static bool record_inside(inside_t * inside_context, pointf p)
@@ -3849,12 +3849,12 @@ static void record_gencode(GVJ_t * job, node_t * n)
     if (style & FILLED) {
 	char* fillcolor = findFill (n);
 	float frac;
-	
+
 	if (findStopColor (fillcolor, clrs, &frac)) {
             gvrender_set_fillcolor(job, clrs[0]);
-	    if (clrs[1]) 
+	    if (clrs[1])
 		gvrender_set_gradient_vals(job,clrs[1],late_int(n,N_gradientangle,0,0), frac);
-	    else 
+	    else
 		gvrender_set_gradient_vals(job,DEFAULT_COLOR,late_int(n,N_gradientangle,0,0), frac);
 	    if (style & RADIAL)
 		filled = RGRADIENT;
@@ -4033,7 +4033,7 @@ static void star_vertices (pointf* vertices, pointf* bb)
     /* for given sz, get radius */
     r = sz.x/(2*cos(alpha));
     r0 = r * cos(alpha) * cos(alpha4) / (sin(alpha4) * cos(alpha2));
-    
+
     /* offset is the y shift of circle center from bb center */
     offset = (r*(1 - sin(alpha3)))/2;
 
