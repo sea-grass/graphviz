@@ -95,7 +95,6 @@ typedef struct
 	xdot_op op;
 	void *obj;
 	glCompFont* font;
-	int size;
 	int layer;
 	glCompImage* img;
     } sdot_op;	
@@ -107,7 +106,7 @@ typedef struct
     } colorschema;
 
     typedef struct {
-	int schemacount;       /* number of colors */
+	size_t schemacount; // number of colors
 	int smooth;            /* if true, interpolate */
 	colorschema *s;
     } colorschemaset;
@@ -235,7 +234,7 @@ typedef struct
     } selection;
 
     typedef struct {
-	int Nodecount;
+	size_t Nodecount;
 	struct {
 	    int active;	//1 draw hierarchy 0 draw regular topview
 	    reposition_t repos;

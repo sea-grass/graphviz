@@ -96,8 +96,8 @@ static void cairogen_end_job(GVJ_t * job)
     }
 }
 
-#define CAIRO_XMAX 32767
-#define CAIRO_YMAX 32767
+static const double CAIRO_XMAX = 32767;
+static const double CAIRO_YMAX = 32767;
 
 static void cairogen_begin_page(GVJ_t * job)
 {
@@ -170,8 +170,7 @@ static void cairogen_begin_page(GVJ_t * job)
         case FORMAT_PNG:
         default:
 	    if (job->width >= CAIRO_XMAX || job->height >= CAIRO_YMAX) {
-		double scale = fmin((double)CAIRO_XMAX / job->width,
-			(double)CAIRO_YMAX / job->height);
+		double scale = fmin(CAIRO_XMAX / job->width, CAIRO_YMAX / job->height);
 		job->width *= scale;
 		job->height *= scale;
 		job->scale.x *= scale;
@@ -210,7 +209,6 @@ static void cairogen_begin_page(GVJ_t * job)
     cairo_rectangle(cr, job->clip.LL.x, - job->clip.LL.y,
 	    job->clip.UR.x - job->clip.LL.x, - (job->clip.UR.y - job->clip.LL.y));
     cairo_clip(cr);
-    /* cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND); */
 }
 
 static void cairogen_end_page(GVJ_t * job)
@@ -396,8 +394,8 @@ static void cairogen_ellipse(GVJ_t * job, pointf * A, int filled)
     ry = A[1].y - A[0].y;
 
 #define RMIN 0.01
-if (rx < RMIN) rx = RMIN;
-if (ry < RMIN) ry = RMIN;
+    rx = fmax(rx, RMIN);
+    ry = fmax(ry, RMIN);
 
     cairo_translate(cr, A[0].x, -A[0].y);
     cairo_scale(cr, rx, ry);

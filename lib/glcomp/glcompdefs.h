@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -116,10 +117,7 @@ extern "C" {
 					    float dy,
 					    glMouseButtonType t);
 
-
-
-    typedef struct _glCompAnchor {
-
+    typedef struct {
 	int topAnchor;		/*anchor booleans */
 	int leftAnchor;
 	int rightAnchor;
@@ -133,15 +131,12 @@ extern "C" {
 
     } glCompAnchor;
 
-    typedef struct _glCompJustify {
+    typedef struct {
 	glCompVJustify VJustify;
 	glCompHJustify HJustify;
     } glCompJustify;
 
-
-
-
-    typedef struct _glCompPoint {
+    typedef struct {
 	float x, y, z;
     } glCompPoint;
 
@@ -157,14 +152,13 @@ extern "C" {
 	float A;		//Alpha
     } glCompColor;
 
-
-    typedef struct _glCompRect {
+    typedef struct {
 	glCompPoint pos;
 	float w;
 	float h;
     } glCompRect;
 
-    typedef struct _glCompTex {
+    typedef struct {
 	uint32_t id;
 	char *def;
 	char *text;
@@ -188,11 +182,11 @@ extern "C" {
 	int size;
 	int reference;		/*if font has references to parent */
 	glCompJustify justify;
-	int is2D;
+	bool is2D;
 	int optimize;
     } glCompFont;
 
-    typedef struct _glCompCallBacks {
+    typedef struct {
 	glcompdrawfunc_t draw;
 	glcompclickfunc_t click;
 	glcompdoubleclickfunc_t doubleclick;
@@ -210,7 +204,7 @@ extern "C" {
 	common widget properties
 	also each widget has pointer to its parents common
 */
-    typedef struct _glCompCommon {
+    typedef struct {
 	glCompPoint pos;
 	glCompPoint refPos;	/*calculated pos after anchors and aligns */
 	float width, height;
@@ -231,7 +225,7 @@ extern "C" {
     } glCompCommon;
 
 /*generic image*/
-    typedef struct _glCompImage {
+    typedef struct {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
 	glCompTex *texture;
@@ -241,7 +235,7 @@ extern "C" {
     } glCompImage;
 
 /*generic panel*/
-    typedef struct _glCompPanel {
+    typedef struct {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
 	float shadowwidth;
@@ -251,7 +245,7 @@ extern "C" {
     } glCompPanel;
 
 /*label*/
-    typedef struct _glCompLabel {
+    typedef struct {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
 	char *text;
@@ -264,8 +258,8 @@ extern "C" {
 	glCompCommon common;
 	float width, height;
 	glCompLabel *label;
-	int status;		//0 not pressed 1 pressed;
-	int refStatus;		//0 not pressed 1 pressed;
+	bool status; ///< false not pressed, true pressed
+	bool refStatus; ///< false not pressed, true pressed
 	int groupid;
 	glCompImage *image;	/*glyph */
 	int data;
@@ -280,8 +274,7 @@ extern "C" {
 	glCompCommon common;
     };
 
-    typedef struct _glCompMouse {
-	glCompMouseStatus status;
+    typedef struct {
 	glMouseButtonType t;
 	glCompPoint pos; /*current mouse pos,*/
 	glCompPoint GLpos;/*3d converted opengl position*/

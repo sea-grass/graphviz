@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <glcomp/glutils.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -306,7 +307,7 @@ void glCompDrawRectangle(glCompRect * r)
 }
 
 void glCompDrawRectPrism(glCompPoint *p, float w, float h, float b, float d,
-                         glCompColor *c, int bumped) {
+                         glCompColor *c, bool bumped) {
     float color_fac;
     glCompPoint A, B, C, D, E, F, G, H;
     float dim = 1;

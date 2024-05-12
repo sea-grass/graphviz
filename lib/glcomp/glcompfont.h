@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #ifdef _WIN32
@@ -26,7 +27,7 @@ extern "C" {
     void glprintfglut(void *font, float xpos, float ypos, float zpos, char *bf);
 
     glCompFont *glNewFont(glCompSet * s, char *text, glCompColor * c,
-                          char *fontdesc, int fs,int is2D);
+                          char *fontdesc, int fs, bool is2D);
     glCompFont *glNewFontFromParent(glCompObj * o, char *text);
     void glDeleteFont(glCompFont * f);
     void glCompDrawText(glCompFont * f,float x,float y);

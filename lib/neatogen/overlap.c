@@ -55,13 +55,13 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 	} else if (dy < MACHINEACC*wy){
 	  t = wx/dx;
 	} else {
-	  t = MIN(wx/dx, wy/dy);
+	  t = fmin(wx / dx, wy / dy);
 	}
-	if (t > 1) t = MAX(t, 1.001);/* no point in things like t = 1.00000001 as this slow down convergence */
-	*tmax = MAX(*tmax, t);
-	*tmin = MIN(*tmin, t);
-	t = MIN(expandmax, t);
-	t = MAX(expandmin, t);
+	if (t > 1) t = fmax(t, 1.001);/* no point in things like t = 1.00000001 as this slow down convergence */
+	*tmax = fmax(*tmax, t);
+	*tmin = fmin(*tmin, t);
+	t = fmin(expandmax, t);
+	t = fmax(expandmin, t);
 	if (t > 1) {
 	  ideal_distance[j] = t*dist;
 	} else {
@@ -75,14 +75,11 @@ static void ideal_distance_avoid_overlap(int dim, SparseMatrix A, double *x, dou
 
 enum {INTV_OPEN, INTV_CLOSE};
 
-struct scan_point_struct{
+typedef struct {
   int node;
   double x;
   int status;
-};
-
-typedef struct scan_point_struct scan_point;
-
+} scan_point;
 
 static int comp_scan_points(const void *p, const void *q){
   const scan_point *pp = p;
@@ -412,7 +409,8 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
 
   /* no overlap at all! */
   if (*max_overlap < 1 && shrink){
-    double scale_sta = MIN(1, *max_overlap*1.0001), scale_sto = 1;
+    double scale_sta = fmin(1, *max_overlap * 1.0001);
+    const double scale_sto = 1;
 
     if (Verbose) fprintf(stderr," no overlap (overlap = %f), rescale to shrink\n", *max_overlap - 1);
 
@@ -486,7 +484,7 @@ static void scale_to_edge_length(int dim, SparseMatrix A, double *x, double avg_
   if (Verbose) fprintf(stderr,"avg edge len=%f avg_label-size= %f\n", dist, avg_label_size);
 
 
-  dist = avg_label_size/MAX(dist, MACHINEACC);
+  dist = avg_label_size / fmax(dist, MACHINEACC);
 
   for (i = 0; i < dim*A->m; i++) x[i] *= dist;
 }
@@ -501,8 +499,8 @@ static void print_bounding_box(int n, int dim, double *x){
 
   for (i = 0; i < n; i++){
     for (k = 0; k < dim; k++){
-      xmin[k] = MIN(xmin[k],x[i*dim+k]);
-      xmax[k] = MAX(xmax[k],x[i*dim+k]);
+      xmin[k] = fmin(xmin[k], x[i * dim + k]);
+      xmax[k] = fmax(xmax[k], x[i * dim + k]);
     }
   }
   fprintf(stderr,"bounding box = \n");

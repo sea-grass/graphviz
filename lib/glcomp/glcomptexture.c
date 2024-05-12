@@ -8,15 +8,15 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glpangofont.h>
 #include <stddef.h>
+#include <stdbool.h>
 
-static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
-					 int height, unsigned char *data,
-					 int is2D)
-{
+static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
+                                         unsigned char *data, bool is2D) {
     int Er, offset, ind;
     unsigned char *tarData;
     unsigned char *srcData;
@@ -50,13 +50,16 @@ static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 	}
     }
     if (is2D && !Er) {
-	t->data = gv_calloc(4 * width * height, sizeof(unsigned char));
+	assert(width >= 0);
+	assert(height >= 0);
+	t->data = gv_calloc(4 * (unsigned)width * (unsigned)height,
+	                    sizeof(unsigned char));
 	offset = 4;		//RGBA  mod,TO DO implement other modes 
 	/*data upside down because of pango gl coord system */
 	for (ind = 0; ind < height; ind++) {
 	    srcData = data + (height - 1 - ind) * offset * width;
 	    tarData = t->data + ind * offset * width;
-	    memcpy(tarData, srcData, 4 * width);
+	    memcpy(tarData, srcData, 4 * (unsigned)width);
 	}
     }
 
@@ -80,9 +83,8 @@ static glCompTex *glCompSetAddNewTexture(glCompSet * s, int width,
 
 }
 
-glCompTex *glCompSetAddNewTexImage(glCompSet * s, int width, int height,
-				   unsigned char *data, int is2D)
-{
+glCompTex *glCompSetAddNewTexImage(glCompSet *s, int width, int height,
+                                   unsigned char *data, bool is2D) {
 
     glCompTex *t;
     if (!data)
@@ -95,9 +97,8 @@ glCompTex *glCompSetAddNewTexImage(glCompSet * s, int width, int height,
 
 }
 
-glCompTex *glCompSetAddNewTexLabel(glCompSet * s, char *def, int fs,
-				   char *text, int is2D)
-{
+glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
+                                   bool is2D) {
     int Er, width, height;
     glCompTex *t;
     cairo_surface_t *surface = NULL;

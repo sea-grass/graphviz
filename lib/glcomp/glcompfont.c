@@ -15,6 +15,7 @@
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
 #include <GL/glut.h>
+#include <stdbool.h>
 #include <stddef.h>
 
 static void print_bitmap_string(void *font, char *s)
@@ -43,8 +44,8 @@ void glDeleteFont(glCompFont * f)
 
 }
 
-glCompFont *glNewFont (glCompSet * s, char *text, glCompColor * c, char *fontdesc, int fs,int is2D)
-{
+glCompFont *glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
+                      int fs, bool is2D) {
     glCompFont *font = gv_alloc(sizeof(glCompFont));
     font->reference = 0;
     font->color.R = c->R;
@@ -107,7 +108,7 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 	c.B = GLCOMPSET_FONT_COLOR_B;
 	c.A = GLCOMPSET_FONT_COLOR_ALPHA;
 	font = glNewFont(o->common.compset, text, &c,
-		     GLCOMPSET_FONT_DESC, GLCOMPSET_FONT_SIZE,1);
+		     GLCOMPSET_FONT_DESC, GLCOMPSET_FONT_SIZE, true);
     }
     return font;
 }
