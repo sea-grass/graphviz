@@ -22,6 +22,7 @@
 #include <math.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <string.h>
 
 #define RBCONST 12
 #define RBCURVE .5
@@ -605,6 +606,11 @@ static double mid_y(const pointf line[2]) {
  */
 void round_corners(GVJ_t *job, pointf *AF, size_t sides,
                    graphviz_polygon_style_t style, int filled) {
+    assert(job != NULL);
+    assert(AF != NULL);
+    assert(sides > 0);
+    assert(memcmp(&style, &(graphviz_polygon_style_t){0}, sizeof(style)) != 0);
+
     pointf *B, C[5], *D, p0, p1;
     double rbconst, d, dx, dy, t;
     pointf* pts;
