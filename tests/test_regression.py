@@ -2488,7 +2488,10 @@ def test_2396(arg: str):
         check=True,
     )
 
-    assert proc.stderr == "", "loading an image by relative path produced warnings"
+    # work around macOS warnings
+    stderr = remove_xtype_warnings(proc.stderr).strip()
+
+    assert stderr == "", "loading an image by relative path produced warnings"
 
     # whether we used `imagepath` or `filepath` should affect whether we get a leading
     # slash
@@ -3378,8 +3381,11 @@ def test_2413(source: str):
         universal_newlines=True,
     )
 
+    # work around macOS warnings
+    stderr = remove_xtype_warnings(proc.stderr).strip()
+
     # no warnings should have been generated
-    assert proc.stderr == "", "long edges resulted in a warning"
+    assert stderr == "", "long edges resulted in a warning"
 
 
 @pytest.mark.skipif(

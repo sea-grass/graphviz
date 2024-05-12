@@ -18,6 +18,7 @@ brew update
 brew install pango || brew upgrade pango
 brew install qt5 || brew upgrade qt5
 brew install devil || brew upgrade devil
+brew install gd || brew upgrade gd
 brew install gtk+ || brew upgrade gtk+
 brew install gts || brew upgrade gts
 
@@ -45,8 +46,8 @@ brew install libxaw || brew upgrade libxaw
 
 # install MacPorts for libANN
 curl --retry 3 --location --no-progress-meter -O \
-  https://github.com/macports/macports-base/releases/download/v2.7.2/MacPorts-2.7.2-12-Monterey.pkg
-sudo installer -package MacPorts-2.7.2-12-Monterey.pkg -target /
+  https://github.com/macports/macports-base/releases/download/v2.9.3/MacPorts-2.9.3-13-Ventura.pkg
+sudo installer -package MacPorts-2.9.3-13-Ventura.pkg -target /
 export PATH=/opt/local/bin:${PATH}
 
 # lib/mingle dependency

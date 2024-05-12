@@ -66,9 +66,8 @@ static void
 power_iteration_orthog(float** square_mat, int n, int neigs, 
      double** eigs, double* evals, double* orthog, double p_iteration_threshold)
 {
-	/*
-	 * Power-Iteration with (I-orthog*orthog^T)*square_mat*(I-orthog*orthog^T)
-     */
+  // Power-Iteration with
+  //   (I - orthog × orthogᵀ) × square_mat × (I - orthog × orthogᵀ)
 
 	int i,j;
 	double *tmp_vec = gv_calloc(n, sizeof(double));
@@ -77,7 +76,6 @@ power_iteration_orthog(float** square_mat, int n, int neigs,
 	double len;
 	double angle;
 	double alpha;
-	int iteration;
 	int largest_index;
 	double largest_eval;
 
@@ -109,9 +107,7 @@ choose:
 			goto choose;
 		}
 		vectors_scalar_mult(n, curr_vector, 1.0 / len, curr_vector);	
-		iteration=0;
 		do {
-			iteration++;
 			copy_vector(n, curr_vector, last_vec);
 			
 			mat_mult_vec_orthog(square_mat,n,n,curr_vector,tmp_vec,orthog);
