@@ -26,13 +26,10 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global GOLANG     1
 %global GTS        1
 %global GTK        1
-%global GUILE      1
-%global JAVA       1
 %global JAVASCRIPT 0
 %global LASI       1
+%global PHP        1
 %global WEBP       1
-%global PYTHON3    1
-%global QT5        1
 
 # Overrides for RHEL
 %if 0%{?rhel}
@@ -54,19 +51,27 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 %global ANN        0
 %endif
 
+# Overrides for Fedora ≥ 40
+%if 0%{?fedora} >= 40
+%global PHP        0
+%endif
+
 # Plugins version
 %global pluginsver 6
 
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
+BuildRequires: java-devel
 BuildRequires: zlib-devel expat-devel ksh bison m4 flex swig gcc-c++
 BuildRequires: libXaw-devel libSM-devel libICE-devel libXpm-devel libXt-devel
 BuildRequires: libXmu-devel libXext-devel libX11-devel gtk2-devel freeglut-devel
 BuildRequires: freetype-devel fontconfig-devel cairo-devel pango-devel
 BuildRequires: gmp-devel gd gd-devel librsvg2-devel
 BuildRequires: ghostscript ghostscript-devel poppler-glib-devel libtool-ltdl libtool-ltdl-devel
-BuildRequires: ruby ruby-devel php-devel lua-devel
+BuildRequires: qt5-qtbase-devel
+BuildRequires: ruby ruby-devel lua-devel
 BuildRequires: perl-devel perl-libs perl-ExtUtils-Embed tcl tcl-devel tk tk-devel
+BuildRequires: python3 python3-devel
 
 %if %{ANN}
 BuildRequires: ann-devel
@@ -89,24 +94,16 @@ BuildRequires: libglade2-devel gtkglext-devel
 %if %{GTS}
 BuildRequires: gts-devel
 %endif
-%if %{GUILE}
 %if 0%{?fedora} > 0 || 0%{?rhel} >= 9
 BuildRequires: guile30-devel
 %else
 BuildRequires: guile-devel
 %endif
-%endif
-%if %{JAVA}
-BuildRequires: java-devel
-%endif
 %if %{LASI}
 BuildRequires: lasi-devel
 %endif
-%if %{PYTHON3}
-BuildRequires: python3 python3-devel
-%endif
-%if %{QT5}
-BuildRequires: qt5-qtbase-devel
+%if %{PHP}
+BuildRequires: php-devel
 %endif
 %if %{SHARP}
 BuildRequires: mono-core
@@ -115,6 +112,7 @@ BuildRequires: mono-core
 BuildRequires: libwebp-devel
 %endif
 
+%if %{PHP}
 # What a meal PHP makes of versioning !!!
 %define php_extdir %(php-config --extension-dir 2>/dev/null || echo %{_libdir}/php4)
 %global php_apiver %((echo 0; php -i 2>/dev/null | sed -n 's/^PHP API => //p') | tail -1)
@@ -131,6 +129,7 @@ BuildRequires: libwebp-devel
 %{?filter_setup}
 # RPM 4.9
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{php_extdir}/.*\\.so$
+%endif
 
 # Fix for the i386 extended precision (rhbz#772637)
 %ifarch i386 i686
@@ -561,7 +560,6 @@ Guile extension for graphviz.
 %endif
 
 #-- graphviz-lang-guile rpm --------------------------------------------
-%if %{GUILE}
 %package lang-guile
 Group:          Applications/Multimedia
 Summary:        Guile extension for graphviz
@@ -581,10 +579,8 @@ Guile extension for graphviz.
 %dir %{_libdir}/graphviz/guile
 %{_libdir}/graphviz/guile/*
 %{_mandir}/man3/*.3guile.*
-%endif
 
 #-- graphviz-lang-java rpm ---------------------------------------------
-%if 0%{?JAVA}
 %package lang-java
 Group:          Applications/Multimedia
 Summary:        Java extension for graphviz
@@ -600,7 +596,6 @@ Java extension for graphviz.
 %dir %{_libdir}/graphviz/java
 %{_libdir}/graphviz/java/*
 %{_mandir}/man3/*.3java.*
-%endif
 
 #-- graphviz-lang-javascript rpm ---------------------------------------------
 %if 0%{?JAVASCRIPT}
@@ -658,6 +653,7 @@ Perl extension for graphviz.
 %exclude %{_libdir}/graphviz/perl/*.so
 %exclude %{_libdir}/graphviz/perl/*.pm
 
+%if %{PHP}
 #-- graphviz-lang-php rpm ----------------------------------------------
 %package lang-php
 Group:          Applications/Multimedia
@@ -682,9 +678,9 @@ PHP extension for graphviz.
 %if 0%{?fedora} < 38
 %exclude %{_libdir}/graphviz/php/*.php
 %endif
+%endif
 
 #-- graphviz-lang-python3 rpm -------------------------------------------
-%if %{PYTHON3}
 %package lang-python3
 Group:          Applications/Multimedia
 Summary:        Python extension for graphviz
@@ -702,7 +698,6 @@ Python extension for graphviz.
 %{_mandir}/man3/gv.3python.*
 %exclude %{_libdir}/graphviz/python3/*.so
 %exclude %{_libdir}/graphviz/python3/*.py*
-%endif
 
 #-- graphviz-lang-R rpm ---------------------------------------------
 %if %{ARRRR}
@@ -874,23 +869,17 @@ CFLAGS="$RPM_OPT_FLAGS" \
         --without-ann \
 %endif
         --disable-python \
-%if ! %{PYTHON3}
-        --disable-python3 \
-%endif
 %if ! %{GOLANG}
         --disable-go \
 %endif
 %if ! %{JAVASCRIPT}
         --disable-javascript \
 %endif
-%if ! %{JAVA}
-        --disable-java \
-%endif
-%if ! %{GUILE}
-        --disable-guile \
-%endif
 %if ! %{LASI}
         --without-lasi \
+%endif
+%if ! %{PHP}
+        --disable-php \
 %endif
 %if ! %{GTS}
         --without-gts \
@@ -932,12 +921,14 @@ find %{buildroot} -type f -name "*.la" -exec rm -f {} ';'
 cp -a %{buildroot}%{_docdir}/%{name} __doc
 rm -rf %{buildroot}%{_docdir}/%{name}
 
+%if %{PHP}
 # PHP configuration file
 %{__mkdir_p} %{buildroot}%{_sysconfdir}/php.d
 %{__cat} << __EOF__ > %{buildroot}%{_sysconfdir}/php.d/%{name}.ini
 ; Enable %{name} extension module
 extension=gv.so
 __EOF__
+%endif
 
 # Remove executable modes from demos
 find %{buildroot}%{_datadir}/%{name}/demo -type f -exec chmod a-x {} ';'

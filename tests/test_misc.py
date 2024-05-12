@@ -119,6 +119,7 @@ def test_xml_escape():
         xml_exe = Path(tmp) / "xml.exe"
         cflags = [
             "-std=c99",
+            "-D_POSIX_C_SOURCE=200809L",
             "-DTEST_XML",
             "-I",
             tmp,
