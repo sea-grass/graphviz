@@ -16,11 +16,11 @@ if(PANGOCAIRO_FOUND AND DevIL_FOUND)
 
   target_include_directories(gvplugin_devil SYSTEM PRIVATE
     ${PANGOCAIRO_INCLUDE_DIRS}
-    ${IL_INCLUDE_DIR}
+    ${IL_INCLUDE_DIR}/..
   )
 
   target_link_libraries(gvplugin_devil PRIVATE
-    ${PANGOCAIRO_LIBRARIES}
+    ${PANGOCAIRO_LINK_LIBRARIES}
     ${IL_LIBRARIES}
     ${ILU_LIBRARIES}
   )

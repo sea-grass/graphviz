@@ -24,7 +24,7 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
   target_link_libraries(gvplugin_lasi PRIVATE
     ${FREETYPE_LIBRARIES}
     ${LASI_LIBRARIES}
-    ${PANGOCAIRO_LIBRARIES}
+    ${PANGOCAIRO_LINK_LIBRARIES}
   )
 
   install(

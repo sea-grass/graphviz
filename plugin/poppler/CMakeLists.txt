@@ -21,7 +21,7 @@ if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
 
   target_link_libraries(gvplugin_poppler PRIVATE
     gvc
-    ${PANGOCAIRO_LIBRARIES}
+    ${PANGOCAIRO_LINK_LIBRARIES}
     ${POPPLER_LIBRARIES}
   )
 
