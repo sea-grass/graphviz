@@ -63,8 +63,6 @@ guile-3.0-dev \
 # Language extension gv_lua
 lua5.3 \
 liblua5.3-dev \
-# Language extension gv_ocaml
-ocaml \
 # Language extension gv_perl
 libperl-dev \
 # Language extension gv_php
