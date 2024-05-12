@@ -198,49 +198,35 @@
 #define CHAR_LATIN1	1
 #define CHAR_BIG5	2
 
-/* style flags (0-23)*/
-#define FILLED		(1 << 0)
-#define RADIAL		(1 << 1)
-#define ROUNDED		(1 << 2)
-#define DIAGONALS	(1 << 3)
-#define AUXLABELS	(1 << 4)
-#define INVISIBLE	(1 << 5)
-#define STRIPED		(1 << 6)
-#define DOTTED		(1 << 7)
-#define DASHED		(1 << 8)
-#define WEDGED		(1 << 9)
-#define UNDERLINE	(1 << 10)
-#define FIXEDSHAPE	(1 << 11)
-
-#define SHAPE_MASK	(127 << 24)
-
-/* shape (1-127) */
-#define DOGEAR		(1 << 24)
-#define TAB		(2 << 24)
-#define FOLDER		(3 << 24)
-#define BOX3D		(4 << 24)
-#define COMPONENT	(5 << 24)
-#define PROMOTER	(6 << 24)
-#define CDS		(7 << 24)
-#define TERMINATOR	(8 << 24)
-#define UTR		(9 << 24)
-#define PRIMERSITE	(10 << 24)
-#define RESTRICTIONSITE	(11 << 24)
-#define FIVEPOVERHANG	(12 << 24)
-#define THREEPOVERHANG	(13 << 24)
-#define NOVERHANG	(14 << 24)
-#define ASSEMBLY	(15 << 24)
-#define SIGNATURE	(16 << 24)
-#define INSULATOR	(17 << 24)
-#define RIBOSITE	(18 << 24)
-#define RNASTAB		(19 << 24)
-#define PROTEASESITE	(20 << 24)
-#define PROTEINSTAB	(21 << 24)
-#define RPROMOTER	(22 << 24)
-#define RARROW		(23 << 24)
-#define LARROW		(24 << 24)
-#define LPROMOTER	(25 << 24)
-#define CYLINDER	(26 << 24)
+/// shape values, for `graphviz_polygon_style_t.shape`
+enum {
+  DOGEAR = 1,
+  TAB = 2,
+  FOLDER = 3,
+  BOX3D = 4,
+  COMPONENT = 5,
+  PROMOTER = 6,
+  CDS = 7,
+  TERMINATOR = 8,
+  UTR = 9,
+  PRIMERSITE = 10,
+  RESTRICTIONSITE = 11,
+  FIVEPOVERHANG = 12,
+  THREEPOVERHANG = 13,
+  NOVERHANG = 14,
+  ASSEMBLY = 15,
+  SIGNATURE = 16,
+  INSULATOR = 17,
+  RIBOSITE = 18,
+  RNASTAB = 19,
+  PROTEASESITE = 20,
+  PROTEINSTAB = 21,
+  RPROMOTER = 22,
+  RARROW = 23,
+  LARROW = 24,
+  LPROMOTER = 25,
+  CYLINDER = 26,
+};
 
 /* fill types */
 #define FILL      	1

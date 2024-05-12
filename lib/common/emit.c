@@ -352,11 +352,10 @@ static void map_point(GVJ_t *job, pointf pf)
     }
 }
 
-static char **checkClusterStyle(graph_t* sg, int *flagp)
-{
+static char **checkClusterStyle(graph_t *sg, graphviz_polygon_style_t *flagp) {
     char *style;
     char **pstyle = NULL;
-    int istyle = 0;
+    graphviz_polygon_style_t istyle = {0};
 
     if ((style = agget(sg, "style")) != 0 && style[0]) {
 	char **pp;
@@ -365,24 +364,25 @@ static char **checkClusterStyle(graph_t* sg, int *flagp)
 	pp = pstyle = parse_style(style);
 	while ((p = *pp)) {
 	    if (strcmp(p, "filled") == 0) {
-		istyle |= FILLED;
+		istyle.filled = true;
 		pp++;
  	    }else if (strcmp(p, "radial") == 0) {
- 		istyle |= (FILLED | RADIAL);
+ 		istyle.filled = true;
+ 		istyle.radial = true;
 		qp = pp; /* remove rounded from list passed to renderer */
 		do {
 		    qp++;
 		    *(qp-1) = *qp;
 		} while (*qp);
  	    }else if (strcmp(p, "striped") == 0) {
- 		istyle |= STRIPED;
+ 		istyle.striped = true;
 		qp = pp; /* remove rounded from list passed to renderer */
 		do {
 		    qp++;
 		    *(qp-1) = *qp;
 		} while (*qp);
 	    }else if (strcmp(p, "rounded") == 0) {
-		istyle |= ROUNDED;
+		istyle.rounded = true;
 		qp = pp; /* remove rounded from list passed to renderer */
 		do {
 		    qp++;
@@ -1567,7 +1567,8 @@ static void emit_background(GVJ_t * job, graph_t *g)
 	float frac;
 
 	if ((findStopColor (str, clrs, &frac))) {
-	    int filled, istyle = 0;
+	    int filled;
+	    graphviz_polygon_style_t istyle = {0};
             gvrender_set_fillcolor(job, clrs[0]);
             gvrender_set_pencolor(job, "transparent");
 	    checkClusterStyle(g, &istyle);
@@ -1575,7 +1576,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
 		gvrender_set_gradient_vals(job,clrs[1],late_int(g,G_gradientangle,0,0), frac);
 	    else 
 		gvrender_set_gradient_vals(job,DEFAULT_COLOR,late_int(g,G_gradientangle,0,0), frac);
-	    if (istyle & RADIAL)
+	    if (istyle.radial)
 		filled = RGRADIENT;
 	    else
 		filled = GRADIENT;
@@ -3494,7 +3495,7 @@ static void emit_end_cluster(GVJ_t *job) {
 
 void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 {
-    int doPerim, c, istyle, filled;
+    int doPerim, c, filled;
     pointf AF[4];
     char *color, *fillcolor, *pencolor, **style, *s;
     graph_t *sg;
@@ -3522,10 +3523,10 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	    gvrender_begin_anchor(job, obj->url, obj->tooltip, obj->target, obj->id);
 	}
 	filled = 0;
-	istyle = 0;
+	graphviz_polygon_style_t istyle = {0};
 	if ((style = checkClusterStyle(sg, &istyle))) {
 	    gvrender_set_style(job, style);
-	    if (istyle & FILLED)
+	    if (istyle.filled)
 		filled = FILL;
 	}
 	fillcolor = pencolor = 0;
@@ -3579,7 +3580,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 		    gvrender_set_gradient_vals(job,clrs[1],late_int(sg,G_gradientangle,0,0), frac);
 		else 
 		    gvrender_set_gradient_vals(job,DEFAULT_COLOR,late_int(sg,G_gradientangle,0,0), frac);
-		if (istyle & RADIAL)
+		if (istyle.radial)
 		    filled = RGRADIENT;
 	 	else
 		    filled = GRADIENT;
@@ -3593,7 +3594,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
             gvrender_set_penwidth(job, penwidth);
 	}
 
-	if (istyle & ROUNDED) {
+	if (istyle.rounded) {
 	    if ((doPerim = late_int(sg, G_peripheries, 1, 0)) || filled != 0) {
 		AF[0] = GD_bb(sg).LL;
 		AF[2] = GD_bb(sg).UR;
@@ -3608,7 +3609,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 		round_corners(job, AF, 4, istyle, filled);
 	    }
 	}
-	else if (istyle & STRIPED) {
+	else if (istyle.striped) {
 	    int rv;
 	    AF[0] = GD_bb(sg).LL;
 	    AF[2] = GD_bb(sg).UR;

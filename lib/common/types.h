@@ -124,6 +124,22 @@ extern "C" {
 	bool html; /* true if html label */
     } textlabel_t;
 
+    typedef struct {
+	bool filled: 1;
+	bool radial: 1;
+	bool rounded: 1;
+	bool diagonals: 1;
+	bool auxlabels: 1;
+	bool invisible: 1;
+	bool striped: 1;
+	bool dotted: 1;
+	bool dashed: 1;
+	bool wedged: 1;
+	bool underline: 1;
+	bool fixedshape: 1;
+	unsigned shape: 7;
+    } graphviz_polygon_style_t;
+
     typedef struct polygon_t {	/* mutable shape information for a node */
 	int regular;		/* true for symmetric shapes */
 	size_t peripheries; ///< number of periphery lines
@@ -131,7 +147,7 @@ extern "C" {
 	double orientation;	/* orientation of shape (+ve degrees) */
 	double distortion;	/* distortion factor - as in trapezium */
 	double skew;		/* skew factor - as in parallelogram */
-	int option;		/* ROUNDED, DIAGONAL corners, etc. */
+	graphviz_polygon_style_t option; ///< ROUNDED, DIAGONAL corners, etc.
 	pointf *vertices;	/* array of vertex points */
     } polygon_t;
 

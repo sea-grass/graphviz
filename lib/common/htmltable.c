@@ -270,7 +270,8 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
     gvrender_set_penwidth(job, dp->border);
 
     if (dp->style.rounded)
-	round_corners(job, mkPts(AF, b, dp->border), 4, ROUNDED, 0);
+	round_corners(job, mkPts(AF, b, dp->border), 4,
+	              (graphviz_polygon_style_t){.rounded = true}, 0);
     else if ((sides = (dp->flags & BORDER_MASK))) {
 	mkPts (AF+1, b, dp->border);  /* AF[1-4] has LL=SW,SE,UR=NE,NW */
 	switch (sides) {
@@ -553,7 +554,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 			tbl->data.style, clrs);
 	    if (tbl->data.style.rounded) {
 		round_corners(job, mkPts(AF, pts, tbl->data.border), 4,
-			      ROUNDED, filled);
+		              (graphviz_polygon_style_t){.rounded = true}, filled);
 	    } else
 		gvrender_box(job, pts, filled);
 	    free(clrs[0]);
@@ -651,7 +652,7 @@ static void emit_html_cell(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env)
 			cp->data.style, clrs);
 	    if (cp->data.style.rounded) {
 		round_corners(job, mkPts(AF, pts, cp->data.border), 4,
-			      ROUNDED, filled);
+			      (graphviz_polygon_style_t){.rounded = true}, filled);
 	    } else
 		gvrender_box(job, pts, filled);
 	    free(clrs[0]);

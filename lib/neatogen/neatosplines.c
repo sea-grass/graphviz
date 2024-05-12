@@ -357,7 +357,7 @@ Ppoly_t *makeObstacle(node_t * n, expand_t* pmargin, bool isOrtho)
 		/* For fixedshape, we can't use the width and height, as this includes
 		 * the label. We only want to use the actual node shape.
 		 */
-	    if (poly->option & FIXEDSHAPE) {
+	    if (poly->option.fixedshape) {
 		b = polyBB (poly);
 		vs[0] = b.LL;
 		vs[1].x = b.UR.x;
