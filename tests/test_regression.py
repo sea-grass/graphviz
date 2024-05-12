@@ -3701,6 +3701,67 @@ def test_2476():
     subprocess.check_call(["dot", "-Tsvg", "-Gmclimit=0.5", "-o", os.devnull, input])
 
 
+def test_2490():
+    """
+    the `crow` arrow shall be correctly placed and orientated when ports are used
+    https://gitlab.com/graphviz/graphviz/-/issues/2490
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2490.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # translate this to SVG
+    svg = dot("svg", input)
+
+    # load this as XML
+    root = ET.fromstring(svg)
+
+    # The output is expected to contain three polygons, of which the two last
+    # are the `crow` arrow shapes of the edge head and tail. Except for the
+    # crow's "toes", the corners of these are expected to have the same x
+    # position as the nodes' centers. The "toes" are expected to have x
+    # positions half the width more or less than the nodes' centers.
+    ellipses = root.findall(".//{http://www.w3.org/2000/svg}ellipse")
+    assert len(ellipses) == 2, "wrong number of ellipses in output"
+    cx = float(ellipses[0].get("cx"))
+    assert float(ellipses[1].get("cx")) == cx
+
+    polygons = root.findall(".//{http://www.w3.org/2000/svg}polygon")
+    assert len(polygons) == 3, "wrong number of polygons in output"
+    for polygon_index, polygon in enumerate(polygons):
+        points_attr = polygon.get("points")
+        point_pair_strs = points_attr.split(" ")
+        points = [point_pair_str.split(",") for point_pair_str in point_pair_strs]
+        if polygon_index == 0:
+            assert len(points) == 5
+            # ignore the graph polygon
+            continue
+        assert len(points) == 9
+        for point_index, point in enumerate(points):
+            x = float(point[0])
+            crow_width = 9
+            expected_crow_tip_and_shaft_x = cx
+            expected_crow_toe_left_x = cx - crow_width / 2
+            expected_crow_toe_right_x = cx + crow_width / 2
+            expected_first_crow_toe_x = (
+                expected_crow_toe_left_x
+                if polygon_index == 1
+                else expected_crow_toe_right_x
+            )
+            expected_second_crow_toe_x = (
+                expected_crow_toe_right_x
+                if polygon_index == 1
+                else expected_crow_toe_left_x
+            )
+            if point_index in [0, 2, 3, 4, 5, 6, 8]:
+                assert x == expected_crow_tip_and_shaft_x
+            elif point_index == 1:
+                assert x == expected_first_crow_toe_x
+            elif point_index == 7:
+                assert x == expected_second_crow_toe_x
+
+
 @pytest.mark.skipif(which("gv2gml") is None, reason="gv2gml not available")
 def test_2493():
     """
