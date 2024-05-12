@@ -67,9 +67,9 @@ install-exec-hook:
 	if test "x$(DESTDIR)" = "x" -a "x$(build)" = "x$(host)"; then if test -x $(bindir)/dot$(EXEEXT); then if test -x /sbin/ldconfig; then /sbin/ldconfig 2>/dev/null; fi; cd $(bindir); ./dot$(EXEEXT) -c; else cd $(bindir); ./dot_static$(EXEEXT) -c; fi; fi
 
 uninstall-hook:
-	(cd $(DESTDIR)$(man1dir); for i in $(linkedman); do rm -f $$i; done;)
+	(cd $(DESTDIR)$(man1dir); rm -f $(linkedman);)
 	(cd $(DESTDIR)$(pdfdir); for i in $(linkedpdf); do rm -f $$i; done;)
-	(cd $(DESTDIR)$(bindir); for i in $(linkedprogram); do rm -f $$i; done;)
+	(cd $(DESTDIR)$(bindir); rm -f $(linkedprogram);)
 	(cd $(DESTDIR)$(libdir); rm -f config;)
 
 .1.1.pdf:
