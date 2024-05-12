@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   2022 17 and toolset v143.
 - The macOS release artifacts are now built on macOS 13 (Ventura).
 - The CMake build system no longer links `dot_builtins` against libsocket.
+- The CMake build system now only compiles `dot_builtins` if building shared
+  libraries (`-DBUILD_SHARED_LIBS=ON`).
 
 ### Fixed
 
