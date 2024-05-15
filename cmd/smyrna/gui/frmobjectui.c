@@ -25,6 +25,7 @@
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
+#include <cgraph/unreachable.h>
 #include <stdint.h>
 #include <string.h>
 
@@ -59,7 +60,7 @@ static attr_t *new_attr(void) {
 static attr_t *new_attr_with_ref(Agsym_t * sym)
 {
     attr_t *a = new_attr();
-    a->name = safestrdup(sym->name);
+    a->name = gv_strdup(sym->name);
     switch (sym->kind) {
     case AGRAPH:
 	a->objType[0] = 1;
@@ -73,6 +74,8 @@ static attr_t *new_attr_with_ref(Agsym_t * sym)
 	a->objType[2] = 1;
 	a->defValE = safestrdup(sym->defval);
 	break;
+    default:
+	UNREACHABLE();
     }
     return a;
 }
@@ -84,7 +87,7 @@ static attr_t *new_attr_ref(attr_t * refAttr)
     a->defValG = safestrdup(refAttr->defValG);
     a->defValN = safestrdup(refAttr->defValN);
     a->defValE = safestrdup(refAttr->defValE);
-    a->name = safestrdup(refAttr->name);
+    a->name = gv_strdup(refAttr->name);
     a->value = safestrdup(refAttr->value);
     return a;
 }
@@ -127,18 +130,21 @@ static attr_list *attr_list_new(bool with_widgets) {
     return l;
 }
 
-static int attr_compare(const void *a, const void *b)
-{
-    const attr_t *a1 = *(attr_t *const *) a;
-    const attr_t *a2 = *(attr_t *const *) b;
-    return strcasecmp(a1->name, a2->name);
+static int attr_compare_core(const void *key, const void *candidate) {
+  const char *k = key;
+  const attr_t *const *c = candidate;
+  return strcasecmp(k, (*c)->name);
+}
+
+static int attr_compare(const attr_t **a, const attr_t **b) {
+  return attr_compare_core((*a)->name, b);
 }
 
 static void attr_list_add(attr_list *l, attr_t *a) {
     if (!l || !a)
 	return;
     attrs_append(&l->attributes, a);
-    attrs_sort(&l->attributes, (int(*)(const attr_t**, const attr_t**))attr_compare);
+    attrs_sort(&l->attributes, attr_compare);
     /*update indices */
     for (size_t id = 0; id < attrs_size(&l->attributes); ++id)
 	attrs_get(&l->attributes, id)->index = id;
@@ -158,6 +164,8 @@ static attr_data_type get_attr_data_type(char c)
 	break;
     case 'I':
 	return attr_int;
+	break;
+    default:
 	break;
     }
     return attr_alpha;
@@ -198,13 +206,10 @@ static void set_attr_object_type(const char *str, int *t) {
   }
 }
 
-static attr_t *binarySearch(attr_list * l, char *searchKey)
-{
-  const attr_t key = {.name = searchKey};
-  const attr_t *keyp = &key;
-  attr_t **attrp = bsearch(&keyp, attrs_at(&l->attributes, 0),
+static attr_t *binarySearch(attr_list *l, const char *searchKey) {
+  attr_t **attrp = bsearch(searchKey, attrs_at(&l->attributes, 0),
                            attrs_size(&l->attributes), sizeof(attr_t*),
-                           attr_compare);
+                           attr_compare_core);
   if (attrp != NULL) {
     return *attrp;
   }
@@ -526,15 +531,17 @@ attr_list *load_attr_list(Agraph_t * g)
 
 		switch (idx) {
 		case 0:
-		    attr->name = safestrdup(a);
+		    attr->name = gv_strdup(a);
 		    break;
 		case 1:
-		    attr->defValG = safestrdup(a);
-		    attr->defValN = safestrdup(a);
-		    attr->defValE = safestrdup(a);
+		    attr->defValG = gv_strdup(a);
+		    attr->defValN = gv_strdup(a);
+		    attr->defValE = gv_strdup(a);
 		    break;
 		case 2:
 		    set_attr_object_type(a, attr->objType);
+		    break;
+		default:
 		    break;
 		}
 	    }

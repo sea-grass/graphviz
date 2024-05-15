@@ -81,15 +81,14 @@ static void pick_objects_in_rect(Agraph_t *g, float x1, float y1, float x2,
      
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
     {
-	if(view->Topview->sel.selectNodes==1)
-	{
+	if (view->Topview->sel.selectNodes) {
 	    posN = ND_A(v);
 	    if(!ND_visible(v))
 		continue;
 	    if(is_point_in_rectangle(posN.x,posN.y,x1,y1,x2-x1,y2-y1) )
 		select_node(g,v,0);
 	}
-	if(view->Topview->sel.selectEdges==1) {
+	if (view->Topview->sel.selectEdges) {
 	    for (e = agfstout(g, v); e; e = agnxtout(g, e)) 
 	    {
 		posT = ED_posTail(e);

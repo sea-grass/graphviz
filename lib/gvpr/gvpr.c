@@ -27,6 +27,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/queue.h>
 #include <cgraph/stack.h>
+#include <cgraph/unreachable.h>
 #include <common/globals.h>
 #include <gvpr/compile.h>
 #include <gvpr/gvpr.h>
@@ -369,7 +370,6 @@ static void freeOpts(options opts) {
  * Parse command line options.
  */
 static options scanArgs(int argc, char **argv) {
-    int i, nfiles;
     char* arg;
     options opts = {0};
 
@@ -380,15 +380,15 @@ static options scanArgs(int argc, char **argv) {
     opts.verbose = 0;
 
     /* estimate number of file names */
-    nfiles = 0;
-    for (i = 1; i < argc; i++)
+    size_t nfiles = 0;
+    for (int i = 1; i < argc; i++)
 	if (argv[i] && argv[i][0] != '-')
 	    nfiles++;
     char** input_filenames = gv_calloc(nfiles + 1, sizeof(char*));
 
     /* loop over arguments */
     nfiles = 0;
-    for (i = 1; i < argc; ) {
+    for (int i = 1; i < argc; ) {
 	arg = argv[i++];
 	if (*arg == '-') {
 	    i = doFlags(arg+1, i, argc, argv, &opts);
@@ -408,7 +408,7 @@ static options scanArgs(int argc, char **argv) {
 	    opts.state = -1;
 	} else {
 	    opts.program = input_filenames[0];
-	    for (i = 1; i <= nfiles; i++)
+	    for (size_t i = 1; i <= nfiles; i++)
 		input_filenames[i-1] = input_filenames[i];
 	    nfiles--;
 	}
@@ -519,9 +519,21 @@ typedef struct {
     unsigned char visit;
 } trav_fns;
 
+/// `agnxtout` wrapper to tweak calling convention
+static Agedge_t *agnxtout_(Agraph_t *g, Agedge_t *e, Agnode_t *ignored) {
+  (void)ignored;
+  return agnxtout(g, e);
+}
+
+/// `agnxtin` wrapper to tweak calling convention
+static Agedge_t *agnxtin_(Agraph_t *g, Agedge_t *e, Agnode_t *ignored) {
+  (void)ignored;
+  return agnxtin(g, e);
+}
+
 static trav_fns DFSfns = { agfstedge, agnxtedge, 1, 0 };
-static trav_fns FWDfns = { agfstout, (nxttedgefn_t) agnxtout, 0, 0 };
-static trav_fns REVfns = { agfstin, (nxttedgefn_t) agnxtin, 0, 0 };
+static trav_fns FWDfns = { agfstout, agnxtout_, 0, 0 };
+static trav_fns REVfns = { agfstin, agnxtin_, 0, 0 };
 
 static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 {
@@ -802,6 +814,8 @@ static bool traverse(Gpr_t *state, Expr_t *prog, comp_block *bp, bool cleanup) {
 	travEdges(state, prog, bp);
 	travNodes(state, prog, bp);
 	break;
+    default:
+	UNREACHABLE();
     }
     return cleanup;
 }

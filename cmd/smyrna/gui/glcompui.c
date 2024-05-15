@@ -195,27 +195,22 @@ static void glCompMouseMove(glCompObj *obj, float x, float y) {
     }
 }
 
-static void selectedges(glCompObj *obj, float x, float y) {
+static void selectedges(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)obj;
     (void)x;
     (void)y;
+    (void)t;
 
-    if(view->Topview->sel.selectEdges==0)
-	view->Topview->sel.selectEdges=1;
-    else
-	view->Topview->sel.selectEdges=0;
-
+    view->Topview->sel.selectEdges = !view->Topview->sel.selectEdges;
 }
 
-static void selectnodes(glCompObj *obj, float x, float y) {
+static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)obj;
     (void)x;
     (void)y;
+    (void)t;
 
-    if(view->Topview->sel.selectNodes==0)
-	view->Topview->sel.selectNodes=1;
-    else
-	view->Topview->sel.selectNodes=0;
+    view->Topview->sel.selectNodes = !view->Topview->sel.selectNodes;
 }
 
 glCompSet *glcreate_gl_topview_menu(void)
@@ -229,7 +224,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     glCompColor c;
     s->common.callbacks.click = CBglCompMouseRightClick;
 
-    p = glCompPanelNew((glCompObj *) s, 25, 25, 45, 47);
+    p = glCompPanelNew(s, 25, 25, 45, 47);
     p->common.align = glAlignLeft;
     p->common.data = 0;
 
@@ -270,16 +265,16 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     y=y+off;
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "N");
-    b->common.callbacks.click = (glcompclickfunc_t)selectnodes;
+    b->common.callbacks.click = selectnodes;
     b->groupid=-1;
     b->status = true;
 
     y=y+off;
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "E");
-    b->common.callbacks.click = (glcompclickfunc_t)selectedges;
+    b->common.callbacks.click = selectedges;
     b->groupid=-1;
 
-    p = glCompPanelNew((glCompObj *) p, 1, 325, 45, 180);
+    p = glCompPanelNew(p, 1, 325, 45, 180);
     p->common.align = glAlignTop;
     p->common.data = 0;
     p->common.borderWidth = 1;
@@ -320,7 +315,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     b->common.callbacks.click = menu_click_center;
     b->common.color = c;
 
-    p = glCompPanelNew((glCompObj *) s, -250, 550, 150, 175);
+    p = glCompPanelNew(s, -250, 550, 150, 175);
     p->common.borderWidth = 0;
     p->shadowwidth = 0;
     p->common.color.R = 0;
@@ -332,17 +327,12 @@ glCompSet *glcreate_gl_topview_menu(void)
     s->common.callbacks.mouseover = glCompMouseMove;
     s->common.callbacks.mouseup = CBglCompMouseUp;
 
-
-    p = glCompPanelNew((glCompObj *) s, 25, 25, 52, 47);
+    p = glCompPanelNew(s, 25, 25, 52, 47);
     p->common.align = glAlignRight;
     p->common.data = 0;
     p->common.color.A = 0;
 
-
-
-
-	
-    p = glCompPanelNew((glCompObj *) p, 25, 0, 52, 110);
+    p = glCompPanelNew(p, 25, 0, 52, 110);
     p->common.align = glAlignTop;
     p->common.data = 0;
     p->common.color.A = 0;

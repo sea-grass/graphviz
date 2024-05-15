@@ -459,7 +459,7 @@ static double getSegLen (char* s)
  * Otherwise, psegs is left unchanged and the allocated memory is
  * freed before returning.
  */
-static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
+static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
     colorsegs_t segs = {0};
     colorseg_t* s;
     char* colors = gv_strdup(clrs);
@@ -521,7 +521,7 @@ static int parseSegs(char *clrs, int nseg, colorsegs_t *psegs) {
 	    if (!(s[i].t > 0)) nseg++;
 	}
 	if (nseg > 0) {
-	    double delta = left/nseg;
+	    double delta = left / (double)nseg;
 	    for (i = 0; i < cnum; i++) {
 		if (!(s[i].t > 0)) s[i].t = delta;
 	    }
@@ -2056,8 +2056,8 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
  * implementation.
  * Return non-zero if color spec is incorrect
  */
-static int multicolor (GVJ_t * job, edge_t * e, char** styles, char* colors, int num, double arrowsize, double penwidth)
-{ 
+static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
+                      size_t num, double arrowsize, double penwidth) {
     bezier bz;
     bezier bz0, bz_l, bz_r;
     int rv;
@@ -2178,7 +2178,7 @@ taperfun (edge_t* e)
 
 static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 {
-    int cnum, numc = 0, numsemi = 0;
+    int cnum, numsemi = 0;
     char *color, *pencolor, *fillcolor;
     char *headcolor, *tailcolor, *lastcolor;
     char *colors = NULL;
@@ -2207,6 +2207,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	}
 
 	/* need to know how many colors separated by ':' */
+	size_t numc = 0;
 	for (p = color; *p; p++) {
 	    if (*p == ':')
 		numc++;
@@ -2277,7 +2278,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    tmpspl.size = offspl.size = ED_spl(e)->size;
 	    offspl.list = gv_calloc(offspl.size, sizeof(bezier));
 	    tmpspl.list = gv_calloc(tmpspl.size, sizeof(bezier));
-	    numc2 = (2 + numc) / 2.0;
+	    numc2 = (2 + (double)numc) / 2.0;
 	    for (size_t i = 0; i < offspl.size; i++) {
 		bz = ED_spl(e)->list[i];
 		tmpspl.list[i].size = offspl.list[i].size = bz.size;
