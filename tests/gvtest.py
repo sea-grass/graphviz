@@ -160,18 +160,6 @@ def is_cmake() -> bool:
     return os.getenv("build_system") == "cmake"
 
 
-def is_fedora() -> bool:
-    """is the current environment Fedora?"""
-    return freedesktop_os_release().get("ID") == "fedora"
-
-
-def is_fedora_38() -> bool:
-    """
-    is the current environment Fedora 38?
-    """
-    return is_fedora() and freedesktop_os_release().get("VERSION_ID") == "38"
-
-
 def is_macos() -> bool:
     """is the current platform macOS?"""
     return platform.system() == "Darwin"
