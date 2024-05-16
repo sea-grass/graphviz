@@ -31,7 +31,6 @@ from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     gvpr,
     is_centos,
-    is_fedora_38,
     is_mingw,
     is_rocky_8,
     remove_xtype_warnings,
@@ -3603,7 +3602,7 @@ def test_2471():
 
 
 @pytest.mark.xfail(
-    is_centos() or is_fedora_38() or is_rocky_8(),
+    is_centos() or is_rocky_8(),
     reason="Cairo is <v1.16 or malfunctions",
     strict=True,
 )
