@@ -26,7 +26,7 @@
 #include <neatogen/overlap.h>
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/call_tri.h>
-#include <sfdpgen/sfdpinternal.h>
+#include <sfdpgen/sfdp.h>
 
 #define node_degree(i) (ia[(i)+1] - ia[(i)])
 

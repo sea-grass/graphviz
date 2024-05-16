@@ -12,7 +12,7 @@
 #include <cgraph/alloc.h>
 #include <string.h>
 #include <sfdpgen/sparse_solve.h>
-#include <sfdpgen/sfdpinternal.h>
+#include <sfdpgen/sfdp.h>
 #include <math.h>
 #include <common/arith.h>
 #include <common/types.h>

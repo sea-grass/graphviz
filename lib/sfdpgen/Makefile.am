@@ -13,7 +13,7 @@ if WITH_WIN32
 AM_CFLAGS = -DNEATOGEN_EXPORTS=1
 endif
 
-noinst_HEADERS = sfdpinternal.h spring_electrical.h \
+noinst_HEADERS = spring_electrical.h \
 	sparse_solve.h post_process.h \
 	stress_model.h \
 	Multilevel.h sfdp.h
