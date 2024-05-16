@@ -95,11 +95,6 @@ if(PANGOCAIRO_FOUND)
   endif()
 endif()
 
-find_library(SOCKET socket)
-if(SOCKET)
-  target_link_libraries(dot_builtins PRIVATE ${SOCKET})
-endif()
-
 install(
   TARGETS dot_builtins
   RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
