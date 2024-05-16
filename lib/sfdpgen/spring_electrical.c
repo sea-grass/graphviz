@@ -445,12 +445,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 #ifdef TIME
       qtree_cpu0 = qtree_cpu - qtree_cpu0;
       qtree_new_cpu0 = qtree_new_cpu - qtree_new_cpu0;
-      /*      if (Verbose) fprintf(stderr, "\r iter=%d cpu=%.2f, quadtree=%.2f quad_force=%.2f other=%.2f counts={%.2f,%.2f,%.2f} step=%f Fnorm=%f nz=%d  K=%f qtree_lev = %d",
-			   iter, ((double) (clock() - start2)) / CLOCKS_PER_SEC, qtree_new_cpu0,
-			   qtree_cpu0,((double) (clock() - start2))/CLOCKS_PER_SEC - qtree_cpu0 - qtree_new_cpu0,
-			   counts[0], counts[1], counts[2],
-			   step, Fnorm, A->nz,K,max_qtree_level);
-      */
       qtree_cpu0 = qtree_cpu;
       qtree_new_cpu0 = qtree_new_cpu;
 #endif
