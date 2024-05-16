@@ -28,6 +28,10 @@
 #include <string.h>
 #include <time.h>
 
+/// another parameter
+/// fₐ(i, j) = C × dist(i , j)² ÷ K × dᵢⱼ, fᵣ(i, j) = K³⁻ᵖ ÷ dist(i, j)⁻ᵖ
+static const double C = 0.2;
+
 spring_electrical_control spring_electrical_control_new(void){
   spring_electrical_control ctrl;
   ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
@@ -36,7 +40,6 @@ spring_electrical_control spring_electrical_control_new(void){
 		attractive force = dist^q. Stress energy = (||x_i-x_j||-d_ij)^{q+1} */
   ctrl->random_start = true; // whether to apply SE from a random layout, or from existing layout
   ctrl->K = -1;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
-  ctrl->C = 0.2;/* another parameter. f_a(i,j) = C*dist(i,j)^2/K * d_ij, f_r(i,j) = K^(3-p)/dist(i,j)^(-p). By default C = 0.2. */
   ctrl->multilevels = 0;/* if <=1, single level */
 
   ctrl->quadtree_size = 45;/* cut off size above which quadtree approximation is used */
@@ -76,7 +79,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  repulsive and attractive exponents: %.03f %.03f\n", ctrl->p, ctrl->q);
   fprintf(stderr, "  random start %d seed %d\n", (int)ctrl->random_start,
           ctrl->random_seed);
-  fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, ctrl->C);
+  fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, C);
   fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
@@ -327,7 +330,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, C = ctrl->C, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
@@ -365,7 +368,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   if (K < 0){
     ctrl->K = K = average_edge_length(A, dim, x);
   }
-  if (C < 0) ctrl->C = C = 0.2;
   if (p >= 0) ctrl->p = p = -1;
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
@@ -495,7 +497,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, C = ctrl->C, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
@@ -531,7 +533,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   if (K < 0){
     ctrl->K = K = average_edge_length(A, dim, x);
   }
-  if (C < 0) ctrl->C = C = 0.2;
   if (p >= 0) ctrl->p = p = -1;
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
@@ -652,7 +653,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, C = ctrl->C, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
@@ -698,7 +699,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   if (K < 0){
     ctrl->K = K = average_edge_length(A, dim, x);
   }
-  if (C < 0) ctrl->C = C = 0.2;
   if (p >= 0) ctrl->p = p = -1;
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
@@ -857,7 +857,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, C = ctrl->C, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, tol = ctrl->tol, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   int *id = NULL, *jd = NULL;
   double *d;
@@ -900,7 +900,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   if (K < 0){
     ctrl->K = K = average_edge_length(A, dim, x);
   }
-  if (C < 0) ctrl->C = C = 0.2;
   if (p >= 0) ctrl->p = p = -1;
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
