@@ -372,7 +372,7 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   }
 
   sm->tol_cg = 0.01;
-  sm->maxit_cg = sqrt((double) A->m);
+  sm->maxit_cg = floor(sqrt(A->m));
 
   sm->lambda = gv_calloc(m, sizeof(double));
   

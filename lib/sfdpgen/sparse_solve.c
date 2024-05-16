@@ -53,7 +53,7 @@ static double *diag_precon_new(SparseMatrix A) {
 
 static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
                                  double *x, double *rhs, double tol,
-                                 int maxit) {
+                                 double maxit) {
   double res, alpha;
   double rho, rho_old = 1, res0, beta;
   int iter = 0;
@@ -69,7 +69,9 @@ static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
   res0 = res = sqrt(vector_product(n, r, r))/n;
 #ifdef DEBUG_PRINT
     if (Verbose){
-      fprintf(stderr, "on entry, cg iter = %d of %d, residual = %g, tol = %g\n", iter, maxit, res, tol);
+      fprintf(stderr,
+              "on entry, cg iter = %d of %.0f, residual = %g, tol = %g\n",
+              iter, maxit, res, tol);
     }
 #endif
 
@@ -117,7 +119,7 @@ static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
 }
 
 static double cg(SparseMatrix A, const double *precond, int n, int dim,
-                 double *x0, double *rhs, double tol, int maxit) {
+                 double *x0, double *rhs, double tol, double maxit) {
   double res = 0;
   int k, i;
   double *x = gv_calloc(n, sizeof(double));
@@ -138,7 +140,8 @@ static double cg(SparseMatrix A, const double *precond, int n, int dim,
   return res;
 }
 
-double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs, double tol, int maxit){
+double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs,
+                          double tol, double maxit) {
   int n = A->m;
 
   double *precond = diag_precon_new(A);
