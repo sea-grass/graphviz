@@ -3450,6 +3450,33 @@ def test_2434():
 
 
 @pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2437"
+)
+def test_2437():
+    """
+    both an arrowhead and an arrowtail shall be created when using dir=both,
+    compass ports, an edge default attribute and rank=same
+    https://gitlab.com/graphviz/graphviz/-/issues/2437
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2437.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # translate this to SVG
+    svg = dot("svg", input)
+
+    # load this as XML
+    root = ET.fromstring(svg)
+
+    # The output is expected to contain tree polygons. The graph "background"
+    # polygon, the arrowhead pologyn and the arrowtail polygon.
+    polygons = root.findall(".//{http://www.w3.org/2000/svg}polygon")
+
+    assert len(polygons) == 3, "wrong number of polygons in output"
+
+
+@pytest.mark.xfail(
     strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2416"
 )
 def test_2416():
