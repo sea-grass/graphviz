@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   linking, resolving build problems on macOS.
 - The CMake build system’s path for third-party headers for the DevIL plugin has
   been corrected.
+- Edges not rendering properly when using ports and the `crow` arrowhead/tail
+  with Windows `Release` builds. #2490
 
 ## [11.0.0] – 2024-04-28
 
