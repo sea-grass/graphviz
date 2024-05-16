@@ -1260,10 +1260,6 @@ static SparseMatrix shorting_edge_label_nodes(SparseMatrix A, int n_edge_label_n
 	if (ja[jj] != i && mask[ja[jj]] >= 0) {
 	    irn[nz] = mask[i];
 	    jcn[nz++] = mask[ja[jj]];
-	    if (mask[i] == 68 || mask[ja[jj]] == 68){
-	      fprintf(stderr, "%d %d\n",mask[i], mask[ja[jj]]);
-	      mask[i] = mask[i];
-	    }
 	}
       }
     }
