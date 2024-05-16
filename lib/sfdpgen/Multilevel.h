@@ -32,8 +32,6 @@ typedef struct {
   int maxlevel;
 } Multilevel_control;
 
-Multilevel_control Multilevel_control_new(void);
-
 void Multilevel_delete(Multilevel grid);
 
 Multilevel Multilevel_new(SparseMatrix A, const Multilevel_control ctrl);

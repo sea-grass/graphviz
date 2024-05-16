@@ -18,14 +18,6 @@
 static const int minsize = 4;
 static const double min_coarsen_factor = 0.75;
 
-Multilevel_control Multilevel_control_new(void) {
-  Multilevel_control ctrl = {
-    .maxlevel = 1<<30,
-  };
-
-  return ctrl;
-}
-
 static Multilevel Multilevel_init(SparseMatrix A) {
   if (!A) return NULL;
   assert(A->m == A->n);

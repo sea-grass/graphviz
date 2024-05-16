@@ -1326,8 +1326,7 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
     return;
   }
 
-  Multilevel_control mctrl = Multilevel_control_new();
-  mctrl.maxlevel = ctrl->multilevels;
+  Multilevel_control mctrl = {.maxlevel = ctrl->multilevels};
   grid0 = Multilevel_new(A, mctrl);
 
   grid = Multilevel_get_coarsest(grid0);
