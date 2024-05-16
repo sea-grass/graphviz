@@ -206,8 +206,8 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   free(clusterp);
 }
 
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
-                        SparseMatrix *P, SparseMatrix *R) {
+static void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
+                               SparseMatrix *P, SparseMatrix *R) {
   SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
   int nc = 0, n;
   
