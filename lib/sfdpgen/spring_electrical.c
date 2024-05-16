@@ -129,24 +129,18 @@ static void oned_optimizer_train(oned_optimizer *opt, double work) {
       opt->i = MIN(MAX_I, opt->i + 1);
     }
   } else if (opt->direction == OPT_UP){
-    /*    fprintf(stderr, "{current_level, prev_level} = {%d,%d}, {work, work_prev} = {%f,%f}",i,i-1,opt->work[i], opt->work[i-1]);*/
     assert(i >= 1);
     if (opt->work[i] < opt->work[i-1] && opt->i < MAX_I){
-      /*      fprintf(stderr, "keep going up to level %d\n",opt->i+1);*/
       opt->i = MIN(MAX_I, opt->i + 1);
     } else {
-      /*      fprintf(stderr, "going down to level %d\n",opt->i-1);*/
       (opt->i)--;
       opt->direction = OPT_DOWN;
     }
   } else {
     assert(i < MAX_I);
-    /*    fprintf(stderr, "{current_level, prev_level} = {%d,%d}, {work, work_prev} = {%f,%f}",i,i+1,opt->work[i], opt->work[i+1]);*/
     if (opt->work[i] < opt->work[i+1] && opt->i > 0){
-      /*      fprintf(stderr, "keep going down to level %d\n",opt->i-1);*/
       opt->i = MAX(0, opt->i-1);
     } else {
-      /*      fprintf(stderr, "keep up to level %d\n",opt->i+1);*/
       (opt->i)++;
       opt->direction = OPT_UP;
     }
@@ -217,7 +211,7 @@ void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *widt
     }
   }
 
-  fprintf(fp,"}],Hue[%f]",/*drand()*/1.);
+  fprintf(fp, "}],Hue[%f]", 1.0);
 
   if (width && dim == 2){
     for (i = 0; i < A->m; i++){
@@ -382,10 +376,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   force = gv_calloc(dim * n, sizeof(double));
 
   do {
-#ifdef TIME
-    //start2 = clock();
-#endif
-
     iter++;
     Fnorm0 = Fnorm;
     Fnorm = 0.;
