@@ -10,6 +10,7 @@
 
 #include <assert.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/gv_math.h>
 #include <inttypes.h>
 #include	<sfio/sfhdr.h>
 #include	<stddef.h>
@@ -27,12 +28,6 @@
 #define SFFMT_PREFIX	(SFFMT_MINUS|SFFMT_SIGN|SFFMT_BLANK)
 
 #define FPRECIS		6	/* default precision for floats         */
-
-static int imin(int a, int b) {
-  if (a < b)
-    return a;
-  return b;
-}
 
 /**
  * @param f file to print to
