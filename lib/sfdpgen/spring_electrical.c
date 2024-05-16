@@ -35,6 +35,10 @@ static const double C = 0.2;
 /// cut off size above which quadtree approximation is used
 static const int quadtree_size = 45;
 
+/// Barnes-Hutt constant,
+/// if width(snode) ÷ dist[i, snode] < bh, treat snode as a supernode.
+static const double bh = 0.6;
+
 spring_electrical_control spring_electrical_control_new(void){
   spring_electrical_control ctrl;
   ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
@@ -44,7 +48,6 @@ spring_electrical_control spring_electrical_control_new(void){
   ctrl->multilevels = 0;/* if <=1, single level */
 
   ctrl->max_qtree_level = 10;/* max level of quadtree */
-  ctrl->bh = 0.6;/* Barnes-Hutt constant, if width(snode)/dist[i,snode] < bh, treat snode as a supernode.*/
   ctrl->tol = 0.001;/* minimum different between two subsequence config before terminating. ||x-xold||_infinity < tol/K */
   ctrl->maxiter = 500;
   ctrl->cool = 0.90;/* default 0.9 */
@@ -82,7 +85,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, C);
   fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", quadtree_size, ctrl->max_qtree_level);
-  fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
+  fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", bh, ctrl->tol, ctrl->maxiter);
   fprintf(stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool,
           ctrl->step, (int)ctrl->adaptive_cooling);
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
@@ -399,7 +402,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
     start = clock();
 #endif
 
-    QuadTree_get_repulsive_force(qt, force, x, ctrl->bh, p, KP, counts);
+    QuadTree_get_repulsive_force(qt, force, x, bh, p, KP, counts);
 
 #ifdef TIME
     end = clock();
@@ -746,7 +749,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
 #ifdef TIME
 	start = clock();
 #endif
-	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
+	QuadTree_get_supernodes(qt, bh, &(x[dim*i]), i, &nsuper, &nsupermax,
 				&center, &supernode_wgts, &distances, &counts);
 
 #ifdef TIME
@@ -951,7 +954,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
 
       /* repulsive force K^(1 - p)/||x_i-x_j||^(1 - p) (x_i - x_j) */
       if (USE_QT){
-	QuadTree_get_supernodes(qt, ctrl->bh, &(x[dim*i]), i, &nsuper, &nsupermax,
+	QuadTree_get_supernodes(qt, bh, &(x[dim*i]), i, &nsuper, &nsupermax,
 				&center, &supernode_wgts, &distances, &counts);
 	nsuper_avg += nsuper;
 	for (j = 0; j < nsuper; j++){
