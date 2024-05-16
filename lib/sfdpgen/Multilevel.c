@@ -16,10 +16,10 @@
 #include <stdbool.h>
 
 static const int minsize = 4;
+static const double min_coarsen_factor = 0.75;
 
 Multilevel_control Multilevel_control_new(void) {
   Multilevel_control ctrl = {
-    .min_coarsen_factor = 0.75,
     .maxlevel = 1<<30,
   };
 
@@ -149,8 +149,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
 }
 
 static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
-                                        SparseMatrix *P, SparseMatrix *R,
-                                        const Multilevel_control ctrl) {
+                                        SparseMatrix *P, SparseMatrix *R) {
   int nc, nzc, n, i;
   int *irn = NULL, *jcn = NULL;
   double *val = NULL;
@@ -169,9 +168,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   if (nc == n || nc < minsize) {
 #ifdef DEBUG_PRINT
     if (Verbose)
-      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, minsize, ctrl.min_coarsen_factor);
-#else
-    (void)ctrl;
+      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, minsize, min_coarsen_factor);
 #endif
     goto RETURN;
   }
@@ -210,8 +207,7 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
 }
 
 void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
-                        SparseMatrix *P, SparseMatrix *R,
-                        const Multilevel_control ctrl) {
+                        SparseMatrix *P, SparseMatrix *R) {
   SparseMatrix cA0 = A, P0 = NULL, R0 = NULL, M;
   int nc = 0, n;
   
@@ -220,7 +216,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
   n = A->n;
 
   do {/* this loop force a sufficient reduction */
-    Multilevel_coarsen_internal(A, &cA0, &P0, &R0, ctrl);
+    Multilevel_coarsen_internal(A, &cA0, &P0, &R0);
     if (!cA0) return;
     nc = cA0->n;
 #ifdef DEBUG_PRINT
@@ -245,7 +241,7 @@ void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA,
     *cA = cA0;
 
     A = cA0;
-  } while (nc > ctrl.min_coarsen_factor*n);
+  } while (nc > min_coarsen_factor*n);
 
 }
 
@@ -275,7 +271,7 @@ static Multilevel Multilevel_establish(Multilevel grid,
 #endif
     return grid;
   }
-  Multilevel_coarsen(A, &cA, &P, &R, ctrl);
+  Multilevel_coarsen(A, &cA, &P, &R);
   if (!cA) return grid;
 
   cgrid = Multilevel_init(cA);
