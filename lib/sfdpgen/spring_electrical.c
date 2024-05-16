@@ -32,6 +32,9 @@
 /// fₐ(i, j) = C × dist(i , j)² ÷ K × dᵢⱼ, fᵣ(i, j) = K³⁻ᵖ ÷ dist(i, j)⁻ᵖ
 static const double C = 0.2;
 
+/// cut off size above which quadtree approximation is used
+static const int quadtree_size = 45;
+
 spring_electrical_control spring_electrical_control_new(void){
   spring_electrical_control ctrl;
   ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
@@ -40,7 +43,6 @@ spring_electrical_control spring_electrical_control_new(void){
   ctrl->K = -1;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   ctrl->multilevels = 0;/* if <=1, single level */
 
-  ctrl->quadtree_size = 45;/* cut off size above which quadtree approximation is used */
   ctrl->max_qtree_level = 10;/* max level of quadtree */
   ctrl->bh = 0.6;/* Barnes-Hutt constant, if width(snode)/dist[i,snode] < bh, treat snode as a supernode.*/
   ctrl->tol = 0.001;/* minimum different between two subsequence config before terminating. ||x-xold||_infinity < tol/K */
@@ -79,7 +81,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
           ctrl->random_seed);
   fprintf (stderr, "  K : %.03f C : %.03f\n", ctrl->K, C);
   fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
-  fprintf (stderr, "  quadtree size %d max_level %d\n", ctrl->quadtree_size, ctrl->max_qtree_level);
+  fprintf (stderr, "  quadtree size %d max_level %d\n", quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", ctrl->bh, ctrl->tol, ctrl->maxiter);
   fprintf(stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool,
           ctrl->step, (int)ctrl->adaptive_cooling);
@@ -673,7 +675,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   m = A->m, n = A->n;
   if (n <= 0 || dim <= 0) return;
 
-  if (n >= ctrl->quadtree_size) {
+  if (n >= quadtree_size) {
     USE_QT = true;
     qtree_level_optimizer = oned_optimizer_new(max_qtree_level);
     center = gv_calloc(nsupermax * dim, sizeof(double));
@@ -872,7 +874,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   m = A->m, n = A->n;
   if (n <= 0 || dim <= 0) return;
 
-  if (n >= ctrl->quadtree_size) {
+  if (n >= quadtree_size) {
     USE_QT = true;
     center = gv_calloc(nsupermax * dim, sizeof(double));
     supernode_wgts = gv_calloc(nsupermax, sizeof(double));

@@ -28,7 +28,6 @@ struct spring_electrical_control_struct {
   double p;/*a negativve real number default to -1. repulsive force = dist^p */
   double K;/* the natural distance. If K < 0, K will be set to the average distance of an edge */
   int multilevels;/* if <=1, single level */
-  int quadtree_size;/* cut off size above which quadtree approximation is used */
   int max_qtree_level;/* max level of quadtree */
   double bh;/* Barnes-Hutt constant, if width(snode)/dist[i,snode] < bh, treat snode as a supernode. default 0.2*/
   double tol;/* minimum different between two subsequence config before terminating. ||x-xold|| < tol */
