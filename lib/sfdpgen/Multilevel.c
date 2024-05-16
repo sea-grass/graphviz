@@ -15,9 +15,10 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+static const int minsize = 4;
+
 Multilevel_control Multilevel_control_new(void) {
   Multilevel_control ctrl = {
-    .minsize = 4,
     .min_coarsen_factor = 0.75,
     .maxlevel = 1<<30,
   };
@@ -165,10 +166,12 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(A, &cluster, &clusterp, &ncluster);
   assert(ncluster <= n);
   nc = ncluster;
-  if (nc == n || nc < ctrl.minsize) {
+  if (nc == n || nc < minsize) {
 #ifdef DEBUG_PRINT
     if (Verbose)
-      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, ctrl.minsize, ctrl.min_coarsen_factor);
+      fprintf(stderr, "nc = %d, nf = %d, minsz = %d, coarsen_factor = %f coarsening stops\n",nc, n, minsize, ctrl.min_coarsen_factor);
+#else
+    (void)ctrl;
 #endif
     goto RETURN;
   }

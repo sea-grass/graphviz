@@ -29,7 +29,6 @@ struct Multilevel_struct {
 enum { MAX_CLUSTER_SIZE = 4 };
 
 typedef struct {
-  int minsize;
   double min_coarsen_factor;
   int maxlevel;
 } Multilevel_control;
