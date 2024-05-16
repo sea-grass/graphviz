@@ -43,6 +43,8 @@ static const double bh = 0.6;
 /// ||x - xold||_∞ < tol ÷ K
 static const double tol = 0.001;
 
+static const double cool = 0.90;
+
 spring_electrical_control spring_electrical_control_new(void){
   spring_electrical_control ctrl;
   ctrl = gv_alloc(sizeof(struct spring_electrical_control_struct));
@@ -53,7 +55,6 @@ spring_electrical_control spring_electrical_control_new(void){
 
   ctrl->max_qtree_level = 10;/* max level of quadtree */
   ctrl->maxiter = 500;
-  ctrl->cool = 0.90;/* default 0.9 */
   ctrl->step = 0.1;
   ctrl->adaptive_cooling = true;
   ctrl->random_seed = 123;
@@ -89,7 +90,7 @@ void spring_electrical_control_print(spring_electrical_control ctrl){
   fprintf (stderr, "  max levels %d\n", ctrl->multilevels);
   fprintf (stderr, "  quadtree size %d max_level %d\n", quadtree_size, ctrl->max_qtree_level);
   fprintf (stderr, "  Barnes-Hutt constant %.03f tolerance  %.03f maxiter %d\n", bh, tol, ctrl->maxiter);
-  fprintf(stderr, "  cooling %.03f step size  %.03f adaptive %d\n", ctrl->cool,
+  fprintf(stderr, "  cooling %.03f step size  %.03f adaptive %d\n", cool,
           ctrl->step, (int)ctrl->adaptive_cooling);
   fprintf (stderr, "  beautify_leaves %d node weights %d rotation %.03f\n",
            (int)ctrl->beautify_leaves, 0, ctrl->rotation);
@@ -259,7 +260,7 @@ void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *widt
 }
 
 static double update_step(bool adaptive_cooling, double step, double Fnorm,
-                          double Fnorm0, double cool) {
+                          double Fnorm0) {
 
   if (!adaptive_cooling) {
     return cool*step;
@@ -336,7 +337,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
@@ -462,7 +463,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
       }
     }
 
-    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
+    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
 #ifdef DEBUG_PRINT
@@ -497,7 +498,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
@@ -607,7 +608,7 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
     }/* done vertex i */
 
-    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
+    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
 #ifdef DEBUG_PRINT
@@ -653,7 +654,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   double *f = NULL, dist, F, Fnorm = 0, Fnorm0;
   int iter = 0;
@@ -802,7 +803,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
       oned_optimizer_train(&qtree_level_optimizer, 5 * nsuper_avg + counts_avg);
     }
 
-    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
+    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
 #ifdef DEBUG_PRINT
@@ -857,7 +858,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   SparseMatrix A = A0;
   int m, n;
   int i, j, k;
-  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, cool = ctrl->cool, step = ctrl->step, KP;
+  double p = ctrl->p, K = ctrl->K, CRK, maxiter = ctrl->maxiter, step = ctrl->step, KP;
   int *ia = NULL, *ja = NULL;
   int *id = NULL, *jd = NULL;
   double *d;
@@ -998,7 +999,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     (void)nsuper_avg;
 #endif
 
-    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0, cool);
+    step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
 #ifdef DEBUG_PRINT

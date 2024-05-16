@@ -30,7 +30,6 @@ struct spring_electrical_control_struct {
   int multilevels;/* if <=1, single level */
   int max_qtree_level;/* max level of quadtree */
   int maxiter;
-  double cool;/* default 0.9 */
   double step;/* initial step size */
   int random_seed;
   bool random_start : 1; ///< whether to apply SE from a random layout, or from exisiting layout
