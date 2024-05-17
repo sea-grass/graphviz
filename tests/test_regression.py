@@ -31,6 +31,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     gvpr,
     is_centos,
+    is_macos,
     is_mingw,
     is_rocky_8,
     remove_xtype_warnings,
@@ -3878,6 +3879,23 @@ def test_2521(testcase: str):
     # we should be able to reset `newrank` with an explicit setting
     force_off = subprocess.check_output(["dot", "-Gnewrank=false", "-Tpng", input])
     assert force_off == off, "-Gnewrank=false did not reset the default"
+
+
+@pytest.mark.xfail(
+    is_macos(), strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2538"
+)
+def test_2538():
+    """
+    `chanSearch` assertion on `cp` should not fail
+    https://gitlab.com/graphviz/graphviz/-/issues/2538
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2538.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    dot("dot", input)
 
 
 def test_changelog_dates():
