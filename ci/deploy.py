@@ -239,7 +239,7 @@ def main() -> int:  # pylint: disable=missing-function-docstring
     if len(assets) > 50:
         log.error(
             f"upload has {len(assets)} assets, which will result in some of "
-            "them being unviewable in web page lists: {assets}"
+            f"them being unviewable in web page lists: {assets}"
         )
         return -1
 
