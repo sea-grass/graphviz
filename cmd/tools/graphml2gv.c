@@ -15,6 +15,7 @@
 
 
 #include    "convert.h"
+#include    <assert.h>
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
@@ -22,6 +23,7 @@
 #include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
+#include    <limits.h>
 #include    <stdbool.h>
 #include    <stdio.h>
 #include    <string.h>
@@ -94,10 +96,8 @@ typedef struct {
 } userdata_t;
 
 static Agraph_t *root;		/* root graph */
-static int Current_class;	/* Current element type */
 static Agraph_t *G;		/* Current graph */
-static Agnode_t *N;		/* Set if Current_class == TAG_NODE */
-static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
+static Agedge_t *E; // current edge
 
 static gv_stack_t Gstack;
 
@@ -156,8 +156,7 @@ static Agraph_t *pop_subg(void)
 
 static Agnode_t *bind_node(const char *name)
 {
-    N = agnode(G, (char *) name, 1);
-    return N;
+  return agnode(G, (char *)name, 1);
 }
 
 static Agedge_t *bind_edge(const char *tail, const char *head)
@@ -185,9 +184,8 @@ static int get_xml_attr(char *attrname, const char **atts)
 
 static char *defval = "";
 
-static void
-setEdgeAttr(Agedge_t * ep, char *name, char *value, userdata_t * ud)
-{
+static void setEdgeAttr(Agedge_t *ep, char *name, const char *value,
+                        userdata_t *ud) {
     Agsym_t *ap;
     char *attrname;
 
@@ -234,7 +232,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	Agdesc_t dir;
 	char buf[NAMEBUF];	/* holds % + number */
 
-	Current_class = TAG_GRAPH;
 	if (ud->closedElementType == TAG_GRAPH) {
 	    fprintf(stderr,
 		    "Warning: Node contains more than one graph.\n");
@@ -277,7 +274,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 
 	pushString(&ud->elements, id);
     } else if (strcmp(name, "node") == 0) {
-	Current_class = TAG_NODE;
 	pos = get_xml_attr("id", atts);
 	if (pos > 0) {
 	    const char *attrname;
@@ -295,7 +291,6 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	char *tname;
 	Agnode_t *t;
 
-	Current_class = TAG_EDGE;
 	pos = get_xml_attr("source", atts);
 	if (pos > 0)
 	    tail = atts[pos];
@@ -319,7 +314,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 
 	    pos = get_xml_attr("id", atts);
 	    if (pos > 0) {
-	        setEdgeAttr(E, GRAPHML_ID, (char *) atts[pos], ud);
+	        setEdgeAttr(E, GRAPHML_ID, atts[pos], ud);
 	    }
         }
     } else {
@@ -345,11 +340,8 @@ static void endElementHandler(void *userData, const char *name)
 	    if (node) agdelete(root, node);
 	}
 	popString(&ud->elements);
-	Current_class = TAG_GRAPH;
-	N = 0;
 	ud->closedElementType = TAG_NODE;
     } else if (strcmp(name, "edge") == 0) {
-	Current_class = TAG_GRAPH;
 	E = 0;
 	ud->closedElementType = TAG_EDGE;
 	ud->edgeinverted = false;
@@ -366,14 +358,14 @@ static Agraph_t *graphml_to_gv(char *graphname, FILE *graphmlFile, int *rv) {
     XML_SetUserData(parser, &udata);
     XML_SetElementHandler(parser, startElementHandler, endElementHandler);
 
-    Current_class = TAG_GRAPH;
     root = 0;
     do {
 	size_t len = fread(buf, 1, sizeof(buf), graphmlFile);
 	if (len == 0)
 	    break;
 	done = len < sizeof(buf);
-	if (XML_Parse(parser, buf, len, done) == XML_STATUS_ERROR) {
+	assert(len <= INT_MAX);
+	if (XML_Parse(parser, buf, (int)len, done) == XML_STATUS_ERROR) {
 	    fprintf(stderr,
 		    "%s at line %lu\n",
 		    XML_ErrorString(XML_GetErrorCode(parser)),

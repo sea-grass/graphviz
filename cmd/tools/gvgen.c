@@ -35,11 +35,11 @@ typedef enum { unknown, grid, circle, complete, completeb,
 } GraphType;
 
 typedef struct {
-    int graphSize1;
-    int graphSize2;
-    int cnt;
-    int parm1;
-    int parm2;
+    unsigned graphSize1;
+    unsigned graphSize2;
+    unsigned cnt;
+    unsigned parm1;
+    unsigned parm2;
     int Verbose;
     int isPartial;
     int foldVal;
@@ -93,39 +93,35 @@ static void errexit(int opt) {
 }
 
 /* readPos:
- * Read and return a single int from s, guaranteed to be >= 1.
+ * Read and return a single unsigned int from s, guaranteed to be >= 1.
  * A pointer to the next available character from s is stored in e.
- * Return -1 on error.
+ * Return 0 on error.
  */
-static int readPos(char *s, char **e) {
-    static const int MIN = 1;
+static unsigned readPos(char *s, char **e) {
+    static const unsigned MIN = 1;
 
-    long d = strtol(s, e, 10);
-    if (s == *e || d > INT_MAX) {
+    const unsigned long d = strtoul(s, e, 10);
+    if (s == *e || d > UINT_MAX) {
 	fprintf(stderr, "ill-formed integer \"%s\" ", s);
-	return -1;
+	return 0;
     }
     if (d < MIN) {
 	fprintf(stderr, "integer \"%s\" less than %d", s, MIN);
-	return -1;
+	return 0;
     }
-    return (int)d;
+    return (unsigned)d;
 }
 
 /* readOne:
  * Return non-zero on error.
  */
-static int readOne(char *s, int* ip)
-{
-    int d;
-    char *next;
-
-    d = readPos(s, &next);
+static int readOne(char *s, unsigned *ip) {
+    const unsigned d = readPos(s, &(char *){NULL});
     if (d > 0) {
 	*ip = d;
 	return 0;
     }
-    else return d;
+    return -1;
 }
 
 /* setOne:
@@ -141,12 +137,11 @@ static int setOne(char *s, opts_t* opts)
  */
 static int setTwo(char *s, opts_t* opts)
 {
-    int d;
     char *next;
 
-    d = readPos(s, &next);
-    if (d < 0)
-	return d;
+    unsigned d = readPos(s, &next);
+    if (d == 0)
+	return -1;
     opts->graphSize1 = d;
 
     if (*next != ',') {
@@ -155,12 +150,12 @@ static int setTwo(char *s, opts_t* opts)
     }
 
     s = next + 1;
-    d = readPos(s, &next);
+    d = readPos(s, &(char *){NULL});
     if (d > 1) {
 	opts->graphSize2 = d;
 	return 0;
     }
-    else return d;
+    return -1;
 }
 
 /* setTwoTwoOpt:
@@ -168,14 +163,12 @@ static int setTwo(char *s, opts_t* opts)
  * Read 2 more optional numbers
  * Return non-zero on error.
  */
-static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
-{
-    int d;
+static int setTwoTwoOpt(char *s, opts_t *opts, unsigned dflt) {
     char *next;
 
-    d = readPos(s, &next);
-    if (d < 0)
-	return d;
+    unsigned d = readPos(s, &next);
+    if (d == 0)
+	return -1;
     opts->graphSize1 = d;
 
     if (*next != ',') {
@@ -185,7 +178,7 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
 
     s = next + 1;
     d = readPos(s, &next);
-    if (d < 1) {
+    if (d == 0) {
 	return 0;
     }
     opts->graphSize2 = d;
@@ -197,8 +190,8 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
 
     s = next + 1;
     d = readPos(s, &next);
-    if (d < 0)
-	return d;
+    if (d == 0)
+	return -1;
     opts->parm1 = d;
 
     if (*next != ',') {
@@ -213,14 +206,12 @@ static int setTwoTwoOpt(char *s, opts_t* opts, int dflt)
 /* setTwoOpt:
  * Return non-zero on error.
  */
-static int setTwoOpt(char *s, opts_t* opts, int dflt)
-{
-    int d;
+static int setTwoOpt(char *s, opts_t *opts, unsigned dflt) {
     char *next;
 
-    d = readPos(s, &next);
-    if (d < 0)
-	return d;
+    unsigned d = readPos(s, &next);
+    if (d == 0)
+	return -1;
     opts->graphSize1 = d;
 
     if (*next != ',') {
@@ -229,12 +220,12 @@ static int setTwoOpt(char *s, opts_t* opts, int dflt)
     }
 
     s = next + 1;
-    d = readPos(s, &next);
+    d = readPos(s, &(char *){NULL});
     if (d > 1) {
 	opts->graphSize2 = d;
 	return 0;
     }
-    else return d;
+    return -1;
 }
 
 static char* setFold(char *s, opts_t* opts)
@@ -343,7 +334,8 @@ static GraphType init(int argc, char *argv[], opts_t* opts)
 	    if (setTwoOpt(optarg, opts, 2))
 		errexit(c);
 	    if (opts->graphSize2 > 3) {
-		fprintf(stderr, "%dD Sierpinski not implemented - use 2 or 3 ", opts->graphSize2);
+		fprintf(stderr, "%uD Sierpinski not implemented - use 2 or 3 ",
+		        opts->graphSize2);
 		errexit(c);
 	    }
 	    break;
@@ -401,20 +393,18 @@ static GraphType init(int argc, char *argv[], opts_t* opts)
 
 static opts_t opts;
 
-static void dirfn (int t, int h)
-{
+static void dirfn(unsigned t, unsigned h) {
     if (h > 0)
-	fprintf (opts.outfile, "  %s%d -> %s%d\n", opts.pfx, t, opts.pfx, h);
+	fprintf(opts.outfile, "  %s%u -> %s%u\n", opts.pfx, t, opts.pfx, h);
     else
-	fprintf (opts.outfile, "  %s%d\n", opts.pfx, t);
+	fprintf(opts.outfile, "  %s%u\n", opts.pfx, t);
 }
 
-static void undirfn (int t, int h)
-{
+static void undirfn(unsigned t, unsigned h) {
     if (h > 0)
-	fprintf (opts.outfile, "  %s%d -- %s%d\n", opts.pfx, t, opts.pfx, h);
+	fprintf(opts.outfile, "  %s%u -- %s%u\n", opts.pfx, t, opts.pfx, h);
     else
-	fprintf (opts.outfile, "  %s%d\n", opts.pfx, t);
+	fprintf(opts.outfile, "  %s%u\n", opts.pfx, t);
 }
 
 static void
@@ -493,9 +483,8 @@ int main(int argc, char *argv[])
 	break;
     case randomt:
 	{
-	    int i;
 	    treegen_t* tg = makeTreeGen (opts.graphSize1);
-	    for (i = 1; i <= opts.cnt; i++) {
+	    for (unsigned i = 1; i <= opts.cnt; i++) {
 		makeRandomTree (tg, ef);
 		if (i != opts.cnt) closeOpen ();
 	    }

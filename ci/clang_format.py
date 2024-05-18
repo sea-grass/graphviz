@@ -100,7 +100,6 @@ EXCLUDE = (
     "cmd/tools/gml2gv.c",
     "cmd/tools/gml2gv.h",
     "cmd/tools/graph_generator.c",
-    "cmd/tools/graph_generator.h",
     "cmd/tools/graphml2gv.c",
     "cmd/tools/gv2gml.c",
     "cmd/tools/gv2gxl.c",
