@@ -57,7 +57,6 @@ typedef struct { pointf LL, UR; } boxf;
 #define EXPANDBB(b0, b1) ((b0).LL.x = MIN((b0).LL.x, (b1).LL.x), (b0).LL.y = MIN((b0).LL.y, (b1).LL.y), (b0).UR.x = MAX((b0).UR.x, (b1).UR.x), (b0).UR.y = MAX((b0).UR.y, (b1).UR.y))
 
 #define LEN2(a,b)		(SQR(a) + SQR(b))
-#define LEN(a,b)		(sqrt(LEN2((a),(b))))
 
 #define DIST2(p,q)		(LEN2(((p).x - (q).x),((p).y - (q).y)))
 #define DIST(p,q)		(sqrt(DIST2((p),(q))))
