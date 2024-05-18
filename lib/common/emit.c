@@ -23,6 +23,7 @@
 #include <limits.h>
 #include <locale.h>
 #include <math.h>
+#include <common/geomprocs.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
@@ -559,14 +560,13 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
     colorsegs_t segs;
     int rv;
     double save_penwidth = job->obj->penwidth;
-    pointf ctr, semi;
+    pointf semi;
     Ppolyline_t* pp;
     double angle0, angle1;
 
     rv = parseSegs (clrs, 0, &segs);
     if (rv == 1 || rv == 2) return rv;
-    ctr.x = (pf[0].x + pf[1].x) / 2.;
-    ctr.y = (pf[0].y + pf[1].y) / 2.;
+    const pointf ctr = mid_pointf(pf[0], pf[1]);
     semi.x = pf[1].x - ctr.x;
     semi.y = pf[1].y - ctr.y;
     if (save_penwidth > THIN_LINE)
