@@ -26,6 +26,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 
@@ -105,11 +106,11 @@ static void rgb2hsv(double r, double g, double b,
 	rc = (rgbmax - r) / (rgbmax - rgbmin);
 	gc = (rgbmax - g) / (rgbmax - rgbmin);
 	bc = (rgbmax - b) / (rgbmax - rgbmin);
-	if (r == rgbmax)
+	if (is_exactly_equal(r, rgbmax))
 	    ht = bc - gc;
-	else if (g == rgbmax)
+	else if (is_exactly_equal(g, rgbmax))
 	    ht = 2 + rc - bc;
-	else if (b == rgbmax)
+	else if (is_exactly_equal(b, rgbmax))
 	    ht = 4 + gc - rc;
 	ht = ht * 60.0;
 	if (ht < 0.0)
