@@ -631,7 +631,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
 	gvrender_set_penwidth(job, THIN_LINE);
     for (colorseg_t *s = segs.segs; s->color; s++) {
 	if (s->t <= 0) continue;
-	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
+	gvrender_set_fillcolor(job, s->color);
 	if (s[1].color == NULL) 
 	    pts[1].x = pts[2].x = lastx;
 	else
