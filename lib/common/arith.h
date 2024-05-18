@@ -37,10 +37,6 @@ extern "C" {
 #endif
 #define MAX(a,b)	((a)>(b)?(a):(b))
 
-#ifndef MAXDOUBLE
-#define MAXDOUBLE	1.7976931348623157e+308
-#endif
-
 #ifdef BETWEEN
 #undef BETWEEN
 #endif
