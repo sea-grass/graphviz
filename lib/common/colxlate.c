@@ -305,10 +305,10 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 		break;
 	    case RGBA_BYTE:
 		hsv2rgb(H, S, V, &R, &G, &B);
-		color->u.rgba[0] = (int) (R * 255);
-		color->u.rgba[1] = (int) (G * 255);
-		color->u.rgba[2] = (int) (B * 255);
-		color->u.rgba[3] = (int) (A * 255);
+		color->u.rgba[0] = (unsigned char)(R * 255);
+		color->u.rgba[1] = (unsigned char)(G * 255);
+		color->u.rgba[2] = (unsigned char)(B * 255);
+		color->u.rgba[3] = (unsigned char)(A * 255);
 		break;
 	    case RGBA_WORD:
 		hsv2rgb(H, S, V, &R, &G, &B);
