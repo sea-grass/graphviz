@@ -560,15 +560,13 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
     colorsegs_t segs;
     int rv;
     double save_penwidth = job->obj->penwidth;
-    pointf semi;
     Ppolyline_t* pp;
     double angle0, angle1;
 
     rv = parseSegs (clrs, 0, &segs);
     if (rv == 1 || rv == 2) return rv;
     const pointf ctr = mid_pointf(pf[0], pf[1]);
-    semi.x = pf[1].x - ctr.x;
-    semi.y = pf[1].y - ctr.y;
+    const pointf semi = sub_pointf(pf[1], ctr);
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
 	
