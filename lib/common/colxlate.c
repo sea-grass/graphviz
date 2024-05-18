@@ -47,7 +47,7 @@ static void hsv2rgb(double h, double s, double v,
 	    h = 0.0;
 	h = 6.0 * h;
 	i = (int) h;
-	f = h - (double) i;
+	f = h - i;
 	p = v * (1 - s);
 	q = v * (1 - s * f);
 	t = v * (1 - s * (1 - f));
