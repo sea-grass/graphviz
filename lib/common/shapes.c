@@ -560,6 +560,59 @@ static void Mcircle_hack(GVJ_t * job, node_t * n)
     gvrender_polyline(job, AF, 2);
 }
 
+static pointf * alloc_interpolation_points(pointf *AF, size_t sides,
+		graphviz_polygon_style_t style, bool rounded)
+{
+    pointf *B = gv_calloc(4 * sides + 4, sizeof(pointf));
+    size_t i = 0;
+    pointf p0, p1;
+    double dx, dy, t;
+    /* rbconst is distance offset from a corner of the polygon.
+     * It should be the same for every corner, and also never
+     * bigger than one-third the length of a side.
+     */
+    double rbconst = RBCONST;
+    for (size_t seg = 0; seg < sides; seg++) {
+	p0 = AF[seg];
+	if (seg + 1 < sides)
+	    p1 = AF[seg + 1];
+	else
+	    p1 = AF[0];
+	dx = p1.x - p0.x;
+	dy = p1.y - p0.y;
+	const double d = hypot(dx, dy);
+	rbconst = fmin(rbconst, d / 3.0);
+    }
+    for (size_t seg = 0; seg < sides; seg++) {
+	p0 = AF[seg];
+	if (seg + 1 < sides)
+	    p1 = AF[seg + 1];
+	else
+	    p1 = AF[0];
+	dx = p1.x - p0.x;
+	dy = p1.y - p0.y;
+	const double d = hypot(dx, dy);
+	t = rbconst / d;
+	if (style.shape == BOX3D || style.shape == COMPONENT)
+	    t /= 3;
+	else if (style.shape == DOGEAR)
+	    t /= 2;
+	if (!rounded)
+	    B[i++] = p0;
+	else
+	    B[i++] = interpolate_pointf(RBCURVE * t, p0, p1);
+	B[i++] = interpolate_pointf(t, p0, p1);
+	B[i++] = interpolate_pointf(1.0 - t, p0, p1);
+	if (rounded)
+	    B[i++] = interpolate_pointf(1.0 - RBCURVE * t, p0, p1);
+    }
+    B[i++] = B[0];
+    B[i++] = B[1];
+    B[i++] = B[2];
+
+    return B;
+}
+
 /**
  * @file
  * ~~~~
@@ -611,8 +664,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
     assert(sides > 0);
     assert(memcmp(&style, &(graphviz_polygon_style_t){0}, sizeof(style)) != 0);
 
-    pointf *B, C[5], *D, p0, p1;
-    double dx, dy, t;
+    pointf *B, C[5], *D;
     pointf* pts;
 
     struct {
@@ -631,54 +683,10 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	cylinder_draw(job, AF, sides, filled);
 	return;
     }
-    B = gv_calloc(4 * sides + 4, sizeof(pointf));
-    size_t i = 0;
-    /* rbconst is distance offset from a corner of the polygon.
-     * It should be the same for every corner, and also never
-     * bigger than one-third the length of a side.
-     */
-    double rbconst = RBCONST;
-    for (size_t seg = 0; seg < sides; seg++) {
-	p0 = AF[seg];
-	if (seg + 1 < sides)
-	    p1 = AF[seg + 1];
-	else
-	    p1 = AF[0];
-	dx = p1.x - p0.x;
-	dy = p1.y - p0.y;
-	const double d = hypot(dx, dy);
-	rbconst = fmin(rbconst, d / 3.0);
-    }
-    for (size_t seg = 0; seg < sides; seg++) {
-	p0 = AF[seg];
-	if (seg + 1 < sides)
-	    p1 = AF[seg + 1];
-	else
-	    p1 = AF[0];
-	dx = p1.x - p0.x;
-	dy = p1.y - p0.y;
-	const double d = hypot(dx, dy);
-	t = rbconst / d;
-	if (style.shape == BOX3D || style.shape == COMPONENT)
-	    t /= 3;
-	else if (style.shape == DOGEAR)
-	    t /= 2;
-	if (!mode.rounded)
-	    B[i++] = p0;
-	else
-	    B[i++] = interpolate_pointf(RBCURVE * t, p0, p1);
-	B[i++] = interpolate_pointf(t, p0, p1);
-	B[i++] = interpolate_pointf(1.0 - t, p0, p1);
-	if (mode.rounded)
-	    B[i++] = interpolate_pointf(1.0 - RBCURVE * t, p0, p1);
-    }
-    B[i++] = B[0];
-    B[i++] = B[1];
-    B[i++] = B[2];
-
+    B = alloc_interpolation_points(AF, sides, style, mode.rounded);
     if (mode.rounded) {
+	int i = 0;
 	pts = gv_calloc(6 * sides + 2, sizeof(pointf));
-	i = 0;
 	for (size_t seg = 0; seg < sides; seg++) {
 	    pts[i++] = B[4 * seg];
 	    pts[i++] = B[4 * seg+1];
