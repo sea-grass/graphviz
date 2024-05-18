@@ -130,7 +130,7 @@ extern "C" {
     RENDER_API port resolvePort(node_t*  n, node_t* other, port* oldport);
     RENDER_API void resolvePorts (edge_t* e);
     RENDER_API void round_corners(GVJ_t *job, pointf *AF, size_t sides,
-                                  int style, int filled);
+                                  graphviz_polygon_style_t style, int filled);
     RENDER_API int routesplinesinit(void);
     RENDER_API pointf *routesplines(path *, size_t *);
     RENDER_API void routesplinesterm(void);

@@ -108,17 +108,21 @@ static polygon_t p_pentagon = {.peripheries = 1, .sides = 5};
 static polygon_t p_hexagon = {.peripheries = 1, .sides = 6};
 static polygon_t p_septagon = {.peripheries = 1, .sides = 7};
 static polygon_t p_octagon = {.peripheries = 1, .sides = 8};
-static polygon_t p_note = {.peripheries = 1, .sides = 4, .option = DOGEAR};
-static polygon_t p_tab = {.peripheries = 1, .sides = 4, .option = TAB};
-static polygon_t p_folder = {.peripheries = 1, .sides = 4, .option = FOLDER};
-static polygon_t p_box3d = {.peripheries = 1, .sides = 4, .option = BOX3D};
+static polygon_t p_note = {
+    .peripheries = 1, .sides = 4, .option = {.shape = DOGEAR}};
+static polygon_t p_tab = {
+    .peripheries = 1, .sides = 4, .option = {.shape = TAB}};
+static polygon_t p_folder = {
+    .peripheries = 1, .sides = 4, .option = {.shape = FOLDER}};
+static polygon_t p_box3d = {
+    .peripheries = 1, .sides = 4, .option = {.shape = BOX3D}};
 static polygon_t p_component = {
-    .peripheries = 1, .sides = 4, .option = COMPONENT};
+    .peripheries = 1, .sides = 4, .option = {.shape = COMPONENT}};
 static polygon_t p_underline = {
-    .peripheries = 1, .sides = 4, .option = UNDERLINE};
+    .peripheries = 1, .sides = 4, .option = {.underline = true}};
 static polygon_t p_cylinder = {.peripheries = 1,
                                .sides = 19,
-                               .option = CYLINDER,
+                               .option = {.shape = CYLINDER},
                                .vertices = (pointf *)&cylinder_gen};
 
 /* redundant and undocumented builtin polygons */
@@ -132,16 +136,19 @@ static polygon_t p_invhouse = {
     .peripheries = 1, .sides = 5, .orientation = 180.0, .distortion = -0.64};
 static polygon_t p_doubleoctagon = {.peripheries = 2, .sides = 8};
 static polygon_t p_tripleoctagon = {.peripheries = 3, .sides = 8};
-static polygon_t p_Mdiamond = {.peripheries = 1,
-                               .sides = 4,
-                               .orientation = 45.0,
-                               .option = DIAGONALS | AUXLABELS};
-static polygon_t p_Msquare = {
-    .regular = true, .peripheries = 1, .sides = 4, .option = DIAGONALS};
+static polygon_t p_Mdiamond = {
+    .peripheries = 1,
+    .sides = 4,
+    .orientation = 45.0,
+    .option = {.diagonals = true, .auxlabels = true}};
+static polygon_t p_Msquare = {.regular = true,
+                              .peripheries = 1,
+                              .sides = 4,
+                              .option = {.diagonals = true}};
 static polygon_t p_Mcircle = {.regular = true,
                               .peripheries = 1,
                               .sides = 1,
-                              .option = DIAGONALS | AUXLABELS};
+                              .option = {.diagonals = true, .auxlabels = true}};
 
 /* non-convex polygons */
 static polygon_t p_star = {
@@ -150,41 +157,46 @@ static polygon_t p_star = {
 /* biological circuit shapes, as specified by SBOLv*/
 /** gene expression symbols **/
 static polygon_t p_promoter = {
-    .peripheries = 1, .sides = 4, .option = PROMOTER};
-static polygon_t p_cds = {.peripheries = 1, .sides = 4, .option = CDS};
+    .peripheries = 1, .sides = 4, .option = {.shape = PROMOTER}};
+static polygon_t p_cds = {
+    .peripheries = 1, .sides = 4, .option = {.shape = CDS}};
 static polygon_t p_terminator = {
-    .peripheries = 1, .sides = 4, .option = TERMINATOR};
-static polygon_t p_utr = {.peripheries = 1, .sides = 4, .option = UTR};
+    .peripheries = 1, .sides = 4, .option = {.shape = TERMINATOR}};
+static polygon_t p_utr = {
+    .peripheries = 1, .sides = 4, .option = {.shape = UTR}};
 static polygon_t p_insulator = {
-    .peripheries = 1, .sides = 4, .option = INSULATOR};
+    .peripheries = 1, .sides = 4, .option = {.shape = INSULATOR}};
 static polygon_t p_ribosite = {
-    .peripheries = 1, .sides = 4, .option = RIBOSITE};
-static polygon_t p_rnastab = {.peripheries = 1, .sides = 4, .option = RNASTAB};
+    .peripheries = 1, .sides = 4, .option = {.shape = RIBOSITE}};
+static polygon_t p_rnastab = {
+    .peripheries = 1, .sides = 4, .option = {.shape = RNASTAB}};
 static polygon_t p_proteasesite = {
-    .peripheries = 1, .sides = 4, .option = PROTEASESITE};
+    .peripheries = 1, .sides = 4, .option = {.shape = PROTEASESITE}};
 static polygon_t p_proteinstab = {
-    .peripheries = 1, .sides = 4, .option = PROTEINSTAB};
+    .peripheries = 1, .sides = 4, .option = {.shape = PROTEINSTAB}};
 /** dna construction symbols **/
 static polygon_t p_primersite = {
-    .peripheries = 1, .sides = 4, .option = PRIMERSITE};
+    .peripheries = 1, .sides = 4, .option = {.shape = PRIMERSITE}};
 static polygon_t p_restrictionsite = {
-    .peripheries = 1, .sides = 4, .option = RESTRICTIONSITE};
+    .peripheries = 1, .sides = 4, .option = {.shape = RESTRICTIONSITE}};
 static polygon_t p_fivepoverhang = {
-    .peripheries = 1, .sides = 4, .option = FIVEPOVERHANG};
+    .peripheries = 1, .sides = 4, .option = {.shape = FIVEPOVERHANG}};
 static polygon_t p_threepoverhang = {
-    .peripheries = 1, .sides = 4, .option = THREEPOVERHANG};
+    .peripheries = 1, .sides = 4, .option = {.shape = THREEPOVERHANG}};
 static polygon_t p_noverhang = {
-    .peripheries = 1, .sides = 4, .option = NOVERHANG};
+    .peripheries = 1, .sides = 4, .option = {.shape = NOVERHANG}};
 static polygon_t p_assembly = {
-    .peripheries = 1, .sides = 4, .option = ASSEMBLY};
+    .peripheries = 1, .sides = 4, .option = {.shape = ASSEMBLY}};
 static polygon_t p_signature = {
-    .peripheries = 1, .sides = 4, .option = SIGNATURE};
+    .peripheries = 1, .sides = 4, .option = {.shape = SIGNATURE}};
 static polygon_t p_rpromoter = {
-    .peripheries = 1, .sides = 4, .option = RPROMOTER};
-static polygon_t p_rarrow = {.peripheries = 1, .sides = 4, .option = RARROW};
-static polygon_t p_larrow = {.peripheries = 1, .sides = 4, .option = LARROW};
+    .peripheries = 1, .sides = 4, .option = {.shape = RPROMOTER}};
+static polygon_t p_rarrow = {
+    .peripheries = 1, .sides = 4, .option = {.shape = RARROW}};
+static polygon_t p_larrow = {
+    .peripheries = 1, .sides = 4, .option = {.shape = LARROW}};
 static polygon_t p_lpromoter = {
-    .peripheries = 1, .sides = 4, .option = LPROMOTER};
+    .peripheries = 1, .sides = 4, .option = {.shape = LPROMOTER}};
 
 static bool IS_BOX(node_t *n) {
   return ND_shape(n)->polygon == &p_box;
@@ -195,8 +207,8 @@ static bool IS_PLAIN(node_t *n) {
 }
 
 /// True if style requires processing through round_corners.
-static bool SPECIAL_CORNERS(int style) {
-  return (style & (ROUNDED | DIAGONALS | SHAPE_MASK)) != 0;
+static bool SPECIAL_CORNERS(graphviz_polygon_style_t style) {
+  return style.rounded || style.diagonals || style.shape != 0;
 }
 
 /*
@@ -422,11 +434,34 @@ static bool isEllipse(node_t *n) {
     return false;
 }
 
-static char **checkStyle(node_t * n, int *flagp)
-{
+/// bitwise-OR styles
+static graphviz_polygon_style_t style_or(graphviz_polygon_style_t a,
+                                         graphviz_polygon_style_t b) {
+
+  // bitwise-or-ing the shape does not make sense, so there better only be one
+  assert(a.shape == 0 || b.shape == 0);
+
+  return (graphviz_polygon_style_t){
+    .filled = a.filled || b.filled,
+    .radial = a.radial || b.radial,
+    .rounded = a.rounded || b.rounded,
+    .diagonals = a.diagonals || b.diagonals,
+    .auxlabels = a.auxlabels || b.auxlabels,
+    .invisible = a.invisible || b.invisible,
+    .striped = a.striped || b.striped,
+    .dotted = a.dotted || b.dotted,
+    .dashed = a.dashed || b.dashed,
+    .wedged = a.wedged || b.wedged,
+    .underline = a.underline || b.underline,
+    .fixedshape = a.fixedshape || b.fixedshape,
+    .shape = a.shape | b.shape,
+  };
+}
+
+static char **checkStyle(node_t *n, graphviz_polygon_style_t *flagp) {
     char *style;
     char **pstyle = 0;
-    int istyle = 0;
+    graphviz_polygon_style_t istyle = {0};
     polygon_t *poly;
 
     style = late_nnstring(n, N_style, "");
@@ -437,41 +472,42 @@ static char **checkStyle(node_t * n, int *flagp)
 	pp = pstyle = parse_style(style);
 	while ((p = *pp)) {
 	    if (streq(p, "filled")) {
-		istyle |= FILLED;
+		istyle.filled = true;
 		pp++;
 	    } else if (streq(p, "rounded")) {
-		istyle |= ROUNDED;
+		istyle.rounded = true;
 		qp = pp;	/* remove rounded from list passed to renderer */
 		do {
 		    qp++;
 		    *(qp - 1) = *qp;
 		} while (*qp);
 	    } else if (streq(p, "diagonals")) {
-		istyle |= DIAGONALS;
+		istyle.diagonals = true;
 		qp = pp;	/* remove diagonals from list passed to renderer */
 		do {
 		    qp++;
 		    *(qp - 1) = *qp;
 		} while (*qp);
 	    } else if (streq(p, "invis")) {
-		istyle |= INVISIBLE;
+		istyle.invisible = true;
 		pp++;
 	    } else if (streq(p, "radial")) {
-		istyle |= (RADIAL|FILLED);
+		istyle.radial = true;
+		istyle.filled = true;
 		qp = pp;	/* remove radial from list passed to renderer */
 		do {
 		    qp++;
 		    *(qp - 1) = *qp;
 		} while (*qp);
 	    } else if (streq(p, "striped") && isBox(n)) {
-		istyle |= STRIPED;
+		istyle.striped = true;
 		qp = pp;	/* remove striped from list passed to renderer */
 		do {
 		    qp++;
 		    *(qp - 1) = *qp;
 		} while (*qp);
 	    } else if (streq(p, "wedged") && isEllipse(n)) {
-		istyle |= WEDGED;
+		istyle.wedged = true;
 		qp = pp;	/* remove wedged from list passed to renderer */
 		do {
 		    qp++;
@@ -482,16 +518,15 @@ static char **checkStyle(node_t * n, int *flagp)
 	}
     }
     if ((poly = ND_shape(n)->polygon))
-	istyle |= poly->option;
+	istyle = style_or(istyle, poly->option);
 
     *flagp = istyle;
     return pstyle;
 }
 
-static int stylenode(GVJ_t * job, node_t * n)
-{
+static graphviz_polygon_style_t stylenode(GVJ_t *job, node_t *n) {
     char **pstyle, *s;
-    int istyle;
+    graphviz_polygon_style_t istyle = {0};
     double penwidth;
 
     if ((pstyle = checkStyle(n, &istyle)))
@@ -568,21 +603,25 @@ static double mid_y(const pointf line[2]) {
  * consist of a region, filled or unfilled, followed by additional line
  * segments. A single fill is necessary for gradient colors to work.
  */
-void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
-{
+void round_corners(GVJ_t *job, pointf *AF, size_t sides,
+                   graphviz_polygon_style_t style, int filled) {
     pointf *B, C[5], *D, p0, p1;
     double rbconst, d, dx, dy, t;
-    int mode, shape;
     pointf* pts;
 
-    shape = style & SHAPE_MASK;
-    if (style & DIAGONALS)
-	mode = DIAGONALS;
-    else if (style & SHAPE_MASK)
-	mode = shape;
+    struct {
+	bool diagonals: 1;
+	bool rounded: 1;
+	unsigned shape: 7;
+    } mode = {0};
+
+    if (style.diagonals)
+	mode.diagonals = true;
+    else if (style.shape != 0)
+	mode.shape = style.shape;
     else
-	mode = ROUNDED;
-    if (mode == CYLINDER) {
+	mode.rounded = true;
+    if (mode.shape == CYLINDER) {
 	cylinder_draw(job, AF, sides, filled);
 	return;
     }
@@ -614,25 +653,24 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	dy = p1.y - p0.y;
 	d = hypot(dx, dy);
 	t = rbconst / d;
-	if (shape == BOX3D || shape == COMPONENT)
+	if (style.shape == BOX3D || style.shape == COMPONENT)
 	    t /= 3;
-	else if (shape == DOGEAR)
+	else if (style.shape == DOGEAR)
 	    t /= 2;
-	if (mode != ROUNDED)
+	if (!mode.rounded)
 	    B[i++] = p0;
 	else
 	    B[i++] = interpolate_pointf(RBCURVE * t, p0, p1);
 	B[i++] = interpolate_pointf(t, p0, p1);
 	B[i++] = interpolate_pointf(1.0 - t, p0, p1);
-	if (mode == ROUNDED)
+	if (mode.rounded)
 	    B[i++] = interpolate_pointf(1.0 - RBCURVE * t, p0, p1);
     }
     B[i++] = B[0];
     B[i++] = B[1];
     B[i++] = B[2];
 
-    switch (mode) {
-    case ROUNDED:
+    if (mode.rounded) {
 	pts = gv_calloc(6 * sides + 2, sizeof(pointf));
 	i = 0;
 	for (size_t seg = 0; seg < sides; seg++) {
@@ -647,9 +685,9 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	pts[i++] = pts[1];
 	gvrender_beziercurve(job, pts+1, i-1, filled);
 	free (pts);
-
-	break;
-    case DIAGONALS:
+	free(B);
+	return;
+    } else if (mode.diagonals) {
 	/* diagonals are weird.  rewrite someday. */
 	gvrender_polygon(job, AF, sides, filled);
 
@@ -658,7 +696,10 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides, int style, int filled)
 	    C[1] = B[3 * seg + 4];
 	    gvrender_polyline(job, C, 2);
 	}
-	break;
+	free(B);
+	return;
+    }
+    switch (mode.shape) {
     case DOGEAR:
 	/* Add the cutoff edge. */
 	D = gv_calloc(sides + 1, sizeof(pointf));
@@ -2032,7 +2073,7 @@ static void poly_init(node_t * n)
     fxd = late_string(n, N_fixed, "false");
     if (*fxd == 's' && streq(fxd,"shape")) {
 	bb = (pointf){.x = width, .y = height};
-	poly->option |= FIXEDSHAPE;
+	poly->option.fixedshape = true;
     } else if (mapbool(fxd)) {
 	/* check only label, as images we can scale to fit */
 	if (width < ND_label(n)->dimen.x || height < ND_label(n)->dimen.y)
@@ -2067,7 +2108,7 @@ static void poly_init(node_t * n)
 	ND_label(n)->space.x = dimen.x - spacex;
     }
 
-    if ((poly->option & FIXEDSHAPE) == 0) {
+    if (!poly->option.fixedshape) {
 	temp = bb.y - min_bb.y;
 	if (dimen.y < imagesize.y)
 	    temp += imagesize.y - dimen.y;
@@ -2285,7 +2326,7 @@ static void poly_init(node_t * n)
     poly->distortion = distortion;
     poly->vertices = vertices;
 
-    if (poly->option & FIXEDSHAPE) {
+    if (poly->option.fixedshape) {
 	/* set width and height to reflect label and shape */
 	ND_width(n) = PS2INCH(fmax(dimen.x, bb.x));
 	ND_height(n) = PS2INCH(fmax(dimen.y, bb.y));
@@ -2350,7 +2391,7 @@ static bool poly_inside(inside_t * inside_context, pointf p)
 	sides = inside_context->s.last_poly->sides;
 
 	double xsize, ysize;
-	if (inside_context->s.last_poly->option & FIXEDSHAPE) {
+	if (inside_context->s.last_poly->option.fixedshape) {
 	    boxf bb = polyBB(inside_context->s.last_poly);
 	    n_width = bb.UR.x - bb.LL.x;
 	    n_height = bb.UR.y - bb.LL.y;
@@ -2843,7 +2884,6 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     obj_state_t *obj = job->obj;
     polygon_t *poly;
     double xsize, ysize;
-    int style;
     pointf P, *vertices;
     int filled;
     bool usershape_p;
@@ -2871,7 +2911,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     xsize = (ND_lw(n) + ND_rw(n)) / INCH2PS(ND_width(n));
     ysize = ND_ht(n) / INCH2PS(ND_height(n));
 
-    style = stylenode(job, n);
+    const graphviz_polygon_style_t style = stylenode(job, n);
     clrs[0] = NULL;
 
     if (ND_gui_state(n) & GUI_STATE_ACTIVE) {
@@ -2907,7 +2947,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else {
-	if (style & FILLED) {
+	if (style.filled) {
 	    float frac;
 	    fillcolor = findFill (n);
 	    if (findStopColor (fillcolor, clrs, &frac)) {
@@ -2916,7 +2956,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 		    gvrender_set_gradient_vals(job,clrs[1],late_int(n,N_gradientangle,0,0), frac);
 		else
 		    gvrender_set_gradient_vals(job,DEFAULT_COLOR,late_int(n,N_gradientangle,0,0), frac);
-		if (style & RADIAL)
+		if (style.radial)
 		    filled = RGRADIENT;
 	 	else
 		    filled = GRADIENT;
@@ -2926,7 +2966,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 		filled = FILL;
 	    }
 	}
-	else if (style & (STRIPED|WEDGED))  {
+	else if (style.striped || style.wedged)  {
 	    fillcolor = findFill (n);
 	    filled = 1;
 	}
@@ -2953,24 +2993,24 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	    AF[i].y = P.y * ysize + ND_coord(n).y;
 	}
 	if (sides <= 2) {
-	    if ((style & WEDGED) && j == 0 && multicolor(fillcolor)) {
+	    if (style.wedged && j == 0 && multicolor(fillcolor)) {
 		int rv = wedgedEllipse (job, AF, fillcolor);
 		if (rv > 1)
 		    agerr (AGPREV, "in node %s\n", agnameof(n));
 		filled = 0;
 	    }
 	    gvrender_ellipse(job, AF, filled);
-	    if (style & DIAGONALS) {
+	    if (style.diagonals) {
 		Mcircle_hack(job, n);
 	    }
-	} else if (style & STRIPED) {
+	} else if (style.striped) {
 	    if (j == 0) {
 		int rv = stripedBox (job, AF, fillcolor, 1);
 		if (rv > 1)
 		    agerr (AGPREV, "in node %s\n", agnameof(n));
 	    }
 	    gvrender_polygon(job, AF, sides, 0);
-	} else if (style & UNDERLINE) {
+	} else if (style.underline) {
 	    gvrender_set_pencolor(job, "transparent");
 	    gvrender_polygon(job, AF, sides, filled);
 	    gvrender_set_pencolor(job, pencolor);
@@ -3005,22 +3045,22 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	/* lay down fill first */
 	if (filled != 0 && pfilled) {
 	    if (sides <= 2) {
-		if ((style & WEDGED) && j == 0 && multicolor(fillcolor)) {
+		if (style.wedged && j == 0 && multicolor(fillcolor)) {
 		    int rv = wedgedEllipse (job, AF, fillcolor);
 		    if (rv > 1)
 			agerr (AGPREV, "in node %s\n", agnameof(n));
 		    filled = 0;
 		}
 		gvrender_ellipse(job, AF, filled);
-		if (style & DIAGONALS) {
+		if (style.diagonals) {
 		    Mcircle_hack(job, n);
 		}
-	    } else if (style & STRIPED) {
+	    } else if (style.striped) {
 		int rv = stripedBox (job, AF, fillcolor, 1);
 		if (rv > 1)
 		    agerr (AGPREV, "in node %s\n", agnameof(n));
 		gvrender_polygon(job, AF, sides, 0);
-	    } else if (style & (ROUNDED | DIAGONALS)) {
+	    } else if (style.rounded || style.diagonals) {
 		round_corners(job, AF, sides, style, filled);
 	    } else {
 		gvrender_polygon(job, AF, sides, filled);
@@ -3189,7 +3229,6 @@ static void point_gencode(GVJ_t * job, node_t * n)
 {
     obj_state_t *obj = job->obj;
     polygon_t *poly;
-    int style;
     pointf P, *vertices;
     bool filled;
     char *color;
@@ -3205,8 +3244,9 @@ static void point_gencode(GVJ_t * job, node_t * n)
     const size_t sides = poly->sides;
     size_t peripheries = poly->peripheries;
 
+    graphviz_polygon_style_t style = {0};
     checkStyle(n, &style);
-    if (style & INVISIBLE)
+    if (style.invisible)
 	gvrender_set_style(job, point_style);
     else
 	gvrender_set_style(job, &point_style[1]);
@@ -3826,7 +3866,6 @@ static void record_gencode(GVJ_t * job, node_t * n)
     obj_state_t *obj = job->obj;
     boxf BF;
     pointf AF[4];
-    int style;
     field_t *f;
     int doMap = obj->url || obj->explicit_tooltip;
     int filled;
@@ -3843,10 +3882,10 @@ static void record_gencode(GVJ_t * job, node_t * n)
 	gvrender_begin_anchor(job,
 			      obj->url, obj->tooltip, obj->target,
 			      obj->id);
-    style = stylenode(job, n);
+    graphviz_polygon_style_t style = stylenode(job, n);
     penColor(job, n);
     clrs[0] = NULL;
-    if (style & FILLED) {
+    if (style.filled) {
 	char* fillcolor = findFill (n);
 	float frac;
 
@@ -3856,7 +3895,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
 		gvrender_set_gradient_vals(job,clrs[1],late_int(n,N_gradientangle,0,0), frac);
 	    else
 		gvrender_set_gradient_vals(job,DEFAULT_COLOR,late_int(n,N_gradientangle,0,0), frac);
-	    if (style & RADIAL)
+	    if (style.radial)
 		filled = RGRADIENT;
 	    else
 		filled = GRADIENT;
@@ -3869,7 +3908,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
     else filled = 0;
 
     if (streq(ND_shape(n)->name, "Mrecord"))
-	style |= ROUNDED;
+	style.rounded = true;
     if (SPECIAL_CORNERS(style)) {
 	AF[0] = BF.LL;
 	AF[2] = BF.UR;

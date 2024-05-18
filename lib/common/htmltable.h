@@ -70,6 +70,14 @@ extern "C" {
     } htmlimg_t;
 
     typedef struct {
+	bool radial: 1;
+	bool rounded: 1;
+	bool invisible: 1;
+	bool dotted: 1;
+	bool dashed: 1;
+    } htmlstyle_t;
+
+    typedef struct {
 	char *href;		/* pointer to an external resource */
 	char *port;
 	char *target;
@@ -85,7 +93,7 @@ extern "C" {
 	unsigned short flags;
 	unsigned short width;
 	unsigned short height;
-	unsigned short style;
+	htmlstyle_t style;
 	boxf box;		/* its geometric placement in points */
     } htmldata_t;
 

@@ -180,13 +180,15 @@ static int stylefn(htmldata_t * p, char *v)
     int rv = 0;
     for (tok_t t = tok(v, DELIM); !tok_end(&t); tok_next(&t)) {
 	strview_t tk = tok_get(&t);
-	if (strview_case_str_eq(tk, "ROUNDED")) p->style |= ROUNDED;
-	else if (strview_case_str_eq(tk, "RADIAL")) p->style |= RADIAL;
-	else if (strview_case_str_eq(tk,"SOLID")) p->style &= (unsigned short)~(DOTTED|DASHED);
-	else if (strview_case_str_eq(tk,"INVISIBLE") ||
-	         strview_case_str_eq(tk,"INVIS")) p->style |= INVISIBLE;
-	else if (strview_case_str_eq(tk,"DOTTED")) p->style |= DOTTED;
-	else if (strview_case_str_eq(tk,"DASHED")) p->style |= DASHED;
+	if (strview_case_str_eq(tk, "ROUNDED")) p->style.rounded = true;
+	else if (strview_case_str_eq(tk, "RADIAL")) p->style.radial = true;
+	else if (strview_case_str_eq(tk,"SOLID")) {
+	    p->style.dotted = false;
+	    p->style.dashed = false;
+	} else if (strview_case_str_eq(tk,"INVISIBLE") ||
+	           strview_case_str_eq(tk,"INVIS")) p->style.invisible = true;
+	else if (strview_case_str_eq(tk,"DOTTED")) p->style.dotted = true;
+	else if (strview_case_str_eq(tk,"DASHED")) p->style.dashed = true;
 	else {
 	    agwarningf("Illegal value %.*s for STYLE - ignored\n", (int)tk.size,
 	          tk.data);

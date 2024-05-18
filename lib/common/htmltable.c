@@ -258,19 +258,20 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
     unsigned short sides;
 
     gvrender_set_pencolor(job, color);
-    if (dp->style & (DASHED | DOTTED)) {
+    if (dp->style.dashed || dp->style.dotted) {
 	sptr[0] = sptr[1] = NULL;
-	if (dp->style & DASHED)
+	if (dp->style.dashed)
 	    sptr[0] = "dashed";
-	else if (dp->style & DOTTED)
+	else if (dp->style.dotted)
 	    sptr[0] = "dotted";
 	gvrender_set_style(job, sptr);
     } else
 	gvrender_set_style(job, job->gvc->defaultlinestyle);
     gvrender_set_penwidth(job, dp->border);
 
-    if (dp->style & ROUNDED)
-	round_corners(job, mkPts(AF, b, dp->border), 4, ROUNDED, 0);
+    if (dp->style.rounded)
+	round_corners(job, mkPts(AF, b, dp->border), 4,
+	              (graphviz_polygon_style_t){.rounded = true}, 0);
     else if ((sides = (dp->flags & BORDER_MASK))) {
 	mkPts (AF+1, b, dp->border);  /* AF[1-4] has LL=SW,SE,UR=NE,NW */
 	switch (sides) {
@@ -343,9 +344,8 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
  * Set up fill values from given color; make pen transparent.
  * Return type of fill required.
  */
-static int
-setFill(GVJ_t * job, char *color, int angle, int style, char *clrs[2])
-{
+static int setFill(GVJ_t *job, char *color, int angle, htmlstyle_t style,
+                   char *clrs[2]) {
     int filled;
     float frac;
     if (findStopColor(color, clrs, &frac)) {
@@ -354,7 +354,7 @@ setFill(GVJ_t * job, char *color, int angle, int style, char *clrs[2])
 	    gvrender_set_gradient_vals(job, clrs[1], angle, frac);
 	else
 	    gvrender_set_gradient_vals(job, DEFAULT_COLOR, angle, frac);
-	if (style & RADIAL)
+	if (style.radial)
 	    filled = RGRADIENT;
 	else
 	    filled = GRADIENT;
@@ -544,7 +544,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
     else
 	anchor = 0;
 
-    if (!(tbl->data.style & INVISIBLE)) {
+    if (!tbl->data.style.invisible) {
 
 	/* Fill first */
 	if (tbl->data.bgcolor) {
@@ -552,9 +552,9 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 	    int filled =
 		setFill(job, tbl->data.bgcolor, tbl->data.gradientangle,
 			tbl->data.style, clrs);
-	    if (tbl->data.style & ROUNDED) {
+	    if (tbl->data.style.rounded) {
 		round_corners(job, mkPts(AF, pts, tbl->data.border), 4,
-			      ROUNDED, filled);
+		              (graphviz_polygon_style_t){.rounded = true}, filled);
 	    } else
 		gvrender_box(job, pts, filled);
 	    free(clrs[0]);
@@ -644,15 +644,15 @@ static void emit_html_cell(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env)
     else
 	inAnchor = 0;
 
-    if (!(cp->data.style & INVISIBLE)) {
+    if (!cp->data.style.invisible) {
 	if (cp->data.bgcolor) {
 	    char *clrs[2];
 	    int filled =
 		setFill(job, cp->data.bgcolor, cp->data.gradientangle,
 			cp->data.style, clrs);
-	    if (cp->data.style & ROUNDED) {
+	    if (cp->data.style.rounded) {
 		round_corners(job, mkPts(AF, pts, cp->data.border), 4,
-			      ROUNDED, filled);
+			      (graphviz_polygon_style_t){.rounded = true}, filled);
 	    } else
 		gvrender_box(job, pts, filled);
 	    free(clrs[0]);
