@@ -575,7 +575,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
     angle0 = 0;
     for (colorseg_t *s = segs.segs; s->color; s++) {
 	if (!(s->t > 0)) continue;
-	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
+	gvrender_set_fillcolor(job, s->color);
 
 	if (s[1].color == NULL) 
 	    angle1 = 2*M_PI;
