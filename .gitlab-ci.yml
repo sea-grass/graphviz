@@ -1534,10 +1534,10 @@ lint_clang_format:
     - tags
 
 lint_cmake_format:
-  image: "$CI_REGISTRY_IMAGE/fedora39:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/fedora40:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_fedora39
+    - docker_build_fedora40
   script:
     - git ls-files -z -- '**/CMakeLists.txt' '**/*.cmake' '**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
   except:
