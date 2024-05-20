@@ -612,7 +612,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
     assert(memcmp(&style, &(graphviz_polygon_style_t){0}, sizeof(style)) != 0);
 
     pointf *B, C[5], *D, p0, p1;
-    double rbconst, d, dx, dy, t;
+    double dx, dy, t;
     pointf* pts;
 
     struct {
@@ -637,7 +637,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
      * It should be the same for every corner, and also never
      * bigger than one-third the length of a side.
      */
-    rbconst = RBCONST;
+    double rbconst = RBCONST;
     for (size_t seg = 0; seg < sides; seg++) {
 	p0 = AF[seg];
 	if (seg + 1 < sides)
@@ -646,8 +646,8 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	    p1 = AF[0];
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
-	d = hypot(dx, dy);
-	rbconst = MIN(rbconst, d / 3.0);
+	const double d = hypot(dx, dy);
+	rbconst = fmin(rbconst, d / 3.0);
     }
     for (size_t seg = 0; seg < sides; seg++) {
 	p0 = AF[seg];
@@ -657,7 +657,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	    p1 = AF[0];
 	dx = p1.x - p0.x;
 	dy = p1.y - p0.y;
-	d = hypot(dx, dy);
+	const double d = hypot(dx, dy);
 	t = rbconst / d;
 	if (style.shape == BOX3D || style.shape == COMPONENT)
 	    t /= 3;
@@ -1939,7 +1939,7 @@ static void poly_init(node_t * n)
 	else {
 	    width = ND_width(n);
 	    height = ND_height(n);
-	    width = height = INCH2PS(MIN(width, height));
+	    width = height = INCH2PS(fmin(width, height));
 	}
     } else {
 	width = INCH2PS(ND_width(n));
@@ -3542,10 +3542,10 @@ static pointf size_reclbl(node_t * n, field_t * f)
 	    d0 = size_reclbl(n, f->fld[i]);
 	    if (f->LR) {
 		d.x += d0.x;
-		d.y = MAX(d.y, d0.y);
+		d.y = fmax(d.y, d0.y);
 	    } else {
 		d.y += d0.y;
-		d.x = MAX(d.x, d0.x);
+		d.x = fmax(d.x, d0.x);
 	    }
 	}
     }
@@ -3703,8 +3703,8 @@ static void record_init(node_t * n)
 */
 	}
     } else {
-	sz.x = MAX(info->size.x, sz.x);
-	sz.y = MAX(info->size.y, sz.y);
+	sz.x = fmax(info->size.x, sz.x);
+	sz.y = fmax(info->size.y, sz.y);
     }
     resize_reclbl(info, sz, mapbool(late_string(n, N_nojustify, "false")));
     pointf ul = {-sz.x / 2., sz.y / 2.};	/* FIXME - is this still true:    suspected to introduce rounding error - see Kluge below */
@@ -4047,11 +4047,11 @@ static void epsf_gencode(GVJ_t * job, node_t * n)
 static pointf star_size (pointf sz0)
 {
     pointf sz;
-    double r0, r, rx, ry;
+    double r, rx, ry;
 
     rx = sz0.x/(2*cos(alpha));
     ry = sz0.y/(sin(alpha) + sin(alpha3));
-    r0 = MAX(rx,ry);
+    const double r0 = fmax(rx, ry);
     r = r0 * sin(alpha4) * cos(alpha2) / (cos(alpha) * cos(alpha4));
 
     sz.x = 2*r*cos(alpha);
