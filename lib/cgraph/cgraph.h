@@ -869,7 +869,7 @@ CGRAPH_API agusererrf agseterrf(agusererrf);
 /// @{
 /* data access macros */
 /* this assumes that e[0] is out and e[1] is inedge, see @ref Agedgepair_s  */
-#define AGIN2OUT(inedge) ((inedge)-1) ///< Agedgepair_s.in -> Agedgepair_s.out
+#define AGIN2OUT(inedge) ((inedge) - 1) ///< Agedgepair_s.in -> Agedgepair_s.out
 #define AGOUT2IN(outedge)                                                      \
   ((outedge) + 1) ///< Agedgepair_s.out -> Agedgepair_s.in
 #define AGOPP(e) ((AGTYPE(e) == AGINEDGE) ? AGIN2OUT(e) : AGOUT2IN(e))
@@ -909,7 +909,7 @@ in subgraphs */
 #define AGSNMAIN(sn) ((sn) == (&((sn)->node->mainsub)))
 #define EDGEOF(sn, rep)                                                        \
   (AGSNMAIN(sn)                                                                \
-       ? ((Agedge_t *)((unsigned char *)(rep)-offsetof(Agedge_t, seq_link)))   \
+       ? ((Agedge_t *)((unsigned char *)(rep) - offsetof(Agedge_t, seq_link))) \
        : ((Dthold_t *)(rep))->obj)
 /// @}
 

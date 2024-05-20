@@ -16,7 +16,7 @@
 #include <neatogen/neatoprocs.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define asub(i, j) a[(i)*n + (j)]
+#define asub(i, j) a[(i) * n + (j)]
 
 static void swap(double *x, double *y) {
   const double temp = *x;
