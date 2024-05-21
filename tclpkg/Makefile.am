@@ -21,9 +21,8 @@ endif
 SUBDIRS = tclstubs tclhandle gdtclft tcldot tclpathplan gv
 
 pkgIndex.tcl: $(TCL_PKGINDEX) $(TCL_PKGINDEX_GD) $(TCL_PKGINDEX_SWIG)
-	echo "# end" >end
-	cat $(TCL_PKGINDEX) $(TCL_PKGINDEX_GD) $(TCL_PKGINDEX_SWIG) end >$@
-	rm -f end
+	cat $(TCL_PKGINDEX) $(TCL_PKGINDEX_GD) $(TCL_PKGINDEX_SWIG) >$@
+	echo "# end" >>$@
 
 if ENABLE_SHARED
 # Installation of softlinks into non-owned directories is done as a
