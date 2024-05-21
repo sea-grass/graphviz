@@ -28,11 +28,11 @@ install(
   ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
 )
 
-add_custom_command(
-  OUTPUT pkgIndex.tcl
+add_custom_target(tclplan_pkgindex
   COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh" libtclplan.so
     Tclpathplan "${GRAPHVIZ_VERSION_STRING}"
-  MAIN_DEPENDENCY tclpathplan
   DEPENDS ../mkpkgindex.sh
-  COMMENT "create tclpathplan package index"
+  BYPRODUCTS pkgIndex.tcl
+  COMMENT "create tclplan package index"
 )
+add_dependencies(tclplan_pkgindex tclplan)

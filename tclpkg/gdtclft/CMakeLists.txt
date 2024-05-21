@@ -18,14 +18,14 @@ if(GD_FOUND)
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
   )
 
-  add_custom_command(
-    OUTPUT pkgIndex.tcl
+  add_custom_target(gdtclft_pkgindex
     COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh" libgdtclft.so
       Gdtclft "${GRAPHVIZ_VERSION_STRING}"
-    MAIN_DEPENDENCY gdtclft
     DEPENDS ../mkpkgindex.sh
+    BYPRODUCTS pkgIndex.tcl
     COMMENT "create gdtclft package index"
   )
+  add_dependencies(gdtclft_pkgindex gdtclft)
 
   if(GZIP)
     add_custom_target(man-gdtclft ALL DEPENDS gdtclft.3tcl.gz
