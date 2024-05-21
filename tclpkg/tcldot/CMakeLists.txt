@@ -7,14 +7,13 @@ set(SOURCES
   tcldot-util.c
   tcldot-id.c
   tcldot-io.c
-  no_builtins.c
 )
 
 if(GD_FOUND)
   list(APPEND SOURCES $<TARGET_OBJECTS:gdtclft>)
 endif()
 
-add_library(tcldot SHARED ${SOURCES})
+add_library(tcldot SHARED ${SOURCES} no_builtins.c)
 
 target_compile_definitions(tcldot PRIVATE -DDEMAND_LOADING=1)
 
@@ -68,3 +67,38 @@ else()
     DESTINATION ${MAN_INSTALL_DIR}/man3
   )
 endif()
+
+add_library(tcldot_builtin SHARED ${SOURCES} tcldot_builtins.c)
+
+target_compile_definitions(tcldot_builtin PRIVATE -DDEMAND_LOADING=1)
+
+target_link_libraries(tcldot_builtin PRIVATE
+  tclhandle
+  gvplugin_dot_layout
+  gvplugin_neato_layout
+  gvplugin_core
+  gvc
+  cgraph
+  cdt
+  pathplan
+  tclstubs
+)
+target_include_directories(tcldot_builtin SYSTEM PRIVATE ${TCL_INCLUDE_PATH})
+target_link_libraries(tcldot_builtin PRIVATE ${TCL_LIBRARY})
+if(GD_FOUND)
+  target_include_directories(tcldot_builtin SYSTEM PRIVATE ${GD_INCLUDE_DIRS})
+  target_link_libraries(tcldot_builtin PRIVATE ${GD_LIBRARIES})
+endif()
+if(PANGOCAIRO_FOUND)
+  target_link_libraries(tcldot_builtin PRIVATE gvplugin_pango)
+endif()
+if(GD_FOUND)
+  target_link_libraries(tcldot_builtin PRIVATE gvplugin_gd)
+endif()
+
+install(
+  TARGETS tcldot_builtin
+  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/tcl
+  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+)
