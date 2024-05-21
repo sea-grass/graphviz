@@ -26,7 +26,7 @@
 #include <neatogen/overlap.h>
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/call_tri.h>
-#include <sfdpgen/sfdpinternal.h>
+#include <sfdpgen/sfdp.h>
 
 #define node_degree(i) (ia[(i)+1] - ia[(i)])
 
@@ -118,7 +118,7 @@ StressMajorizationSmoother StressMajorizationSmoother2_new(SparseMatrix A, int d
   sm->data = NULL;
   sm->scheme = SM_SCHEME_NORMAL;
   sm->tol_cg = 0.01;
-  sm->maxit_cg = (int)sqrt((double) A->m);
+  sm->maxit_cg = floor(sqrt(A->m));
 
   lambda = sm->lambda = gv_calloc(m, sizeof(double));
   for (i = 0; i < m; i++) sm->lambda[i] = lambda0;
@@ -318,7 +318,7 @@ StressMajorizationSmoother SparseStressMajorizationSmoother_new(SparseMatrix A, 
   sm->scheme = SM_SCHEME_NORMAL;
   sm->D = A;
   sm->tol_cg = 0.01;
-  sm->maxit_cg = (int)sqrt((double) A->m);
+  sm->maxit_cg = floor(sqrt(A->m));
 
   lambda = sm->lambda = gv_calloc(m, sizeof(double));
 
@@ -702,7 +702,7 @@ TriangleSmoother TriangleSmoother_new(SparseMatrix A, int dim, double *x,
   sm->data = NULL;
   sm->scheme = SM_SCHEME_NORMAL;
   sm->tol_cg = 0.01;
-  sm->maxit_cg = (int)sqrt((double) A->m);
+  sm->maxit_cg = floor(sqrt(A->m));
 
   double *lambda = sm->lambda = gv_calloc(m, sizeof(double));
   

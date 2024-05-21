@@ -7,7 +7,6 @@ add_library(sfdpgen STATIC
   Multilevel.h
   post_process.h
   sfdp.h
-  sfdpinternal.h
   sparse_solve.h
   spring_electrical.h
   stress_model.h

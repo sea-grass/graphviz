@@ -13,4 +13,4 @@
 #include <sparse/SparseMatrix.h>
 
 double SparseMatrix_solve(SparseMatrix A, int dim, double *x0, double *rhs,
-                          double tol, int maxit);
+                          double tol, double maxit);

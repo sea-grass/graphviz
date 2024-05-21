@@ -29,12 +29,8 @@ struct Multilevel_struct {
 enum { MAX_CLUSTER_SIZE = 4 };
 
 typedef struct {
-  int minsize;
-  double min_coarsen_factor;
   int maxlevel;
 } Multilevel_control;
-
-Multilevel_control Multilevel_control_new(void);
 
 void Multilevel_delete(Multilevel grid);
 
@@ -46,6 +42,3 @@ void print_padding(int n);
 
 #define Multilevel_is_finest(grid) (!((grid)->prev))
 #define Multilevel_is_coarsest(grid) (!((grid)->next))
-
-void Multilevel_coarsen(SparseMatrix A, SparseMatrix *cA, SparseMatrix *P,
-                        SparseMatrix *R, const Multilevel_control ctrl);

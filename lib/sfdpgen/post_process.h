@@ -27,7 +27,7 @@ struct StressMajorizationSmoother_struct {
   double tol_cg;/* tolerance and maxit for conjugate gradient that solves the Laplacian system.
 		 typically the Laplacian only needs to be solved very crudely as it is part of an
 		 outer iteration.*/
-  int maxit_cg;
+  double maxit_cg;
 };
 
 typedef struct StressMajorizationSmoother_struct *StressMajorizationSmoother;

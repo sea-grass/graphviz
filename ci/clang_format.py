@@ -474,7 +474,6 @@ EXCLUDE = (
     "lib/sfdpgen/post_process.h",
     "lib/sfdpgen/sfdp.h",
     "lib/sfdpgen/sfdpinit.c",
-    "lib/sfdpgen/sfdpinternal.h",
     "lib/sfdpgen/sparse_solve.c",
     "lib/sfdpgen/spring_electrical.c",
     "lib/sfdpgen/spring_electrical.h",
