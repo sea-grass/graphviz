@@ -42,7 +42,7 @@ typedef struct {
     uint64_t idx; 
 } gctx_t;
 
-#if HAVE_LIBGD
+#ifdef HAVE_LIBGD
 extern void *GDHandleTable;
 extern int Gdtclft_Init(Tcl_Interp *);
 #endif
