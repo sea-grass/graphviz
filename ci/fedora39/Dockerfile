@@ -65,12 +65,10 @@ ruby-devel \
 # Required in redhat/graphviz.spec.fedora.in
 libglade2-devel \
 mono-core \
-# Test utilities
-python3-pip \
-python3-setuptools \
-# install Python dependencies
-&& python3 -m pip install --user --upgrade pip \
-&& python3 -m pip install --user --requirement requirements.txt \
+# create a Python virtual environment
+&& python3 -m venv /opt/virtualenv \
+# install Python dependencies within the virtual environment
+&& env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt \
 # install a newer CMake to deal with RPM 4.19 glob changes
 && curl --retry 3 --location --no-progress-meter -O \
   https://github.com/Kitware/CMake/releases/download/v3.28.1/cmake-3.28.1-linux-x86_64.tar.gz \

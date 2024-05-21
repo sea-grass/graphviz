@@ -67,11 +67,9 @@ libXrender-devel \
 tk-devel \
 expat-devel \
 gmp-devel \
-# Test utilities
-python3-pip \
-python3-setuptools \
-# install Python dependencies
-&& python3 -m pip install --user --upgrade pip \
-&& python3 -m pip install --user --requirement requirements.txt \
+# create a Python virtual environment
+&& python3 -m venv /opt/virtualenv \
+# install Python dependencies within the virtual environment
+&& env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt \
 # Clean up
 && dnf clean all && rm -rf /var/cache/dnf

@@ -77,14 +77,14 @@ ruby-dev \
 # Language extension gv_tcl
 tcl-dev \
 # Test utilities
-python3-pip \
-python3-setuptools \
+python3-venv \
 gcovr \
 lcov \
 shellcheck \
-# install Python dependencies
-&& python3 -m pip install --user --upgrade pip \
-&& python3 -m pip install --user --requirement requirements.txt \
-&& python3 -m pip install --user --requirement doc-infosrc-requirements.txt \
+# create a Python virtual environment
+&& python3 -m venv /opt/virtualenv \
+# install Python dependencies within the virtual environment
+&& env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt \
+&& env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement doc-infosrc-requirements.txt \
 # Clean up
 && rm -rf /var/lib/apt/lists/*
