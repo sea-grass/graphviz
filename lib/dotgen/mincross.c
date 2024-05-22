@@ -61,6 +61,7 @@ static void restore_best(graph_t * g);
 static adjmatrix_t *new_matrix(size_t i, size_t j);
 static void free_matrix(adjmatrix_t * p);
 static int ordercmpf(const void *, const void *);
+static int ncross(Agraph_t *);
 #ifdef DEBUG
 #if DEBUG > 1
 static int gd_minrank(Agraph_t *g) {return GD_minrank(g);}
@@ -1555,8 +1556,7 @@ static int rcross(graph_t * g, int r)
     return cross;
 }
 
-int ncross(graph_t * g)
-{
+static int ncross(graph_t *g) {
     int r, count, nc;
 
     g = Root;
