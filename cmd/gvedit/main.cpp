@@ -18,20 +18,20 @@
 #ifdef _WIN32
 #include "windows.h"
 #endif
-#include <stdio.h>
+#include "mainwindow.h"
 #include <QApplication>
 #include <QFile>
-#include "mainwindow.h"
+#include <stdio.h>
 
+#include <cgraph/exit.h>
 #include <getopt.h>
 #include <gvc/gvc.h>
-#include <common/globals.h>
-#include <cgraph/exit.h>
 
+#include <common/globals.h>
 
 #ifdef _MSC_VER
-#pragma comment( lib, "cgraph.lib" )
-#pragma comment( lib, "gvc.lib" )
+#pragma comment(lib, "cgraph.lib")
+#pragma comment(lib, "gvc.lib")
 #endif
 
 QTextStream errout(stderr, QIODevice::WriteOnly);
@@ -41,58 +41,54 @@ static char useString[] = "Usage: gvedit [-v?] <files>\n\
   -v    - verbose\n\
   -?    - print usage\n";
 
-static void usage(int v)
-{
-    printf("%s",useString);
-    graphviz_exit(v);
+static void usage(int v) {
+  printf("%s", useString);
+  graphviz_exit(v);
 }
 
-static char **parseArgs(int argc, char *argv[])
-{
-    int c;
+static char **parseArgs(int argc, char *argv[]) {
+  int c;
 
-    const char *cmd = argv[0];
-    while ((c = getopt(argc, argv, ":sv?")) != -1) {
-	switch (c) {
-	case 's':
-	    PSinputscale = POINTS_PER_INCH;
-	    break;
-	case 'v':
-	    Verbose = 1;
-	    break;
-	case '?':
-	    if (optopt == '\0' || optopt == '?')
-		usage(0);
-	    else {
-		errout << cmd << " : option -" << ((char) optopt) <<
-		    " unrecognized\n";
-		errout.flush();
-		usage(1);
-	    }
-	    break;
-	}
+  const char *cmd = argv[0];
+  while ((c = getopt(argc, argv, ":sv?")) != -1) {
+    switch (c) {
+    case 's':
+      PSinputscale = POINTS_PER_INCH;
+      break;
+    case 'v':
+      Verbose = 1;
+      break;
+    case '?':
+      if (optopt == '\0' || optopt == '?')
+        usage(0);
+      else {
+        errout << cmd << " : option -" << ((char)optopt) << " unrecognized\n";
+        errout.flush();
+        usage(1);
+      }
+      break;
     }
+  }
 
-    argv += optind;
-    argc -= optind;
+  argv += optind;
+  argc -= optind;
 
-    if (argc)
-	return argv;
-    else
-	return nullptr;
+  if (argc)
+    return argv;
+  else
+    return nullptr;
 }
 
-int main(int argc, char *argv[])
-{
-    Q_INIT_RESOURCE(mdi);
-    int ret;
+int main(int argc, char *argv[]) {
+  Q_INIT_RESOURCE(mdi);
+  int ret;
 
-    char **files = parseArgs(argc, argv);
-    QApplication app(argc, argv);
-    CMainWindow mainWin(files);
-    mainWin.show();
-    ret = app.exec();
-    graphviz_exit(ret);
+  char **files = parseArgs(argc, argv);
+  QApplication app(argc, argv);
+  CMainWindow mainWin(files);
+  mainWin.show();
+  ret = app.exec();
+  graphviz_exit(ret);
 }
 
 /**
