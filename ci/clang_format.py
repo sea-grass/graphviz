@@ -21,7 +21,6 @@ EXCLUDE = (
     "cmd/gvedit/csettings.h",
     "cmd/gvedit/imageviewer.cpp",
     "cmd/gvedit/imageviewer.h",
-    "cmd/gvedit/mainwindow.h",
     "cmd/gvedit/mdichild.cpp",
     "cmd/gvedit/mdichild.h",
     "cmd/gvedit/ui_settings.h",
