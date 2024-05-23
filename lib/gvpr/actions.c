@@ -785,7 +785,7 @@ char *canon(Expr_t *pgm, char *arg) {
 #include "../common/colxlate.c"
 
 /* colorx:
- * RGB, RGBA, HSV, HSVA, CMYK
+ * RGB, RGBA, HSV, HSVA
  */
 char *colorx(Expr_t *ex, char *incolor, char *fmt) {
   gvcolor_t color = {{{0}}, 0};
@@ -807,9 +807,6 @@ char *colorx(Expr_t *ex, char *incolor, char *fmt) {
       alpha = 1;
     else
       alpha = 0;
-  } else if (*fmt == 'C') {
-    type = CMYK_BYTE;
-    alpha = 0;
   } else
     return "";
 
@@ -831,10 +828,6 @@ char *colorx(Expr_t *ex, char *incolor, char *fmt) {
               color.u.rgba[2]);
     if (alpha)
       agxbprint(&fp, "%02x", color.u.rgba[3]);
-    break;
-  case CMYK_BYTE:
-    agxbprint(&fp, "#%02x%02x%02x%02x", color.u.cmyk[0], color.u.cmyk[1],
-              color.u.cmyk[2], color.u.cmyk[3]);
     break;
   default:
     break;

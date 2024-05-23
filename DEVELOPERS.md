@@ -444,6 +444,26 @@ See [`gen_version.py`](https://gitlab.com/graphviz/graphviz/-/blob/main/gen_vers
 
 1. Merge the merge request
 
+## How to find which version of Graphviz a change arrived in
+
+The repository history goes back a long way, so you can usually use `git blame`
+to discover the origin of any line of code. This will lead you to a commit hash,
+but for communicating with users it is more useful to give a Graphviz version
+number.
+
+Recent releases use Git tags, so you can use `git tag --contains <hash>` to list
+all releases that included a particular commit. The release the change arrived
+in is the oldest of the tags listed.
+
+Prior to the release process using tags, versions were only documented in the
+ChangeLog file (pre-dating the current CHANGELOG.md). For changes in this range,
+run `git log --graph origin/main`, scroll/search to the commit you found from
+`git blame` (`/<hash>` if you are using `less` as a pager), then search upwards
+for a commit touching “ChangeLog” (`?ChangeLog` if you are using `less` as a
+pager). Check the content of this commit to see if it added a new version
+heading. If so, you have found the version. If not, return to the commit graph
+and continue searching upwards for more commits touching ChangeLog.
+
 ## How to update this guide
 
 ### Markdown flavor used

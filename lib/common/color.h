@@ -23,7 +23,7 @@ typedef struct hsvrgbacolor_t {
 } hsvrgbacolor_t;
 
 /* possible representations of color in gvcolor_t */
-typedef enum { HSVA_DOUBLE, RGBA_BYTE, RGBA_WORD, CMYK_BYTE,
+typedef enum { HSVA_DOUBLE, RGBA_BYTE, RGBA_WORD,
 		RGBA_DOUBLE, COLOR_STRING, COLOR_INDEX } color_type_t;
 
 /* gvcolor_t can hold a color spec in a choice or representations */
@@ -32,7 +32,6 @@ typedef struct color_s {
 	double RGBA[4];
 	double HSVA[4];
 	unsigned char rgba[4];
-	unsigned char cmyk[4];
 	int rrggbbaa[4];
 	char *string;
 	int index;

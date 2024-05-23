@@ -26,6 +26,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
 
@@ -46,7 +47,7 @@ static void hsv2rgb(double h, double s, double v,
 	    h = 0.0;
 	h = 6.0 * h;
 	i = (int) h;
-	f = h - (double) i;
+	f = h - i;
 	p = v * (1 - s);
 	q = v * (1 - s * f);
 	t = v * (1 - s * (1 - f));
@@ -105,11 +106,11 @@ static void rgb2hsv(double r, double g, double b,
 	rc = (rgbmax - r) / (rgbmax - rgbmin);
 	gc = (rgbmax - g) / (rgbmax - rgbmin);
 	bc = (rgbmax - b) / (rgbmax - rgbmin);
-	if (r == rgbmax)
+	if (is_exactly_equal(r, rgbmax))
 	    ht = bc - gc;
-	else if (g == rgbmax)
+	else if (is_exactly_equal(g, rgbmax))
 	    ht = 2 + rc - bc;
-	else if (b == rgbmax)
+	else if (is_exactly_equal(b, rgbmax))
 	    ht = 4 + gc - rc;
 	ht = ht * 60.0;
 	if (ht < 0.0)
@@ -118,19 +119,6 @@ static void rgb2hsv(double r, double g, double b,
     *h = ht / 360.0;
     *v = rgbmax;
     *s = st;
-}
-
-static void rgb2cmyk(double r, double g, double b, double *c, double *m,
-		     double *y, double *k)
-{
-    *c = 1.0 - r;
-    *m = 1.0 - g;
-    *y = 1.0 - b;
-    *k = fmin(*c, *m);
-    *k = fmin(*y, *k);
-    *c -= *k;
-    *m -= *k;
-    *y -= *k;
 }
 
 static int colorcmpf(const void *p0, const void *p1)
@@ -232,7 +220,6 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     char *p;
     char c;
     double H, S, V, A, R, G, B;
-    double C, M, Y, K;
     unsigned int r, g, b, a;
     int rc;
 
@@ -272,16 +259,6 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 	    color->u.rgba[1] = (unsigned char)g;
 	    color->u.rgba[2] = (unsigned char)b;
 	    color->u.rgba[3] = (unsigned char)a;
-	    break;
-	case CMYK_BYTE:
-	    R = (double) r / 255.0;
-	    G = (double) g / 255.0;
-	    B = (double) b / 255.0;
-	    rgb2cmyk(R, G, B, &C, &M, &Y, &K);
-	    color->u.cmyk[0] = (int) C *255;
-	    color->u.cmyk[1] = (int) M *255;
-	    color->u.cmyk[2] = (int) Y *255;
-	    color->u.cmyk[3] = (int) K *255;
 	    break;
 	case RGBA_WORD:
 	    color->u.rrggbbaa[0] = (int)(r * 65535 / 255);
@@ -328,18 +305,10 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 		break;
 	    case RGBA_BYTE:
 		hsv2rgb(H, S, V, &R, &G, &B);
-		color->u.rgba[0] = (int) (R * 255);
-		color->u.rgba[1] = (int) (G * 255);
-		color->u.rgba[2] = (int) (B * 255);
-		color->u.rgba[3] = (int) (A * 255);
-		break;
-	    case CMYK_BYTE:
-		hsv2rgb(H, S, V, &R, &G, &B);
-		rgb2cmyk(R, G, B, &C, &M, &Y, &K);
-		color->u.cmyk[0] = (int) C *255;
-		color->u.cmyk[1] = (int) M *255;
-		color->u.cmyk[2] = (int) Y *255;
-		color->u.cmyk[3] = (int) K *255;
+		color->u.rgba[0] = (unsigned char)(R * 255);
+		color->u.rgba[1] = (unsigned char)(G * 255);
+		color->u.rgba[2] = (unsigned char)(B * 255);
+		color->u.rgba[3] = (unsigned char)(A * 255);
 		break;
 	    case RGBA_WORD:
 		hsv2rgb(H, S, V, &R, &G, &B);
@@ -391,16 +360,6 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 	    color->u.rgba[2] = last->b;
 	    color->u.rgba[3] = last->a;
 	    break;
-	case CMYK_BYTE:
-	    R = last->r / 255.0;
-	    G = last->g / 255.0;
-	    B = last->b / 255.0;
-	    rgb2cmyk(R, G, B, &C, &M, &Y, &K);
-	    color->u.cmyk[0] = (int) C * 255;
-	    color->u.cmyk[1] = (int) M * 255;
-	    color->u.cmyk[2] = (int) Y * 255;
-	    color->u.cmyk[3] = (int) K * 255;
-	    break;
 	case RGBA_WORD:
 	    color->u.rrggbbaa[0] = last->r * 65535 / 255;
 	    color->u.rrggbbaa[1] = last->g * 65535 / 255;
@@ -433,10 +392,6 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
     case RGBA_BYTE:
 	color->u.rgba[0] = color->u.rgba[1] = color->u.rgba[2] = 0;
 	color->u.rgba[3] = 255;	/* opaque */
-	break;
-    case CMYK_BYTE:
-	color->u.cmyk[0] =
-	    color->u.cmyk[1] = color->u.cmyk[2] = color->u.cmyk[3] = 0;
 	break;
     case RGBA_WORD:
 	color->u.rrggbbaa[0] = color->u.rrggbbaa[1] = color->u.rrggbbaa[2] = 0;

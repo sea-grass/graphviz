@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: the `polygon_t.style` member is now a struct.
 - **Breaking**: the `LEN` and `MAXDOUBLE` constants have been removed.
 - Accuracy in processing compass points has been improved.
+- **Breaking**: the `CMYK_BYTE` member of the `color_type_t` enum and the
+  corresponding `gvolor_t.u.cmyk` field have been removed. The color format this
+  mapped to was neither documented nor implemented correctly.
 
 ### Fixed
 
