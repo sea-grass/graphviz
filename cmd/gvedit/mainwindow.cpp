@@ -186,9 +186,7 @@ void CMainWindow::addFile(QString fileName) {
 
 void CMainWindow::slotOpen() {
   QStringList filters;
-  filters << "*.cpp"
-          << "*.cxx"
-          << "*.cc";
+  filters << "*.cpp" << "*.cxx" << "*.cc";
 
   QFileDialog fd;
   fd.setNameFilter("XML (*.xml)");
