@@ -51,7 +51,6 @@ extern "C" {
     extern bool mergeable(edge_t *e, edge_t *f);
     extern void merge_chain(Agraph_t*, Agedge_t*, Agedge_t*, bool);
     extern void merge_oneway(Agedge_t *, Agedge_t *);
-    extern int ncross(Agraph_t *);
     extern Agedge_t *new_virtual_edge(Agnode_t *, Agnode_t *, Agedge_t *);
     extern bool nonconstraint_edge(Agedge_t *);
     extern void other_edge(Agedge_t *);
