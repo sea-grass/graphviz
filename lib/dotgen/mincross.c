@@ -61,7 +61,7 @@ static void restore_best(graph_t * g);
 static adjmatrix_t *new_matrix(size_t i, size_t j);
 static void free_matrix(adjmatrix_t * p);
 static int ordercmpf(const void *, const void *);
-static int ncross(Agraph_t *);
+static int ncross(void);
 #ifdef DEBUG
 #if DEBUG > 1
 static int gd_minrank(Agraph_t *g) {return GD_minrank(g);}
@@ -694,7 +694,7 @@ static int mincross(graph_t *g, int startpass) {
     int cur_cross, best_cross;
 
     if (startpass > 1) {
-	cur_cross = best_cross = ncross(g);
+	cur_cross = best_cross = ncross();
 	save_best(g);
     } else
 	cur_cross = best_cross = INT_MAX;
@@ -707,7 +707,7 @@ static int mincross(graph_t *g, int startpass) {
 		flat_breakcycles(g);
 	    flat_reorder(g);
 
-	    if ((cur_cross = ncross(g)) <= best_cross) {
+	    if ((cur_cross = ncross()) <= best_cross) {
 		save_best(g);
 		best_cross = cur_cross;
 	    }
@@ -728,7 +728,7 @@ static int mincross(graph_t *g, int startpass) {
 	    if (cur_cross == 0)
 		break;
 	    mincross_step(g, iter);
-	    if ((cur_cross = ncross(g)) <= best_cross) {
+	    if ((cur_cross = ncross()) <= best_cross) {
 		save_best(g);
 		if (cur_cross < Convergence * best_cross)
 		    trying = 0;
@@ -742,7 +742,7 @@ static int mincross(graph_t *g, int startpass) {
 	restore_best(g);
     if (best_cross > 0) {
 	transpose(g, false);
-	best_cross = ncross(g);
+	best_cross = ncross();
     }
 
     return best_cross;
@@ -1285,7 +1285,7 @@ void build_ranks(graph_t * g, int pass)
 	}
     }
 
-    if (g == dot_root(g) && ncross(g) > 0)
+    if (g == dot_root(g) && ncross() > 0)
 	transpose(g, false);
     queue_free(&q);
 }
@@ -1556,10 +1556,10 @@ static int rcross(graph_t * g, int r)
     return cross;
 }
 
-static int ncross(graph_t *g) {
+static int ncross(void) {
     int r, count, nc;
 
-    g = Root;
+    graph_t *g = Root;
     count = 0;
     for (r = GD_minrank(g); r < GD_maxrank(g); r++) {
 	if (GD_rank(g)[r].valid)
