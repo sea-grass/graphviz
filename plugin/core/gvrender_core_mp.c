@@ -304,7 +304,6 @@ static void mp_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     int backward_arrow = 0;
 
     pointf pf, V[4];
-    point p;
     int step;
     int count = 0;
 
@@ -326,8 +325,7 @@ static void mp_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
     V[3].y = A[0].y;
     /* Write first point in line */
     count++;
-    PF2P(A[0], p);
-    agxbprint(&buf, " %d %d", p.x, p.y);
+    agxbprint(&buf, " %.0f %.0f", A[0].x, A[0].y);
     /* write subsequent points */
     for (size_t i = 0; i + 3 < n; i += 3) {
         V[0] = V[3];
@@ -338,8 +336,7 @@ static void mp_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
         for (step = 1; step <= BEZIERSUBDIVISION; step++) {
             count++;
             pf = Bezier(V, (double)step / BEZIERSUBDIVISION, NULL, NULL);
-	    PF2P(pf, p);
-            agxbprint(&buf, " %d %d", p.x, p.y);
+            agxbprint(&buf, " %.0f %.0f", pf.x, pf.y);
         }
     }
 
