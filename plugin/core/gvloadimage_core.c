@@ -92,25 +92,21 @@ static void core_loadimage_fig(GVJ_t * job, usershape_t *us, boxf bf, bool fille
     int npoints = 5;
     int flipped = 0;
 
-    box b;
-
     assert(job);
     assert(us);
     assert(us->name);
-
-    BF2B(bf, b);
 
     gvprintf(job, "%d %d %d %d %d %d %d %d %d %.1f %d %d %d %d %d %d\n %d %s\n",
             object_code, sub_type, line_style, thickness, pen_color,
             fill_color, depth, pen_style, area_fill, style_val, join_style,
             cap_style, radius, forward_arrow, backward_arrow, npoints,
             flipped, us->name);
-    gvprintf(job," %d %d %d %d %d %d %d %d %d %d\n",
-	    b.LL.x, b.LL.y,
-	    b.LL.x, b.UR.y,
-	    b.UR.x, b.UR.y,
-	    b.UR.x, b.LL.y,
-	    b.LL.x, b.LL.y);
+    gvprintf(job," %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f\n",
+	    bf.LL.x, bf.LL.y,
+	    bf.LL.x, bf.UR.y,
+	    bf.UR.x, bf.UR.y,
+	    bf.UR.x, bf.LL.y,
+	    bf.LL.x, bf.LL.y);
 }
 
 static void core_loadimage_vrml(GVJ_t * job, usershape_t *us, boxf b, bool filled)
