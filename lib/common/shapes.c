@@ -2667,10 +2667,8 @@ static pointf compassPoint(inside_t * ictxt, double y, double x)
  * the already adjusted ND_ht, ND_lw and ND_rw back to non-flipped values.
  *
  */
-static int
-compassPort(node_t *n, boxf *bp, port *pp, char *compass, unsigned char sides,
-	    inside_t * ictxt)
-{
+static int compassPort(node_t *n, boxf *bp, port *pp, const char *compass,
+                       unsigned char sides, inside_t * ictxt) {
     boxf b;
     pointf p, ctr;
     int rv = 0;
@@ -4233,12 +4231,10 @@ static void cylinder_draw(GVJ_t *job, pointf *AF, size_t sides, int filled) {
     gvrender_beziercurve(job, vertices, 7, 0);
 }
 
-static char *side_port[] = { "s", "e", "n", "w" };
+static const char *side_port[] = {"s", "e", "n", "w"};
 
-static point cvtPt(pointf p, int rankdir)
-{
+static pointf cvtPt(pointf p, int rankdir) {
     pointf q = { 0, 0 };
-    point Q;
 
     switch (rankdir) {
     case RANKDIR_TB:
@@ -4259,8 +4255,7 @@ static point cvtPt(pointf p, int rankdir)
     default:
 	UNREACHABLE();
     }
-    PF2P(q, Q);
-    return Q;
+    return q;
 }
 
 /* closestSide:
@@ -4274,16 +4269,14 @@ static point cvtPt(pointf p, int rankdir)
  *  - if line segment from port centers uses available sides, use these
  *     or center. (This latter may require spline routing to cooperate.)
  */
-static char *closestSide(node_t * n, node_t * other, port * oldport)
-{
+static const char *closestSide(node_t *n, node_t *other, port *oldport) {
     boxf b;
     int rkd = GD_rankdir(agraphof(n)->root);
-    point p = { 0, 0 };
-    point pt = cvtPt(ND_coord(n), rkd);
-    point opt = cvtPt(ND_coord(other), rkd);
+    pointf p = {0};
+    const pointf pt = cvtPt(ND_coord(n), rkd);
+    const pointf opt = cvtPt(ND_coord(other), rkd);
     int sides = oldport->side;
-    char *rv = NULL;
-    int i, d, mind = 0;
+    const char *rv = NULL;
 
     if (sides == 0 || sides == (TOP | BOTTOM | LEFT | RIGHT))
 	return rv;		/* use center */
@@ -4304,23 +4297,24 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 	}
     }
 
-    for (i = 0; i < 4; i++) {
+    double mind = 0;
+    for (int i = 0; i < 4; i++) {
 	if ((sides & (1 << i)) == 0)
 	    continue;
 	switch (i) {
-	case 0:
+	case BOTTOM_IX:
 	    p.y = b.LL.y;
 	    p.x = (b.LL.x + b.UR.x) / 2;
 	    break;
-	case 1:
+	case RIGHT_IX:
 	    p.x = b.UR.x;
 	    p.y = (b.LL.y + b.UR.y) / 2;
 	    break;
-	case 2:
+	case TOP_IX:
 	    p.y = b.UR.y;
 	    p.x = (b.LL.x + b.UR.x) / 2;
 	    break;
-	case 3:
+	case LEFT_IX:
 	    p.x = b.LL.x;
 	    p.y = (b.LL.y + b.UR.y) / 2;
 	    break;
@@ -4329,7 +4323,7 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 	}
 	p.x += pt.x;
 	p.y += pt.y;
-	d = DIST2(p, opt);
+	const double d = DIST2(p, opt);
 	if (!rv || d < mind) {
 	    mind = d;
 	    rv = side_port[i];
@@ -4341,7 +4335,7 @@ static char *closestSide(node_t * n, node_t * other, port * oldport)
 port resolvePort(node_t * n, node_t * other, port * oldport)
 {
     port rv;
-    char *compass = closestSide(n, other, oldport);
+    const char *compass = closestSide(n, other, oldport);
 
     /* transfer name pointer; all other necessary fields will be regenerated */
     rv.name = oldport->name;
