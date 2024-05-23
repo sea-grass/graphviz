@@ -241,7 +241,7 @@ struct Agobj_s {
 /** @brief This is the node struct allocated per graph (or subgraph).
 
 It resides in the n_dict of the graph.
-The node set is maintained by libdict, but transparently to libgraph callers.
+The node set is maintained by libcdt, but transparently to libgraph callers.
 Every node may be given an optional string name at its time of creation,
 or it is permissible to pass NULL for the name. */
 
