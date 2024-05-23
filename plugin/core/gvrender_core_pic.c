@@ -138,19 +138,15 @@ static const char *picfontname(strview_t psname) {
 }
 
 static void picptarray(GVJ_t *job, pointf *A, size_t n, int close) {
-    point p;
-
     for (size_t i = 0; i < n; i++) {
-	PF2P(A[i],p);
         if (i == 0) {
-            gvprintf(job, "move to (%d, %d)", p.x, p.y);
+            gvprintf(job, "move to (%.0f, %.0f)", A[i].x, A[i].y);
         } else {
-            gvprintf(job, "; line to (%d, %d)", p.x, p.y);
+            gvprintf(job, "; line to (%.0f, %.0f)", A[i].x, A[i].y);
         }
     }
     if (close) {
-	PF2P(A[0],p);
-        gvprintf(job, "; line to (%d, %d)", p.x, p.y);
+        gvprintf(job, "; line to (%.0f, %.0f)", A[0].x, A[0].y);
     }
     gvputs(job, "\n");
 }
