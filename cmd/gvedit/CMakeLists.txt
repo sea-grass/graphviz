@@ -29,11 +29,16 @@ endif()
 if(with_gvedit)
   add_executable(gvedit
     csettings.cpp
+    csettings.h
     imageviewer.cpp
+    imageviewer.h
     main.cpp
     mainwindow.cpp
+    mainwindow.h
     mdi.qrc
     mdichild.cpp
+    mdichild.h
+    ui_settings.h
   )
 
   set_target_properties(gvedit PROPERTIES
