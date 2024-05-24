@@ -28,6 +28,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: the `CMYK_BYTE` member of the `color_type_t` enum and the
   corresponding `gvolor_t.u.cmyk` field have been removed. The color format this
   mapped to was neither documented nor implemented correctly.
+- The Windows releases available for download on graphviz.org now only include
+  CMake-produced packages, not MS Build-produced packages. The MS Build packages
+  are available in the
+  [Gitlab package registry](https://gitlab.com/graphviz/graphviz/-/packages) if
+  needed.
 
 ### Fixed
 
