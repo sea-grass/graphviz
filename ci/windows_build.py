@@ -27,9 +27,7 @@ def run(args: List[str], cwd: Path, out: TextIO):  # pylint: disable=C0116
 
 def main(args: List[str]) -> int:  # pylint: disable=C0116
 
-    parser = argparse.ArgumentParser(
-        description="Graphviz CI script for " "compilation on Windows"
-    )
+    parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--build-system",
         choices=("cmake", "msbuild"),
