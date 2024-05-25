@@ -43,15 +43,6 @@ if(BUILD_SHARED_LIBS)
     dot_builtins.cpp
   )
 
-  # teach dot_builtins how to find plugins at run time
-  if(APPLE)
-    set_target_properties(dot_builtins PROPERTIES
-      INSTALL_RPATH "@executable_path/../${PLUGIN_INSTALL_DIR}")
-  else()
-    set_target_properties(dot_builtins PROPERTIES
-      INSTALL_RPATH "\$ORIGIN/../${PLUGIN_INSTALL_DIR}")
-  endif()
-
   target_link_libraries(dot_builtins PRIVATE
     cdt
     cgraph
