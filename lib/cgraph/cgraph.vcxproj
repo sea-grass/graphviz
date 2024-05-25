@@ -107,6 +107,7 @@ win_flex --case-insensitive --outfile=scan.c scan.l</Command>
     <ClInclude Include="gv_math.h" />
     <ClInclude Include="ingraphs.h" />
     <ClInclude Include="list.h" />
+    <ClInclude Include="node_set.h" />
     <ClInclude Include="overflow.h" />
     <ClInclude Include="prisize_t.h" />
     <ClInclude Include="queue.h" />

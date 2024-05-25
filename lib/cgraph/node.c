@@ -12,9 +12,12 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
-#include <stddef.h>
+#include <cgraph/node_set.h>
+#include <cgraph/unreachable.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)
 {
@@ -24,7 +27,7 @@ Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)
 
     dummy.base.tag.id = id;
     template.node = &dummy;
-    sn = dtsearch(g->n_id, &template);
+    sn = node_set_find(g->n_id, &template);
     return sn ? sn->node : NULL;
 }
 
@@ -92,18 +95,18 @@ static Agnode_t *newnode(Agraph_t * g, IDTYPE id, uint64_t seq)
 static void installnode(Agraph_t * g, Agnode_t * n)
 {
     Agsubnode_t *sn;
-    int osize;
+    size_t osize;
     (void)osize;
 
-    assert(dtsize(g->n_id) == dtsize(g->n_seq));
-    osize = dtsize(g->n_id);
+    assert(node_set_size(g->n_id) == (size_t)dtsize(g->n_seq));
+    osize = node_set_size(g->n_id);
     if (g == agroot(g)) sn = &(n->mainsub);
     else sn = agalloc(g, sizeof(Agsubnode_t));
     sn->node = n;
-    dtinsert(g->n_id, sn);
+    node_set_add(g->n_id, sn);
     dtinsert(g->n_seq, sn);
-    assert(dtsize(g->n_id) == dtsize(g->n_seq));
-    assert(dtsize(g->n_id) == osize + 1);
+    assert(node_set_size(g->n_id) == (size_t)dtsize(g->n_seq));
+    assert(node_set_size(g->n_id) == osize + 1);
 }
 
 static void installnodetoroot(Agraph_t * g, Agnode_t * n)
@@ -191,7 +194,7 @@ void agdelnodeimage(Agraph_t * g, Agnode_t * n, void *ignored)
     /* If the following lines are switched, switch the discpline using
      * free_subnode below.
      */ 
-    dtdelete(g->n_id, &template);
+    node_set_remove(g->n_id, &template);
     dtdelete(g->n_seq, &template);
 }
 
@@ -230,9 +233,9 @@ static void dict_relabel(Agraph_t *ignored, Agnode_t *n, void *arg) {
     new_id = *(uint64_t *) arg;
     Agsubnode_t *key = agsubrep(g, n);
     assert(key != NULL && "node being renamed does not exist");
-    dtdelete(g->n_id, key);
+    node_set_remove(g->n_id, key);
     AGID(key->node) = new_id;
-    dtinsert(g->n_id, key);
+    node_set_add(g->n_id, key);
     /* because all the subgraphs share the same node now, this
        now requires a separate deletion and insertion phase */
 }
@@ -279,17 +282,13 @@ Agnode_t *agsubnode(Agraph_t * g, Agnode_t * n0, int cflag)
     return n;
 }
 
-static int agsubnodeidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
-{
-    (void)d; /* unused */
-    (void)disc; /* unused */
-
-    Agsubnode_t *sn0 = arg0;
-    Agsubnode_t *sn1 = arg1;
-    
-    if (AGID(sn0->node) < AGID(sn1->node)) return -1;
-    if (AGID(sn0->node) > AGID(sn1->node)) return 1;
-    return 0; 
+/// compare two subnodes for equality
+///
+/// @param sn0 Operand 1
+/// @param sn1 Operand 2
+/// @return True if nodes are equal
+static bool agsubnodeideq(const Agsubnode_t *sn0, const Agsubnode_t *sn1) {
+  return AGID(sn0->node) == AGID(sn1->node);
 }
 
 static int agsubnodeseqcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
@@ -318,11 +317,6 @@ static void free_subnode(Agsubnode_t *sn, Dtdisc_t *disc) {
    if (!AGSNMAIN(sn)) 
 	agfree (sn->node->root, sn);
 }
-
-Dtdisc_t Ag_subnode_id_disc = {
-    .link = offsetof(Agsubnode_t, id_link), // link offset
-    .comparf = agsubnodeidcmpf,
-};
 
 Dtdisc_t Ag_subnode_seq_disc = {
     .link = offsetof(Agsubnode_t, seq_link), // link offset
@@ -392,3 +386,180 @@ int agnodebefore(Agnode_t *fst, Agnode_t *snd)
 	}
 	return SUCCESS;
 } 
+
+struct graphviz_node_set {
+  Agsubnode_t **slots; ///< backing store for elements
+  size_t size;         ///< number of elements in the set
+  size_t capacity;     ///< size of `slots`
+};
+
+/// a sentinel, marking a set slot from which an element has been deleted
+static Agsubnode_t *const TOMBSTONE = (Agsubnode_t *)-1;
+
+node_set_t *node_set_new(void) { return gv_alloc(sizeof(node_set_t)); }
+
+/// compute initial index to attempt to store/find an item in
+///
+/// This function only returns the first index to be examined. `node_set_t` is
+/// implemented using linear probing, so steps sequentially through indices
+/// following this.
+///
+/// If the suboptimal choice of using the ID here turns out to be bad for
+/// performance, this could be converted to a more sophisticated hashing
+/// algorithm. None of the callers depend on the exact implementation.
+///
+/// @param self Set to compute with respect to
+/// @param item Element being sought/added
+/// @return Initial index to examine
+static size_t node_set_index(const node_set_t *self, const Agsubnode_t *item) {
+  assert(self != NULL);
+  assert(item != NULL);
+  assert(self->capacity != 0);
+  return (size_t)AGID(item->node) % self->capacity;
+}
+
+void node_set_add(node_set_t *self, Agsubnode_t *item) {
+  assert(self != NULL);
+  assert(item != NULL);
+
+  // a watermark ratio at which the set capacity should be expanded
+  static const double OCCUPANCY_THRESHOLD = 0.7; // 70%
+
+  // do we need to expand the backing store?
+  bool grow = false;
+
+  // we definitely do if it has no room at all
+  if (self->capacity == 0) {
+    grow = true;
+  }
+
+  // we might need to if it has exceeded the watermark
+  if (!grow && self->size / self->capacity > OCCUPANCY_THRESHOLD) {
+    grow = true;
+  }
+
+  if (grow) {
+    const size_t new_c = self->capacity == 0 ? 1024 : self->capacity * 2;
+    Agsubnode_t **new_slots = gv_calloc(new_c, sizeof(Agsubnode_t *));
+
+    // Construct a new set and copy everything into it. Note we need to rehash
+    // because capacity (and hence modulo wraparound behavior) has changed. This
+    // conveniently flushes out the tombstones too.
+    node_set_t new_self = {.slots = new_slots, .capacity = new_c};
+    for (size_t i = 0; i < self->capacity; ++i) {
+      // skip empty slots
+      if (self->slots[i] == NULL) {
+        continue;
+      }
+      // skip deleted slots
+      if (self->slots[i] == TOMBSTONE) {
+        continue;
+      }
+      node_set_add(&new_self, self->slots[i]);
+    }
+
+    // replace ourselves with this new set
+    free(self->slots);
+    *self = new_self;
+  }
+
+  assert(self->capacity > self->size);
+
+  const size_t index = node_set_index(self, item);
+
+  for (size_t i = 0; i < self->capacity; ++i) {
+    const size_t candidate = (index + i) % self->capacity;
+
+    // if we found an empty slot or a previously deleted slot, we can insert
+    if (self->slots[candidate] == NULL || self->slots[candidate] == TOMBSTONE) {
+      self->slots[candidate] = item;
+      ++self->size;
+      return;
+    }
+  }
+
+  UNREACHABLE();
+}
+
+Agsubnode_t *node_set_find(node_set_t *self, const Agsubnode_t *key) {
+  assert(self != NULL);
+  assert(key != NULL);
+
+  // early exit to avoid `self->slots == NULL`/`self->capacity == 0`
+  // complications
+  if (self->size == 0) {
+    return NULL;
+  }
+
+  const size_t index = node_set_index(self, key);
+
+  for (size_t i = 0; i < self->capacity; ++i) {
+    const size_t candidate = (index + i) % self->capacity;
+
+    // if we found an empty slot, the sought item does not exist
+    if (self->slots[candidate] == NULL) {
+      return NULL;
+    }
+
+    // if we found a previously deleted slot, skip over it
+    if (self->slots[candidate] == TOMBSTONE) {
+      continue;
+    }
+
+    if (agsubnodeideq(self->slots[candidate], key)) {
+      return self->slots[candidate];
+    }
+  }
+
+  return NULL;
+}
+
+void node_set_remove(node_set_t *self, const Agsubnode_t *item) {
+  assert(self != NULL);
+  assert(item != NULL);
+
+  // early exit to avoid `self->slots == NULL`/`self->capacity == 0`
+  // complications
+  if (self->size == 0) {
+    return;
+  }
+
+  const size_t index = node_set_index(self, item);
+
+  for (size_t i = 0; i < self->capacity; ++i) {
+    const size_t candidate = (index + i) % self->capacity;
+
+    // if we found an empty slot, the sought item does not exist
+    if (self->slots[candidate] == NULL) {
+      return;
+    }
+
+    // if we found a previously deleted slot, skip over it
+    if (self->slots[candidate] == TOMBSTONE) {
+      continue;
+    }
+
+    if (agsubnodeideq(self->slots[candidate], item)) {
+      assert(self->size > 0);
+      self->slots[candidate] = TOMBSTONE;
+      --self->size;
+      return;
+    }
+  }
+}
+
+size_t node_set_size(const node_set_t *self) {
+  assert(self != NULL);
+  return self->size;
+}
+
+void node_set_free(node_set_t **self) {
+  assert(self != NULL);
+
+  if (*self != NULL) {
+    free((*self)->slots);
+  }
+
+  free(*self);
+  *self = NULL;
+}

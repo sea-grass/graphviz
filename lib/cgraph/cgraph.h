@@ -415,18 +415,21 @@ struct Agclos_s {
   Dict_t *lookup_by_id[3];
 };
 
+/// opaque type; the definition of this is internal to Graphviz
+struct graphviz_node_set;
+
 /// graph or subgraph
 struct Agraph_s {
   Agobj_t base;
   Agdesc_t desc;
   Dtlink_t seq_link;
   Dtlink_t id_link;
-  Dict_t *n_seq;           /* the node set in sequence */
-  Dict_t *n_id;            /* the node set indexed by ID */
-  Dict_t *e_seq, *e_id;    /* holders for edge sets */
-  Dict_t *g_seq, *g_id;    /* subgraphs - descendants */
-  Agraph_t *parent, *root; /* subgraphs - ancestors */
-  Agclos_t *clos;          /* shared resources */
+  Dict_t *n_seq;                  ///< the node set in sequence
+  struct graphviz_node_set *n_id; ///< the node set indexed by ID
+  Dict_t *e_seq, *e_id;           ///< holders for edge sets
+  Dict_t *g_seq, *g_id;           ///< subgraphs - descendants
+  Agraph_t *parent, *root;        ///< subgraphs - ancestors
+  Agclos_t *clos;                 ///< shared resources
 };
 
 /* graphs */

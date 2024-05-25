@@ -15,6 +15,7 @@
 
 #include <assert.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/node_set.h>
 #include <stddef.h>
 #include <stdbool.h>
 
@@ -147,7 +148,7 @@ Agsubnode_t *agsubrep(Agraph_t * g, Agnode_t * n)
 	if (g == n->root) sn = &(n->mainsub);
 	else {
 			template.node = n;
-			sn = dtsearch(g->n_id, &template);
+			sn = node_set_find(g->n_id, &template);
 	}
     return sn;
 }
