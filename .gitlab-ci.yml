@@ -9,7 +9,7 @@ stages:
 # generate doxygen documentation from sources for https://graphviz.gitlab.io/graphviz/doxygen/
 pages:
     needs:
-        - job: docker_build_ubuntu-23.10
+        - job: docker_build_ubuntu-24.04
           artifacts: false
         - job: portable-source
           artifacts: true
@@ -21,7 +21,7 @@ pages:
             - public
     image: "$CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA"
     variables:
-        IMAGE: ubuntu-23.10
+        IMAGE: ubuntu-24.04
     except:
         - tags
     # GitLab Pages only allow one hosted root per repository.
