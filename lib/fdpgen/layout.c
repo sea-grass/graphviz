@@ -120,11 +120,8 @@ static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
     }
 
     if (GD_label(rg)) {
-	point p;
-
 	isEmpty = 0;
-	PF2P(GD_label(rg)->dimen, p);
-	double d = p.x - (bb.UR.x - bb.LL.x);
+	double d = round(GD_label(rg)->dimen.x) - (bb.UR.x - bb.LL.x);
 	if (d > 0) {		/* height of label added below */
 	    d /= 2;
 	    bb.LL.x -= d;
