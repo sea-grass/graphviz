@@ -3016,7 +3016,6 @@ def test_2285():
 
 
 @pytest.mark.skipif(which("gxl2gv") is None, reason="gxl2gv not available")
-@pytest.mark.xfail()
 def test_2300_1():
     """
     translating GXL with an attribute `name` should not crash

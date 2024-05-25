@@ -228,9 +228,11 @@ static void dict_relabel(Agraph_t *ignored, Agnode_t *n, void *arg) {
 
     g = agraphof(n);
     new_id = *(uint64_t *) arg;
-    dtdelete(g->n_id, n);	/* wrong, should be subrep */
-    AGID(n) = new_id;
-    dtinsert(g->n_id, n);	/* also wrong */
+    Agsubnode_t *key = agsubrep(g, n);
+    assert(key != NULL && "node being renamed does not exist");
+    dtdelete(g->n_id, key);
+    AGID(key->node) = new_id;
+    dtinsert(g->n_id, key);
     /* because all the subgraphs share the same node now, this
        now requires a separate deletion and insertion phase */
 }
