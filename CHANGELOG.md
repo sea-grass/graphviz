@@ -33,6 +33,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   are available in the
   [Gitlab package registry](https://gitlab.com/graphviz/graphviz/-/packages) if
   needed.
+- The CMake build system more pervasively sets rpaths of compiled binaries,
+  which should result in them more reliably finding their supporting libraries
+  without `$LD_LIBRARY_PATH`/`$DYLD_LIBRARY_PATH` tricks.
 
 ### Fixed
 
