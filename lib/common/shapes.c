@@ -614,6 +614,34 @@ static pointf * alloc_interpolation_points(pointf *AF, size_t sides,
 }
 
 /**
+ * @brief draws rounded symmetric polygons with
+ * [Bézier curve](https://en.wikipedia.org/wiki/Bézier_curve)
+ *
+ * For example, a rounded star looks like a cartoon starfish.
+ */
+static void rounded_draw(GVJ_t *job, pointf *AF, size_t sides,
+                         graphviz_polygon_style_t style, int filled)
+{
+  size_t i = 0;
+
+  pointf *B = alloc_interpolation_points(AF, sides, style, true);
+  pointf *pts = gv_calloc(6 * sides + 2, sizeof(pointf));
+  for (size_t seg = 0; seg < sides; seg++) {
+    pts[i++] = B[4 * seg];
+    pts[i++] = B[4 * seg + 1];
+    pts[i++] = B[4 * seg + 1];
+    pts[i++] = B[4 * seg + 2];
+    pts[i++] = B[4 * seg + 2];
+    pts[i++] = B[4 * seg + 3];
+  }
+  pts[i++] = pts[0];
+  pts[i++] = pts[1];
+  gvrender_beziercurve(job, pts + 1, i - 1, filled);
+  free(pts);
+  free(B);
+}
+
+/**
  * @file
  * ~~~~
  *                y
@@ -665,11 +693,9 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
     assert(memcmp(&style, &(graphviz_polygon_style_t){0}, sizeof(style)) != 0);
 
     pointf *B, C[5], *D;
-    pointf* pts;
 
     struct {
 	bool diagonals: 1;
-	bool rounded: 1;
 	unsigned shape: 7;
     } mode = {0};
 
@@ -677,31 +703,17 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	mode.diagonals = true;
     else if (style.shape != 0)
 	mode.shape = style.shape;
+    else if (style.rounded)
+	return rounded_draw(job, AF, sides, style, filled);
     else
-	mode.rounded = true;
+	UNREACHABLE();
+
     if (mode.shape == CYLINDER) {
 	cylinder_draw(job, AF, sides, filled);
 	return;
     }
-    B = alloc_interpolation_points(AF, sides, style, mode.rounded);
-    if (mode.rounded) {
-	int i = 0;
-	pts = gv_calloc(6 * sides + 2, sizeof(pointf));
-	for (size_t seg = 0; seg < sides; seg++) {
-	    pts[i++] = B[4 * seg];
-	    pts[i++] = B[4 * seg+1];
-	    pts[i++] = B[4 * seg+1];
-	    pts[i++] = B[4 * seg+2];
-	    pts[i++] = B[4 * seg+2];
-	    pts[i++] = B[4 * seg+3];
-	}
-	pts[i++] = pts[0];
-	pts[i++] = pts[1];
-	gvrender_beziercurve(job, pts+1, i-1, filled);
-	free (pts);
-	free(B);
-	return;
-    } else if (mode.diagonals) {
+    B = alloc_interpolation_points(AF, sides, style, false);
+    if (mode.diagonals) {
 	/* diagonals are weird.  rewrite someday. */
 	gvrender_polygon(job, AF, sides, filled);
 
