@@ -44,23 +44,19 @@ want to test using Autotools or MSBuild instead.
 However, if you do want to use CMake:
 
 ```sh
-# make a scratch directory to store build artifacts
-mkdir build
-cd build
-
 # you probably do not want to install your development version of Graphviz over
 # the top of your system binaries/libraries, so create a temporary directory as
 # an install destination
 PREFIX=$(mktemp -d)
 
 # configure the build system
-cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} ..
+cmake -DCMAKE_INSTALL_PREFIX=${PREFIX} -B build -S .
 
 # compile Graphviz binaries and libraries
-make
+cmake --build build
 
 # install everything to the temporary directory
-make install
+cmake --install build
 ```
 
 ### Microsoft Build Engine
