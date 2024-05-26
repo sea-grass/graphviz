@@ -40,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: the libpack functions `putGraphs`, `putRects`, and `shiftGraphs`
   now operate on floating-point points (`pointf`) instead of integer points
   (`point`).
+- **Breaking**: the `BF2B` macro has been removed.
 
 ### Fixed
 

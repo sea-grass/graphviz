@@ -73,7 +73,6 @@ typedef struct { pointf LL, UR; } boxf;
 #define PF2P(pf,p)		((p).x = ROUND((pf).x),(p).y = ROUND((pf).y))
 
 #define B2BF(b,bf)		(P2PF((b).LL,(bf).LL),P2PF((b).UR,(bf).UR))
-#define BF2B(bf,b)		(PF2P((bf).LL,(b).LL),PF2P((bf).UR,(b).UR))
 
 #define APPROXEQPT(p,q,tol)	(DIST2((p),(q)) < SQR(tol))
 
