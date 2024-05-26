@@ -469,21 +469,20 @@ static void placeFixed(ginfo *info, PointSet *ps, pointf *place,
 static void placeGraph(size_t i, ginfo *info, PointSet *ps, pointf *place,
                        int step, unsigned int margin, boxf* bbs) {
     int x, y;
-    int W, H;
     int bnd;
     boxf bb = bbs[info->index];
 
     if (i == 0) {
-	W = GRID(bb.UR.x - bb.LL.x + 2 * margin, step);
-	H = GRID(bb.UR.y - bb.LL.y + 2 * margin, step);
+	const int W = GRID(bb.UR.x - bb.LL.x + 2 * margin, step);
+	const int H = GRID(bb.UR.y - bb.LL.y + 2 * margin, step);
 	if (fits(-W / 2, -H / 2, info, ps, place, step, bbs))
 	    return;
     }
 
     if (fits(0, 0, info, ps, place, step, bbs))
 	return;
-    W = ceil(bb.UR.x - bb.LL.x);
-    H = ceil(bb.UR.y - bb.LL.y);
+    const double W = ceil(bb.UR.x - bb.LL.x);
+    const double H = ceil(bb.UR.y - bb.LL.y);
     if (W >= H) {
 	for (bnd = 1;; bnd++) {
 	    x = 0;
