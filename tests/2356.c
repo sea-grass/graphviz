@@ -19,7 +19,6 @@ static void GraphProc(void) {
       1, // if multi-edges forbidden
       0, // if no loops
       1, // if this is the top level graph
-      1, // if sets are flattened into lists in cdt
       0, // if a temporary subgraph
       1, // if string attr tables should be initialized
       1  // if may contain collapsed nodes
