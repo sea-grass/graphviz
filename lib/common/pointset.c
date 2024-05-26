@@ -88,10 +88,7 @@ int inPS(PointSet *ps, pointf pt) {
 }
 
 int isInPS(PointSet *ps, double x, double y) {
-    pair p;
-    p.id.x = x;
-    p.id.y = y;
-    return dtsearch(ps, &p) ? 1 : 0;
+  return inPS(ps, (pointf){.x = x, .y = y});
 }
 
 int sizeOf(PointSet * ps)
