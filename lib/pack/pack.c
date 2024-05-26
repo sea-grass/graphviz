@@ -923,10 +923,8 @@ int packRects(size_t ng, boxf *bbs, pack_info *pinfo) {
     for (size_t i = 0; i < ng; i++) {
 	bb = bbs[i];
 	const pointf p = pp[i];
-	bb.LL.x += p.x;
-	bb.UR.x += p.x;
-	bb.LL.y += p.y;
-	bb.UR.y += p.y;
+	bb.LL = add_pointf(bb.LL, p);
+	bb.UR = add_pointf(bb.UR, p);
 	bbs[i] = bb;
     }
     free(pp);
