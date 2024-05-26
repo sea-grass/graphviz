@@ -700,7 +700,6 @@ static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
 static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
     int stepSize;
     Dict_t *ps;
-    point center;
 
     /* calculate grid size */
     stepSize = computeStep(ng, gs, pinfo->margin);
@@ -710,11 +709,10 @@ static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
 	return 0;
 
     /* generate polyomino cover for the rectangles */
-    center.x = center.y = 0;
     ginfo *info = gv_calloc(ng, sizeof(ginfo));
     for (size_t i = 0; i < ng; i++) {
 	info[i].index = i;
-	genBox(gs[i], info + i, stepSize, pinfo->margin, center, "");
+	genBox(gs[i], info + i, stepSize, pinfo->margin, (point){0}, "");
     }
 
     /* sort */
