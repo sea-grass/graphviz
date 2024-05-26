@@ -23,7 +23,7 @@
 extern "C" {
 #endif
 
-    typedef Dict_t PointSet; ///< set of @ref point. Created by @ref newPS
+    typedef Dict_t PointSet; ///< set of @ref pointf. Created by @ref newPS
     typedef Dict_t PointMap; ///< map of @ref point. Created by @ref newPM
 
 #ifdef GVDLL
@@ -42,12 +42,12 @@ extern "C" {
 
 	POINTSET_API PointSet *newPS(void);
     POINTSET_API void freePS(PointSet *);
-    POINTSET_API void insertPS(PointSet *, point);
-    POINTSET_API void addPS(PointSet *, int x, int y);
-    POINTSET_API int inPS(PointSet *, point);
-    POINTSET_API int isInPS(PointSet *, int x, int y);
+    POINTSET_API void insertPS(PointSet *, pointf);
+    POINTSET_API void addPS(PointSet *, double x, double y);
+    POINTSET_API int inPS(PointSet *, pointf);
+    POINTSET_API int isInPS(PointSet *, double x, double y);
     POINTSET_API int sizeOf(PointSet *);
-    POINTSET_API point *pointsOf(PointSet *);
+    POINTSET_API pointf *pointsOf(PointSet *);
 
     POINTSET_API PointMap *newPM(void);
     POINTSET_API void clearPM(PointMap *);

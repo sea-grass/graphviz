@@ -39,7 +39,7 @@
 
 typedef struct {
     int perim;			/* half size of bounding rectangle perimeter */
-    point *cells;		/* cells in covering polyomino */
+    pointf *cells;		///< cells in covering polyomino
     int nc;			/* no. of cells */
     size_t index; ///<  index in original array
 } ginfo;
@@ -259,7 +259,7 @@ genBox(boxf bb0, ginfo * info, int ssize, unsigned int margin, point center,
 	fprintf(stderr, "%s no. cells %d W %d H %d\n",
 		s, info->nc, W, H);
 	for (i = 0; i < info->nc; i++)
-	    fprintf(stderr, "  %d %d cell\n", info->cells[i].x,
+	    fprintf(stderr, "  %.0f %.0f cell\n", info->cells[i].x,
 		    info->cells[i].y);
     }
 
@@ -407,7 +407,7 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 	fprintf(stderr, "%s no. cells %d W %d H %d\n",
 		agnameof(g), info->nc, W, H);
 	for (i = 0; i < info->nc; i++)
-	    fprintf(stderr, "  %d %d cell\n", info->cells[i].x,
+	    fprintf(stderr, "  %.0f %.0f cell\n", info->cells[i].x,
 		    info->cells[i].y);
     }
 
@@ -421,14 +421,13 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 static int
 fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* bbs)
 {
-    point *cells = info->cells;
+    pointf *cells = info->cells;
     int n = info->nc;
-    point cell;
     int i;
     point LL;
 
     for (i = 0; i < n; i++) {
-	cell = *cells;
+	pointf cell = *cells;
 	cell.x += x;
 	cell.y += y;
 	if (inPS(ps, cell))
@@ -442,7 +441,7 @@ fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* b
 
     cells = info->cells;
     for (i = 0; i < n; i++) {
-	cell = *cells;
+	pointf cell = *cells;
 	cell.x += x;
 	cell.y += y;
 	insertPS(ps, cell);
@@ -462,7 +461,7 @@ fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* b
 static void
 placeFixed(ginfo * info, PointSet * ps, point * place, point center)
 {
-    point *cells = info->cells;
+    pointf *cells = info->cells;
     int n = info->nc;
     int i;
 
@@ -547,12 +546,12 @@ static void placeGraph(size_t i, ginfo *info, PointSet *ps, point *place,
 #ifdef DEBUG
 void dumpp(ginfo * info, char *pfx)
 {
-    point *cells = info->cells;
+    pointf *cells = info->cells;
     int i, c_cnt = info->nc;
 
     fprintf(stderr, "%s\n", pfx);
     for (i = 0; i < c_cnt; i++) {
-	fprintf(stderr, "%d %d box\n", cells[i].x, cells[i].y);
+	fprintf(stderr, "%.0f %.0f box\n", cells[i].x, cells[i].y);
     }
 }
 #endif
