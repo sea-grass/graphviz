@@ -165,15 +165,14 @@ static void fillLine(pointf p, pointf q, PointSet * ps)
 /* It appears that spline_edges always have the start point at the
  * beginning and the end point at the end.
  */
-static void
-fillEdge(Agedge_t * e, point p, PointSet * ps, int dx, int dy,
+static void fillEdge(Agedge_t *e, pointf p, PointSet *ps, double dx, double dy,
          int ssize, bool doS) {
     size_t k;
     bezier bz;
     pointf pt, hpt;
     Agnode_t *h;
 
-    P2PF(p, pt);
+    pt = p;
 
     /* If doS is false or the edge has not splines, use line segment */
     if (!doS || !ED_spl(e)) {
@@ -224,17 +223,15 @@ fillEdge(Agedge_t * e, point p, PointSet * ps, int dx, int dy,
 /* Generate polyomino info from graph using the bounding box of
  * the graph.
  */
-static void
-genBox(boxf bb0, ginfo * info, int ssize, unsigned int margin, point center,
-	char* s)
-{
+static void genBox(boxf bb0, ginfo *info, int ssize, unsigned int margin,
+                   pointf center, char *s) {
     PointSet *ps;
     int W, H;
-    point UR, LL;
-    box bb;
-    int x, y;
+    pointf UR, LL;
+    boxf bb;
+    double x, y;
 
-    BF2B(bb0, bb);
+    bb = bb0;
     ps = newPS();
 
     LL.x = center.x - margin;
@@ -275,24 +272,16 @@ genBox(boxf bb0, ginfo * info, int ssize, unsigned int margin, point center,
  * top level clusters like large nodes.
  * Returns 0 if okay.
  */
-static int
-genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
-	int ssize, pack_info * pinfo, point center)
-{
+static int genPoly(Agraph_t *root, Agraph_t *g, ginfo *info, int ssize,
+                   pack_info *pinfo, pointf center) {
     PointSet *ps;
     int W, H;
-    point LL, UR;
-    point pt, s2;
-    pointf ptf;
     Agraph_t *eg;		/* graph containing edges */
     Agnode_t *n;
     Agedge_t *e;
-    int x, y;
-    int dx, dy;
     graph_t *subg;
     unsigned int margin = pinfo->margin;
     bool doSplines = pinfo->doSplines;
-    box bb;
 
     if (root)
 	eg = root;
@@ -300,8 +289,8 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 	eg = g;
 
     ps = newPS();
-    dx = center.x - ROUND(GD_bb(g).LL.x);
-    dy = center.y - ROUND(GD_bb(g).LL.y);
+    const double dx = center.x - round(GD_bb(g).LL.x);
+    const double dy = center.y - round(GD_bb(g).LL.y);
 
     if (pinfo->mode == l_clust) {
 	int i;
@@ -316,7 +305,7 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 	/* do bbox of top clusters */
 	for (i = 1; i <= GD_n_cluster(g); i++) {
 	    subg = GD_clust(g)[i];
-	    BF2B(GD_bb(subg), bb);
+	    boxf bb = GD_bb(subg);
 	    if (bb.UR.x > bb.LL.x && bb.UR.y > bb.LL.y) {
 		MOVEPT(bb.LL);
 		MOVEPT(bb.UR);
@@ -327,8 +316,8 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 		CELL(bb.LL, ssize);
 		CELL(bb.UR, ssize);
 
-		for (x = bb.LL.x; x <= bb.UR.x; x++)
-		    for (y = bb.LL.y; y <= bb.UR.y; y++)
+		for (double x = bb.LL.x; x <= bb.UR.x; x++)
+		    for (double y = bb.LL.y; y <= bb.UR.y; y++)
 			addPS(ps, x, y);
 
 		/* note which nodes are in clusters */
@@ -339,19 +328,18 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 
 	/* now do remaining nodes and edges */
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	    ptf = coord(n);
-	    PF2P(ptf, pt);
+	    pointf pt = coord(n);
 	    MOVEPT(pt);
 	    if (!ND_clust(n)) {	/* n is not in a top-level cluster */
-		s2.x = margin + ND_xsize(n) / 2;
-		s2.y = margin + ND_ysize(n) / 2;
-		LL = sub_point(pt, s2);
-		UR = add_point(pt, s2);
+		const pointf s2 = {.x = margin + ND_xsize(n) / 2,
+		                   .y = margin + ND_ysize(n) / 2};
+		pointf LL = sub_pointf(pt, s2);
+		pointf UR = add_pointf(pt, s2);
 		CELL(LL, ssize);
 		CELL(UR, ssize);
 
-		for (x = LL.x; x <= UR.x; x++)
-		    for (y = LL.y; y <= UR.y; y++)
+		for (double x = LL.x; x <= UR.x; x++)
+		    for (double y = LL.y; y <= UR.y; y++)
 			addPS(ps, x, y);
 
 		CELL(pt, ssize);
@@ -376,18 +364,17 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 
     } else
 	for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	    ptf = coord(n);
-	    PF2P(ptf, pt);
+	    pointf pt = coord(n);
 	    MOVEPT(pt);
-	    s2.x = margin + ND_xsize(n) / 2;
-	    s2.y = margin + ND_ysize(n) / 2;
-	    LL = sub_point(pt, s2);
-	    UR = add_point(pt, s2);
+	    pointf s2 = {.x = margin + ND_xsize(n) / 2,
+	                 .y = margin + ND_ysize(n) / 2};
+	    pointf LL = sub_pointf(pt, s2);
+	    pointf UR = add_pointf(pt, s2);
 	    CELL(LL, ssize);
 	    CELL(UR, ssize);
 
-	    for (x = LL.x; x <= UR.x; x++)
-		for (y = LL.y; y <= UR.y; y++)
+	    for (double x = LL.x; x <= UR.x; x++)
+		for (double y = LL.y; y <= UR.y; y++)
 		    addPS(ps, x, y);
 
 	    CELL(pt, ssize);
@@ -418,13 +405,11 @@ genPoly(Agraph_t * root, Agraph_t * g, ginfo * info,
 /* Check if polyomino fits at given point.
  * If so, add cells to pointset, store point in place and return true.
  */
-static int
-fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* bbs)
-{
+static int fits(int x, int y, ginfo *info, PointSet *ps, pointf *place,
+                int step, boxf *bbs) {
     pointf *cells = info->cells;
     int n = info->nc;
     int i;
-    point LL;
 
     for (i = 0; i < n; i++) {
 	pointf cell = *cells;
@@ -435,7 +420,7 @@ fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* b
 	cells++;
     }
 
-    PF2P(bbs[info->index].LL, LL);
+    const pointf LL = bbs[info->index].LL;
     place->x = step * x - LL.x;
     place->y = step * y - LL.y;
 
@@ -449,7 +434,7 @@ fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* b
     }
 
     if (Verbose >= 2)
-	fprintf(stderr, "cc (%d cells) at (%d,%d) (%d,%d)\n", n, x, y,
+	fprintf(stderr, "cc (%d cells) at (%d,%d) (%.0f,%.0f)\n", n, x, y,
 		place->x, place->y);
     return 1;
 }
@@ -458,9 +443,8 @@ fits(int x, int y, ginfo * info, PointSet * ps, point * place, int step, boxf* b
  * fill polyomino set. Note that polyomino set for the
  * graph is constructed where it will be.
  */
-static void
-placeFixed(ginfo * info, PointSet * ps, point * place, point center)
-{
+static void placeFixed(ginfo *info, PointSet *ps, pointf *place,
+                       pointf center) {
     pointf *cells = info->cells;
     int n = info->nc;
     int i;
@@ -473,7 +457,7 @@ placeFixed(ginfo * info, PointSet * ps, point * place, point center)
     }
 
     if (Verbose >= 2)
-	fprintf(stderr, "cc (%d cells) at (%d,%d)\n", n, place->x,
+	fprintf(stderr, "cc (%d cells) at (%.0f,%.0f)\n", n, place->x,
 		place->y);
 }
 
@@ -482,7 +466,7 @@ placeFixed(ginfo * info, PointSet * ps, point * place, point center)
  * with bounding box origin at point.
  * First graph (i == 0) is centered on the origin if possible.
  */
-static void placeGraph(size_t i, ginfo *info, PointSet *ps, point *place,
+static void placeGraph(size_t i, ginfo *info, PointSet *ps, pointf *place,
                        int step, unsigned int margin, boxf* bbs) {
     int x, y;
     int W, H;
@@ -585,12 +569,12 @@ static int acmpf(const void *X, const void *Y)
     if (m){ c++; if (c == nc) { c = 0; r++; } } \
     else { r++; if (r == nr) { r = 0; c++; } }
 
-static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
+static pointf *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
     size_t nr = 0, nc;
     size_t r, c;
     ainfo *info;
     double v, wd, ht;
-    point *places = gv_calloc(ng, sizeof(point));
+    pointf *places = gv_calloc(ng, sizeof(pointf));
     boxf bb;
     int sz, rowMajor;
 
@@ -697,7 +681,7 @@ static point *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
     return places;
 }
 
-static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
+static pointf *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
     int stepSize;
     Dict_t *ps;
 
@@ -712,7 +696,7 @@ static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
     ginfo *info = gv_calloc(ng, sizeof(ginfo));
     for (size_t i = 0; i < ng; i++) {
 	info[i].index = i;
-	genBox(gs[i], info + i, stepSize, pinfo->margin, (point){0}, "");
+	genBox(gs[i], info + i, stepSize, pinfo->margin, (pointf){0}, "");
     }
 
     /* sort */
@@ -723,7 +707,7 @@ static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
-    point *places = gv_calloc(ng, sizeof(point));
+    pointf *places = gv_calloc(ng, sizeof(pointf));
     for (size_t i = 0; i < ng; i++)
 	placeGraph(i, sinfo[i], ps, places + sinfo[i]->index,
 		       stepSize, pinfo->margin, gs);
@@ -736,7 +720,7 @@ static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
 
     if (Verbose > 1)
 	for (size_t i = 0; i < ng; i++)
-	    fprintf(stderr, "pos[%" PRISIZE_T "] %d %d\n", i, places[i].x,
+	    fprintf(stderr, "pos[%" PRISIZE_T "] %.0f %.0f\n", i, places[i].x,
 		    places[i].y);
 
     return places;
@@ -766,15 +750,15 @@ static point *polyRects(size_t ng, boxf *gs, pack_info *pinfo) {
  * FIX: Check CELL and GRID macros for negative coordinates 
  * FIX: Check width and height computation
  */
-static point *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
-                         pack_info *pinfo) {
+static pointf *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
+                          pack_info *pinfo) {
     int stepSize;
     ginfo *info;
     Dict_t *ps;
     bool *fixed = pinfo->fixed;
     int fixed_cnt = 0;
-    box bb, fixed_bb = { {0, 0}, {0, 0} };
-    point center;
+    boxf fixed_bb = { {0, 0}, {0, 0} };
+    pointf center;
 
     if (ng == 0)
 	return 0;
@@ -785,7 +769,7 @@ static point *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
 	Agraph_t *g = gs[i];
 	compute_bb(g);
 	if (fixed && fixed[i]) {
-	    BF2B(GD_bb(g), bb);
+	    const boxf bb = GD_bb(g);
 	    if (fixed_cnt) {
 		fixed_bb.LL.x = MIN(bb.LL.x, fixed_bb.LL.x);
 		fixed_bb.LL.y = MIN(bb.LL.y, fixed_bb.LL.y);
@@ -840,7 +824,7 @@ static point *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
     qsort(sinfo, ng, sizeof(ginfo *), cmpf);
 
     ps = newPS();
-    point *places = gv_calloc(ng, sizeof(point));
+    pointf *places = gv_calloc(ng, sizeof(pointf));
     if (fixed) {
 	for (size_t i = 0; i < ng; i++) {
 	    if (fixed[i])
@@ -866,16 +850,16 @@ static point *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
 
     if (Verbose > 1)
 	for (size_t i = 0; i < ng; i++)
-	    fprintf(stderr, "pos[%" PRISIZE_T "] %d %d\n", i, places[i].x,
+	    fprintf(stderr, "pos[%" PRISIZE_T "] %.0f %.0f\n", i, places[i].x,
 		    places[i].y);
 
     return places;
 }
 
-point *putGraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *pinfo) {
+pointf *putGraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *pinfo) {
     int v;
     Agraph_t* g;
-    point* pts = NULL;
+    pointf* pts = NULL;
     char* s;
 
     if (ng == 0) return NULL;
@@ -911,7 +895,7 @@ point *putGraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *pinfo) {
     return pts;
 }
 
-point *putRects(size_t ng, boxf* bbs, pack_info* pinfo) {
+pointf *putRects(size_t ng, boxf *bbs, pack_info *pinfo) {
     if (ng == 0) return NULL;
     if (pinfo->mode == l_node || pinfo->mode == l_clust) return NULL;
     if (pinfo->mode == l_graph)
@@ -931,19 +915,17 @@ point *putRects(size_t ng, boxf* bbs, pack_info* pinfo) {
  * Returns 0 on success.
  */
 int packRects(size_t ng, boxf *bbs, pack_info *pinfo) {
-    point *pp;
     boxf bb;
-    point p;
 
     if (ng <= 1) return 0;
 
-    pp = putRects(ng, bbs, pinfo);
+    pointf *pp = putRects(ng, bbs, pinfo);
     if (!pp)
 	return 1;
 
     for (size_t i = 0; i < ng; i++) {
 	bb = bbs[i];
-	p = pp[i];
+	const pointf p = pp[i];
 	bb.LL.x += p.x;
 	bb.UR.x += p.x;
 	bb.LL.y += p.y;
@@ -955,8 +937,7 @@ int packRects(size_t ng, boxf *bbs, pack_info *pinfo) {
 }
 
 /// Translate all of the edge components by the given offset.
-static void shiftEdge(Agedge_t * e, int dx, int dy)
-{
+static void shiftEdge(Agedge_t *e, double dx, double dy) {
     bezier bz;
 
     if (ED_label(e))
@@ -982,8 +963,7 @@ static void shiftEdge(Agedge_t * e, int dx, int dy)
     }
 }
 
-static void shiftGraph(Agraph_t * g, int dx, int dy)
-{
+static void shiftGraph(Agraph_t *g, double dx, double dy) {
     graph_t *subg;
     boxf bb = GD_bb(g);
     int i;
@@ -1025,11 +1005,9 @@ static void shiftGraph(Agraph_t * g, int dx, int dy)
  * the pos and coord fields in nodehinfo_t and
  * the spl field in Aedgeinfo_t.
  */
-int shiftGraphs(size_t ng, Agraph_t **gs, point *pp, Agraph_t *root,
+int shiftGraphs(size_t ng, Agraph_t **gs, pointf *pp, Agraph_t *root,
                 bool doSplines) {
-    int dx, dy;
     double fx, fy;
-    point p;
     Agraph_t *g;
     Agraph_t *eg;
     Agnode_t *n;
@@ -1044,9 +1022,9 @@ int shiftGraphs(size_t ng, Agraph_t **gs, point *pp, Agraph_t *root,
 	    eg = root;
 	else
 	    eg = g;
-	p = pp[i];
-	dx = p.x;
-	dy = p.y;
+	const pointf p = pp[i];
+	const double dx = p.x;
+	const double dy = p.y;
 	fx = PS2INCH(dx);
 	fy = PS2INCH(dy);
 
@@ -1081,7 +1059,7 @@ int shiftGraphs(size_t ng, Agraph_t **gs, point *pp, Agraph_t *root,
  */
 int packGraphs(size_t ng, Agraph_t **gs, Agraph_t *root, pack_info *info) {
     int ret;
-    point *pp = putGraphs(ng, gs, root, info);
+    pointf *pp = putGraphs(ng, gs, root, info);
 
     if (!pp)
 	return 1;
