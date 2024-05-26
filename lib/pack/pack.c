@@ -988,7 +988,6 @@ static void shiftGraph(Agraph_t * g, int dx, int dy)
     boxf bb = GD_bb(g);
     int i;
 
-    bb = GD_bb(g);
     bb.LL.x += dx;
     bb.UR.x += dx;
     bb.LL.y += dy;
