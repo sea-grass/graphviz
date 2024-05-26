@@ -631,8 +631,8 @@ static pointf *arrayRects(size_t ng, boxf *gs, pack_info *pinfo) {
     r = c = 0;
     for (size_t i = 0; i < ng; i++, ip++) {
 	ip = sinfo[i];
-	widths[c] = MAX(widths[c],ip->width);
-	heights[r] = MAX(heights[r],ip->height);
+	widths[c] = fmax(widths[c], ip->width);
+	heights[r] = fmax(heights[r], ip->height);
 	INC(rowMajor,c,r);
     }
 
