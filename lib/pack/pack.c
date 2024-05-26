@@ -769,10 +769,10 @@ static pointf *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
 	if (fixed && fixed[i]) {
 	    const boxf bb = GD_bb(g);
 	    if (fixed_cnt) {
-		fixed_bb.LL.x = MIN(bb.LL.x, fixed_bb.LL.x);
-		fixed_bb.LL.y = MIN(bb.LL.y, fixed_bb.LL.y);
-		fixed_bb.UR.x = MAX(bb.UR.x, fixed_bb.UR.x);
-		fixed_bb.UR.y = MAX(bb.UR.y, fixed_bb.UR.y);
+		fixed_bb.LL.x = fmin(bb.LL.x, fixed_bb.LL.x);
+		fixed_bb.LL.y = fmin(bb.LL.y, fixed_bb.LL.y);
+		fixed_bb.UR.x = fmax(bb.UR.x, fixed_bb.UR.x);
+		fixed_bb.UR.y = fmax(bb.UR.y, fixed_bb.UR.y);
 	    } else
 		fixed_bb = bb;
 	    fixed_cnt++;
