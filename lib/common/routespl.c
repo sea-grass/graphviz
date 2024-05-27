@@ -18,6 +18,7 @@
 #include <cgraph/list.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
+#include <float.h>
 #include <limits.h>
 #include <math.h>
 #include <pathplan/pathplan.h>
@@ -449,8 +450,8 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
 	    polypoints[i].y *= -1;
     }
 
-    static const double INITIAL_LLX = INT_MAX;
-    static const double INITIAL_URX = INT_MIN;
+    static const double INITIAL_LLX = DBL_MAX;
+    static const double INITIAL_URX = -DBL_MAX;
     for (bi = 0; bi < boxn; bi++) {
 	boxes[bi].LL.x = INITIAL_LLX;
 	boxes[bi].UR.x = INITIAL_URX;
