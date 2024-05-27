@@ -241,15 +241,15 @@ void routesplinesterm(void)
 }
 
 static void limitBoxes(boxf *boxes, int boxn, const pointf *pps, size_t pn,
-                       int delta) {
-    int bi, si;
+                       double delta) {
+    int bi;
     double t;
     pointf sp[4];
-    int num_div = delta * boxn;
+    const double num_div = delta * boxn;
 
     for (size_t splinepi = 0; splinepi + 3 < pn; splinepi += 3) {
-	for (si = 0; si <= num_div; si++) {
-	    t = si / (double)num_div;
+	for (double si = 0; si <= num_div; si++) {
+	    t = si / num_div;
 	    sp[0] = pps[splinepi];
 	    sp[1] = pps[splinepi + 1];
 	    sp[2] = pps[splinepi + 2];
@@ -311,7 +311,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     int boxn;
     edge_t* realedge;
     bool flip;
-    int loopcnt, delta = INIT_DELTA;
+    int loopcnt;
     bool unbounded;
 
     *npoints = 0;
@@ -517,6 +517,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
 	ps[splinepi] = spl.ps[splinepi];
     }
 
+    double delta = INIT_DELTA;
     for (loopcnt = 0; unbounded && loopcnt < LOOP_TRIES; loopcnt++) {
 	limitBoxes(boxes, boxn, ps, spl.pn, delta);
 
@@ -531,8 +532,6 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
 	    if (is_exactly_equal(boxes[bi].LL.x, INITIAL_LLX) ||
 	        is_exactly_equal(boxes[bi].UR.x, INITIAL_URX)) {
 		delta *= 2; /* try again with a finer interval */
-		if (delta > INT_MAX/boxn) /* in limitBoxes, boxn*delta must fit in an int, so give up */
-		    loopcnt = LOOP_TRIES;
 		break;
 	    }
 	}
