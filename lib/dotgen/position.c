@@ -217,7 +217,7 @@ static void
 make_LR_constraints(graph_t * g)
 {
     int i, j;
-    int m0, m1;
+    int m0;
     double width;
     int sep[2];
     int nodesep;      /* separation between nodes on same rank */
@@ -275,7 +275,7 @@ make_LR_constraints(graph_t * g)
 		    e1 = ff;
 		}
 		m0 = ED_minlen(e) * GD_nodesep(g) / 2;
-		m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
+		double m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
 		/* these guards are needed because the flat edges
 		 * work very poorly with cluster layout */
 		if (!canreach(agtail(e0), aghead(e0)))
