@@ -303,7 +303,6 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
 	    drawbevel(x, lineout, false, direction, direction_2, &p);
 	}
     }
-    /* closepath(&p); */
     free(pathpoints);
     return p;
 }
