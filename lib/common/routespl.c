@@ -522,7 +522,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     /* The following check is necessary because if a box is not very 
      * high, it is possible that the sampling above might miss it.
      * Therefore, we make the sample finer until all boxes have
-     * valid values. cf. bug 456. Would making sp[] pointfs help?
+     * valid values. cf. bug 456.
      */
 	for (bi = 0; bi < boxn; bi++) {
 	/* these fp equality tests are used only to detect if the
