@@ -37,6 +37,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   which should result in them more reliably finding their supporting libraries
   without `$LD_LIBRARY_PATH`/`$DYLD_LIBRARY_PATH` tricks.
 - **Breaking**: the `Agraph_t.n_id` field is now an opaque pointer.
+- **Breaking**: the libpack functions `putGraphs`, `putRects`, and `shiftGraphs`
+  now operate on floating-point points (`pointf`) instead of integer points
+  (`point`).
+- **Breaking**: the `BF2B` macro has been removed.
 
 ### Fixed
 

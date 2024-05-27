@@ -16,11 +16,10 @@
 
 typedef struct {
     Dtlink_t link;
-    point id;
+    pointf id;
 } pair;
 
-static pair *mkPair(point p)
-{
+static pair *mkPair(pointf p) {
     pair *pp = gv_alloc(sizeof(pair));
     pp->id = p;
     return pp;
@@ -32,8 +31,7 @@ static void freePair(pair *pp, Dtdisc_t *disc) {
     free (pp);
 }
 
-static int cmppair(Dt_t * d, point * key1, point * key2, Dtdisc_t * disc)
-{
+static int cmppair(Dt_t *d, pointf *key1, pointf *key2, Dtdisc_t *disc) {
     (void)d;
     (void)disc;
 
@@ -51,7 +49,7 @@ static int cmppair(Dt_t * d, point * key1, point * key2, Dtdisc_t * disc)
 
 static Dtdisc_t intPairDisc = {
     offsetof(pair, id),
-    sizeof(point),
+    sizeof(pointf),
     offsetof(pair, link),
     0,
     (Dtfree_f) freePair,
@@ -68,8 +66,7 @@ void freePS(PointSet * ps)
     dtclose(ps);
 }
 
-void insertPS(PointSet * ps, point pt)
-{
+void insertPS(PointSet *ps, pointf pt) {
     pair *pp;
 
     pp = mkPair(pt);
@@ -77,27 +74,21 @@ void insertPS(PointSet * ps, point pt)
         free(pp);
 }
 
-void addPS(PointSet * ps, int x, int y)
-{
-    const point pt = {.x = x, .y = y};
+void addPS(PointSet *ps, double x, double y) {
+    const pointf pt = {.x = x, .y = y};
     pair *pp = mkPair(pt);
     if (dtinsert(ps, pp) != pp)
         free(pp);
 }
 
-int inPS(PointSet * ps, point pt)
-{
+int inPS(PointSet *ps, pointf pt) {
     pair p;
     p.id = pt;
     return dtsearch(ps, &p) ? 1 : 0;
 }
 
-int isInPS(PointSet * ps, int x, int y)
-{
-    pair p;
-    p.id.x = x;
-    p.id.y = y;
-    return dtsearch(ps, &p) ? 1 : 0;
+int isInPS(PointSet *ps, double x, double y) {
+  return inPS(ps, (pointf){.x = x, .y = y});
 }
 
 int sizeOf(PointSet * ps)
@@ -105,12 +96,11 @@ int sizeOf(PointSet * ps)
     return dtsize(ps);
 }
 
-point *pointsOf(PointSet * ps)
-{
+pointf *pointsOf(PointSet *ps) {
     int n = dtsize(ps);
-    point *pts = gv_calloc(n, sizeof(point));
+    pointf *pts = gv_calloc(n, sizeof(pointf));
     pair *p;
-    point *pp = pts;
+    pointf *pp = pts;
 
     for (p = (pair *) dtflatten(ps); p;
 	 p = (pair *)dtlink(ps, p)) {
