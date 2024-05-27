@@ -536,13 +536,11 @@ static pointf initPositions(graph_t * g, bport_t * pp)
      * TODO: place unfixed points using adjacent ports or fixed pts.
      */
     if (pp) {
-/* fprintf (stderr, "initPos %s ctr (%g,%g) Wd %g Ht %g\n", agnameof(g), ctr.x, ctr.y, T_Wd, T_Ht); */
 	while (pp->e) {		/* position ports on ellipse */
 	    np = pp->n;
 	    ND_pos(np)[0] = T_Wd * cos(pp->alpha) + ctr.x;
 	    ND_pos(np)[1] = T_Ht * sin(pp->alpha) + ctr.y;
 	    ND_pinned(np) = P_SET;
-/* fprintf (stderr, "%s pt (%g,%g) %g\n", agnameof(np), ND_pos(np)[0], ND_pos(np)[1], pp->alpha); */
 	    pp++;
 	}
 	for (np = agfstnode(g); np; np = agnxtnode(g, np)) {
@@ -574,17 +572,14 @@ static pointf initPositions(graph_t * g, bport_t * pp)
 		if (cnt > 1) {
 		    ND_pos(np)[0] = p.x;
 		    ND_pos(np)[1] = p.y;
-/* fprintf (stderr, "%s 1 (%g,%g)\n", agnameof(np), p.x, p.y); */
 		} else if (cnt == 1) {
 		    ND_pos(np)[0] = 0.98 * p.x + 0.1 * ctr.x;
 		    ND_pos(np)[1] = 0.9 * p.y + 0.1 * ctr.y;
-/* fprintf (stderr, "%s %d (%g,%g)\n", agnameof(np), cnt, ND_pos(np)[0], ND_pos(np)[1]); */
 		} else {
 		    double angle = PItimes2 * drand48();
 		    double radius = 0.9 * drand48();
 		    ND_pos(np)[0] = radius * T_Wd * cos(angle);
 		    ND_pos(np)[1] = radius * T_Ht * sin(angle);
-/* fprintf (stderr, "%s 0 (%g,%g)\n", agnameof(np), ND_pos(np)[0], ND_pos(np)[1]); */
 		}
 		ND_pinned(np) = P_SET;
 	    }
