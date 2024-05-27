@@ -89,7 +89,7 @@ static int isBox(Point *verts, size_t cnt) {
 		(verts[0].y == verts[3].y) && (verts[1].y == verts[2].y));
 }
 
-static Point makeScaledTransPoint(int x, int y, double dx, double dy) {
+static Point makeScaledTransPoint(double x, double y, double dx, double dy) {
     Point rv;
     rv.x = PS2INCH(x) + dx;
     rv.y = PS2INCH(y) + dy;
