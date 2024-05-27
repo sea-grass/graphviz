@@ -18,7 +18,6 @@
 #cmakedefine HAVE_MEMRCHR
 #cmakedefine HAVE_SETENV
 #cmakedefine HAVE_SETMODE
-#cmakedefine HAVE_SINCOS
 #cmakedefine HAVE_SRAND48
 
 // Typedefs for missing types

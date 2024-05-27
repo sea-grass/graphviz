@@ -42,6 +42,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   (`point`).
 - **Breaking**: the `BF2B` macro has been removed.
 - **Breaking**: the undocumented `-Tmp` output format has been removed.
+- **Breaking**: the arith.h header defines neither `_GNU_SOURCE` nor `sincos`
+  any more. None of the build systems attempt to discover `sincos` any more.
 
 ### Fixed
 

@@ -21,9 +21,6 @@
 /*    specifically just the change to Tcl_CmdProc */
 #define USE_NON_CONST
 
-/* for sincos */
-#define _GNU_SOURCE 1
-
 #include                <sys/types.h>
 #include                <stdbool.h>
 #include                <stdint.h>
@@ -70,12 +67,6 @@ typedef struct vgpane_s {
     Tcl_Interp *interp;		/* interpreter that owns the binding */
     char *triangle_cmd;		/* why is this here any more */
 } vgpane_t;
-
-#ifdef HAVE_SINCOS
-extern void sincos(double x, double *s, double *c);
-#else
-# define sincos(x,s,c) *s = sin(x); *c = cos(x)
-#endif
 
 tblHeader_pt vgpaneTable;
 
@@ -280,11 +271,12 @@ static double distance(point p, point q)
 static point rotate(point c, point p, double alpha)
 {
     point q;
-    double beta, r, sina, cosa;
+    double beta, r;
 
     r = distance(c, p);
     beta = atan2(p.x - c.x, p.y - c.y);
-    sincos(beta + alpha, &sina, &cosa);
+    const double sina = sin(beta + alpha);
+    const double cosa = cos(beta + alpha);
     q.x = c.x + r * sina;
     q.y = c.y - r * cosa;	/* adjust for tk y-down */
     return q;

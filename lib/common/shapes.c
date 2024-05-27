@@ -2212,7 +2212,8 @@ static void poly_init(node_t * n)
 	    gdistortion = distortion * SQRT2 / cos(sectorangle / 2.);
 	    gskew = skew / 2.;
 	    angle = (sectorangle - M_PI) / 2.;
-	    sincos(angle, &sinx, &cosx);
+	    sinx = sin(angle);
+	    cosx = cos(angle);
 	    pointf R = {.x = .5 * cosx, .y = .5 * sinx};
 	    xmax = ymax = 0.;
 	    angle += (M_PI - sectorangle) / 2.;
@@ -2220,7 +2221,8 @@ static void poly_init(node_t * n)
 
 	    /*next regular vertex */
 		angle += sectorangle;
-		sincos(angle, &sinx, &cosx);
+		sinx = sin(angle);
+		cosx = cos(angle);
 		R.x += sidelength * cosx;
 		R.y += sidelength * sinx;
 
@@ -2231,7 +2233,8 @@ static void poly_init(node_t * n)
 
 	    /*orient P.x,P.y */
 		alpha = RADIANS(orientation) + atan2(P.y, P.x);
-		sincos(alpha, &sinx, &cosx);
+		sinx = sin(alpha);
+		cosx = cos(alpha);
 		P.x = P.y = hypot(P.x, P.y);
 		P.x *= cosx;
 		P.y *= sinx;
@@ -2313,9 +2316,8 @@ static void poly_init(node_t * n)
 		    temp = GAP / sin(gamma);
 
 		    /*convert this distance to x and y */
-		    sincos(alpha - gamma, &sinx, &cosx);
-		    sinx *= temp;
-		    cosx *= temp;
+		    sinx = sin(alpha - gamma) * temp;
+		    cosx = cos(alpha - gamma) * temp;
 		}
 		assert(cosx != 0 || sinx != 0);
 		Qprev = Q;
