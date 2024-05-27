@@ -600,15 +600,15 @@ set_xcoords(graph_t * g)
  * FIX: There can be excess space between ranks. Not sure where this is
  * coming from but it could be cleaned up.
  */
-static void adjustSimple(graph_t * g, int delta, int margin_total)
-{
-    int r, bottom, deltop;
+static void adjustSimple(graph_t *g, double delta, int margin_total) {
+    int r;
+    double deltop;
     graph_t *root = dot_root(g);
     rank_t *rank = GD_rank(root);
     int maxr = GD_maxrank(g);
     int minr = GD_minrank(g);
 
-    bottom = (delta+1) / 2;
+    const double bottom = (delta + 1) / 2;
     const double delbottom = GD_ht1(g) + bottom - (rank[maxr].ht1 - margin_total);
     if (delbottom > 0) {
 	for (r = maxr; r >= minr; r--) {
