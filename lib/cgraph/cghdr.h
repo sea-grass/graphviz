@@ -58,7 +58,6 @@ extern Agraph_t *Ag_G_global;
 extern char *AgDataRecName;
 
 	/* set ordering disciplines */
-extern Dtdisc_t Ag_subnode_id_disc;
 extern Dtdisc_t Ag_subnode_seq_disc;
 extern Dtdisc_t Ag_mainedge_id_disc;
 extern Dtdisc_t Ag_subedge_id_disc;

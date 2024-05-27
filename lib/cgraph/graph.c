@@ -16,6 +16,8 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/node_set.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -68,7 +70,7 @@ Agraph_t *agopen1(Agraph_t * g)
     Agraph_t *par;
 
     g->n_seq = agdtopen(g, &Ag_subnode_seq_disc, Dttree);
-    g->n_id = agdtopen(g, &Ag_subnode_id_disc, Dttree);
+    g->n_id = node_set_new();
     g->e_seq = agdtopen(g, g == agroot(g)? &Ag_mainedge_seq_disc : &Ag_subedge_seq_disc, Dttree);
     g->e_id = agdtopen(g, g == agroot(g)? &Ag_mainedge_id_disc : &Ag_subedge_id_disc, Dttree);
     g->g_seq = agdtopen(g, &Ag_subgraph_seq_disc, Dttree);
@@ -111,8 +113,8 @@ int agclose(Agraph_t * g)
     aginternalmapclose(g);
     agmethod_delete(g, g);
 
-    assert(dtsize(g->n_id) == 0);
-    if (agdtclose(g, g->n_id)) return FAILURE;
+    assert(node_set_is_empty(g->n_id));
+    node_set_free(&g->n_id);
     assert(dtsize(g->n_seq) == 0);
     if (agdtclose(g, g->n_seq)) return FAILURE;
 
@@ -155,7 +157,8 @@ uint64_t agnextseq(Agraph_t * g, int objtype)
 
 int agnnodes(Agraph_t * g)
 {
-    return dtsize(g->n_id);
+  assert(node_set_size(g->n_id) <= INT_MAX);
+  return (int)node_set_size(g->n_id);
 }
 
 int agnedges(Agraph_t * g)

@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The CMake build system more pervasively sets rpaths of compiled binaries,
   which should result in them more reliably finding their supporting libraries
   without `$LD_LIBRARY_PATH`/`$DYLD_LIBRARY_PATH` tricks.
+- **Breaking**: the `Agraph_t.n_id` field is now an opaque pointer.
 
 ### Fixed
 

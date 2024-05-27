@@ -24,6 +24,7 @@ add_library(cgraph
   gv_math.h
   ingraphs.h
   list.h
+  node_set.h
   overflow.h
   prisize_t.h
   queue.h
