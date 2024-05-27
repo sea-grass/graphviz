@@ -602,14 +602,14 @@ set_xcoords(graph_t * g)
  */
 static void adjustSimple(graph_t * g, int delta, int margin_total)
 {
-    int r, bottom, deltop, delbottom;
+    int r, bottom, deltop;
     graph_t *root = dot_root(g);
     rank_t *rank = GD_rank(root);
     int maxr = GD_maxrank(g);
     int minr = GD_minrank(g);
 
     bottom = (delta+1) / 2;
-    delbottom = GD_ht1(g) + bottom - (rank[maxr].ht1 - margin_total);
+    const double delbottom = GD_ht1(g) + bottom - (rank[maxr].ht1 - margin_total);
     if (delbottom > 0) {
 	for (r = maxr; r >= minr; r--) {
 	    if (rank[r].n > 0)
