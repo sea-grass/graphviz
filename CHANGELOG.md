@@ -49,6 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: The TCL binding’s `tcldot_layout` function no longer tries to
   fallback to the `dot` layout engine if the requested engine is unavailable but
   instead fails with an error message.
+- The TCL binding’s graph `render` command no longer ignores layout errors.
 
 ### Fixed
 

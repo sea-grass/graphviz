@@ -326,17 +326,9 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	} else {
 	    canvas = argv[2];
 	}
-	if (!gvjobs_output_langname(gvc, "tk")) {
-	    Tcl_AppendResult(interp, " Format: \"tk\" not recognized.\n", NULL);
-	    return TCL_ERROR;
-	}
 
         gvc->write_fn = Tcldot_string_writer;
-	job = gvc->job;
 	tcldot_context_t context = {.canvas = canvas, .interp = interp};
-	job->context = &context;
-	job->external_context = true;
-	job->output_file = stdout;
 
 	/* make sure that layout is done */
 	g = agroot(g);
@@ -345,11 +337,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 
 	/* render graph TK canvas commands */
 	gvc->common.viewNum = 0;
-	gvRenderJobs(gvc, g);
-	gvrender_end_job(job);
-	gvdevice_finalize(job);
-	fflush(job->output_file);
-	gvjobs_delete(gvc);
+	if (gvRenderContext(gvc, g, "tk", &context) != 0) {
+	    return TCL_ERROR;
+	}
+	fflush(stdout);
 	return TCL_OK;
 
     } else if (strcmp("setattributes", argv[1]) == 0) {
