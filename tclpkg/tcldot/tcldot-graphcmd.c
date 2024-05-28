@@ -30,7 +30,6 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
     char buf[12], **argv2;
     int i, j, argc2;
     GVC_t *gvc = ictx->gvc;
-    GVJ_t *job = gvc->job;
 
     if (argc < 2) {
 	Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0], " option ?arg arg ...?\"", NULL);
@@ -435,21 +434,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	    return TCL_ERROR;
 	}
 
-	/* process lang first to create job */
-	if (!gvjobs_output_langname(gvc, argc < 4 ? "dot" : argv[3])) {
-	    const char *s = gvplugin_list(gvc, API_render, argv[3]);
-	    Tcl_AppendResult(interp, "bad langname: \"", argv[3], "\". Use one of:", s, NULL);
-	    return TCL_ERROR;
-	}
-
 	gvc->write_fn = Tcldot_channel_writer;
-	job = gvc->job;
 
-	/* populate new job struct with output language and output file data */
-	job->output_lang = gvrender_select(job, job->output_langname);
-
+	Tcl_Channel chan;
 	{
-	    Tcl_Channel chan;
 	    int mode;
 
 	    chan = Tcl_GetChannel(interp, argv[2], &mode);
@@ -462,18 +450,16 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	        Tcl_AppendResult(interp, "channel not writable: \"", argv[2], NULL);
 	        return TCL_ERROR;
 	    }
-	    job->output_file = (FILE *)chan;
 	}
-	job->output_filename = NULL;
 
 	/* make sure that layout is done  - unless canonical output */
-	if ((!aggetrec (g, "Agraphinfo_t",0) || argc > 4) && !(job->flags & LAYOUT_NOT_REQUIRED))
+	if (!aggetrec (g, "Agraphinfo_t",0) || argc > 4)
 	    tcldot_layout(gvc, g, (argc > 4) ? argv[4] : NULL);
 
 	gvc->common.viewNum = 0;
-	gvRenderJobs(gvc, g);
-	gvdevice_finalize(job);
-	gvjobs_delete(gvc);
+	if (gvRender(gvc, g, argc < 4 ? "dot" : argv[3], (FILE *)chan) != 0) {
+	    return TCL_ERROR;
+	}
 	return TCL_OK;
 
     } else {
