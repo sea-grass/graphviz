@@ -61,7 +61,7 @@ void solve(double *a, double *b, double *c, size_t n) { // a[n][n],b[n],c[n]
     const size_t ip = i + 1;
     for (size_t ii = ip; ii < n; ii++) {
       const double pivot = a[ii * n + i] / a[i * n + i];
-      c[ii] = c[ii] - pivot * c[i];
+      c[ii] -= pivot * c[i];
       for (size_t j = 0; j < n; j++)
         a[ii * n + j] = a[ii * n + j] - pivot * a[i * n + j];
     }
