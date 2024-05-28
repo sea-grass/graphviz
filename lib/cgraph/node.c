@@ -22,9 +22,8 @@
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)
 {
     Agsubnode_t *sn;
-    Agnode_t dummy = {0};
+    const Agnode_t dummy = {.base = {.tag = {.id = id}}};
 
-    dummy.base.tag.id = id;
     sn = node_set_find(g->n_id, &dummy);
     return sn ? sn->node : NULL;
 }
