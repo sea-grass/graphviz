@@ -12,6 +12,7 @@
 #include "tcldot.h"
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
+#include <gvc/gvc.h>
 
 size_t Tcldot_string_writer(GVJ_t *job, const char *s, size_t len)
 {
@@ -220,50 +221,21 @@ void listEdgeAttrs (Tcl_Interp * interp, Agraph_t* g)
 
 void tcldot_layout(GVC_t *gvc, Agraph_t * g, char *engine)
 {
-    char buf[256];
-    Agsym_t *a;
-    int rc;
-
     gvFreeLayout(gvc, g);               /* in case previously drawn */
 
 /* support old behaviors if engine isn't specified*/
     if (!engine || *engine == '\0') {
 	if (agisdirected(g))
-	    rc = gvlayout_select(gvc, "dot");
+	    engine = "dot";
 	else
-	    rc = gvlayout_select(gvc, "neato");
+	    engine = "neato";
     }
     else {
 	if (strcasecmp(engine, "nop") == 0) {
 	    Nop = 2;
 	    PSinputscale = POINTS_PER_INCH;
-	    rc = gvlayout_select(gvc, "neato");
+	    engine = "neato";
 	}
-	else {
-	    rc = gvlayout_select(gvc, engine);
-	}
-	if (rc == NO_SUPPORT)
-	    rc = gvlayout_select(gvc, "dot");
     }
-    if (rc == NO_SUPPORT) {
-        fprintf(stderr, "Layout type: \"%s\" not recognized. Use one of:%s\n",
-                engine, gvplugin_list(gvc, API_layout, engine));
-        return;
-    }
-    gvLayoutJobs(gvc, g);
-
-/* set bb attribute for basic layout.
- * doesn't yet include margins, scaling or page sizes because
- * those depend on the renderer being used. */
-    if (GD_drawing(g)->landscape)
-	snprintf(buf, sizeof(buf), "%.0f %.0f %.0f %.0f",
-		round(GD_bb(g).LL.y), round(GD_bb(g).LL.x),
-		round(GD_bb(g).UR.y), round(GD_bb(g).UR.x));
-    else
-	snprintf(buf, sizeof(buf), "%.0f %.0f %.0f %.0f",
-		round(GD_bb(g).LL.x), round(GD_bb(g).LL.y),
-		round(GD_bb(g).UR.x), round(GD_bb(g).UR.y));
-    if (!(a = agattr(g, AGRAPH, "bb", NULL))) 
-	a = agattr(g, AGRAPH, "bb", "");
-    agxset(g, a, buf);
+    gvLayout(gvc, g, engine);
 }

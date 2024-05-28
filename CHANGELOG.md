@@ -46,6 +46,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   any more. None of the build systems attempt to discover `sincos` any more.
 - The FIG output format (`-Tfig`) supports up to 512 custom colors. The previous
   limit was 256, after which it would crash (see note in the “Fixed” section).
+- **Breaking**: The TCL binding’s `tcldot_layout` function no longer tries to
+  fallback to the `dot` layout engine if the requested engine is unavailable but
+  instead fails with an error message.
 
 ### Fixed
 
