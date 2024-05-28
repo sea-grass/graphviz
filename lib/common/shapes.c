@@ -1928,8 +1928,7 @@ static void poly_init(node_t * n)
     char *p, *sfile, *fxd;
     double temp, alpha, beta, gamma;
     double orientation, distortion, skew;
-    double sectorangle, sidelength, skewdist, gdistortion, gskew;
-    double angle, sinx = 0, cosx = 0, xmax, ymax, scalex, scaley;
+    double scalex, scaley;
     double width, height, marginx, marginy, spacex;
     polygon_t *poly = gv_alloc(sizeof(polygon_t));
     bool isPlain = IS_PLAIN(n);
@@ -2199,6 +2198,7 @@ static void poly_init(node_t * n)
  *   the current segments, and outside by GAP distance, intersect.
  */
 
+	double sinx = 0, cosx = 0, xmax, ymax;
 	vertices = gv_calloc(outp * sides, sizeof(pointf));
 	if (ND_shape(n)->polygon->vertices) {
 	    poly_desc_t* pd = (poly_desc_t*)ND_shape(n)->polygon->vertices;
@@ -2206,6 +2206,7 @@ static void poly_init(node_t * n)
 	    xmax = bb.x/2;
 	    ymax = bb.y/2;
 	} else {
+	    double angle, sectorangle, sidelength, skewdist, gdistortion, gskew;
 	    sectorangle = 2. * M_PI / (double)sides;
 	    sidelength = sin(sectorangle / 2.);
 	    skewdist = hypot(fabs(distortion) + fabs(skew), 1.);
