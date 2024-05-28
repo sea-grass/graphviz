@@ -143,12 +143,11 @@ static Agedge_t *agfindedge_by_id(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 
 Agsubnode_t *agsubrep(Agraph_t * g, Agnode_t * n)
 {
-    Agsubnode_t *sn, template;
+    Agsubnode_t *sn;
 
 	if (g == n->root) sn = &(n->mainsub);
 	else {
-			template.node = n;
-			sn = node_set_find(g->n_id, &template);
+			sn = node_set_find(g->n_id, n);
 	}
     return sn;
 }
