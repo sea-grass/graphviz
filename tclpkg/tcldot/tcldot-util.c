@@ -16,7 +16,8 @@
 
 size_t Tcldot_string_writer(GVJ_t *job, const char *s, size_t len)
 {
-    Tcl_AppendResult(job->context, s, NULL);
+    tcldot_context_t *context = job->context;
+    Tcl_AppendResult(context->interp, s, NULL);
     return len;
 }
 

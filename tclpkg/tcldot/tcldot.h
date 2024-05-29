@@ -17,6 +17,7 @@
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
 #include "tclhandle.h"
+#include "../../plugin/core/tcl_context.h"
 
 #ifndef CONST84
 #define CONST84

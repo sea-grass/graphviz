@@ -93,6 +93,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ps.h" />
+    <ClInclude Include="tcl_context.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gvloadimage_core.c" />

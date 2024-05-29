@@ -333,8 +333,8 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 
         gvc->write_fn = Tcldot_string_writer;
 	job = gvc->job;
-	job->imagedata = canvas;
-	job->context = interp;
+	tcldot_context_t context = {.canvas = canvas, .interp = interp};
+	job->context = &context;
 	job->external_context = true;
 	job->output_file = stdout;
 
