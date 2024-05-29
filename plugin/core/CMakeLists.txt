@@ -9,7 +9,6 @@ add_library(gvplugin_core SHARED
   gvrender_core_json.c
   gvrender_core_fig.c
   gvrender_core_map.c
-  gvrender_core_mp.c
   gvrender_core_pic.c
   gvrender_core_pov.c
   gvrender_core_ps.c

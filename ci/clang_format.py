@@ -554,7 +554,6 @@ EXCLUDE = (
     "plugin/core/gvrender_core_fig.c",
     "plugin/core/gvrender_core_json.c",
     "plugin/core/gvrender_core_map.c",
-    "plugin/core/gvrender_core_mp.c",
     "plugin/core/gvrender_core_pic.c",
     "plugin/core/gvrender_core_pov.c",
     "plugin/core/gvrender_core_ps.c",
