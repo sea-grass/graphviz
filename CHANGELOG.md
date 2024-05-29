@@ -41,6 +41,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   now operate on floating-point points (`pointf`) instead of integer points
   (`point`).
 - **Breaking**: the `BF2B` macro has been removed.
+- **Breaking**: the undocumented `-Tmp` output format has been removed.
 
 ### Fixed
 
