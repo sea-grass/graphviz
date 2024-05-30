@@ -52,7 +52,7 @@ static void figptarray(GVJ_t *job, pointf *A, size_t n, int close) {
 static int figColorResolve(int *new, unsigned char r, unsigned char g,
   unsigned char b)
 {
-#define maxColors 256
+#define maxColors 512
     static int top = 0;
     static short red[maxColors], green[maxColors], blue[maxColors];
     int c;
