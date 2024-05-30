@@ -15,10 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef _WIN32
-#include <io.h>
-#endif
-
 #include <common/macros.h>
 #include <common/const.h>
 
