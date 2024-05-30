@@ -11,7 +11,6 @@
 #include "config.h"
 #include <assert.h>
 #include <math.h>
-#include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
