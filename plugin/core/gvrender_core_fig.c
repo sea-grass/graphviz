@@ -81,9 +81,8 @@ static int figColorResolve(bool *new, unsigned char r, unsigned char g,
 }
 
 /* this table is in xfig color index order */
-static char *figcolor[] = {
-    "black", "blue", "green", "cyan", "red", "magenta", "yellow", "white", (char *) NULL
-};
+static char *figcolor[] = {"black",   "blue",   "green", "cyan", "red",
+                           "magenta", "yellow", "white", NULL};
 
 static void fig_resolve_color(GVJ_t *job, gvcolor_t * color)
 {
