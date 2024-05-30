@@ -4259,3 +4259,21 @@ def test_control_characters_in_error():
     )
 
     assert "\010" not in ret.stderr, "control character appears in error message"
+
+
+@pytest.mark.xfail(strict=True)
+def test_fig_max_colors():
+    """
+    using a large number of colors should not crash the FIG renderer
+    """
+
+    # contruct a graph that uses well over 256 colors
+    buf = io.StringIO()
+    buf.write("graph {\n")
+    for red in range(256):
+        for green in range(10):
+            buf.write(f'  n_{red}_{green}[color="#{red:02x}{green:02x}00"];\n')
+    buf.write("}\n")
+
+    # render this using the FIG renderer
+    dot("fig", source=buf.getvalue())
