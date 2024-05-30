@@ -74,8 +74,9 @@ static int figColorResolve(int *new, unsigned char r, unsigned char g,
         }
     }
     /* no exact match.  We now know closest, but first try to allocate exact */
-    if (top++ == maxColors)
+    if (top == maxColors)
         return ct;              /* Return closest available color */
+    ++top;
     red[c] = r;
     green[c] = g;
     blue[c] = b;

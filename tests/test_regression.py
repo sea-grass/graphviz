@@ -4261,7 +4261,6 @@ def test_control_characters_in_error():
     assert "\010" not in ret.stderr, "control character appears in error message"
 
 
-@pytest.mark.xfail(strict=True)
 def test_fig_max_colors():
     """
     using a large number of colors should not crash the FIG renderer
