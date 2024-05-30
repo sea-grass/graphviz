@@ -12,6 +12,7 @@
 #include <assert.h>
 #include <math.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,7 +50,7 @@ static void figptarray(GVJ_t *job, pointf *A, size_t n, int close) {
     gvputs(job, "\n");
 }
 
-static int figColorResolve(int *new, unsigned char r, unsigned char g,
+static int figColorResolve(bool *new, unsigned char r, unsigned char g,
   unsigned char b)
 {
 #define maxColors 512
@@ -60,7 +61,7 @@ static int figColorResolve(int *new, unsigned char r, unsigned char g,
     long rd, gd, bd, dist;
     long mindist = 3 * 255 * 255;       /* init to max poss dist */
 
-    *new = 0;                   /* in case it is not a new color */
+    *new = false; // in case it is not a new color
     for (c = 0; c < top; c++) {
         rd = (long) (red[c] - r);
         gd = (long) (green[c] - g);
@@ -80,7 +81,7 @@ static int figColorResolve(int *new, unsigned char r, unsigned char g,
     red[c] = r;
     green[c] = g;
     blue[c] = b;
-    *new = 1;                   /* flag new color */
+    *new = true; // flag new color
     return c;                   /* Return newly allocated color */
 }
 
@@ -92,7 +93,7 @@ static char *figcolor[] = {
 static void fig_resolve_color(GVJ_t *job, gvcolor_t * color)
 {
     int object_code = 0;        /* always 0 for color */
-    int i, new;
+    int i;
 
     switch (color->type) {
 	case COLOR_STRING:
@@ -103,7 +104,8 @@ static void fig_resolve_color(GVJ_t *job, gvcolor_t * color)
 		}
 	    }
 	    break;
-	case RGBA_BYTE:
+	case RGBA_BYTE: {
+	    bool new;
 	    i = 32 + figColorResolve(&new,
 			color->u.rgba[0],
 			color->u.rgba[1],
@@ -116,6 +118,7 @@ static void fig_resolve_color(GVJ_t *job, gvcolor_t * color)
 			color->u.rgba[2]);
 	    color->u.index = i;
 	    break;
+	}
 	default:
 	    UNREACHABLE(); // internal error
     }
