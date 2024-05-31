@@ -42,4 +42,4 @@ If you have a bug or believe something is not working as expected, please submit
 
 If you have a general question or are unsure how things work, these queries can be posted in the [Graphviz Forum](https://forum.graphviz.org/).
 
-Graphviz is on twitter and fosstodon.
+Graphviz is on [X](https://twitter.com/graphviz) and [Fosstodon](https://fosstodon.org/@graphviz).
