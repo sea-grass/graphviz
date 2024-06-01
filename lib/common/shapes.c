@@ -725,6 +725,25 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	free(B);
 	return;
     }
+    assert(mode.shape);
+    assert(sides == 4);
+    /*
+     * Finding coordinates of AF rectangle midpoint for shapes:
+     * ~~~
+     *
+     *             AF[3]───────AF[2]
+     *                │           │
+     * mid_y(&AF[1])→ │  midpoint │
+     *                │           │
+     *             AF[0]───────AF[1]
+     *                      ↑
+     *                  mid_x(AF)
+     * ~~~
+     */
+    assert(is_exactly_equal(AF[0].x, AF[3].x));
+    assert(is_exactly_equal(AF[1].x, AF[2].x));
+    assert(is_exactly_equal(AF[2].y, AF[3].y));
+    assert(is_exactly_equal(AF[0].y, AF[1].y));
     switch (mode.shape) {
     case DOGEAR:
 	/* Add the cutoff edge. */
@@ -939,7 +958,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1016,7 +1035,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1057,7 +1076,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1096,7 +1115,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1141,14 +1160,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[4].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line right half*/
 	C[0].x = D[7].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1198,7 +1217,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = D[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1248,7 +1267,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[3].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1326,14 +1345,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = D[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line left half*/
 	C[0].x = mid_x(AF) - (B[2].x-B[3].x)*9/8; //D[0].x of of the left rectangles
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[1].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1382,14 +1401,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = D[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = D[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1480,14 +1499,14 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = mid_x(AF) + (B[2].x-B[3].x)*3/4;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	/*dsDNA line left half*/
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = mid_x(AF) - (B[2].x-B[3].x)*3/4;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 
 	break;
@@ -1557,7 +1576,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1614,7 +1633,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1675,7 +1694,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -1721,7 +1740,7 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	C[0].x = AF[1].x;
 	C[0].y = mid_y(&AF[1]);
 	C[1].x = AF[0].x;
-	C[1].y = AF[2].y + (AF[0].y - AF[3].y)/2;
+	C[1].y = mid_y(&AF[1]);
 	gvrender_polyline(job, C, 2);
 	free(D);
 
@@ -3009,6 +3028,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     }
 
     /* draw peripheries first */
+    //fprintf(stderr, "%s\n", ND_shape(n)->name);
     size_t j;
     for (j = 0; j < peripheries; j++) {
 	for (size_t i = 0; i < sides; i++) {
@@ -3040,6 +3060,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	    gvrender_set_pencolor(job, pencolor);
 	    gvrender_polyline(job, AF+2, 2);
 	} else if (SPECIAL_CORNERS(style)) {
+		//trl();
 	    round_corners(job, AF, sides, style, filled);
 	} else {
 	    gvrender_polygon(job, AF, sides, filled);
@@ -3085,6 +3106,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 		    agerr (AGPREV, "in node %s\n", agnameof(n));
 		gvrender_polygon(job, AF, sides, 0);
 	    } else if (style.rounded || style.diagonals) {
+		//trl();
 		round_corners(job, AF, sides, style, filled);
 	    } else {
 		gvrender_polygon(job, AF, sides, filled);
@@ -3940,6 +3962,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
 	AF[1].y = AF[0].y;
 	AF[3].x = AF[0].x;
 	AF[3].y = AF[2].y;
+        //fprintf(stderr, "%s\n", ND_shape(n)->name);
 	round_corners(job, AF, 4, style, filled);
     } else {
 	gvrender_box(job, BF, filled);
