@@ -55,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `agrelabel_node` (or equivalently, `agrename` when operating on a node) no
   longer corrupts the node-by-id set, causing a crash. This bug was preventing
   `gxl2gv` from processing inputs that used node `name` attributes. #2300
+- Accuracy improvements have fixed an assertion failure on macOS. #2538
 
 ## [11.0.0] – 2024-04-28
 
