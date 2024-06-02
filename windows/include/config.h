@@ -129,9 +129,6 @@
 /* Define to 1 if you have the `setmode' function. */
 #define HAVE_SETMODE 1
 
-/* Define if libm provides a *working* sincos function */
-/* #undef HAVE_SINCOS */
-
 /* Define to 1 if you have the `srand48' function. */
 /* #undef HAVE_SRAND48 */
 

@@ -15,11 +15,6 @@
 
 #pragma once
 
-/* for sincos */
-#ifndef _GNU_SOURCE
-#define _GNU_SOURCE 1
-#endif
-
 #include <limits.h>
 #include <math.h>
 
@@ -55,12 +50,6 @@ extern "C" {
 #define DEGREES(rad)	((rad)/M_PI * 180.0)
 
 #define SQR(a) ((a) * (a))
-
-#ifdef HAVE_SINCOS
-    extern void sincos(double x, double *s, double *c);
-#else
-# define sincos(x,s,c) *s = sin(x); *c = cos(x)
-#endif
 
 #ifdef __cplusplus
 }

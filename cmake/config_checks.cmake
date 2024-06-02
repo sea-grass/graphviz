@@ -22,7 +22,6 @@ check_function_exists( lrand48          HAVE_LRAND48         )
 check_function_exists( memrchr          HAVE_MEMRCHR         )
 check_function_exists( setenv           HAVE_SETENV          )
 check_function_exists( setmode          HAVE_SETMODE         )
-check_function_exists( sincos           HAVE_SINCOS          )
 check_function_exists( srand48          HAVE_SRAND48         )
 
 # Library checks

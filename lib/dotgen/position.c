@@ -68,8 +68,7 @@ largeMinlen (double l)
   return (double)INT_MAX;
 }
 
-/* connectGraph:
- * When source and/or sink nodes are defined, it is possible that
+/* When source and/or sink nodes are defined, it is possible that
  * after the auxiliary edges are added, the graph may still have 2 or
  * 3 components. To fix this, we put trivial constraints connecting the
  * first items of each rank.
@@ -211,13 +210,11 @@ static void allocate_aux_edges(graph_t * g)
     }
 }
 
-/* make_LR_constraints:
- */
 static void 
 make_LR_constraints(graph_t * g)
 {
     int i, j;
-    int m0, m1;
+    int m0;
     double width;
     int sep[2];
     int nodesep;      /* separation between nodes on same rank */
@@ -275,7 +272,7 @@ make_LR_constraints(graph_t * g)
 		    e1 = ff;
 		}
 		m0 = ED_minlen(e) * GD_nodesep(g) / 2;
-		m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
+		double m1 = m0 + ND_rw(aghead(e0)) + ND_lw(agtail(e0));
 		/* these guards are needed because the flat edges
 		 * work very poorly with cluster layout */
 		if (!canreach(agtail(e0), aghead(e0)))
@@ -324,7 +321,7 @@ make_LR_constraints(graph_t * g)
     }
 }
 
-/* make_edge_pairs: make virtual edge pairs corresponding to input edges */
+/// make virtual edge pairs corresponding to input edges
 static void make_edge_pairs(graph_t * g)
 {
     int i, m0, m1;
@@ -381,8 +378,7 @@ static bool vnode_not_related_to(graph_t *g, node_t *v) {
     return true;
 }
 
-/* keepout_othernodes:
- * Guarantee nodes outside the cluster g are placed outside of it.
+/* Guarantee nodes outside the cluster g are placed outside of it.
  * This is done by adding constraints to make sure such nodes have
  * a gap of margin from the left or right bounding box node ln or rn.
  * 
@@ -425,8 +421,7 @@ static void keepout_othernodes(graph_t * g)
 	keepout_othernodes(GD_clust(g)[c]);
 }
 
-/* contain_subclust:
- * Make sure boxes of subclusters of g are offset from the
+/* Make sure boxes of subclusters of g are offset from the
  * box of g. This is done by a constraint between the left and
  * right bounding box nodes ln and rn of g and a subcluster.
  * The gap needs to include any left or right labels.
@@ -449,8 +444,7 @@ static void contain_subclust(graph_t * g)
     }
 }
 
-/* separate_subclust:
- * Guarantee space between subcluster of g.
+/* Guarantee space between subcluster of g.
  * This is done by adding a constraint between the right bbox node rn
  * of the left cluster and the left bbox node ln of the right cluster.
  * This is only done if the two clusters overlap in some rank.
@@ -489,7 +483,7 @@ static void separate_subclust(graph_t * g)
     }
 }
 
-/* pos_clusters: create constraints for:
+/*	create constraints for:
  *	node containment in clusters,
  *	cluster containment in clusters,
  *	separation of sibling clusters.
@@ -570,9 +564,7 @@ static void remove_aux_edges(graph_t * g)
     ND_prev(GD_nlist(g)) = NULL;
 }
 
-/* set_xcoords:
- * Set x coords of nodes.
- */
+/// Set x coords of nodes.
 static void 
 set_xcoords(graph_t * g)
 {
@@ -589,8 +581,7 @@ set_xcoords(graph_t * g)
     }
 }
 
-/* adjustSimple:
- * Expand cluster height by delta, adding half to top
+/* Expand cluster height by delta, adding half to top
  * and half to bottom. If the bottom expansion exceeds the
  * ht1 of the rank, shift the ranks in the cluster up.
  * If the top expansion, including any shift from the bottom
@@ -600,16 +591,16 @@ set_xcoords(graph_t * g)
  * FIX: There can be excess space between ranks. Not sure where this is
  * coming from but it could be cleaned up.
  */
-static void adjustSimple(graph_t * g, int delta, int margin_total)
-{
-    int r, bottom, deltop, delbottom;
+static void adjustSimple(graph_t *g, double delta, int margin_total) {
+    int r;
+    double deltop;
     graph_t *root = dot_root(g);
     rank_t *rank = GD_rank(root);
     int maxr = GD_maxrank(g);
     int minr = GD_minrank(g);
 
-    bottom = (delta+1) / 2;
-    delbottom = GD_ht1(g) + bottom - (rank[maxr].ht1 - margin_total);
+    const double bottom = (delta + 1) / 2;
+    const double delbottom = GD_ht1(g) + bottom - (rank[maxr].ht1 - margin_total);
     if (delbottom > 0) {
 	for (r = maxr; r >= minr; r--) {
 	    if (rank[r].n > 0)
@@ -629,8 +620,7 @@ static void adjustSimple(graph_t * g, int delta, int margin_total)
     GD_ht1(g) += bottom;
 }
 
-/* adjustRanks:
- * Recursively adjust ranks to take into account
+/* Recursively adjust ranks to take into account
  * wide cluster labels when rankdir=LR.
  * We divide the extra space between the top and bottom.
  * Adjust the ht1 and ht2 values in the process.
@@ -682,8 +672,7 @@ static void adjustRanks(graph_t * g, int margin_total)
     }
 }
 
-/* clust_ht:
- * recursively compute cluster ht requirements.  assumes GD_ht1(subg) and ht2
+/* recursively compute cluster ht requirements.  assumes GD_ht1(subg) and ht2
  * are computed from primitive nodes only.  updates ht1 and ht2 to reflect
  * cluster nesting and labels.  also maintains global rank ht1 and ht2.
  * Return true if some cluster has a label.
@@ -837,8 +826,7 @@ static void set_ycoords(graph_t * g)
 	ND_coord(n).y = (ND_coord(rank[ND_rank(n)].v[0])).y;
 }
 
-/* dot_compute_bb:
- * Compute bounding box of g.
+/* Compute bounding box of g.
  * The x limits of clusters are given by the x positions of ln and rn.
  * This information is stored in the rank field, since it was calculated
  * using network simplex.
@@ -900,8 +888,7 @@ static void rec_bb(graph_t * g, graph_t * root)
     dot_compute_bb(g, root);
 }
 
-/* scale_bb:
- * Recursively rescale all bounding boxes using scale factors
+/* Recursively rescale all bounding boxes using scale factors
  * xf and yf. We assume all the bboxes have been computed.
  */
 static void scale_bb(graph_t * g, graph_t * root, double xf, double yf)
@@ -916,8 +903,7 @@ static void scale_bb(graph_t * g, graph_t * root, double xf, double yf)
     GD_bb(g).UR.y *= yf;
 }
 
-/* set_aspect:
- * Set bounding boxes and, if ratio is set, rescale graph.
+/* Set bounding boxes and, if ratio is set, rescale graph.
  * Note that if some dimension shrinks, there may be problems
  * with labels.
  */
@@ -1059,8 +1045,7 @@ static void expand_leaves(graph_t * g)
     }
 }
 
-/* make_lrvn:
- * Add left and right slacknodes to a cluster which
+/* Add left and right slacknodes to a cluster which
  * are used in the LP to constrain nodes not in g but
  * sharing its ranks to be to the left or right of g
  * by a specified amount.
@@ -1093,8 +1078,7 @@ static void make_lrvn(graph_t * g)
     GD_rn(g) = rn;
 }
 
-/* contain_nodes: 
- * make left and right bounding box virtual nodes ln and rn
+/* make left and right bounding box virtual nodes ln and rn
  * constrain interior nodes
  */
 static void contain_nodes(graph_t * g)
@@ -1123,8 +1107,7 @@ static void contain_nodes(graph_t * g)
     }
 }
 
-/* idealsize:
- * set g->drawing->size to a reasonable default.
+/* set g->drawing->size to a reasonable default.
  * returns a boolean to indicate if drawing is to
  * be scaled and filled */
 static bool idealsize(graph_t * g, double minallowed)

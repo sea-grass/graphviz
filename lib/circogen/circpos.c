@@ -124,23 +124,14 @@ static void applyDelta(block_t * sn, double x, double y, double rotate)
     subg = sn->sub_graph;
 
     for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
-	double X, Y;
 
-	if (rotate != 0) {
-	    double tmpX, tmpY;
-	    double cosR, sinR;
+	const double tmpX = ND_pos(n)[0];
+	const double tmpY = ND_pos(n)[1];
+	const double cosR = cos(rotate);
+	const double sinR = sin(rotate);
 
-	    tmpX = ND_pos(n)[0];
-	    tmpY = ND_pos(n)[1];
-	    cosR = cos(rotate);
-	    sinR = sin(rotate);
-
-	    X = tmpX * cosR - tmpY * sinR;
-	    Y = tmpX * sinR + tmpY * cosR;
-	} else {
-	    X = ND_pos(n)[0];
-	    Y = ND_pos(n)[1];
-	}
+	const double X = tmpX * cosR - tmpY * sinR;
+	const double Y = tmpX * sinR + tmpY * cosR;
 
 	/* translate */
 	ND_pos(n)[0] = X + x;

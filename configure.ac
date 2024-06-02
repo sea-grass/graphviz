@@ -367,15 +367,8 @@ AC_CHECK_HEADERS( \
 dnl -----------------------------------
 dnl Checks for -lm library
 
-save_LIBS=$LIBS
 AC_CHECK_LIB(m, main, [MATH_LIBS="-lm"])
 AC_SUBST([MATH_LIBS])
-
-# Check for functions that might need -lm
-LIBS="$LIBS $MATH_LIBS"
-AC_CHECK_FUNCS([sincos])
-
-LIBS=$save_LIBS
 
 # -----------------------------------
 
