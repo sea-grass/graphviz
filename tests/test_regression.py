@@ -352,6 +352,31 @@ def test_218():
     assert warnings.strip() != "", "no warning issued for a font name containing space"
 
 
+@pytest.mark.parametrize("test_case", ("241_0.dot", "241_1.dot"))
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/241"
+)
+def test_241(test_case: str):
+    """
+    processing a graph with a `splines=…` setting should not causes warnings
+    https://gitlab.com/graphviz/graphviz/-/issues/241
+    """
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / test_case
+    assert input.exists(), "unexpectedly missing test case"
+
+    proc = subprocess.run(
+        ["dot", "-Tsvg", "-o", os.devnull, input],
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+        check=True,
+    )
+
+    assert (
+        "Something is probably seriously wrong" not in proc.stderr
+    ), "splines setting caused warnings"
+
+
 def test_358():
     """
     setting xdot version to 1.7 should enable font characteristics
