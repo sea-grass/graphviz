@@ -614,6 +614,24 @@ static pointf * alloc_interpolation_points(pointf *AF, size_t sides,
 }
 
 /**
+ * @brief draws polygons with diagonals on corners
+ *
+ * Diagonals are weird. Rewrite someday.
+ */
+static void diagonals_draw(GVJ_t *job, pointf *AF, size_t sides,
+                           graphviz_polygon_style_t style, int filled)
+{
+  pointf *B = alloc_interpolation_points(AF, sides, style, false);
+  gvrender_polygon(job, AF, sides, filled);
+
+  for (size_t seg = 0; seg < sides; seg++) {
+    pointf C[] = {B[3 * seg + 2], B[3 * seg + 4]};
+    gvrender_polyline(job, C, 2);
+  }
+  free(B);
+}
+
+/**
  * @brief draws rounded symmetric polygons with
  * [Bézier curve](https://en.wikipedia.org/wiki/Bézier_curve)
  *
@@ -695,12 +713,11 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
     pointf *B, C[5], *D;
 
     struct {
-	bool diagonals: 1;
 	unsigned shape: 7;
     } mode = {0};
 
     if (style.diagonals)
-	mode.diagonals = true;
+	return diagonals_draw(job, AF, sides, style, filled);
     else if (style.shape != 0)
 	mode.shape = style.shape;
     else if (style.rounded)
@@ -713,18 +730,6 @@ void round_corners(GVJ_t *job, pointf *AF, size_t sides,
 	return;
     }
     B = alloc_interpolation_points(AF, sides, style, false);
-    if (mode.diagonals) {
-	/* diagonals are weird.  rewrite someday. */
-	gvrender_polygon(job, AF, sides, filled);
-
-	for (size_t seg = 0; seg < sides; seg++) {
-	    C[0] = B[3 * seg + 2];
-	    C[1] = B[3 * seg + 4];
-	    gvrender_polyline(job, C, 2);
-	}
-	free(B);
-	return;
-    }
     switch (mode.shape) {
     case DOGEAR:
 	/* Add the cutoff edge. */
