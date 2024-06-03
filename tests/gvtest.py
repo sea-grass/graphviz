@@ -95,6 +95,7 @@ def dot(
         "canon",
         "cmapx",
         "dot",
+        "fig",
         "json",
         "pic",
         "svg",

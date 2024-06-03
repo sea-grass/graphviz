@@ -44,6 +44,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: the undocumented `-Tmp` output format has been removed.
 - **Breaking**: the arith.h header defines neither `_GNU_SOURCE` nor `sincos`
   any more. None of the build systems attempt to discover `sincos` any more.
+- The FIG output format (`-Tfig`) supports up to 512 custom colors. The previous
+  limit was 256, after which it would crash (see note in the “Fixed” section).
 
 ### Fixed
 
@@ -58,6 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   longer corrupts the node-by-id set, causing a crash. This bug was preventing
   `gxl2gv` from processing inputs that used node `name` attributes. #2300
 - Accuracy improvements have fixed an assertion failure on macOS. #2538
+- The FIG output format (`-Tfig`) no longer crashes when handling more than 256
+  colors.
 
 ## [11.0.0] – 2024-04-28
 
