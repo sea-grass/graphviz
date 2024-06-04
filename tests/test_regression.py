@@ -2455,8 +2455,9 @@ def test_2342():
     dot("svg", input)
 
 
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2356",
+@pytest.mark.skipif(
+    os.getenv("build_system") == "msbuild",
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/1777",
 )
 def test_2356():
     """

@@ -197,6 +197,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   periphery using fdp or neato, causing the same symptoms as #2168.
 - Adjust the space available for edge routing based on penwidth when
   using fdp or neato and `splines=ortho`.
+- Setting "mindist" graph attribute for circo layout causes GraphViz library to
+  crash with "access violation in cgraph.dll" on gvLayout (checked for Windows
+  only). #2356
 
 ## [10.0.1] – 2024-02-11
 
