@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <cgraph/unreachable.h>
+#include <stdint.h>
 #include "tcldot.h"
 
 // Agiddisc functions
@@ -33,7 +34,7 @@ static long myiddisc_map(void *state, int objtype, char *str, uint64_t *id, int 
             s = agstrdup(gctx->g, str);
         else
             s = agstrbind(gctx->g, str);
-        *id = (uint64_t) s;
+        *id = (uint64_t)(uintptr_t)s;
     } else {
         *id = ictx->ctr;  /* counter maintained in per-interp space, so that
 		ids are unique across all graphs in the interp */
@@ -66,13 +67,13 @@ static void myiddisc_free(void *state, int objtype, uint64_t id) {
     Tcl_DeleteCommand(ictx->interp, buf);
 */
     if (id % 2 == 0)
-        agstrfree(gctx->g, (char *) id);
+        agstrfree(gctx->g, (char *)(uintptr_t)id);
 }
 static char *myiddisc_print(void *state, int objtype, uint64_t id) {
     (void)state;
     (void)objtype;
     if (id % 2 == 0)
-        return (char *) id;
+        return (char *)(uintptr_t)id;
     else
         return "";
 }

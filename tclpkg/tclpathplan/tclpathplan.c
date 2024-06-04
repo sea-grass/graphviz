@@ -384,7 +384,6 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
     double alpha, gain;
     Pvector_t slopes[2];
     Ppolyline_t line, spline;
-    int pp, qp;			/* polygon indices for p, q */
     Pedge_t *barriers;
 
     if (argc < 2) {
@@ -639,7 +638,8 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    return result;
 
 	/* determine the polygons (if any) that contain the endpoints */
-	pp = qp = POLYID_NONE;
+	int pp = POLYID_NONE;
+	int qp = POLYID_NONE;
 	for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	    poly *tpp = polys_at(&vgp->poly, i);
 	    if ((pp == POLYID_NONE) && in_poly(tpp->boundary, p))

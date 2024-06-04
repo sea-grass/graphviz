@@ -193,7 +193,7 @@ int Tcldot_Init(Tcl_Interp *interp) {
     return TCL_ERROR;
   }
 
-#if HAVE_LIBGD
+#ifdef HAVE_LIBGD
   Gdtclft_Init(interp);
 #endif
 

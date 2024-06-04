@@ -24,6 +24,7 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
+#include "tcl_context.h"
 
 typedef enum { FORMAT_TK, } format_type;
 
@@ -105,9 +106,10 @@ static void tkgen_print_tags(GVJ_t *job)
 
 static void tkgen_canvas(GVJ_t * job)
 {
-   if (job->external_context) 
-	gvputs(job, job->imagedata);
-   else
+   if (job->external_context) {
+	tcldot_context_t *context = job->context;
+	gvputs(job, context->canvas);
+   } else
 	gvputs(job, "$c");
 }
 

@@ -18,6 +18,9 @@
     <ClInclude Include="ps.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tcl_context.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gvloadimage_core.c">
