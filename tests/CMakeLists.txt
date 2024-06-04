@@ -61,7 +61,8 @@ macro(CREATE_TEST testname)
   set_target_properties(test_${testname} PROPERTIES CXX_STANDARD 20)
   set_target_properties(test_${testname} PROPERTIES CXX_STANDARD_REQUIRED ON)
   add_test(NAME test_${testname}
-           COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/catch2_wrapper.py ${testname})
+           COMMAND ./test_${testname} --reporter JUnit::out=test_${testname}.xml
+             --reporter console::out=-::colour-mode=ansi)
   target_include_directories(test_${testname} PRIVATE
     ../lib
     ../lib/cdt
