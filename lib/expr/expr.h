@@ -27,8 +27,6 @@ extern "C" {
 
 #include <expr/exparse.h>
 
-#undef	extern
-
 #include <assert.h>
 #include <cdt.h>
 #include <cgraph/agxbuf.h>
@@ -261,8 +259,6 @@ extern char*	exopname(int);
 extern void		exinit(void);
 extern char *extypename(Expr_t *p, long);
 extern int		exisAssign(Exnode_t *);
-
-#undef	extern
 
 /** Construct a vmalloc-backed string.
  *
