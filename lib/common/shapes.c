@@ -632,7 +632,7 @@ static void diagonals_draw(GVJ_t *job, pointf *AF, size_t sides,
 }
 
 /**
- * @brief draws rounded symmetric polygons with
+ * @brief draws rounded polygons with
  * [Bézier curve](https://en.wikipedia.org/wiki/Bézier_curve)
  *
  * For example, a rounded star looks like a cartoon starfish.
