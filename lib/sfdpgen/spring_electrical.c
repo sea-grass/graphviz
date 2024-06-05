@@ -645,7 +645,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0, counts_avg = 0;
 #ifdef TIME
   clock_t start, end, start0, start2;
-  double qtree_cpu = 0, qtree_cpu0 = 0;
+  double qtree_cpu = 0;
   double total_cpu = 0;
   start0 = clock();
 #endif
@@ -775,10 +775,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
       QuadTree_delete(qt);
       nsuper_avg /= n;
       counts_avg /= n;
-#ifdef TIME
-      qtree_cpu0 = qtree_cpu - qtree_cpu0;
-      qtree_cpu0 = qtree_cpu;
-#endif
       oned_optimizer_train(&qtree_level_optimizer, 5 * nsuper_avg + counts_avg);
     }
 
