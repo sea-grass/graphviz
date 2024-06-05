@@ -14,6 +14,7 @@ import re
 import shutil
 import signal
 import stat
+import statistics
 import subprocess
 import sys
 import tempfile
@@ -32,6 +33,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     gvpr,
     is_centos,
     is_mingw,
+    is_rocky,
     is_rocky_8,
     remove_xtype_warnings,
     run_c,
@@ -2422,6 +2424,68 @@ def test_2215():
     # try the same on a labelled version of this graph
     input = 'graph g { node[label=""] a -- b; }'
     subprocess.run(["dot", "-v"], input=input, check=True, universal_newlines=True)
+
+
+@pytest.mark.xfail(
+    (platform.system() == "Windows" and not is_mingw()) or is_centos() or is_rocky(),
+    strict=True,
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2241",
+)
+def test_2241():
+    """
+    a graph with two nodes and one edge in each direction should be rendered
+    with two visually distinct edges when using the neato engine and
+    splines=true, not two edges on top of each other, visually looking like a
+    single edge with both head and tail arrowheads.
+    https://gitlab.com/graphviz/graphviz/-/issues/2241
+    """
+
+    # find our collocated test case
+    input = Path(__file__).parent / "2241.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run it through Graphviz
+    svg = dot("svg", input)
+
+    # load this as XML
+    root = ET.fromstring(svg)
+
+    # the output is expected to contain two paths which are well separated
+    paths = root.findall(".//{http://www.w3.org/2000/svg}path")
+    assert len(paths) == 2, "expected two paths in output"
+    ellipses = root.findall(".//{http://www.w3.org/2000/svg}ellipse")
+    assert len(ellipses) == 2, "expected two ellipses in output"
+
+    # calculate the x coordinate of a vertical line which is equidistant from the two nodes
+    x = statistics.mean(float(ellipse.get("cx")) for ellipse in ellipses)
+
+    # for each edge path, get the y coordinate of a point on a line between the edge's endpoints
+    # where the line intersects the node equidistant vertical line
+    y_coordinates = []
+    for path in paths:
+        d_attribute = path.get("d")
+        points_str = re.split("[ C]", d_attribute.replace("M", ""))
+        assert (
+            len(points_str) == 4
+        ), "expected four points in the 'd' attribute of the 'path' element"
+        points = [
+            (float(x_str), float(y_str))
+            for x_str, y_str in [point_str.split(",") for point_str in points_str]
+        ]
+        dx = points[3][0] - points[0][0]
+        dy = points[3][1] - points[0][1]
+        y = points[0][1] + dy / dx * (x - points[0][0])
+        y_coordinates.append(y)
+
+    # check that the lines are well separated vertically where they intersect the node equidistant
+    # vertical line
+    y_coordinates_abs_difference = abs(y_coordinates[1] - y_coordinates[0])
+    y_coordinates_abs_difference_when_ok = 11.5004437538844
+    y_coordinates_abs_difference_when_not_ok = 0.00658290568043185
+    min_y_coordinates_abs_difference = (
+        y_coordinates_abs_difference_when_ok + y_coordinates_abs_difference_when_not_ok
+    ) / 2
+    assert y_coordinates_abs_difference > min_y_coordinates_abs_difference
 
 
 def test_2242():
