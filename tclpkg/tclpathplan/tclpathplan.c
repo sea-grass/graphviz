@@ -778,6 +778,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    if (polys_get(&vgp->poly, i).id == polyid) {
 		const size_t n = polys_get(&vgp->poly, i).boundary.pn;
 		ps = polys_get(&vgp->poly, i).boundary.ps;
+		p = center(ps, n);
 		for (size_t j = 0; j < n; j++) {
 		    appendpoint(interp, scale(p, ps[j], gain));
 		}

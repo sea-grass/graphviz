@@ -68,6 +68,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Accuracy improvements have fixed an assertion failure on macOS. #2538
 - The FIG output format (`-Tfig`) no longer crashes when handling more than 256
   colors.
+- The `scale` operation implemented by the TCL binding’s tclpathplan scales
+  relative to the center of the points being scaled instead of reading
+  uninitialized memory.
 
 ## [11.0.0] – 2024-04-28
 
