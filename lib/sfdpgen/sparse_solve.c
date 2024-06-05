@@ -95,14 +95,6 @@ static double conjugate_gradient(SparseMatrix A, const double *precon, int n,
     
     res = sqrt(vector_product(n, r, r))/n;
 
-#ifdef DEBUG_PRINT
-    if (Verbose && 0){
-      fprintf(stderr, "   cg iter = %d, residual = %g, relative res = %g\n", iter, res, res/res0);
-    }
-#endif
-
-
-
     rho_old = rho;
   }
   free(z); free(r); free(p); free(q);
