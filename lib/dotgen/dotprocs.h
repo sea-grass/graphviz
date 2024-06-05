@@ -74,7 +74,6 @@ extern "C" {
     extern void dot_rank(Agraph_t *);
     extern void dot_sameports(Agraph_t *);
     extern void dot_splines(Agraph_t *);
-#undef extern
 
 #ifdef __cplusplus
 }
