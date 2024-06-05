@@ -339,7 +339,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   double counts[4], *force = NULL;
 #ifdef TIME
   clock_t start, end, start0;
-  double qtree_cpu = 0, qtree_cpu0 = 0, qtree_new_cpu = 0, qtree_new_cpu0 = 0;
+  double qtree_cpu = 0, qtree_new_cpu = 0, qtree_new_cpu0 = 0;
   double total_cpu = 0;
   start0 = clock();
 #endif
@@ -440,9 +440,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 #endif
 
 #ifdef TIME
-      qtree_cpu0 = qtree_cpu - qtree_cpu0;
       qtree_new_cpu0 = qtree_new_cpu - qtree_new_cpu0;
-      qtree_cpu0 = qtree_cpu;
       qtree_new_cpu0 = qtree_new_cpu;
 #endif
       oned_optimizer_train(&qtree_level_optimizer,
