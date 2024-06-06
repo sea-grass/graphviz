@@ -11,6 +11,9 @@
 #include "config.h"
 
 #include <assert.h>
+#ifdef HAVE_FCNTL_H
+#include <fcntl.h>
+#endif
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>
@@ -518,7 +521,22 @@ static void xlib_finalize(GVJ_t *firstjob)
     bool watching_file_p = false;
     char *p, *cwd = NULL;
 
+#ifdef HAVE_INOTIFY_INIT1
+#ifdef IN_CLOSEXEC
+    inotify_fd = inotify_init1(IN_CLOSEXEC);
+#else
+    inotify_fd = inotify_init1(IN_CLOEXEC);
+#endif
+#else
     inotify_fd = inotify_init();
+    if (inotify_fd >= 0) {
+	const int flags = fcntl(inotify_fd, F_GETFD);
+	if (fcntl(inotify_fd, F_SETFD, flags | FD_CLOEXEC) < 0) {
+	    fprintf(stderr, "setting FD_CLOEXEC failed\n");
+	    return;
+	}
+    }
+#endif
     if (inotify_fd < 0) {
 	fprintf(stderr,"inotify_init() failed\n");
 	return;

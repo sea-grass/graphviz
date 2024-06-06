@@ -42,6 +42,9 @@
 /* Define to 1 if you have the `drand48' function. */
 /* #undef HAVE_DRAND48 */
 
+/* Define to 1 if you have the `inotify_init1' function. */
+/* #undef HAVE_INOTIFY_INIT1 */
+
 /* Define if you have the expat library */
 #define HAVE_EXPAT 1
 
