@@ -3495,7 +3495,7 @@ def test_2437():
     root = ET.fromstring(svg)
 
     # The output is expected to contain tree polygons. The graph "background"
-    # polygon, the arrowhead pologyn and the arrowtail polygon.
+    # polygon, the arrowhead polygon and the arrowtail polygon.
     polygons = root.findall(".//{http://www.w3.org/2000/svg}polygon")
 
     assert len(polygons) == 3, "wrong number of polygons in output"
