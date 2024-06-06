@@ -413,7 +413,7 @@ static int handle_file_events(GVJ_t *job, int inotify_fd)
     ret = ioctl(inotify_fd, FIONREAD, &avail);
     if (ret < 0) {
 	fprintf(stderr,"ioctl() failed\n");
-	return -1;;
+	return -1;
     }
 
     if (avail) {
