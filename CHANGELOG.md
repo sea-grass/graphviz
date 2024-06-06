@@ -71,6 +71,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The `scale` operation implemented by the TCL binding’s tclpathplan scales
   relative to the center of the points being scaled instead of reading
   uninitialized memory.
+- The xlib plugin sets “close-on-exec” on the file descriptors it creates,
+  preventing them leaking into either web browsers it starts or other processes
+  created by the hosting application.
 
 ## [11.0.0] – 2024-04-28
 

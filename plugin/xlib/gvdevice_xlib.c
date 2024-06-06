@@ -577,7 +577,12 @@ static void xlib_finalize(GVJ_t *firstjob)
     }
     else {
 	watching_stdin_p = true;
+#ifdef F_DUPFD_CLOEXEC
+	stdin_fd = fcntl(STDIN_FILENO, F_DUPFD_CLOEXEC, 0);
+#else
 	stdin_fd = fcntl(STDIN_FILENO, F_DUPFD, 0);
+	(void)fcntl(stdin_fd, F_SETFD, fcntl(stdin_fd, F_GETFD) | FD_CLOEXEC);
+#endif
 	numfds = imax(stdin_fd, numfds);
     }
 
