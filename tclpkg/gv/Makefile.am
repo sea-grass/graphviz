@@ -387,7 +387,7 @@ test_sharp: libgv_sharp.la
 	-(mkdir -p test_sharp; cd test_sharp; \
 		ln -fs ../.libs/libgv_sharp.so libgv_sharp.so; \
 		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.cs .; \
-		$(SHARP) *.cs -out:test.exe; \
+		$(MCS) *.cs -out:test.exe; \
 		mono test.exe)
 
 .PHONY: test_go
