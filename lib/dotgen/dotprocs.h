@@ -14,13 +14,16 @@
 extern "C" {
 #endif
 
+#include <cgraph/list.h>
 #include <cgraph/queue.h>
 #include <dotgen/aspect.h>
 #include <stdbool.h>
 
+DEFINE_LIST(ints, int)
+
     extern void acyclic(Agraph_t *);
     extern void allocate_ranks(Agraph_t *);
-    extern void build_ranks(Agraph_t *, int);
+    extern void build_ranks(Agraph_t *, int, ints_t *);
     extern void build_skeleton(Agraph_t *, Agraph_t *);
     extern void checkLabelOrder (graph_t* g);
     extern void class1(Agraph_t *);

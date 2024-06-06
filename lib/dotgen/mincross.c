@@ -21,6 +21,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/list.h>
 #include <cgraph/queue.h>
 #include <cgraph/streq.h>
@@ -52,8 +53,8 @@ static void init_mincross(graph_t * g);
 static void merge2(graph_t * g);
 static void init_mccomp(graph_t *g, size_t c);
 static void cleanup2(graph_t * g, int nc);
-static int mincross_clust(graph_t *g);
-static int mincross(graph_t *g, int startpass);
+static int mincross_clust(graph_t *g, ints_t *scratch);
+static int mincross(graph_t *g, int startpass, ints_t *scratch);
 static void mincross_step(graph_t * g, int pass);
 static void mincross_options(graph_t * g);
 static void save_best(graph_t * g);
@@ -61,7 +62,7 @@ static void restore_best(graph_t * g);
 static adjmatrix_t *new_matrix(size_t i, size_t j);
 static void free_matrix(adjmatrix_t * p);
 static int ordercmpf(const void *, const void *);
-static int ncross(void);
+static int ncross(ints_t *scratch);
 #ifdef DEBUG
 #if DEBUG > 1
 static int gd_minrank(Agraph_t *g) {return GD_minrank(g);}
@@ -369,17 +370,19 @@ void dot_mincross(graph_t *g) {
 
     init_mincross(g);
 
+    ints_t scratch = {0};
+
     size_t comp;
     for (nc = 0, comp = 0; comp < GD_comp(g).size; comp++) {
 	init_mccomp(g, comp);
-	nc += mincross(g, 0);
+	nc += mincross(g, 0, &scratch);
     }
 
     merge2(g);
 
     /* run mincross on contents of each cluster */
     for (int c = 1; c <= GD_n_cluster(g); c++) {
-	nc += mincross_clust(GD_clust(g)[c]);
+	nc += mincross_clust(GD_clust(g)[c], &scratch);
 #ifdef DEBUG
 	check_vlists(GD_clust(g)[c]);
 	check_order();
@@ -389,12 +392,13 @@ void dot_mincross(graph_t *g) {
     if (GD_n_cluster(g) > 0 && (!(s = agget(g, "remincross")) || mapbool(s))) {
 	mark_lowclusters(g);
 	ReMincross = true;
-	nc = mincross(g, 2);
+	nc = mincross(g, 2, &scratch);
 #ifdef DEBUG
 	for (int c = 1; c <= GD_n_cluster(g); c++)
 	    check_vlists(GD_clust(g)[c]);
 #endif
     }
+    ints_free(&scratch);
     cleanup2(g, nc);
 }
 
@@ -536,17 +540,17 @@ static void ordered_edges(graph_t * g)
     }
 }
 
-static int mincross_clust(graph_t * g) {
+static int mincross_clust(graph_t *g, ints_t *scratch) {
     int c, nc;
 
     expand_cluster(g);
     ordered_edges(g);
     flat_breakcycles(g);
     flat_reorder(g);
-    nc = mincross(g, 2);
+    nc = mincross(g, 2, scratch);
 
     for (c = 1; c <= GD_n_cluster(g); c++)
-	nc += mincross_clust(GD_clust(g)[c]);
+	nc += mincross_clust(GD_clust(g)[c], scratch);
 
     save_vlist(g);
     return nc;
@@ -688,13 +692,13 @@ static void transpose(graph_t * g, bool reverse)
     } while (delta >= 1);
 }
 
-static int mincross(graph_t *g, int startpass) {
+static int mincross(graph_t *g, int startpass, ints_t *scratch) {
     const int endpass = 2;
     int maxthispass = 0, iter, trying, pass;
     int cur_cross, best_cross;
 
     if (startpass > 1) {
-	cur_cross = best_cross = ncross();
+	cur_cross = best_cross = ncross(scratch);
 	save_best(g);
     } else
 	cur_cross = best_cross = INT_MAX;
@@ -702,12 +706,12 @@ static int mincross(graph_t *g, int startpass) {
 	if (pass <= 1) {
 	    maxthispass = MIN(4, MaxIter);
 	    if (g == dot_root(g))
-		build_ranks(g, pass);
+		build_ranks(g, pass, scratch);
 	    if (pass == 0)
 		flat_breakcycles(g);
 	    flat_reorder(g);
 
-	    if ((cur_cross = ncross()) <= best_cross) {
+	    if ((cur_cross = ncross(scratch)) <= best_cross) {
 		save_best(g);
 		best_cross = cur_cross;
 	    }
@@ -728,7 +732,7 @@ static int mincross(graph_t *g, int startpass) {
 	    if (cur_cross == 0)
 		break;
 	    mincross_step(g, iter);
-	    if ((cur_cross = ncross()) <= best_cross) {
+	    if ((cur_cross = ncross(scratch)) <= best_cross) {
 		save_best(g);
 		if (cur_cross < Convergence * best_cross)
 		    trying = 0;
@@ -742,7 +746,7 @@ static int mincross(graph_t *g, int startpass) {
 	restore_best(g);
     if (best_cross > 0) {
 	transpose(g, false);
-	best_cross = ncross();
+	best_cross = ncross(scratch);
     }
 
     return best_cross;
@@ -1222,8 +1226,7 @@ void install_in_rank(graph_t * g, node_t * n)
  *	graphs such as trees are drawn with no crossings.  it tries searching
  *	in- and out-edges and takes the better of the two initial orderings.
  */
-void build_ranks(graph_t * g, int pass)
-{
+void build_ranks(graph_t *g, int pass, ints_t *scratch) {
     int i, j;
     node_t *n, *n0, *ns;
     edge_t **otheredges;
@@ -1285,7 +1288,7 @@ void build_ranks(graph_t * g, int pass)
 	}
     }
 
-    if (g == dot_root(g) && ncross() > 0)
+    if (g == dot_root(g) && ncross(scratch) > 0)
 	transpose(g, false);
     queue_free(&q);
 }
@@ -1516,8 +1519,7 @@ static int local_cross(elist l, int dir)
     return cross;
 }
 
-static int rcross(graph_t * g, int r)
-{
+static int rcross(graph_t *g, int r, ints_t *Count) {
     int top, bot, cross, max, i, k;
     node_t **rtop, *v;
 
@@ -1525,21 +1527,28 @@ static int rcross(graph_t * g, int r)
     max = 0;
     rtop = GD_rank(g)[r].v;
 
-    int *Count = gv_calloc(GD_rank(Root)[r + 1].n + 1, sizeof(int));
+    // discard any data from previous runs
+    ints_clear(Count);
 
     for (top = 0; top < GD_rank(g)[r].n; top++) {
 	edge_t *e;
 	if (max > 0) {
 	    for (i = 0; (e = ND_out(rtop[top]).list[i]); i++) {
 		for (k = ND_order(aghead(e)) + 1; k <= max; k++)
-		    cross += Count[k] * ED_xpenalty(e);
+		    cross += ints_size(Count) <= (size_t)k
+		             ? 0
+		             : ints_get(Count, (size_t)k) * ED_xpenalty(e);
 	    }
 	}
 	for (i = 0; (e = ND_out(rtop[top]).list[i]); i++) {
 	    int inv = ND_order(aghead(e));
 	    if (inv > max)
 		max = inv;
-	    Count[inv] += ED_xpenalty(e);
+	    const size_t inv_z = (size_t)inv;
+	    if (ints_size(Count) <= inv_z) {
+		ints_resize(Count, inv_z + 1, 0);
+	    }
+	    ints_set(Count, inv_z, ints_get(Count, inv_z) + ED_xpenalty(e));
 	}
     }
     for (top = 0; top < GD_rank(g)[r].n; top++) {
@@ -1552,11 +1561,11 @@ static int rcross(graph_t * g, int r)
 	if (ND_has_port(v))
 	    cross += local_cross(ND_in(v), -1);
     }
-    free(Count);
     return cross;
 }
 
-static int ncross(void) {
+static int ncross(ints_t *scratch) {
+    assert(scratch != NULL);
     int r, count, nc;
 
     graph_t *g = Root;
@@ -1565,7 +1574,7 @@ static int ncross(void) {
 	if (GD_rank(g)[r].valid)
 	    count += GD_rank(g)[r].cache_nc;
 	else {
-	    nc = GD_rank(g)[r].cache_nc = rcross(g, r);
+	    nc = GD_rank(g)[r].cache_nc = rcross(g, r, scratch);
 	    count += nc;
 	    GD_rank(g)[r].valid = true;
 	}

@@ -13,6 +13,7 @@
 #include <cgraph/queue.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 static node_t*
 map_interclust_node(node_t * n)
@@ -294,7 +295,9 @@ void expand_cluster(graph_t * subg)
     GD_comp(subg).size = 1;
     GD_comp(subg).list[0] = GD_nlist(subg);
     allocate_ranks(subg);
-    build_ranks(subg, 0);
+    ints_t scratch = {0};
+    build_ranks(subg, 0, &scratch);
+    ints_free(&scratch);
     merge_ranks(subg);
 
     /* build external structure of the cluster */
