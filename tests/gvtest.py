@@ -184,16 +184,25 @@ def remove_xtype_warnings(s: str) -> str:
     return re.sub(r"^.* XType: .*\.$\n", "", s, flags=re.MULTILINE)
 
 
+def is_rocky(wanted_version_id: Optional[str] = None) -> bool:
+    """
+    is the current environment Rocky Linux? And if specified, is it version `wanted_version_id`?
+    """
+    if freedesktop_os_release().get("ID") != "rocky":
+        return False
+    if wanted_version_id is None:
+        return True
+    version_id = freedesktop_os_release().get("VERSION_ID")
+    if version_id is None:
+        return False
+    return re.match(rf"{wanted_version_id}\b", version_id) is not None
+
+
 def is_rocky_8() -> bool:
     """
     is the current environment Rocky Linux 8?
     """
-    if freedesktop_os_release().get("ID") != "rocky":
-        return False
-    version_id = freedesktop_os_release().get("VERSION_ID")
-    if version_id is None:
-        return False
-    return re.match(r"8\b", version_id) is not None
+    return is_rocky("8")
 
 
 def run_c(
