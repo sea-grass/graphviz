@@ -56,9 +56,16 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
         cwd / "build/cmd/gvedit/gvedit_autogen/EWIEGA46WW/qrc_mdi.cpp",
     ]
 
+    # files that are generated but only need to be excluded during init
+    init_generated_files = [
+        cwd / "build/tclpkg/gv/gv_tcl.cpp/gvTCL_wrap.cxx",
+    ]
+
     excluded_files = generated_files
+    init_excluded_files = init_generated_files
 
     exclude_options = [f"--exclude={f}" for f in excluded_files]
+    init_exclude_options = [f"--exclude={f}" for f in init_excluded_files]
 
     if options.init:
         subprocess.check_call(
@@ -73,6 +80,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "--no-external",
             ]
             + exclude_options
+            + init_exclude_options
             + ["--output-file", "app_base.info"]
         )
 
