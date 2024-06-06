@@ -115,32 +115,27 @@ MINGW32=no
 case "${host_os}" in
   *uwin* )
 	UWIN=yes
-	PATHSEPARATOR=";"
 	BROWSER="xdg-open"
 	JSHEXT=so
 	;;
   *cygwin* )
 	CYGWIN=yes
-	PATHSEPARATOR=";"
 	BROWSER="xdg-open"
 	JSHEXT=so
 	;;
   *mingw32* )
 	MINGW32=yes
-	PATHSEPARATOR=":"
 	BROWSER="xdg-open"
 	JSHEXT=so
 	;;
   *darwin* )
 	DARWIN=yes
 	AC_DEFINE_UNQUOTED(DARWIN,1,[Define for any Darwin-based OS.])
-	PATHSEPARATOR=":"
 	BROWSER="open"
 	JSHEXT=jnilib
 	AC_DEFINE_UNQUOTED(DARWIN_DYLIB,"$DARWIN_DYLIB",[Define for Darwin-style shared library names.])
 	;;
   * )
-	PATHSEPARATOR=":"
 	BROWSER="xdg-open"
 	JSHEXT=so
 	;;
@@ -151,7 +146,6 @@ AC_SUBST([DARWIN])
 JNI_EXTRA_LDFLAGS="-shrext .$JSHEXT"
 AC_SUBST([JNI_EXTRA_LDFLAGS])
 AC_SUBST([JSHEXT])
-AC_DEFINE_UNQUOTED(PATHSEPARATOR,"$PATHSEPARATOR",[Path separator character.])
 AM_CONDITIONAL(WITH_WIN32, [test "$UWIN" = "yes" -o "$CYGWIN" = "yes" -o "$MINGW32" = "yes"])
 AM_CONDITIONAL(WITH_CYGWIN, [test "$CYGWIN" = "yes"])
 AM_CONDITIONAL(WITH_MINGW, [test "$MINGW32" = "yes"])
