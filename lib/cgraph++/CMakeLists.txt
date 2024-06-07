@@ -1,4 +1,4 @@
-add_library(cgraph++ SHARED
+add_library(cgraph++
   AGraph.h
   AGraph.cpp
 )

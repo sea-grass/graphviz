@@ -52,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The TCL binding’s graph `render` command no longer ignores layout errors.
 - The TCL binding’s graph `write` command now does layout unconditionally,
   regardless of what output renderer is selected.
+- The CMake build system builds cgraph++ as either a shared or static library,
+  respecting the `BUILD_SHARED_LIBS` setting.
 
 ### Fixed
 
