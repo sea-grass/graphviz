@@ -151,9 +151,7 @@ static Dtdisc_t hdictDisc = {
  * thinner the channel, the faster the weight rises.
  */
 
-static void
-updateWt (sedge* ep, int sz)
-{
+static void updateWt(sedge *ep, double sz) {
     ep->cnt++;
     if (ep->cnt > sz) {
 	ep->cnt = 0;
@@ -176,9 +174,9 @@ updateWts (sgraph* g, cell* cp, sedge* ep)
     int i;
     sedge* e;
     int isBend = BEND(g,ep);
-    int hsz = CHANSZ (cp->bb.UR.y - cp->bb.LL.y);
-    int vsz = CHANSZ (cp->bb.UR.x - cp->bb.LL.x);
-    int minsz = MIN(hsz, vsz);
+    const double hsz = CHANSZ(cp->bb.UR.y - cp->bb.LL.y);
+    const double vsz = CHANSZ(cp->bb.UR.x - cp->bb.LL.x);
+    const double minsz = fmin(hsz, vsz);
 
     /* Bend edges are added first */
     for (i = 0; i < cp->nedges; i++) {
