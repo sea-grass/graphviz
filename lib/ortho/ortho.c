@@ -1120,9 +1120,7 @@ vtrack (segment* seg, maze* m)
   return left + f*(right-left);
 }
 
-static int
-htrack (segment* seg, maze* m)
-{
+static double htrack(segment *seg, maze *m) {
   channel* chp = chanSearch(m->hchans, seg);
   double f = 1.0 - (double)seg->track_no / ((double)seg_list_size(&chp->seg_list) + 1);
   double lo = chp->cp->bb.LL.y;
@@ -1446,7 +1444,7 @@ coordOf (cell* cp, snode* np)
 static boxf
 emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 {
-    int x, y;
+    double x, y;
     boxf n = CELL(agtail(e))->bb;
     segment* seg = rte.segs;
     if (seg->isVert) {
@@ -1461,7 +1459,7 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
     bb.LL.y = MIN(bb.LL.y, SC*y);
     bb.UR.x = MAX(bb.UR.x, SC*x);
     bb.UR.y = MAX(bb.UR.y, SC*y);
-    fprintf (fp, "newpath %d %d moveto\n", SC*x, SC*y);
+    fprintf(fp, "newpath %.0f %.0f moveto\n", SC * x, SC * y);
 
     for (size_t i = 1;i<rte.n;i++) {
 	seg = rte.segs+i;
@@ -1475,7 +1473,7 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	bb.LL.y = MIN(bb.LL.y, SC*y);
 	bb.UR.x = MAX(bb.UR.x, SC*x);
 	bb.UR.y = MAX(bb.UR.y, SC*y);
-	fprintf (fp, "%d %d lineto\n", SC*x, SC*y);
+	fprintf(fp, "%.0f %.0f lineto\n", SC * x, SC * y);
     }
 
     n = CELL(aghead(e))->bb;
@@ -1491,7 +1489,7 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
     bb.LL.y = MIN(bb.LL.y, SC*y);
     bb.UR.x = MAX(bb.UR.x, SC*x);
     bb.UR.y = MAX(bb.UR.y, SC*y);
-    fprintf (fp, "%d %d lineto stroke\n", SC*x, SC*y);
+    fprintf(fp, "%.0f %.0f lineto stroke\n", SC * x, SC * y);
 
     return bb;
 }
