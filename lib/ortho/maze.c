@@ -59,12 +59,12 @@ char* post = "showpage\n";
 static void
 psdump(cell *gcells, int n_gcells, boxf BB, boxf *rects, size_t nrect) {
     boxf bb;
-    box absbb = {.LL = {.y = 10, .x = 10}};
+    boxf absbb = {.LL = {.y = 10.0, .x = 10.0}};
 
     absbb.UR.x = absbb.LL.x + BB.UR.x - BB.LL.x;
     absbb.UR.y = absbb.LL.y + BB.UR.y - BB.LL.y;
     fputs (pre, stderr);
-    fprintf (stderr, "%%%%Page: 1 1\n%%%%PageBoundingBox: %d %d %d %d\n",
+    fprintf(stderr, "%%%%Page: 1 1\n%%%%PageBoundingBox: %.0f %.0f %.0f %.0f\n",
        absbb.LL.x, absbb.LL.y, absbb.UR.x, absbb.UR.y);
       
 
