@@ -1449,9 +1449,9 @@ static void reorder(graph_t * g, int r, bool reverse, bool hasfixed)
 	    if (rp >= ep)
 		break;
 	    if (!muststay) {
-		int p1 = ND_mval(*lp);
-		int p2 = ND_mval(*rp);
-		if (p1 > p2 || (p1 == p2 && reverse)) {
+		const double p1 = ND_mval(*lp);
+		const double p2 = ND_mval(*rp);
+		if (p1 > p2 || (p1 >= p2 && reverse)) {
 		    exchange(*lp, *rp);
 		    changed++;
 		}
