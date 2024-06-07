@@ -1,4 +1,4 @@
-add_library(gvc++ SHARED
+add_library(gvc++
   GVContext.h
   GVContext.cpp
   GVLayout.h
