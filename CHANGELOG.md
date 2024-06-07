@@ -76,6 +76,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   created by the hosting application.
 - A sign confusion issue in neatogen’s weighting calculations was fixed. This
   was a regression in Graphviz 11.0.0.
+- The CMake build system no longer attaches `dllimport`/`dllexport` annotations
+  when compiling static libraries on Windows and MinGW.
 
 ## [11.0.0] – 2024-04-28
 
