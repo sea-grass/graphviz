@@ -531,12 +531,12 @@ static void putSeg (FILE* fp, segment* seg)
       seg->p.p2, seg->comm_coord, bendToStr (seg->l1), bendToStr (seg->l2));
 }
 
-static DEBUG_FN void dumpChanG(channel *cp, int v) {
+static DEBUG_FN void dumpChanG(channel *cp, double v) {
   intitem* ip;
   Dt_t* adj;
 
   if (seg_list_size(&cp->seg_list) < 2) return;
-  fprintf (stderr, "channel %d (%f,%f)\n", v, cp->p.p1, cp->p.p2);
+  fprintf (stderr, "channel %.0f (%f,%f)\n", v, cp->p.p1, cp->p.p2);
   for (size_t k = 0; k < seg_list_size(&cp->seg_list); ++k) {
     adj = cp->G->vertices[k].adj_list;
     if (dtsize(adj) == 0) continue;
