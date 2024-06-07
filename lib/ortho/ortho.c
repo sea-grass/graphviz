@@ -1453,10 +1453,10 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	y = htrack(seg, m);
 	x = (n.UR.x + n.LL.x)/2;
     }
-    bb.LL.x = MIN(bb.LL.x, SC*x);
-    bb.LL.y = MIN(bb.LL.y, SC*y);
-    bb.UR.x = MAX(bb.UR.x, SC*x);
-    bb.UR.y = MAX(bb.UR.y, SC*y);
+    bb.LL.x = fmin(bb.LL.x, SC * x);
+    bb.LL.y = fmin(bb.LL.y, SC * y);
+    bb.UR.x = fmax(bb.UR.x, SC * x);
+    bb.UR.y = fmax(bb.UR.y, SC * y);
     fprintf(fp, "newpath %.0f %.0f moveto\n", SC * x, SC * y);
 
     for (size_t i = 1;i<rte.n;i++) {
@@ -1467,10 +1467,10 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	else {
 	    y = htrack(seg, m);
 	}
-	bb.LL.x = MIN(bb.LL.x, SC*x);
-	bb.LL.y = MIN(bb.LL.y, SC*y);
-	bb.UR.x = MAX(bb.UR.x, SC*x);
-	bb.UR.y = MAX(bb.UR.y, SC*y);
+	bb.LL.x = fmin(bb.LL.x, SC * x);
+	bb.LL.y = fmin(bb.LL.y, SC * y);
+	bb.UR.x = fmax(bb.UR.x, SC * x);
+	bb.UR.y = fmax(bb.UR.y, SC * y);
 	fprintf(fp, "%.0f %.0f lineto\n", SC * x, SC * y);
     }
 
@@ -1483,10 +1483,10 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	y = htrack(seg, m);
 	x = (n.LL.x + n.UR.x)/2;
     }
-    bb.LL.x = MIN(bb.LL.x, SC*x);
-    bb.LL.y = MIN(bb.LL.y, SC*y);
-    bb.UR.x = MAX(bb.UR.x, SC*x);
-    bb.UR.y = MAX(bb.UR.y, SC*y);
+    bb.LL.x = fmin(bb.LL.x, SC * x);
+    bb.LL.y = fmin(bb.LL.y, SC * y);
+    bb.UR.x = fmax(bb.UR.x, SC * x);
+    bb.UR.y = fmax(bb.UR.y, SC * y);
     fprintf(fp, "%.0f %.0f lineto stroke\n", SC * x, SC * y);
 
     return bb;
