@@ -1414,10 +1414,8 @@ static char* epilog2 =
 %%%%Trailer\n\
 %%%%BoundingBox: %.f %.f %.f %.f\n";
 
-static point
-coordOf (cell* cp, snode* np)
-{
-    point p;
+static pointf coordOf(cell *cp, snode *np) {
+    pointf p;
     if (cp->sides[M_TOP] == np) {
 	p.x = (cp->bb.LL.x + cp->bb.UR.x)/2;
 	p.y = cp->bb.UR.y;
@@ -1508,7 +1506,7 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
     cell* cp;
     snode* np;
     sedge* ep;
-    point p;
+    pointf p;
     int i;
     fputs ("graph G {\n", fp);
     fputs (" node[shape=point]\n", fp);
@@ -1517,15 +1515,13 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 	np = sg->nodes+i;
 	cp = np->cells[0];
 	if (cp == np->cells[1]) {
-	    pointf pf = midPt (cp);
-	    p.x = pf.x;
-	    p.y = pf.y;
+	    p = midPt(cp);
 	}
 	else {
 	    if (IsNode(cp)) cp = np->cells[1];
 	    p = coordOf (cp, np);
 	}
-	fprintf (fp, "  %d [pos=\"%d,%d!\"]\n", i, p.x, p.y);
+	fprintf (fp, "  %d [pos=\"%.0f,%.0f!\"]\n", i, p.x, p.y);
     }
     for (i = 0; i < sg->nedges; i++) {
 	ep = sg->edges+i;
