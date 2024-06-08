@@ -348,7 +348,7 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 static int setFill(GVJ_t *job, char *color, int angle, htmlstyle_t style,
                    char *clrs[2]) {
     int filled;
-    float frac;
+    double frac;
     if (findStopColor(color, clrs, &frac)) {
 	gvrender_set_fillcolor(job, clrs[0]);
 	if (clrs[1])

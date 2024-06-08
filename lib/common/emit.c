@@ -1562,7 +1562,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
     if (!(   ((job->flags & GVDEVICE_DOES_TRUECOLOR) && streq(str, "transparent"))
           || ((job->flags & GVRENDER_NO_WHITE_BG) && dfltColor))) {
 	char* clrs[2];
-	float frac;
+	double frac;
 
 	if ((findStopColor (str, clrs, &frac))) {
 	    int filled;
@@ -3570,7 +3570,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	if (!fillcolor) fillcolor = DEFAULT_FILL;
 	clrs[0] = NULL;
 	if (filled != 0) {
-	    float frac;
+	    double frac;
 	    if (findStopColor (fillcolor, clrs, &frac)) {
         	gvrender_set_fillcolor(job, clrs[0]);
 		if (clrs[1]) 
@@ -4042,8 +4042,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  * Note that memory is allocated as a single block stored in clrs[0] and
  * must be freed by calling function.
  */
-bool findStopColor (char* colorlist, char* clrs[2], float* frac)
-{
+bool findStopColor(char *colorlist, char *clrs[2], double *frac) {
     colorsegs_t segs = {0};
     int rv;
 
