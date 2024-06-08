@@ -125,12 +125,12 @@ static int gvloadimage_process_surface(GVJ_t *job, usershape_t *us, gs_t *gs, vo
     gs->surface = cairo_surface_create_similar( 
 	cairo_get_target(gs->cr),
 	CAIRO_CONTENT_COLOR_ALPHA,
-	us->x + us->w,
-	us->y + us->h);
+	(int)(us->x + us->w),
+	(int)(us->y + us->h));
 
     cr = cairo_create(gs->surface);  /* temp context for gs */
 
-    snprintf(width_height, sizeof(width_height), "-g%dx%d", us->x + us->w,
+    snprintf(width_height, sizeof(width_height), "-g%0.fx%0.f", us->x + us->w,
              us->y + us->h);
     snprintf(dpi, sizeof(dpi), "-r%d", us->dpi);
     snprintf(cairo_context, sizeof(cairo_context), "-sCairoContext=%p", cr);

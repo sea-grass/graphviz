@@ -102,8 +102,8 @@ void epsf_init(node_t * n)
 	usershape_t *us = user_init(str);
 	if (!us)
 	    return;
-	int dx = us->w;
-	int dy = us->h;
+	const double dx = us->w;
+	const double dy = us->h;
 	ND_width(n) = PS2INCH(dx);
 	ND_height(n) = PS2INCH(dy);
 	ND_shape_info(n) = desc = gv_alloc(sizeof(epsf_t));
