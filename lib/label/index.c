@@ -245,7 +245,7 @@ RTreeInsert2(RTree_t * rtp, Rect_t * r, void *data,
     } else if (n->level == level) {	/* at level for insertion. */
 	/*Add rect, split if necessary */
 	b.rect = *r;
-	b.child = (Node_t *) data;
+	b.child = data;
 	return AddBranch(rtp, &b, n, new);
     } else {			/* Not supposed to happen */
 	assert(false);
