@@ -746,17 +746,17 @@ static char *str_mpy(Expr_t *ex, const char *l, const char *r) {
  * Add replacement string.
  * \digit is replaced with a subgroup match, if any.
  */
-static void replace(agxbuf *s, char *base, char *repl, int ng, int *sub) {
+static void replace(agxbuf *s, char *base, char *repl, int ng, size_t *sub) {
   char c;
-  int idx, offset;
+  int idx;
 
   while ((c = *repl++)) {
     if (c == '\\') {
       if ((c = *repl) && gv_isdigit(c)) {
         idx = c - '0';
         if (idx < ng) {
-          offset = sub[2 * idx];
-          agxbput_n(s, base + offset, (size_t)(sub[2 * idx + 1] - offset));
+          const size_t offset = sub[2 * idx];
+          agxbput_n(s, base + offset, sub[2 * idx + 1] - offset);
         }
         repl++;
       } else {
@@ -887,7 +887,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 	char *p;
 	char *s;
 	Extype_t v;
-	int sub[20];
+	size_t sub[20];
 	int flags = 0;
 	int ng;
 
@@ -936,7 +936,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 
 	agxbuf buffer = {0};
 
-	agxbput_n(&buffer, str, (size_t)sub[0]);
+	agxbput_n(&buffer, str, sub[0]);
 
 	if (repl) {
 		replace(&buffer, str, repl, ng, sub);
@@ -945,7 +945,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 	s = str + sub[1];
 	if (global) {
 		while ((ng = strgrpmatch(s, pat, sub, sizeof(sub) / (sizeof(sub[0]) * 2), flags))) {
-			agxbput_n(&buffer, s, (size_t)sub[0]);
+			agxbput_n(&buffer, s, sub[0]);
 			if (repl) {
 				replace(&buffer, s, repl, ng, sub);
 			}
