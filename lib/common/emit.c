@@ -2003,7 +2003,6 @@ static void splitBSpline(bezier *bz, double t, bezier *left, bezier *right) {
     const size_t cnt = (bz->size - 1) / 3;
     double last, len, sum;
     pointf* pts;
-    float r;
 
     if (cnt == 1) {
 	left->size = 4;
@@ -2043,7 +2042,7 @@ static void splitBSpline(bezier *bz, double t, bezier *left, bezier *right) {
 	right->list[j] = bz->list[k++];
 
     last = lens[i];
-    r = (len - (sum - last))/last;
+    const double r = (len - (sum - last)) / last;
     Bezier (bz->list + 3*i, r, left->list + 3*i, right->list);
 
     free (lens);
