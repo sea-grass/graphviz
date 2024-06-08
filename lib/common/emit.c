@@ -519,12 +519,12 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
 	/* count zero segments */
 	nseg = 0;
 	for (i = 0; i < cnum; i++) {
-	    if (!(s[i].t > 0)) nseg++;
+	    if (s[i].t <= 0) nseg++;
 	}
 	if (nseg > 0) {
 	    double delta = left / (double)nseg;
 	    for (i = 0; i < cnum; i++) {
-		if (!(s[i].t > 0)) s[i].t = delta;
+		if (s[i].t <= 0) s[i].t = delta;
 	    }
 	}
 	else {
@@ -572,7 +572,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	
     angle0 = 0;
     for (colorseg_t *s = segs.segs; s->color; s++) {
-	if (!(s->t > 0)) continue;
+	if (s->t <= 0) continue;
 	gvrender_set_fillcolor(job, s->color);
 
 	if (s[1].color == NULL) 
@@ -630,7 +630,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
     for (colorseg_t *s = segs.segs; s->color; s++) {
-	if (!(s->t > 0)) continue;
+	if (s->t <= 0) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 	if (s[1].color == NULL) 
 	    pts[1].x = pts[2].x = lastx;
