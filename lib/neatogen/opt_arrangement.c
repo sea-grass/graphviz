@@ -65,7 +65,7 @@ compute_y_coords(vtx_data * graph, int n, double *y_coords,
     float *uniform_weights = gv_calloc(nedges, sizeof(float));
     for (i = 0; i < n; i++) {
 	graph[i].ewgts = uniform_weights;
-	uniform_weights[0] = (float) -(graph[i].nedges - 1);
+	uniform_weights[0] = -(float)(graph[i].nedges - 1);
 	for (size_t j = 1; j < graph[i].nedges; j++) {
 	    uniform_weights[j] = 1;
 	}
