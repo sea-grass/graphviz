@@ -399,7 +399,7 @@ static char **checkClusterStyle(graph_t *sg, graphviz_polygon_style_t *flagp) {
 
 typedef struct {
     char* color;   /* segment color */
-    float t;       /* segment size >= 0 */
+    double t; ///< segment size >= 0
     bool hasFraction;  /* true if color explicitly specifies its fraction */
 } colorseg_t;
 /* Sum of segment sizes should add to 1 */
@@ -1999,8 +1999,7 @@ static double approxLen (pointf* pts)
  * treating the control points as a polyline.
  * We then split that Bezier.
  */
-static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
-{
+static void splitBSpline(bezier *bz, double t, bezier *left, bezier *right) {
     const size_t cnt = (bz->size - 1) / 3;
     double last, len, sum;
     pointf* pts;
