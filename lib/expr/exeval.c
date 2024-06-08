@@ -768,8 +768,6 @@ static void replace(agxbuf *s, char *base, char *repl, int ng, int *sub) {
   }
 }
 
-#define MCNT(s) (sizeof(s)/(2*sizeof(int)))
-
 static void
 addItem (Dt_t* arr, Extype_t v, char* tok)
 {
@@ -925,7 +923,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 		return v;
 	}
 
-	ng = strgrpmatch(str, pat, sub, MCNT(sub), flags);
+	ng = strgrpmatch(str, pat, sub, sizeof(sub) / (sizeof(sub[0]) * 2), flags);
 	if (ng == 0) {
 		v.string = vmstrdup(ex->ve, str);
 		return v;
@@ -946,7 +944,7 @@ static Extype_t exsub(Expr_t *ex, Exnode_t *exnode, void *env, bool global) {
 
 	s = str + sub[1];
 	if (global) {
-		while ((ng = strgrpmatch(s, pat, sub, MCNT(sub), flags))) {
+		while ((ng = strgrpmatch(s, pat, sub, sizeof(sub) / (sizeof(sub[0]) * 2), flags))) {
 			agxbput_n(&buffer, s, (size_t)sub[0]);
 			if (repl) {
 				replace(&buffer, s, repl, ng, sub);
