@@ -193,7 +193,7 @@ extern "C" {
 
 	gvcolor_t pencolor, fillcolor, stopcolor;
 	int gradient_angle;
-	float gradient_frac;
+	double gradient_frac;
 	pen_type pen;
 	fill_type fill;
 	double penwidth;
