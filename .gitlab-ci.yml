@@ -134,7 +134,7 @@ portable-source:
         - Add-MpPreference -ExclusionPath 'C:\'
         - $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
         - nuget install python -ExcludeVersion -OutputDirectory C:\
-        - $env:Path = "C:\python\tools;" + $env:Path
+        - $Env:Path = "C:\python\tools;" + $Env:Path
         - python --version
         - python -m pip install --requirement requirements.txt
         # Toolchain definitions
@@ -152,7 +152,7 @@ portable-source:
         - Set-ExecutionPolicy Bypass -Force -Scope Process
         - $logfile = New-TemporaryFile
         - windows/bin/setup-build-utilities.ps1 2>&1 | tee $logfile
-        - python ci/windows_build.py --build-system $env:build_system --platform $Env:project_platform --configuration $env:configuration --logfile $logfile
+        - python ci/windows_build.py --build-system $Env:build_system --platform $Env:project_platform --configuration $Env:configuration --logfile $logfile
         - $warnings_count = (Select-String -Pattern " warning " -Path $logfile).length
         - echo "$CI_JOB_NAME-warnings $warnings_count" | tee metrics.txt
         - python gen_version.py --output GRAPHVIZ_VERSION
@@ -168,13 +168,13 @@ portable-source:
         # Set up VCTools variables and import into PowerShell environment
         - cmd.exe /c "call `"C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat`" $TARGET_ARCH && set > %temp%\vcvars.txt";
         - >-
-            Get-Content "$env:temp\vcvars.txt" | Foreach-Object {
+            Get-Content "$Env:temp\vcvars.txt" | Foreach-Object {
               if ($_ -match "^([A-Za-z0-9_()]*)=(.*)$") {
                 Set-Content "env:\$($matches[1])" $matches[2];
               }
             }
         - >-
-            if($env:build_system -eq "cmake") {
+            if($Env:build_system -eq "cmake") {
               cd build;
               $FILENAME = & invoke-Expression "Get-ChildItem Graphviz*.exe";
               mv $FILENAME graphviz-install.exe;
@@ -182,30 +182,30 @@ portable-source:
               # Piping the output of the installer to Out-Null, makes the script wait
               # for the .exe to exit, instead continuing to the next command (which
               # will then fail because the install hasn't finished)
-              ./graphviz-install.exe /S /D=$env:graphviz_install_dir | Out-Null;
+              ./graphviz-install.exe /S /D=$Env:graphviz_install_dir | Out-Null;
               mv graphviz-install.exe graphviz-install-$Env:GV_VERSION-$API.exe;
-              $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
+              $Env:Path = $Env:graphviz_install_dir + "\bin" + ";" + $Env:Path
               cd ..;
               $Env:INCLUDE += ";C:\Graphviz\include";
               $Env:LIB += ";C:\Graphviz\lib";
             }
-            elseif($env:build_system -eq "msbuild") {
+            elseif($Env:build_system -eq "msbuild") {
               # Append build destination to the PATH, configure dot and execute regression tests
               # The following is per https://gitlab.com/graphviz/graphviz/-/merge_requests/1345
-              $env:Path = $env:CI_PROJECT_DIR + "\" + $env:configuration + "\Graphviz\bin" + ";" + $env:Path;
+              $Env:Path = $Env:CI_PROJECT_DIR + "\" + $Env:configuration + "\Graphviz\bin" + ";" + $Env:Path;
             }
         - python -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
         # Create artifacts to archive
         - $ID = "windows"
         - $VERSION_ID = "10"
-        - $DIR = "Packages\${ID}\${VERSION_ID}\$env:build_system\$env:configuration"
+        - $DIR = "Packages\${ID}\${VERSION_ID}\$Env:build_system\$Env:configuration"
         - mkdir -p $DIR
         - >-
-            if($env:build_system -eq "cmake") {
+            if($Env:build_system -eq "cmake") {
                 mv "build\*.exe" $DIR;
                 mv "build\*.zip" $DIR;
             } else {
-                Compress-Archive -Path "$env:configuration\*" -DestinationPath "$DIR\graphviz-$Env:GV_VERSION-$API.zip";
+                Compress-Archive -Path "$Env:configuration\*" -DestinationPath "$DIR\graphviz-$Env:GV_VERSION-$API.zip";
             }
     artifacts:
         when: on_success
@@ -552,7 +552,7 @@ windows-cygwin-build:
         - Add-MpPreference -ExclusionPath 'C:\'
         - wget https://cygwin.com/setup-x86_64.exe -OutFile C:\setup-x86_64.exe
         - Start-Process "C:\setup-x86_64.exe" -ArgumentList "--quiet-mode --site https://mirrors.kernel.org/sourceware/cygwin --wait" -wait
-        - $env:Path = "C:\cygwin64\bin;" + $env:Path
+        - $Env:Path = "C:\cygwin64\bin;" + $Env:Path
         - $Env:build_system = "autotools"
         # change line endings from crlf to lf
         - C:\cygwin64\bin\sed -i 's/\r//g' ci/*.sh
@@ -580,9 +580,9 @@ windows-cygwin-build-using-autogen:
         - Add-MpPreference -ExclusionPath 'C:\'
         - wget https://cygwin.com/setup-x86_64.exe -OutFile C:\setup-x86_64.exe
         - Start-Process "C:\setup-x86_64.exe" -ArgumentList "--quiet-mode --site https://mirrors.kernel.org/sourceware/cygwin --wait" -wait
-        - $env:Path = "C:\cygwin64\bin;" + $env:Path
+        - $Env:Path = "C:\cygwin64\bin;" + $Env:Path
         - nuget install python -ExcludeVersion -OutputDirectory C:\
-        - $env:Path = "C:\python\tools;" + $env:Path
+        - $Env:Path = "C:\python\tools;" + $Env:Path
         - python gen_version.py --output GRAPHVIZ_VERSION
         - $Env:build_system = "autotools"
         - $Env:use_autogen = "yes"
@@ -978,7 +978,7 @@ windows-cygwin-cmake-build:
         - Add-MpPreference -ExclusionPath 'C:\'
         - wget https://cygwin.com/setup-x86_64.exe -OutFile C:\setup-x86_64.exe
         - Start-Process "C:\setup-x86_64.exe" -ArgumentList "--quiet-mode --site https://mirrors.kernel.org/sourceware/cygwin --wait" -wait
-        - $env:Path = "C:\cygwin64\bin;" + $env:Path
+        - $Env:Path = "C:\cygwin64\bin;" + $Env:Path
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror -Wno-deprecated-declarations"
@@ -1310,8 +1310,8 @@ windows-mingw32-cmake-test:
         - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
         - $Env:graphviz_install_dir = "C:\Graphviz"
         - $msys2_release = $(C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'uname -r')
-        - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$env:graphviz_install_dir" | Out-Null
-        - $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
+        - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$Env:graphviz_install_dir" | Out-Null
+        - $Env:Path = $Env:graphviz_install_dir + "\bin" + ";" + $Env:Path
         - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
     needs:
         - job: "windows-mingw32-cmake-build"
@@ -1333,8 +1333,8 @@ windows-mingw64-cmake-test:
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-install.sh'
         - $Env:graphviz_install_dir = "C:\Graphviz"
         - $msys2_release = $(C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'uname -r')
-        - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$env:graphviz_install_dir" | Out-Null
-        - $env:Path = $env:graphviz_install_dir + "\bin" + ";" + $env:Path
+        - Invoke-Expression "./Packages/msys2/$msys2_release/Graphviz-*.exe /S /D=$Env:graphviz_install_dir" | Out-Null
+        - $Env:Path = $Env:graphviz_install_dir + "\bin" + ";" + $Env:Path
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-test.sh'
     needs:
         - job: "windows-mingw64-cmake-build"

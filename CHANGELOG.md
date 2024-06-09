@@ -52,6 +52,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The TCL binding’s graph `render` command no longer ignores layout errors.
 - The TCL binding’s graph `write` command now does layout unconditionally,
   regardless of what output renderer is selected.
+- The CMake build system builds cgraph++ and gvc++ as either shared or static
+  libraries, respecting the `BUILD_SHARED_LIBS` setting.
 
 ### Fixed
 
@@ -76,6 +78,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   created by the hosting application.
 - A sign confusion issue in neatogen’s weighting calculations was fixed. This
   was a regression in Graphviz 11.0.0.
+- The CMake build system no longer attaches `dllimport`/`dllexport` annotations
+  when compiling static libraries on Windows and MinGW.
+- An issue with linking gvpack when building static libraries in the CMake build
+  system was fixed.
 
 ## [11.0.0] – 2024-04-28
 

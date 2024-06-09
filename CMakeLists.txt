@@ -27,11 +27,10 @@ set(with_tclpkg AUTO CACHE STRING "Build TCL components")
 set_property(CACHE with_tclpkg PROPERTY STRINGS AUTO ON OFF)
 
 if(WIN32)
-  # Build dynamic-link libraries on Windows, including MinGW. The
-  # CMake build system does not currently support building static
-  # libraries, so the GVDLL symbol can be unconditionally set until
-  # such support is introduced.
-  add_definitions(-DGVDLL)
+  if(BUILD_SHARED_LIBS)
+    # build dynamic-link libraries on Windows, including MinGW
+    add_definitions(-DGVDLL)
+  endif()
 
   option(install_win_dependency_dlls "Install 3rd party dependencies" ON)
 endif()
