@@ -1,5 +1,4 @@
 // Include headers
-#cmakedefine HAVE_FCNTL_H
 #cmakedefine HAVE_SEARCH_H
 #cmakedefine HAVE_SYS_INOTIFY_H
 #cmakedefine HAVE_SYS_IOCTL_H

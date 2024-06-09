@@ -11,9 +11,7 @@
 #include "config.h"
 
 #include <assert.h>
-#ifdef HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
 #include <limits.h>
 #include <math.h>
 #include <stdbool.h>
