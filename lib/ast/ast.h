@@ -46,7 +46,7 @@ extern "C" {
     extern char *fmtquote(const char*, const char*, const char*, size_t);
 
     extern int strmatch(char *, char *);
-    extern int strgrpmatch(char *, char *, int *, int, int);
+    extern int strgrpmatch(char *, char *, size_t *, int, int);
     extern void stresc(char *);
 
 #ifdef __cplusplus

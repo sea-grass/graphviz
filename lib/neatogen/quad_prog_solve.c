@@ -60,7 +60,7 @@ ensureMonotonicOrderingWithGaps(float *place, int n, int *ordering,
 
     int i;
     int node, level, max_in_level;
-    float lower_bound = (float) -1e9;
+    float lower_bound = -1e9f;
 
     level = -1;
     max_in_level = 0;
@@ -75,7 +75,7 @@ ensureMonotonicOrderingWithGaps(float *place, int n, int *ordering,
 		max_in_level = levels[level];
 	    }
 	    lower_bound =
-		i > 0 ? place[ordering[i - 1]] + levels_gap : (float) -1e9;
+		i > 0 ? place[ordering[i - 1]] + levels_gap : -1e9f;
 	    quicksort_placef(place, ordering, i, max_in_level - 1);
 	}
 

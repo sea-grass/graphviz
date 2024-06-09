@@ -74,6 +74,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The xlib plugin sets “close-on-exec” on the file descriptors it creates,
   preventing them leaking into either web browsers it starts or other processes
   created by the hosting application.
+- A sign confusion issue in neatogen’s weighting calculations was fixed. This
+  was a regression in Graphviz 11.0.0.
 
 ## [11.0.0] – 2024-04-28
 

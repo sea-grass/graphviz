@@ -502,7 +502,7 @@ grpmatch(Match_t * mp, int g, char *s, char *p, char *e,
  * including s+sub[1]
  */
 
-int strgrpmatch(char *b, char *p, int *sub, int n, int flags) {
+int strgrpmatch(char *b, char *p, size_t *sub, int n, int flags) {
     int i;
     char *s;
     char *e;
@@ -540,8 +540,8 @@ int strgrpmatch(char *b, char *p, int *sub, int n, int flags) {
     if (n > match.current.groups)
 	n = match.current.groups;
     for (i = 0; i < n; i++) {
-	sub[i * 2] = match.current.end[i] ? match.current.beg[i] - s : 0;
-	sub[i * 2 + 1] = match.current.end[i] ? match.current.end[i] - s : 0;
+	sub[i * 2] = match.current.end[i] ? (size_t)(match.current.beg[i] - s) : 0;
+	sub[i * 2 + 1] = match.current.end[i] ? (size_t)(match.current.end[i] - s) : 0;
     }
     return n;
 }

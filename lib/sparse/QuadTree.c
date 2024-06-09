@@ -15,6 +15,7 @@
 #include <math.h>
 #include <sparse/QuadTree.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 extern double distance_cropped(double *x, int dim, int i, int j);
 
@@ -462,7 +463,7 @@ static QuadTree QuadTree_add_internal(QuadTree q, double *coord, double weight, 
     q->total_weight += weight;
     for (i = 0; i < q->dim; i++) q->average[i] = (q->average[i] * q->n + coord[i]) / (q->n + 1);
     if (!q->qts){
-      q->qts = gv_calloc(1 << dim, sizeof(QuadTree));
+      q->qts = gv_calloc((size_t)1 << dim, sizeof(QuadTree));
     }/* done adding new quadtree, now add points to them */
     
     /* insert the old node (if exist) and the current node into the appropriate child quadtree */

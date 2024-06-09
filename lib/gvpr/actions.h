@@ -24,7 +24,7 @@ extern "C" {
     extern int copyAttr(Agobj_t * obj, Agobj_t * obj1);
     extern int indexOf(char *s1, char *s2);
     extern long rindexOf(char *s1, char *s2);
-    extern int match(char *str, char *pat);
+    extern size_t match(char *str, char *pat);
     extern int lockGraph(Agraph_t * g, int);
     extern Agraph_t *compOf(Agraph_t * g, Agnode_t * n);
     extern Agedge_t *isEdge(Agraph_t* g, Agnode_t * t, Agnode_t * h, char *key);

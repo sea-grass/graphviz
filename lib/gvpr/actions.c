@@ -25,6 +25,7 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -100,15 +101,15 @@ long rindexOf(char *s1, char *s2) {
 }
 
 /* match:
- * Return index of pattern pat in string str, or -1
+ * Return index of pattern pat in string str, or SIZE_MAX
  */
-int match(char *str, char *pat) {
-  int sub[2];
+size_t match(char *str, char *pat) {
+  size_t sub[2];
 
   if (strgrpmatch(str, pat, sub, 1, 0)) {
     return (sub[0]);
   } else
-    return -1;
+    return SIZE_MAX;
 }
 
 /* copyAttr:

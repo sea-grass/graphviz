@@ -32,6 +32,8 @@
 #include <inttypes.h>
 #include <string.h>
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <math.h>
 
@@ -1493,9 +1495,15 @@ getval(Expr_t * pgm, Exnode_t * node, Exid_t * sym, Exref_t * ref,
 	case F_rindex:
 	    v.integer = rindexOf(args[0].string, args[1].string);
 	    break;
-	case F_match:
-	    v.integer = match(args[0].string, args[1].string);
+	case F_match: {
+	    const size_t m = match(args[0].string, args[1].string);
+	    if (m == SIZE_MAX) {
+		v.integer = -1;
+	    } else {
+		v.integer = (long long)m;
+	    }
 	    break;
+	}
 	case F_call:
 	    if ((bp = findBinding (state, args[0].string)))
 		v.integer = (bp->fn)(args[1].string);
