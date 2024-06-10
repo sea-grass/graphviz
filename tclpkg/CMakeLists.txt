@@ -5,3 +5,5 @@ if(with_tclpkg)
   add_subdirectory(tclpathplan)
   add_subdirectory(tclstubs)
 endif()
+
+add_subdirectory(gv)

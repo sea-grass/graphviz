@@ -25,6 +25,8 @@ option(use_win_pre_inst_libs "enables building using pre-installed Windows libra
 option(BUILD_SHARED_LIBS "Build in shared lib mode" ON)
 set(with_tclpkg AUTO CACHE STRING "Build TCL components")
 set_property(CACHE with_tclpkg PROPERTY STRINGS AUTO ON OFF)
+set(with_swig AUTO CACHE STRING "Build language bindings")
+set_property(CACHE with_swig PROPERTY STRINGS AUTO ON OFF)
 
 if(WIN32)
   if(BUILD_SHARED_LIBS)
@@ -240,6 +242,27 @@ if(NOT with_tclpkg STREQUAL "OFF")
     endif()
   elseif(NOT TCL_FOUND)
     message(FATAL_ERROR "-Dwith_tclpkg=ON and TCL not found")
+  endif()
+endif()
+
+if(NOT with_swig STREQUAL "OFF")
+  # Opt in to new `-module` behavior that we do not care about. This silences
+  # -Wdev warnings. See `cmake --help-policy CMP0086`.
+  if(POLICY CMP0086)
+    cmake_policy(SET CMP0086 NEW)
+  endif()
+
+  find_package(SWIG)
+  if(with_swig STREQUAL "AUTO")
+    if(SWIG_FOUND)
+      message(STATUS "setting -Dwith_swig=ON")
+      set(with_swig ON)
+    else()
+      message(STATUS "setting -Dwith_swig=OFF")
+      set(with_swig OFF)
+    endif()
+  elseif(NOT SWIG_FOUND)
+    message(FATAL_ERROR "-Dwith_swig=ON and SWIG not found")
   endif()
 endif()
 
