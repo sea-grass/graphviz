@@ -17,4 +17,11 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-gvplugin_library_t gvplugin_kitty_LTX_library = {"kitty", apis};
+#ifdef GVDLL
+#define GVPLUGIN_KITTY_API __declspec(dllexport)
+#else
+#define GVPLUGIN_KITTY_API
+#endif
+
+GVPLUGIN_KITTY_API gvplugin_library_t gvplugin_kitty_LTX_library = {"kitty",
+                                                                    apis};

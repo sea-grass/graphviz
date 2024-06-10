@@ -579,7 +579,6 @@ EXCLUDE = (
     "plugin/gdk/gvloadimage_gdk.c",
     "plugin/gdk/gvplugin_gdk.c",
     "plugin/gs/gvloadimage_gs.c",
-    "plugin/gs/gvplugin_gs.c",
     "plugin/gtk/callbacks.c",
     "plugin/gtk/callbacks.h",
     "plugin/gtk/gvdevice_gtk.c",
