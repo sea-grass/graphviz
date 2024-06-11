@@ -49,7 +49,6 @@ endif
 
 if WITH_WIN32
 libgvplugin_neato_layout_la_LDFLAGS += -no-undefined
-libgvplugin_neato_layout_la_LIBADD += $(top_builddir)/lib/cgraph/libcgraph.la $(top_builddir)/lib/cdt/libcdt.la
 endif
 
 EXTRA_DIST = gvplugin_neato_layout.vcxproj*
