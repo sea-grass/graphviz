@@ -33,7 +33,6 @@ libgvplugin_dot_layout_la_LIBADD = $(libgvplugin_dot_layout_C_la_LIBADD) \
 
 if WITH_WIN32
 libgvplugin_dot_layout_la_LDFLAGS += -no-undefined
-libgvplugin_dot_layout_la_LIBADD += $(top_builddir)/lib/cgraph/libcgraph.la
 endif
 
 EXTRA_DIST = gvplugin_dot_layout.vcxproj*
