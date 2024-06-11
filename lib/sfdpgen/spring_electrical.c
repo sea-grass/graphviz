@@ -339,7 +339,7 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
   double counts[4], *force = NULL;
 #ifdef TIME
   clock_t start, end, start0;
-  double qtree_cpu = 0, qtree_cpu0 = 0, qtree_new_cpu = 0, qtree_new_cpu0 = 0;
+  double qtree_cpu = 0, qtree_new_cpu = 0;
   double total_cpu = 0;
   start0 = clock();
 #endif
@@ -439,12 +439,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
       qtree_new_cpu += ((double) (end - start)) / CLOCKS_PER_SEC;
 #endif
 
-#ifdef TIME
-      qtree_cpu0 = qtree_cpu - qtree_cpu0;
-      qtree_new_cpu0 = qtree_new_cpu - qtree_new_cpu0;
-      qtree_cpu0 = qtree_cpu;
-      qtree_new_cpu0 = qtree_new_cpu;
-#endif
       oned_optimizer_train(&qtree_level_optimizer,
                            counts[0] + 0.85 * counts[1] + 3.3 * counts[2]);
     } else {
@@ -455,11 +449,6 @@ void spring_electrical_embedding_fast(int dim, SparseMatrix A0, spring_electrica
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT
-  if (Verbose && 0) fputs("\n", stderr);
-#endif
-
 
 #ifdef DEBUG_PRINT
     if (Verbose) {
@@ -601,10 +590,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
-#ifdef DEBUG_PRINT
-  if (Verbose && 0) fputs("\n", stderr);
-#endif
-
 #ifdef DEBUG_PRINT_0
   {
     FILE *f;
@@ -654,7 +639,7 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0, counts_avg = 0;
 #ifdef TIME
   clock_t start, end, start0, start2;
-  double qtree_cpu = 0, qtree_cpu0 = 0;
+  double qtree_cpu = 0;
   double total_cpu = 0;
   start0 = clock();
 #endif
@@ -784,21 +769,11 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
       QuadTree_delete(qt);
       nsuper_avg /= n;
       counts_avg /= n;
-#ifdef TIME
-      qtree_cpu0 = qtree_cpu - qtree_cpu0;
-      if (Verbose && 0) fprintf(stderr, "\n cpu this outer iter = %f, quadtree time = %f other time = %f\n",((double) (clock() - start2)) / CLOCKS_PER_SEC, qtree_cpu0,((double) (clock() - start2))/CLOCKS_PER_SEC - qtree_cpu0);
-      qtree_cpu0 = qtree_cpu;
-#endif
-      if (Verbose & 0) fprintf(stderr, "nsuper_avg=%f, counts_avg = %f 2*nsuper+counts=%f\n",nsuper_avg,counts_avg, 2*nsuper_avg+counts_avg);
       oned_optimizer_train(&qtree_level_optimizer, 5 * nsuper_avg + counts_avg);
     }
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT
-  if (Verbose && 0) fputs("\n", stderr);
-#endif
 
 #ifdef DEBUG_PRINT_0
   {
@@ -858,7 +833,7 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   const bool adaptive_cooling = ctrl->adaptive_cooling;
   bool USE_QT = false;
   int nsuper = 0, nsupermax = 10;
-  double *center = NULL, *supernode_wgts = NULL, *distances = NULL, nsuper_avg, counts = 0;
+  double *center = NULL, *supernode_wgts = NULL, *distances = NULL, counts = 0;
   int max_qtree_level = 10;
 
   if (!A  || maxiter <= 0) return;
@@ -914,7 +889,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     memcpy(xold, x, sizeof(double)*dim*n);
     Fnorm0 = Fnorm;
     Fnorm = 0.;
-    nsuper_avg = 0;
 
     QuadTree qt = NULL;
     if (USE_QT) {
@@ -950,7 +924,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
       if (USE_QT){
 	QuadTree_get_supernodes(qt, bh, &(x[dim*i]), i, &nsuper, &nsupermax,
 				&center, &supernode_wgts, &distances, &counts);
-	nsuper_avg += nsuper;
 	for (j = 0; j < nsuper; j++){
 	  dist = MAX(distances[j], MINDIST);
 	  for (k = 0; k < dim; k++){
@@ -980,21 +953,9 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
     }/* done vertex i */
 
     if (qt) QuadTree_delete(qt);
-    nsuper_avg /= n;
-#ifdef DEBUG_PRINT
-    if (Verbose && 0) {
-        fprintf(stderr, "\r                iter = %d, step = %f Fnorm = %f nsuper = %d nz = %d  K = %f                                  ",iter, step, Fnorm, (int) nsuper_avg,A->nz,K);
-    }
-#else
-    (void)nsuper_avg;
-#endif
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT
-  if (Verbose && 0) fputs("\n", stderr);
-#endif
 
 #ifdef DEBUG_PRINT_0
   {

@@ -147,12 +147,6 @@ void furtherest_point(int k, int dim, double *wgt, double *pts, double *center, 
 
   }/* continue down the quadtree */
 
-  if (Verbose > 10) {
-    FILE *fp;
-    fp = fopen("/tmp/1.m","w");
-    QuadTree_print(fp, qt0);
-  }
-
   QuadTree_delete(qt0);
 
   qt_list_free(&candidates);
