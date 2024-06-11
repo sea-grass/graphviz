@@ -57,6 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   regardless of what output renderer is selected.
 - The CMake build system builds cgraph++ and gvc++ as either shared or static
   libraries, respecting the `BUILD_SHARED_LIBS` setting.
+- Discovery of the fcntl.h header has been removed from all build systems. This
+  header is now unconditionally assumed to exist.
 
 ### Fixed
 
