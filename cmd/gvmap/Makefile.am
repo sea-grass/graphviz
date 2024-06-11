@@ -22,23 +22,23 @@ gvmap_SOURCES = gvmap.c make_map.c power.c country_graph_coloring.c
 cluster_SOURCES = cluster.c make_map.c power.c country_graph_coloring.c
 
 gvmap_LDADD = \
-	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
+	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
-	$(top_builddir)/lib/rbtree/librbtree_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/rbtree/librbtree_C.la \
 	$(GTS_LIBS) -lm
 
 cluster_LDADD = \
-	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
+	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
-	$(top_builddir)/lib/rbtree/librbtree_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/rbtree/librbtree_C.la \
 	$(GTS_LIBS) -lm
 
 gvmap.sh :

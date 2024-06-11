@@ -16,14 +16,14 @@ endif
 edgepaint_SOURCES = edgepaintmain.c
 edgepaint_CPPFLAGS = $(AM_CPPFLAGS)
 edgepaint_LDADD = \
-	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
+	$(top_builddir)/lib/edgepaint/libedgepaint_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
-	$(top_builddir)/lib/rbtree/librbtree_C.la \
+	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
-	$(top_builddir)/lib/gvc/libgvc.la \
+	$(top_builddir)/lib/rbtree/librbtree_C.la \
 	-lm
 
 # add a non-existent C++ source to force the C++ compiler to be used for

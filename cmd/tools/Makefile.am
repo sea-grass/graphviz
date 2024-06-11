@@ -133,10 +133,10 @@ gvpack_SOURCES = gvpack.cpp
 gvpack_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=0
 
 gvpack_LDADD = \
+	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
-	$(top_builddir)/lib/cdt/libcdt.la \
-	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout.la
+	$(top_builddir)/lib/cdt/libcdt.la
 
 if ENABLE_STATIC
 gvpack_static_SOURCES = gvpack.cpp
