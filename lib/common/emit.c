@@ -399,7 +399,7 @@ static char **checkClusterStyle(graph_t *sg, graphviz_polygon_style_t *flagp) {
 
 typedef struct {
     char* color;   /* segment color */
-    float t;       /* segment size >= 0 */
+    double t; ///< segment size >= 0
     bool hasFraction;  /* true if color explicitly specifies its fraction */
 } colorseg_t;
 /* Sum of segment sizes should add to 1 */
@@ -519,12 +519,12 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
 	/* count zero segments */
 	nseg = 0;
 	for (i = 0; i < cnum; i++) {
-	    if (!(s[i].t > 0)) nseg++;
+	    if (s[i].t <= 0) nseg++;
 	}
 	if (nseg > 0) {
 	    double delta = left / (double)nseg;
 	    for (i = 0; i < cnum; i++) {
-		if (!(s[i].t > 0)) s[i].t = delta;
+		if (s[i].t <= 0) s[i].t = delta;
 	    }
 	}
 	else {
@@ -572,7 +572,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	
     angle0 = 0;
     for (colorseg_t *s = segs.segs; s->color; s++) {
-	if (!(s->t > 0)) continue;
+	if (s->t <= 0) continue;
 	gvrender_set_fillcolor(job, s->color);
 
 	if (s[1].color == NULL) 
@@ -630,7 +630,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
     for (colorseg_t *s = segs.segs; s->color; s++) {
-	if (!(s->t > 0)) continue;
+	if (s->t <= 0) continue;
 	gvrender_set_fillcolor (job, (s->color?s->color:DEFAULT_COLOR));
 	if (s[1].color == NULL) 
 	    pts[1].x = pts[2].x = lastx;
@@ -1562,7 +1562,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
     if (!(   ((job->flags & GVDEVICE_DOES_TRUECOLOR) && streq(str, "transparent"))
           || ((job->flags & GVRENDER_NO_WHITE_BG) && dfltColor))) {
 	char* clrs[2];
-	float frac;
+	double frac;
 
 	if ((findStopColor (str, clrs, &frac))) {
 	    int filled;
@@ -1999,12 +1999,10 @@ static double approxLen (pointf* pts)
  * treating the control points as a polyline.
  * We then split that Bezier.
  */
-static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
-{
+static void splitBSpline(bezier *bz, double t, bezier *left, bezier *right) {
     const size_t cnt = (bz->size - 1) / 3;
     double last, len, sum;
     pointf* pts;
-    float r;
 
     if (cnt == 1) {
 	left->size = 4;
@@ -2044,7 +2042,7 @@ static void splitBSpline (bezier* bz, float t, bezier* left, bezier* right)
 	right->list[j] = bz->list[k++];
 
     last = lens[i];
-    r = (len - (sum - last))/last;
+    const double r = (len - (sum - last)) / last;
     Bezier (bz->list + 3*i, r, left->list + 3*i, right->list);
 
     free (lens);
@@ -3571,7 +3569,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	if (!fillcolor) fillcolor = DEFAULT_FILL;
 	clrs[0] = NULL;
 	if (filled != 0) {
-	    float frac;
+	    double frac;
 	    if (findStopColor (fillcolor, clrs, &frac)) {
         	gvrender_set_fillcolor(job, clrs[0]);
 		if (clrs[1]) 
@@ -4043,8 +4041,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  * Note that memory is allocated as a single block stored in clrs[0] and
  * must be freed by calling function.
  */
-bool findStopColor (char* colorlist, char* clrs[2], float* frac)
-{
+bool findStopColor(char *colorlist, char *clrs[2], double *frac) {
     colorsegs_t segs = {0};
     int rv;
 

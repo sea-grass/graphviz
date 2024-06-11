@@ -16,7 +16,6 @@
 
 #include "config.h"
 #include <assert.h>
-#include <limits.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -179,7 +178,6 @@ typedef double (*radfunc_t) (double curlen, double totallen, double initwid);
  * decrease from initwid to 0 as the curlen goes from 0 to totallen.
  */
 stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
-    int l, n;
     double direction=0, direction_2=0;
     vararr_t arr = pathtolines(bez);
     pathpoint cur_point, last_point, next_point;
@@ -195,10 +193,8 @@ stroke_t taper(bezier *bez, radfunc_t radfunc, double initwid) {
 
     /* determine miter and bevel points and directions */
     for (size_t i = 0; i < pathcount; i++) {
-	assert(i <= INT_MAX);
-	assert(pathcount <= INT_MAX);
-	l = mymod((int)i - 1, (int)pathcount);
-	n = mymod((int)i + 1, (int)pathcount);
+	const size_t l = i == 0 ? pathcount - 1 : i - 1;
+	const size_t n = (i + 1) % pathcount;
 
 	cur_point = pathpoints[i];
 	x = cur_point.x;

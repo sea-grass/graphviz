@@ -44,6 +44,7 @@
 #include <cgraph/unreachable.h>
 #include <float.h>
 #include <inttypes.h>
+#include <limits.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdbool.h>
@@ -347,7 +348,7 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 static int setFill(GVJ_t *job, char *color, int angle, htmlstyle_t style,
                    char *clrs[2]) {
     int filled;
-    float frac;
+    double frac;
     if (findStopColor(color, clrs, &frac)) {
 	gvrender_set_fillcolor(job, clrs[0]);
 	if (clrs[1])
@@ -1347,18 +1348,19 @@ static void checkChain(graph_t * g)
  * Check for edge in g. If it exists, set its minlen to max of sz and
  * current minlen. Else, create it and set minlen to sz.
  */
-static void
-checkEdge (graph_t* g, node_t* t, node_t* h, int sz)
-{
+static void checkEdge(graph_t *g, node_t *t, node_t *h, double sz) {
     edge_t* e;
+
+    const int sz_as_int = sz > INT_MAX ? INT_MAX :
+                          sz < INT_MIN ? INT_MIN : (int)sz;
 
     e = agfindedge (g, t, h);
     if (e)
-	ED_minlen(e) = MAX(ED_minlen(e), sz);
+	ED_minlen(e) = MAX(ED_minlen(e), sz_as_int);
     else {
 	e = agedge(g, t, h, NULL, 1);
 	agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
-	ED_minlen(e) = sz;
+	ED_minlen(e) = sz_as_int;
 	elist_append(e, ND_out(t));
 	elist_append(e, ND_in(h));
     }

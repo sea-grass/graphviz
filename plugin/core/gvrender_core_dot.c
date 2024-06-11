@@ -514,8 +514,7 @@ static void xdot_textspan(GVJ_t * job, pointf p, textspan_t * span)
     xdot_str (job, "", span->str);
 }
 
-static void xdot_color_stop (agxbuf* xb, float v, gvcolor_t* clr)
-{
+static void xdot_color_stop(agxbuf *xb, double v, gvcolor_t *clr) {
   agxbprint(xb, "%.03f", v);
   agxbuf_trim_zeros(xb);
   agxbputc(xb, ' ');

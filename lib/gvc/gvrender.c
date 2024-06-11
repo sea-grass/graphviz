@@ -467,8 +467,8 @@ void gvrender_set_fillcolor(GVJ_t * job, char *name)
 	*cp = ':';
 }
 
-void gvrender_set_gradient_vals (GVJ_t * job, char *stopcolor, int angle, float frac)
-{
+void gvrender_set_gradient_vals(GVJ_t *job, char *stopcolor, int angle,
+                                double frac) {
     gvrender_engine_t *gvre = job->render.engine;
     gvcolor_t *color = &(job->obj->stopcolor);
 

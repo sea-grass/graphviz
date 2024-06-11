@@ -2980,7 +2980,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 	filled = FILL;
     } else {
 	if (style.filled) {
-	    float frac;
+	    double frac;
 	    fillcolor = findFill (n);
 	    if (findStopColor (fillcolor, clrs, &frac)) {
         	gvrender_set_fillcolor(job, clrs[0]);
@@ -3919,7 +3919,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
     clrs[0] = NULL;
     if (style.filled) {
 	char* fillcolor = findFill (n);
-	float frac;
+	double frac;
 
 	if (findStopColor (fillcolor, clrs, &frac)) {
             gvrender_set_fillcolor(job, clrs[0]);

@@ -45,7 +45,7 @@ extern "C" {
 
     typedef struct epsf_s {
 	int macro_id;
-	point offset;
+	pointf offset;
     } epsf_t;
 
 #ifdef GVDLL
