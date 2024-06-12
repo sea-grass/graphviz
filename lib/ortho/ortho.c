@@ -531,12 +531,12 @@ static void putSeg (FILE* fp, segment* seg)
       seg->p.p2, seg->comm_coord, bendToStr (seg->l1), bendToStr (seg->l2));
 }
 
-static DEBUG_FN void dumpChanG(channel *cp, int v) {
+static DEBUG_FN void dumpChanG(channel *cp, double v) {
   intitem* ip;
   Dt_t* adj;
 
   if (seg_list_size(&cp->seg_list) < 2) return;
-  fprintf (stderr, "channel %d (%f,%f)\n", v, cp->p.p1, cp->p.p2);
+  fprintf (stderr, "channel %.0f (%f,%f)\n", v, cp->p.p1, cp->p.p2);
   for (size_t k = 0; k < seg_list_size(&cp->seg_list); ++k) {
     adj = cp->G->vertices[k].adj_list;
     if (dtsize(adj) == 0) continue;
@@ -1120,9 +1120,7 @@ vtrack (segment* seg, maze* m)
   return left + f*(right-left);
 }
 
-static int
-htrack (segment* seg, maze* m)
-{
+static double htrack(segment *seg, maze *m) {
   channel* chp = chanSearch(m->hchans, seg);
   double f = 1.0 - (double)seg->track_no / ((double)seg_list_size(&chp->seg_list) + 1);
   double lo = chp->cp->bb.LL.y;
@@ -1416,10 +1414,8 @@ static char* epilog2 =
 %%%%Trailer\n\
 %%%%BoundingBox: %.f %.f %.f %.f\n";
 
-static point
-coordOf (cell* cp, snode* np)
-{
-    point p;
+static pointf coordOf(cell *cp, snode *np) {
+    pointf p;
     if (cp->sides[M_TOP] == np) {
 	p.x = (cp->bb.LL.x + cp->bb.UR.x)/2;
 	p.y = cp->bb.UR.y;
@@ -1446,7 +1442,7 @@ coordOf (cell* cp, snode* np)
 static boxf
 emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 {
-    int x, y;
+    double x, y;
     boxf n = CELL(agtail(e))->bb;
     segment* seg = rte.segs;
     if (seg->isVert) {
@@ -1457,11 +1453,11 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	y = htrack(seg, m);
 	x = (n.UR.x + n.LL.x)/2;
     }
-    bb.LL.x = MIN(bb.LL.x, SC*x);
-    bb.LL.y = MIN(bb.LL.y, SC*y);
-    bb.UR.x = MAX(bb.UR.x, SC*x);
-    bb.UR.y = MAX(bb.UR.y, SC*y);
-    fprintf (fp, "newpath %d %d moveto\n", SC*x, SC*y);
+    bb.LL.x = fmin(bb.LL.x, SC * x);
+    bb.LL.y = fmin(bb.LL.y, SC * y);
+    bb.UR.x = fmax(bb.UR.x, SC * x);
+    bb.UR.y = fmax(bb.UR.y, SC * y);
+    fprintf(fp, "newpath %.0f %.0f moveto\n", SC * x, SC * y);
 
     for (size_t i = 1;i<rte.n;i++) {
 	seg = rte.segs+i;
@@ -1471,11 +1467,11 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	else {
 	    y = htrack(seg, m);
 	}
-	bb.LL.x = MIN(bb.LL.x, SC*x);
-	bb.LL.y = MIN(bb.LL.y, SC*y);
-	bb.UR.x = MAX(bb.UR.x, SC*x);
-	bb.UR.y = MAX(bb.UR.y, SC*y);
-	fprintf (fp, "%d %d lineto\n", SC*x, SC*y);
+	bb.LL.x = fmin(bb.LL.x, SC * x);
+	bb.LL.y = fmin(bb.LL.y, SC * y);
+	bb.UR.x = fmax(bb.UR.x, SC * x);
+	bb.UR.y = fmax(bb.UR.y, SC * y);
+	fprintf(fp, "%.0f %.0f lineto\n", SC * x, SC * y);
     }
 
     n = CELL(aghead(e))->bb;
@@ -1487,11 +1483,11 @@ emitEdge (FILE* fp, Agedge_t* e, route rte, maze* m, boxf bb)
 	y = htrack(seg, m);
 	x = (n.LL.x + n.UR.x)/2;
     }
-    bb.LL.x = MIN(bb.LL.x, SC*x);
-    bb.LL.y = MIN(bb.LL.y, SC*y);
-    bb.UR.x = MAX(bb.UR.x, SC*x);
-    bb.UR.y = MAX(bb.UR.y, SC*y);
-    fprintf (fp, "%d %d lineto stroke\n", SC*x, SC*y);
+    bb.LL.x = fmin(bb.LL.x, SC * x);
+    bb.LL.y = fmin(bb.LL.y, SC * y);
+    bb.UR.x = fmax(bb.UR.x, SC * x);
+    bb.UR.y = fmax(bb.UR.y, SC * y);
+    fprintf(fp, "%.0f %.0f lineto stroke\n", SC * x, SC * y);
 
     return bb;
 }
@@ -1510,7 +1506,7 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
     cell* cp;
     snode* np;
     sedge* ep;
-    point p;
+    pointf p;
     int i;
     fputs ("graph G {\n", fp);
     fputs (" node[shape=point]\n", fp);
@@ -1519,15 +1515,13 @@ static DEBUG_FN void emitSearchGraph(FILE *fp, sgraph *sg) {
 	np = sg->nodes+i;
 	cp = np->cells[0];
 	if (cp == np->cells[1]) {
-	    pointf pf = midPt (cp);
-	    p.x = pf.x;
-	    p.y = pf.y;
+	    p = midPt(cp);
 	}
 	else {
 	    if (IsNode(cp)) cp = np->cells[1];
 	    p = coordOf (cp, np);
 	}
-	fprintf (fp, "  %d [pos=\"%d,%d!\"]\n", i, p.x, p.y);
+	fprintf (fp, "  %d [pos=\"%.0f,%.0f!\"]\n", i, p.x, p.y);
     }
     for (i = 0; i < sg->nedges; i++) {
 	ep = sg->edges+i;
