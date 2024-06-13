@@ -1,5 +1,3 @@
-add_definitions(-DDEMAND_LOADING=1)
-
 include_directories(
   ../../lib
   ${CMAKE_CURRENT_BINARY_DIR}
@@ -15,6 +13,8 @@ add_executable(dot
   dot.c
   no_builtins.c
 )
+
+target_compile_definitions(dot PRIVATE DEMAND_LOADING=1)
 
 target_link_libraries(dot PRIVATE
   cgraph
@@ -42,6 +42,8 @@ if(BUILD_SHARED_LIBS)
     dot.c
     dot_builtins.cpp
   )
+
+  target_compile_definitions(dot_builtins PRIVATE DEMAND_LOADING=1)
 
   target_link_libraries(dot_builtins PRIVATE
     cdt
