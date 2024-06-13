@@ -171,6 +171,17 @@ def is_mingw() -> bool:
     return "mingw" in sysconfig.get_platform()
 
 
+def is_static_build() -> bool:
+    """was the build we are testing done with static linking?"""
+
+    if os.environ.get("BUILD_SHARED_LIBS") == "OFF":
+        return True
+
+    # answer “no” to other scenarios, even when some of them are statically
+    # linked, because the test suite is unaffected
+    return False
+
+
 def remove_xtype_warnings(s: str) -> str:
     """
     Remove macOS XType warnings from a string. These appear to be harmless, but
