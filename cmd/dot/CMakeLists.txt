@@ -8,36 +8,36 @@ include_directories(
   ../../lib/pathplan
 )
 
-add_executable(dot
-  # Source files
-  dot.c
-  no_builtins.c
-)
-
-target_compile_definitions(dot PRIVATE DEMAND_LOADING=1)
-
-target_link_libraries(dot PRIVATE
-  cgraph
-  gvc
-)
-
-if(APPLE)
-  set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,-stack_size,0x2000000)
-elseif(MINGW)
-  set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,--stack,0x2000000)
-elseif(WIN32)
-  set_target_properties(dot PROPERTIES LINK_FLAGS /STACK:"33554432")
-endif()
-
-# Installation location of executables
-install(
-  TARGETS dot
-  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-  LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-)
-
 if(BUILD_SHARED_LIBS)
+  add_executable(dot
+    # Source files
+    dot.c
+    no_builtins.c
+  )
+
+  target_compile_definitions(dot PRIVATE DEMAND_LOADING=1)
+
+  target_link_libraries(dot PRIVATE
+    cgraph
+    gvc
+  )
+
+  if(APPLE)
+    set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,-stack_size,0x2000000)
+  elseif(MINGW)
+    set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,--stack,0x2000000)
+  elseif(WIN32)
+    set_target_properties(dot PROPERTIES LINK_FLAGS /STACK:"33554432")
+  endif()
+
+  # Installation location of executables
+  install(
+    TARGETS dot
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+
   add_executable(dot_builtins
     dot.c
     dot_builtins.cpp
@@ -105,6 +105,55 @@ if(BUILD_SHARED_LIBS)
 
   install(
     TARGETS dot_builtins
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+else()
+  add_executable(dot
+    dot.c
+    dot_builtins.cpp
+  )
+
+  target_compile_definitions(dot PRIVATE DEMAND_LOADING=0)
+
+  target_link_libraries(dot PRIVATE
+    cdt
+    cgraph
+    gvc
+    gvplugin_core
+    gvplugin_dot_layout
+    gvplugin_neato_layout
+    pathplan
+    xdot
+  )
+
+  if(APPLE)
+    set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,-stack_size,0x2000000)
+  elseif(MINGW)
+    set_target_properties(dot PROPERTIES LINK_FLAGS -Wl,--stack,0x2000000)
+  elseif(WIN32)
+    set_target_properties(dot PROPERTIES LINK_FLAGS /STACK:"33554432")
+  endif()
+
+  if(GD_FOUND)
+    target_link_libraries(dot PRIVATE gvplugin_gd)
+  endif()
+
+  if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
+    target_link_libraries(dot PRIVATE gvplugin_lasi)
+  endif()
+
+  if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
+    target_link_libraries(dot PRIVATE gvplugin_pango)
+  endif()
+
+  if(WEBP_FOUND)
+    target_link_libraries(dot PRIVATE gvplugin_webp)
+  endif()
+
+  install(
+    TARGETS dot
     RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
     LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
