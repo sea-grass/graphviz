@@ -1,6 +1,6 @@
 if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_pango SHARED
+  add_library(gvplugin_pango
     # Header files
     gvgetfontlist.h
     gvplugin_pango.h
@@ -36,13 +36,15 @@ if(CAIRO_FOUND AND PANGOCAIRO_FOUND)
     ${PANGOCAIRO_LINK_LIBRARIES}
   )
 
-  # Installation location of library files
-  install(
-    TARGETS gvplugin_pango
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    # Installation location of library files
+    install(
+      TARGETS gvplugin_pango
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   # Include DLLs with this library on Windows
   if(WIN32 AND install_win_dependency_dlls)

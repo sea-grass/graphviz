@@ -1,6 +1,6 @@
 if(WEBP_FOUND)
 
-  add_library(gvplugin_webp SHARED
+  add_library(gvplugin_webp
     gvplugin_webp.c
     gvloadimage_webp.c
     gvdevice_webp.c
@@ -42,12 +42,14 @@ if(WEBP_FOUND)
     endif()
   endif()
 
-  install(
-    TARGETS gvplugin_webp
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_webp
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_webp PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

@@ -1,6 +1,6 @@
 if(IS_DIRECTORY "/System/Library/Frameworks/ApplicationServices.framework")
 
-  add_library(gvplugin_quartz SHARED
+  add_library(gvplugin_quartz
     gvplugin_quartz.h
     GVTextLayout.h
     gvdevice_quartz.c
@@ -31,12 +31,14 @@ if(IS_DIRECTORY "/System/Library/Frameworks/ApplicationServices.framework")
     -framework ApplicationServices
   )
 
-  install(
-    TARGETS gvplugin_quartz
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_quartz
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_quartz PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

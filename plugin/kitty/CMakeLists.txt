@@ -1,5 +1,5 @@
 if(PANGOCAIRO_FOUND)
-  add_library(gvplugin_kitty SHARED gvdevice_kitty.c gvplugin_kitty.c)
+  add_library(gvplugin_kitty gvdevice_kitty.c gvplugin_kitty.c)
 
   target_include_directories(gvplugin_kitty PRIVATE
     ../../lib
@@ -19,12 +19,14 @@ if(PANGOCAIRO_FOUND)
     )
   endif()
 
-  install(
-    TARGETS gvplugin_kitty
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_kitty
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_kitty PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

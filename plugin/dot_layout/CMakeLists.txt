@@ -1,4 +1,4 @@
-add_library(gvplugin_dot_layout SHARED
+add_library(gvplugin_dot_layout
   # Source files
   gvplugin_dot_layout.c
   gvlayout_dot_layout.c
@@ -19,13 +19,15 @@ target_link_libraries(gvplugin_dot_layout PRIVATE
   gvc
 )
 
-# Installation location of library files
-install(
-  TARGETS gvplugin_dot_layout
-  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-  LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-)
+if(BUILD_SHARED_LIBS)
+  # Installation location of library files
+  install(
+    TARGETS gvplugin_dot_layout
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+endif()
 
 # Specify library version and soversion
 set_target_properties(gvplugin_dot_layout PROPERTIES

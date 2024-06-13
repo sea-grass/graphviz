@@ -1,6 +1,6 @@
 if(PANGOCAIRO_FOUND AND X11_FOUND AND XRENDER_FOUND)
 
-  add_library(gvplugin_xlib SHARED
+  add_library(gvplugin_xlib
     gvdevice_xlib.c
     gvplugin_xlib.c
   )
@@ -26,12 +26,14 @@ if(PANGOCAIRO_FOUND AND X11_FOUND AND XRENDER_FOUND)
     ${XRENDER_LINK_LIBRARIES}
   )
 
-  install(
-    TARGETS gvplugin_xlib
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_xlib
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_xlib PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

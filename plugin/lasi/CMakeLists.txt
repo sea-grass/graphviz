@@ -1,6 +1,6 @@
 if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_lasi SHARED
+  add_library(gvplugin_lasi
     gvloadimage_lasi.cpp
     gvplugin_lasi.c
     gvrender_lasi.cpp
@@ -27,12 +27,14 @@ if(Freetype_FOUND AND LASI_FOUND AND PANGOCAIRO_FOUND)
     ${PANGOCAIRO_LINK_LIBRARIES}
   )
 
-  install(
-    TARGETS gvplugin_lasi
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_lasi
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_lasi PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
