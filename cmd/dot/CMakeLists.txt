@@ -56,6 +56,16 @@ if(BUILD_SHARED_LIBS)
     xdot
   )
 
+  if(APPLE)
+    set_target_properties(dot_builtins PROPERTIES
+      LINK_FLAGS -Wl,-stack_size,0x2000000)
+  elseif(MINGW)
+    set_target_properties(dot_builtins PROPERTIES
+      LINK_FLAGS -Wl,--stack,0x2000000)
+  elseif(WIN32)
+    set_target_properties(dot_builtins PROPERTIES LINK_FLAGS /STACK:"33554432")
+  endif()
+
   if(EXPAT_FOUND)
     target_include_directories(dot_builtins SYSTEM PRIVATE
       ${EXPAT_INCLUDE_DIRS}
