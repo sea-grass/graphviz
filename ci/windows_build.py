@@ -29,6 +29,12 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
+        "--build-shared-libs",
+        choices=("ON", "OFF"),
+        default="ON",
+        help="control shared libraries selection (CMake only)",
+    )
+    parser.add_argument(
         "--build-system",
         choices=("cmake", "msbuild"),
         required=True,
@@ -68,6 +74,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "Visual Studio 17 2022",
                 "-A",
                 options.platform,
+                f"-DBUILD_SHARED_LIBS={options.build_shared_libs}",
                 "-Dwith_cxx_api=ON",
                 "-Denable_ltdl=ON",
                 "-Dwith_expat=ON",
