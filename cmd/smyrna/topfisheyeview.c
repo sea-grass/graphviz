@@ -22,10 +22,6 @@
 #include <common/color.h>
 #include <common/colorprocs.h>
 
-#ifdef _WIN32
-#include <wincrypt.h>
-#endif
-
 static int get_temp_coords(topview * t, int level, int v, double *coord_x,
 			   double *coord_y);
 

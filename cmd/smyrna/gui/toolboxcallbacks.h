@@ -12,7 +12,7 @@
 
 #include <gtk/gtk.h>
 #include "gui.h"
-#if defined(_WIN32)
+#ifdef _MSC_VER
 #define _BB  __declspec(dllexport)
 #else
 #define _BB /**/
