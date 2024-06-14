@@ -86,8 +86,8 @@ dot_static_LDADD = \
 	$(top_builddir)/plugin/core/libgvplugin_core_C.la \
 	$(top_builddir)/lib/gvc/libgvc_C.la \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/xdot/libxdot_C.la \
+	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
 	$(PANGOCAIRO_LIBS) $(PANGOFT2_LIBS) $(GTS_LIBS) $(EXPAT_LIBS) $(Z_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 
@@ -99,8 +99,8 @@ dot_builtins_LDADD = \
 	$(top_builddir)/plugin/core/libgvplugin_core.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/pathplan/libpathplan.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/xdot/libxdot.la \
+	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(GTS_LIBS) $(EXPAT_LIBS) $(Z_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 

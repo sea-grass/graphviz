@@ -50,10 +50,10 @@ libtcldot_la_LDFLAGS = -no-undefined -module -avoid-version
 
 libtcldot_la_LIBADD = $(TCLHANDLE_LIBS) $(GDTCLFT_LIBS) \
 	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la \
-	$(top_builddir)/lib/cdt/libcdt.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
-	$(top_builddir)/lib/gvc/libgvc.la
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/cdt/libcdt.la
 
 libtcldot_la_DEPENDENCIES = $(top_builddir)/lib/gvc/libgvc.la
 
@@ -80,11 +80,12 @@ libtcldot_builtin_la_LIBADD = $(TCLHANDLE_LIBS) $(GDTCLFT_LIBS) \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
 	$(top_builddir)/plugin/core/libgvplugin_core_C.la \
+	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la \
 	$(top_builddir)/lib/gvc/libgvc_C.la \
+	$(top_builddir)/lib/pathplan/libpathplan_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
-	$(top_builddir)/lib/pathplan/libpathplan_C.la \
-	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la $(GTS_LIBS)
+	$(GTS_LIBS)
 
 if WITH_PANGOCAIRO
 libtcldot_builtin_la_LIBADD += $(top_builddir)/plugin/pango/libgvplugin_pango_C.la $(PANGOCAIRO_LIBS) $(PANGOFT2_LIBS)

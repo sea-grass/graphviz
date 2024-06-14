@@ -17,14 +17,14 @@ endif
 mingle_SOURCES = minglemain.cpp
 mingle_CPPFLAGS = $(AM_CPPFLAGS)
 mingle_LDADD = \
-	$(top_builddir)/lib/mingle/libmingle_C.la \
 	$(top_builddir)/lib/sfdpgen/libsfdpgen_C.la \
+	$(top_builddir)/lib/mingle/libmingle_C.la \
 	$(top_builddir)/lib/neatogen/libneatogen_C.la \
 	$(top_builddir)/lib/sparse/libsparse_C.la \
-	$(top_builddir)/lib/rbtree/librbtree_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
+	$(top_builddir)/lib/rbtree/librbtree_C.la \
 	$(ANN_LIBS) -lm
 
 .1.1.pdf:

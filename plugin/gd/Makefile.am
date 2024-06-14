@@ -40,7 +40,7 @@ libgvplugin_gd_la_DEPENDENCIES = $(top_builddir)/lib/gvc/libgvc.la
 
 if WITH_WIN32
 libgvplugin_gd_la_LDFLAGS += -no-undefined
-libgvplugin_gd_la_LIBADD += $(top_builddir)/lib/cgraph/libcgraph.la $(top_builddir)/lib/pathplan/libpathplan.la
+libgvplugin_gd_la_LIBADD += $(top_builddir)/lib/pathplan/libpathplan.la
 endif
 endif
 

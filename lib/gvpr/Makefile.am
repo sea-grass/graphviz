@@ -48,8 +48,8 @@ libgvpr_la_LDFLAGS = -version-info $(GVPR_VERSION) -no-undefined
 libgvpr_la_SOURCES = $(libgvpr_C_la_SOURCES)
 libgvpr_la_LIBADD = $(libgvpr_C_la_LIBADD) \
 	$(top_builddir)/lib/expr/libexpr_C.la \
-	$(top_builddir)/lib/cdt/libcdt.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/cdt/libcdt.la \
 	$(MATH_LIBS)
 libgvpr_la_DEPENDENCIES = $(libgvpr_C_la_DEPENDENCIES)
 
