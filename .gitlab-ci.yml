@@ -1,3 +1,6 @@
+variables:
+    FF_TIMESTAMPS: true
+
 stages:
     - build_docker_images
     - push_docker_images
