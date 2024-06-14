@@ -3983,6 +3983,25 @@ def test_2538():
     dot("dot", input)
 
 
+@pytest.mark.skipif(which("sfdp") is None, reason="sfdp not available")
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2556"
+)
+def test_2556():
+    """
+    sfdp should not fail a GTS assertion
+    https://gitlab.com/graphviz/graphviz/-/issues/2556
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2556.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run this through sfdp
+    sfdp = which("sfdp")
+    subprocess.check_call([sfdp, "-Tpng", "-o", os.devnull, input])
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
