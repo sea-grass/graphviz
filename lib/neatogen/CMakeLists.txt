@@ -119,4 +119,11 @@ if(GTS_FOUND)
   target_link_libraries(neatogen PRIVATE
     ${GTS_LINK_LIBRARIES}
   )
+
+  if(WIN32 AND NOT MINGW AND install_win_dependency_dlls)
+    install(
+      FILES ${GTS_RUNTIME_LIBRARIES}
+      DESTINATION ${BINARY_INSTALL_DIR}
+    )
+  endif()
 endif()

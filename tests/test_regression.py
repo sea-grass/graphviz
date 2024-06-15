@@ -2437,7 +2437,7 @@ def test_2215():
 
 
 @pytest.mark.xfail(
-    (platform.system() == "Windows" and not is_mingw()) or is_rocky(),
+    os.getenv("build_system") == "msbuild" or is_rocky(),
     strict=True,
     reason="https://gitlab.com/graphviz/graphviz/-/issues/2241",
 )
