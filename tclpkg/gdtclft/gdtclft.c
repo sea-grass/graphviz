@@ -1337,6 +1337,7 @@ int Gdtclft_SafeInit(Tcl_Interp * interp)
  * @param reason Reason this function is being called
  * @param reserved Not used
  */
+BOOL APIENTRY DllEntryPoint(HINSTANCE hInst, DWORD reason, LPVOID reserved);
 BOOL APIENTRY DllEntryPoint(HINSTANCE hInst, DWORD reason, LPVOID reserved) {
     return TRUE;
 }
