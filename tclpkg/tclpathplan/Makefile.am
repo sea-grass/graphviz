@@ -4,7 +4,7 @@ SUBDIRS = demo
 
 pkgtcldir = $(pkglibdir)/tcl
 
-noinst_HEADERS = makecw.h simple.h
+noinst_HEADERS = makecw.h Plegal_arrangement.h simple.h
 if WITH_TCL
 pkgtcl_LTLIBRARIES = libtclplan.la
 endif

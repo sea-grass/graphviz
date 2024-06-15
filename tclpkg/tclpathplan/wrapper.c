@@ -10,6 +10,7 @@
 
 #include <cgraph/alloc.h>
 #include <pathplan/pathgeom.h>
+#include "Plegal_arrangement.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "simple.h"
