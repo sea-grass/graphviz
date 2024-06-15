@@ -25,8 +25,8 @@
 #include <cgraph/agxbuf.h>
 #include <common/utils.h>
 #include <gvc/gvio.h>
+#include "core_loadimage_xdot.h"
 
-extern void core_loadimage_xdot(GVJ_t*, usershape_t*, boxf, bool);
 extern shape_desc *find_user_shape(char *name);
 
 typedef enum {

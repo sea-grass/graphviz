@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="core_loadimage_xdot.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ps.h">
       <Filter>Header Files</Filter>
     </ClInclude>

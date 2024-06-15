@@ -33,6 +33,7 @@
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
+#include "core_loadimage_xdot.h"
 
 typedef enum {
 	FORMAT_DOT,

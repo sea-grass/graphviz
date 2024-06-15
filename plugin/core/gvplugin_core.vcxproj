@@ -92,6 +92,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="core_loadimage_xdot.h" />
     <ClInclude Include="ps.h" />
     <ClInclude Include="tcl_context.h" />
   </ItemGroup>
