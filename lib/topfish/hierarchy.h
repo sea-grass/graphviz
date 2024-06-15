@@ -91,3 +91,5 @@ void find_old_physical_coords(Hierarchy * hierarchy, int level, int node, double
 
 int find_active_ancestor(Hierarchy*, int, int);
 void find_active_ancestor_info(Hierarchy * hierarchy, int level, int node, int *levell,int *nodee);
+
+void quicksort_place(double *place, int *ordering, size_t size);
