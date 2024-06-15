@@ -12,6 +12,7 @@
 #include "tcl.h"
 
 /* need to reference an entry point to fool Sun's ld */
+void tclstubs_dummy(void);
 void tclstubs_dummy(void)
 {
     Tcl_InitStubs(0, 0, 0);
