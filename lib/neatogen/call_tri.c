@@ -11,6 +11,7 @@
 #include "config.h"
 #include <cgraph/alloc.h>
 #include <sparse/SparseMatrix.h>
+#include <neatogen/call_tri.h>
 #include <neatogen/delaunay.h>
 #include <stddef.h>
 #include <stdbool.h>
