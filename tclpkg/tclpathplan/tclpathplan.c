@@ -835,6 +835,7 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
     return TCL_OK;
 }
 
+int Tclpathplan_Init(Tcl_Interp *interp);
 int Tclpathplan_Init(Tcl_Interp * interp)
 {
 #ifdef USE_TCL_STUBS
@@ -866,6 +867,7 @@ int Tclpathplan_Init(Tcl_Interp * interp)
     return TCL_OK;
 }
 
+int Tclpathplan_SafeInit(Tcl_Interp *interp);
 int Tclpathplan_SafeInit(Tcl_Interp * interp)
 {
     return Tclpathplan_Init(interp);
