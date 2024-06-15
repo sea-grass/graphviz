@@ -9,28 +9,10 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
+#include <pathplan/pathgeom.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "simple.h"
-
-/* this is all out of pathgeom.h and will eventually get included */
-
-typedef struct Pxy_t {
-    double x, y;
-} Pxy_t;
-
-typedef struct Pxy_t Ppoint_t;
-typedef struct Pxy_t Pvector_t;
-
-typedef struct Ppoly_t {
-    Ppoint_t *ps;
-    size_t pn;
-} Ppoly_t;
-
-typedef struct Pedge_t {
-    Ppoint_t a, b;
-} Pedge_t;
-
 
 int Plegal_arrangement(Ppoly_t **polys, size_t n_polys) {
 
