@@ -156,7 +156,6 @@ static int intpoint(struct vertex *l, struct vertex *m, float *x, float *y, int 
     return 1;
 }
 
-/*detect whether lines l and m intersect      */
 void find_intersection(struct vertex *l,
 		  struct vertex *m,
 		  struct intersection ilist[], struct data *input)
