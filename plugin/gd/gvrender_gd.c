@@ -143,9 +143,6 @@ static void gdgen_begin_page(GVJ_t * job)
     gdImageAlphaBlending(im, true);
 }
 
-extern int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len);
-extern void gvdevice_gd_putC (gdIOCtx *context, int C);
-
 static void gdgen_end_page(GVJ_t * job)
 {
     gdImagePtr im = job->context;
