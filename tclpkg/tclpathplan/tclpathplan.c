@@ -38,6 +38,7 @@
 #include <pathplan/pathutil.h>
 #include <pathplan/vispath.h>
 #include <pathplan/tri.h>
+#include "Plegal_arrangement.h"
 #include <tcl.h>
 #include "tclhandle.h"
 
@@ -69,8 +70,6 @@ typedef struct vgpane_s {
 } vgpane_t;
 
 tblHeader_pt vgpaneTable;
-
-extern int Plegal_arrangement(Ppoly_t **polys, size_t n_polys);
 
 static int polyid = 0;		/* unique and unchanging id for each poly */
 
@@ -836,6 +835,7 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
     return TCL_OK;
 }
 
+int Tclpathplan_Init(Tcl_Interp *interp);
 int Tclpathplan_Init(Tcl_Interp * interp)
 {
 #ifdef USE_TCL_STUBS
@@ -867,6 +867,7 @@ int Tclpathplan_Init(Tcl_Interp * interp)
     return TCL_OK;
 }
 
+int Tclpathplan_SafeInit(Tcl_Interp *interp);
 int Tclpathplan_SafeInit(Tcl_Interp * interp)
 {
     return Tclpathplan_Init(interp);

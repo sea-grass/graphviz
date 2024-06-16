@@ -9,10 +9,8 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
-#include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <stdbool.h>
-#include <stdio.h>
 
 #include <neatogen/mem.h>
 #include <neatogen/hedges.h>
@@ -121,33 +119,4 @@ void PQinitialize(void)
 	PQhash = gv_calloc(PQhashsize, sizeof(Halfedge));
     for (i = 0; i < PQhashsize; ++i)
 	PQhash[i].PQnext = NULL;
-}
-
-static void PQdumphe(Halfedge * p)
-{
-    printf("  [%p] %p %p %d %d %d ",
-	   p, p->ELleft, p->ELright, p->ELedge->edgenbr,
-	   p->ELrefcnt, p->ELpm);
-    if (p->vertex != 0) {
-      printf("%" PRISIZE_T, p->vertex->sitenbr);
-    } else {
-      printf("-1");
-    }
-    printf(" %f\n", p->ystar);
-}
-
-void PQdump(void)
-{
-    int i;
-    Halfedge *p;
-
-    for (i = 0; i < PQhashsize; ++i) {
-	printf("[%d]\n", i);
-	p = PQhash[i].PQnext;
-	while (p != NULL) {
-	    PQdumphe(p);
-	    p = p->PQnext;
-	}
-    }
-
 }

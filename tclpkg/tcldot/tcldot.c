@@ -153,6 +153,7 @@ static int dotstring(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 }
 
+int Tcldot_Init(Tcl_Interp *interp);
 int Tcldot_Init(Tcl_Interp *interp) {
   ictx_t *ictx = calloc(1, sizeof(ictx_t));
   if (!ictx)
@@ -213,6 +214,8 @@ int Tcldot_Init(Tcl_Interp *interp) {
   return TCL_OK;
 }
 
+int Tcldot_SafeInit(Tcl_Interp *interp);
 int Tcldot_SafeInit(Tcl_Interp *interp) { return Tcldot_Init(interp); }
 
+int Tcldot_builtin_Init(Tcl_Interp *interp);
 int Tcldot_builtin_Init(Tcl_Interp *interp) { return Tcldot_Init(interp); }

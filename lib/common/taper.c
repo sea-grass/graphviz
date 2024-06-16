@@ -26,6 +26,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
+#include <common/render.h>
 #include <common/utils.h>
 
   /* sample point size; should be dynamic based on dpi or under user control */

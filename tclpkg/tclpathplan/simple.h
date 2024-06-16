@@ -55,3 +55,7 @@
 
 void find_ints(struct vertex vertex_list[], struct data *input,
                struct intersection ilist[]);
+
+/// detect whether lines `l` and `m` intersect
+void find_intersection(struct vertex *l, struct vertex *m,
+                       struct intersection ilist[], struct data *input);

@@ -1,5 +1,6 @@
 add_library(gvplugin_core SHARED
   # Header files
+  core_loadimage_xdot.h
   ps.h
   tcl_context.h
 

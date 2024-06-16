@@ -24,7 +24,6 @@ int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len)
     return gvwrite(gd_context->job, buffer, len);
 }
 
-/* used by gif output */
 void gvdevice_gd_putC (gdIOCtx *context, int C)
 {
     gd_context_t *gd_context = get_containing_context(context);

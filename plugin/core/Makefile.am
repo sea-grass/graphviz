@@ -11,7 +11,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/xdot \
 	$(LIBGVC_CFLAGS)
 
-noinst_HEADERS = tcl_context.h
+noinst_HEADERS = core_loadimage_xdot.h tcl_context.h
 noinst_LTLIBRARIES = libgvplugin_core_C.la
 if WITH_WIN32
 lib_LTLIBRARIES = libgvplugin_core.la

@@ -7,6 +7,8 @@
  *
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
+
+#include <edgepaint/intersection.h>
 #include <sparse/general.h>
 #include <math.h>
 
