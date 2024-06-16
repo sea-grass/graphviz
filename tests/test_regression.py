@@ -3984,9 +3984,6 @@ def test_2538():
 
 
 @pytest.mark.skipif(which("sfdp") is None, reason="sfdp not available")
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2556"
-)
 def test_2556():
     """
     sfdp should not fail a GTS assertion
@@ -3999,7 +3996,19 @@ def test_2556():
 
     # run this through sfdp
     sfdp = which("sfdp")
-    subprocess.check_call([sfdp, "-Tpng", "-o", os.devnull, input])
+    p = subprocess.run(
+        [sfdp, "-Tpng", "-o", os.devnull, input],
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    # if sfdp was built without libgts, it will not handle anything non-trivial
+    no_gts_error = "remove_overlap: Graphviz not built with triangulation library"
+    if no_gts_error in p.stderr:
+        assert p.returncode != 0, "sfdp returned success after an error message"
+        return
+
+    p.check_returncode()
 
 
 def test_changelog_dates():

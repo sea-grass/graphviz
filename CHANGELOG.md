@@ -89,6 +89,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   when compiling static libraries on Windows and MinGW.
 - An issue with linking gvpack when building static libraries in the CMake build
   system was fixed.
+- An sfdp use-after-free issue was fixed. #2556
 
 ## [11.0.0] – 2024-04-28
 
