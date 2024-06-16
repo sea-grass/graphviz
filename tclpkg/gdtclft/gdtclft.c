@@ -1332,13 +1332,12 @@ int Gdtclft_SafeInit(Tcl_Interp * interp)
  *    None.
  *
  *----------------------------------------------------------------------
+ *
+ * @param hInst Library instance handle
+ * @param reason Reason this function is being called
+ * @param reserved Not used
  */
-
-BOOL APIENTRY DllEntryPoint(hInst, reason, reserved)
-HINSTANCE hInst;		/* Library instance handle. */
-DWORD reason;			/* Reason this function is being called. */
-LPVOID reserved;		/* Not used. */
-{
+BOOL APIENTRY DllEntryPoint(HINSTANCE hInst, DWORD reason, LPVOID reserved) {
     return TRUE;
 }
 #endif
