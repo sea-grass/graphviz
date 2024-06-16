@@ -480,7 +480,7 @@ static void RBDeleteFixUp(rb_red_blk_tree* tree, rb_red_blk_node* x) {
 	LeftRotate(tree,x->parent);
 	x=root; /* this is to exit while loop */
       }
-    } else { /* the code below is has left and right switched from above */
+    } else { // the code below has left and right switched from above
       w=x->parent->left;
       if (w->red) {
 	w->red=0;
