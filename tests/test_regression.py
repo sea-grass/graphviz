@@ -3705,7 +3705,7 @@ def test_2460():
 
 
 @pytest.mark.xfail(
-    strict=not is_mingw(),
+    strict=platform.system() != "Windows",
     reason="https://gitlab.com/graphviz/graphviz/-/issues/2470",
 )
 def test_2470():
