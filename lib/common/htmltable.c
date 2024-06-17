@@ -48,6 +48,7 @@
 #include <math.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 
 #define DEFAULT_BORDER    1
@@ -1169,8 +1170,7 @@ size_html_cell(graph_t * g, htmlcell_t * cp, htmltbl_t * parent,
     return rv;
 }
 
-static int findCol(PointSet * ps, int row, int col, htmlcell_t * cellp)
-{
+static uint16_t findCol(PointSet *ps, int row, int col, htmlcell_t *cellp) {
     int notFound = 1;
     int lastc;
     int i, j, c;
@@ -1192,7 +1192,8 @@ static int findCol(PointSet * ps, int row, int col, htmlcell_t * cellp)
 	    addPS(ps, j, i);
 	}
     }
-    return col;
+    assert(col >= 0 && col <= UINT16_MAX);
+    return (uint16_t)col;
 }
 
 /* processTbl:
