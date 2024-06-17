@@ -69,13 +69,13 @@ typedef struct {
 
 DEFINE_LIST(points, pointf)
 
-static void adjustregularpath(path *, int, int);
+static void adjustregularpath(path *, size_t, size_t);
 static Agedge_t *bot_bound(Agedge_t *, int);
 static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
 static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
-				pathend_t *, pathend_t *, boxf *, int, int);
+                                pathend_t *, pathend_t *, boxf *, size_t, int);
 static int edgecmp(const void *, const void *);
 static void make_flat_edge(graph_t *, spline_info_t *, path *, Agedge_t **,
                            unsigned, unsigned, int);
@@ -1856,7 +1856,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    P->end.theta = M_PI / 2, P->end.constrained = true;
 	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
-	                        (int)boxes.size, 1);
+	                        boxes.size, 1);
 	    pointf *ps = NULL;
 	    size_t pn = 0;
 	    if (is_spline) ps = routesplines(P, &pn);
@@ -1906,7 +1906,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    hend.boxes[hend.boxn++] = b;
 	assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
-	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, (int)boxes.size,
+	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, boxes.size,
 	                    longedge);
 	boxes_free(&boxes);
 	pointf *ps = NULL;
@@ -1976,15 +1976,12 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 static void
 completeregularpath(path * P, edge_t * first, edge_t * last,
 		    pathend_t * tendp, pathend_t * hendp, boxf * boxes,
-		    int boxn, int flag)
-{
+		    size_t boxn, int flag) {
     // this implementation of completeregularpath ignores the flag
     (void)flag;
 
     edge_t *uleft, *uright, *lleft, *lright;
-    int i, fb, lb;
 
-    fb = lb = -1;
     uleft = uright = NULL;
     uleft = top_bound(first, -1), uright = top_bound(first, 1);
     if (uleft) {
@@ -2001,13 +1998,13 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
     if (lright) {
 	if (getsplinepoints(lright) == NULL) return;
     }
-    for (i = 0; i < tendp->boxn; i++)
+    for (int i = 0; i < tendp->boxn; i++)
 	add_box(P, tendp->boxes[i]);
-    fb = P->nbox + 1;
-    lb = fb + boxn - 3;
-    for (i = 0; i < boxn; i++)
+    const size_t fb = P->nbox + 1;
+    const size_t lb = fb + boxn - 3;
+    for (size_t i = 0; i < boxn; i++)
 	add_box(P, boxes[i]);
-    for (i = hendp->boxn - 1; i >= 0; i--)
+    for (int i = hendp->boxn - 1; i >= 0; i--)
 	add_box(P, hendp->boxes[i]);
     adjustregularpath(P, fb, lb);
 }
@@ -2041,12 +2038,11 @@ static boxf makeregularend(boxf b, int side, double y)
  * to guarantee an overlap between adjacent boxes of at least MINW.
  * It doesn't do this.
  */
-static void adjustregularpath(path * P, int fb, int lb)
+static void adjustregularpath(path *P, size_t fb, size_t lb)
 {
     boxf *bp1, *bp2;
-    int i;
 
-    for (i = fb-1; i < lb+1; i++) {
+    for (size_t i = fb - 1; i < lb + 1; i++) {
 	bp1 = &P->boxes[i];
 	if ((i - fb) % 2 == 0) {
 	    if (bp1->LL.x >= bp1->UR.x) {
@@ -2062,7 +2058,7 @@ static void adjustregularpath(path * P, int fb, int lb)
 	    }
 	}
     }
-    for (i = 0; i < P->nbox - 1; i++) {
+    for (size_t i = 0; i + 1 < P->nbox; i++) {
 	bp1 = &P->boxes[i], bp2 = &P->boxes[i + 1];
 	if (i >= fb && i <= lb && (i - fb) % 2 == 0) {
 	    if (bp1->LL.x + MINW > bp2->UR.x)
@@ -2130,10 +2126,9 @@ static edge_t *straight_path(edge_t *e, int cnt, points_t *plist) {
 
 static void recover_slack(edge_t * e, path * p)
 {
-    int b;
     node_t *vn;
 
-    b = 0;			/* skip first rank box */
+    size_t b = 0; // skip first rank box
     for (vn = aghead(e);
 	 ND_node_type(vn) == VIRTUAL && !sinfo.splineMerge(vn);
 	 vn = aghead(ND_out(vn).list[0])) {
@@ -2383,11 +2378,10 @@ static bool pathscross(node_t *n0, node_t *n1, edge_t *ie1, edge_t *oe1)
 #ifdef DEBUG
 void showpath(path * p)
 {
-    int i;
     pointf LL, UR;
 
     fprintf(stderr, "%%!PS\n");
-    for (i = 0; i < p->nbox; i++) {
+    for (size_t i = 0; i < p->nbox; i++) {
 	LL = p->boxes[i].LL;
 	UR = p->boxes[i].UR;
 	fprintf(stderr,

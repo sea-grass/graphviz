@@ -13,6 +13,7 @@
 #include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/pointset.h>
+#include <stddef.h>
 
 typedef struct {
     Dtlink_t link;
@@ -97,7 +98,7 @@ int sizeOf(PointSet * ps)
 }
 
 pointf *pointsOf(PointSet *ps) {
-    int n = dtsize(ps);
+    const size_t n = (size_t)dtsize(ps);
     pointf *pts = gv_calloc(n, sizeof(pointf));
     pair *p;
     pointf *pp = pts;

@@ -81,7 +81,7 @@ extern "C" {
     typedef struct path {	/* internal specification for an edge spline */
 	port start;
 	port end;
-	int nbox;		/* number of subdivisions */
+	size_t nbox; ///< number of subdivisions
 	boxf *boxes;		/* rectangular regions of subdivision */
 	void *data;
     } path;
