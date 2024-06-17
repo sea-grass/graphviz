@@ -1495,7 +1495,7 @@ static void sizeArray(htmltbl_t * tbl)
     closeGraphs(rowg, colg);
 }
 
-static void pos_html_tbl(htmltbl_t *, boxf, int);	/* forward declaration */
+static void pos_html_tbl(htmltbl_t *, boxf, unsigned char);
 
 /* pos_html_img:
  * Place image in cell
@@ -1520,8 +1520,7 @@ static void pos_html_txt(htmltxt_t * ftxt, char c)
 
 /* pos_html_cell:
  */
-static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
-{
+static void pos_html_cell(htmlcell_t *cp, boxf pos, unsigned char sides) {
     double delx, dely;
     pointf oldsz;
     boxf cbox;
@@ -1667,8 +1666,7 @@ static void pos_html_cell(htmlcell_t * cp, boxf pos, int sides)
  * attribute indicating which external sides of the node
  * are accessible to the table.
  */
-static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
-{
+static void pos_html_tbl(htmltbl_t *tbl, boxf pos, unsigned char sides) {
     int plus;
     htmlcell_t **cells = tbl->u.n.cells;
     htmlcell_t *cp;
@@ -1740,7 +1738,7 @@ static void pos_html_tbl(htmltbl_t * tbl, boxf pos, int sides)
     }
 
     while ((cp = *cells++)) {
-	int mask = 0;
+	unsigned char mask = 0;
 	if (sides) {
 	    if (cp->col == 0)
 		mask |= LEFT;
