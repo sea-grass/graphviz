@@ -199,7 +199,7 @@ tri(double *x, double *y, int npt, int *segs, int nsegs, int sepArr)
 	/* if v != NULL, it is a previously added pt with the same
 	 * coordinates as v4, in which case we replace v4 with v
 	 */
-	if (v) {
+	if (v && v4 != v) {
 	    gts_vertex_replace(v4, v);
 	}
     }

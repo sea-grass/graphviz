@@ -117,7 +117,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
   /* if check_overlap_only = TRUE, we only check whether there is one overlap */
   int i, k, neighbor;
   SparseMatrix A = NULL, B = NULL;
-  rb_red_blk_node *newNode, *newNode0, *newNode2 = NULL;
+  rb_red_blk_node *newNode, *newNode0;
   rb_red_blk_tree* treey;
   double one = 1;
 
@@ -198,10 +198,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
 #endif
 	    if (check_overlap_only) goto check_overlap_RETURN;
 	  }
-	} else {
-	  newNode2 = newNode;
 	}
-
       }
 
 #ifdef DEBUG_RBTREE
@@ -210,18 +207,6 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
 #endif
 
       if (newNode0) RBDelete(treey,newNode0);
-
-
-     if (newNode2 && newNode2 != treey->nil && newNode2 != newNode0) {
-
-#ifdef DEBUG_RBTREE
-	fprintf(stderr, "deleteing2...");
-	treey->PrintKey(newNode2->key);
-#endif
-
-	if (newNode0) RBDelete(treey,newNode2);
-      }
-
     }
   }
 
