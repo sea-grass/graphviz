@@ -246,7 +246,9 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     }
 
     /* feed the globals */
-    Verbose = gvc->common.verbose;
+    Verbose = gvc->common.verbose > UCHAR_MAX
+      ? UCHAR_MAX
+      : (unsigned char)gvc->common.verbose;
     CmdName = gvc->common.cmdname;
 
     size_t nfiles = 0;
