@@ -328,6 +328,8 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 	    gvrender_polyline(job, AF, 2);
 	    gvrender_polyline(job, AF+2, 2);
 	    break;
+	default:
+	    break;
 	}
     } else {
 	if (dp->border > 1) {
