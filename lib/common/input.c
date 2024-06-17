@@ -18,6 +18,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/gv_math.h>
 #include <cgraph/exit.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
@@ -391,7 +392,7 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
 				rest);
 			return dotneato_usage(1);
 		    }
-		    else if (PSinputscale == 0)
+		    else if (is_exactly_zero(PSinputscale))
 			PSinputscale = POINTS_PER_INCH;
 		} else
 		    PSinputscale = POINTS_PER_INCH;
