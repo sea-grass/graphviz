@@ -709,6 +709,8 @@ static void allocObj(GVJ_t * job)
     case EDGE_OBJTYPE:
 	obj->u.e = parent->u.e;
 	break;
+    default:
+	UNREACHABLE();
     }
     obj->url = parent->url;
     obj->tooltip = parent->tooltip;
