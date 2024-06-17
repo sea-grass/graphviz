@@ -1592,6 +1592,8 @@ static void pos_html_cell(htmlcell_t *cp, boxf pos, unsigned char sides) {
 	    case HALIGN_RIGHT:
 		cbox.LL.x += delx;
 		break;
+	    default:
+		break;
 	    }
 	}
 
@@ -1603,6 +1605,8 @@ static void pos_html_cell(htmlcell_t *cp, boxf pos, unsigned char sides) {
 		break;
 	    case VALIGN_TOP:
 		cbox.LL.y += dely;
+		break;
+	    default:
 		break;
 	    }
 	}
