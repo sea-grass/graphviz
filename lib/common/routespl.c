@@ -16,6 +16,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
+#include <cgraph/prisize_t.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
 #include <float.h>
@@ -23,22 +24,22 @@
 #include <math.h>
 #include <pathplan/pathplan.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
-static int nedges, nboxes; /* total no. of edges and boxes used in routing */
+static int nedges; ///< total no. of edges used in routing
+static size_t nboxes; ///< total no. of boxes used in routing
 
 static int routeinit;
 
-static int checkpath(int, boxf*, path*);
+static int checkpath(size_t, boxf *, path *);
 static void printpath(path * pp);
 #ifdef DEBUG
-static void printboxes(int boxn, boxf* boxes)
-{
+static void printboxes(size_t boxn, boxf *boxes) {
     pointf ll, ur;
-    int bi;
 
-    for (bi = 0; bi < boxn; bi++) {
+    for (size_t bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
 	agxbuf buf = {0};
 	agxbprint(&buf, "%.0f %.0f %.0f %.0f pathbox", ll.x, ll.y, ur.x, ur.y);
@@ -129,14 +130,12 @@ static void psprintpoly(Ppoly_t p)
     show_boxes_append(&Show_boxes, gv_strdup("grestore"));
 }
 
-static void psprintboxes(int boxn, boxf* boxes)
-{
+static void psprintboxes(size_t boxn, boxf *boxes) {
     pointf ll, ur;
-    int bi;
 
     show_boxes_append(&Show_boxes, gv_strdup("%% box list"));
     show_boxes_append(&Show_boxes, gv_strdup("gsave 0 1 0 setrgbcolor"));
-    for (bi = 0; bi < boxn; bi++) {
+    for (size_t bi = 0; bi < boxn; bi++) {
 	ll = boxes[bi].LL, ur = boxes[bi].UR;
 	agxbuf buf = {0};
 	agxbprint(&buf, "newpath\n%.0f %.0f moveto", ll.x, ll.y);
@@ -236,16 +235,15 @@ void routesplinesterm(void)
     if (--routeinit > 0) return;
     if (Verbose)
 	fprintf(stderr,
-		"routesplines: %d edges, %d boxes %.2f sec\n",
+		"routesplines: %d edges, %" PRISIZE_T " boxes %.2f sec\n",
 		nedges, nboxes, elapsed_sec());
 }
 
-static void limitBoxes(boxf *boxes, int boxn, const pointf *pps, size_t pn,
+static void limitBoxes(boxf *boxes, size_t boxn, const pointf *pps, size_t pn,
                        double delta) {
-    int bi;
     double t;
     pointf sp[4];
-    const double num_div = delta * boxn;
+    const double num_div = delta * (double)boxn;
 
     for (size_t splinepi = 0; splinepi + 3 < pn; splinepi += 3) {
 	for (double si = 0; si <= num_div; si++) {
@@ -266,7 +264,7 @@ static void limitBoxes(boxf *boxes, int boxn, const pointf *pps, size_t pn,
 	    sp[1].y += t * (sp[2].y - sp[1].y);
 	    sp[0].x += t * (sp[1].x - sp[0].x);
 	    sp[0].y += t * (sp[1].y - sp[0].y);
-	    for (bi = 0; bi < boxn; bi++) {
+	    for (size_t bi = 0; bi < boxn; bi++) {
 /* this tested ok on 64bit machines, but on 32bit we need this FUDGE
  *     or graphs/directed/records.gv fails */
 #define FUDGE .0001
@@ -306,9 +304,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     Ppoint_t eps[2];
     Pvector_t evs[2];
     int prev, next;
-    int bi;
     boxf *boxes;
-    int boxn;
     edge_t* realedge;
     bool flip;
     int loopcnt;
@@ -327,7 +323,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     }
 
     boxes = pp->boxes;
-    boxn = pp->nbox;
+    const size_t boxn = pp->nbox;
 
     if (checkpath(boxn, boxes, pp))
 	return NULL;
@@ -346,7 +342,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
 
     if (boxn > 1 && boxes[0].LL.y > boxes[1].LL.y) {
         flip = true;
-	for (bi = 0; bi < boxn; bi++) {
+	for (size_t bi = 0; bi < boxn; bi++) {
 	    double v = boxes[bi].UR.y;
 	    boxes[bi].UR.y = -1*boxes[bi].LL.y;
 	    boxes[bi].LL.y = -v;
@@ -358,11 +354,12 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     if (agtail(realedge) != aghead(realedge)) {
 	/* I assume that the path goes either down only or
 	   up - right - down */
+	size_t bi;
 	for (bi = 0, pi = 0; bi < boxn; bi++) {
 	    next = prev = 0;
 	    if (bi > 0)
 		prev = boxes[bi].LL.y > boxes[bi - 1].LL.y ? -1 : 1;
-	    if (bi < boxn - 1)
+	    if (bi + 1 < boxn)
 		next = boxes[bi + 1].LL.y > boxes[bi].LL.y ? 1 : -1;
 	    if (prev != next) {
 		if (next == -1 || prev == 1) {
@@ -391,9 +388,9 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
 		}
 	    }
 	}
-	for (bi = boxn - 1; bi >= 0; bi--) {
+	for (bi = boxn - 1; bi != SIZE_MAX; bi--) {
 	    next = prev = 0;
-	    if (bi < boxn - 1)
+	    if (bi + 1 < boxn)
 		prev = boxes[bi].LL.y > boxes[bi + 1].LL.y ? -1 : 1;
 	    if (bi > 0)
 		next = boxes[bi - 1].LL.y > boxes[bi].LL.y ? 1 : -1;
@@ -441,7 +438,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
     }
 
     if (flip) {
-	for (bi = 0; bi < boxn; bi++) {
+	for (size_t bi = 0; bi < boxn; bi++) {
 	    double v = boxes[bi].UR.y;
 	    boxes[bi].UR.y = -1*boxes[bi].LL.y;
 	    boxes[bi].LL.y = -v;
@@ -452,7 +449,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
 
     static const double INITIAL_LLX = DBL_MAX;
     static const double INITIAL_URX = -DBL_MAX;
-    for (bi = 0; bi < boxn; bi++) {
+    for (size_t bi = 0; bi < boxn; bi++) {
 	boxes[bi].LL.x = INITIAL_LLX;
 	boxes[bi].UR.x = INITIAL_URX;
     }
@@ -526,6 +523,7 @@ static pointf *routesplines_(path *pp, size_t *npoints, int polyline) {
      * Therefore, we make the sample finer until all boxes have
      * valid values. cf. bug 456.
      */
+	size_t bi;
 	for (bi = 0; bi < boxn; bi++) {
 	/* these fp equality tests are used only to detect if the
 	 * values have been changed since initialization - ok */
@@ -602,14 +600,13 @@ static double overlap(double i0, double i1, double j0, double j1) {
  *
  * Return 1 on failure; 0 on success.
  */
-static int checkpath(int boxn, boxf* boxes, path* thepath)
-{
+static int checkpath(size_t boxn, boxf *boxes, path *thepath) {
     boxf *ba, *bb;
-    int bi, i, errs, l, r, d, u;
+    int errs, l, r, d, u;
 
     /* remove degenerate boxes. */
-    i = 0;
-    for (bi = 0; bi < boxn; bi++) {
+    size_t i = 0;
+    for (size_t bi = 0; bi < boxn; bi++) {
 	if (fabs(boxes[bi].LL.y - boxes[bi].UR.y) < .01)
 	    continue;
 	if (fabs(boxes[bi].LL.x - boxes[bi].UR.x) < .01)
@@ -625,10 +622,11 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	printpath(thepath);
 	return 1;
     }
-    for (bi = 0; bi < boxn - 1; bi++) {
+    for (size_t bi = 0; bi + 1 < boxn; bi++) {
 	ba = &boxes[bi], bb = &boxes[bi + 1];
 	if (bb->LL.x > bb->UR.x || bb->LL.y > bb->UR.y) {
-	    agerrorf("in checkpath, box %d has LL coord > UR coord\n", bi + 1);
+	    agerrorf("in checkpath, box %" PRISIZE_T " has LL coord > UR coord\n",
+	             bi + 1);
 	    printpath(thepath);
 	    return 1;
 	}
@@ -638,8 +636,8 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 	u = ba->LL.y > bb->UR.y ? 1 : 0;
 	errs = l + r + d + u;
 	if (errs > 0 && Verbose) {
-	    fprintf(stderr, "in checkpath, boxes %d and %d don't touch\n",
-		    bi, bi + 1);
+	    fprintf(stderr, "in checkpath, boxes %" PRISIZE_T " and %" PRISIZE_T
+	            " don't touch\n", bi, bi + 1);
 	    printpath(thepath);
 	}
 	if (errs > 0) {
@@ -653,7 +651,7 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 		xy = ba->UR.y, ba->UR.y = bb->LL.y, bb->LL.y = xy, d = 0;
 	    else if (u == 1)
 		xy = ba->LL.y, ba->LL.y = bb->UR.y, bb->UR.y = xy, u = 0;
-	    for (i = 0; i < errs - 1; i++) {
+	    for (int j = 0; j < errs - 1; j++) {
 		if (l == 1)
 		    xy = (ba->UR.x + bb->LL.x) / 2.0 + 0.5, ba->UR.x =
 			bb->LL.x = xy, l = 0;
@@ -735,11 +733,9 @@ static int checkpath(int boxn, boxf* boxes, path* thepath)
 
 static void printpath(path * pp)
 {
-    int bi;
-
-    fprintf(stderr, "%d boxes:\n", pp->nbox);
-    for (bi = 0; bi < pp->nbox; bi++)
-	fprintf(stderr, "%d (%.5g, %.5g), (%.5g, %.5g)\n", bi,
+    fprintf(stderr, "%" PRISIZE_T " boxes:\n", pp->nbox);
+    for (size_t bi = 0; bi < pp->nbox; bi++)
+	fprintf(stderr, "%" PRISIZE_T " (%.5g, %.5g), (%.5g, %.5g)\n", bi,
 		pp->boxes[bi].LL.x, pp->boxes[bi].LL.y,
 	       	pp->boxes[bi].UR.x, pp->boxes[bi].UR.y);
     fprintf(stderr, "start port: (%.5g, %.5g), tangent angle: %.5g, %s\n",

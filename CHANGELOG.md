@@ -60,6 +60,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Discovery of the fcntl.h header has been removed from all build systems. This
   header is now unconditionally assumed to exist.
 - **Breaking**: `obj_state_t.gradient_frac` is now a `double`.
+- **Breaking**: `path.nbox` is now a `size_t`.
 
 ### Fixed
 
