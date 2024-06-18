@@ -17,4 +17,10 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-gvplugin_library_t gvplugin_poppler_LTX_library = { "poppler", apis };
+#ifdef GVDLL
+#define GVPLUGIN_POPPLER_API __declspec(dllexport)
+#else
+#define GVPLUGIN_POPPLER_API
+#endif
+
+GVPLUGIN_POPPLER_API gvplugin_library_t gvplugin_poppler_LTX_library = { "poppler", apis };
