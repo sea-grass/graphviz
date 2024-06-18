@@ -8,7 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
+#include <assert.h>
+#include <stddef.h>
 #include "tcldot.h"
 
 /*
@@ -27,6 +28,8 @@
  */
 int myiodisc_afread(void* channel, char *ubuf, int n)
 {
+    assert(n >= 0);
+
     static Tcl_DString dstr;
     static int strpos;
     int nput;
@@ -44,13 +47,13 @@ int myiodisc_afread(void* channel, char *ubuf, int n)
 	nput = Tcl_DStringLength(&dstr) - strpos;
 	if (nput > n) {
 	    /* chunk between first and last */
-	    memcpy(ubuf, strpos + Tcl_DStringValue(&dstr), n);
+	    memcpy(ubuf, strpos + Tcl_DStringValue(&dstr), (size_t)n);
 	    strpos += n;
 	    nput = n;
 	    ubuf[n] = '\0';
 	} else {
 	    /* last chunk */
-	    memcpy(ubuf, strpos + Tcl_DStringValue(&dstr), nput);
+	    memcpy(ubuf, strpos + Tcl_DStringValue(&dstr), (size_t)nput);
 	    strpos = 0;
 	}
     } else {
@@ -67,12 +70,12 @@ int myiodisc_afread(void* channel, char *ubuf, int n)
 	if (Tcl_DStringLength(&dstr) > n) {
 	    /* first chunk */
 	    nput = n;
-	    memcpy(ubuf, Tcl_DStringValue(&dstr), n);
+	    memcpy(ubuf, Tcl_DStringValue(&dstr), (size_t)n);
 	    strpos = n;
 	} else {
 	    /* single chunk */
 	    nput = Tcl_DStringLength(&dstr);
-	    memcpy(ubuf, Tcl_DStringValue(&dstr),nput);
+	    memcpy(ubuf, Tcl_DStringValue(&dstr), (size_t)nput);
 	}
     }
     return nput;
