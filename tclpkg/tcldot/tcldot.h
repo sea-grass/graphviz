@@ -16,7 +16,6 @@
 #include <common/render.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
-#include <stddef.h>
 #include "tclhandle.h"
 #include "../../plugin/core/tcl_context.h"
 
@@ -70,13 +69,6 @@ extern int edgecmd(ClientData clientData, Tcl_Interp * interp,
 		    int argc, Tcl_Obj * CONST objv[]
 #endif
     );
-
-/* rdr_t isn't exposed by cgraph/io.c */
-typedef struct {
-    const char *data;
-    size_t len;
-    size_t cur;
-} rdr_t;
 
 extern int myiodisc_afread(void* channel, char *ubuf, int n);
 extern int myiodisc_memiofread(void *chan, char *buf, int bufsize);

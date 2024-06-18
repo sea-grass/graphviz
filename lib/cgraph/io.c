@@ -15,6 +15,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <cgraph/cghdr.h>
+#include <cgraph/rdr.h>
 #if defined(_WIN32)
 #include <io.h>
 #endif
@@ -39,12 +40,6 @@ static int ioflush(void *chan)
 }
 
 Agiodisc_t AgIoDisc = { iofread, ioputstr, ioflush };
-
-typedef struct {
-    const char *data;
-    size_t len;
-    size_t cur;
-} rdr_t;
 
 static int
 memiofread(void *chan, char *buf, int bufsize)

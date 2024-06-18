@@ -19,6 +19,7 @@
 #include <QTemporaryFile>
 #include <QtWidgets>
 #include <cassert>
+#include <cgraph/rdr.h>
 #include <cstdint>
 #include <qfile.h>
 #include <string>
@@ -40,11 +41,6 @@
 extern int errorPipe(char *errMsg);
 
 #define WIDGET(t, f) ((t *)findChild<t *>(#f))
-typedef struct {
-  const char *data;
-  int len;
-  int cur;
-} rdr_t;
 
 #ifndef _WIN32
 /// `readlink`-alike but dynamically allocates

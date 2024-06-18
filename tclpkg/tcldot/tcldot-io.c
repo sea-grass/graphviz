@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <cgraph/rdr.h>
 #include <limits.h>
 #include <stddef.h>
 #include "tcldot.h"
