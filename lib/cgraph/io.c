@@ -16,9 +16,6 @@
 #include <stdio.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/rdr.h>
-#if defined(_WIN32)
-#include <io.h>
-#endif
 
 static int iofread(void *chan, char *buf, int bufsize)
 {
