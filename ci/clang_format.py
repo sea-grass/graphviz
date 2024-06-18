@@ -580,7 +580,6 @@ EXCLUDE = (
     "plugin/gtk/callbacks.c",
     "plugin/gtk/callbacks.h",
     "plugin/gtk/gvdevice_gtk.c",
-    "plugin/gtk/gvplugin_gtk.c",
     "plugin/gtk/interface.c",
     "plugin/gtk/interface.h",
     "plugin/gtk/support.c",
