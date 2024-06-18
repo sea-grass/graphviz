@@ -9,7 +9,6 @@
  *************************************************************************/
 #ifdef _WIN32
 #include <windows.h>
-#include <io.h>
 #endif
 #include <assert.h>
 #include "viewport.h"
