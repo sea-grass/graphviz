@@ -576,7 +576,6 @@ EXCLUDE = (
     "plugin/gdiplus/gvtextlayout_gdiplus.cpp",
     "plugin/gdk/gvdevice_gdk.c",
     "plugin/gdk/gvloadimage_gdk.c",
-    "plugin/gdk/gvplugin_gdk.c",
     "plugin/gs/gvloadimage_gs.c",
     "plugin/gtk/callbacks.c",
     "plugin/gtk/callbacks.h",

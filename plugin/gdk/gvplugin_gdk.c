@@ -1,5 +1,5 @@
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -25,4 +25,4 @@ static gvplugin_api_t apis[] = {
 #define GVPLUGIN_GDK_API
 #endif
 
-GVPLUGIN_GDK_API gvplugin_library_t gvplugin_gdk_LTX_library = { "gdk", apis };
+GVPLUGIN_GDK_API gvplugin_library_t gvplugin_gdk_LTX_library = {"gdk", apis};
