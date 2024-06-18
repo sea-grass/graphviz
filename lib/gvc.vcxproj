@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\include\unistd;$(SolutionDir)windows\dependencies\GTK2\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir);$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\pathplan;$(SolutionDir)lib\gvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)windows\include\unistd;$(SolutionDir)windows\dependencies\GTK2\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir);$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\pathplan;$(SolutionDir)lib\gvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GVDLL;GVC_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -62,12 +62,12 @@
       <DisableSpecificWarnings>4223;4706;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\x86\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\lib;$(SolutionDir)windows\dependencies\libraries\x86\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>cdt.lib;cgraph.lib;xml2.lib;expat.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cdt.lib;cgraph.lib;xml2.lib;libexpatd.lib;zlibd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:gvortho.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
@@ -77,12 +77,13 @@ python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
 python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)windows\dependencies\libraries\x86\bin\expat.dll $(OutDir)expat.dll</Command>
+      <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libexpatd.dll $(OutDir)libexpatd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\zlibd1.dll $(OutDir)zlibd1.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\include\unistd;$(SolutionDir)windows\dependencies\GTK2\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir);$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\pathplan;$(SolutionDir)lib\gvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)windows\include\unistd;$(SolutionDir)windows\dependencies\GTK2\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir);$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\pathplan;$(SolutionDir)lib\gvc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;GVDLL;GVC_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
@@ -90,14 +91,14 @@ python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\colo
       <DisableSpecificWarnings>4223;4706;4996</DisableSpecificWarnings>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\x86\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\lib;$(SolutionDir)windows\dependencies\libraries\x86\lib;$(OutDir);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>No</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <DataExecutionPrevention />
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalDependencies>cdt.lib;cgraph.lib;xml2.lib;expat.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cdt.lib;cgraph.lib;xml2.lib;libexpat.lib;zlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>/WHOLEARCHIVE:gvortho.lib %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
@@ -107,7 +108,8 @@ python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
 python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)windows\dependencies\libraries\x86\bin\expat.dll $(OutDir)expat.dll</Command>
+      <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libexpat.dll $(OutDir)libexpat.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\zlib1.dll $(OutDir)zlib1.dll</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
