@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <assert.h>
+#include <limits.h>
 #include <stddef.h>
 #include "tcldot.h"
 
@@ -88,20 +89,19 @@ int myiodisc_memiofread(void *chan, char *buf, int bufsize)
     const char *ptr;
     char *optr;
     char c;
-    int l;
     rdr_t *s;
 
     if (bufsize == 0) return 0;
     s = chan;
     if (s->cur >= s->len)
         return 0;
-    l = 0;
+    size_t l = 0;
     ptr = s->data + s->cur;
     optr = buf;
     do {
         *optr++ = c = *ptr++;
         l++;
-    } while (c && c != '\n' && l < bufsize);
+    } while (c && c != '\n' && l < INT_MAX && (int)l < bufsize);
     s->cur += l;
-    return l;
+    return (int)l;
 }
