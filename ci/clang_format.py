@@ -560,7 +560,6 @@ EXCLUDE = (
     "plugin/core/gvrender_core_svg.c",
     "plugin/core/gvrender_core_tk.c",
     "plugin/devil/gvdevice_devil.c",
-    "plugin/devil/gvplugin_devil.c",
     "plugin/dot_layout/gvlayout_dot_layout.c",
     "plugin/dot_layout/gvplugin_dot_layout.c",
     "plugin/gd/gvdevice_gd.c",
