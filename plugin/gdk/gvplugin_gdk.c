@@ -19,4 +19,10 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-gvplugin_library_t gvplugin_gdk_LTX_library = { "gdk", apis };
+#ifdef GVDLL
+#define GVPLUGIN_GDK_API __declspec(dllexport)
+#else
+#define GVPLUGIN_GDK_API
+#endif
+
+GVPLUGIN_GDK_API gvplugin_library_t gvplugin_gdk_LTX_library = { "gdk", apis };
