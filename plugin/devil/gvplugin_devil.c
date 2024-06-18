@@ -17,4 +17,10 @@ static gvplugin_api_t apis[] = {
     {(api_t)0, 0},
 };
 
-gvplugin_library_t gvplugin_devil_LTX_library = { "devil", apis };
+#ifdef GVDLL
+#define GVPLUGIN_DEVIL_API __declspec(dllexport)
+#else
+#define GVPLUGIN_DEVIL_API
+#endif
+
+GVPLUGIN_DEVIL_API gvplugin_library_t gvplugin_devil_LTX_library = { "devil", apis };
