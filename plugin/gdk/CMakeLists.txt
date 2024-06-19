@@ -1,6 +1,6 @@
 if(GDK_FOUND AND GDK_PIXBUF_FOUND AND PANGOCAIRO_FOUND)
 
-  add_library(gvplugin_gdk SHARED
+  add_library(gvplugin_gdk
     gvdevice_gdk.c
     gvloadimage_gdk.c
     gvplugin_gdk.c
@@ -28,12 +28,14 @@ if(GDK_FOUND AND GDK_PIXBUF_FOUND AND PANGOCAIRO_FOUND)
     ${PANGOCAIRO_LINK_LIBRARIES}
   )
 
-  install(
-    TARGETS gvplugin_gdk
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_gdk
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_gdk PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

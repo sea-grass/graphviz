@@ -1,6 +1,6 @@
 if(GD_FOUND)
 
-  add_library(gvplugin_gd SHARED
+  add_library(gvplugin_gd
     # Source files
     gdioctx_wrapper.h
     gdgen_text.h
@@ -52,13 +52,15 @@ if(GD_FOUND)
     endif()
   endif()
 
-  # Installation location of library files
-  install(
-    TARGETS gvplugin_gd
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    # Installation location of library files
+    install(
+      TARGETS gvplugin_gd
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   # Include DLLs with this library on Windows
   if(WIN32 AND install_win_dependency_dlls)

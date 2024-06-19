@@ -1,4 +1,4 @@
-add_library(gvplugin_vt SHARED gvplugin_vt.c)
+add_library(gvplugin_vt gvplugin_vt.c)
 
 target_include_directories(gvplugin_vt PRIVATE
   ../../lib
@@ -11,13 +11,15 @@ target_include_directories(gvplugin_vt PRIVATE
 
 target_link_libraries(gvplugin_vt PRIVATE cgraph gvc xdot)
 
-# Installation location of library files
-install(
-  TARGETS gvplugin_vt
-  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-  LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-)
+if(BUILD_SHARED_LIBS)
+  # Installation location of library files
+  install(
+    TARGETS gvplugin_vt
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+endif()
 
 # Specify library version and soversion
 set_target_properties(gvplugin_vt PROPERTIES

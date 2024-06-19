@@ -9,7 +9,11 @@ from pathlib import Path
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
-from gvtest import run_c, which  # pylint: disable=wrong-import-position
+from gvtest import (  # pylint: disable=wrong-import-position
+    is_static_build,
+    run_c,
+    which,
+)
 
 
 @pytest.mark.parametrize(
@@ -20,6 +24,10 @@ from gvtest import run_c, which  # pylint: disable=wrong-import-position
 @pytest.mark.skipif(
     os.getenv("build_system") == "msbuild",
     reason="Windows MSBuild release does not contain any header files (#1777)",
+)
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
 )
 def test_compile_example(src):
     """try to compile the example"""

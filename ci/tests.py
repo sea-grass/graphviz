@@ -18,6 +18,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     is_cmake,
     is_macos,
     is_mingw,
+    is_static_build,
     which,
 )
 
@@ -145,6 +146,9 @@ def test_existence(binary: str):
     if binary == "vimdot" and not is_cmake() and is_macos():
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip("https://gitlab.com/graphviz/graphviz/-/issues/2423")
+
+    if binary == "dot_builtins" and is_static_build():
+        pytest.skip("dot_builtins may not be built in a static build")
 
     assert which(binary) is not None
 

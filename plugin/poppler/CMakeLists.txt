@@ -1,6 +1,6 @@
 if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
 
-  add_library(gvplugin_poppler SHARED
+  add_library(gvplugin_poppler
     gvloadimage_poppler.c
     gvplugin_poppler.c
   )
@@ -25,12 +25,14 @@ if(PANGOCAIRO_FOUND AND POPPLER_FOUND)
     ${POPPLER_LIBRARIES}
   )
 
-  install(
-    TARGETS gvplugin_poppler
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_poppler
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_poppler PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

@@ -35,6 +35,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     is_mingw,
     is_rocky,
     is_rocky_8,
+    is_static_build,
     remove_xtype_warnings,
     run_c,
     which,
@@ -1147,6 +1148,10 @@ def test_1724():
     assert ret != -signal.SIGSEGV, "Graphviz segfaulted"
 
 
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
+)
 def test_1767():
     """
     using the Pango plugin multiple times should produce consistent results
@@ -1619,6 +1624,10 @@ def test_1909():
     assert output == "// begin\n" "digraph bug {\n" "	a -> b;\n" "	b -> c;\n" "}\n"
 
 
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
+)
 def test_1910():
     """
     Repeatedly using agmemread() should have consistent results
@@ -1810,6 +1819,10 @@ def test_1990():
     subprocess.check_call(["circo", "-Tsvg", "-o", os.devnull, input])
 
 
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
+)
 def test_2057():
     """
     gvToolTred should be usable by user code
@@ -2523,6 +2536,10 @@ def test_2342():
     os.getenv("build_system") == "msbuild",
     reason="https://gitlab.com/graphviz/graphviz/-/issues/1777",
 )
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
+)
 def test_2356():
     """
     Using `mindist` programmatically in a loop should not cause Windows crashes
@@ -2615,6 +2632,10 @@ def test_2481():
 @pytest.mark.skipif(
     os.getenv("build_system") == "msbuild",
     reason="https://gitlab.com/graphviz/graphviz/-/issues/1777",
+)
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
 )
 def test_2484():
     """
@@ -2952,6 +2973,10 @@ def test_2270(tmp_path: Path):
     assert output.exists(), "-O resulted in an unexpected output filename"
 
 
+@pytest.mark.skipif(
+    is_static_build(),
+    reason="dynamic libraries are unavailable to link against in static builds",
+)
 def test_2272():
     """
     using `agmemread` with an unterminated string should not fail assertions

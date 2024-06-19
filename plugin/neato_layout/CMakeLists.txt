@@ -1,4 +1,4 @@
-add_library(gvplugin_neato_layout SHARED
+add_library(gvplugin_neato_layout
   # Source files
   gvplugin_neato_layout.c
   gvlayout_neato_layout.c
@@ -34,13 +34,15 @@ if(with_sfdp)
   target_link_libraries(gvplugin_neato_layout PRIVATE sfdpgen)
 endif()
 
-# Installation location of library files
-install(
-  TARGETS gvplugin_neato_layout
-  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-  LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-)
+if(BUILD_SHARED_LIBS)
+  # Installation location of library files
+  install(
+    TARGETS gvplugin_neato_layout
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+endif()
 
 # Specify library version and soversion
 set_target_properties(gvplugin_neato_layout PROPERTIES

@@ -1,6 +1,6 @@
 if(PANGOCAIRO_FOUND AND DevIL_FOUND)
 
-  add_library(gvplugin_devil SHARED
+  add_library(gvplugin_devil
     gvdevice_devil.c
     gvplugin_devil.c
   )
@@ -25,12 +25,14 @@ if(PANGOCAIRO_FOUND AND DevIL_FOUND)
     ${ILU_LIBRARIES}
   )
 
-  install(
-    TARGETS gvplugin_devil
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_devil
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_devil PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

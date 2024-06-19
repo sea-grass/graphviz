@@ -2,7 +2,7 @@ find_package(GTK2)
 
 if(GTK2_FOUND)
 
-  add_library(gvplugin_gtk SHARED
+  add_library(gvplugin_gtk
     callbacks.c
     gvdevice_gtk.c
     gvplugin_gtk.c
@@ -27,12 +27,14 @@ if(GTK2_FOUND)
     ${GTK2_LIBRARIES}
   )
 
-  install(
-    TARGETS gvplugin_gtk
-    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-  )
+  if(BUILD_SHARED_LIBS)
+    install(
+      TARGETS gvplugin_gtk
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
 
   set_target_properties(gvplugin_gtk PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0

@@ -1,4 +1,4 @@
-add_library(gvplugin_core SHARED
+add_library(gvplugin_core
   # Header files
   core_loadimage_xdot.h
   ps.h
@@ -37,13 +37,15 @@ target_link_libraries(gvplugin_core PRIVATE
   xdot
 )
 
-# Installation location of library files
-install(
-  TARGETS gvplugin_core
-  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
-  LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
-  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
-)
+if(BUILD_SHARED_LIBS)
+  # Installation location of library files
+  install(
+    TARGETS gvplugin_core
+    RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+    LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR}
+    ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+  )
+endif()
 
 # Specify library version and soversion
 set_target_properties(gvplugin_core PROPERTIES
