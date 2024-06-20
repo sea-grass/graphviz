@@ -414,7 +414,7 @@ rb_red_blk_node* RBExactQuery(rb_red_blk_tree* tree, void* q) {
   rb_red_blk_node* nil=tree->nil;
   int compVal;
   if (x == nil) return 0;
-  compVal=tree->Compare(x->key,(int*) q);
+  compVal = tree->Compare(x->key, q);
   while(0 != compVal) {/*assignemnt*/
     if (1 == compVal) { /* x->key > q */
       x=x->left;
@@ -422,7 +422,7 @@ rb_red_blk_node* RBExactQuery(rb_red_blk_tree* tree, void* q) {
       x=x->right;
     }
     if ( x == nil) return 0;
-    compVal=tree->Compare(x->key,(int*) q);
+    compVal = tree->Compare(x->key, q);
   }
   return x;
 }
