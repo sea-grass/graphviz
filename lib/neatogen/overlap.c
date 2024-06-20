@@ -104,11 +104,6 @@ static void NodeDest(void* a) {
   /*  free((int*)a);*/
 }
 
-static int NodeComp(const void* a,const void* b) {
-  return comp_scan_points(a,b);
-
-}
-
 static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, int check_overlap_only){
   /* if check_overlap_only = TRUE, we only check whether there is one overlap */
   int i, k, neighbor;
@@ -140,7 +135,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
     scanpointsy[i+n].status = INTV_CLOSE;
   }
 
-  treey = RBTreeCreate(NodeComp, NodeDest);
+  treey = RBTreeCreate(comp_scan_points, NodeDest);
 
   for (i = 0; i < 2*n; i++){
 #ifdef DEBUG_RBTREE
