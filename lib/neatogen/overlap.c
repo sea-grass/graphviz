@@ -170,7 +170,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
       bsta = scanpointsy[ii].x; bsto = scanpointsy[ii+n].x;
 
 #ifdef DEBUG_RBTREE
-      fprintf(stderr, "poping..%d....yinterval={%f,%f}\n", scanpointsy[k + n].node, bsta, bsto);
+      fprintf(stderr, "popping..%d....yinterval={%f,%f}\n", scanpointsy[k + n].node, bsta, bsto);
       treey->PrintKey(newNode->key);
 #endif
 
@@ -193,7 +193,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
       }
 
 #ifdef DEBUG_RBTREE
-      fprintf(stderr, "deleteing...");
+      fprintf(stderr, "deleting...");
       treey->PrintKey(newNode0->key);
 #endif
 
@@ -225,7 +225,7 @@ static void relative_position_constraints_delete(void *d){
   free(data->irn);
   free(data->jcn);
   free(data->val);
-  /* other stuff inside relative_position_constraints is assed back to the user hence no need to deallocator*/
+  /* other stuff inside relative_position_constraints is passed back to the user hence no need to deallocator*/
   free(d);
 }
 
