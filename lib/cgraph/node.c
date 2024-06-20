@@ -22,8 +22,8 @@
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)
 {
     Agsubnode_t *sn;
-    static Agsubnode_t template;
-    static Agnode_t dummy;
+    Agsubnode_t template = {0};
+    Agnode_t dummy = {0};
 
     dummy.base.tag.id = id;
     template.node = &dummy;
@@ -183,7 +183,7 @@ Agnode_t *agnode(Agraph_t * g, char *name, int cflag)
 void agdelnodeimage(Agraph_t * g, Agnode_t * n, void *ignored)
 {
     Agedge_t *e, *f;
-    static Agsubnode_t template;
+    Agsubnode_t template = {0};
     template.node = n;
 
     (void)ignored;
@@ -326,7 +326,7 @@ Dtdisc_t Ag_subnode_seq_disc = {
 
 static void agnodesetfinger(Agraph_t * g, Agnode_t * n, void *ignored)
 {
-    static Agsubnode_t template;
+    Agsubnode_t template = {0};
 	template.node = n;
 	dtsearch(g->n_seq,&template);
     (void)ignored;
