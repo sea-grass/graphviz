@@ -515,7 +515,7 @@ static void RBDeleteFixUp(rb_red_blk_tree* tree, rb_red_blk_node* x) {
 /*    OUTPUT:  none */
 /**/
 /*    EFFECT:  Deletes z from tree and frees the key of z */
-/*             using DestoryKey.  Then calls */
+/*             using DestroyKey.  Then calls */
 /*             RBDeleteFixUp to restore red-black properties */
 /**/
 /*    Modifies Input: tree, z */
