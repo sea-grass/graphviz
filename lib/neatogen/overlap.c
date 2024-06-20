@@ -365,15 +365,6 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   sm->Lw = B;
   sm->Lwd = SparseMatrix_copy(sm->Lw);
 
-#ifdef DEBUG
-  {
-    FILE *fp;
-    fp = fopen("/tmp/111","w");
-    export_embedding(fp, dim, sm->Lwd, x, NULL);
-    fclose(fp);
-  }
-#endif
-
   if (!(sm->Lw) || !(sm->Lwd)) {
     OverlapSmoother_delete(sm);
     return NULL;
@@ -439,14 +430,7 @@ void OverlapSmoother_delete(OverlapSmoother sm){
 double OverlapSmoother_smooth(OverlapSmoother sm, int dim, double *x){
   int maxit_sm = 1;/* only using 1 iteration of stress majorization 
 		      is found to give better results and save time! */
-  double res = StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm);
-#ifdef DEBUG
-  {FILE *fp;
-  fp = fopen("/tmp/222","w");
-  export_embedding(fp, dim, sm->Lwd, x, NULL);
-  fclose(fp);}
-#endif
-  return res;
+  return StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm);
 }
 
 /*================================= end OverlapSmoother =============*/
@@ -540,13 +524,6 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
 
 #ifdef DEBUG
   _statistics[0] = _statistics[1] = 0.;
-  {FILE*fp;
-  fp = fopen("x1","w");
-  for (i = 0; i < A->m; i++){
-    fprintf(fp, "%f %f\n",x[i*2],x[i*2+1]);
-  }
-  fclose(fp);
-  }
 #endif
 
   bool has_penalty_terms =
@@ -594,23 +571,8 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
 #ifdef DEBUG
   fprintf(stderr," number of cg iter = %f, number of stress majorization iter = %f number of overlap removal try = %d\n",
 	  _statistics[0], _statistics[1], i - 1);
-
-  {FILE*fp;
-  fp = fopen("x2","w");
-  for (i = 0; i < A->m; i++){
-    fprintf(fp, "%f %f\n",x[i*2],x[i*2+1]);
-  }
-  fclose(fp);
-  }
 #endif
 
-#ifdef DEBUG
-  {FILE*fp;
-  fp = fopen("/tmp/m","w");
-  if (A) export_embedding(fp, dim, A, x, label_sizes);
-  fclose(fp);
-  }
-#endif
 #ifdef TIME
   fprintf(stderr, "post processing %f\n",((double) (clock() - cpu)) / CLOCKS_PER_SEC);
 #endif
