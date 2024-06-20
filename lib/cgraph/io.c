@@ -15,9 +15,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <cgraph/cghdr.h>
-#if defined(_WIN32)
-#include <io.h>
-#endif
+#include <cgraph/rdr.h>
 
 static int iofread(void *chan, char *buf, int bufsize)
 {
@@ -39,12 +37,6 @@ static int ioflush(void *chan)
 }
 
 Agiodisc_t AgIoDisc = { iofread, ioputstr, ioflush };
-
-typedef struct {
-    const char *data;
-    size_t len;
-    size_t cur;
-} rdr_t;
 
 static int
 memiofread(void *chan, char *buf, int bufsize)

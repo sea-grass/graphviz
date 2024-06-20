@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "tcldot.h"
+#include <cgraph/rdr.h>
 #include <stdlib.h>
 #include <string.h>
 

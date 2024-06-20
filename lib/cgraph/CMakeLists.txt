@@ -28,6 +28,7 @@ add_library(cgraph
   overflow.h
   prisize_t.h
   queue.h
+  rdr.h
   sort.h
   stack.h
   startswith.h

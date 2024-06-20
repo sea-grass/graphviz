@@ -8,7 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <limits.h>
 #include <math.h>
+#include <stddef.h>
 #include "tcldot.h"
 #include <cgraph/strcasecmp.h>
 #include <cgraph/unreachable.h>
@@ -23,7 +25,14 @@ size_t Tcldot_string_writer(GVJ_t *job, const char *s, size_t len)
 
 size_t Tcldot_channel_writer(GVJ_t *job, const char *s, size_t len)
 {
-    return Tcl_Write((Tcl_Channel)(job->output_file), s, len);
+  if (len > INT_MAX) {
+    len = INT_MAX;
+  }
+  const int written = Tcl_Write((Tcl_Channel)(job->output_file), s, (int)len);
+  if (written < 0) {
+    return 0;
+  }
+  return (size_t)written;
 }
 
 /* handles (tcl commands) to obj* */

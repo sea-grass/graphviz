@@ -10,9 +10,9 @@ endif
 
 pkginclude_HEADERS = cgraph.h
 noinst_HEADERS = agxbuf.h alloc.h bitarray.h cghdr.h exit.h gv_ctype.h \
-	gv_math.h ingraphs.h list.h node_set.h overflow.h prisize_t.h queue.h sort.h \
-	stack.h startswith.h strcasecmp.h streq.h strview.h tokenize.h unreachable.h \
-	unused.h
+	gv_math.h ingraphs.h list.h node_set.h overflow.h prisize_t.h queue.h rdr.h \
+	sort.h stack.h startswith.h strcasecmp.h streq.h strview.h tokenize.h \
+	unreachable.h unused.h
 noinst_LTLIBRARIES = libcgraph_C.la
 lib_LTLIBRARIES = libcgraph.la
 pkgconfig_DATA = libcgraph.pc
