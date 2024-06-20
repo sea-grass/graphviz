@@ -517,18 +517,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
   f = gv_calloc(dim, sizeof(double));
   do {
     for (i = 0; i < dim*n; i++) force[i] = 0;
@@ -589,19 +577,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
 
 #ifdef DEBUG_PRINT
     if (Verbose) {
@@ -678,18 +653,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   if (p >= 0) ctrl->p = p = -1;
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
-
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
 
   f = gv_calloc(dim, sizeof(double));
   do {
@@ -775,19 +738,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
-#ifdef DEBUG_PRINT_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
-
 #ifdef DEBUG_PRINT
     if (Verbose) {
       if (USE_QT){
@@ -870,18 +820,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
   f = gv_calloc(dim, sizeof(double));
   xold = gv_calloc(dim * n, sizeof(double));
   do {
@@ -956,18 +894,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
 
   if (ctrl->beautify_leaves) beautify_leaves(dim, A, x);
 
