@@ -16,8 +16,7 @@
 /*  void pointers to keys and returns 1 if the first argument is */
 /*  "greater than" the second.   DestFunc takes a pointer to a key and */
 /*  destroys it in the appropriate manner when the node containing that */
-/*  key is deleted.  InfoDestFunc is similar to DestFunc except it */
-/*  receives a pointer to the info of a node and destroys it. */
+/*  key is deleted. */
 /*  If RBTreePrint is never called the print functions don't have to be */
 /*  defined.  */
 /**/
@@ -28,8 +27,7 @@
 /***********************************************************************/
 
 rb_red_blk_tree* RBTreeCreate( int (*CompFunc) (const void*,const void*),
-			      void (*DestFunc) (void*),
-			      void (*InfoDestFunc) (void*)) {
+                              void (*DestFunc)(void *)) {
   rb_red_blk_tree* newTree = NULL;
   rb_red_blk_node* temp;
 
@@ -40,7 +38,6 @@ rb_red_blk_tree* RBTreeCreate( int (*CompFunc) (const void*,const void*),
   newTree->nil = newTree->root = NULL;
   newTree->Compare=  CompFunc;
   newTree->DestroyKey= DestFunc;
-  newTree->DestroyInfo= InfoDestFunc;
 
   /*  see the comment in the rb_red_blk_tree structure in red_black_tree.h */
   /*  for information on nil and root */
@@ -217,7 +214,7 @@ static void TreeInsertHelp(rb_red_blk_tree* tree, rb_red_blk_node* z) {
 /*  FUNCTION:  RBTreeInsert */
 /**/
 /*  INPUTS:  tree is the red-black tree to insert a node which has a key */
-/*           pointed to by key and info pointed to by info.  */
+/*           pointed to by key.  */
 /**/
 /*  OUTPUT:  This function returns a pointer to the newly inserted node */
 /*           which is guarunteed to be valid until this node is deleted. */
@@ -227,11 +224,11 @@ static void TreeInsertHelp(rb_red_blk_tree* tree, rb_red_blk_node* z) {
 /**/
 /*  Modifies Input: tree */
 /**/
-/*  EFFECTS:  Creates a node node which contains the appropriate key and */
-/*            info pointers and inserts it into the tree. */
+/*  EFFECTS:  Creates a node node which contains the appropriate key */
+/*            pointer and inserts it into the tree. */
 /***********************************************************************/
 
-rb_red_blk_node * RBTreeInsert(rb_red_blk_tree* tree, void* key, void* info) {
+rb_red_blk_node * RBTreeInsert(rb_red_blk_tree* tree, void* key) {
   rb_red_blk_node * y;
   rb_red_blk_node * x;
   rb_red_blk_node * newNode;
@@ -241,7 +238,6 @@ rb_red_blk_node * RBTreeInsert(rb_red_blk_tree* tree, void* key, void* info) {
     return NULL;
   }
   x->key=key;
-  x->info=info;
 
   TreeInsertHelp(tree,x);
   newNode=x;
@@ -376,7 +372,6 @@ static void TreeDestHelper(rb_red_blk_tree* tree, rb_red_blk_node* x) {
     TreeDestHelper(tree,x->left);
     TreeDestHelper(tree,x->right);
     tree->DestroyKey(x->key);
-    tree->DestroyInfo(x->info);
     free(x);
   }
 }
@@ -519,8 +514,8 @@ static void RBDeleteFixUp(rb_red_blk_tree* tree, rb_red_blk_node* x) {
 /**/
 /*    OUTPUT:  none */
 /**/
-/*    EFFECT:  Deletes z from tree and frees the key and info of z */
-/*             using DestoryKey and DestoryInfo.  Then calls */
+/*    EFFECT:  Deletes z from tree and frees the key of z */
+/*             using DestoryKey.  Then calls */
 /*             RBDeleteFixUp to restore red-black properties */
 /**/
 /*    Modifies Input: tree, z */
@@ -553,7 +548,6 @@ void RBDelete(rb_red_blk_tree* tree, rb_red_blk_node* z){
     if (!(y->red)) RBDeleteFixUp(tree,x);
   
     tree->DestroyKey(z->key);
-    tree->DestroyInfo(z->info);
     y->left=z->left;
     y->right=z->right;
     y->parent=z->parent;
@@ -567,7 +561,6 @@ void RBDelete(rb_red_blk_tree* tree, rb_red_blk_node* z){
     free(z); 
   } else {
     tree->DestroyKey(y->key);
-    tree->DestroyInfo(y->info);
     if (!(y->red)) RBDeleteFixUp(tree,x);
     free(y);
   }

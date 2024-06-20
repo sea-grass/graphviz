@@ -25,7 +25,6 @@ extern "C" {
 
 typedef struct rb_red_blk_node {
   void* key;
-  void* info;
   int red; /* if red=0 then the node is black */
   struct rb_red_blk_node* left;
   struct rb_red_blk_node* right;
@@ -38,21 +37,19 @@ typedef struct rb_red_blk_node {
 typedef struct rb_red_blk_tree {
   int (*Compare)(const void* a, const void* b); 
   void (*DestroyKey)(void* a);
-  void (*DestroyInfo)(void* a);
   /*  A sentinel is used for root and for nil.  These sentinels are */
   /*  created when RBTreeCreate is caled.  root->left should always */
   /*  point to the node which is the root of the tree.  nil points to a */
   /*  node which should always be black but has aribtrary children and */
-  /*  parent and no key or info.  The point of using these sentinels is so */
+  /*  parent and no key.  The point of using these sentinels is so */
   /*  that the root and nil nodes do not require special cases in the code */
   rb_red_blk_node* root;             
   rb_red_blk_node* nil;              
 } rb_red_blk_tree;
 
 rb_red_blk_tree* RBTreeCreate(int  (*CompFunc)(const void*, const void*),
-			     void (*DestFunc)(void*), 
-			     void (*InfoDestFunc)(void*));
-rb_red_blk_node * RBTreeInsert(rb_red_blk_tree*, void* key, void* info);
+                              void (*DestFunc)(void *));
+rb_red_blk_node *RBTreeInsert(rb_red_blk_tree *, void *key);
 void RBDelete(rb_red_blk_tree* , rb_red_blk_node* );
 void RBTreeDestroy(rb_red_blk_tree*);
 rb_red_blk_node* TreePredecessor(rb_red_blk_tree*,rb_red_blk_node*);
