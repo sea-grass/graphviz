@@ -56,7 +56,7 @@ rb_red_blk_tree* RBTreeCreate( int (*CompFunc) (const void*,const void*),
   temp->parent=temp->left=temp->right=newTree->nil;
   temp->key=0;
   temp->red=0;
-  return(newTree);
+  return newTree;
 }
 
 /***********************************************************************/
@@ -276,7 +276,7 @@ rb_red_blk_node * RBTreeInsert(rb_red_blk_tree* tree, void* key) {
     }
   }
   tree->root->left->red=0;
-  return(newNode);
+  return newNode;
 }
 
 /***********************************************************************/
@@ -302,15 +302,15 @@ rb_red_blk_node* TreeSuccessor(rb_red_blk_tree* tree,rb_red_blk_node* x) {
     while(y->left != nil) { /* returns the minium of the right subtree of x */
       y=y->left;
     }
-    return(y);
+    return y;
   } else {
     y=x->parent;
     while(x == y->right) { /* sentinel used instead of checking for nil */
       x=y;
       y=y->parent;
     }
-    if (y == root) return(nil);
-    return(y);
+    if (y == root) return nil;
+    return y;
   }
 }
 
@@ -337,15 +337,15 @@ rb_red_blk_node* TreePredecessor(rb_red_blk_tree* tree, rb_red_blk_node* x) {
     while(y->right != nil) { /* returns the maximum of the left subtree of x */
       y=y->right;
     }
-    return(y);
+    return y;
   } else {
     y=x->parent;
     while(x == y->left) { 
-      if (y == root) return(nil); 
+      if (y == root) return nil;
       x=y;
       y=y->parent;
     }
-    return(y);
+    return y;
   }
 }
 
@@ -413,7 +413,7 @@ rb_red_blk_node* RBExactQuery(rb_red_blk_tree* tree, void* q) {
   rb_red_blk_node* x=tree->root->left;
   rb_red_blk_node* nil=tree->nil;
   int compVal;
-  if (x == nil) return(0);
+  if (x == nil) return 0;
   compVal=tree->Compare(x->key,(int*) q);
   while(0 != compVal) {/*assignemnt*/
     if (1 == compVal) { /* x->key > q */
@@ -421,10 +421,10 @@ rb_red_blk_node* RBExactQuery(rb_red_blk_tree* tree, void* q) {
     } else {
       x=x->right;
     }
-    if ( x == nil) return(0);
+    if ( x == nil) return 0;
     compVal=tree->Compare(x->key,(int*) q);
   }
-  return(x);
+  return x;
 }
 
 
