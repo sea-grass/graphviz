@@ -17,8 +17,6 @@
 /*  "greater than" the second.   DestFunc takes a pointer to a key and */
 /*  destroys it in the appropriate manner when the node containing that */
 /*  key is deleted. */
-/*  If RBTreePrint is never called the print functions don't have to be */
-/*  defined.  */
 /**/
 /*  OUTPUT:  This function returns a pointer to the newly created */
 /*  red-black tree. */
