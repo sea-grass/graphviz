@@ -62,6 +62,7 @@ target_link_libraries(gvc PRIVATE
   cgraph
   common
   pack
+  util
 )
 
 if(LTDL_FOUND)

@@ -49,6 +49,7 @@ libgvc_la_LIBADD = $(libgvc_C_la_LIBADD) \
 	$(top_builddir)/lib/pathplan/libpathplan.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(EXPAT_LIBS) $(Z_LIBS) $(MATH_LIBS)
 
 .3.3.pdf:
