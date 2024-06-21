@@ -117,9 +117,6 @@ CMainWindow::CMainWindow(const QStringList &files) {
 
   connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
           SLOT(slotRefreshMenus()));
-  windowMapper = new QSignalMapper(this);
-  connect(windowMapper, SIGNAL(mapped(QWidget *)), this,
-          SLOT(activateChild(QWidget *)));
 
   frmSettings = new CFrmSettings();
 
@@ -343,8 +340,9 @@ void CMainWindow::updateWindowMenu() {
   separatorAct->setVisible(!windows.isEmpty());
 
   for (int i = 0; i < windows.size(); ++i) {
-    if (windows.at(i)->widget()->inherits("MdiChild")) {
-      MdiChild *child = qobject_cast<MdiChild *>(windows.at(i)->widget());
+    QMdiSubWindow *window = windows.at(i);
+    if (window->widget()->inherits("MdiChild")) {
+      MdiChild *child = qobject_cast<MdiChild *>(window->widget());
       QString text;
       if (i < 9) {
         text = tr("&%1 %2").arg(i + 1).arg(child->userFriendlyCurrentFile());
@@ -354,8 +352,8 @@ void CMainWindow::updateWindowMenu() {
       QAction *action = mWindow->addAction(text);
       action->setCheckable(true);
       action->setChecked(child == activeMdiChild());
-      connect(action, SIGNAL(triggered()), windowMapper, SLOT(map()));
-      windowMapper->setMapping(action, windows.at(i));
+      connect(action, &QAction::triggered, this,
+              [this, window] { activateChild(window); });
     }
   }
 }
