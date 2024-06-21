@@ -104,7 +104,6 @@ target_include_directories(common_obj PRIVATE
   ../gvc
   ../pack
   ../pathplan
-  ../xdot
 )
 
 if(EXPAT_FOUND)

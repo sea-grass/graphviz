@@ -80,7 +80,6 @@ if(with_smyrna)
     ../../lib/gvc
     ../../lib/gvpr
     ../../lib/pathplan
-    ../../lib/xdot
     gui
   )
 
