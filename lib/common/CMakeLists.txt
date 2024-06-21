@@ -135,6 +135,7 @@ target_link_libraries(common PRIVATE
   pathplan
   label
   xdot
+  util
 )
 
 if(EXPAT_FOUND)
