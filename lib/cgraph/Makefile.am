@@ -27,7 +27,9 @@ libcgraph_C_la_SOURCES = acyclic.c agerror.c apply.c attr.c edge.c \
 
 libcgraph_la_LDFLAGS = -version-info $(CGRAPH_VERSION) -no-undefined
 libcgraph_la_SOURCES = $(libcgraph_C_la_SOURCES)
-libcgraph_la_LIBADD = $(top_builddir)/lib/cdt/libcdt.la
+libcgraph_la_LIBADD = \
+  $(top_builddir)/lib/cdt/libcdt.la \
+  $(top_builddir)/lib/util/libutil_C.la
 
 scan.o scan.lo: scan.c grammar.h
 

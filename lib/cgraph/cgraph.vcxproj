@@ -152,6 +152,9 @@ win_flex --case-insensitive --outfile=scan.c scan.l</Command>
       <Project>{83cf0498-7884-49d3-8b3c-263c5af5fe1b}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\util\util.vcxproj">
+      <Project>{e19e48f9-aa0a-40f8-a72a-7a63f87f0451}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
