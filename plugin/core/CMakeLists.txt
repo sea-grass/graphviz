@@ -28,7 +28,6 @@ target_include_directories(gvplugin_core PRIVATE
   ../../lib/gvc
   ../../lib/gvpr
   ../../lib/pathplan
-  ../../lib/xdot
 )
 
 target_link_libraries(gvplugin_core PRIVATE
