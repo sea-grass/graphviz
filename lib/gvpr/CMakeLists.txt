@@ -25,7 +25,6 @@ target_include_directories(gvpr PRIVATE
   ${CMAKE_CURRENT_BINARY_DIR}/.. # needed to find generated expr/exparse.h
   ${CMAKE_CURRENT_BINARY_DIR}/../common
     # needed to find generated common/colortbl.h
-  ../ast
   ../cdt
   ../cgraph
   ../common
