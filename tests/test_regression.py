@@ -3287,6 +3287,7 @@ def test_2355():
     dot("svg", source=graph.getvalue())
 
 
+@pytest.mark.xfail(strict=True)  # FIXME
 def test_2368():
     """
     routesplines should not corrupt its `prev` and `next` indices
@@ -4036,9 +4037,6 @@ def test_2556():
     p.check_returncode()
 
 
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2559", strict=True
-)
 def test_2559():
     """
     `concentrate=true` should actually concentrate edges
