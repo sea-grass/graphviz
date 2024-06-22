@@ -29,7 +29,7 @@
  */
 #define UNREACHABLE()                                                          \
   do {                                                                         \
-    fprintf(stderr, "%s:%d: claimed unreachable code was reached", __FILE__,   \
+    fprintf(stderr, "%s:%d: claimed unreachable code was reached\n", __FILE__, \
             __LINE__);                                                         \
     abort();                                                                   \
   } while (0)
