@@ -4036,6 +4036,29 @@ def test_2556():
     p.check_returncode()
 
 
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2559", strict=True
+)
+def test_2559():
+    """
+    `concentrate=true` should actually concentrate edges
+    https://gitlab.com/graphviz/graphviz/-/issues/2559
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2559.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # convert this to JSON
+    layout = dot("json", input)
+    parsed = json.loads(layout)
+
+    # the last edge, d→b, should be drawn as a curve rather than a straight edge
+    assert not parsed["edges"][-1]["pos"].startswith(
+        "e"
+    ), "concentrated edge drawn as a regular straight edge"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
