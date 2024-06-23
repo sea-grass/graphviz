@@ -1953,20 +1953,19 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
 
 /* edges colors can be multiple colors separated by ":"
  * so we commpute a default pencolor with the same number of colors. */
-static char* default_pencolor(char *pencolor, char *deflt)
+static char* default_pencolor(agxbuf *buf, char *pencolor, char *deflt)
 {
-    static agxbuf buf;
     char *p;
     size_t ncol = 1;
     for (p = pencolor; *p; p++) {
 	if (*p == ':')
 	    ncol++;
     }
-    agxbput(&buf, deflt);
+    agxbput(buf, deflt);
     while(--ncol) {
-	agxbprint(&buf, ":%s", deflt);
+	agxbprint(buf, ":%s", deflt);
     }
-    return agxbuse(&buf);
+    return agxbuse(buf);
 }
 
 static double approxLen (pointf* pts)
@@ -2173,6 +2172,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
     double arrowsize, numc2, penwidth=job->obj->penwidth;
     char* p;
     bool tapered = false;
+    agxbuf buf = {0};
 
 #define SEP 2.0
 
@@ -2211,22 +2211,22 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	fillcolor = pencolor = color;
 	if (ED_gui_state(e) & GUI_STATE_ACTIVE) {
 	    pencolor = late_nnstring(e, E_activepencolor,
-			default_pencolor(pencolor, DEFAULT_ACTIVEPENCOLOR));
+			default_pencolor(&buf, pencolor, DEFAULT_ACTIVEPENCOLOR));
 	    fillcolor = late_nnstring(e, E_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
 	}
 	else if (ED_gui_state(e) & GUI_STATE_SELECTED) {
 	    pencolor = late_nnstring(e, E_selectedpencolor,
-			default_pencolor(pencolor, DEFAULT_SELECTEDPENCOLOR));
+			default_pencolor(&buf, pencolor, DEFAULT_SELECTEDPENCOLOR));
 	    fillcolor = late_nnstring(e, E_selectedfillcolor, DEFAULT_SELECTEDFILLCOLOR);
 	}
 	else if (ED_gui_state(e) & GUI_STATE_DELETED) {
 	    pencolor = late_nnstring(e, E_deletedpencolor,
-			default_pencolor(pencolor, DEFAULT_DELETEDPENCOLOR));
+			default_pencolor(&buf, pencolor, DEFAULT_DELETEDPENCOLOR));
 	    fillcolor = late_nnstring(e, E_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
 	}
 	else if (ED_gui_state(e) & GUI_STATE_VISITED) {
 	    pencolor = late_nnstring(e, E_visitedpencolor,
-			default_pencolor(pencolor, DEFAULT_VISITEDPENCOLOR));
+			default_pencolor(&buf, pencolor, DEFAULT_VISITEDPENCOLOR));
 	    fillcolor = late_nnstring(e, E_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
 	}
 	else
@@ -2386,6 +2386,7 @@ done:;
     char *color_scheme = setColorScheme(previous_color_scheme);
     free(color_scheme);
     free(previous_color_scheme);
+    agxbfree(&buf);
 }
 
 static bool edge_in_box(edge_t *e, boxf b)
