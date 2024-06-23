@@ -28,7 +28,6 @@ target_include_directories(gvpr PRIVATE
   ../cdt
   ../cgraph
   ../common
-  ../expr
 )
 
 if(GETOPT_FOUND)
