@@ -61,6 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   header is now unconditionally assumed to exist.
 - **Breaking**: `obj_state_t.gradient_frac` is now a `double`.
 - **Breaking**: `path.nbox` is now a `size_t`.
+- The change described as “Some `routesplines` miscalculations that led to lost
+  edges and fatal errors have been avoided” in 11.0.0 has been reverted. The fix
+  for this caused other problems.
 
 ### Fixed
 
@@ -90,6 +93,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An issue with linking gvpack when building static libraries in the CMake build
   system was fixed.
 - An sfdp use-after-free issue was fixed. #2556
+- Using `concentrate=true` once again works. This was a regression in Graphviz
+  11.0.0. #2559
 
 ## [11.0.0] – 2024-04-28
 
