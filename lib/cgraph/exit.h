@@ -21,7 +21,7 @@ extern "C" {
 #endif
 
 static inline NORETURN void graphviz_exit(int status) {
-#ifdef __MINGW32__
+#ifdef _WIN32
   // workaround for https://gitlab.com/graphviz/graphviz/-/issues/2178
   fflush(stdout);
   fflush(stderr);
