@@ -64,7 +64,6 @@ void multilevel_spring_electrical_embedding(int dim, SparseMatrix A0,
                                             int n_edge_label_nodes,
                                             int *edge_label_nodes, int *flag);
 
-void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *width);
 void spring_electrical_control_delete(spring_electrical_control ctrl);
 
 double average_edge_length(SparseMatrix A, int dim, double *coord);

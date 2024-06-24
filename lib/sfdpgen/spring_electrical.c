@@ -170,89 +170,6 @@ double average_edge_length(SparseMatrix A, int dim, double *coord){
   return dist/ia[A->m];
 }
 
-void export_embedding(FILE *fp, int dim, SparseMatrix A, double *x, double *width){
-  int i, j, k, *ia=A->ia, *ja = A->ja;
-  int ne = 0;
-  double xsize, ysize, xmin, xmax, ymin, ymax;
-
-  xmax = xmin = x[0];
-  ymax = ymin = x[1];
-  for (i = 0; i < A->m; i++){
-    xmax = fmax(xmax, x[i*dim]);
-    xmin = fmin(xmin, x[i*dim]);
-    ymax = fmax(ymax, x[i*dim+1]);
-    ymin = fmin(ymin, x[i*dim+1]);
-  }
-  xsize = xmax-xmin;
-  ysize = ymax-ymin;
-  xsize = fmax(xsize, ysize);
-
-  if (dim == 2){
-    fprintf(fp,"Graphics[{GrayLevel[0.5],Line[{");
-  } else {
-    fprintf(fp,"Graphics3D[{GrayLevel[0.5],Line[{");
-  }
-  for (i = 0; i < A->m; i++){
-    for (j = ia[i]; j < ia[i+1]; j++){
-      if (ja[j] == i) continue;
-      ne++;
-      if (ne > 1) fprintf(fp, ",");
-      fprintf(fp, "{{");
-      for (k = 0; k < dim; k++) {
-	if (k > 0) fprintf(fp,",");
-	fprintf(fp, "%f",x[i*dim+k]);
-      }
-      fprintf(fp, "},{");
-      for (k = 0; k < dim; k++) {
-	if (k > 0) fprintf(fp,",");
-	fprintf(fp, "%f",x[ja[j]*dim+k]);
-      }
-      fprintf(fp, "}}");
-    }
-  }
-
-  fprintf(fp, "}],Hue[%f]", 1.0);
-
-  if (width && dim == 2){
-    for (i = 0; i < A->m; i++){
-      if (i >= 0) fprintf(fp,",");
-      fprintf(fp,"(*width={%f,%f}, x = {%f,%f}*){GrayLevel[.5,.5],Rectangle[{%f,%f},{%f,%f}]}", width[i*dim], width[i*dim+1], x[i*dim], x[i*dim + 1],
-          x[i*dim] - width[i*dim], x[i*dim+1] - width[i*dim+1],
-          x[i*dim] + width[i*dim], x[i*dim+1] + width[i*dim+1]);
-    }
-  }
-
-  if (A->m < 100){
-    for (i = 0; i < A->m; i++){
-      if (i >= 0) fprintf(fp,",");
-      fprintf(fp,"Text[%d,{",i+1);
-      for (k = 0; k < dim; k++) {
-	if (k > 0) fprintf(fp,",");
-	fprintf(fp, "%f",x[i*dim+k]);
-      }
-      fprintf(fp,"}]");
-    }
-  } else if (A->m < 500000){
-    fprintf(fp, ", Point[{");
-    for (i = 0; i < A->m; i++){
-      if (i > 0) fprintf(fp,",");
-      fprintf(fp,"{");
-      for (k = 0; k < dim; k++) {
-	if (k > 0) fprintf(fp,",");
-	fprintf(fp, "%f",x[i*dim+k]);
-      }
-      fprintf(fp,"}");
-    }
-    fprintf(fp, "}]");
-  } else {
-      fprintf(fp,"{}");
-  }
-
-
- fprintf(fp,"},ImageSize->%f]\n", 2*xsize/2);
-
-}
-
 static double update_step(bool adaptive_cooling, double step, double Fnorm,
                           double Fnorm0) {
 
@@ -517,18 +434,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
   f = gv_calloc(dim, sizeof(double));
   do {
     for (i = 0; i < dim*n; i++) force[i] = 0;
@@ -589,19 +494,6 @@ static void spring_electrical_embedding_slow(int dim, SparseMatrix A0, spring_el
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
 
 #ifdef DEBUG_PRINT
     if (Verbose) {
@@ -678,18 +570,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
   if (p >= 0) ctrl->p = p = -1;
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
-
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
 
   f = gv_calloc(dim, sizeof(double));
   do {
@@ -775,19 +655,6 @@ void spring_electrical_embedding(int dim, SparseMatrix A0, spring_electrical_con
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
 
-#ifdef DEBUG_PRINT_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
-
 #ifdef DEBUG_PRINT
     if (Verbose) {
       if (USE_QT){
@@ -870,18 +737,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
   KP = pow(K, 1 - p);
   CRK = pow(C, (2.-p)/3.)/K;
 
-#ifdef DEBUG_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout_0_%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
-
   f = gv_calloc(dim, sizeof(double));
   xold = gv_calloc(dim * n, sizeof(double));
   do {
@@ -956,18 +811,6 @@ void spring_electrical_spring_embedding(int dim, SparseMatrix A0, SparseMatrix D
 
     step = update_step(adaptive_cooling, step, Fnorm, Fnorm0);
   } while (step > tol && iter < maxiter);
-
-#ifdef DEBUG_PRINT_0
-  {
-    FILE *f;
-    agxbuf fname = {0};
-    agxbprint(&fname, "/tmp/graph_layout%d", n);
-    f = fopen(agxbuse(&fname), "w");
-    agxbfree(&fname);
-    export_embedding(f, dim, A, x, NULL);
-    fclose(f);
-  }
-#endif
 
   if (ctrl->beautify_leaves) beautify_leaves(dim, A, x);
 

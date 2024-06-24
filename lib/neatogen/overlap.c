@@ -104,15 +104,6 @@ static void NodeDest(void* a) {
   /*  free((int*)a);*/
 }
 
-static int NodeComp(const void* a,const void* b) {
-  return comp_scan_points(a,b);
-
-}
-
-static void InfoDest(void *a){
-  (void)a;
-}
-
 static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, int check_overlap_only){
   /* if check_overlap_only = TRUE, we only check whether there is one overlap */
   int i, k, neighbor;
@@ -144,7 +135,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
     scanpointsy[i+n].status = INTV_CLOSE;
   }
 
-  treey = RBTreeCreate(NodeComp, NodeDest, InfoDest);
+  treey = RBTreeCreate(comp_scan_points, NodeDest);
 
   for (i = 0; i < 2*n; i++){
 #ifdef DEBUG_RBTREE
@@ -160,14 +151,14 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
       treey->PrintKey(&(scanpointsy[k]));
 #endif
 
-      RBTreeInsert(treey, &(scanpointsy[k]), NULL); /* add both open and close int for y */
+      RBTreeInsert(treey, &scanpointsy[k]); // add both open and close int for y
 
 #ifdef DEBUG_RBTREE
       fprintf(stderr, "inserting2...");
       treey->PrintKey(&(scanpointsy[k+n]));
 #endif
 
-      RBTreeInsert(treey, &(scanpointsy[k+n]), NULL);
+      RBTreeInsert(treey, &scanpointsy[k + n]);
     } else {
       double bsta, bbsta, bsto, bbsto; int ii; 
 
@@ -179,7 +170,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
       bsta = scanpointsy[ii].x; bsto = scanpointsy[ii+n].x;
 
 #ifdef DEBUG_RBTREE
-      fprintf(stderr, "poping..%d....yinterval={%f,%f}\n", scanpointsy[k + n].node, bsta, bsto);
+      fprintf(stderr, "popping..%d....yinterval={%f,%f}\n", scanpointsy[k + n].node, bsta, bsto);
       treey->PrintKey(newNode->key);
 #endif
 
@@ -202,7 +193,7 @@ static SparseMatrix get_overlap_graph(int dim, int n, double *x, double *width, 
       }
 
 #ifdef DEBUG_RBTREE
-      fprintf(stderr, "deleteing...");
+      fprintf(stderr, "deleting...");
       treey->PrintKey(newNode0->key);
 #endif
 
@@ -234,7 +225,7 @@ static void relative_position_constraints_delete(void *d){
   free(data->irn);
   free(data->jcn);
   free(data->val);
-  /* other stuff inside relative_position_constraints is assed back to the user hence no need to deallocator*/
+  /* other stuff inside relative_position_constraints is passed back to the user hence no need to deallocator*/
   free(d);
 }
 
@@ -374,15 +365,6 @@ OverlapSmoother OverlapSmoother_new(SparseMatrix A, int m,
   sm->Lw = B;
   sm->Lwd = SparseMatrix_copy(sm->Lw);
 
-#ifdef DEBUG
-  {
-    FILE *fp;
-    fp = fopen("/tmp/111","w");
-    export_embedding(fp, dim, sm->Lwd, x, NULL);
-    fclose(fp);
-  }
-#endif
-
   if (!(sm->Lw) || !(sm->Lwd)) {
     OverlapSmoother_delete(sm);
     return NULL;
@@ -448,14 +430,7 @@ void OverlapSmoother_delete(OverlapSmoother sm){
 double OverlapSmoother_smooth(OverlapSmoother sm, int dim, double *x){
   int maxit_sm = 1;/* only using 1 iteration of stress majorization 
 		      is found to give better results and save time! */
-  double res = StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm);
-#ifdef DEBUG
-  {FILE *fp;
-  fp = fopen("/tmp/222","w");
-  export_embedding(fp, dim, sm->Lwd, x, NULL);
-  fclose(fp);}
-#endif
-  return res;
+  return StressMajorizationSmoother_smooth(sm, dim, x, maxit_sm);
 }
 
 /*================================= end OverlapSmoother =============*/
@@ -549,13 +524,6 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
 
 #ifdef DEBUG
   _statistics[0] = _statistics[1] = 0.;
-  {FILE*fp;
-  fp = fopen("x1","w");
-  for (i = 0; i < A->m; i++){
-    fprintf(fp, "%f %f\n",x[i*2],x[i*2+1]);
-  }
-  fclose(fp);
-  }
 #endif
 
   bool has_penalty_terms =
@@ -603,23 +571,8 @@ void remove_overlap(int dim, SparseMatrix A, double *x, double *label_sizes, int
 #ifdef DEBUG
   fprintf(stderr," number of cg iter = %f, number of stress majorization iter = %f number of overlap removal try = %d\n",
 	  _statistics[0], _statistics[1], i - 1);
-
-  {FILE*fp;
-  fp = fopen("x2","w");
-  for (i = 0; i < A->m; i++){
-    fprintf(fp, "%f %f\n",x[i*2],x[i*2+1]);
-  }
-  fclose(fp);
-  }
 #endif
 
-#ifdef DEBUG
-  {FILE*fp;
-  fp = fopen("/tmp/m","w");
-  if (A) export_embedding(fp, dim, A, x, label_sizes);
-  fclose(fp);
-  }
-#endif
 #ifdef TIME
   fprintf(stderr, "post processing %f\n",((double) (clock() - cpu)) / CLOCKS_PER_SEC);
 #endif
