@@ -18,7 +18,7 @@ ARCH=$( uname -m )
 
 # Remove possible old version of Graphviz so that we can detect if
 # individual Graphviz tools are missing in the current release
-if [ "${ID}" = "centos" -o "${ID}" = "fedora" ]; then
+if [ "${ID}" = "fedora" ]; then
     # Both doxgen and asciidoc depend on graphviz and needs to be
     # removed to allow Graphviz to be removed
     if rpm -q doxygen; then

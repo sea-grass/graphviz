@@ -69,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   for this caused other problems.
 - **Breaking**: the `d` and `disc` parameters have been removed from
   `Dtcompar_f`.
+- CentOS packages are no longer provided.
 
 ### Fixed
 
