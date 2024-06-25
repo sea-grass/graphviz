@@ -36,13 +36,8 @@ libgvc_C_la_LIBADD = \
 	$(top_builddir)/lib/pack/libpack_C.la \
 	$(top_builddir)/lib/common/libcommon_C.la \
 	$(top_builddir)/lib/label/liblabel_C.la
-libgvc_C_la_DEPENDENCIES = \
-	$(top_builddir)/lib/pack/libpack_C.la \
-	$(top_builddir)/lib/common/libcommon_C.la \
-	$(top_builddir)/lib/label/liblabel_C.la
 if WITH_ORTHO
 libgvc_C_la_LIBADD += $(top_builddir)/lib/ortho/libortho_C.la
-libgvc_C_la_DEPENDENCIES += $(top_builddir)/lib/ortho/libortho_C.la
 endif
 if ENABLE_LTDL
 libgvc_C_la_LIBADD += $(LIBLTDL)
@@ -55,7 +50,6 @@ libgvc_la_LIBADD = $(libgvc_C_la_LIBADD) \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(EXPAT_LIBS) $(Z_LIBS) $(MATH_LIBS)
-libgvc_la_DEPENDENCIES = $(libgvc_C_la_DEPENDENCIES)
 
 .3.3.pdf:
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
