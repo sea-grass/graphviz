@@ -43,9 +43,6 @@ int placeLabels(object_t *objs, size_t n_objs, xlabel_t *lbls, size_t n_lbls,
 #include <label/index.h>
 #include <cdt.h>
 
-#ifndef XLNBR
-#define XLNBR    9
-#endif /*XLNBR*/
 #ifndef XLXDENOM
 #define XLXDENOM 8
 #endif /*XLXDENOM*/
