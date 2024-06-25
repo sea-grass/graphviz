@@ -50,7 +50,6 @@ int placeLabels(object_t *objs, size_t n_objs, xlabel_t *lbls, size_t n_lbls,
 #define XLYDENOM 2
 #endif /*XLYDENOM*/
 #define XLNBR    9
-#define XLCNR    4
 #define XLODCR   -1
 // indexes of neighbors in certain arrays
 // the node of interest is usually in node 4
