@@ -980,7 +980,9 @@ static void checkName(Exid_t * id)
 	}
 }
 
-static int cmpKey(Extype_t *key1, Extype_t *key2) {
+static int cmpKey(void *k1, void *k2) {
+	const Extype_t *key1 = k1;
+	const Extype_t *key2 = k2;
 	if (key1->integer < key2->integer)
 	    return -1;
 	else if (key1->integer > key2->integer)
