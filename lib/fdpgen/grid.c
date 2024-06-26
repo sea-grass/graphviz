@@ -92,7 +92,9 @@ static cell *getCell(Grid * g)
     return cp;
 }
 
-static int ijcmpf(gridpt *p1, gridpt *p2) {
+static int ijcmpf(void *point1, void *point2) {
+    const gridpt *p1 = point1;
+    const gridpt *p2 = point2;
     if (p1->i < p2->i) {
         return -1;
     }
@@ -150,7 +152,7 @@ static Dtdisc_t gridDisc = {
     offsetof(cell, link),
     (Dtmake_f) newCell,
     NULL,
-    (Dtcompar_f) ijcmpf,
+    ijcmpf,
 };
 
 /* mkGrid:
