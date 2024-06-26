@@ -214,10 +214,6 @@ int aagwrap(YY_CALL_ONLY_ARG)
 	return 1;
 }
 
-
-  /* Reset line number */
-void agreadline(int n) { line_num = n; }
-
   /* (Re)set file:
    */
 void agsetfile(const char* f) { InputFile = f; line_num = 1; }
