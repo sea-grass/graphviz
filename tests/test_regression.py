@@ -4057,6 +4057,35 @@ def test_2559():
     ), "concentrated edge drawn as a regular straight edge"
 
 
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2564", strict=True
+)
+def test_2564():
+    """
+    `overlap="scale"` should not result in all nodes overlapping
+    https://gitlab.com/graphviz/graphviz/-/issues/2564
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2564.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # convert this to JSON
+    layout = subprocess.check_output(
+        ["dot", "-Kneato", "-Tjson", input], universal_newlines=True
+    )
+    parsed = json.loads(layout)
+
+    # nodes should not be on top of one another
+    starts = []
+    for node in parsed["objects"]:
+        start = re.match(r"(?P<start>\d+(\.\d+)?,\d+(\.\d+)?)\b", node["pos"]).group(
+            "start"
+        )
+        assert start not in starts, "nodes overlap"
+        starts += [start]
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
