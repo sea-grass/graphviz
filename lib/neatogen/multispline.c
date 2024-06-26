@@ -59,7 +59,9 @@ typedef struct {
     int t;
 } item;
 
-static int cmpItem(int p1[], int p2[]) {
+static int cmpItem(void *item1, void *item2) {
+    const int *p1 = item1;
+    const int *p2 = item2;
     if (p1[0] < p2[0]) return -1;
     if (p1[0] > p2[0]) return 1;
     if (p1[1] < p2[1]) return -1;
@@ -91,7 +93,7 @@ static Dtdisc_t itemdisc = {
     .link = offsetof(item, link),
     .makef = (Dtmake_f)newItem,
     .freef = (Dtfree_f)freeItem,
-    .comparf = (Dtcompar_f)cmpItem,
+    .comparf = cmpItem,
 };
 
 static void addMap(Dt_t * map, int a, int b, int t)
