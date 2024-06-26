@@ -158,7 +158,9 @@ typedef struct {
     int j;
 } Ipair;
 
-static int cmpIpair(int *p1, int *p2) {
+static int cmpIpair(void *pair1, void *pair2) {
+    const int *p1 = pair1;
+    const int *p2 = pair2;
     if (*p1 < *p2) {
         return -1;
     }
@@ -189,7 +191,7 @@ static Dtdisc_t ipairdisc = {
     .link = offsetof(Ipair, link),
     .makef = (Dtmake_f)newIpair,
     .freef = (Dtfree_f)freeIpair,
-    .comparf = (Dtcompar_f)cmpIpair,
+    .comparf = cmpIpair,
 };
 
 static void vmapAdd(Dt_t * map, int i, int j)
