@@ -29,12 +29,10 @@ void node_set_add(node_set_t *self, Agsubnode_t *item);
 
 /// lookup an existing item in a set
 ///
-/// Only the `key->node` member of the `key` needs to be valid.
-///
 /// @param self Set to search
-/// @param key Subnode to look for
-/// @return The found item or `NULL` if it was not in the set
-Agsubnode_t *node_set_find(node_set_t *self, const Agsubnode_t *key);
+/// @param key Node to look for
+/// @return The found corresponding subnode or `NULL` if it was not in the set
+Agsubnode_t *node_set_find(node_set_t *self, const Agnode_t *key);
 
 /// remove an item from a set
 ///
@@ -42,7 +40,7 @@ Agsubnode_t *node_set_find(node_set_t *self, const Agsubnode_t *key);
 ///
 /// @param self Set to remove from
 /// @param item Element to remove
-void node_set_remove(node_set_t *self, const Agsubnode_t *item);
+void node_set_remove(node_set_t *self, const Agnode_t *item);
 
 /// get the number of items in a set
 ///
