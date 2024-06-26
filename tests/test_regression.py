@@ -4057,9 +4057,6 @@ def test_2559():
     ), "concentrated edge drawn as a regular straight edge"
 
 
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2564", strict=True
-)
 def test_2564():
     """
     `overlap="scale"` should not result in all nodes overlapping

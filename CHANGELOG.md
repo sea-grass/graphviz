@@ -95,6 +95,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An sfdp use-after-free issue was fixed. #2556
 - Using `concentrate=true` once again works. This was a regression in Graphviz
   11.0.0. #2559
+- `overlap="scale"` no longer causes nodes to be placed on top of one another.
+  This was a regression in Graphviz 7.0.5. #2564
 
 ## [11.0.0] – 2024-04-28
 
