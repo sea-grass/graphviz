@@ -27,9 +27,7 @@ static void freeItem(edgelistitem *obj, Dtdisc_t *disc) {
     free(obj);
 }
 
-static int cmpItem(Dt_t *d, Agedge_t **key1, Agedge_t **key2) {
-    (void)d;
-
+static int cmpItem(Agedge_t **key1, Agedge_t **key2) {
     if (*key1 > *key2) {
 	return 1;
     }

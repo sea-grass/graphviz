@@ -134,7 +134,7 @@ static void* dthash(Dt_t* dt, void* obj, int type)
 			for(p = NULL; t; p = t, t = t->right)
 			{	if(hsh == t->hash)
 				{	k = _DTOBJ(t,lk); k = _DTKEY(k,ky,sz);
-					if(_DTCMP(dt, key, k, cmpf, sz) == 0)
+					if(_DTCMP(key, k, cmpf, sz) == 0)
 						break;
 				}
 			}

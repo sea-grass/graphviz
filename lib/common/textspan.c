@@ -136,9 +136,7 @@ static void textfont_freef(void *obj, Dtdisc_t *disc) {
     free(f);
 }
 
-static int textfont_comparf(Dt_t *dt, void *key1, void *key2) {
-    (void)dt;
-
+static int textfont_comparf(void *key1, void *key2) {
     int rc;
     textfont_t *f1 = key1, *f2 = key2;
 

@@ -36,9 +36,7 @@ typedef struct nitem {
 typedef int (*distfn) (box *, box *);
 typedef int (*intersectfn) (nitem *, nitem *);
 
-static int cmpitem(Dt_t *d, int *p1, int *p2) {
-    (void)d;
-
+static int cmpitem(int *p1, int *p2) {
     if (*p1 < *p2) {
         return -1;
     }

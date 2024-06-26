@@ -21,14 +21,13 @@
 #define XLABEL_INT
 #include <label/xlabels.h>
 
-static int icompare(Dt_t *, void *, void *);
+static int icompare(void *, void *);
 
 Dtdisc_t Hdisc = { offsetof(HDict_t, key), sizeof(int), -1, 0, 0,
     icompare
 };
 
-static int icompare(Dt_t *dt, void *v1, void *v2) {
-    (void)dt;
+static int icompare(void *v1, void *v2) {
     int k1 = *((int *) v1), k2 = *((int *) v2);
     if (k1 < k2) {
       return -1;

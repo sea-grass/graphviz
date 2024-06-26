@@ -59,9 +59,7 @@ typedef struct {
     int t;
 } item;
 
-static int cmpItem(Dt_t *d, int p1[], int p2[]) {
-    (void)d;
-
+static int cmpItem(int p1[], int p2[]) {
     if (p1[0] < p2[0]) return -1;
     if (p1[0] > p2[0]) return 1;
     if (p1[1] < p2[1]) return -1;
@@ -158,9 +156,7 @@ typedef struct {
     int j;
 } Ipair;
 
-static int cmpIpair(Dt_t *d, int *p1, int *p2) {
-    (void)d;
-
+static int cmpIpair(int *p1, int *p2) {
     if (*p1 < *p2) {
         return -1;
     }

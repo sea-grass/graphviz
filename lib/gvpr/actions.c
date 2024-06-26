@@ -260,9 +260,7 @@ static Agraph_t *cloneSubg(Agraph_t *tgt, Agraph_t *g, Dt_t *emap) {
   return ng;
 }
 
-static int cmppair(Dt_t *d, Agedge_t **key1, Agedge_t **key2) {
-  (void)d;
-
+static int cmppair(Agedge_t **key1, Agedge_t **key2) {
   if (*key1 > *key2)
     return 1;
   else if (*key1 < *key2)

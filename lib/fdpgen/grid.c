@@ -92,9 +92,7 @@ static cell *getCell(Grid * g)
     return cp;
 }
 
-static int ijcmpf(Dt_t *d, gridpt *p1, gridpt *p2) {
-    (void)d;
-
+static int ijcmpf(gridpt *p1, gridpt *p2) {
     if (p1->i < p2->i) {
         return -1;
     }
