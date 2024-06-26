@@ -32,7 +32,9 @@ static void freePair(pair *pp, Dtdisc_t *disc) {
     free (pp);
 }
 
-static int cmppair(pointf *key1, pointf *key2) {
+static int cmppair(void *k1, void *k2) {
+    const pointf *key1 = k1;
+    const pointf *key2 = k2;
     if (key1->x > key2->x)
 	return 1;
     else if (key1->x < key2->x)
@@ -51,7 +53,7 @@ static Dtdisc_t intPairDisc = {
     offsetof(pair, link),
     0,
     (Dtfree_f) freePair,
-    (Dtcompar_f) cmppair,
+    cmppair,
 };
 
 PointSet *newPS(void)
@@ -143,7 +145,7 @@ static Dtdisc_t intMPairDisc = {
     offsetof(mpair, link),
     (Dtmake_f) mkMPair,
     (Dtfree_f) freeMPair,
-    (Dtcompar_f) cmppair,
+    cmppair,
 };
 
 PointMap *newPM(void)
