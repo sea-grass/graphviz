@@ -29,9 +29,8 @@ static void freeIntItem(intitem *obj, Dtdisc_t *disc) {
     free (obj);
 }
 
-static int cmpid(Dt_t *d, size_t *key1, size_t *key2, Dtdisc_t *disc) {
+static int cmpid(Dt_t *d, size_t *key1, size_t *key2) {
   (void)d;
-  (void)disc;
 
   if (*key1 > *key2) return 1;
   else if (*key1 < *key2) return -1;

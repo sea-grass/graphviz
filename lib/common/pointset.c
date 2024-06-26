@@ -32,9 +32,8 @@ static void freePair(pair *pp, Dtdisc_t *disc) {
     free (pp);
 }
 
-static int cmppair(Dt_t *d, pointf *key1, pointf *key2, Dtdisc_t *disc) {
+static int cmppair(Dt_t *d, pointf *key1, pointf *key2) {
     (void)d;
-    (void)disc;
 
     if (key1->x > key2->x)
 	return 1;

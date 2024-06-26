@@ -66,7 +66,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 	{	key = _DTKEY(obj,ky,sz);
 		for(o = dtsearch(dt,obj); o; o = dtnext(dt,o) )
 		{	k = _DTKEY(o,ky,sz);
-			if(_DTCMP(dt,key,k,disc,cmpf,sz) != 0)
+			if(_DTCMP(dt, key, k, cmpf, sz) != 0)
 				break;
 			if(o == obj)
 			{	root = dt->data->here;
@@ -94,12 +94,12 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 	do_search:
 		while(1)
 		{	k = _DTOBJ(root,lk); k = _DTKEY(k,ky,sz);
-			if((cmp = _DTCMP(dt,key,k,disc,cmpf,sz)) == 0)
+			if((cmp = _DTCMP(dt, key, k, cmpf, sz)) == 0)
 				break;
 			else if(cmp < 0)
 			{	if((t = root->left) )
 				{	k = _DTOBJ(t,lk); k = _DTKEY(k,ky,sz);
-					if((cmp = _DTCMP(dt,key,k,disc,cmpf,sz)) < 0)
+					if((cmp = _DTCMP(dt, key, k, cmpf, sz)) < 0)
 					{	rrotate(root,t);
 						rlink(r,t);
 						if(!(root = t->left) )
@@ -126,7 +126,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 			else /* if(cmp > 0) */
 			{	if((t = root->right) )
 				{	k = _DTOBJ(t,lk); k = _DTKEY(k,ky,sz);
-					if((cmp = _DTCMP(dt,key,k,disc,cmpf,sz)) > 0)
+					if((cmp = _DTCMP(dt, key, k, cmpf, sz)) > 0)
 					{	lrotate(root,t);
 						llink(l,t);
 						if(!(root = t->right) )
@@ -172,7 +172,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 
 					/* now see if it's in the same group */
 					k = _DTOBJ(t,lk); k = _DTKEY(k,ky,sz);
-					if(_DTCMP(dt,key,k,disc,cmpf,sz) != 0)
+					if(_DTCMP(dt, key, k, cmpf, sz) != 0)
 						break;
 					RROTATE(root,t);
 				}

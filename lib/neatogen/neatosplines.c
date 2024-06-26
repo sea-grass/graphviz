@@ -122,11 +122,8 @@ static void freeitem(edgeitem *obj, Dtdisc_t *disc) {
     free(obj);
 }
 
-static int
-cmpitems(Dt_t * d, edgeinfo * key1, edgeinfo * key2, Dtdisc_t * disc)
-{
+static int cmpitems(Dt_t *d, edgeinfo *key1, edgeinfo *key2) {
     (void)d;
-    (void)disc;
 
     if (key1->n1 > key2->n1)
 	return 1;

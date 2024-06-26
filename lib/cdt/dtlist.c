@@ -87,7 +87,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 	{	key = (type&DT_MATCH) ? obj : _DTKEY(obj,ky,sz);
 		for(r = dt->data->head; r; r = r->right)
 		{	k = _DTOBJ(r,lk); k = _DTKEY(k,ky,sz);
-			if(_DTCMP(dt,key,k,disc,cmpf,sz) == 0)
+			if(_DTCMP(dt, key, k, cmpf, sz) == 0)
 				break;
 		}
 	}

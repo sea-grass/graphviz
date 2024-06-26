@@ -752,10 +752,8 @@ typedef struct {
     node_t *h;
 } item;
 
-static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
-{
+static int cmpItem(Dt_t *d, void *p1[], void *p2[]) {
     (void)d;
-    (void)disc;
 
     if (p1[0] < p2[0])
 	return -1;

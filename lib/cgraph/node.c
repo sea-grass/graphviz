@@ -288,10 +288,8 @@ static bool agsubnodeideq(const Agsubnode_t *sn0, const Agnode_t *sn1) {
   return AGID(sn0->node) == sn1->base.tag.id;
 }
 
-static int agsubnodeseqcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
-{
+static int agsubnodeseqcmpf(Dict_t *d, void *arg0, void *arg1) {
     (void)d; /* unused */
-    (void)disc; /* unused */
 
     Agsubnode_t *sn0 = arg0;
     Agsubnode_t *sn1 = arg1;

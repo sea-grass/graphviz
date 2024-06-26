@@ -278,11 +278,8 @@ static void freeChanItem(chanItem *cp, Dtdisc_t *disc) {
  * When searching for a channel containing a segment, we rely on
  * interval containment to return the correct channel.
  */
-static int
-chancmpid(Dt_t* d, paird* key1, paird* key2, Dtdisc_t* disc)
-{
+static int chancmpid(Dt_t *d, paird *key1, paird *key2) {
   (void)d;
-  (void)disc;
 
   if (key1->p1 > key2->p1) {
     if (key1->p2 <= key2->p2) return 0;
@@ -295,11 +292,8 @@ chancmpid(Dt_t* d, paird* key1, paird* key2, Dtdisc_t* disc)
   else return 0;
 }   
 
-static int
-dcmpid(Dt_t* d, double* key1, double* key2, Dtdisc_t* disc)
-{
+static int dcmpid(Dt_t *d, double *key1, double *key2) {
   (void)d;
-  (void)disc;
 
   if (*key1 > *key2) return 1;
   else if (*key1 < *key2) return -1;

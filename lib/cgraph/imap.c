@@ -23,14 +23,12 @@ typedef struct IMapEntry_s {
     char *str;
 } IMapEntry_t;
 
-static int idcmpf(Dict_t * d, void *arg_p0, void *arg_p1, Dtdisc_t * disc)
-{
+static int idcmpf(Dict_t *d, void *arg_p0, void *arg_p1) {
     IMapEntry_t *p0, *p1;
 
     (void)d;
     p0 = arg_p0;
     p1 = arg_p1;
-    (void)disc;
     if (p0->id > p1->id)
     {
         return 1;
@@ -48,15 +46,12 @@ static int idcmpf(Dict_t * d, void *arg_p0, void *arg_p1, Dtdisc_t * disc)
 /* note, OK to compare pointers into shared string pool 
  * but can't probe with an arbitrary string pointer
  */
-static int namecmpf(Dict_t * d, void *arg_p0, void *arg_p1,
-		    Dtdisc_t * disc)
-{
+static int namecmpf(Dict_t *d, void *arg_p0, void *arg_p1) {
     IMapEntry_t *p0, *p1;
 
     (void)d;
     p0 = arg_p0;
     p1 = arg_p1;
-    (void)disc;
     if (p0->str > p1->str)
     {
         return 1;

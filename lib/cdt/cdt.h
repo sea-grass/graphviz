@@ -49,7 +49,7 @@ typedef struct _dtstat_s	Dtstat_t;
 typedef void*			(*Dtsearch_f)(Dt_t*,void*,int);
 typedef void* 		(*Dtmake_f)(void*,Dtdisc_t*);
 typedef void 			(*Dtfree_f)(void*,Dtdisc_t*);
-typedef int			(*Dtcompar_f)(Dt_t*,void*,void*,Dtdisc_t*);
+typedef int			(*Dtcompar_f)(Dt_t *, void *,void *);
 
 struct _dtlink_s
 {	Dtlink_t*	right;	/* right child		*/
@@ -176,8 +176,8 @@ CDT_API unsigned int dtstrhash(void*, int);
 #define _DTOBJ(e,lk)	(lk < 0 ? ((Dthold_t*)(e))->obj : (void*)((char*)(e) - lk) )
 #define _DTKEY(o,ky,sz)	(void*)(sz < 0 ? *((char**)((char*)(o)+ky)) : ((char*)(o)+ky))
 
-#define _DTCMP(dt,k1,k2,dc,cmpf,sz) \
-			(cmpf ? (*cmpf)(dt,k1,k2,dc) : \
+#define _DTCMP(dt, k1, k2, cmpf, sz) \
+			(cmpf ? (cmpf)(dt,k1,k2) : \
 			 (sz <= 0 ? strcmp(k1,k2) : memcmp(k1,k2,(size_t)sz)) )
 
 #define dtlink(d,e)	(((Dtlink_t*)(e))->right)

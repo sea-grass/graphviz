@@ -40,7 +40,7 @@ static void* dtvsearch(Dt_t* dt, void* obj, int type)
 			ok = _DTKEY(o,ky,sz);
 
 			if(n) /* get the right one among all dictionaries */
-			{	cmp = _DTCMP(d,ok,nk,d->disc,cmpf,sz);
+			{	cmp = _DTCMP(d, ok, nk, cmpf, sz);
 				if(((type & (DT_NEXT|DT_FIRST)) && cmp < 0) ||
 				   ((type & (DT_PREV|DT_LAST)) && cmp > 0) )
 					goto a_dj;
