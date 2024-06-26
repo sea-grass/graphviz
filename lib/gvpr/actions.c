@@ -260,7 +260,9 @@ static Agraph_t *cloneSubg(Agraph_t *tgt, Agraph_t *g, Dt_t *emap) {
   return ng;
 }
 
-static int cmppair(Agedge_t **key1, Agedge_t **key2) {
+static int cmppair(void *k1, void *k2) {
+  const Agedge_t **key1 = k1;
+  const Agedge_t **key2 = k2;
   if (*key1 > *key2)
     return 1;
   else if (*key1 < *key2)
@@ -273,7 +275,7 @@ static Dtdisc_t edgepair = {
     .key = offsetof(edgepair_t, key),
     .size = sizeof(Agedge_t *),
     .link = offsetof(edgepair_t, link),
-    .comparf = (Dtcompar_f)cmppair,
+    .comparf = cmppair,
 };
 
 /* cloneGraph:
