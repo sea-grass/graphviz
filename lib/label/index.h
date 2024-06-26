@@ -66,9 +66,6 @@ typedef struct LeafList {
     Node_t *root;
 
     SplitQ_t split;
-
-    /* balance criterion for node splitting */
-    int MinFill;
 };
 
 RTree_t *RTreeOpen(void);

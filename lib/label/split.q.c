@@ -127,9 +127,8 @@ static void MethodZero(RTree_t * rtp)
 
     while (rtp->split.Partitions[0].count[0] +
 	   rtp->split.Partitions[0].count[1] < NODECARD + 1 &&
-	   rtp->split.Partitions[0].count[0] < NODECARD + 1 - rtp->MinFill
-	   && rtp->split.Partitions[0].count[1] <
-	   NODECARD + 1 - rtp->MinFill) {
+	   rtp->split.Partitions[0].count[0] < NODECARD + 1
+	   && rtp->split.Partitions[0].count[1] < NODECARD + 1) {
 	bool biggestDiffSet = false;
 	uint64_t biggestDiff = 0;
 	for (int i = 0; i < NODECARD + 1; i++) {
@@ -168,8 +167,7 @@ static void MethodZero(RTree_t * rtp)
     if (rtp->split.Partitions[0].count[0] +
 	rtp->split.Partitions[0].count[1] < NODECARD + 1) {
 	group = 0;
-	if (rtp->split.Partitions[0].count[0] >=
-	    NODECARD + 1 - rtp->MinFill)
+	if (rtp->split.Partitions[0].count[0] >= NODECARD + 1)
 	    group = 1;
 	for (int i = 0; i < NODECARD + 1; i++) {
 	    if (!rtp->split.Partitions[0].taken[i])
@@ -179,8 +177,8 @@ static void MethodZero(RTree_t * rtp)
 
     assert(rtp->split.Partitions[0].count[0] +
 	   rtp->split.Partitions[0].count[1] == NODECARD + 1);
-    assert(rtp->split.Partitions[0].count[0] >= rtp->MinFill
-	   && rtp->split.Partitions[0].count[1] >= rtp->MinFill);
+    assert(rtp->split.Partitions[0].count[0] >= 0
+	   && rtp->split.Partitions[0].count[1] >= 0);
 }
 
 /*-----------------------------------------------------------------------------

@@ -43,12 +43,6 @@ int placeLabels(object_t *objs, size_t n_objs, xlabel_t *lbls, size_t n_lbls,
 #include <label/index.h>
 #include <cdt.h>
 
-#ifndef XLNDSCALE
-#define XLNDSCALE 72.0
-#endif /*XLNDSCALE*/
-#ifndef XLNBR
-#define XLNBR    9
-#endif /*XLNBR*/
 #ifndef XLXDENOM
 #define XLXDENOM 8
 #endif /*XLXDENOM*/
@@ -56,9 +50,6 @@ int placeLabels(object_t *objs, size_t n_objs, xlabel_t *lbls, size_t n_lbls,
 #define XLYDENOM 2
 #endif /*XLYDENOM*/
 #define XLNBR    9
-#define XLCNR    4
-#define XLNDSCALE 72.0
-#define XLODCR   -1
 // indexes of neighbors in certain arrays
 // the node of interest is usually in node 4
 // 6 7 8
