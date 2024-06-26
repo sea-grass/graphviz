@@ -98,7 +98,9 @@ static int vcmpid(void *k1, void *k2) {
 
 /// compares points by Y and then by X
 
-static int hcmpid(pointf *key1, pointf *key2) {
+static int hcmpid(void *k1, void *k2) {
+  const pointf *key1 = k1;
+  const pointf *key2 = k2;
   int dy = dfp_cmp(key1->y, key2->y);
   if (dy != 0)
     return dy;
@@ -125,7 +127,7 @@ static Dtdisc_t hdictDisc = {
     offsetof(snodeitem,link),
     0,
     0,
-    (Dtcompar_f)hcmpid,
+    hcmpid,
 };
 
 #define delta 1        /* weight of length */
