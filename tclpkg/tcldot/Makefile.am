@@ -55,8 +55,6 @@ libtcldot_la_LIBADD = $(TCLHANDLE_LIBS) $(GDTCLFT_LIBS) \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la
 
-libtcldot_la_DEPENDENCIES = $(top_builddir)/lib/gvc/libgvc.la
-
 # GDTCLFT requires gd libs to be builtin
 if WITH_LIBGD
 libtcldot_la_LIBADD += $(GDLIB_LIBS)
