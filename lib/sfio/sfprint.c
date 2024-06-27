@@ -85,8 +85,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
     assert(argv.ft->form != NULL);
 
     const char *form = argv.ft->form;
-    va_list args;
-    va_copy(args, argv.ft->args);
 
     ft = argv.ft;
 
@@ -137,24 +135,15 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			n_str = (form - 1) - t_str;
 		    else {
 			t_str = _Sffmtintf(t_str + 1, &n);
-			n = FP_SET(-1, argn);
+			FP_SET(-1, argn);
 
-			if (ft && ft->extf) {
-			    FMTSET(ft, form, args,
-				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
-			    n = ft->extf(&argv, ft);
-			    if (n < 0)
-				goto done;
-			    if (!(ft->flags & SFFMT_VALUE))
-				goto t_arg;
-			    if ((t_str = argv.s) &&
-				(n_str = (int) ft->size) < 0)
-				n_str = (ssize_t)strlen(t_str);
-			} else {
-			  t_arg:
-			    if ((t_str = va_arg(args, char *)))
-				 n_str = (ssize_t)strlen(t_str);
-			}
+			FMTSET(ft, form, LEFTP, 0, 0, 0, 0, 0, NULL, 0);
+			n = ft->extf(&argv, ft);
+			if (n < 0)
+			    goto done;
+			assert(ft->flags & SFFMT_VALUE);
+			if ((t_str = argv.s) && (n_str = (int)ft->size) < 0)
+			    n_str = (ssize_t)strlen(t_str);
 		    }
 		    goto loop_flags;
 		default:
@@ -217,17 +206,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    form = _Sffmtintf(form, &n);
 	    n = FP_SET(-1, argn);
 
-	    if (ft && ft->extf) {
-		FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL,
-		       0);
-		if (ft->extf(&argv, ft) < 0)
-		    goto done;
-		if (ft->flags & SFFMT_VALUE)
-		    v = argv.i;
-		else
-		    v = (dot <= 2) ? va_arg(args, int) : 0;
-	    } else
-		v = dot <= 2 ? va_arg(args, int) : 0;
+	    FMTSET(ft, form, '.', dot, 0, 0, 0, 0, NULL, 0);
+	    if (ft->extf(&argv, ft) < 0)
+		goto done;
+	    assert(ft->flags & SFFMT_VALUE);
+	    v = argv.i;
 	    goto dot_set;
 
 	case '1':
@@ -264,17 +247,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		if (ft && ft->extf) {
-		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
-			   NULL, 0);
-		    if (ft->extf(&argv, ft) < 0)
-			goto done;
-		    if (ft->flags & SFFMT_VALUE)
-			size = argv.i;
-		    else
-			size = va_arg(args, int);
-		} else
-		    size = va_arg(args, int);
+		FMTSET(ft, form, 'I', sizeof(int), 0, 0, 0, 0, NULL, 0);
+		if (ft->extf(&argv, ft) < 0)
+		    goto done;
+		assert(ft->flags & SFFMT_VALUE);
+		size = argv.i;
 	    }
 	    goto loop_flags;
 
@@ -335,47 +312,17 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	}
 
 	argp = FP_SET(argp, argn);
-	if (ft && ft->extf) {	/* extended processing */
-	    FMTSET(ft, form, args, fmt, size, flags, width, precis, base,
-		   t_str, n_str);
-	    v = ft->extf(&argv, ft);
+	FMTSET(ft, form, fmt, size, flags, width, precis, base, t_str, n_str);
+	v = ft->extf(&argv, ft);
 
-	    if (v < 0)
-		goto done;
-	    else if (v == 0) {	/* extf did not output */
-		FMTGET(ft, form, args, fmt, size, flags, width, precis,
-		       base);
-		if (!(ft->flags & SFFMT_VALUE))
-		    goto get_val;
-	    } else if (v > 0) {	/* extf output v bytes */
-		n_output += v;
-		continue;
-	    }
-	} else {
-	  get_val:
-	    switch (_Sftype[fmt]) {
-	    case SFFMT_INT:
-	    case SFFMT_UINT:
-		if (FMTCMP(size, long, long long))
-		     argv.l = va_arg(args, long);
-		else
-		    argv.i = va_arg(args, int);
-		break;
-	    case SFFMT_FLOAT:
-		    argv.d = va_arg(args, double);
-		break;
-	    case SFFMT_POINTER:
-		argv.vp = va_arg(args, void *);
-		break;
-	    case SFFMT_BYTE:
-		if (base >= 0)
-		    argv.s = va_arg(args, char *);
-		else
-		    argv.c = (char) va_arg(args, int);
-		break;
-	    default:		/* unknown pattern */
-		break;
-	    }
+	if (v < 0)
+	    goto done;
+	else if (v == 0) { // extf did not output
+	    FMTGET(ft, form, fmt, size, flags, width, precis, base);
+	    assert(ft->flags & SFFMT_VALUE);
+	} else if (v > 0) { // extf output v bytes
+	    n_output += v;
+	    continue;
 	}
 
 	switch (fmt) {		/* PRINTF DIRECTIVES */
@@ -539,7 +486,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		}
 	    } else
 	    if (sizeof(short) < sizeof(int) && FMTCMP(size, short, long long)) {
-		if (ft && ft->extf && (ft->flags & SFFMT_VALUE)) {
+		if (ft->flags & SFFMT_VALUE) {
 		    if (fmt == 'd')
 			v = (int) ((short) argv.h);
 		    else
@@ -552,7 +499,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		}
 		goto int_cvt;
 	    } else if (size == sizeof(char)) {
-		if (ft && ft->extf && (ft->flags & SFFMT_VALUE)) {
+		if (ft->flags & SFFMT_VALUE) {
 		    if (fmt == 'd')
 			v = (int) ((char) argv.c);
 		    else
@@ -651,8 +598,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	case 'e':
 	case 'E':
 	case 'f':
-	    if (!(ft && ft->extf && (ft->flags & SFFMT_VALUE)) ||
-		    FMTCMP(size, double, long double))
+	    if (!(ft->flags & SFFMT_VALUE) || FMTCMP(size, double, long double))
 		 dval = argv.d;
 	    else
 		dval = (double) argv.f;

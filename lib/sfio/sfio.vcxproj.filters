@@ -32,9 +32,6 @@
     <ClCompile Include="sfextern.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sfscanf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sftable.c">
       <Filter>Source Files</Filter>
     </ClCompile>

@@ -9,7 +9,6 @@ noinst_LTLIBRARIES = libsfio_C.la
 
 libsfio_C_la_SOURCES = sfcvt.c \
 	sfextern.c \
-	sfscanf.c \
 	sftable.c sfprint.c \
 	sfvscanf.c
 

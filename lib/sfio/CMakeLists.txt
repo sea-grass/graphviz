@@ -6,7 +6,6 @@ add_library(sfio STATIC
   # Source files
   sfcvt.c
   sfextern.c
-  sfscanf.c
   sftable.c
   sfprint.c
   sfvscanf.c

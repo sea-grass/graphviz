@@ -86,14 +86,14 @@ extern "C" {
 #define RIGHTP		')'
 #define QUOTE		'\''
 
-#define FMTSET(ft, frm,ags, fv, sz, flgs, wid,pr,bs, ts,ns) \
-	((ft->form = (char*)frm), va_copy(ft->args,ags), \
+#define FMTSET(ft, frm, fv, sz, flgs, wid,pr,bs, ts,ns) \
+	((ft->form = (char*)frm), \
 	 (ft->fmt = fv), (ft->size = sz), \
 	 (ft->flags = (flgs&SFFMT_SET)), \
 	 (ft->width = wid), (ft->precis = pr), (ft->base = bs), \
 	 (ft->t_str = ts), (ft->n_str = ns) )
-#define FMTGET(ft, frm,ags, fv, sz, flgs, wid,pr,bs) \
-	((frm = ft->form), va_copy(ags,ft->args), (fv = ft->fmt), (sz = ft->size), \
+#define FMTGET(ft, frm, fv, sz, flgs, wid,pr,bs) \
+	((frm = ft->form), (fv = ft->fmt), (sz = ft->size), \
 	 (flgs = (flgs&~(SFFMT_SET))|(ft->flags&SFFMT_SET)), \
 	 (wid = ft->width), (pr = ft->precis), (bs = ft->base) )
 #define FMTCMP(sz, type, maxtype) \
