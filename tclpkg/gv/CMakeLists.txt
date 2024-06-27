@@ -1,4 +1,4 @@
-if(with_swig)
+if(enable_swig)
   include(UseSWIG)
 
   set_property(SOURCE gv.i PROPERTY CPLUSPLUS ON)

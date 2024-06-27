@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   option.
 - Support for building the SWIG-generated TCL language bindings has been
   integrated into the CMake build system. This is controllable by the
-  `-Dwith_swig={AUTO|ON|OFF}` option.
+  `-Denable_swig={AUTO|ON|OFF}` option.
 
 ### Changed
 
