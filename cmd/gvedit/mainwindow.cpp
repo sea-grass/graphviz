@@ -95,7 +95,7 @@ void CMainWindow::createConsole() {
 
 static const QStringList xtra = {"NONE"};
 
-CMainWindow::CMainWindow(char **files) {
+CMainWindow::CMainWindow(const QStringList &files) {
 
   QWidget *centralwidget = new QWidget(this);
   centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
@@ -142,11 +142,9 @@ CMainWindow::CMainWindow(char **files) {
   statusBar()->showMessage(tr("Ready"));
   setWindowIcon(QIcon(":/images/icon.png"));
   // load files specified in command line , one time task
-  if (files)
-    while (*files) {
-      addFile(QString(*files));
-      files++;
-    }
+  for (const QString &file : files) {
+    addFile(file);
+  }
 }
 
 void CMainWindow::closeEvent(QCloseEvent *event) {
