@@ -36,7 +36,6 @@ extern "C" {
 	Sffmtext_f extf;	/* function to process arguments        */
 
 	char *form;		/* format string to stack               */
-	va_list args;		/* corresponding arg list               */
 
 	int fmt;		/* format character                     */
 	ssize_t size;		/* object size                          */

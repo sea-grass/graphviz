@@ -85,8 +85,6 @@ int sfprint(FILE *f, Sffmt_t *format) {
     assert(argv.ft->form != NULL);
 
     const char *form = argv.ft->form;
-    va_list args;
-    va_copy(args, argv.ft->args);
 
     ft = argv.ft;
 
@@ -139,7 +137,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			t_str = _Sffmtintf(t_str + 1, &n);
 			FP_SET(-1, argn);
 
-			FMTSET(ft, form, args, LEFTP, 0, 0, 0, 0, 0, NULL, 0);
+			FMTSET(ft, form, LEFTP, 0, 0, 0, 0, 0, NULL, 0);
 			n = ft->extf(&argv, ft);
 			if (n < 0)
 			    goto done;
@@ -208,7 +206,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    form = _Sffmtintf(form, &n);
 	    n = FP_SET(-1, argn);
 
-	    FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL, 0);
+	    FMTSET(ft, form, '.', dot, 0, 0, 0, 0, NULL, 0);
 	    if (ft->extf(&argv, ft) < 0)
 		goto done;
 	    assert(ft->flags & SFFMT_VALUE);
@@ -249,7 +247,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0, NULL, 0);
+		FMTSET(ft, form, 'I', sizeof(int), 0, 0, 0, 0, NULL, 0);
 		if (ft->extf(&argv, ft) < 0)
 		    goto done;
 		assert(ft->flags & SFFMT_VALUE);
@@ -314,13 +312,13 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	}
 
 	argp = FP_SET(argp, argn);
-	FMTSET(ft, form, args, fmt, size, flags, width, precis, base, t_str, n_str);
+	FMTSET(ft, form, fmt, size, flags, width, precis, base, t_str, n_str);
 	v = ft->extf(&argv, ft);
 
 	if (v < 0)
 	    goto done;
 	else if (v == 0) { // extf did not output
-	    FMTGET(ft, form, args, fmt, size, flags, width, precis, base);
+	    FMTGET(ft, form, fmt, size, flags, width, precis, base);
 	    assert(ft->flags & SFFMT_VALUE);
 	} else if (v > 0) { // extf output v bytes
 	    n_output += v;

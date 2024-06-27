@@ -97,7 +97,6 @@ int sfvscanf(FILE *f, va_list args) {
     argv.ft = va_arg(args, Sffmt_t *);
 
     form = argv.ft->form;
-    va_copy(args, argv.ft->args);
     argn = -1;
 
     ft = argv.ft;
@@ -174,7 +173,7 @@ int sfvscanf(FILE *f, va_list args) {
 			t_str = _Sffmtintf(t_str + 1, &n);
 			FP_SET(-1, argn);
 
-			FMTSET(ft, form, args, LEFTP, 0, 0, 0, 0, 0, NULL, 0);
+			FMTSET(ft, form, LEFTP, 0, 0, 0, 0, 0, NULL, 0);
 			n = ft->extf(&argv, ft);
 			if (n < 0)
 			    goto done;
@@ -202,7 +201,7 @@ int sfvscanf(FILE *f, va_list args) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL, 0);
+		FMTSET(ft, form, '.', dot, 0, 0, 0, 0, NULL, 0);
 		if (ft->extf(&argv, ft) < 0)
 		    goto done;
 		assert(ft->flags & SFFMT_VALUE);
@@ -244,7 +243,7 @@ int sfvscanf(FILE *f, va_list args) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0, NULL, 0);
+		FMTSET(ft, form, 'I', sizeof(int), 0, 0, 0, 0, NULL, 0);
 		if (ft->extf(&argv, ft) < 0)
 		    goto done;
 		assert(ft->flags & SFFMT_VALUE);
@@ -308,13 +307,13 @@ int sfvscanf(FILE *f, va_list args) {
 	}
 
 	argp = FP_SET(argp, argn);
-	FMTSET(ft, form, args, fmt, size, flags, width, 0, base, t_str, n_str);
+	FMTSET(ft, form, fmt, size, flags, width, 0, base, t_str, n_str);
 	v = ft->extf(&argv, ft);
 
 	if (v < 0)
 	    goto done;
 	else if (v == 0) { // extf did not use input stream
-	    FMTGET(ft, form, args, fmt, size, flags, width, n, base);
+	    FMTGET(ft, form, fmt, size, flags, width, n, base);
 	    if ((ft->flags & SFFMT_VALUE) && !(ft->flags & SFFMT_SKIP))
 		value = argv.vp;
 	} else { // v > 0: number of input bytes consumed
@@ -327,9 +326,7 @@ int sfvscanf(FILE *f, va_list args) {
 	if (_Sftype[fmt] == 0)	/* unknown pattern */
 	    continue;
 
-	/* get the address to assign value */
-	if (!value && !(flags & SFFMT_SKIP))
-	    value = va_arg(args, void *);
+	assert(!(!value && !(flags & SFFMT_SKIP)));
 
 	if (fmt == 'n') {	/* return length of consumed input */
 	    if (sizeof(long) > sizeof(int) && FMTCMP(size, long, long long))
