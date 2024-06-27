@@ -1,4 +1,5 @@
 if(enable_swig)
+  set(UseSWIG_MODULE_VERSION 2) # cmake-lint: disable=C0103
   include(UseSWIG)
 
   set_property(SOURCE gv.i PROPERTY CPLUSPLUS ON)
@@ -6,7 +7,6 @@ if(enable_swig)
   if(enable_tcl)
     swig_add_library(gv_tcl
       LANGUAGE tcl
-      OUTFILE_DIR gv_tcl.cpp
       SOURCES gv.i gv_tcl_init.c
     )
     target_include_directories(gv_tcl PRIVATE SYSTEM ${TCL_INCLUDE_PATH})
