@@ -3,7 +3,7 @@ if(with_swig)
 
   set_property(SOURCE gv.i PROPERTY CPLUSPLUS ON)
 
-  if(with_tclpkg)
+  if(enable_tcl)
     swig_add_library(gv_tcl
       LANGUAGE tcl
       OUTFILE_DIR gv_tcl.cpp
