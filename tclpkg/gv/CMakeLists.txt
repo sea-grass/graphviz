@@ -9,6 +9,7 @@ if(enable_swig)
       LANGUAGE tcl
       SOURCES gv.i gv_tcl_init.c
     )
+    set_property(TARGET gv_tcl PROPERTY SWIG_COMPILE_OPTIONS -namespace)
     target_include_directories(gv_tcl PRIVATE SYSTEM ${TCL_INCLUDE_PATH})
     swig_link_libraries(gv_tcl PRIVATE gvc tclstubs ${TCL_LIBRARY})
 
