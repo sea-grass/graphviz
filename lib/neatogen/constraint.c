@@ -840,7 +840,7 @@ int scAdjust(graph_t * g, int equal)
 	assert(nnodes >= 0);
 	aarr = mkOverlapSet(nlist, (size_t)nnodes, &m);
 
-	if (m == 0) {		/* no overlaps */
+	if (m == 1) { // no overlaps
 	    free(aarr);
 	    free(nlist);
 	    return 0;
