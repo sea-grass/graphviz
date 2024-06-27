@@ -29,10 +29,9 @@ static void freeIntItem(intitem *obj, Dtdisc_t *disc) {
     free (obj);
 }
 
-static int cmpid(Dt_t *d, size_t *key1, size_t *key2, Dtdisc_t *disc) {
-  (void)d;
-  (void)disc;
-
+static int cmpid(void *k1, void *k2) {
+  const size_t *key1 = k1;
+  const size_t *key2 = k2;
   if (*key1 > *key2) return 1;
   else if (*key1 < *key2) return -1;
   else return 0;
@@ -44,7 +43,7 @@ static Dtdisc_t intSetDisc = {
     offsetof(intitem,link),
     (Dtmake_f)mkIntItem,
     (Dtfree_f)freeIntItem,
-    (Dtcompar_f)cmpid,
+    cmpid,
 };
 
 Dt_t* 

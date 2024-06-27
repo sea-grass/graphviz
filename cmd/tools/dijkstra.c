@@ -78,11 +78,7 @@ static void setdist(Agnode_t * n, double dist)
 #define isDone(n) (((nodedata_t*)((n)->base.data))->done)
 #define setDone(n) (((nodedata_t*)((n)->base.data))->done = true)
 
-static int cmpf(Dt_t * d, void *key1, void *key2, Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpf(void *key1, void *key2) {
     const double dist1 = getdist(key1);
     const double dist2 = getdist(key2);
     if (dist1 < dist2)

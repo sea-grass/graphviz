@@ -122,12 +122,9 @@ static void freeitem(edgeitem *obj, Dtdisc_t *disc) {
     free(obj);
 }
 
-static int
-cmpitems(Dt_t * d, edgeinfo * key1, edgeinfo * key2, Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpitems(void *k1, void *k2) {
+    const edgeinfo *key1 = k1;
+    const edgeinfo *key2 = k2;
     if (key1->n1 > key2->n1)
 	return 1;
     if (key1->n1 < key2->n1)
@@ -162,7 +159,7 @@ Dtdisc_t edgeItemDisc = {
     offsetof(edgeitem, link),
     (Dtmake_f) newitem,
     (Dtfree_f) freeitem,
-    (Dtcompar_f) cmpitems,
+    cmpitems,
 };
 
 /* equivEdge:

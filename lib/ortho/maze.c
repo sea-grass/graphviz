@@ -87,11 +87,9 @@ psdump(cell *gcells, int n_gcells, boxf BB, boxf *rects, size_t nrect) {
 
 /// compares points by X and then by Y
 
-static int
-vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
-{
-  (void)d;
-  (void)disc;
+static int vcmpid(void *k1, void *k2) {
+  const pointf *key1 = k1;
+  const pointf *key2 = k2;
   int dx = dfp_cmp(key1->x, key2->x);
   if (dx != 0)
     return dx;
@@ -100,11 +98,9 @@ vcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
 
 /// compares points by Y and then by X
 
-static int
-hcmpid(Dt_t* d, pointf* key1, pointf* key2, Dtdisc_t* disc)
-{
-  (void)d;
-  (void)disc;
+static int hcmpid(void *k1, void *k2) {
+  const pointf *key1 = k1;
+  const pointf *key2 = k2;
   int dy = dfp_cmp(key1->y, key2->y);
   if (dy != 0)
     return dy;
@@ -123,7 +119,7 @@ static Dtdisc_t vdictDisc = {
     offsetof(snodeitem,link),
     0,
     0,
-    (Dtcompar_f)vcmpid,
+    vcmpid,
 };
 static Dtdisc_t hdictDisc = {
     offsetof(snodeitem,p),
@@ -131,7 +127,7 @@ static Dtdisc_t hdictDisc = {
     offsetof(snodeitem,link),
     0,
     0,
-    (Dtcompar_f)hcmpid,
+    hcmpid,
 };
 
 #define delta 1        /* weight of length */

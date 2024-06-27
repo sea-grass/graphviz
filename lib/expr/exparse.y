@@ -526,7 +526,7 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 					if ($3 == INTEGER) {
 						disc->key = offsetof(Exassoc_t, key);
 						disc->size = sizeof(Extype_t);
-						disc->comparf = (Dtcompar_f)cmpKey;
+						disc->comparf = cmpKey;
 					}
 					else
 						disc->key = offsetof(Exassoc_t, name);

@@ -752,11 +752,9 @@ typedef struct {
     node_t *h;
 } item;
 
-static int cmpItem(Dt_t * d, void *p1[], void *p2[], Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpItem(void *pp1, void *pp2) {
+    const void **p1 = pp1;
+    const void **p2 = pp2;
     if (p1[0] < p2[0])
 	return -1;
     if (p1[0] > p2[0])
@@ -791,7 +789,7 @@ static Dtdisc_t mapDisc = {
     .link = offsetof(item, link),
     .makef = (Dtmake_f)newItem,
     .freef = (Dtfree_f)freeItem,
-    .comparf = (Dtcompar_f)cmpItem,
+    .comparf = cmpItem,
 };
 
 /// Make a copy of e in e's graph but using ct and ch as nodes

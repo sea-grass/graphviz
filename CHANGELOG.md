@@ -64,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The change described as “Some `routesplines` miscalculations that led to lost
   edges and fatal errors have been avoided” in 11.0.0 has been reverted. The fix
   for this caused other problems.
+- **Breaking**: the `d` and `disc` parameters have been removed from
+  `Dtcompar_f`.
 
 ### Fixed
 

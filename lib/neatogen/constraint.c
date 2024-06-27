@@ -36,11 +36,9 @@ typedef struct nitem {
 typedef int (*distfn) (box *, box *);
 typedef int (*intersectfn) (nitem *, nitem *);
 
-static int cmpitem(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpitem(void *item1, void *item2) {
+    const int *p1 = item1;
+    const int *p2 = item2;
     if (*p1 < *p2) {
         return -1;
     }
@@ -56,7 +54,7 @@ static Dtdisc_t constr = {
     offsetof(nitem, link),
     NULL,
     NULL,
-    (Dtcompar_f) cmpitem,
+    cmpitem,
 };
 
 static int distY(box * b1, box * b2)

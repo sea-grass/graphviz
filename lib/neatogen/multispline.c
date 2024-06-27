@@ -59,11 +59,9 @@ typedef struct {
     int t;
 } item;
 
-static int cmpItem(Dt_t * d, int p1[], int p2[], Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpItem(void *item1, void *item2) {
+    const int *p1 = item1;
+    const int *p2 = item2;
     if (p1[0] < p2[0]) return -1;
     if (p1[0] > p2[0]) return 1;
     if (p1[1] < p2[1]) return -1;
@@ -95,7 +93,7 @@ static Dtdisc_t itemdisc = {
     .link = offsetof(item, link),
     .makef = (Dtmake_f)newItem,
     .freef = (Dtfree_f)freeItem,
-    .comparf = (Dtcompar_f)cmpItem,
+    .comparf = cmpItem,
 };
 
 static void addMap(Dt_t * map, int a, int b, int t)
@@ -160,11 +158,9 @@ typedef struct {
     int j;
 } Ipair;
 
-static int cmpIpair(Dt_t * d, int *p1, int *p2, Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpIpair(void *pair1, void *pair2) {
+    const int *p1 = pair1;
+    const int *p2 = pair2;
     if (*p1 < *p2) {
         return -1;
     }
@@ -195,7 +191,7 @@ static Dtdisc_t ipairdisc = {
     .link = offsetof(Ipair, link),
     .makef = (Dtmake_f)newIpair,
     .freef = (Dtfree_f)freeIpair,
-    .comparf = (Dtcompar_f)cmpIpair,
+    .comparf = cmpIpair,
 };
 
 static void vmapAdd(Dt_t * map, int i, int j)

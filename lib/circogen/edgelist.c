@@ -27,12 +27,9 @@ static void freeItem(edgelistitem *obj, Dtdisc_t *disc) {
     free(obj);
 }
 
-static int
-cmpItem(Dt_t * d, Agedge_t ** key1, Agedge_t ** key2, Dtdisc_t * disc)
-{
-    (void)d;
-    (void)disc;
-
+static int cmpItem(void *k1, void *k2) {
+    const Agedge_t **key1 = k1;
+    const Agedge_t **key2 = k2;
     if (*key1 > *key2) {
 	return 1;
     }
@@ -48,7 +45,7 @@ static Dtdisc_t ELDisc = {
     offsetof(edgelistitem, link),	/* link */
     (Dtmake_f) mkItem,
     (Dtfree_f) freeItem,
-    (Dtcompar_f) cmpItem,
+    cmpItem,
 };
 
 edgelist *init_edgelist(void)

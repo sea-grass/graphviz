@@ -236,9 +236,7 @@ int agdegree(Agraph_t * g, Agnode_t * n, int want_in, int want_out)
 	return rv;
 }
 
-static int agraphseqcmpf(Dict_t *d, void *arg0, void *arg1, Dtdisc_t *disc) {
-  (void)d; // unused
-  (void)disc; // unused
+static int agraphseqcmpf(void *arg0, void *arg1) {
   Agraph_t *sg0 = arg0;
   Agraph_t *sg1 = arg1;
   if (AGSEQ(sg0) < AGSEQ(sg1)) {
@@ -250,10 +248,7 @@ static int agraphseqcmpf(Dict_t *d, void *arg0, void *arg1, Dtdisc_t *disc) {
   return 0;
 }
 
-static int agraphidcmpf(Dict_t * d, void *arg0, void *arg1, Dtdisc_t * disc)
-{
-    (void)d; /* unused */
-    (void)disc; /* unused */
+static int agraphidcmpf(void *arg0, void *arg1) {
     Agraph_t *sg0 = arg0;
     Agraph_t *sg1 = arg1;
     if (AGID(sg0) < AGID(sg1)) {
