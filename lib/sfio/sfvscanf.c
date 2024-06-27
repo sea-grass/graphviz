@@ -101,6 +101,7 @@ int sfvscanf(FILE *f, va_list args) {
     argn = -1;
 
     ft = argv.ft;
+    assert(ft != NULL && ft->extf != NULL);
 
   loop_fmt:
     while ((fmt = *form++)) {
@@ -171,22 +172,15 @@ int sfvscanf(FILE *f, va_list args) {
 			n_str = (form - 1) - t_str;
 		    else {
 			t_str = _Sffmtintf(t_str + 1, &n);
-			n = FP_SET(-1, argn);
+			FP_SET(-1, argn);
 
-			if (ft && ft->extf) {
-			    FMTSET(ft, form, args,
-				   LEFTP, 0, 0, 0, 0, 0, NULL, 0);
-			    n = ft->extf(&argv, ft);
-			    if (n < 0)
-				goto done;
-			    assert(ft->flags & SFFMT_VALUE);
-			    if ((t_str = argv.s) &&
-				(n_str = (int) ft->size) < 0)
-				n_str = (ssize_t)strlen(t_str);
-			} else {
-			    if ((t_str = va_arg(args, char *)))
-				 n_str = (ssize_t)strlen(t_str);
-			}
+			FMTSET(ft, form, args, LEFTP, 0, 0, 0, 0, 0, NULL, 0);
+			n = ft->extf(&argv, ft);
+			if (n < 0)
+			    goto done;
+			assert(ft->flags & SFFMT_VALUE);
+			if ((t_str = argv.s) && (n_str = (int)ft->size) < 0)
+			    n_str = (ssize_t)strlen(t_str);
 		    }
 		    goto loop_flags;
 		default:
@@ -208,15 +202,11 @@ int sfvscanf(FILE *f, va_list args) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		if (ft && ft->extf) {
-		    FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0,
-			   NULL, 0);
-		    if (ft->extf(&argv, ft) < 0)
-			goto done;
-		    assert(ft->flags & SFFMT_VALUE);
-		    v = argv.i;
-		} else
-		    v = (dot <= 2) ? va_arg(args, int) : 0;
+		FMTSET(ft, form, args, '.', dot, 0, 0, 0, 0, NULL, 0);
+		if (ft->extf(&argv, ft) < 0)
+		    goto done;
+		assert(ft->flags & SFFMT_VALUE);
+		v = argv.i;
 		if (v < 0)
 		    v = 0;
 		goto dot_set;
@@ -254,15 +244,11 @@ int sfvscanf(FILE *f, va_list args) {
 		form = _Sffmtintf(form + 1, &n);
 		n = FP_SET(-1, argn);
 
-		if (ft && ft->extf) {
-		    FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0,
-			   NULL, 0);
-		    if (ft->extf(&argv, ft) < 0)
-			goto done;
-		    assert(ft->flags & SFFMT_VALUE);
-		    size = argv.i;
-		} else
-		    size = va_arg(args, int);
+		FMTSET(ft, form, args, 'I', sizeof(int), 0, 0, 0, 0, NULL, 0);
+		if (ft->extf(&argv, ft) < 0)
+		    goto done;
+		assert(ft->flags & SFFMT_VALUE);
+		size = argv.i;
 	    }
 	    goto loop_flags;
 
@@ -322,23 +308,20 @@ int sfvscanf(FILE *f, va_list args) {
 	}
 
 	argp = FP_SET(argp, argn);
-	if (ft && ft->extf) {
-	    FMTSET(ft, form, args, fmt, size, flags, width, 0, base, t_str,
-		   n_str);
-	    v = ft->extf(&argv, ft);
+	FMTSET(ft, form, args, fmt, size, flags, width, 0, base, t_str, n_str);
+	v = ft->extf(&argv, ft);
 
-	    if (v < 0)
-		goto done;
-	    else if (v == 0) {	/* extf did not use input stream */
-		FMTGET(ft, form, args, fmt, size, flags, width, n, base);
-		if ((ft->flags & SFFMT_VALUE) && !(ft->flags & SFFMT_SKIP))
-		    value = argv.vp;
-	    } else {		/* v > 0: number of input bytes consumed */
-		n_input += v;
-		if (!(ft->flags & SFFMT_SKIP))
-		    n_assign += 1;
-		continue;
-	    }
+	if (v < 0)
+	    goto done;
+	else if (v == 0) { // extf did not use input stream
+	    FMTGET(ft, form, args, fmt, size, flags, width, n, base);
+	    if ((ft->flags & SFFMT_VALUE) && !(ft->flags & SFFMT_SKIP))
+		value = argv.vp;
+	} else { // v > 0: number of input bytes consumed
+	    n_input += v;
+	    if (!(ft->flags & SFFMT_SKIP))
+		n_assign += 1;
+	    continue;
 	}
 
 	if (_Sftype[fmt] == 0)	/* unknown pattern */
