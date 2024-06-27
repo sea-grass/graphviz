@@ -31,34 +31,32 @@ void MdiChild::newFile()
 
     isUntitled = true;
     curFile = tr("graph%1.gv").arg(sequenceNumber++);
-    setWindowTitle(curFile + "[*]");
+    setWindowTitle(curFile + QLatin1String("[*]"));
 
     connect(document(), &QTextDocument::contentsChange,
             this, &MdiChild::documentWasModified);
 }
 
-bool MdiChild::loadFile(const QString & fileName)
-{
-    QFile file(fileName);
-    if (!file.open(QFile::ReadOnly | QFile::Text)) {
-	QMessageBox::warning(this, tr("MDI"),
-			     tr("Cannot read file %1:\n%2.")
-			     .arg(fileName)
-			     .arg(file.errorString()));
-	return false;
-    }
+bool MdiChild::loadFile(const QString &fileName) {
+  QFile file(fileName);
+  if (!file.open(QFile::ReadOnly | QFile::Text)) {
+    QMessageBox::warning(
+        this, tr("MDI"),
+        tr("Cannot read file %1:\n%2.").arg(fileName).arg(file.errorString()));
+    return false;
+  }
 
-    QTextStream in(&file);
-    QApplication::setOverrideCursor(Qt::WaitCursor);
-    setPlainText(in.readAll());
-    QApplication::restoreOverrideCursor();
+  QTextStream in(&file);
+  QApplication::setOverrideCursor(Qt::WaitCursor);
+  setPlainText(in.readAll());
+  QApplication::restoreOverrideCursor();
 
-    setCurrentFile(fileName);
+  setCurrentFile(fileName);
 
-    connect(document(), &QTextDocument::contentsChange,
-            this, &MdiChild::documentWasModified);
+  connect(document(), &QTextDocument::contentsChange,
+          this, &MdiChild::documentWasModified);
 
-    return true;
+  return true;
 }
 
 bool MdiChild::save()
@@ -147,7 +145,7 @@ void MdiChild::setCurrentFile(const QString & fileName)
     isUntitled = false;
     document()->setModified(false);
     setWindowModified(false);
-    setWindowTitle(userFriendlyCurrentFile() + "[*]");
+    setWindowTitle(userFriendlyCurrentFile() + QLatin1String("[*]"));
 }
 
 QString MdiChild::strippedName(const QString & fullFileName)
@@ -172,7 +170,6 @@ bool MdiChild::loadPreview(const QString &fileName)
     if (rv)
 	previewFrm->show();
     return rv;
-
 }
 
 bool MdiChild::firstTime()

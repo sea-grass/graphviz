@@ -48,7 +48,8 @@ int main(int argc, char *argv[]) {
         QStringLiteral("gvedit - simple graph editor and viewer"));
     parser.addPositionalArgument(
         QStringLiteral("files"),
-        QCoreApplication::translate("main", "files to open."), "[files...]");
+        QCoreApplication::translate("main", "files to open."),
+        QStringLiteral("[files...]"));
 
     const QCommandLineOption helpOption(
         {

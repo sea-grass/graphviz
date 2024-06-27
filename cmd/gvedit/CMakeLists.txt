@@ -48,7 +48,16 @@ if(with_gvedit)
     AUTOUIC_SEARCH_PATHS "${CMAKE_CURRENT_SOURCE_DIR}/ui"
   )
 
-  target_compile_definitions(gvedit PRIVATE DEMAND_LOADING=1)
+  target_compile_definitions(gvedit PRIVATE
+    DEMAND_LOADING=1
+    QT_NO_CAST_TO_ASCII
+    QT_NO_CAST_FROM_ASCII
+    QT_STRICT_ITERATORS
+    QT_NO_URL_CAST_FROM_STRING
+    QT_NO_CAST_FROM_BYTEARRAY
+    QT_USE_QSTRINGBUILDER
+    QT_USE_FAST_OPERATOR_PLUS
+  )
 
   target_include_directories(gvedit PRIVATE
     ../../lib

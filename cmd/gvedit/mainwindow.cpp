@@ -21,7 +21,8 @@
 QTextEdit *globTextEdit;
 
 int errorPipe(char *errMsg) {
-  globTextEdit->setText(globTextEdit->toPlainText() + QString(errMsg));
+  globTextEdit->setText(globTextEdit->toPlainText() +
+                        QString::fromUtf8(errMsg));
   return 0;
 }
 
@@ -39,7 +40,7 @@ static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
 
   cb.clear();
   for (int id = 0; id < count; id++) {
-    cb.addItem(QString(lp[id]));
+    cb.addItem(QString::fromUtf8(lp[id]));
     if (prefer && idx < 0 && !strcmp(prefer, lp[id]))
       idx = id;
   };
@@ -64,7 +65,7 @@ void CMainWindow::createConsole() {
   addDockWidget(Qt::BottomDockWidgetArea, dock);
   QVBoxLayout *vL = new QVBoxLayout();
 
-  textEdit->setObjectName(QString::fromUtf8("textEdit"));
+  textEdit->setObjectName(QStringLiteral("textEdit"));
   globTextEdit = textEdit;
   agseterrf(errorPipe);
 
@@ -74,8 +75,10 @@ void CMainWindow::createConsole() {
   QFrame *fr = new QFrame(dock);
   vL->addWidget(fr);
 
-  QPushButton *logNewBtn = new QPushButton(QIcon(":/images/new.png"), "", fr);
-  QPushButton *logSaveBtn = new QPushButton(QIcon(":/images/save.png"), "", fr);
+  QPushButton *logNewBtn =
+      new QPushButton(QIcon(QStringLiteral(":/images/new.png")), {}, fr);
+  QPushButton *logSaveBtn =
+      new QPushButton(QIcon(QStringLiteral(":/images/save.png")), {}, fr);
   QHBoxLayout *consoleLayout = new QHBoxLayout();
   consoleLayout->addWidget(logNewBtn);
   connect(logNewBtn, &QPushButton::clicked, this, &CMainWindow::slotNewLog);
@@ -93,18 +96,18 @@ void CMainWindow::createConsole() {
   dock->setWidget(mainFrame);
 }
 
-static const QStringList xtra = {"NONE"};
+static const QStringList xtra = {QStringLiteral("NONE")};
 
 CMainWindow::CMainWindow(const QStringList &files) {
 
   QWidget *centralwidget = new QWidget(this);
-  centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
+  centralwidget->setObjectName(QStringLiteral("centralwidget"));
   QVBoxLayout *verticalLayout_2 = new QVBoxLayout(centralwidget);
-  verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+  verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
   QVBoxLayout *verticalLayout = new QVBoxLayout();
-  verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+  verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
   mdiArea = new QMdiArea(centralwidget);
-  mdiArea->setObjectName(QString::fromUtf8("mdiArea"));
+  mdiArea->setObjectName(QStringLiteral("mdiArea"));
 
   verticalLayout->addWidget(mdiArea);
   verticalLayout_2->setContentsMargins(1, 1, 1, 1);
@@ -132,12 +135,14 @@ CMainWindow::CMainWindow(const QStringList &files) {
   this->resize(1024, 900);
   this->move(0, 0);
   setUnifiedTitleAndToolBarOnMac(true);
-  QComboBox *cb = (QComboBox *)frmSettings->findChild<QComboBox *>("cbLayout");
+  QComboBox *cb = (QComboBox *)frmSettings->findChild<QComboBox *>(
+      QStringLiteral("cbLayout"));
   dfltLayoutIdx = LoadPlugins(*cb, frmSettings->gvc, "layout", {}, "dot");
-  cb = (QComboBox *)frmSettings->findChild<QComboBox *>("cbExtension");
+  cb = (QComboBox *)frmSettings->findChild<QComboBox *>(
+      QStringLiteral("cbExtension"));
   dfltRenderIdx = LoadPlugins(*cb, frmSettings->gvc, "device", xtra, "png");
   statusBar()->showMessage(tr("Ready"));
-  setWindowIcon(QIcon(":/images/icon.png"));
+  setWindowIcon(QIcon(QStringLiteral(":/images/icon.png")));
   // load files specified in command line , one time task
   for (const QString &file : files) {
     addFile(file);
@@ -180,11 +185,14 @@ void CMainWindow::addFile(const QString &fileName) {
 }
 
 void CMainWindow::slotOpen() {
-  QStringList filters;
-  filters << "*.cpp" << "*.cxx" << "*.cc";
+  QStringList filters{
+      QStringLiteral("*.cpp"),
+      QStringLiteral("*.cxx"),
+      QStringLiteral("*.cc"),
+  };
 
   QFileDialog fd;
-  fd.setNameFilter("XML (*.xml)");
+  fd.setNameFilter(QStringLiteral("XML (*.xml)"));
   QString fileName = fd.getOpenFileName(this);
 
   addFile(fileName);
@@ -226,10 +234,8 @@ void CMainWindow::slotAbout() {
 
 void CMainWindow::setChild() {
   if (prevChild != activeMdiChild()) {
-    QString msg;
-    msg.append("working on ");
-    msg.append(activeMdiChild()->currentFile());
-    msg.append("\n");
+    const QString msg =
+        QStringLiteral("working on %1\n").arg(activeMdiChild()->currentFile());
     errorPipe(msg.toLatin1().data());
     prevChild = activeMdiChild();
   }
@@ -259,8 +265,8 @@ void CMainWindow::slotSaveLog() {
     return;
   }
 
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Open File"), "/",
-                                                  tr("Text File(*.*)"));
+  QString fileName = QFileDialog::getSaveFileName(
+      this, tr("Open File"), QStringLiteral("/"), tr("Text File(*.*)"));
   if (!fileName.isEmpty()) {
 
     QFile file(fileName);
@@ -374,17 +380,20 @@ MdiChild *CMainWindow::createMdiChild() {
 }
 
 void CMainWindow::actions() {
-  newAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
+  newAct =
+      new QAction(QIcon(QStringLiteral(":/images/new.png")), tr("&New"), this);
   newAct->setShortcuts(QKeySequence::New);
   newAct->setStatusTip(tr("Create a new file"));
   connect(newAct, &QAction::triggered, this, &CMainWindow::slotNew);
 
-  openAct = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
+  openAct = new QAction(QIcon(QStringLiteral(":/images/open.png")),
+                        tr("&Open..."), this);
   openAct->setShortcuts(QKeySequence::Open);
   openAct->setStatusTip(tr("Open an existing file"));
   connect(openAct, &QAction::triggered, this, &CMainWindow::slotOpen);
 
-  saveAct = new QAction(QIcon(":/images/save.png"), tr("&Save"), this);
+  saveAct = new QAction(QIcon(QStringLiteral(":/images/save.png")), tr("&Save"),
+                        this);
   saveAct->setShortcuts(QKeySequence::Save);
   saveAct->setStatusTip(tr("Save the document to disk"));
   connect(saveAct, &QAction::triggered, this, &CMainWindow::slotSave);
@@ -401,19 +410,22 @@ void CMainWindow::actions() {
   exitAct->setStatusTip(tr("Exit the application"));
   connect(exitAct, &QAction::triggered, qApp, &QApplication::closeAllWindows);
 
-  cutAct = new QAction(QIcon(":/images/cut.png"), tr("Cu&t"), this);
+  cutAct =
+      new QAction(QIcon(QStringLiteral(":/images/cut.png")), tr("Cu&t"), this);
   cutAct->setShortcuts(QKeySequence::Cut);
   cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                           "clipboard"));
   connect(cutAct, &QAction::triggered, this, &CMainWindow::slotCut);
 
-  copyAct = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
+  copyAct = new QAction(QIcon(QStringLiteral(":/images/copy.png")), tr("&Copy"),
+                        this);
   copyAct->setShortcuts(QKeySequence::Copy);
   copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                            "clipboard"));
   connect(copyAct, &QAction::triggered, this, &CMainWindow::slotCopy);
 
-  pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
+  pasteAct = new QAction(QIcon(QStringLiteral(":/images/paste.png")),
+                         tr("&Paste"), this);
   pasteAct->setShortcuts(QKeySequence::Paste);
   pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                             "selection"));
@@ -457,13 +469,14 @@ void CMainWindow::actions() {
   aboutAct->setStatusTip(tr("Show the application's About box"));
   connect(aboutAct, &QAction::triggered, this, &CMainWindow::slotAbout);
 
-  settingsAct =
-      new QAction(QIcon(":/images/settings.png"), tr("Settings"), this);
+  settingsAct = new QAction(QIcon(QStringLiteral(":/images/settings.png")),
+                            tr("Settings"), this);
   settingsAct->setStatusTip(tr("Show Graphviz Settings"));
   connect(settingsAct, &QAction::triggered, this, &CMainWindow::slotSettings);
   settingsAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F5));
 
-  layoutAct = new QAction(QIcon(":/images/run.png"), tr("Layout"), this);
+  layoutAct = new QAction(QIcon(QStringLiteral(":/images/run.png")),
+                          tr("Layout"), this);
   layoutAct->setStatusTip(tr("Layout the active graph"));
   connect(layoutAct, &QAction::triggered, this, [this] { slotRun(); });
   layoutAct->setShortcut(QKeySequence(Qt::Key_F5));
@@ -516,10 +529,13 @@ void CMainWindow::toolBars() {
 void CMainWindow::readSettings() {
   // first try new settings
   {
-    QSettings settings("Graphviz", "gvedit");
-    if (settings.contains("pos") && settings.contains("size")) {
-      QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-      QSize size = settings.value("size", QSize(400, 400)).toSize();
+    QSettings settings(QStringLiteral("Graphviz"), QStringLiteral("gvedit"));
+    if (settings.contains(QStringLiteral("pos")) &&
+        settings.contains(QStringLiteral("size"))) {
+      QPoint pos =
+          settings.value(QStringLiteral("pos"), QPoint(200, 200)).toPoint();
+      QSize size =
+          settings.value(QStringLiteral("size"), QSize(400, 400)).toSize();
       move(pos);
       resize(size);
       return;
@@ -527,17 +543,19 @@ void CMainWindow::readSettings() {
   }
 
   // fall back to old settings
-  QSettings settings("Trolltech", "MDI Example");
-  QPoint pos = settings.value("pos", QPoint(200, 200)).toPoint();
-  QSize size = settings.value("size", QSize(400, 400)).toSize();
+  QSettings settings(QStringLiteral("Trolltech"),
+                     QStringLiteral("MDI Example"));
+  QPoint pos =
+      settings.value(QStringLiteral("pos"), QPoint(200, 200)).toPoint();
+  QSize size = settings.value(QStringLiteral("size"), QSize(400, 400)).toSize();
   move(pos);
   resize(size);
 }
 
 void CMainWindow::writeSettings() {
-  QSettings settings("Graphviz", "gvedit");
-  settings.setValue("pos", pos());
-  settings.setValue("size", size());
+  QSettings settings(QStringLiteral("Graphviz"), QStringLiteral("gvedit"));
+  settings.setValue(QStringLiteral("pos"), pos());
+  settings.setValue(QStringLiteral("size"), size());
 }
 
 MdiChild *CMainWindow::activeMdiChild() {
