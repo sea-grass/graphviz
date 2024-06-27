@@ -519,7 +519,6 @@ else
 	  use_d="Yes"
           AC_SUBST([D_INCLUDES])
           AC_SUBST([D_LIBS])
-          AC_SUBST([INTDSIZE])
         fi
       fi
     fi
