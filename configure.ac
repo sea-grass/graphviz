@@ -483,10 +483,6 @@ else
         use_sharp="No (mcs not available)"
       else
         use_sharp="Yes"
-        SHARP_INCLUDES=
-        SHARP_LIBS=
-        AC_SUBST([SHARP_INCLUDES])
-        AC_SUBST([SHARP_LIBS])
       fi
     fi
   fi
