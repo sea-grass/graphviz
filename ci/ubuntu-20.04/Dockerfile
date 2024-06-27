@@ -52,7 +52,7 @@ libpoppler-glib-dev \
 librsvg2-dev \
 # Plugin library webp
 libwebp-dev \
-# Language extension gv_sharp & gv_ruby
+# Language extension gv_ruby
 ruby \
 # Language extension gv_go
 golang-go \

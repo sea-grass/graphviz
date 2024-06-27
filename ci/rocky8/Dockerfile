@@ -45,7 +45,6 @@ poppler-qt5 \
 # Plugin library rsvg
 librsvg2-devel \
 # Plugin library webp
-# Language extension gv_sharp & gv_ruby
 # Language extension gv_go
 # Language extension gv_guile
 guile-devel \
