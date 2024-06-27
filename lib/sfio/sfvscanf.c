@@ -179,13 +179,11 @@ int sfvscanf(FILE *f, va_list args) {
 			    n = ft->extf(&argv, ft);
 			    if (n < 0)
 				goto done;
-			    if (!(ft->flags & SFFMT_VALUE))
-				goto t_arg;
+			    assert(ft->flags & SFFMT_VALUE);
 			    if ((t_str = argv.s) &&
 				(n_str = (int) ft->size) < 0)
 				n_str = (ssize_t)strlen(t_str);
 			} else {
-			  t_arg:
 			    if ((t_str = va_arg(args, char *)))
 				 n_str = (ssize_t)strlen(t_str);
 			}
@@ -215,10 +213,8 @@ int sfvscanf(FILE *f, va_list args) {
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
 			goto done;
-		    if (ft->flags & SFFMT_VALUE)
-			v = argv.i;
-		    else
-			v = (dot <= 2) ? va_arg(args, int) : 0;
+		    assert(ft->flags & SFFMT_VALUE);
+		    v = argv.i;
 		} else
 		    v = (dot <= 2) ? va_arg(args, int) : 0;
 		if (v < 0)
@@ -263,10 +259,8 @@ int sfvscanf(FILE *f, va_list args) {
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
 			goto done;
-		    if (ft->flags & SFFMT_VALUE)
-			size = argv.i;
-		    else
-			size = va_arg(args, int);
+		    assert(ft->flags & SFFMT_VALUE);
+		    size = argv.i;
 		} else
 		    size = va_arg(args, int);
 	    }
