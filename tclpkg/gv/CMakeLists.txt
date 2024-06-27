@@ -4,6 +4,30 @@ if(enable_swig)
 
   set_property(SOURCE gv.i PROPERTY CPLUSPLUS ON)
 
+  if(enable_sharp)
+    swig_add_library(gv_sharp
+      LANGUAGE csharp
+      SOURCES gv.i gv_dummy_init.c
+    )
+    set_property(TARGET gv_sharp PROPERTY SWIG_COMPILE_OPTIONS -namespace)
+    swig_link_libraries(gv_sharp PRIVATE gvc)
+
+    get_property(gv_sharp_support
+      TARGET gv_sharp
+      PROPERTY SWIG_SUPPORT_FILES_DIRECTORY
+    )
+    install(
+      TARGETS gv_sharp
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/sharp
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+    install(
+      DIRECTORY ${gv_sharp_support}/
+      DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/sharp
+    )
+  endif()
+
   if(enable_tcl)
     swig_add_library(gv_tcl
       LANGUAGE tcl
@@ -61,6 +85,27 @@ if(enable_swig)
         FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3tcl
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
+    endif()
+
+    if(enable_sharp)
+      if(GZIP)
+        add_custom_target(man-gv_sharp ALL DEPENDS gv.3sharp.gz
+                          COMMENT "gv_sharp man page")
+        add_custom_command(
+          OUTPUT gv.3sharp.gz
+          COMMAND ${GZIP} -9 --no-name --to-stdout gv.3sharp
+            >"${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp.gz"
+          MAIN_DEPENDENCY gv.3sharp
+          COMMENT "compress gv_sharp man page")
+        install(
+          FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp.gz
+          DESTINATION ${MAN_INSTALL_DIR}/man3)
+      else()
+        install(
+          FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp
+          DESTINATION ${MAN_INSTALL_DIR}/man3
+        )
+      endif()
     endif()
   endif()
 endif()
