@@ -145,13 +145,11 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			    n = ft->extf(&argv, ft);
 			    if (n < 0)
 				goto done;
-			    if (!(ft->flags & SFFMT_VALUE))
-				goto t_arg;
+			    assert(ft->flags & SFFMT_VALUE);
 			    if ((t_str = argv.s) &&
 				(n_str = (int) ft->size) < 0)
 				n_str = (ssize_t)strlen(t_str);
 			} else {
-			  t_arg:
 			    if ((t_str = va_arg(args, char *)))
 				 n_str = (ssize_t)strlen(t_str);
 			}
@@ -222,10 +220,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		       0);
 		if (ft->extf(&argv, ft) < 0)
 		    goto done;
-		if (ft->flags & SFFMT_VALUE)
-		    v = argv.i;
-		else
-		    v = (dot <= 2) ? va_arg(args, int) : 0;
+		assert(ft->flags & SFFMT_VALUE);
+		v = argv.i;
 	    } else
 		v = dot <= 2 ? va_arg(args, int) : 0;
 	    goto dot_set;
@@ -269,10 +265,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 			   NULL, 0);
 		    if (ft->extf(&argv, ft) < 0)
 			goto done;
-		    if (ft->flags & SFFMT_VALUE)
-			size = argv.i;
-		    else
-			size = va_arg(args, int);
+		    assert(ft->flags & SFFMT_VALUE);
+		    size = argv.i;
 		} else
 		    size = va_arg(args, int);
 	    }
@@ -345,14 +339,12 @@ int sfprint(FILE *f, Sffmt_t *format) {
 	    else if (v == 0) {	/* extf did not output */
 		FMTGET(ft, form, args, fmt, size, flags, width, precis,
 		       base);
-		if (!(ft->flags & SFFMT_VALUE))
-		    goto get_val;
+		assert(ft->flags & SFFMT_VALUE);
 	    } else if (v > 0) {	/* extf output v bytes */
 		n_output += v;
 		continue;
 	    }
 	} else {
-	  get_val:
 	    switch (_Sftype[fmt]) {
 	    case SFFMT_INT:
 	    case SFFMT_UINT:
