@@ -26,7 +26,6 @@ extern "C" {
 #endif // HAVE_SYS_TYPES_H
 
 #include <limits.h>
-#include <stdarg.h>
 #include <stdio.h>
 
 /* formatting environment */
@@ -72,8 +71,7 @@ extern "C" {
      extern ssize_t _Sfi;
 
     extern int sfprint(FILE*, Sffmt_t *format);
-    extern int sfscanf(FILE*, ...);
-    extern int sfvscanf(FILE*, va_list);
+    extern int sfvscanf(FILE *, Sffmt_t *format);
 
 /* miscellaneous function analogues of fast in-line functions */
     extern ssize_t sfslen(void);

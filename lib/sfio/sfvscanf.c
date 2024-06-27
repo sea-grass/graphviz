@@ -63,9 +63,9 @@ static const unsigned char *setclass(const unsigned char *form, bool *accept) {
 
 /**
  * @param f file to be scanned
- * @param args
+ * @param ft Formatting instructions
  */
-int sfvscanf(FILE *f, va_list args) {
+int sfvscanf(FILE *f, Sffmt_t *ft) {
     int inp, shift, base, width;
     ssize_t size;
     int fmt, flags, dot, n_assign, v, n, n_input;
@@ -73,7 +73,6 @@ int sfvscanf(FILE *f, va_list args) {
     char accept[SF_MAXDIGITS];
 
     Argv_t argv;
-    Sffmt_t *ft;
 
     int argp, argn;
 
@@ -94,12 +93,11 @@ int sfvscanf(FILE *f, va_list args) {
     inp = -1;
 
     const char *form;
-    argv.ft = va_arg(args, Sffmt_t *);
+    argv.ft = ft;
 
     form = argv.ft->form;
     argn = -1;
 
-    ft = argv.ft;
     assert(ft != NULL && ft->extf != NULL);
 
   loop_fmt:

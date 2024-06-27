@@ -82,7 +82,6 @@
     <ClCompile Include="sfcvt.c" />
     <ClCompile Include="sfextern.c" />
     <ClCompile Include="sfio_f\_sfslen.c" />
-    <ClCompile Include="sfscanf.c" />
     <ClCompile Include="sftable.c" />
     <ClCompile Include="sfprint.c" />
     <ClCompile Include="sfvscanf.c" />
