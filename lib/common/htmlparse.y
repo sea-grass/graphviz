@@ -78,7 +78,8 @@ cleanCell (htmlcell_t* cp)
 /* free_citem:
  * Free cell item during parsing. This frees cell and pitem.
  */
-static void free_citem(pitem *p) {
+static void free_citem(void *item) {
+  pitem *p = item;
   cleanCell (p->u.cp);
   free (p);
 }
@@ -300,7 +301,7 @@ static void cleanup (void)
     free_html_label (HTMLstate.lbl,1);
     HTMLstate.lbl = NULL;
   }
-  cellDisc.freef = (Dtfree_f)free_citem;
+  cellDisc.freef = free_citem;
   while (tp) {
     next = tp->u.p.prev;
     cleanTbl (tp);
