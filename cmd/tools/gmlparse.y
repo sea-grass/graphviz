@@ -50,7 +50,8 @@ static void free_edge(void *edge) {
     free (p);
 }
 
-static void free_graph(gmlgraph *p) {
+static void free_graph(void *graph) {
+    gmlgraph *p = graph;
     if (!p) return;
     if (p->nodelist)
 	dtclose (p->nodelist);
@@ -88,7 +89,7 @@ static Dtdisc_t graphDisc = {
     .key = offsetof(gmlgraph, nodelist),
     .size = sizeof(Dt_t *),
     .link = offsetof(gmlgraph, link),
-    .freef = (Dtfree_f)free_graph,
+    .freef = free_graph,
 };
 
 static void
