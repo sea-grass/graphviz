@@ -166,7 +166,8 @@ static int cmpIpair(void *pair1, void *pair2) {
     return 0;
 }
 
-static void *newIpair(Ipair *objp, Dtdisc_t *disc) {
+static void *newIpair(void *p, Dtdisc_t *disc) {
+    Ipair *objp = p;
     Ipair *newp = gv_alloc(sizeof(Ipair));
 
     (void)disc;
@@ -180,7 +181,7 @@ static Dtdisc_t ipairdisc = {
     .key = offsetof(Ipair, i),
     .size = sizeof(int),
     .link = offsetof(Ipair, link),
-    .makef = (Dtmake_f)newIpair,
+    .makef = newIpair,
     .freef = free,
     .comparf = cmpIpair,
 };
