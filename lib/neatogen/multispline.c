@@ -82,16 +82,12 @@ static void *newItem(item *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeItem(item *obj) {
-    free(obj);
-}
-
 static Dtdisc_t itemdisc = {
     .key = offsetof(item, a),
     .size = 2 * sizeof(int),
     .link = offsetof(item, link),
     .makef = (Dtmake_f)newItem,
-    .freef = (Dtfree_f)freeItem,
+    .freef = free,
     .comparf = cmpItem,
 };
 
