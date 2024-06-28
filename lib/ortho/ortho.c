@@ -261,7 +261,8 @@ static void freeChannel(void *chan) {
     free (cp);
 }
 
-static void freeChanItem(chanItem *cp) {
+static void freeChanItem(void *item) {
+    chanItem *cp = item;
     dtclose (cp->chans);
     free (cp);
 }
@@ -311,7 +312,7 @@ static Dtdisc_t chanItemDisc = {
     sizeof(double),
     offsetof(chanItem,link),
     0,
-    (Dtfree_f)freeChanItem,
+    freeChanItem,
     dcmpid,
 };
 
