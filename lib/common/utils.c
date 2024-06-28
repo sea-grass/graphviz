@@ -1578,15 +1578,11 @@ typedef struct {
     Agraph_t* clp;
 } clust_t;
 
-static void free_clust(clust_t *clp) {
-    free(clp);
-}
-
 static Dtdisc_t strDisc = {
     .key = offsetof(clust_t, name),
     .size = -1,
     .link = offsetof(clust_t, link),
-    .freef = (Dtfree_f)free_clust,
+    .freef = free,
 };
 
 static void fillMap (Agraph_t* g, Dt_t* map)
