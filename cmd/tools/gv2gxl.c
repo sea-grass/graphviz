@@ -62,16 +62,12 @@ static namev_t *make_nitem(namev_t *objp, Dtdisc_t *disc) {
     return np;
 }
 
-static void free_nitem(namev_t *np) {
-    free(np);
-}
-
 static Dtdisc_t nameDisc = {
     offsetof(namev_t, name),
     -1,
     offsetof(namev_t, link),
     (Dtmake_f) make_nitem,
-    (Dtfree_f) free_nitem,
+    free,
     NULL,
 };
 
