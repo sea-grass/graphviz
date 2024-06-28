@@ -122,16 +122,12 @@ static mpair *mkMPair(mpair *obj, MPairDisc *disc) {
     return ap;
 }
 
-static void freeMPair(mpair *ap) {
-  free(ap);
-}
-
 static Dtdisc_t intMPairDisc = {
     offsetof(mpair, id),
     sizeof(point),
     offsetof(mpair, link),
     (Dtmake_f) mkMPair,
-    (Dtfree_f) freeMPair,
+    free,
     cmppair,
 };
 
