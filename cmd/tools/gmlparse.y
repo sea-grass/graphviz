@@ -43,7 +43,8 @@ static void free_node(void *node) {
     free (p);
 }
 
-static void free_edge(gmledge *p) {
+static void free_edge(void *edge) {
+    gmledge *p = edge;
     if (!p) return;
     if (p->attrlist) dtclose (p->attrlist);
     free (p);
@@ -73,7 +74,7 @@ static Dtdisc_t edgeDisc = {
     .key = offsetof(gmledge, attrlist),
     .size = sizeof(Dt_t *),
     .link = offsetof(gmledge, link),
-    .freef = (Dtfree_f)free_edge,
+    .freef = free_edge,
 };
 
 static Dtdisc_t attrDisc = {
