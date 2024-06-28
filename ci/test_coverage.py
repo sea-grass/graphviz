@@ -58,7 +58,8 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
 
     # files that are generated but only need to be excluded during init
     init_generated_files = [
-        cwd / "build/tclpkg/gv/gv_tcl.cpp/gvTCL_wrap.cxx",
+        cwd / "build/tclpkg/gv/CMakeFiles/gv_sharp.dir/gvCSHARP_wrap.cxx",
+        cwd / "build/tclpkg/gv/CMakeFiles/gv_tcl.dir/gvTCL_wrap.cxx",
     ]
 
     excluded_files = generated_files

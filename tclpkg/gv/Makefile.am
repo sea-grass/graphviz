@@ -22,9 +22,9 @@ pkgsharpdir = $(pkglibdir)/sharp
 SHARP_data = gv.cs gvPINVOKE.cs SWIGTYPE_p_Agraph_t.cs SWIGTYPE_p_Agnode_t.cs SWIGTYPE_p_Agedge_t.cs SWIGTYPE_p_Agsym_t.cs SWIGTYPE_p_FILE.cs
 nodist_libgv_sharp_la_SOURCES = gv_sharp.cpp $(SHARP_data)
 libgv_sharp_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-libgv_sharp_la_LIBADD = $(BASELIBS) $(SHARP_LIBS)
+libgv_sharp_la_LIBADD = $(BASELIBS)
 libgv_sharp_la_LDFLAGS = -module -avoid-version
-libgv_sharp_la_CPPFLAGS = $(BASECPPFLAGS) $(SHARP_INCLUDES)
+libgv_sharp_la_CPPFLAGS = $(BASECPPFLAGS)
 $(SHARP_data): gv_sharp.cpp
 gv_sharp.cpp: gv.i
 	$(SWIG) -c++ -csharp -namespace gv -o $@ $(srcdir)/gv.i

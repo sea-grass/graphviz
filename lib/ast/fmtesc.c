@@ -87,11 +87,6 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
 		    c = '0' + (c & 07);
 		    break;
 		}
-	    } else if (c == '\\') {
-		escaped = 1;
-		*b++ = (char)c;
-		if (*s)
-		    c = *s++;
 	    } else if (qe && strchr(qe, c)) {
 		escaped = 1;
 		*b++ = '\\';

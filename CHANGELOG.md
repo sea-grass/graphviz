@@ -9,11 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Support for building the Graphviz TCL bindings has been integrated into the
-  CMake build system. This is controllable by the `-Dwith_tclpkg={AUTO|ON|OFF}`
+  CMake build system. This is controllable by the `-Denable_tcl={AUTO|ON|OFF}`
   option.
 - Support for building the SWIG-generated TCL language bindings has been
   integrated into the CMake build system. This is controllable by the
-  `-Dwith_swig={AUTO|ON|OFF}` option.
+  `-Denable_swig={AUTO|ON|OFF}` option.
+- Support for building the SWIG-generated C# language bindings has been
+  integrated into the CMake build system. This is controllable by the
+  `-Denable_sharp={AUTO|ON|OFF}` option.
 
 ### Changed
 

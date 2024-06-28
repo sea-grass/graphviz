@@ -1,4 +1,4 @@
-if(with_tclpkg)
+if(enable_tcl)
   add_subdirectory(gdtclft)
   add_subdirectory(tcldot)
   add_subdirectory(tclhandle)

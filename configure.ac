@@ -483,10 +483,6 @@ else
         use_sharp="No (mcs not available)"
       else
         use_sharp="Yes"
-        SHARP_INCLUDES=
-        SHARP_LIBS=
-        AC_SUBST([SHARP_INCLUDES])
-        AC_SUBST([SHARP_LIBS])
       fi
     fi
   fi
@@ -519,7 +515,6 @@ else
 	  use_d="Yes"
           AC_SUBST([D_INCLUDES])
           AC_SUBST([D_LIBS])
-          AC_SUBST([INTDSIZE])
         fi
       fi
     fi
