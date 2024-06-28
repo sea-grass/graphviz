@@ -110,12 +110,9 @@ typedef struct {
     int v;
 } mpair;
 
-typedef struct {
-    Dtdisc_t disc;
-} MPairDisc;
-
-static mpair *mkMPair(mpair *obj, MPairDisc *disc) {
+static void *mkMPair(void *p, Dtdisc_t *disc) {
     (void)disc;
+    mpair *obj = p;
     mpair *ap = gv_alloc(sizeof(mpair));
     ap->id = obj->id;
     ap->v = obj->v;
@@ -126,7 +123,7 @@ static Dtdisc_t intMPairDisc = {
     offsetof(mpair, id),
     sizeof(point),
     offsetof(mpair, link),
-    (Dtmake_f) mkMPair,
+    mkMPair,
     free,
     cmppair,
 };
