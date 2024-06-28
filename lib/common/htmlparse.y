@@ -113,7 +113,8 @@ static void free_fitem(void *item) {
     free (p);
 }
 
-static void free_fspan(fspan *p) {
+static void free_fspan(void *span) {
+    fspan *p = span;
     textspan_t* ti;
 
     if (p->lp.nitems) {
@@ -314,7 +315,7 @@ static void cleanup (void)
   dtclear (HTMLstate.fitemList);
   fstrDisc.freef = free;
 
-  fspanDisc.freef = (Dtfree_f)free_fspan;
+  fspanDisc.freef = free_fspan;
   dtclear (HTMLstate.fspanList);
   fspanDisc.freef = free;
 
