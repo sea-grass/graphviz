@@ -118,25 +118,19 @@ typedef struct {
 
 typedef struct {
     Dtdisc_t disc;
-    mpair *flist;
 } MPairDisc;
 
 static mpair *mkMPair(mpair *obj, MPairDisc *disc) {
-    mpair *ap;
-
-    if (disc->flist) {
-	ap = disc->flist;
-	disc->flist = (mpair *) (ap->link.right);
-    } else
-	ap = gv_alloc(sizeof(mpair));
+    (void)disc;
+    mpair *ap = gv_alloc(sizeof(mpair));
     ap->id = obj->id;
     ap->v = obj->v;
     return ap;
 }
 
 static void freeMPair(mpair *ap, MPairDisc *disc) {
-    ap->link.right = (Dtlink_t *) (disc->flist);
-    disc->flist = ap;
+  (void)disc;
+  free(ap);
 }
 
 static Dtdisc_t intMPairDisc = {
@@ -153,7 +147,6 @@ PointMap *newPM(void)
     MPairDisc *dp = gv_alloc(sizeof(MPairDisc));
 
     dp->disc = intMPairDisc;
-    dp->flist = 0;
 
     return (dtopen(&(dp->disc), Dtoset));
 }
@@ -166,14 +159,8 @@ void clearPM(PointMap * ps)
 void freePM(PointMap * ps)
 {
     MPairDisc *dp = (MPairDisc *) (ps->disc);
-    mpair *p;
-    mpair *next;
 
     dtclose(ps);
-    for (p = dp->flist; p; p = next) {
-	next = (mpair *) (p->link.right);
-	free(p);
-    }
     free(dp);
 }
 
