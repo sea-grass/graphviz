@@ -3440,14 +3440,10 @@ void emit_graph(GVJ_t * job, graph_t * g)
     emit_end_graph(job);
 }
 
-static void free_string_entry(char *key) {
-    free(key);
-}
-
 static Dict_t *strings;
 static Dtdisc_t stringdict = {
     .link = -1, // link - allocate separate holder objects
-    .freef = (Dtfree_f)free_string_entry,
+    .freef = free,
 };
 
 bool emit_once(char *str) {
