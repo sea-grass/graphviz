@@ -76,7 +76,8 @@ typedef struct {
     char *name;
 } idv_t;
 
-static void free_iditem(idv_t *idp) {
+static void free_iditem(void *idv) {
+    idv_t *idp = idv;
     free(idp->name);
     free(idp);
 }
@@ -86,7 +87,7 @@ static Dtdisc_t idDisc = {
     -1,
     offsetof(idv_t, link),
     NULL,
-    (Dtfree_f) free_iditem,
+    free_iditem,
     NULL,
 };
 
