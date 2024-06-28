@@ -46,7 +46,8 @@ static struct {
  * Free row. This closes and frees row's list, then
  * the pitem itself is freed.
  */
-static void free_ritem(pitem *p) {
+static void free_ritem(void *item) {
+  pitem *p = item;
   dtclose (p->u.rp);
   free (p);
 }
@@ -94,7 +95,7 @@ static Dtdisc_t rowDisc = {
     .key = offsetof(pitem, u),
     .size = sizeof(void *),
     .link = offsetof(pitem, link),
-    .freef = (Dtfree_f)free_ritem,
+    .freef = free_ritem,
 };
 static Dtdisc_t cellDisc = {
     .key = offsetof(pitem, u),
