@@ -33,7 +33,7 @@ static gmledge* E;
 static Dt_t* L;
 static gv_stack_t liststk;
 
-static void free_attr(gmlattr *p);
+static void free_attr(void *attr);
 static char *sortToStr(unsigned short sort);
 
 static void free_node(gmlnode *p) {
@@ -79,7 +79,7 @@ static Dtdisc_t attrDisc = {
     .key = offsetof(gmlattr, name),
     .size = sizeof(char *),
     .link = offsetof(gmlattr, link),
-    .freef = (Dtfree_f)free_attr,
+    .freef = free_attr,
 };
 
 static Dtdisc_t graphDisc = {
@@ -352,7 +352,8 @@ alistitem : NAME INTEGER { $$ = mkAttr ($1, 0, INTEGER, $2, 0); }
 
 %%
 
-static void free_attr(gmlattr *p) {
+static void free_attr(void *attr) {
+    gmlattr *p = attr;
     if (!p) return;
     if (p->kind == LIST && p->u.lp)
 	dtclose (p->u.lp);
