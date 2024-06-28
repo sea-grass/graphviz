@@ -144,11 +144,7 @@ static Dtdisc_t intMPairDisc = {
 
 PointMap *newPM(void)
 {
-    MPairDisc *dp = gv_alloc(sizeof(MPairDisc));
-
-    dp->disc = intMPairDisc;
-
-    return (dtopen(&(dp->disc), Dtoset));
+  return dtopen(&intMPairDisc, Dtoset);
 }
 
 void clearPM(PointMap * ps)
@@ -158,10 +154,7 @@ void clearPM(PointMap * ps)
 
 void freePM(PointMap * ps)
 {
-    MPairDisc *dp = (MPairDisc *) (ps->disc);
-
     dtclose(ps);
-    free(dp);
 }
 
 int insertPM(PointMap * pm, int x, int y, int value)
