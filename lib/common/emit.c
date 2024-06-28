@@ -3440,7 +3440,6 @@ void emit_graph(GVJ_t * job, graph_t * g)
     emit_end_graph(job);
 }
 
-/* support for stderr_once */
 static void free_string_entry(char *key) {
     free(key);
 }
