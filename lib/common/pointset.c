@@ -26,10 +26,6 @@ static pair *mkPair(pointf p) {
     return pp;
 }
 
-static void freePair(pair *pp) {
-    free (pp);
-}
-
 static int cmppair(void *k1, void *k2) {
     const pointf *key1 = k1;
     const pointf *key2 = k2;
@@ -50,7 +46,7 @@ static Dtdisc_t intPairDisc = {
     sizeof(pointf),
     offsetof(pair, link),
     0,
-    (Dtfree_f) freePair,
+    free,
     cmppair,
 };
 
