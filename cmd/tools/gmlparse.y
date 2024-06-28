@@ -36,7 +36,8 @@ static gv_stack_t liststk;
 static void free_attr(void *attr);
 static char *sortToStr(unsigned short sort);
 
-static void free_node(gmlnode *p) {
+static void free_node(void *node) {
+    gmlnode *p = node;
     if (!p) return;
     if (p->attrlist) dtclose (p->attrlist);
     free (p);
@@ -65,7 +66,7 @@ static Dtdisc_t nodeDisc = {
     .key = offsetof(gmlnode, attrlist),
     .size = sizeof(Dt_t *),
     .link = offsetof(gmlnode, link),
-    .freef = (Dtfree_f)free_node,
+    .freef = free_node,
 };
 
 static Dtdisc_t edgeDisc = {
