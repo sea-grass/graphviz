@@ -23,10 +23,6 @@ static void *mkIntItem(intitem *obj, Dtdisc_t *disc) {
     return np;
 }
 
-static void freeIntItem(intitem *obj) {
-    free (obj);
-}
-
 static int cmpid(void *k1, void *k2) {
   const size_t *key1 = k1;
   const size_t *key2 = k2;
@@ -40,7 +36,7 @@ static Dtdisc_t intSetDisc = {
     sizeof(int),
     offsetof(intitem,link),
     (Dtmake_f)mkIntItem,
-    (Dtfree_f)freeIntItem,
+    free,
     cmpid,
 };
 
