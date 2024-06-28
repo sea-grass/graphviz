@@ -107,7 +107,8 @@ typedef struct {
     htextspan_t  lp;
 } fspan;
 
-static void free_fitem(fitem *p) {
+static void free_fitem(void *item) {
+    fitem *p = item;
     free (p->ti.str);
     free (p);
 }
@@ -309,7 +310,7 @@ static void cleanup (void)
   }
   cellDisc.freef = free;
 
-  fstrDisc.freef = (Dtfree_f)free_fitem;
+  fstrDisc.freef = free_fitem;
   dtclear (HTMLstate.fitemList);
   fstrDisc.freef = free;
 
