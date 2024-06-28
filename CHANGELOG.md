@@ -70,6 +70,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking**: the `d` and `disc` parameters have been removed from
   `Dtcompar_f`.
 - CentOS packages are no longer provided.
+- In the CMake build system, the minimum required CMake version has been
+  increased to 3.14.1.
 
 ### Fixed
 
