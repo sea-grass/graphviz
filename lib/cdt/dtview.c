@@ -17,7 +17,7 @@ static void* dtvsearch(Dt_t* dt, void* obj, int type)
 
 	/* these operations only happen at the top level */
 	if(type&(DT_INSERT|DT_DELETE|DT_CLEAR|DT_RENEW))
-		return (*(dt->meth->searchf))(dt,obj,type);
+		return dt->meth->searchf(dt, obj, type);
 
 	if((type&(DT_MATCH|DT_SEARCH)) || /* order sets first/last done below */
 	   ((type&(DT_FIRST|DT_LAST)) && !(dt->meth->type&(DT_OBAG|DT_OSET)) ) )
