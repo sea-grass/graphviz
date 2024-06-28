@@ -23,9 +23,7 @@ static void *mkIntItem(intitem *obj, Dtdisc_t *disc) {
     return np;
 }
 
-static void freeIntItem(intitem *obj, Dtdisc_t *disc) {
-    (void)disc;
-
+static void freeIntItem(intitem *obj) {
     free (obj);
 }
 

@@ -602,8 +602,7 @@ typedef struct {
     int v;
 } intm;
 
-static void freef(intm *obj, Dtdisc_t *disc) {
-    (void)disc;
+static void freef(intm *obj) {
     free(obj->id);
     free(obj);
 }

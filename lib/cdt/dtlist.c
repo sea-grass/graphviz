@@ -36,7 +36,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 			{	for(r = dt->data->head; r; r = t)
 				{	t = r->right;
 					if(disc->freef)
-						disc->freef(_DTOBJ(r, lk), disc);
+						disc->freef(_DTOBJ(r, lk));
 					if(disc->link < 0)
 						free(r);
 				}
@@ -59,7 +59,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 				((Dthold_t*)r)->obj = obj;
 			else
 			{	if(disc->makef && disc->freef && (type&DT_INSERT))
-					disc->freef(obj, disc);
+					disc->freef(obj);
 				return NULL;
 			}
 		}
@@ -115,7 +115,7 @@ static void* dtlist(Dt_t* dt, void* obj, int type)
 
 		obj = _DTOBJ(r,lk);
 		if(disc->freef && (type&DT_DELETE))
-			disc->freef(obj, disc);
+			disc->freef(obj);
 		if(disc->link < 0)
 			free(r);
 		return obj;

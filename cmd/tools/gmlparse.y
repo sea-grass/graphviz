@@ -33,28 +33,22 @@ static gmledge* E;
 static Dt_t* L;
 static gv_stack_t liststk;
 
-static void free_attr(gmlattr *p, Dtdisc_t *ds);
+static void free_attr(gmlattr *p);
 static char *sortToStr(unsigned short sort);
 
-static void free_node(gmlnode *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_node(gmlnode *p) {
     if (!p) return;
     if (p->attrlist) dtclose (p->attrlist);
     free (p);
 }
 
-static void free_edge(gmledge *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_edge(gmledge *p) {
     if (!p) return;
     if (p->attrlist) dtclose (p->attrlist);
     free (p);
 }
 
-static void free_graph(gmlgraph *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_graph(gmlgraph *p) {
     if (!p) return;
     if (p->nodelist)
 	dtclose (p->nodelist);
@@ -108,15 +102,15 @@ cleanup (void)
 	L = NULL;
     }
     if (N) {
-	free_node(N, 0);
+	free_node(N);
 	N = NULL;
     }
     if (E) {
-	free_edge(E, 0);
+	free_edge(E);
 	E = NULL;
     }
     if (G) {
-	free_graph(G, 0);
+	free_graph(G);
 	G = NULL;
     }
 }
@@ -358,9 +352,7 @@ alistitem : NAME INTEGER { $$ = mkAttr ($1, 0, INTEGER, $2, 0); }
 
 %%
 
-static void free_attr(gmlattr *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_attr(gmlattr *p) {
     if (!p) return;
     if (p->kind == LIST && p->u.lp)
 	dtclose (p->u.lp);

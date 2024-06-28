@@ -21,9 +21,7 @@ static edgelistitem *mkItem(edgelistitem *obj, Dtdisc_t *disc) {
     return ap;
 }
 
-static void freeItem(edgelistitem *obj, Dtdisc_t *disc) {
-    (void)disc;
-
+static void freeItem(edgelistitem *obj) {
     free(obj);
 }
 

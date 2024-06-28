@@ -82,8 +82,7 @@ static void *newItem(item *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeItem(item *obj, Dtdisc_t *disc) {
-    (void)disc;
+static void freeItem(item *obj) {
     free(obj);
 }
 
@@ -180,8 +179,7 @@ static void *newIpair(Ipair *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeIpair(Ipair *obj, Dtdisc_t *disc) {
-    (void)disc;
+static void freeIpair(Ipair *obj) {
     free(obj);
 }
 

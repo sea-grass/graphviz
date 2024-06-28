@@ -73,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CentOS packages are no longer provided.
 - In the CMake build system, the minimum required CMake version has been
   increased to 3.14.1.
+- **Breaking**: the `disc` parameter has been removed from `Dtfree_f`.
 
 ### Fixed
 

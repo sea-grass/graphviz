@@ -90,9 +90,7 @@ static namev_t *make_nitem(namev_t *objp, Dtdisc_t *disc){
     return np;
 }
 
-static void free_nitem(namev_t *np, Dtdisc_t *disc) {
-    (void)disc;
-
+static void free_nitem(namev_t *np) {
     free(np->unique_name);
     free(np);
 }

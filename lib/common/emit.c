@@ -3441,8 +3441,7 @@ void emit_graph(GVJ_t * job, graph_t * g)
 }
 
 /* support for stderr_once */
-static void free_string_entry(char *key, Dtdisc_t *disc) {
-    (void)disc;
+static void free_string_entry(char *key) {
     free(key);
 }
 

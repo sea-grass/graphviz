@@ -26,9 +26,7 @@ static pair *mkPair(pointf p) {
     return pp;
 }
 
-static void freePair(pair *pp, Dtdisc_t *disc) {
-    (void)disc;
-
+static void freePair(pair *pp) {
     free (pp);
 }
 
@@ -128,8 +126,7 @@ static mpair *mkMPair(mpair *obj, MPairDisc *disc) {
     return ap;
 }
 
-static void freeMPair(mpair *ap, MPairDisc *disc) {
-  (void)disc;
+static void freeMPair(mpair *ap) {
   free(ap);
 }
 

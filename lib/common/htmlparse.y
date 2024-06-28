@@ -46,9 +46,7 @@ static struct {
  * Free row. This closes and frees row's list, then
  * the pitem itself is freed.
  */
-static void free_ritem(pitem *p, Dtdisc_t *ds) {
-  (void)ds;
-
+static void free_ritem(pitem *p) {
   dtclose (p->u.rp);
   free (p);
 }
@@ -57,9 +55,7 @@ static void free_ritem(pitem *p, Dtdisc_t *ds) {
  * Generic Dt free. Only frees container, assuming contents
  * have been copied elsewhere.
  */
-static void free_item(void *p, Dtdisc_t *ds) {
-  (void)ds;
-
+static void free_item(void *p) {
   free (p);
 }
 
@@ -89,9 +85,7 @@ cleanCell (htmlcell_t* cp)
 /* free_citem:
  * Free cell item during parsing. This frees cell and pitem.
  */
-static void free_citem(pitem *p, Dtdisc_t *ds) {
-  (void)ds;
-
+static void free_citem(pitem *p) {
   cleanCell (p->u.cp);
   free (p);
 }
@@ -106,7 +100,7 @@ static Dtdisc_t cellDisc = {
     .key = offsetof(pitem, u),
     .size = sizeof(void *),
     .link = offsetof(pitem, link),
-    .freef = (Dtfree_f)free_item,
+    .freef = free_item,
 };
 
 typedef struct {
@@ -119,16 +113,12 @@ typedef struct {
     htextspan_t  lp;
 } fspan;
 
-static void free_fitem(fitem *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_fitem(fitem *p) {
     free (p->ti.str);
     free (p);
 }
 
-static void free_fspan(fspan *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_fspan(fspan *p) {
     textspan_t* ti;
 
     if (p->lp.nitems) {
@@ -144,12 +134,12 @@ static void free_fspan(fspan *p, Dtdisc_t *ds) {
 
 static Dtdisc_t fstrDisc = {
     .link = offsetof(fitem, link),
-    .freef = (Dtfree_f)free_item,
+    .freef = free_item,
 };
 
 static Dtdisc_t fspanDisc = {
     .link = offsetof(fspan, link),
-    .freef = (Dtfree_f)free_item,
+    .freef = free_item,
 };
 
 /* appendFItemList:
@@ -323,15 +313,15 @@ static void cleanup (void)
     cleanTbl (tp);
     tp = next;
   }
-  cellDisc.freef = (Dtfree_f)free_item;
+  cellDisc.freef = free_item;
 
   fstrDisc.freef = (Dtfree_f)free_fitem;
   dtclear (HTMLstate.fitemList);
-  fstrDisc.freef = (Dtfree_f)free_item;
+  fstrDisc.freef = free_item;
 
   fspanDisc.freef = (Dtfree_f)free_fspan;
   dtclear (HTMLstate.fspanList);
-  fspanDisc.freef = (Dtfree_f)free_item;
+  fspanDisc.freef = free_item;
 
   freeFontstack();
 }

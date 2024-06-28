@@ -778,8 +778,7 @@ static void *newItem(item *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeItem(item *obj, Dtdisc_t *disc) {
-    (void)disc;
+static void freeItem(item *obj) {
     free(obj);
 }
 
@@ -1583,8 +1582,7 @@ typedef struct {
     Agraph_t* clp;
 } clust_t;
 
-static void free_clust(clust_t *clp, Dtdisc_t *disc) {
-    (void)disc;
+static void free_clust(clust_t *clp) {
     free(clp);
 }
 

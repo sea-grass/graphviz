@@ -33,7 +33,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 						RROTATE(root,t);
 					t = root->right;
 					if(disc->freef)
-						disc->freef(_DTOBJ(root, lk), disc);
+						disc->freef(_DTOBJ(root, lk));
 					if(disc->link < 0)
 						free(root);
 				} while((root = t) );
@@ -211,7 +211,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		dt_delete:
 			obj = _DTOBJ(root,lk);
 			if(disc->freef && (type&DT_DELETE))
-				disc->freef(obj, disc);
+				disc->freef(obj);
 			if(disc->link < 0)
 				free(root);
 			if((dt->data->size -= 1) < 0)
@@ -231,7 +231,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 		else if(type&DT_RENEW) /* a duplicate */
 		{	if(dt->meth->type&DT_OSET)
 			{	if(disc->freef)
-					disc->freef(obj, disc);
+					disc->freef(obj);
 				if(disc->link < 0)
 					free(me);
 			}
@@ -274,7 +274,7 @@ static void* dttree(Dt_t* dt, void* obj, int type)
 						((Dthold_t*)root)->obj = obj;
 					else if(disc->makef && disc->freef &&
 						(type&DT_INSERT))
-						disc->freef(obj, disc);
+						disc->freef(obj);
 				}
 			}
 			if(root)

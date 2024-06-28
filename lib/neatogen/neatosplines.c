@@ -117,8 +117,7 @@ static void *newitem(edgeitem *obj, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeitem(edgeitem *obj, Dtdisc_t *disc) {
-    (void)disc;
+static void freeitem(edgeitem *obj) {
     free(obj);
 }
 

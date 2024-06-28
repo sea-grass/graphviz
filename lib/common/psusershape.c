@@ -21,8 +21,7 @@
 static int N_EPSF_files;
 static Dict_t *EPSF_contents;
 
-static void ps_image_free(usershape_t *p, Dtdisc_t *disc) {
-    (void)disc;
+static void ps_image_free(usershape_t *p) {
     free(p->data);
 }
 
