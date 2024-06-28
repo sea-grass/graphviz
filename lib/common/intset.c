@@ -15,8 +15,9 @@
 #include <stddef.h>
 #include <common/intset.h>
 
-static void *mkIntItem(intitem *obj, Dtdisc_t *disc) {
+static void *mkIntItem(void *p, Dtdisc_t *disc) {
     (void)disc;
+    intitem *obj = p;
 
     intitem* np = gv_alloc(sizeof(intitem));
     np->id = obj->id;
@@ -35,7 +36,7 @@ static Dtdisc_t intSetDisc = {
     offsetof(intitem,id),
     sizeof(int),
     offsetof(intitem,link),
-    (Dtmake_f)mkIntItem,
+    mkIntItem,
     free,
     cmpid,
 };
