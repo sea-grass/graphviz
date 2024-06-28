@@ -175,16 +175,12 @@ static void *newIpair(Ipair *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeIpair(Ipair *obj) {
-    free(obj);
-}
-
 static Dtdisc_t ipairdisc = {
     .key = offsetof(Ipair, i),
     .size = sizeof(int),
     .link = offsetof(Ipair, link),
     .makef = (Dtmake_f)newIpair,
-    .freef = (Dtfree_f)freeIpair,
+    .freef = free,
     .comparf = cmpIpair,
 };
 
