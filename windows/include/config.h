@@ -165,9 +165,6 @@
 /* Define if triangle.[ch] are available. */
 /* #undef HAVE_TRIANGLE */
 
-/* Define to 1 if you have the <X11/Intrinsic.h> header file. */
-/* #undef HAVE_X11_INTRINSIC_H */
-
 /* Define to 1 if you have the <X11/Xaw/Text.h> header file. */
 /* #undef HAVE_X11_XAW_TEXT_H */
 
