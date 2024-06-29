@@ -24,27 +24,29 @@ namespace GVC {
  * @brief The GVLayout class represents a graph layout
  */
 
-class GVLAYOUT_API GVLayout {
+class GVLayout {
 public:
-  GVLayout(const std::shared_ptr<GVContext> &gvc,
-           const std::shared_ptr<CGraph::AGraph> &g, const std::string &engine);
-  GVLayout(GVContext &&gvc, CGraph::AGraph &&g, const std::string &engine);
-  GVLayout(std::shared_ptr<GVContext> gvc, CGraph::AGraph &&g,
-           const std::string &engine);
-  GVLayout(GVContext &&gvc, std::shared_ptr<CGraph::AGraph> g,
-           const std::string &engine);
-  ~GVLayout();
+  GVLAYOUT_API GVLayout(const std::shared_ptr<GVContext> &gvc,
+                        const std::shared_ptr<CGraph::AGraph> &g,
+                        const std::string &engine);
+  GVLAYOUT_API GVLayout(GVContext &&gvc, CGraph::AGraph &&g,
+                        const std::string &engine);
+  GVLAYOUT_API GVLayout(std::shared_ptr<GVContext> gvc, CGraph::AGraph &&g,
+                        const std::string &engine);
+  GVLAYOUT_API GVLayout(GVContext &&gvc, std::shared_ptr<CGraph::AGraph> g,
+                        const std::string &engine);
+  GVLAYOUT_API ~GVLayout();
 
   // default copy since we manage resources through movable types
-  GVLayout(const GVLayout &) = default;
-  GVLayout &operator=(const GVLayout &) = default;
+  GVLAYOUT_API GVLayout(const GVLayout &) = default;
+  GVLAYOUT_API GVLayout &operator=(const GVLayout &) = default;
 
   // default move since we manage resources through movable types
-  GVLayout(GVLayout &&) = default;
-  GVLayout &operator=(GVLayout &&) = default;
+  GVLAYOUT_API GVLayout(GVLayout &&) = default;
+  GVLAYOUT_API GVLayout &operator=(GVLayout &&) = default;
 
   // render the layout in the specified format
-  GVRenderData render(const std::string &format) const;
+  GVLAYOUT_API GVRenderData render(const std::string &format) const;
 
 private:
   std::shared_ptr<GVContext> m_gvc;
