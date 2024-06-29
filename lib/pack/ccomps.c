@@ -456,7 +456,6 @@ subgInduce(Agraph_t * root, Agraph_t * g, int inCluster)
     Agraph_t *proj;
     int in_cluster;
 
-/* fprintf (stderr, "subgInduce %s inCluster %d\n", agnameof(root), inCluster); */
     for (subg = agfstsubg(root); subg; subg = agnxtsubg(subg)) {
 	if (GD_cc_subg(subg))
 	    continue;
