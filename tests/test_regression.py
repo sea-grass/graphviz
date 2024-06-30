@@ -31,7 +31,6 @@ from gvtest import (  # pylint: disable=wrong-import-position
     ROOT,
     dot,
     gvpr,
-    is_centos,
     is_mingw,
     is_rocky,
     is_rocky_8,
@@ -943,9 +942,7 @@ def test_1554():
     ), "computation exceeded bounds"
 
 
-@pytest.mark.skipif(
-    is_centos() or is_rocky_8(), reason="insufficient XPath support on this platform"
-)
+@pytest.mark.skipif(is_rocky_8(), reason="insufficient XPath support on this platform")
 def test_1585():
     """
     clustering nodes should not reverse their horizontal layout
@@ -2440,7 +2437,7 @@ def test_2215():
 
 
 @pytest.mark.xfail(
-    (platform.system() == "Windows" and not is_mingw()) or is_centos() or is_rocky(),
+    (platform.system() == "Windows" and not is_mingw()) or is_rocky(),
     strict=True,
     reason="https://gitlab.com/graphviz/graphviz/-/issues/2241",
 )
@@ -3744,7 +3741,7 @@ def test_2471():
 
 
 @pytest.mark.xfail(
-    is_centos() or is_rocky_8(),
+    is_rocky_8(),
     reason="Cairo is <v1.16 or malfunctions",
     strict=True,
 )

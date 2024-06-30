@@ -149,13 +149,6 @@ def gvpr(program: Path) -> str:
     )
 
 
-def is_centos() -> bool:
-    """
-    is the current environment CentOS?
-    """
-    return freedesktop_os_release().get("ID") == "centos"
-
-
 def is_cmake() -> bool:
     """was the Graphviz under test built with CMake?"""
     return os.getenv("build_system") == "cmake"

@@ -281,18 +281,6 @@ portable-source:
     <<: *test_definition_including_ctest
     image: "$CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA"
 
-centos7-build:
-    <<: *rpm_build_definition
-    needs:
-        - job: docker_build_centos7
-          artifacts: false
-        - job: portable-source
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: centos7
-
 rocky8-build:
     <<: *rpm_build_definition
     needs:
@@ -753,27 +741,6 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
     variables:
       IMAGE: ubuntu-24.04
 
-centos7-cmake-build:
-    <<: *rpm_build_definition
-    needs:
-        - job: docker_build_centos7
-          artifacts: false
-    before_script:
-        - export build_system="cmake"
-        # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
-        - export CXXFLAGS="-Werror -Wno-deprecated-declarations -Wno-error=missing-braces"
-        - export CMAKE_OPTIONS="-Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
-        # disable TCL components for which FindTCL.cmake triggers a -Wdev warning
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_tcl=OFF"
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: centos7
-
 rocky8-cmake-build:
     <<: *rpm_build_definition
     needs:
@@ -1079,18 +1046,6 @@ ubuntu-24.04-test:
     variables:
       IMAGE: ubuntu-24.04
 
-centos7-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="autotools"
-    needs:
-        - job: "centos7-build"
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: centos7
-
 rocky8-test:
     <<: *linux_test_definition
     before_script:
@@ -1229,21 +1184,6 @@ ubuntu-24.04-cmake-ASan-test-including-ctest:
         - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-24.04
-
-centos7-cmake-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="cmake"
-        - python3 gen_version.py --output GRAPHVIZ_VERSION
-        # Graphviz libs are installed in /usr/lib, but Centos 7 doesn't look there by default
-        - export LD_LIBRARY_PATH=/usr/lib
-    needs:
-        - job: "centos7-cmake-build"
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: centos7
 
 rocky8-cmake-test:
     <<: *linux_test_definition
@@ -1427,11 +1367,6 @@ deployment:
     - docker tag $CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE/$IMAGE:latest
     - docker push     $CI_REGISTRY_IMAGE/$IMAGE:latest
 
-docker_build_centos7:
-  <<: *docker_build_definition
-  variables:
-    IMAGE: centos7
-
 docker_build_rocky8:
   <<: *docker_build_definition
   variables:
@@ -1471,13 +1406,6 @@ docker_build_ubuntu-24.04:
   <<: *docker_build_definition
   variables:
     IMAGE: ubuntu-24.04
-
-docker_push_centos7:
-  <<: *docker_push_definition
-  variables:
-    IMAGE: centos7
-  needs:
-    - docker_build_centos7
 
 docker_push_rocky8:
   <<: *docker_push_definition
