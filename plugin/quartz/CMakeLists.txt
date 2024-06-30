@@ -25,8 +25,6 @@ if(IS_DIRECTORY "/System/Library/Frameworks/ApplicationServices.framework")
     gvc
   )
 
-  # `target_link_options` is only available ≥ CMake 3.13, but this plugin is
-  # only enabled on macOS where we can rely on an up to date CMake
   target_link_options(gvplugin_quartz PUBLIC
     -framework ApplicationServices
   )
