@@ -236,11 +236,12 @@ prformat(void* vp, Sffmt_t* dp)
 			{
 				if (fmt->value.string)
 				{
-					size_t n = strlen(fmt->value.string);
-					if ((s = fmtbuf(n + 1)))
-						memcpy(s, fmt->value.string, n + 1);
+					char *const copy = vmstrdup(fmt->expr->vm, fmt->value.string);
+					if (copy == NULL) {
+						exerror("printf: out of memory");
+					}
 					vmfree(fmt->expr->vm, fmt->value.string);
-					fmt->value.string = s;
+					fmt->value.string = copy;
 				}
 				if (!fmt->value.string)
 					fmt->value.string = "";
