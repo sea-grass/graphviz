@@ -74,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the CMake build system, the minimum required CMake version has been
   increased to 3.14.1.
 - **Breaking**: the `disc` parameter has been removed from `Dtfree_f`.
+- Gvedit no longer depends on the getopt library.
 
 ### Fixed
 
