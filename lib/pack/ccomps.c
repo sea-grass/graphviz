@@ -18,6 +18,7 @@
 #include <cgraph/stack.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
+#include <common/utils.h>
 #include <pack/pack.h>
 #include <stdbool.h>
 
@@ -290,11 +291,6 @@ dnodeSet (Agnode_t* v, Agnode_t* n)
 #define clustOf(np)  (((ccgnodeinfo_t*)((np)->base.data))->ptr.g)
 #define clMark(n) (((ccgnodeinfo_t*)(n->base.data))->mark)
 
-/* isCluster:
- * Return true if graph is a cluster
- */
-#define isCluster(g) startswith(agnameof(g), "cluster")
-
 /* deriveClusters:
  * Construct nodes in derived graph corresponding top-level clusters.
  * Since a cluster might be wrapped in a subgraph, we need to traverse
@@ -307,7 +303,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     Agnode_t *n;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	if (isCluster(subg)) {
+	if (is_a_cluster(subg)) {
 	    dn = agnode(dg, agnameof(subg), 1);
 	    agbindrec (dn, NRECNAME, sizeof(ccgnodeinfo_t), true);
 	    clustOf(dn) = subg;
@@ -440,7 +436,7 @@ static Agraph_t *projectG(Agraph_t * subg, Agraph_t * g, int inCluster)
     if (proj) {
 	(void)graphviz_node_induce(proj, subg);
 	agcopyattr(subg, proj);
-	if (isCluster(proj)) {
+	if (is_a_cluster(proj)) {
 	    op = agbindrec(proj,ORIG_REC, sizeof(orig_t), false);
 	    op->orig = subg;
 	}
@@ -460,12 +456,11 @@ subgInduce(Agraph_t * root, Agraph_t * g, int inCluster)
     Agraph_t *proj;
     int in_cluster;
 
-/* fprintf (stderr, "subgInduce %s inCluster %d\n", agnameof(root), inCluster); */
     for (subg = agfstsubg(root); subg; subg = agnxtsubg(subg)) {
 	if (GD_cc_subg(subg))
 	    continue;
 	if ((proj = projectG(subg, g, inCluster))) {
-	    in_cluster = (inCluster || isCluster(subg));
+	    in_cluster = (inCluster || is_a_cluster(subg));
 	    subgInduce(subg, proj, in_cluster);
 	}
     }

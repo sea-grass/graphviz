@@ -103,6 +103,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   11.0.0. #2559
 - `overlap="scale"` no longer causes nodes to be placed on top of one another.
   This was a regression in Graphviz 7.0.5. #2564
+- libpack code now understands a cluster to be indicated by the common rules,
+  including the “cluster” prefix being case insensitive and the `cluster=true`
+  attribute as an alternative. #2187, #2555
 
 ## [11.0.0] – 2024-04-28
 
