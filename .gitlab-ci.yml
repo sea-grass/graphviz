@@ -605,6 +605,8 @@ ubuntu-20.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        # disable TCL components for which pkgIndex.tcl rule triggers a warning
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_tcl=OFF"
     tags:
         - saas-linux-small-amd64
     variables:
