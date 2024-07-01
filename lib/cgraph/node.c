@@ -22,9 +22,8 @@
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)
 {
     Agsubnode_t *sn;
-    const Agnode_t dummy = {.base = {.tag = {.id = id}}};
 
-    sn = node_set_find(g->n_id, &dummy);
+    sn = node_set_find(g->n_id, id);
     return sn ? sn->node : NULL;
 }
 
@@ -191,7 +190,7 @@ void agdelnodeimage(Agraph_t * g, Agnode_t * n, void *ignored)
     /* If the following lines are switched, switch the discpline using
      * free_subnode below.
      */ 
-    node_set_remove(g->n_id, n);
+    node_set_remove(g->n_id, n->base.tag.id);
     dtdelete(g->n_seq, &template);
 }
 
@@ -230,7 +229,7 @@ static void dict_relabel(Agraph_t *ignored, Agnode_t *n, void *arg) {
     new_id = *(uint64_t *) arg;
     Agsubnode_t *key = agsubrep(g, n);
     assert(key != NULL && "node being renamed does not exist");
-    node_set_remove(g->n_id, key->node);
+    node_set_remove(g->n_id, key->node->base.tag.id);
     AGID(key->node) = new_id;
     node_set_add(g->n_id, key);
     /* because all the subgraphs share the same node now, this
@@ -279,13 +278,13 @@ Agnode_t *agsubnode(Agraph_t * g, Agnode_t * n0, int cflag)
     return n;
 }
 
-/// compare a subnode to a node for equality
+/// compare a subnode to an identifier for equality
 ///
 /// @param sn0 Operand 1
 /// @param sn1 Operand 2
 /// @return True if nodes are equal
-static bool agsubnodeideq(const Agsubnode_t *sn0, const Agnode_t *sn1) {
-  return AGID(sn0->node) == sn1->base.tag.id;
+static bool agsubnodeideq(const Agsubnode_t *sn0, IDTYPE id) {
+  return AGID(sn0->node) == id;
 }
 
 static int agsubnodeseqcmpf(void *arg0, void *arg1) {
@@ -404,11 +403,10 @@ node_set_t *node_set_new(void) { return gv_alloc(sizeof(node_set_t)); }
 /// @param self Set to compute with respect to
 /// @param item Element being sought/added
 /// @return Initial index to examine
-static size_t node_set_index(const node_set_t *self, const Agnode_t *item) {
+static size_t node_set_index(const node_set_t *self, IDTYPE id) {
   assert(self != NULL);
-  assert(item != NULL);
   assert(self->capacity != 0);
-  return (size_t)item->base.tag.id % self->capacity;
+  return (size_t)id % self->capacity;
 }
 
 void node_set_add(node_set_t *self, Agsubnode_t *item) {
@@ -458,7 +456,7 @@ void node_set_add(node_set_t *self, Agsubnode_t *item) {
 
   assert(self->capacity > self->size);
 
-  const size_t index = node_set_index(self, item->node);
+  const size_t index = node_set_index(self, item->node->base.tag.id);
 
   for (size_t i = 0; i < self->capacity; ++i) {
     const size_t candidate = (index + i) % self->capacity;
@@ -474,9 +472,8 @@ void node_set_add(node_set_t *self, Agsubnode_t *item) {
   UNREACHABLE();
 }
 
-Agsubnode_t *node_set_find(node_set_t *self, const Agnode_t *key) {
+Agsubnode_t *node_set_find(node_set_t *self, IDTYPE key) {
   assert(self != NULL);
-  assert(key != NULL);
 
   // early exit to avoid `self->slots == NULL`/`self->capacity == 0`
   // complications
@@ -507,9 +504,8 @@ Agsubnode_t *node_set_find(node_set_t *self, const Agnode_t *key) {
   return NULL;
 }
 
-void node_set_remove(node_set_t *self, const Agnode_t *item) {
+void node_set_remove(node_set_t *self, IDTYPE item) {
   assert(self != NULL);
-  assert(item != NULL);
 
   // early exit to avoid `self->slots == NULL`/`self->capacity == 0`
   // complications

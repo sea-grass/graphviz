@@ -143,7 +143,7 @@ static Agedge_t *agfindedge_by_id(Agraph_t * g, Agnode_t * t, Agnode_t * h,
 
 Agsubnode_t *agsubrep(Agraph_t * g, Agnode_t * n)
 {
-  return g == n->root ? &n->mainsub : node_set_find(g->n_id, n);
+  return g == n->root ? &n->mainsub : node_set_find(g->n_id, n->base.tag.id);
 }
 
 static void ins(Dict_t * d, Dtlink_t ** set, Agedge_t * e)
