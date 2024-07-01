@@ -1,3 +1,11 @@
+# teach libraries how to find other libraries, even if there is another copy of
+# Graphviz installed in the system default paths
+if(APPLE)
+  list(APPEND CMAKE_INSTALL_RPATH "@executable_path")
+else()
+  list(APPEND CMAKE_INSTALL_RPATH "\$ORIGIN")
+endif()
+
 # No dependencies
 add_subdirectory(ast)
 add_subdirectory(cdt)

@@ -1,3 +1,14 @@
+# teach libraries how to find plugins and libraries, even if there is another
+# copy of Graphviz installed in the system default paths
+if(APPLE)
+  list(APPEND CMAKE_INSTALL_RPATH
+    "@executable_path/../../../${PLUGIN_INSTALL_DIR}")
+  list(APPEND CMAKE_INSTALL_RPATH "@executable_path/../..")
+else()
+  list(APPEND CMAKE_INSTALL_RPATH "\$ORIGIN/../../../${PLUGIN_INSTALL_DIR}")
+  list(APPEND CMAKE_INSTALL_RPATH "\$ORIGIN/../..")
+endif()
+
 if(enable_tcl)
   add_subdirectory(gdtclft)
   add_subdirectory(tcldot)
