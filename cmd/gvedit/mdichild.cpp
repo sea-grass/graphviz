@@ -33,8 +33,8 @@ void MdiChild::newFile()
     curFile = tr("graph%1.gv").arg(sequenceNumber++);
     setWindowTitle(curFile + "[*]");
 
-    connect(document(), SIGNAL(contentsChanged()),
-	    this, SLOT(documentWasModified()));
+    connect(document(), &QTextDocument::contentsChange,
+            this, &MdiChild::documentWasModified);
 }
 
 bool MdiChild::loadFile(const QString & fileName)
@@ -55,8 +55,8 @@ bool MdiChild::loadFile(const QString & fileName)
 
     setCurrentFile(fileName);
 
-    connect(document(), SIGNAL(contentsChanged()),
-	    this, SLOT(documentWasModified()));
+    connect(document(), &QTextDocument::contentsChange,
+            this, &MdiChild::documentWasModified);
 
     return true;
 }

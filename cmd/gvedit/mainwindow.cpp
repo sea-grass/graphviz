@@ -78,8 +78,8 @@ void CMainWindow::createConsole() {
   QPushButton *logSaveBtn = new QPushButton(QIcon(":/images/save.png"), "", fr);
   QHBoxLayout *consoleLayout = new QHBoxLayout();
   consoleLayout->addWidget(logNewBtn);
-  connect(logNewBtn, SIGNAL(clicked()), this, SLOT(slotNewLog()));
-  connect(logSaveBtn, SIGNAL(clicked()), this, SLOT(slotSaveLog()));
+  connect(logNewBtn, &QPushButton::clicked, this, &CMainWindow::slotNewLog);
+  connect(logSaveBtn, &QPushButton::clicked, this, &CMainWindow::slotSaveLog);
   consoleLayout->addWidget(logSaveBtn);
   consoleLayout->addStretch();
 
@@ -115,11 +115,8 @@ CMainWindow::CMainWindow(const QStringList &files) {
 
   createConsole();
 
-  connect(mdiArea, SIGNAL(subWindowActivated(QMdiSubWindow *)), this,
-          SLOT(slotRefreshMenus()));
-  windowMapper = new QSignalMapper(this);
-  connect(windowMapper, SIGNAL(mapped(QWidget *)), this,
-          SLOT(activateChild(QWidget *)));
+  connect(mdiArea, &QMdiArea::subWindowActivated, this,
+          &CMainWindow::slotRefreshMenus);
 
   frmSettings = new CFrmSettings();
 
@@ -343,8 +340,9 @@ void CMainWindow::updateWindowMenu() {
   separatorAct->setVisible(!windows.isEmpty());
 
   for (int i = 0; i < windows.size(); ++i) {
-    if (windows.at(i)->widget()->inherits("MdiChild")) {
-      MdiChild *child = qobject_cast<MdiChild *>(windows.at(i)->widget());
+    QMdiSubWindow *window = windows.at(i);
+    if (window->widget()->inherits("MdiChild")) {
+      MdiChild *child = qobject_cast<MdiChild *>(window->widget());
       QString text;
       if (i < 9) {
         text = tr("&%1 %2").arg(i + 1).arg(child->userFriendlyCurrentFile());
@@ -354,8 +352,8 @@ void CMainWindow::updateWindowMenu() {
       QAction *action = mWindow->addAction(text);
       action->setCheckable(true);
       action->setChecked(child == activeMdiChild());
-      connect(action, SIGNAL(triggered()), windowMapper, SLOT(map()));
-      windowMapper->setMapping(action, windows.at(i));
+      connect(action, &QAction::triggered, this,
+              [this, window] { activateChild(window); });
     }
   }
 }
@@ -367,8 +365,8 @@ MdiChild *CMainWindow::createMdiChild() {
   s->resize(800, 600);
   s->move(mdiArea->subWindowList().count() * 5,
           mdiArea->subWindowList().count() * 5);
-  connect(child, SIGNAL(copyAvailable(bool)), cutAct, SLOT(setEnabled(bool)));
-  connect(child, SIGNAL(copyAvailable(bool)), copyAct, SLOT(setEnabled(bool)));
+  connect(child, &MdiChild::copyAvailable, cutAct, &QAction::setEnabled);
+  connect(child, &MdiChild::copyAvailable, copyAct, &QAction::setEnabled);
   child->layoutIdx = dfltLayoutIdx;
   child->renderIdx = dfltRenderIdx;
 
@@ -379,90 +377,95 @@ void CMainWindow::actions() {
   newAct = new QAction(QIcon(":/images/new.png"), tr("&New"), this);
   newAct->setShortcuts(QKeySequence::New);
   newAct->setStatusTip(tr("Create a new file"));
-  connect(newAct, SIGNAL(triggered()), this, SLOT(slotNew()));
+  connect(newAct, &QAction::triggered, this, &CMainWindow::slotNew);
 
   openAct = new QAction(QIcon(":/images/open.png"), tr("&Open..."), this);
   openAct->setShortcuts(QKeySequence::Open);
   openAct->setStatusTip(tr("Open an existing file"));
-  connect(openAct, SIGNAL(triggered()), this, SLOT(slotOpen()));
+  connect(openAct, &QAction::triggered, this, &CMainWindow::slotOpen);
 
   saveAct = new QAction(QIcon(":/images/save.png"), tr("&Save"), this);
   saveAct->setShortcuts(QKeySequence::Save);
   saveAct->setStatusTip(tr("Save the document to disk"));
-  connect(saveAct, SIGNAL(triggered()), this, SLOT(slotSave()));
+  connect(saveAct, &QAction::triggered, this, &CMainWindow::slotSave);
 
   saveAsAct = new QAction(tr("Save &As..."), this);
   saveAsAct->setShortcuts(QKeySequence::SaveAs);
   saveAsAct->setStatusTip(tr("Save the document under a new name"));
-  connect(saveAsAct, SIGNAL(triggered()), this, SLOT(slotSaveAs()));
+  connect(saveAsAct, &QAction::triggered, this, &CMainWindow::slotSaveAs);
+
   exitAct = new QAction(tr("E&xit"), this);
 #if (QT_VERSION >= QT_VERSION_CHECK(4, 6, 0))
   exitAct->setShortcuts(QKeySequence::Quit);
 #endif
   exitAct->setStatusTip(tr("Exit the application"));
-  connect(exitAct, SIGNAL(triggered()), qApp, SLOT(closeAllWindows()));
+  connect(exitAct, &QAction::triggered, qApp, &QApplication::closeAllWindows);
+
   cutAct = new QAction(QIcon(":/images/cut.png"), tr("Cu&t"), this);
   cutAct->setShortcuts(QKeySequence::Cut);
   cutAct->setStatusTip(tr("Cut the current selection's contents to the "
                           "clipboard"));
-  connect(cutAct, SIGNAL(triggered()), this, SLOT(slotCut()));
+  connect(cutAct, &QAction::triggered, this, &CMainWindow::slotCut);
 
   copyAct = new QAction(QIcon(":/images/copy.png"), tr("&Copy"), this);
   copyAct->setShortcuts(QKeySequence::Copy);
   copyAct->setStatusTip(tr("Copy the current selection's contents to the "
                            "clipboard"));
-  connect(copyAct, SIGNAL(triggered()), this, SLOT(slotCopy()));
+  connect(copyAct, &QAction::triggered, this, &CMainWindow::slotCopy);
 
   pasteAct = new QAction(QIcon(":/images/paste.png"), tr("&Paste"), this);
   pasteAct->setShortcuts(QKeySequence::Paste);
   pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
                             "selection"));
-  connect(pasteAct, SIGNAL(triggered()), this, SLOT(slotPaste()));
+  connect(pasteAct, &QAction::triggered, this, &CMainWindow::slotPaste);
 
   closeAct = new QAction(tr("Cl&ose"), this);
   closeAct->setStatusTip(tr("Close the active window"));
-  connect(closeAct, SIGNAL(triggered()), mdiArea, SLOT(closeActiveSubWindow()));
+  connect(closeAct, &QAction::triggered, mdiArea,
+          &QMdiArea::closeActiveSubWindow);
 
   closeAllAct = new QAction(tr("Close &All"), this);
   closeAllAct->setStatusTip(tr("Close all the windows"));
-  connect(closeAllAct, SIGNAL(triggered()), mdiArea,
-          SLOT(closeAllSubWindows()));
+  connect(closeAllAct, &QAction::triggered, mdiArea,
+          &QMdiArea::closeAllSubWindows);
 
   tileAct = new QAction(tr("&Tile"), this);
   tileAct->setStatusTip(tr("Tile the windows"));
-  connect(tileAct, SIGNAL(triggered()), mdiArea, SLOT(tileSubWindows()));
+  connect(tileAct, &QAction::triggered, mdiArea, &QMdiArea::tileSubWindows);
 
   cascadeAct = new QAction(tr("&Cascade"), this);
   cascadeAct->setStatusTip(tr("Cascade the windows"));
-  connect(cascadeAct, SIGNAL(triggered()), mdiArea, SLOT(cascadeSubWindows()));
+  connect(cascadeAct, &QAction::triggered, mdiArea,
+          &QMdiArea::cascadeSubWindows);
 
   nextAct = new QAction(tr("Ne&xt"), this);
   nextAct->setShortcuts(QKeySequence::NextChild);
   nextAct->setStatusTip(tr("Move the focus to the next window"));
-  connect(nextAct, SIGNAL(triggered()), mdiArea, SLOT(activateNextSubWindow()));
+  connect(nextAct, &QAction::triggered, mdiArea,
+          &QMdiArea::activateNextSubWindow);
 
   previousAct = new QAction(tr("Pre&vious"), this);
   previousAct->setShortcuts(QKeySequence::PreviousChild);
   previousAct->setStatusTip(tr("Move the focus to the previous window"));
-  connect(previousAct, SIGNAL(triggered()), mdiArea,
-          SLOT(activatePreviousSubWindow()));
+  connect(previousAct, &QAction::triggered, mdiArea,
+          &QMdiArea::activatePreviousSubWindow);
 
   separatorAct = new QAction(this);
   separatorAct->setSeparator(true);
 
   aboutAct = new QAction(tr("&About"), this);
   aboutAct->setStatusTip(tr("Show the application's About box"));
-  connect(aboutAct, SIGNAL(triggered()), this, SLOT(slotAbout()));
+  connect(aboutAct, &QAction::triggered, this, &CMainWindow::slotAbout);
 
   settingsAct =
       new QAction(QIcon(":/images/settings.png"), tr("Settings"), this);
   settingsAct->setStatusTip(tr("Show Graphviz Settings"));
-  connect(settingsAct, SIGNAL(triggered()), this, SLOT(slotSettings()));
+  connect(settingsAct, &QAction::triggered, this, &CMainWindow::slotSettings);
   settingsAct->setShortcut(QKeySequence(Qt::SHIFT | Qt::Key_F5));
 
   layoutAct = new QAction(QIcon(":/images/run.png"), tr("Layout"), this);
   layoutAct->setStatusTip(tr("Layout the active graph"));
-  connect(layoutAct, SIGNAL(triggered()), this, SLOT(slotRun()));
+  connect(layoutAct, &QAction::triggered, this, [this] { slotRun(); });
   layoutAct->setShortcut(QKeySequence(Qt::Key_F5));
 }
 
@@ -490,7 +493,7 @@ void CMainWindow::menus() {
   mGraph->addSeparator();
 
   updateWindowMenu();
-  connect(mWindow, SIGNAL(aboutToShow()), this, SLOT(slotRefreshMenus()));
+  connect(mWindow, &QMenu::aboutToShow, this, &CMainWindow::slotRefreshMenus);
   mHelp->addAction(aboutAct);
 }
 

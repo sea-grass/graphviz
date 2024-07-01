@@ -30,7 +30,6 @@ class QAction;
 class QMenu;
 class QMdiArea;
 class QMdiSubWindow;
-class QSignalMapper;
 QT_END_NAMESPACE
 
 class CMainWindow : public QMainWindow {
@@ -74,7 +73,6 @@ private:
   MdiChild *activeMdiChild();
   MdiChild *prevChild;
   QMdiSubWindow *findMdiChild(const QString &fileName);
-  QSignalMapper *windowMapper;
   int dfltRenderIdx, dfltLayoutIdx;
 
   QToolBar *tbFile;

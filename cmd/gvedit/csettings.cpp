@@ -266,22 +266,26 @@ CFrmSettings::CFrmSettings() {
   else
     path = QString::fromStdString(find_share());
 
-  connect(WIDGET(QPushButton, pbAdd), SIGNAL(clicked()), this, SLOT(addSlot()));
-  connect(WIDGET(QPushButton, pbNew), SIGNAL(clicked()), this, SLOT(newSlot()));
-  connect(WIDGET(QPushButton, pbOpen), SIGNAL(clicked()), this,
-          SLOT(openSlot()));
-  connect(WIDGET(QPushButton, pbSave), SIGNAL(clicked()), this,
-          SLOT(saveSlot()));
-  connect(WIDGET(QPushButton, btnOK), SIGNAL(clicked()), this, SLOT(okSlot()));
-  connect(WIDGET(QPushButton, btnCancel), SIGNAL(clicked()), this,
-          SLOT(cancelSlot()));
-  connect(WIDGET(QPushButton, pbOut), SIGNAL(clicked()), this,
-          SLOT(outputSlot()));
-  connect(WIDGET(QPushButton, pbHelp), SIGNAL(clicked()), this,
-          SLOT(helpSlot()));
+  connect(WIDGET(QPushButton, pbAdd), &QPushButton::clicked, this,
+          &CFrmSettings::addSlot);
+  connect(WIDGET(QPushButton, pbNew), &QPushButton::clicked, this,
+          &CFrmSettings::newSlot);
+  connect(WIDGET(QPushButton, pbOpen), &QPushButton::clicked, this,
+          &CFrmSettings::openSlot);
+  connect(WIDGET(QPushButton, pbSave), &QPushButton::clicked, this,
+          &CFrmSettings::saveSlot);
+  connect(WIDGET(QPushButton, btnOK), &QPushButton::clicked, this,
+          &CFrmSettings::okSlot);
+  connect(WIDGET(QPushButton, btnCancel), &QPushButton::clicked, this,
+          &CFrmSettings::cancelSlot);
+  connect(WIDGET(QPushButton, pbOut), &QPushButton::clicked, this,
+          &CFrmSettings::outputSlot);
+  connect(WIDGET(QPushButton, pbHelp), &QPushButton::clicked, this,
+          &CFrmSettings::helpSlot);
 
-  connect(WIDGET(QComboBox, cbScope), SIGNAL(currentIndexChanged(int)), this,
-          SLOT(scopeChangedSlot(int)));
+  connect(WIDGET(QComboBox, cbScope),
+          QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+          &CFrmSettings::scopeChangedSlot);
   scopeChangedSlot(0);
 
   if (path != "") {
