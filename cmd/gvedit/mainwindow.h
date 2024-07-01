@@ -38,7 +38,7 @@ class CMainWindow : public QMainWindow {
 public:
   CMainWindow(const QStringList &files);
   QMdiArea *mdiArea;
-  void addFile(QString fileName);
+  void addFile(const QString &fileName);
 private slots:
   void slotSettings();
   void slotRun(MdiChild *m = nullptr);

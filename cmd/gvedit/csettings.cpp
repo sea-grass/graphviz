@@ -204,7 +204,7 @@ static std::string find_share(void) {
          "graphviz" + PATH_SEPARATOR + "gvedit";
 }
 
-bool loadAttrs(const QString fileName, QComboBox *cbNameG, QComboBox *cbNameN,
+bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
                QComboBox *cbNameE) {
   QStringList lines;
   QFile file(fileName);
@@ -241,7 +241,7 @@ bool loadAttrs(const QString fileName, QComboBox *cbNameG, QComboBox *cbNameN,
   return false;
 }
 
-QString stripFileExtension(QString fileName) {
+QString stripFileExtension(const QString &fileName) {
   int idx;
   for (idx = fileName.length(); idx >= 0; idx--) {
     if (fileName.mid(idx, 1) == ".")
@@ -459,7 +459,7 @@ static QString buildTempFile() {
   return a;
 }
 
-void CFrmSettings::doPreview(QString fileName) {
+void CFrmSettings::doPreview(const QString &fileName) {
   if (getActiveWindow()->previewFrm != nullptr) {
     getActiveWindow()->parentFrm->mdiArea->removeSubWindow(
         getActiveWindow()->previewFrm->subWindowRef);

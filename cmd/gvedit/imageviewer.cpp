@@ -37,7 +37,7 @@ ImageViewer::ImageViewer()
 
 }
 
-bool ImageViewer::open(QString fileName)
+bool ImageViewer::open(const QString &fileName)
 {
     if (!fileName.isEmpty()) {
 	QImage image(fileName);

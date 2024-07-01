@@ -34,7 +34,7 @@ public:
     MdiChild* graphWindow;
     QMdiSubWindow* subWindowRef; //reference to its wrapping sub window
 public slots:
-    bool open(QString fileName);
+    bool open(const QString &fileName);
     void print();
     void zoomIn();
     void zoomOut();

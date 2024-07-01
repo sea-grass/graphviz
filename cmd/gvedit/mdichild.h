@@ -37,7 +37,7 @@ public:
     QString attributes;
     std::unique_ptr<ImageViewer> previewFrm;
     CMainWindow* parentFrm;
-    bool loadPreview(QString fileName);
+    bool loadPreview(const QString &fileName);
     bool firstTime();
     bool settingsSet;
 protected:
