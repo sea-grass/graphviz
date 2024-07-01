@@ -32,9 +32,6 @@
     <ClCompile Include="error.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="fmtbuf.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="fmtesc.c">
       <Filter>Source Files</Filter>
     </ClCompile>

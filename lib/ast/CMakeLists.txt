@@ -8,7 +8,6 @@ add_library(ast STATIC
   chresc.c
   chrtoi.c
   error.c
-  fmtbuf.c
   fmtesc.c
   pathaccess.c
   pathcat.c
