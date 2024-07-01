@@ -270,12 +270,18 @@ prformat(void* vp, Sffmt_t* dp)
 	switch (dp->fmt)
 	{
 	case 'q':
-	case 'Q':
+	case 'Q': {
 		s = *(char**)vp;
-		*(char**)vp = fmtquote(s, "$'", "'");
+		char *quoted = fmtquote(s, "$'", "'");
+		*(char**)vp = vmstrdup(fmt->expr->vm, quoted);
+		free(quoted);
+		if (*(char**)vp == NULL) {
+			exerror("printf: out of memory");
+		}
 		dp->fmt = 's';
 		dp->size = -1;
 		break;
+	}
 	case 'S':
 		dp->flags &= ~SFFMT_LONG;
 		s = *(char**)vp;
