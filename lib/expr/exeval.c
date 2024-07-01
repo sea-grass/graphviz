@@ -329,18 +329,19 @@ prformat(void* vp, Sffmt_t* dp)
         if (txt.data == NULL) {
             exerror("printf: no time format provided");
         } else {
-            s = fmtbuf(TIME_LEN);
+            s = vmalloc(fmt->expr->vm, TIME_LEN);
             stm = localtime(&tm);
             char *format = malloc(sizeof(char) * (txt.size + 1));
-            if (format == NULL) {
+            if (s == NULL || format == NULL) {
+                vmfree(fmt->expr->vm, s);
                 exerror("printf: out of memory");
             } else {
                 strncpy(format, txt.data, txt.size);
                 format[txt.size] = '\0';
                 strftime(s, TIME_LEN, format, stm);
-                free(format);
                 *(char **)vp = s;
             }
+            free(format);
         }
 		dp->fmt = 's';
 		dp->size = -1;
