@@ -17,6 +17,7 @@
 
 #include <ast/ast.h>
 #include <cgraph/gv_ctype.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
@@ -26,9 +27,9 @@ char *fmtquote(const char *as, const char *qb, const char *qe) {
     const unsigned char *s = (const unsigned char *) as;
     const unsigned char *e = s + n;
     char *b;
-    int escaped;
-    int spaced;
-    int shell;
+    bool escaped = false;
+    bool spaced = false;
+    bool shell = false;
     char *f;
     char *buf;
 
@@ -38,19 +39,17 @@ char *fmtquote(const char *as, const char *qb, const char *qe) {
     if (qe)
 	len += strlen(qe);
     b = buf = fmtbuf(len);
-    shell = 0;
     if (qb) {
 	if (qb[0] == '$' && qb[1] == '\'' && qb[2] == 0)
-	    shell = 1;
+	    shell = true;
 	while ((*b = *qb++))
 	    b++;
     }
     f = b;
-    escaped = spaced = 0;
     while (s < e) {
 	    int c = *s++;
 	    if (gv_iscntrl(c) || !gv_isprint(c) || c == '\\') {
-		escaped = 1;
+		escaped = true;
 		*b++ = '\\';
 		switch (c) {
 		case CC_bel:
@@ -86,7 +85,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe) {
 		    break;
 		}
 	    } else if (qe && strchr(qe, c)) {
-		escaped = 1;
+		escaped = true;
 		*b++ = '\\';
 	    } else if (!spaced &&
 		       !escaped &&
@@ -99,7 +98,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe) {
 			)
 		       )
 		)
-		spaced = 1;
+		spaced = true;
 	    *b++ = (char)c;
     }
     if (qb) {
