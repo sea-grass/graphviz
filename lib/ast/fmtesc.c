@@ -20,11 +20,9 @@
 #include <stddef.h>
 #include <string.h>
 
-/*
- * quote string as of length n with qb...qe
- */
-
-char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
+/// quote string as with qb...qe
+char *fmtquote(const char *as, const char *qb, const char *qe) {
+    const size_t n = strlen(as);
     const unsigned char *s = (const unsigned char *) as;
     const unsigned char *e = s + n;
     char *b;
@@ -121,7 +119,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
 
 char *fmtesq(const char *as, const char *qs)
 {
-  return fmtquote(as, NULL, qs, strlen(as));
+  return fmtquote(as, NULL, qs);
 }
 
 /*
@@ -130,5 +128,5 @@ char *fmtesq(const char *as, const char *qs)
 
 char *fmtesc(const char *as)
 {
-  return fmtquote(as, NULL, NULL, strlen(as));
+  return fmtquote(as, NULL, NULL);
 }
