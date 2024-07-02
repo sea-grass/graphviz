@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13.0 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.14.1 FATAL_ERROR)
 project(Graphviz)
 
 include(FeatureSummary)
@@ -146,13 +146,13 @@ if(NOT with_smyrna STREQUAL "OFF")
   find_package(GLUT)
   find_package(GTK2)
   find_package(PkgConfig)
+  find_package(Fontconfig)
   if(PkgConfig_FOUND)
-    pkg_check_modules(FONTCONFIG fontconfig)
     pkg_check_modules(GTKGLEXT gtkglext-1.0)
     pkg_check_modules(GTS gts)
     pkg_check_modules(XRENDER xrender)
   endif()
-  if(Freetype_FOUND AND GLUT_FOUND AND GTK2_FOUND AND FONTCONFIG_FOUND AND
+  if(Freetype_FOUND AND GLUT_FOUND AND GTK2_FOUND AND Fontconfig_FOUND AND
      GTKGLEXT_FOUND AND GTS_FOUND AND XRENDER_FOUND)
     if(with_smyrna STREQUAL "AUTO")
       message(STATUS "setting -Dwith_smyrna=ON")

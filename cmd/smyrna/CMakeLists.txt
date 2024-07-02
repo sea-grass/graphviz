@@ -7,7 +7,7 @@ if(with_smyrna)
   find_package(GLUT REQUIRED)
   find_package(GTK2 REQUIRED COMPONENTS gtk glade)
   find_package(PkgConfig REQUIRED)
-  pkg_check_modules(FONTCONFIG REQUIRED fontconfig)
+  find_package(Fontconfig REQUIRED)
   pkg_check_modules(GTKGLEXT REQUIRED gtkglext-1.0)
   pkg_check_modules(GTS REQUIRED gts)
   pkg_check_modules(XRENDER REQUIRED xrender)
@@ -85,7 +85,7 @@ if(with_smyrna)
 
   target_include_directories(smyrna SYSTEM PRIVATE
     ${EXPAT_INCLUDE_DIRS}
-    ${FONTCONFIG_INCLUDE_DIRS}
+    ${Fontconfig_INCLUDE_DIRS}
     ${FREETYPE_INCLUDE_DIRS}
     ${GLUT_INCLUDE_DIR}
     ${GTK2_INCLUDE_DIRS}
@@ -106,7 +106,7 @@ if(with_smyrna)
     topfish
     xdot
     ${EXPAT_LIBRARIES}
-    ${FONTCONFIG_LIBRARIES}
+    ${Fontconfig_LIBRARIES}
     ${FREETYPE_LIBRARIES}
     ${GLUT_LIBRARIES}
     ${GTK2_LIBRARIES}

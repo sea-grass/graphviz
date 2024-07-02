@@ -63,10 +63,8 @@ python3-devel \
 ruby-devel \
 # Language extension gv_tcl
 tcl-devel \
-# Requred in redhat/graphviz.spec.fedora.in
-libICE-devel \
-libSM-devel \
-libXaw-devel \
+libX11-devel \
+libXrender-devel \
 tk-devel \
 expat-devel \
 gmp-devel \
