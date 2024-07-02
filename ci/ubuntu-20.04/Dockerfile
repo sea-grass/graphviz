@@ -15,7 +15,6 @@ autoconf \
 bison \
 libtool \
 flex \
-ksh \
 # Debian build utilities
 d-shlibs \
 debhelper \

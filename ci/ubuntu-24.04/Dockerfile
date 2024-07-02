@@ -15,7 +15,6 @@ bison \
 libtool \
 dh-python \
 flex \
-ksh \
 doxygen \
 # Debian build utilities
 d-shlibs \

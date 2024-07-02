@@ -14,7 +14,6 @@ https://dl.fedoraproject.org/pub/epel/epel-release-latest-9.noarch.rpm \
 && dnf -y --setopt install_weak_deps=false install \
 libtool-ltdl-devel \
 libedit-devel \
-ksh \
 cmake \
 # security-hardened alternatives of packages
 rocky-release-security \
