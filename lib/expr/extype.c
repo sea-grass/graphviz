@@ -17,9 +17,6 @@
 
 #include <expr/exlib.h>
 
-#define str(s)		# s
-#define xstr(s)		str(s)
-
 /*
  * return C type name for type
  */
@@ -32,7 +29,7 @@ char *extype(long int type) {
 	case STRING:
 		return "char*";
 	case UNSIGNED:
-		return xstr(uintmax_t);
+		return "uintmax_t";
 	}
-	return xstr(intmax_t);
+	return "intmax_t";
 }
