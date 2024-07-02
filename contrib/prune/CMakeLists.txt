@@ -1,3 +1,13 @@
+# teach `prune` how to find plugins and libraries, even if there is another copy
+# of Graphviz installed in the system default paths
+if(APPLE)
+  list(APPEND CMAKE_INSTALL_RPATH "@executable_path/../${PLUGIN_INSTALL_DIR}")
+  list(APPEND CMAKE_INSTALL_RPATH "@executable_path/../${LIBRARY_INSTALL_DIR}")
+else()
+  list(APPEND CMAKE_INSTALL_RPATH "\$ORIGIN/../${PLUGIN_INSTALL_DIR}")
+  list(APPEND CMAKE_INSTALL_RPATH "\$ORIGIN/../${LIBRARY_INSTALL_DIR}")
+endif()
+
 add_executable(prune prune.c)
 target_include_directories(prune PRIVATE
   ../../lib
