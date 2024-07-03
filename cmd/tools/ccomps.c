@@ -45,7 +45,7 @@ typedef struct {
 } nodeinfo_t;
 
 #define GD_cc_subg(g)  (((graphinfo_t*)(g->base.data))->cc_subg)
-#define ND_mark(n)  (((nodeinfo_t*)(n->base.data))->mark)
+#define Node_mark(n)  (((nodeinfo_t*)(n->base.data))->mark)
 #define ND_ptr(n)  (((nodeinfo_t*)(n->base.data))->ptr)
 #define ND_dn(n)  ((Agnode_t*)ND_ptr(n))
 #define ND_clust(n)  ((Agraph_t*)ND_ptr(n))
@@ -240,7 +240,7 @@ static gv_stack_t Stk;
 
 static void push(Agnode_t * np)
 {
-  ND_mark(np) = -1;
+  Node_mark(np) = -1;
   stack_push(&Stk, np);
 }
 
@@ -260,13 +260,13 @@ static int dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out)
 
     push(n);
     while ((n = pop())) {
-	ND_mark(n) = 1;
+	Node_mark(n) = 1;
 	cnt++;
 	agsubnode(out, n, 1);
 	for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	    if ((other = agtail(e)) == n)
 		other = aghead(e);
-	    if (ND_mark(other) == 0)
+	    if (Node_mark(other) == 0)
 		push (other);
 	}
     }
@@ -597,7 +597,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 
     c_cnt = 0;
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
-	if (ND_mark(dn))
+	if (Node_mark(dn))
 	    continue;
 	{
 	    agxbuf buf = {0};
@@ -726,7 +726,7 @@ static int process(Agraph_t * g, char* graphName)
 
     c_cnt = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (ND_mark(n))
+	if (Node_mark(n))
 	    continue;
 	{
 	    agxbuf name = {0};
