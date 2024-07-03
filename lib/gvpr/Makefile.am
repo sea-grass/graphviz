@@ -51,7 +51,7 @@ libgvpr_la_LIBADD = $(libgvpr_C_la_LIBADD) \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
 	$(MATH_LIBS)
-libgvpr_la_DEPENDENCIES = $(libgvpr_C_la_DEPENDENCIES)
+EXTRA_libgvpr_la_DEPENDENCIES = $(libgvpr_C_la_DEPENDENCIES)
 
 if WITH_WIN32
 libgvpr_la_LDFLAGS += -export-symbols-regex gvpr
