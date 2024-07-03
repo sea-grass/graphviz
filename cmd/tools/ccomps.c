@@ -36,7 +36,7 @@
 typedef struct {
     Agrec_t h;
     char cc_subg;   /* true iff subgraph corresponds to a component */
-} Agraphinfo_t;
+} graphinfo_t;
 
 typedef struct {
     Agrec_t h;
@@ -44,7 +44,7 @@ typedef struct {
     Agobj_t* ptr;
 } nodeinfo_t;
 
-#define GD_cc_subg(g)  (((Agraphinfo_t*)(g->base.data))->cc_subg)
+#define GD_cc_subg(g)  (((graphinfo_t*)(g->base.data))->cc_subg)
 #define ND_mark(n)  (((nodeinfo_t*)(n->base.data))->mark)
 #define ND_ptr(n)  (((nodeinfo_t*)(n->base.data))->ptr)
 #define ND_dn(n)  ((Agnode_t*)ND_ptr(n))
@@ -579,7 +579,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    out = agsubg(g, name, 1);
 	    agxbfree(&buf);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	dn = ND_dn(n);
 	n_cnt = dfs(dg, dn, dout);
@@ -608,7 +608,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    out = agsubg(g, name, 1);
 	    agxbfree(&buf);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
@@ -674,7 +674,7 @@ bindGraphinfo (Agraph_t * g)
 {
     Agraph_t *subg;
 
-    aginit(g, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+    aginit(g, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	bindGraphinfo (subg);
     }
@@ -710,7 +710,7 @@ static int process(Agraph_t * g, char* graphName)
 	    out = agsubg(g, agxbuse(&name), 1);
 	    agxbfree(&name);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	size_t e_cnt = 0;
@@ -735,7 +735,7 @@ static int process(Agraph_t * g, char* graphName)
 	    out = agsubg(g, agxbuse(&name), 1);
 	    agxbfree(&name);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	size_t e_cnt = 0;
