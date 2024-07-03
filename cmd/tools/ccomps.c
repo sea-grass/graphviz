@@ -77,7 +77,7 @@ static int doEdges = 1; // induce edges
 static int doAll = 1; // induce subgraphs
 static char *suffix = 0;
 static char *outfile = 0;
-static char *path = 0;
+static char *rootpath = 0;
 static int sufcnt = 0;
 static int sorted = 0;
 static int sortIndex = 0;
@@ -114,9 +114,9 @@ static void split(void) {
     if (sfx) {
 	suffix = sfx + 1;
 	size_t size = (size_t)(sfx - outfile);
-	path = gv_strndup(outfile, size);
+	rootpath = gv_strndup(outfile, size);
     } else {
-	path = outfile;
+	rootpath = outfile;
     }
 }
 
@@ -281,9 +281,9 @@ static char *getName(void)
 	agxbput(&name, outfile);
     else {
 	if (suffix)
-	    agxbprint(&name, "%s_%d.%s", path, sufcnt, suffix);
+	    agxbprint(&name, "%s_%d.%s", rootpath, sufcnt, suffix);
 	else
-	    agxbprint(&name, "%s_%d", path, sufcnt);
+	    agxbprint(&name, "%s_%d", rootpath, sufcnt);
     }
     sufcnt++;
     return agxbdisown(&name);
