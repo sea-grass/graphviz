@@ -29,9 +29,10 @@
 #include <cgraph/ingraphs.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
-#include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
+#include <common/render.h>
+#include <common/utils.h>
 
 typedef struct {
     Agrec_t h;
@@ -49,7 +50,6 @@ typedef struct {
 #define ND_ptr(n)  (((nodeinfo_t*)(n->base.data))->ptr)
 #define ND_dn(n)  ((Agnode_t*)ND_ptr(n))
 #define Node_clust(n)  ((Agraph_t*)ND_ptr(n))
-#define agfindnode(G,N) (agnode(G, N, 0))
 
 #include <getopt.h>
 
@@ -118,14 +118,6 @@ static void split(void) {
     } else {
 	rootpath = outfile;
     }
-}
-
-/* isCluster:
- * Return true if graph is a cluster
- */
-static int isCluster(Agraph_t * g)
-{
-  return startswith(agnameof(g), "cluster");
 }
 
 static void init(int argc, char *argv[])
@@ -358,7 +350,7 @@ subgInduce(Agraph_t * root, Agraph_t * g, int inCluster)
 	if (GD_cc_subg(subg))
 	    continue;
 	if ((proj = projectG(subg, g, inCluster))) {
-	    in_cluster = inCluster || (useClusters && isCluster(subg));
+	    in_cluster = inCluster || (useClusters && is_a_cluster(subg));
 	    subgInduce(subg, proj, in_cluster);
 	}
     }
@@ -385,7 +377,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     Agnode_t *n;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	if (startswith(agnameof(subg), "cluster")) {
+	if (is_a_cluster(subg)) {
 	    dn = agnode(dg, agnameof(subg), 1);
 	    agbindrec (dn, "nodeinfo", sizeof(nodeinfo_t), true);
 	    ND_ptr(dn) = (Agobj_t*)subg;

@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (12.0.1)]
 
+### Fixed
+
+- `ccomps` now understands a cluster to be indicated by the common rules,
+  including the “cluster” prefix being case insensitive and the `cluster=true`
+  attribute as an alternative. #2187
+
 ## [12.0.0] – 2024-07-04
 
 ### Added
