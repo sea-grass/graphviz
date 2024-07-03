@@ -778,17 +778,12 @@ static void *newItem(item *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeItem(item *obj, Dtdisc_t *disc) {
-    (void)disc;
-    free(obj);
-}
-
 static Dtdisc_t mapDisc = {
     .key = offsetof(item, p),
     .size = sizeof(2 * sizeof(void *)),
     .link = offsetof(item, link),
     .makef = (Dtmake_f)newItem,
-    .freef = (Dtfree_f)freeItem,
+    .freef = free,
     .comparf = cmpItem,
 };
 
@@ -1583,16 +1578,11 @@ typedef struct {
     Agraph_t* clp;
 } clust_t;
 
-static void free_clust(clust_t *clp, Dtdisc_t *disc) {
-    (void)disc;
-    free(clp);
-}
-
 static Dtdisc_t strDisc = {
     .key = offsetof(clust_t, name),
     .size = -1,
     .link = offsetof(clust_t, link),
-    .freef = (Dtfree_f)free_clust,
+    .freef = free,
 };
 
 static void fillMap (Agraph_t* g, Dt_t* map)

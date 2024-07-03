@@ -18,11 +18,8 @@
 
 static Agraph_t *Ag_dictop_G;
 
-void agdictobjfree(void *p, Dtdisc_t *disc) {
-    Agraph_t *g;
-
-    (void)disc;
-    g = Ag_dictop_G;
+void agdictobjfree(void *p) {
+    Agraph_t *g = Ag_dictop_G;
     if (g)
 	agfree(g, p);
     else

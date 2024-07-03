@@ -48,7 +48,7 @@ typedef struct _dt_s		Dict_t;	/* for libdict compatibility */
 typedef struct _dtstat_s	Dtstat_t;
 typedef void*			(*Dtsearch_f)(Dt_t*,void*,int);
 typedef void* 		(*Dtmake_f)(void*,Dtdisc_t*);
-typedef void 			(*Dtfree_f)(void*,Dtdisc_t*);
+typedef void 			(*Dtfree_f)(void *);
 typedef int			(*Dtcompar_f)(void *,void *);
 
 struct _dtlink_s

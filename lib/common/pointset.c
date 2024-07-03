@@ -26,12 +26,6 @@ static pair *mkPair(pointf p) {
     return pp;
 }
 
-static void freePair(pair *pp, Dtdisc_t *disc) {
-    (void)disc;
-
-    free (pp);
-}
-
 static int cmppair(void *k1, void *k2) {
     const pointf *key1 = k1;
     const pointf *key2 = k2;
@@ -52,7 +46,7 @@ static Dtdisc_t intPairDisc = {
     sizeof(pointf),
     offsetof(pair, link),
     0,
-    (Dtfree_f) freePair,
+    free,
     cmppair,
 };
 
@@ -118,25 +112,14 @@ typedef struct {
 
 typedef struct {
     Dtdisc_t disc;
-    mpair *flist;
 } MPairDisc;
 
 static mpair *mkMPair(mpair *obj, MPairDisc *disc) {
-    mpair *ap;
-
-    if (disc->flist) {
-	ap = disc->flist;
-	disc->flist = (mpair *) (ap->link.right);
-    } else
-	ap = gv_alloc(sizeof(mpair));
+    (void)disc;
+    mpair *ap = gv_alloc(sizeof(mpair));
     ap->id = obj->id;
     ap->v = obj->v;
     return ap;
-}
-
-static void freeMPair(mpair *ap, MPairDisc *disc) {
-    ap->link.right = (Dtlink_t *) (disc->flist);
-    disc->flist = ap;
 }
 
 static Dtdisc_t intMPairDisc = {
@@ -144,18 +127,13 @@ static Dtdisc_t intMPairDisc = {
     sizeof(point),
     offsetof(mpair, link),
     (Dtmake_f) mkMPair,
-    (Dtfree_f) freeMPair,
+    free,
     cmppair,
 };
 
 PointMap *newPM(void)
 {
-    MPairDisc *dp = gv_alloc(sizeof(MPairDisc));
-
-    dp->disc = intMPairDisc;
-    dp->flist = 0;
-
-    return (dtopen(&(dp->disc), Dtoset));
+  return dtopen(&intMPairDisc, Dtoset);
 }
 
 void clearPM(PointMap * ps)
@@ -165,16 +143,7 @@ void clearPM(PointMap * ps)
 
 void freePM(PointMap * ps)
 {
-    MPairDisc *dp = (MPairDisc *) (ps->disc);
-    mpair *p;
-    mpair *next;
-
     dtclose(ps);
-    for (p = dp->flist; p; p = next) {
-	next = (mpair *) (p->link.right);
-	free(p);
-    }
-    free(dp);
 }
 
 int insertPM(PointMap * pm, int x, int y, int value)

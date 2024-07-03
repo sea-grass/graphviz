@@ -589,9 +589,7 @@ static void pdf_size (usershape_t *us)
     }
 }
 
-static void usershape_close(void *p, Dtdisc_t *disc) {
-    (void)disc;
-
+static void usershape_close(void *p) {
     usershape_t *us = p;
 
     if (us->f)

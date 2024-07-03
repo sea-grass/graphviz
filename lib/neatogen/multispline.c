@@ -82,17 +82,12 @@ static void *newItem(item *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeItem(item *obj, Dtdisc_t *disc) {
-    (void)disc;
-    free(obj);
-}
-
 static Dtdisc_t itemdisc = {
     .key = offsetof(item, a),
     .size = 2 * sizeof(int),
     .link = offsetof(item, link),
     .makef = (Dtmake_f)newItem,
-    .freef = (Dtfree_f)freeItem,
+    .freef = free,
     .comparf = cmpItem,
 };
 
@@ -180,17 +175,12 @@ static void *newIpair(Ipair *objp, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeIpair(Ipair *obj, Dtdisc_t *disc) {
-    (void)disc;
-    free(obj);
-}
-
 static Dtdisc_t ipairdisc = {
     .key = offsetof(Ipair, i),
     .size = sizeof(int),
     .link = offsetof(Ipair, link),
     .makef = (Dtmake_f)newIpair,
-    .freef = (Dtfree_f)freeIpair,
+    .freef = free,
     .comparf = cmpIpair,
 };
 

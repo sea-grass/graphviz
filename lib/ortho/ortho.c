@@ -254,17 +254,15 @@ typedef struct {
     Dt_t*     chans;
 } chanItem;
 
-static void freeChannel(channel *cp, Dtdisc_t *disc) {
-    (void)disc;
-
+static void freeChannel(void *chan) {
+    channel *cp = chan;
     free_graph (cp->G);
     seg_list_free(&cp->seg_list);
     free (cp);
 }
 
-static void freeChanItem(chanItem *cp, Dtdisc_t *disc) {
-    (void)disc;
-
+static void freeChanItem(void *item) {
+    chanItem *cp = item;
     dtclose (cp->chans);
     free (cp);
 }
@@ -305,7 +303,7 @@ static Dtdisc_t chanDisc = {
     sizeof(paird),
     offsetof(channel,link),
     0,
-    (Dtfree_f)freeChannel,
+    freeChannel,
     chancmpid,
 };
 
@@ -314,7 +312,7 @@ static Dtdisc_t chanItemDisc = {
     sizeof(double),
     offsetof(chanItem,link),
     0,
-    (Dtfree_f)freeChanItem,
+    freeChanItem,
     dcmpid,
 };
 

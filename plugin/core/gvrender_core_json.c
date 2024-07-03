@@ -602,8 +602,8 @@ typedef struct {
     int v;
 } intm;
 
-static void freef(intm *obj, Dtdisc_t *disc) {
-    (void)disc;
+static void freef(void *ident) {
+    intm *obj = ident;
     free(obj->id);
     free(obj);
 }
@@ -613,7 +613,7 @@ static Dtdisc_t intDisc = {
     -1,
     offsetof(intm, link),
     (Dtmake_f) NULL,
-    (Dtfree_f) freef,
+    freef,
     (Dtcompar_f) NULL,
 };
 

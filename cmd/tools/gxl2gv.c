@@ -90,9 +90,8 @@ static namev_t *make_nitem(namev_t *objp, Dtdisc_t *disc){
     return np;
 }
 
-static void free_nitem(namev_t *np, Dtdisc_t *disc) {
-    (void)disc;
-
+static void free_nitem(void *name) {
+    namev_t *np = name;
     free(np->unique_name);
     free(np);
 }
@@ -102,7 +101,7 @@ static Dtdisc_t nameDisc = {
     .size = -1,
     .link = offsetof(namev_t, link),
     .makef = (Dtmake_f)make_nitem,
-    .freef = (Dtfree_f)free_nitem,
+    .freef = free_nitem,
 };
 
 static userdata_t genUserdata(void) {

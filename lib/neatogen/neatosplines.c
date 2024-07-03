@@ -117,11 +117,6 @@ static void *newitem(edgeitem *obj, Dtdisc_t *disc) {
     return newp;
 }
 
-static void freeitem(edgeitem *obj, Dtdisc_t *disc) {
-    (void)disc;
-    free(obj);
-}
-
 static int cmpitems(void *k1, void *k2) {
     const edgeinfo *key1 = k1;
     const edgeinfo *key2 = k2;
@@ -158,7 +153,7 @@ Dtdisc_t edgeItemDisc = {
     sizeof(edgeinfo),
     offsetof(edgeitem, link),
     (Dtmake_f) newitem,
-    (Dtfree_f) freeitem,
+    free,
     cmpitems,
 };
 

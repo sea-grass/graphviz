@@ -46,20 +46,9 @@ static struct {
  * Free row. This closes and frees row's list, then
  * the pitem itself is freed.
  */
-static void free_ritem(pitem *p, Dtdisc_t *ds) {
-  (void)ds;
-
+static void free_ritem(void *item) {
+  pitem *p = item;
   dtclose (p->u.rp);
-  free (p);
-}
-
-/* free_item:
- * Generic Dt free. Only frees container, assuming contents
- * have been copied elsewhere.
- */
-static void free_item(void *p, Dtdisc_t *ds) {
-  (void)ds;
-
   free (p);
 }
 
@@ -89,9 +78,8 @@ cleanCell (htmlcell_t* cp)
 /* free_citem:
  * Free cell item during parsing. This frees cell and pitem.
  */
-static void free_citem(pitem *p, Dtdisc_t *ds) {
-  (void)ds;
-
+static void free_citem(void *item) {
+  pitem *p = item;
   cleanCell (p->u.cp);
   free (p);
 }
@@ -100,13 +88,13 @@ static Dtdisc_t rowDisc = {
     .key = offsetof(pitem, u),
     .size = sizeof(void *),
     .link = offsetof(pitem, link),
-    .freef = (Dtfree_f)free_ritem,
+    .freef = free_ritem,
 };
 static Dtdisc_t cellDisc = {
     .key = offsetof(pitem, u),
     .size = sizeof(void *),
     .link = offsetof(pitem, link),
-    .freef = (Dtfree_f)free_item,
+    .freef = free,
 };
 
 typedef struct {
@@ -119,16 +107,14 @@ typedef struct {
     htextspan_t  lp;
 } fspan;
 
-static void free_fitem(fitem *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_fitem(void *item) {
+    fitem *p = item;
     free (p->ti.str);
     free (p);
 }
 
-static void free_fspan(fspan *p, Dtdisc_t *ds) {
-    (void)ds;
-
+static void free_fspan(void *span) {
+    fspan *p = span;
     textspan_t* ti;
 
     if (p->lp.nitems) {
@@ -144,12 +130,12 @@ static void free_fspan(fspan *p, Dtdisc_t *ds) {
 
 static Dtdisc_t fstrDisc = {
     .link = offsetof(fitem, link),
-    .freef = (Dtfree_f)free_item,
+    .freef = free,
 };
 
 static Dtdisc_t fspanDisc = {
     .link = offsetof(fspan, link),
-    .freef = (Dtfree_f)free_item,
+    .freef = free,
 };
 
 /* appendFItemList:
@@ -183,7 +169,7 @@ appendFLineList (int v)
 
 	fi = (fitem*)dtflatten(ilist);
 	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
-		/* NOTE: When fitemList is closed, it uses free_item, which only frees the container,
+		/* NOTE: When fitemList is closed, it uses free, which only frees the container,
 		 * not the contents, so this copy is safe.
 		 */
 	    ln->lp.items[i] = fi->ti;  
@@ -317,21 +303,21 @@ static void cleanup (void)
     free_html_label (HTMLstate.lbl,1);
     HTMLstate.lbl = NULL;
   }
-  cellDisc.freef = (Dtfree_f)free_citem;
+  cellDisc.freef = free_citem;
   while (tp) {
     next = tp->u.p.prev;
     cleanTbl (tp);
     tp = next;
   }
-  cellDisc.freef = (Dtfree_f)free_item;
+  cellDisc.freef = free;
 
-  fstrDisc.freef = (Dtfree_f)free_fitem;
+  fstrDisc.freef = free_fitem;
   dtclear (HTMLstate.fitemList);
-  fstrDisc.freef = (Dtfree_f)free_item;
+  fstrDisc.freef = free;
 
-  fspanDisc.freef = (Dtfree_f)free_fspan;
+  fspanDisc.freef = free_fspan;
   dtclear (HTMLstate.fspanList);
-  fspanDisc.freef = (Dtfree_f)free_item;
+  fspanDisc.freef = free;
 
   freeFontstack();
 }

@@ -21,15 +21,15 @@
 static int N_EPSF_files;
 static Dict_t *EPSF_contents;
 
-static void ps_image_free(usershape_t *p, Dtdisc_t *disc) {
-    (void)disc;
+static void ps_image_free(void *shape) {
+    usershape_t *p = shape;
     free(p->data);
 }
 
 static Dtdisc_t ImageDictDisc = {
     .key = offsetof(usershape_t, name),
     .size = -1,
-    .freef = (Dtfree_f)ps_image_free,
+    .freef = ps_image_free,
 };
 
 static usershape_t *user_init(const char *str)

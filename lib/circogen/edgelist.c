@@ -21,12 +21,6 @@ static edgelistitem *mkItem(edgelistitem *obj, Dtdisc_t *disc) {
     return ap;
 }
 
-static void freeItem(edgelistitem *obj, Dtdisc_t *disc) {
-    (void)disc;
-
-    free(obj);
-}
-
 static int cmpItem(void *k1, void *k2) {
     const Agedge_t **key1 = k1;
     const Agedge_t **key2 = k2;
@@ -44,7 +38,7 @@ static Dtdisc_t ELDisc = {
     sizeof(Agedge_t *),		/* size */
     offsetof(edgelistitem, link),	/* link */
     (Dtmake_f) mkItem,
-    (Dtfree_f) freeItem,
+    free,
     cmpItem,
 };
 
