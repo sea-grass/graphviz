@@ -841,13 +841,16 @@ static item *mapEdge(Dt_t * map, edge_t * e)
  *
  * Return 1 if cluster edge is created.
  */
-#define MAPC(n) (startswith(agnameof(n), "cluster") ? findCluster(cmap, agnameof(n)) : NULL)
+static graph_t *mapc(Dt_t *cmap, node_t *n) {
+  if (startswith(agnameof(n), "cluster")) {
+    return findCluster(cmap, agnameof(n));
+  }
+  return NULL;
+}
 
 static int
 checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
 {
-    graph_t *tg;
-    graph_t *hg;
     node_t *cn;
     node_t *cn1;
     node_t *t = agtail(e);
@@ -856,8 +859,8 @@ checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
     item *ip;
 
     if (IS_CLUST_NODE(h)) return 0;
-    tg = MAPC(t);
-    hg = MAPC(h);
+    graph_t *const tg = mapc(cmap, t);
+    graph_t *const hg = mapc(cmap, h);
     if (!tg && !hg)
 	return 0;
     if (tg == hg) {
