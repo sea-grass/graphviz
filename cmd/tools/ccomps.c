@@ -48,7 +48,7 @@ typedef struct {
 #define Node_mark(n)  (((nodeinfo_t*)(n->base.data))->mark)
 #define ND_ptr(n)  (((nodeinfo_t*)(n->base.data))->ptr)
 #define ND_dn(n)  ((Agnode_t*)ND_ptr(n))
-#define ND_clust(n)  ((Agraph_t*)ND_ptr(n))
+#define Node_clust(n)  ((Agraph_t*)ND_ptr(n))
 #define agfindnode(G,N) (agnode(G, N, 0))
 
 #include <getopt.h>
@@ -458,7 +458,7 @@ static void unionNodes(Agraph_t * dg, Agraph_t * g)
 	if (AGTYPE(ND_ptr(dn)) == AGNODE) {
 	    agsubnode(g, ND_dn(dn), 1);
 	} else {
-	    clust = ND_clust(dn);
+	    clust = Node_clust(dn);
 	    for (n = agfstnode(clust); n; n = agnxtnode(clust, n))
 		agsubnode(g, n, 1);
 	}
