@@ -42,11 +42,11 @@ typedef struct {
     Agrec_t h;
     char mark;
     Agobj_t* ptr;
-} Agnodeinfo_t;
+} nodeinfo_t;
 
 #define GD_cc_subg(g)  (((Agraphinfo_t*)(g->base.data))->cc_subg)
-#define ND_mark(n)  (((Agnodeinfo_t*)(n->base.data))->mark)
-#define ND_ptr(n)  (((Agnodeinfo_t*)(n->base.data))->ptr)
+#define ND_mark(n)  (((nodeinfo_t*)(n->base.data))->mark)
+#define ND_ptr(n)  (((nodeinfo_t*)(n->base.data))->ptr)
 #define ND_dn(n)  ((Agnode_t*)ND_ptr(n))
 #define ND_clust(n)  ((Agraph_t*)ND_ptr(n))
 #define agfindnode(G,N) (agnode(G, N, 0))
@@ -388,7 +388,7 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	if (startswith(agnameof(subg), "cluster")) {
 	    dn = agnode(dg, agnameof(subg), 1);
-	    agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
+	    agbindrec (dn, "nodeinfo", sizeof(nodeinfo_t), true);
 	    ND_ptr(dn) = (Agobj_t*)subg;
 	    for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
 		if (ND_ptr(n)) {
@@ -423,7 +423,7 @@ static Agraph_t *deriveGraph(Agraph_t * g)
 	if (ND_dn(n))
 	    continue;
 	dn = agnode(dg, agnameof(n), 1);
-	agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
+	agbindrec (dn, "nodeinfo", sizeof(nodeinfo_t), true);
 	ND_ptr(dn) = (Agobj_t*)n;
 	ND_ptr(n) = (Agobj_t*)dn;
     }
@@ -690,7 +690,7 @@ static int process(Agraph_t * g, char* graphName)
     Agnode_t *n;
     int extracted = 0;
 
-    aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
+    aginit(g, AGNODE, "nodeinfo", sizeof(nodeinfo_t), true);
     bindGraphinfo (g);
 
     if (useClusters)
