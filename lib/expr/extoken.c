@@ -21,6 +21,7 @@
 #include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <expr/exlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,6 +37,7 @@ trace(Expr_t* ex, int lev, char* op, int c)
 {
 	char*	s = 0;
 	char*	t;
+	bool free_t = false;
 	char	buf[16];
 	void*	x = 0;
 
@@ -130,6 +132,7 @@ trace(Expr_t* ex, int lev, char* op, int c)
 	case STRING:
 		s = " STRING ";
 		t = fmtesc(ex_lval.string);
+		free_t = true;
 		break;
 	case UNSIGNED:
 		s = " UNSIGNED ";
@@ -220,6 +223,7 @@ trace(Expr_t* ex, int lev, char* op, int c)
 			*s++ = c;
 			*s = 0;
 			t = fmtesc(buf);
+			free_t = true;
 			s = " ";
 		}
 		break;
@@ -229,6 +233,9 @@ trace(Expr_t* ex, int lev, char* op, int c)
 
 	else
 		error(TRACE_lex + lev, "%s: [%d] %04d%s%s", op, ex->input->nesting, c, s, t);
+	if (free_t) {
+		free(t);
+	}
 }
 
 /*

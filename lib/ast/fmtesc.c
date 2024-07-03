@@ -16,44 +16,40 @@
  */
 
 #include <ast/ast.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
-#include <stddef.h>
+#include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 
-/*
- * quote string as of length n with qb...qe
- */
-
-char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
+/// quote string as with qb...qe
+char *fmtquote(const char *as, const char *qb, const char *qe) {
+    const size_t n = strlen(as);
     const unsigned char *s = (const unsigned char *) as;
     const unsigned char *e = s + n;
-    char *b;
-    int escaped;
-    int spaced;
-    int shell;
-    char *f;
-    char *buf;
+    bool escaped = false;
+    bool spaced = false;
+    bool shell = false;
 
-    size_t len = 4 * (n + 1);
-    if (qb)
-	len += strlen(qb);
-    if (qe)
-	len += strlen(qe);
-    b = buf = fmtbuf(len);
-    shell = 0;
+    agxbuf b = {0};
     if (qb) {
 	if (qb[0] == '$' && qb[1] == '\'' && qb[2] == 0)
-	    shell = 1;
-	while ((*b = *qb++))
-	    b++;
+	    shell = true;
+	agxbput(&b, qb);
     }
-    f = b;
-    escaped = spaced = 0;
+
+    char last = '\0';
+#define PUT(ch)                                                                \
+  do {                                                                         \
+    last = (ch);                                                               \
+    agxbputc(&b, (ch));                                                        \
+  } while (0)
+
     while (s < e) {
 	    int c = *s++;
 	    if (gv_iscntrl(c) || !gv_isprint(c) || c == '\\') {
-		escaped = 1;
-		*b++ = '\\';
+		escaped = true;
+		PUT('\\');
 		switch (c) {
 		case CC_bel:
 		    c = 'a';
@@ -82,37 +78,42 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
 		case '\\':
 		    break;
 		default:
-		    *b++ = (char)('0' + ((c >> 6) & 07));
-		    *b++ = (char)('0' + ((c >> 3) & 07));
+		    PUT((char)('0' + ((c >> 6) & 07)));
+		    PUT((char)('0' + ((c >> 3) & 07)));
 		    c = '0' + (c & 07);
 		    break;
 		}
 	    } else if (qe && strchr(qe, c)) {
-		escaped = 1;
-		*b++ = '\\';
+		escaped = true;
+		PUT('\\');
 	    } else if (!spaced &&
 		       !escaped &&
 		       (gv_isspace(c) ||
 			(shell &&
 			 (strchr("\";~&|()<>[]*?", c) ||
-			  (c == '#' && (b == f || gv_isspace(*(b - 1)))
+			  (c == '#' && (last == '\0' || gv_isspace(last))
 			  )
 			 )
 			)
 		       )
 		)
-		spaced = 1;
-	    *b++ = (char)c;
+		spaced = true;
+	    PUT((char)c);
     }
+#undef PUT
     if (qb) {
-	if (!escaped)
-	    buf += shell + !spaced;
+	if (!escaped) {
+	    const size_t move_by = (size_t)(shell + !spaced);
+	    if (move_by > 0) {
+		char *content = agxbdisown(&b);
+		agxbput(&b, content + move_by);
+		free(content);
+	    }
+	}
 	if (qe && (escaped || spaced))
-	    while ((*b = *qe++))
-		b++;
+	    agxbput(&b, qe);
     }
-    *b = 0;
-    return buf;
+    return agxbdisown(&b);
 }
 
 /*
@@ -121,7 +122,7 @@ char *fmtquote(const char *as, const char *qb, const char *qe, size_t n) {
 
 char *fmtesq(const char *as, const char *qs)
 {
-  return fmtquote(as, NULL, qs, strlen(as));
+  return fmtquote(as, NULL, qs);
 }
 
 /*
@@ -130,5 +131,5 @@ char *fmtesq(const char *as, const char *qs)
 
 char *fmtesc(const char *as)
 {
-  return fmtquote(as, NULL, NULL, strlen(as));
+  return fmtquote(as, NULL, NULL);
 }

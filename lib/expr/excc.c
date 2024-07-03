@@ -127,9 +127,14 @@ static void print(Excc_t *cc, Exnode_t *exnode) {
 
 	if ((x = exnode->data.print.args))
 	{
-		agxbprint(cc->ccdisc->text, "sfprintf(%s, \"%s", exnode->data.print.descriptor->op == CONSTANT && exnode->data.print.descriptor->data.constant.value.integer == 2 ? "sfstderr" : "sfstdout", fmtesq(x->format, quote));
-		while ((x = x->next))
-			agxbput(cc->ccdisc->text, fmtesq(x->format, quote));
+		char *quoted = fmtesq(x->format, quote);
+		agxbprint(cc->ccdisc->text, "sfprintf(%s, \"%s", exnode->data.print.descriptor->op == CONSTANT && exnode->data.print.descriptor->data.constant.value.integer == 2 ? "sfstderr" : "sfstdout", quoted);
+		free(quoted);
+		while ((x = x->next)) {
+			quoted = fmtesq(x->format, quote);
+			agxbput(cc->ccdisc->text, quoted);
+			free(quoted);
+		}
 		agxbputc(cc->ccdisc->text, '"');
 		for (x = exnode->data.print.args; x; x = x->next)
 		{
@@ -159,9 +164,14 @@ static void scan(Excc_t *cc, Exnode_t *exnode) {
 
 	if ((x = exnode->data.print.args))
 	{
-		agxbprint(cc->ccdisc->text, "sfscanf(sfstdin, \"%s", fmtesq(x->format, quote));
-		while ((x = x->next))
-			agxbput(cc->ccdisc->text, fmtesq(x->format, quote));
+		char *quoted = fmtesq(x->format, quote);
+		agxbprint(cc->ccdisc->text, "sfscanf(sfstdin, \"%s", quoted);
+		free(quoted);
+		while ((x = x->next)) {
+			quoted = fmtesq(x->format, quote);
+			agxbput(cc->ccdisc->text, quoted);
+			free(quoted);
+		}
 		agxbputc(cc->ccdisc->text, '"');
 		for (x = exnode->data.print.args; x; x = x->next)
 		{
@@ -219,9 +229,12 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 		case FLOATING:
 			agxbprint(cc->ccdisc->text, "%g", exnode->data.constant.value.floating);
 			break;
-		case STRING:
-			agxbprint(cc->ccdisc->text, "\"%s\"", fmtesq(exnode->data.constant.value.string, quote));
+		case STRING: {
+			char *quoted = fmtesq(exnode->data.constant.value.string, quote);
+			agxbprint(cc->ccdisc->text, "\"%s\"", quoted);
+			free(quoted);
 			break;
+		}
 		case UNSIGNED:
 			agxbprint(cc->ccdisc->text, "%llu",
 			          (long long unsigned)exnode->data.constant.value.integer);
@@ -383,10 +396,11 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 						m = 1;
 						agxbput(cc->ccdisc->text, "if (");
 					}
-					if (t == STRING)
-						agxbprint(cc->ccdisc->text, "strmatch(%stmp_%d, \"%s\")", cc->id, cc->tmp, fmtesq(v->string, quote));
-					else
-					{
+					if (t == STRING) {
+						char *quoted = fmtesq(v->string, quote);
+						agxbprint(cc->ccdisc->text, "strmatch(%stmp_%d, \"%s\")", cc->id, cc->tmp, quoted);
+						free(quoted);
+					} else {
 						agxbprint(cc->ccdisc->text, "%stmp_%d == ", cc->id, cc->tmp);
 						switch (t)
 						{

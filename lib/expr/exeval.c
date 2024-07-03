@@ -236,11 +236,12 @@ prformat(void* vp, Sffmt_t* dp)
 			{
 				if (fmt->value.string)
 				{
-					size_t n = strlen(fmt->value.string);
-					if ((s = fmtbuf(n + 1)))
-						memcpy(s, fmt->value.string, n + 1);
+					char *const copy = vmstrdup(fmt->expr->vm, fmt->value.string);
+					if (copy == NULL) {
+						exerror("printf: out of memory");
+					}
 					vmfree(fmt->expr->vm, fmt->value.string);
-					fmt->value.string = s;
+					fmt->value.string = copy;
 				}
 				if (!fmt->value.string)
 					fmt->value.string = "";
@@ -270,12 +271,18 @@ prformat(void* vp, Sffmt_t* dp)
 	switch (dp->fmt)
 	{
 	case 'q':
-	case 'Q':
+	case 'Q': {
 		s = *(char**)vp;
-		*(char**)vp = fmtquote(s, "$'", "'", strlen(s));
+		char *quoted = fmtquote(s, "$'", "'");
+		*(char**)vp = vmstrdup(fmt->expr->vm, quoted);
+		free(quoted);
+		if (*(char**)vp == NULL) {
+			exerror("printf: out of memory");
+		}
 		dp->fmt = 's';
 		dp->size = -1;
 		break;
+	}
 	case 'S':
 		dp->flags &= ~SFFMT_LONG;
 		s = *(char**)vp;
@@ -322,18 +329,19 @@ prformat(void* vp, Sffmt_t* dp)
         if (txt.data == NULL) {
             exerror("printf: no time format provided");
         } else {
-            s = fmtbuf(TIME_LEN);
+            s = vmalloc(fmt->expr->vm, TIME_LEN);
             stm = localtime(&tm);
             char *format = malloc(sizeof(char) * (txt.size + 1));
-            if (format == NULL) {
+            if (s == NULL || format == NULL) {
+                vmfree(fmt->expr->vm, s);
                 exerror("printf: out of memory");
             } else {
                 strncpy(format, txt.data, txt.size);
                 format[txt.size] = '\0';
                 strftime(s, TIME_LEN, format, stm);
-                free(format);
                 *(char **)vp = s;
             }
+            free(format);
         }
 		dp->fmt = 's';
 		dp->size = -1;
