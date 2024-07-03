@@ -69,7 +69,7 @@ typedef struct {
 #define BY_SIZE  2
 
 static char* Cmd;
-static char **Files;
+static char **Inputs;
 static int verbose;
 static int printMode = INTERNAL;
 static int useClusters = 0;
@@ -233,7 +233,7 @@ static void init(int argc, char *argv[])
 	    sorted = 0;    /* not relevant; turn off */
     }
     if (argc > 0)
-	Files = argv;
+	Inputs = argv;
 }
 
 static gv_stack_t Stk;
@@ -820,7 +820,7 @@ int main(int argc, char *argv[])
     ingraph_state ig;
     int r = 0;
     init(argc, argv);
-    newIngraph(&ig, Files);
+    newIngraph(&ig, Inputs);
 
     while ((g = nextGraph(&ig)) != 0) {
 	r += process(g, chkGraphName(g));
