@@ -569,10 +569,9 @@ Agraph_t *gvplugin_graph(GVC_t * gvc)
                             loadimage_n = n;
 			}
                         if (!(p && *p)) {
-                            strcpy(bufb, "render_cg");
-                            m = agfindnode(sg, bufb);
+                            m = agfindnode(sg, "render_cg");
                             if (!m) {
-                                m = agnode(sg, bufb, 1);
+                                m = agnode(sg, "render_cg", 1);
                                 a = agfindgraphattr(g, "label");
                                 agxset(m, a, "cg");
                             }
