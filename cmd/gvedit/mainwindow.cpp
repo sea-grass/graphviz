@@ -160,7 +160,7 @@ void CMainWindow::slotNew() {
   child->show();
 }
 
-void CMainWindow::addFile(QString fileName) {
+void CMainWindow::addFile(const QString &fileName) {
   if (!fileName.isEmpty()) {
     QMdiSubWindow *existing = findMdiChild(fileName);
     if (existing) {

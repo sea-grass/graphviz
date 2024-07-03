@@ -155,7 +155,7 @@ QString MdiChild::strippedName(const QString & fullFileName)
     return QFileInfo(fullFileName).fileName();
 }
 
-bool MdiChild::loadPreview(QString fileName)
+bool MdiChild::loadPreview(const QString &fileName)
 {
     if (previewFrm == nullptr) {
 	previewFrm = std::unique_ptr<ImageViewer>(new ImageViewer());
