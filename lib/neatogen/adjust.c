@@ -45,7 +45,6 @@
 static const double incr = 0.05;	/* Increase bounding box by adding
 				 * incr * dimension around box.
 				 */
-static bool doAll = false; // Move all nodes, regardless of overlap
 static Site **sites;		/* Array of pointers to sites; used in qsort */
 static Site **endSite;		/* Sentinel on sites array */
 static Point nw, ne, sw, se;	/* Corners of clipping window */
@@ -408,9 +407,10 @@ static void addCorners(void)
   * window.
   * We first add the corner of the clipping windows to the
   * vertex lists of the appropriate sites.
+  *
+  * @param doAll Move all nodes, regardless of overlap
   */
-static void newPos(void)
-{
+static void newPos(bool doAll) {
     addCorners();
     for (size_t i = 0; i < nsites; i++) {
 	Info_t *ip = &nodeInfo[i];
@@ -447,8 +447,8 @@ static int vAdjust(void)
     rmEquality();
     geomUpdate(0);
     voronoi(nextOne);
-    while (1) {
-	newPos();
+    for (bool doAll = false;;) {
+	newPos(doAll);
 	iterCnt++;
 
 	const int cnt = countOverlap(iterCnt);
