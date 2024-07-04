@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (12.0.0)]
+## [12.0.0] – 2024-07-04
 
 ### Added
 
@@ -74,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the CMake build system, the minimum required CMake version has been
   increased to 3.14.1.
 - **Breaking**: the `disc` parameter has been removed from `Dtfree_f`.
+- Gvedit no longer depends on the getopt library.
 
 ### Fixed
 
@@ -2705,7 +2706,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (12.0.0)]: https://gitlab.com/graphviz/graphviz/compare/11.0.0...main
+[12.0.0]: https://gitlab.com/graphviz/graphviz/compare/11.0.0...12.0.0
 [11.0.0]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...11.0.0
 [10.0.1]: https://gitlab.com/graphviz/graphviz/compare/9.0.0...10.0.1
 [9.0.0]: https://gitlab.com/graphviz/graphviz/compare/8.1.0...9.0.0
