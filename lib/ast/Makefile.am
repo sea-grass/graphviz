@@ -5,7 +5,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 noinst_HEADERS = ast.h error.h
 noinst_LTLIBRARIES = libast_C.la
 
-libast_C_la_SOURCES = pathpath.c chresc.c chrtoi.c error.c \
+libast_C_la_SOURCES = chresc.c chrtoi.c error.c \
 	fmtesc.c pathaccess.c pathcat.c \
 	pathfind.c \
 	stresc.c strmatch.c
