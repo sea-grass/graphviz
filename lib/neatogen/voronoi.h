@@ -16,7 +16,7 @@ extern "C" {
 
 #include <neatogen/site.h>
 
-    extern void voronoi(Site * (*)(void));
+void voronoi(Site *(*)(void *), void *);
 
 #ifdef __cplusplus
 }

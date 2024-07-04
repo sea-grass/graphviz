@@ -217,8 +217,8 @@ static void geomUpdate(int doSort)
     deltax = xmax - xmin;
 }
 
-static Site *nextOne(void)
-{
+static Site *nextOne(void *ignored) {
+    (void)ignored;
     if (nextSite < endSite) {
 	return *nextSite++;
     } else
@@ -446,7 +446,7 @@ static int vAdjust(void)
 
     rmEquality();
     geomUpdate(0);
-    voronoi(nextOne);
+    voronoi(nextOne, NULL);
     for (bool doAll = false;;) {
 	newPos(doAll);
 	iterCnt++;
@@ -472,7 +472,7 @@ static int vAdjust(void)
 	}
 
 	geomUpdate(1);
-	voronoi(nextOne);
+	voronoi(nextOne, NULL);
     }
 
     if (Verbose) {
