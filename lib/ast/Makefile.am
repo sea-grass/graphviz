@@ -6,7 +6,7 @@ noinst_HEADERS = ast.h error.h
 noinst_LTLIBRARIES = libast_C.la
 
 libast_C_la_SOURCES = chresc.c chrtoi.c error.c \
-	fmtesc.c pathcat.c \
+	fmtesc.c \
 	pathfind.c \
 	stresc.c strmatch.c
 

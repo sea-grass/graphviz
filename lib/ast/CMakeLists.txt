@@ -8,7 +8,6 @@ add_library(ast STATIC
   chrtoi.c
   error.c
   fmtesc.c
-  pathcat.c
   pathfind.c
   stresc.c
   strmatch.c
