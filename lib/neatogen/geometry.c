@@ -12,8 +12,6 @@
 #include <math.h>
 #include <stddef.h>
 
-Point origin = { 0, 0 };
-
 double xmin, xmax, ymin, ymax;	/* min and max x and y values of sites */
 double deltax,			/* xmax - xmin */
  deltay;			/* ymax - ymin */

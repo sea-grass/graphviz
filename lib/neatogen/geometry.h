@@ -24,8 +24,6 @@ extern "C" {
     } Point;
 #endif
 
-    extern Point origin;
-
     extern double xmin, xmax, ymin, ymax;	/* extreme x,y values of sites */
     extern double deltax, deltay;	/* xmax - xmin, ymax - ymin */
 
