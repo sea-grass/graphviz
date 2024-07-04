@@ -32,7 +32,7 @@ static struct { /* directory list state           */
 } state;
 
 /*
- * return path to name using pathinclude() list
+ * return path to name
  * if lib!=0 then pathpath() attempted after include search
  * if type!=0 and name has no '.' then file.type also attempted
  * any *: prefix in lib is ignored (discipline library dictionary support)
