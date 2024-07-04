@@ -18,8 +18,6 @@
 #define W_OK    2       /* Test for write permission.  */
 #define F_OK    0       /* Test for existence.  */
 
-#define S_ISDIR(mode) (((mode) & _S_IFDIR) == _S_IFDIR)
-
 #define access _access
 #define ftruncate _chsize
 #define fileno _fileno

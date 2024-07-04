@@ -33,7 +33,6 @@ extern "C" {
 #define elementsof(x)   (sizeof(x)/sizeof(x[0]))
 
     extern char *pathfind(const char *, const char *);
-    extern char *pathaccess(const char*, const char*, const char*);
     extern const char *pathcat(agxbuf *, const char *, const char *,
 			 const char *);
 

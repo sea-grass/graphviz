@@ -11,8 +11,6 @@
 /*
  * Glenn Fowler
  * AT&T Bell Laboratories
- *
- * single dir support for pathaccess()
  */
 
 #include <ast/ast.h>

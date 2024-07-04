@@ -83,7 +83,6 @@
     <ClCompile Include="chrtoi.c" />
     <ClCompile Include="error.c" />
     <ClCompile Include="fmtesc.c" />
-    <ClCompile Include="pathaccess.c" />
     <ClCompile Include="pathcat.c" />
     <ClCompile Include="pathfind.c" />
     <ClCompile Include="stresc.c" />
