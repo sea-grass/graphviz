@@ -783,7 +783,7 @@ int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 		in->close = 0;
 	else if (name)
 	{
-		if (!(s = pathfind(name, NULL, p->disc->type)) || !(in->fp = fopen(s, "r")))
+		if (!(s = pathfind(name, p->disc->type)) || !(in->fp = fopen(s, "r")))
 		{
 			exerror("%s: file not found", name);
 		}

@@ -17,21 +17,16 @@
 
 #include <ast/ast.h>
 #include <cgraph/agxbuf.h>
-#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 
 /*
  * return path to name
- * if lib!=0 then pathpath() attempted after include search
  * if type!=0 and name has no '.' then file.type also attempted
- * any *: prefix in lib is ignored (discipline library dictionary support)
  */
 
-char *pathfind(const char *name, const char *lib, const char *type) {
-  char *s;
+char *pathfind(const char *name, const char *type) {
   agxbuf tmp = {0};
-  char *buf;
 
   if (access(name, R_OK) >= 0)
     return strdup(name);
@@ -41,26 +36,6 @@ char *pathfind(const char *name, const char *lib, const char *type) {
     if (access(tmp_path, R_OK) >= 0)
       return tmp_path;
     free(tmp_path);
-  }
-  if (*name != '/') {
-    if (strchr(name, '.'))
-      type = 0;
-    if (lib) {
-      if ((s = strrchr(lib, ':')))
-        lib = s + 1;
-      agxbprint(&tmp, "lib/%s/%s", lib, name);
-      if ((buf = pathpath(agxbuse(&tmp)))) {
-        agxbfree(&tmp);
-        return buf;
-      }
-      if (type) {
-        agxbprint(&tmp, "lib/%s/%s.%s", lib, name, type);
-        if ((buf = pathpath(agxbuse(&tmp)))) {
-          agxbfree(&tmp);
-          return buf;
-        }
-      }
-    }
   }
   agxbfree(&tmp);
   return 0;
