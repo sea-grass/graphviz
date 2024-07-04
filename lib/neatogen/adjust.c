@@ -355,7 +355,7 @@ static void newpos(Info_t * ip)
  /* Add corners of clipping window to appropriate sites.
   * A site gets a corner if it is the closest site to that corner.
   */
-static void addCorners(state_t *st) {
+static void addCorners(const state_t *st) {
     Info_t *ip = nodeInfo;
     Info_t *sws = ip;
     Info_t *nws = ip;
