@@ -21,16 +21,6 @@
 #include <string.h>
 #include <unistd.h>
 
-typedef struct Dir_s { /* directory list element */
-  struct Dir_s *next;  /* next in list                 */
-  char dir[1];         /* directory path               */
-} Dir_t;
-
-static struct { /* directory list state           */
-  Dir_t *head;  /* directory list head          */
-  Dir_t *tail;  /* directory list tail          */
-} state;
-
 /*
  * return path to name
  * if lib!=0 then pathpath() attempted after include search
@@ -39,7 +29,6 @@ static struct { /* directory list state           */
  */
 
 char *pathfind(const char *name, const char *lib, const char *type) {
-  Dir_t *dp;
   char *s;
   agxbuf tmp = {0};
   char *buf;
@@ -56,20 +45,6 @@ char *pathfind(const char *name, const char *lib, const char *type) {
   if (*name != '/') {
     if (strchr(name, '.'))
       type = 0;
-    for (dp = state.head; dp; dp = dp->next) {
-      agxbprint(&tmp, "%s/%s", dp->dir, name);
-      if ((buf = pathpath(agxbuse(&tmp)))) {
-        agxbfree(&tmp);
-        return buf;
-      }
-      if (type) {
-        agxbprint(&tmp, "%s/%s.%s", dp->dir, name, type);
-        if ((buf = pathpath(agxbuse(&tmp)))) {
-          agxbfree(&tmp);
-          return buf;
-        }
-      }
-    }
     if (lib) {
       if ((s = strrchr(lib, ':')))
         lib = s + 1;
