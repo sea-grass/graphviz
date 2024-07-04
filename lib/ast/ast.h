@@ -32,7 +32,7 @@ extern "C" {
 
 #define elementsof(x)   (sizeof(x)/sizeof(x[0]))
 
-    extern char *pathfind(const char *, const char *);
+    extern char *pathfind(const char *);
 
     extern int chresc(const char *, char **);
     extern int chrtoi(const char *);

@@ -16,27 +16,15 @@
  */
 
 #include <ast/ast.h>
-#include <cgraph/agxbuf.h>
 #include <string.h>
 #include <unistd.h>
 
 /*
  * return path to name
- * if type!=0 and name has no '.' then file.type also attempted
  */
 
-char *pathfind(const char *name, const char *type) {
-  agxbuf tmp = {0};
-
+char *pathfind(const char *name) {
   if (access(name, R_OK) >= 0)
     return strdup(name);
-  if (type) {
-    agxbprint(&tmp, "%s.%s", name, type);
-    char *tmp_path = agxbdisown(&tmp);
-    if (access(tmp_path, R_OK) >= 0)
-      return tmp_path;
-    free(tmp_path);
-  }
-  agxbfree(&tmp);
   return 0;
 }
