@@ -31,10 +31,9 @@ void geominit(void)
     /* deltax = xmax - xmin; */
 }
 
-double dist_2(Point * pp, Point * qp)
-{
-    double dx = pp->x - qp->x;
-    double dy = pp->y - qp->y;
+double dist_2(Point pp, Point qp) {
+    const double dx = pp.x - qp.x;
+    const double dy = pp.y - qp.y;
 
     return (dx * dx + dy * dy);
 }

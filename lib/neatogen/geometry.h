@@ -33,7 +33,7 @@ extern "C" {
     extern int sqrt_nsites;
 
     extern void geominit(void);
-    extern double dist_2(Point *, Point *);	/* Distance squared between two points */
+    extern double dist_2(Point, Point); ///< distance squared between two points
     extern void subpt(Point * a, Point b, Point c);
     extern void addpt(Point * a, Point b, Point c);
     extern double area_2(Point a, Point b, Point c);

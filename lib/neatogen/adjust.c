@@ -361,29 +361,29 @@ static void addCorners(state_t *st) {
     Info_t *nws = ip;
     Info_t *ses = ip;
     Info_t *nes = ip;
-    double swd = dist_2(&ip->site.coord, &st->sw);
-    double nwd = dist_2(&ip->site.coord, &st->nw);
-    double sed = dist_2(&ip->site.coord, &st->se);
-    double ned = dist_2(&ip->site.coord, &st->ne);
+    double swd = dist_2(ip->site.coord, st->sw);
+    double nwd = dist_2(ip->site.coord, st->nw);
+    double sed = dist_2(ip->site.coord, st->se);
+    double ned = dist_2(ip->site.coord, st->ne);
 
     for (size_t i = 1; i < nsites; i++) {
 	ip = &nodeInfo[i];
-	double d = dist_2(&ip->site.coord, &st->sw);
+	double d = dist_2(ip->site.coord, st->sw);
 	if (d < swd) {
 	    swd = d;
 	    sws = ip;
 	}
-	d = dist_2(&ip->site.coord, &st->se);
+	d = dist_2(ip->site.coord, st->se);
 	if (d < sed) {
 	    sed = d;
 	    ses = ip;
 	}
-	d = dist_2(&ip->site.coord, &st->nw);
+	d = dist_2(ip->site.coord, st->nw);
 	if (d < nwd) {
 	    nwd = d;
 	    nws = ip;
 	}
-	d = dist_2(&ip->site.coord, &st->ne);
+	d = dist_2(ip->site.coord, st->ne);
 	if (d < ned) {
 	    ned = d;
 	    nes = ip;
