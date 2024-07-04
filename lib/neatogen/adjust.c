@@ -42,10 +42,6 @@
 
 #define SEPFACT         0.8 // default esep/sep
 
-static double margin = 0.05;	/* Create initial bounding box by adding
-				 * margin * dimension around box enclosing
-				 * nodes.
-				 */
 static const double incr = 0.05;	/* Increase bounding box by adding
 				 * incr * dimension around box.
 				 */
@@ -106,10 +102,10 @@ static void chkBoundBox(Agraph_t * graph)
 	y_max = fmax(y_max, pp->corner.y + y);
     }
 
+    // create initial bounding box by adding margin × dimension around box
+    // enclosing nodes
     char *marg = agget(graph, "voro_margin");
-    if (marg && *marg != '\0') {
-	margin = atof(marg);
-    }
+    const double margin = (marg && *marg != '\0') ? atof(marg) : 0.05;
     double ydelta = margin * (y_max - y_min);
     double xdelta = margin * (x_max - x_min);
     ll.x = x_min - xdelta;
