@@ -7,7 +7,6 @@ noinst_LTLIBRARIES = libast_C.la
 
 libast_C_la_SOURCES = chresc.c chrtoi.c error.c \
 	fmtesc.c \
-	pathfind.c \
 	stresc.c strmatch.c
 
 EXTRA_DIST = ast.vcxproj*

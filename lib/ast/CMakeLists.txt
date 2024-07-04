@@ -8,7 +8,6 @@ add_library(ast STATIC
   chrtoi.c
   error.c
   fmtesc.c
-  pathfind.c
   stresc.c
   strmatch.c
 )
@@ -16,7 +15,3 @@ add_library(ast STATIC
 target_include_directories(ast PRIVATE
   ..
 )
-
-if(WIN32 AND NOT MINGW)
-  target_include_directories(ast PRIVATE ../../windows/include/unistd)
-endif()
