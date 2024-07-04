@@ -996,8 +996,6 @@ removeOverlapWith (graph_t * G, adjust_data* am)
     /* create main array */
     if (makeInfo(G)) {
 	freeNodes();
-	free(sites);
-	sites = 0;
 	return nret;
     }
 
