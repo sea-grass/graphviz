@@ -406,7 +406,7 @@ static void addCorners(const state_t *st) {
   * @param st Algorithm state
   * @param doAll Move all nodes, regardless of overlap
   */
-static void newPos(state_t *st, bool doAll) {
+static void newPos(const state_t *st, bool doAll) {
     addCorners(st);
     for (size_t i = 0; i < nsites; i++) {
 	Info_t *ip = &nodeInfo[i];
