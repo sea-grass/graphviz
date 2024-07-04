@@ -1,12 +1,8 @@
 include(FindPackageHandleStandardArgs)
 
 if(MINGW)
-  find_path(
-    CAIRO_INCLUDE_DIR cairo.h
-    PATH_SUFFIXES cairo
-  )
-
-  find_library(CAIRO_LIBRARY NAMES cairo)
+  find_package(PkgConfig)
+  pkg_check_modules(CAIRO cairo)
 
   find_program(CAIRO_RUNTIME_LIBRARY NAMES libcairo-2.dll)
   find_program(EXPAT_RUNTIME_LIBRARY NAMES libexpat-1.dll)
@@ -14,21 +10,15 @@ if(MINGW)
   find_program(PIXMAN_RUNTIME_LIBRARY NAMES libpixman-1-0.dll)
 
   find_package_handle_standard_args(CAIRO DEFAULT_MSG
-    CAIRO_INCLUDE_DIR
+    CAIRO_INCLUDE_DIRS
 
-    CAIRO_LIBRARY
+    CAIRO_LIBRARIES
 
     CAIRO_RUNTIME_LIBRARY
     EXPAT_RUNTIME_LIBRARY
     FONTCONFIG_RUNTIME_LIBRARY
     PIXMAN_RUNTIME_LIBRARY
   )
-
-  set(CAIRO_INCLUDE_DIRS ${CAIRO_INCLUDE_DIR})
-
-  set(CAIRO_LIBRARIES ${CAIRO_LIBRARY})
-
-  set(CAIRO_LINK_LIBRARIES ${CAIRO_LIBRARY})
 
   set(CAIRO_RUNTIME_LIBRARIES
     ${CAIRO_RUNTIME_LIBRARY}
