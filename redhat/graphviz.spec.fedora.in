@@ -62,7 +62,7 @@ Source0: https://gitlab.com/graphviz/graphviz/-/archive/@VERSION@/graphviz-@VERS
 BuildRoot:     %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires: java-devel
-BuildRequires: zlib-devel expat-devel ksh bison m4 flex swig gcc-c++
+BuildRequires: zlib-devel expat-devel bison m4 flex swig gcc-c++
 BuildRequires: libX11-devel gtk2-devel freeglut-devel
 BuildRequires: freetype-devel fontconfig-devel cairo-devel pango-devel
 BuildRequires: gmp-devel gd gd-devel librsvg2-devel

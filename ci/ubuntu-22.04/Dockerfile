@@ -18,7 +18,6 @@ bison \
 libtool \
 dh-python \
 flex \
-ksh \
 # Debian build utilities
 d-shlibs \
 debhelper \

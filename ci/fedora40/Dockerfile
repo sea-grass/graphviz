@@ -11,7 +11,6 @@ flex \
 # Centos build utilities
 libtool-ltdl-devel \
 libedit-devel \
-ksh \
 # Option xpat
 expat-devel \
 # Option glut
