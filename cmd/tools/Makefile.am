@@ -83,8 +83,12 @@ sccmap_LDADD = \
 ccomps_SOURCES = ccomps.c
 
 ccomps_LDADD = \
-	$(top_builddir)/lib/cgraph/libcgraph.la
-
+	$(top_builddir)/lib/common/libcommon_C.la \
+	$(top_builddir)/lib/gvc/libgvc.la \
+	$(top_builddir)/lib/pathplan/libpathplan.la \
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/cdt/libcdt.la \
+	$(MATH_LIBS)
 
 tred_SOURCES = tred.c
 

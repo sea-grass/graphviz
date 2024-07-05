@@ -29,27 +29,27 @@
 #include <cgraph/ingraphs.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/stack.h>
-#include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
+#include <common/render.h>
+#include <common/utils.h>
 
 typedef struct {
     Agrec_t h;
     char cc_subg;   /* true iff subgraph corresponds to a component */
-} Agraphinfo_t;
+} graphinfo_t;
 
 typedef struct {
     Agrec_t h;
     char mark;
     Agobj_t* ptr;
-} Agnodeinfo_t;
+} nodeinfo_t;
 
-#define GD_cc_subg(g)  (((Agraphinfo_t*)(g->base.data))->cc_subg)
-#define ND_mark(n)  (((Agnodeinfo_t*)(n->base.data))->mark)
-#define ND_ptr(n)  (((Agnodeinfo_t*)(n->base.data))->ptr)
+#define GD_cc_subg(g)  (((graphinfo_t*)(g->base.data))->cc_subg)
+#define Node_mark(n)  (((nodeinfo_t*)(n->base.data))->mark)
+#define ND_ptr(n)  (((nodeinfo_t*)(n->base.data))->ptr)
 #define ND_dn(n)  ((Agnode_t*)ND_ptr(n))
-#define ND_clust(n)  ((Agraph_t*)ND_ptr(n))
-#define agfindnode(G,N) (agnode(G, N, 0))
+#define Node_clust(n)  ((Agraph_t*)ND_ptr(n))
 
 #include <getopt.h>
 
@@ -69,7 +69,7 @@ typedef struct {
 #define BY_SIZE  2
 
 static char* Cmd;
-static char **Files;
+static char **Inputs;
 static int verbose;
 static int printMode = INTERNAL;
 static int useClusters = 0;
@@ -77,7 +77,7 @@ static int doEdges = 1; // induce edges
 static int doAll = 1; // induce subgraphs
 static char *suffix = 0;
 static char *outfile = 0;
-static char *path = 0;
+static char *rootpath = 0;
 static int sufcnt = 0;
 static int sorted = 0;
 static int sortIndex = 0;
@@ -114,18 +114,10 @@ static void split(void) {
     if (sfx) {
 	suffix = sfx + 1;
 	size_t size = (size_t)(sfx - outfile);
-	path = gv_strndup(outfile, size);
+	rootpath = gv_strndup(outfile, size);
     } else {
-	path = outfile;
+	rootpath = outfile;
     }
-}
-
-/* isCluster:
- * Return true if graph is a cluster
- */
-static int isCluster(Agraph_t * g)
-{
-  return startswith(agnameof(g), "cluster");
 }
 
 static void init(int argc, char *argv[])
@@ -233,14 +225,14 @@ static void init(int argc, char *argv[])
 	    sorted = 0;    /* not relevant; turn off */
     }
     if (argc > 0)
-	Files = argv;
+	Inputs = argv;
 }
 
 static gv_stack_t Stk;
 
 static void push(Agnode_t * np)
 {
-  ND_mark(np) = -1;
+  Node_mark(np) = -1;
   stack_push(&Stk, np);
 }
 
@@ -260,13 +252,13 @@ static int dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out)
 
     push(n);
     while ((n = pop())) {
-	ND_mark(n) = 1;
+	Node_mark(n) = 1;
 	cnt++;
 	agsubnode(out, n, 1);
 	for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
 	    if ((other = agtail(e)) == n)
 		other = aghead(e);
-	    if (ND_mark(other) == 0)
+	    if (Node_mark(other) == 0)
 		push (other);
 	}
     }
@@ -281,9 +273,9 @@ static char *getName(void)
 	agxbput(&name, outfile);
     else {
 	if (suffix)
-	    agxbprint(&name, "%s_%d.%s", path, sufcnt, suffix);
+	    agxbprint(&name, "%s_%d.%s", rootpath, sufcnt, suffix);
 	else
-	    agxbprint(&name, "%s_%d", path, sufcnt);
+	    agxbprint(&name, "%s_%d", rootpath, sufcnt);
     }
     sufcnt++;
     return agxbdisown(&name);
@@ -354,12 +346,11 @@ subgInduce(Agraph_t * root, Agraph_t * g, int inCluster)
     Agraph_t *proj;
     int in_cluster;
 
-/* fprintf (stderr, "subgInduce %s inCluster %d\n", agnameof(root), inCluster); */
     for (subg = agfstsubg(root); subg; subg = agnxtsubg(subg)) {
 	if (GD_cc_subg(subg))
 	    continue;
 	if ((proj = projectG(subg, g, inCluster))) {
-	    in_cluster = inCluster || (useClusters && isCluster(subg));
+	    in_cluster = inCluster || (useClusters && is_a_cluster(subg));
 	    subgInduce(subg, proj, in_cluster);
 	}
     }
@@ -386,9 +377,9 @@ static void deriveClusters(Agraph_t* dg, Agraph_t * g)
     Agnode_t *n;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-	if (startswith(agnameof(subg), "cluster")) {
+	if (is_a_cluster(subg)) {
 	    dn = agnode(dg, agnameof(subg), 1);
-	    agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
+	    agbindrec (dn, "nodeinfo", sizeof(nodeinfo_t), true);
 	    ND_ptr(dn) = (Agobj_t*)subg;
 	    for (n = agfstnode(subg); n; n = agnxtnode(subg, n)) {
 		if (ND_ptr(n)) {
@@ -423,7 +414,7 @@ static Agraph_t *deriveGraph(Agraph_t * g)
 	if (ND_dn(n))
 	    continue;
 	dn = agnode(dg, agnameof(n), 1);
-	agbindrec (dn, "nodeinfo", sizeof(Agnodeinfo_t), true);
+	agbindrec (dn, "nodeinfo", sizeof(nodeinfo_t), true);
 	ND_ptr(dn) = (Agobj_t*)n;
 	ND_ptr(n) = (Agobj_t*)dn;
     }
@@ -459,7 +450,7 @@ static void unionNodes(Agraph_t * dg, Agraph_t * g)
 	if (AGTYPE(ND_ptr(dn)) == AGNODE) {
 	    agsubnode(g, ND_dn(dn), 1);
 	} else {
-	    clust = ND_clust(dn);
+	    clust = Node_clust(dn);
 	    for (n = agfstnode(clust); n; n = agnxtnode(clust, n))
 		agsubnode(g, n, 1);
 	}
@@ -579,7 +570,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    out = agsubg(g, name, 1);
 	    agxbfree(&buf);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	dn = ND_dn(n);
 	n_cnt = dfs(dg, dn, dout);
@@ -598,7 +589,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 
     c_cnt = 0;
     for (dn = agfstnode(dg); dn; dn = agnxtnode(dg, dn)) {
-	if (ND_mark(dn))
+	if (Node_mark(dn))
 	    continue;
 	{
 	    agxbuf buf = {0};
@@ -608,7 +599,7 @@ static int processClusters(Agraph_t * g, char* graphName)
 	    out = agsubg(g, name, 1);
 	    agxbfree(&buf);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(dg, dn, dout);
 	unionNodes(dout, out);
@@ -674,7 +665,7 @@ bindGraphinfo (Agraph_t * g)
 {
     Agraph_t *subg;
 
-    aginit(g, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+    aginit(g, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
 	bindGraphinfo (subg);
     }
@@ -690,7 +681,7 @@ static int process(Agraph_t * g, char* graphName)
     Agnode_t *n;
     int extracted = 0;
 
-    aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
+    aginit(g, AGNODE, "nodeinfo", sizeof(nodeinfo_t), true);
     bindGraphinfo (g);
 
     if (useClusters)
@@ -710,7 +701,7 @@ static int process(Agraph_t * g, char* graphName)
 	    out = agsubg(g, agxbuse(&name), 1);
 	    agxbfree(&name);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	size_t e_cnt = 0;
@@ -727,7 +718,7 @@ static int process(Agraph_t * g, char* graphName)
 
     c_cnt = 0;
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
-	if (ND_mark(n))
+	if (Node_mark(n))
 	    continue;
 	{
 	    agxbuf name = {0};
@@ -735,7 +726,7 @@ static int process(Agraph_t * g, char* graphName)
 	    out = agsubg(g, agxbuse(&name), 1);
 	    agxbfree(&name);
 	}
-	aginit(out, AGRAPH, "graphinfo", sizeof(Agraphinfo_t), true);
+	aginit(out, AGRAPH, "graphinfo", sizeof(graphinfo_t), true);
 	GD_cc_subg(out) = 1;
 	n_cnt = dfs(g, n, out);
 	size_t e_cnt = 0;
@@ -820,7 +811,7 @@ int main(int argc, char *argv[])
     ingraph_state ig;
     int r = 0;
     init(argc, argv);
-    newIngraph(&ig, Files);
+    newIngraph(&ig, Inputs);
 
     while ((g = nextGraph(&ig)) != 0) {
 	r += process(g, chkGraphName(g));
