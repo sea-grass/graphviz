@@ -260,7 +260,7 @@ if test "$ac_cv_prog_cc_c99" = "no"; then
   AC_MSG_ERROR([C compiler does not support C99])
 fi
 AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX_11(noext,mandatory)
+AX_CXX_COMPILE_STDCXX_14(noext,mandatory)
 AC_PROG_OBJC
 
 AC_C_INLINE
