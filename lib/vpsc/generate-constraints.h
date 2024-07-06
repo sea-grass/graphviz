@@ -27,9 +27,6 @@ public:
 	double getMaxY() const { return maxY; }
 	double getMinX() const { return minX; }
 	double getMinY() const { return minY; }
-	double getMaxD(unsigned const d) const {
-		return ( d == 0 ? getMaxX() : getMaxY() );
-	}
 	double getCentreX() const { return minX+width()/2.0; }
 	double getCentreY() const { return minY+height()/2.0; }
 	double width() const { return getMaxX()-minX; }
