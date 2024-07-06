@@ -37,9 +37,6 @@ public:
 	double getCentreY() const { return minY+height()/2.0; }
 	double width() const { return getMaxX()-minX; }
 	double height() const { return getMaxY()-minY; }
-	void moveCentreY(double y) {
-		moveMinY(y-height()/2.0);
-	}
 	void moveMinX(double x) {
 		maxX=x+width();
 		minX=x;
