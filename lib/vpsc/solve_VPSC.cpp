@@ -95,8 +95,7 @@ void VPSC::satisfy() {
 }
 
 void VPSC::refine() {
-	bool solved=false;
-	while(!solved) {
+	for (bool solved = false; !solved;) {
 		solved=true;
 		for(Block *b : bs) {
 			b->setUpInConstraints();
