@@ -97,61 +97,60 @@ checkG (Agraph_t* g)
 	return 0;
 }
 
-static void init(int argc, char *argv[], opts_t* opts)
-{
+static void init(int argc, char *argv[], opts_t &opts) {
 	int c;
 	char* cmd = argv[0];
 	double s;
 	int i;
 
 	opterr = 0;
-	opts->outer_iter = 4;
-	opts->method = METHOD_INK_AGGLOMERATE;
-	opts->compatibility_method = COMPATIBILITY_FULL;
-	opts->K = -1;
-	opts->fmt = FMT_GV;
-	opts->nneighbors = 10;
-	opts->max_recursion = 100;
-	opts->angle_param = -1;
-	opts->angle = 40.0/180.0*M_PI;
+	opts.outer_iter = 4;
+	opts.method = METHOD_INK_AGGLOMERATE;
+	opts.compatibility_method = COMPATIBILITY_FULL;
+	opts.K = -1;
+	opts.fmt = FMT_GV;
+	opts.nneighbors = 10;
+	opts.max_recursion = 100;
+	opts.angle_param = -1;
+	opts.angle = 40.0/180.0*M_PI;
 
 	while ((c = getopt(argc, argv, ":a:c:i:k:K:m:o:p:r:T:v:?")) != -1) {
 		switch (c) {
 		case 'a':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s >= 0))
-				opts->angle =  M_PI*s/180;
+				opts.angle =  M_PI * s / 180;
 			else
 				std::cerr << "-a arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'c':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= COMPATIBILITY_FULL))
-				opts->compatibility_method =  i;
+				opts.compatibility_method =  i;
 			else
 				std::cerr << "-c arg " << optarg << " must be an integer in [0,"
 					<< COMPATIBILITY_FULL << "] - ignored\n";
 			break;
 		case 'i':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
-				opts->outer_iter =  i;
+				opts.outer_iter =  i;
 			else
 				std::cerr << "-i arg " << optarg << " must be a non-negative integer - "
 					"ignored\n";
 			break;
 		case 'k':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 2))
-				opts->nneighbors =  i;
+				opts.nneighbors =  i;
 			else
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'K':
 			if ((sscanf(optarg,"%lf",&s) > 0) && (s > 0))
-				opts->K =  s;
+				opts.K =  s;
 			else
 				std::cerr << "-K arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'm':
 			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= METHOD_INK))
-				opts->method =  i;
+				opts.method =  i;
 			else
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
@@ -160,22 +159,22 @@ static void init(int argc, char *argv[], opts_t* opts)
 			break;
 		case 'p':
 			if ((sscanf(optarg,"%lf",&s) > 0))
-				opts->angle_param =  s;
+				opts.angle_param =  s;
 			else
 				std::cerr << "-p arg " << optarg << " must be real - ignored\n";
 			break;
 		case 'r':
 			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
-				opts->max_recursion =  i;
+				opts.max_recursion =  i;
 			else
 				std::cerr << "-r arg " << optarg << " must be a non-negative integer - "
 					"ignored\n";
 			break;
 		case 'T':
 			if (!strcmp(optarg, "gv"))
-				opts->fmt = FMT_GV;
+				opts.fmt = FMT_GV;
 			else if (!strcmp(optarg,"simple"))
-				opts->fmt = FMT_SIMPLE;
+				opts.fmt = FMT_SIMPLE;
 			else
 				std::cerr << "-T arg " << optarg << " must be \"gv\" or \"simple\" - "
 					"ignored\n";
@@ -216,15 +215,15 @@ static void init(int argc, char *argv[], opts_t* opts)
     if (Verbose) {
        std::cerr
          << "Mingle params:\n"
-         << "  outer_iter = " << opts->outer_iter << '\n'
-         << "  method = " << opts->method << '\n'
-         << "  compatibility_method = " << opts->compatibility_method << '\n'
-         << "  K = " << std::setprecision(2) << opts->K << '\n'
-         << "  fmt = " << (opts->fmt ? "simple" : "gv") << '\n'
-         << "  nneighbors = " << opts->nneighbors << '\n'
-         << "  max_recursion = " <<  opts->max_recursion << '\n'
-         << "  angle_param = " << std::setprecision(2) <<  opts->angle_param << '\n'
-         << "  angle = " << std::setprecision(2) << (180 * opts->angle / M_PI) << '\n';
+         << "  outer_iter = " << opts.outer_iter << '\n'
+         << "  method = " << opts.method << '\n'
+         << "  compatibility_method = " << opts.compatibility_method << '\n'
+         << "  K = " << std::setprecision(2) << opts.K << '\n'
+         << "  fmt = " << (opts.fmt ? "simple" : "gv") << '\n'
+         << "  nneighbors = " << opts.nneighbors << '\n'
+         << "  max_recursion = " <<  opts.max_recursion << '\n'
+         << "  angle_param = " << std::setprecision(2) <<  opts.angle_param << '\n'
+         << "  angle = " << std::setprecision(2) << (180 * opts.angle / M_PI) << '\n';
     }
 }
 
@@ -458,7 +457,7 @@ int main(int argc, char *argv[])
 	int rv = 0;
 	opts_t opts;
 
-	init(argc, argv, &opts);
+	init(argc, argv, opts);
 	newIngraph(&ig, Files);
 
 	while ((g = nextGraph(&ig)) != 0) {
