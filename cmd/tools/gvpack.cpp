@@ -118,10 +118,9 @@ static void usage(int v)
  */
 static int setNameValue(char *arg)
 {
-    char *p;
     char *rhs = const_cast<char*>("true");
 
-    if ((p = strchr(arg, '='))) {
+    if (char *p = strchr(arg, '=')) {
 	*p++ = '\0';
 	rhs = p;
     }
