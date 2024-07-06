@@ -256,7 +256,7 @@ CFrmSettings::CFrmSettings() {
   graph = nullptr;
   activeWindow = nullptr;
   QString path;
-  char *s = NULL;
+  char *s = nullptr;
 #ifndef _WIN32
   s = getenv("GVEDIT_PATH");
 #endif
