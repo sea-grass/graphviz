@@ -556,7 +556,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     Agnode_t *n;
     Agnode_t *np;
     Agsym_t *G_bb;
-    Agsym_t *rv;
     bool doWarn = true;
 
     if (verbose)
@@ -568,8 +567,7 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 
     /* add command-line attributes */
     for (attr_t &a : G_args) {
-	rv = agfindgraphattr(root, a.name);
-	if (rv)
+	if (Agsym_t *rv = agfindgraphattr(root, a.name))
 	    agxset(root, rv, a.value);
 	else
 	    agattr(root, AGRAPH, a.name, a.value);
