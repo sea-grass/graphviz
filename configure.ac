@@ -260,7 +260,7 @@ if test "$ac_cv_prog_cc_c99" = "no"; then
   AC_MSG_ERROR([C compiler does not support C99])
 fi
 AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX_14(noext,mandatory)
+AX_CXX_COMPILE_STDCXX_17(noext,mandatory)
 AC_PROG_OBJC
 
 AC_C_INLINE
@@ -1688,7 +1688,6 @@ AS_IF([test "$with_qt" != "no"], [
             AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6Widgets.so, [
               AC_CHECK_FILE($(${QMAKE} -query QT_INSTALL_LIBS)/libQt6PrintSupport.so, [
                 QTGUI_LIBS="-L$(${QMAKE} -query QT_INSTALL_LIBS) -lQt6Widgets -lQt6PrintSupport -lQt6Gui -lQt6Core"
-                AX_CXX_COMPILE_STDCXX_17(noext,mandatory)
                 use_qt="Yes"
               ], [
                 use_qt="No (Qt6PrintSupport library not available)"
