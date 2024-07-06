@@ -156,7 +156,7 @@ QString MdiChild::strippedName(const QString & fullFileName)
 bool MdiChild::loadPreview(const QString &fileName)
 {
     if (previewFrm == nullptr) {
-	previewFrm = std::unique_ptr<ImageViewer>(new ImageViewer());
+	previewFrm = std::make_unique<ImageViewer>();
 	previewFrm->graphWindow = this;
 	QMdiSubWindow *s = parentFrm->mdiArea->addSubWindow(previewFrm.get());
 

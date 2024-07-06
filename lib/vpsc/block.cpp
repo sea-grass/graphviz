@@ -63,8 +63,7 @@ void Block::setUpOutConstraints() {
 }
 void Block::setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h,
 	  bool use_in) {
-	h = std::unique_ptr<PairingHeap<Constraint*>>(
-	  new PairingHeap<Constraint*>(&compareConstraints));
+	h = std::make_unique<PairingHeap<Constraint*>>(&compareConstraints);
 	for (Variable *v : vars) {
 		vector<Constraint*> *cs= use_in ? &v->in : &v->out;
 		for (Constraint *c : *cs) {

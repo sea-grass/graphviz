@@ -51,10 +51,10 @@ Layout::Layout(char *fontname, double fontsize, char* string)
 		0) == 0) {
 		found_font.lfHeight = (LONG)-fontsize;
 		found_font.lfWidth = 0;
-		font = std::unique_ptr<Font>(new Font(reference.hdc, &found_font));
+		font = std::make_unique<Font>(reference.hdc, &found_font);
 	}
 	else
-		font = std::unique_ptr<Font>(new Font(FontFamily::GenericSerif(), fontsize));
+		font = std::make_unique<Font>(FontFamily::GenericSerif(), fontsize);
 }
 
 void gdiplus_free_layout(void *layout)
