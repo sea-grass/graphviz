@@ -279,8 +279,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     Ndim = GD_ndim(g) = 2;
     init_node_edge(g);
     if (fill) {
-	int ret = init_nop(g,0);
-	if (ret) {
+	if (int ret = init_nop(g, 0)) {
 	    if (ret < 0)
 		std::cerr << "Error loading layout info from graph " << agnameof(g) << '\n';
 	    else if (ret > 0)
