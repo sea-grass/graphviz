@@ -351,9 +351,7 @@ static void export_dot(FILE *fp, int ne, const std::vector<pedge> &edges,
 	agwrite(g, fp);
 }
 
-static int
-bundle (Agraph_t* g, opts_t* opts)
-{
+static int bundle(Agraph_t *g, const opts_t &opts) {
 	double *x = nullptr;
 	int dim = 2;
     int i;
@@ -375,7 +373,7 @@ bundle (Agraph_t* g, opts_t* opts)
     }
 
 	A = SparseMatrix_symmetrize(A, true);
-	if (opts->fmt == FMT_GV) {
+	if (opts.fmt == FMT_GV) {
 		PointMap* pm = newPM();    /* map from node id pairs to edge index */
 		Agnode_t* n;
 		Agedge_t* e;
@@ -429,18 +427,18 @@ bundle (Agraph_t* g, opts_t* opts)
 	if (Verbose)
 		std::cerr << "n = " << A->m << " nz = " << nz << '\n';
 
-	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts->nneighbors, nz), xx);
+	SparseMatrix B = nearest_neighbor_graph(nz, std::min(opts.nneighbors, nz), xx);
 
 	SparseMatrix_delete(A);
 	A = B;
 	free(x);
 
 	std::vector<pedge> edges =
-            edge_bundling(A, 2, xx, opts->outer_iter, opts->K, opts->method,
-                          opts->nneighbors, opts->compatibility_method,
-                          opts->max_recursion, opts->angle_param, opts->angle);
+            edge_bundling(A, 2, xx, opts.outer_iter, opts.K, opts.method,
+                          opts.nneighbors, opts.compatibility_method,
+                          opts.max_recursion, opts.angle_param, opts.angle);
 
-	if (opts->fmt == FMT_GV) {
+	if (opts.fmt == FMT_GV) {
 	    	export_dot(outfile, A->m, edges, g);
 	}
 	else {
@@ -467,7 +465,7 @@ int main(int argc, char *argv[])
 		fname = fileName(&ig);
 		if (Verbose)
 		    std::cerr << "Process graph " << agnameof(g) << " in file " << fname << '\n';
-		rv |= bundle (g, &opts);
+		rv |= bundle(g, opts);
 	}
 
 	graphviz_exit(rv);
