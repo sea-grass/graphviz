@@ -404,9 +404,7 @@ void CMainWindow::actions() {
   connect(saveAsAct, &QAction::triggered, this, &CMainWindow::slotSaveAs);
 
   exitAct = new QAction(tr("E&xit"), this);
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 6, 0))
   exitAct->setShortcuts(QKeySequence::Quit);
-#endif
   exitAct->setStatusTip(tr("Exit the application"));
   connect(exitAct, &QAction::triggered, qApp, &QApplication::closeAllWindows);
 
