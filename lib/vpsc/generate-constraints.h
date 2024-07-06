@@ -37,10 +37,6 @@ public:
 	double getCentreY() const { return minY+height()/2.0; }
 	double width() const { return getMaxX()-minX; }
 	double height() const { return getMaxY()-minY; }
-	void moveMinY(double y) {
-		maxY=y+height();
-		minY=y;
-	}
 	double overlapX(const Rectangle &r) const {
 		if (getCentreX() <= r.getCentreX() && r.minX < getMaxX())
 			return getMaxX() - r.minX;
