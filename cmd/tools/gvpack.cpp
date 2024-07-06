@@ -637,7 +637,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
  * be non-strict.
  */
 static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
-    Agraph_t *g;
     std::vector<Agraph_t*> gs;
     ingraph_state ig;
     int kindUnset = 1;
@@ -647,7 +646,7 @@ static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
     Nop = 2;
 
     newIngraph(&ig, myFiles);
-    while ((g = nextGraph(&ig)) != 0) {
+    while (Agraph_t *g = nextGraph(&ig)) {
 	if (verbose)
 	    std::cerr << "Reading graph " << agnameof(g) << '\n';
 	if (agnnodes(g) == 0) {
