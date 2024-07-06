@@ -13,8 +13,6 @@
 #include "mdichild.h"
 #include <QtGlobal>
 
-extern int errorPipe(char *errMsg);
-
 ImageViewer::ImageViewer()
 {
     imageLabel = new QLabel;
