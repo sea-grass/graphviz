@@ -15,8 +15,7 @@
 #include <QStringList>
 #include <QtWidgets>
 #include <qframe.h>
-
-#include <string.h>
+#include <string_view>
 
 QTextEdit *globTextEdit;
 
@@ -33,7 +32,7 @@ static void freeList(char **lp, int count) {
 }
 
 static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
-                       const QStringList &more, const char *prefer) {
+                       const QStringList &more, std::string_view prefer) {
   int count;
   char **lp = gvPluginList(gvc, kind, &count);
   int idx = -1;
@@ -41,7 +40,7 @@ static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
   cb.clear();
   for (int id = 0; id < count; id++) {
     cb.addItem(QString::fromUtf8(lp[id]));
-    if (idx < 0 && !strcmp(prefer, lp[id]))
+    if (idx < 0 && prefer == lp[id])
       idx = id;
   };
   freeList(lp, count);
