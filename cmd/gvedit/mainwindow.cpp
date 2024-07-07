@@ -14,6 +14,7 @@
 #include "mdichild.h"
 #include <QStringList>
 #include <QtWidgets>
+#include <optional>
 #include <qframe.h>
 #include <string_view>
 
@@ -35,12 +36,12 @@ static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
                        const QStringList &more, std::string_view prefer) {
   int count;
   char **lp = gvPluginList(gvc, kind, &count);
-  int idx = -1;
+  std::optional<int> idx;
 
   cb.clear();
   for (int id = 0; id < count; id++) {
     cb.addItem(QString::fromUtf8(lp[id]));
-    if (idx < 0 && prefer == lp[id])
+    if (!idx.has_value() && prefer == lp[id])
       idx = id;
   };
   freeList(lp, count);
@@ -48,12 +49,10 @@ static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
   /* Add additional items if supplied */
   cb.addItems(more);
 
-  if (idx > 0)
-    cb.setCurrentIndex(idx);
-  else
-    idx = 0;
+  if (idx.has_value())
+    cb.setCurrentIndex(*idx);
 
-  return idx;
+  return idx.value_or(0);
 }
 
 void CMainWindow::createConsole() {
