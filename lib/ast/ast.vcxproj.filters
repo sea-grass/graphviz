@@ -35,18 +35,6 @@
     <ClCompile Include="fmtesc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pathaccess.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathcat.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathfind.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathpath.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="stresc.c">
       <Filter>Source Files</Filter>
     </ClCompile>

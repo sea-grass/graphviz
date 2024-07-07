@@ -198,8 +198,6 @@ concat (char* pfx, char* sfx)
  * If arg contains '/', return arg.
  * Else search directories in GVPRPATH for arg.
  * Return NULL on error.
- * 
- * FIX - use pathinclude/pathfind
  */
 static char *resolve(char *arg, int verbose) {
     char *path;

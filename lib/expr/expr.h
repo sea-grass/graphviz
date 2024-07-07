@@ -173,8 +173,6 @@ struct Exdisc_s				/* discipline			*/
 	uint64_t	flags;		/* EX_* flags			*/
 	Exid_t*		symbols;	/* static symbols		*/
 	char**		data;		/* compiled function arg data	*/
-	char*		lib;		/* pathfind() lib		*/
-	char*		type;		/* pathfind() type		*/
 	int		(*castf)(Expr_t*, Exnode_t*, const char*, int, Exid_t*, int, Exdisc_t*);
 					/* unknown cast function	*/
 	int (*convertf)(Exnode_t *, long, int);

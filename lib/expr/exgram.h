@@ -770,7 +770,6 @@ preprint(Exnode_t* args)
 
 int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 	Exinput_t*	in;
-	char*		s;
 
 	if (!(in = calloc(1, sizeof(Exinput_t))))
 	{
@@ -783,16 +782,15 @@ int expush(Expr_t *p, const char *name, int line, FILE *fp) {
 		in->close = 0;
 	else if (name)
 	{
-		if (!(s = pathfind(name, p->disc->lib, p->disc->type)) || !(in->fp = fopen(s, "r")))
+		if (!(in->fp = fopen(name, "r")))
 		{
 			exerror("%s: file not found", name);
 		}
 		else
 		{
-			name = vmstrdup(p->vm, s);
+			name = vmstrdup(p->vm, name);
 			in->close = 1;
 		}
-		free(s);
 	}
 	if (!(in->next = p->input)->next)
 	{
