@@ -74,7 +74,7 @@ static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
 static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
-                                pathend_t *, pathend_t *, boxf *, size_t);
+                                pathend_t *, pathend_t *, const boxes_t *);
 static int edgecmp(const void *, const void *);
 static void make_flat_edge(graph_t *, spline_info_t *, path *, Agedge_t **,
                            unsigned, unsigned, int);
@@ -1851,8 +1851,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        hend.boxes[hend.boxn++] = b;
 	    P->end.theta = M_PI / 2, P->end.constrained = true;
-	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
-	                        boxes.size);
+	    completeregularpath(P, segfirst, e, &tend, &hend, &boxes);
 	    pointf *ps = NULL;
 	    size_t pn = 0;
 	    if (is_spline) ps = routesplines(P, &pn);
@@ -1901,7 +1900,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    	   ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    hend.boxes[hend.boxn++] = b;
-	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, boxes.size);
+	completeregularpath(P, segfirst, e, &tend, &hend, &boxes);
 	boxes_free(&boxes);
 	pointf *ps = NULL;
 	size_t pn = 0;
@@ -1967,10 +1966,9 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 
 /* regular edges */
 
-static void
-completeregularpath(path * P, edge_t * first, edge_t * last,
-		    pathend_t * tendp, pathend_t * hendp, boxf * boxes,
-		    size_t boxn) {
+static void completeregularpath(path *P, edge_t *first, edge_t *last,
+                                pathend_t *tendp, pathend_t *hendp,
+                                const boxes_t *boxes) {
     edge_t *uleft, *uright, *lleft, *lright;
 
     uleft = uright = NULL;
@@ -1992,9 +1990,9 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
     for (int i = 0; i < tendp->boxn; i++)
 	add_box(P, tendp->boxes[i]);
     const size_t fb = P->nbox + 1;
-    const size_t lb = fb + boxn - 3;
-    for (size_t i = 0; i < boxn; i++)
-	add_box(P, boxes[i]);
+    const size_t lb = fb + boxes_size(boxes) - 3;
+    for (size_t i = 0; i < boxes_size(boxes); i++)
+	add_box(P, boxes_get(boxes, i));
     for (int i = hendp->boxn - 1; i >= 0; i--)
 	add_box(P, hendp->boxes[i]);
     adjustregularpath(P, fb, lb);
