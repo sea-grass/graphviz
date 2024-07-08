@@ -34,7 +34,7 @@
 #include <cgraph/exit.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/stack.h>
+#include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 
 typedef struct {
@@ -67,10 +67,12 @@ char *suffix = 0;
 int external;			/* emit blocks as root graphs */
 int doTree;			/* emit block-cutpoint tree */
 
+DEFINE_LIST(edge_stack, Agedge_t *)
+
 typedef struct {
     int count;
     int nComp;
-    gv_stack_t stk;
+    edge_stack_t stk;
     Agraph_t *blks;
 } bcstate;
 
@@ -165,14 +167,14 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	if (v == u)
 	    continue;
 	if (N(v) == 0) {
-	    stack_push(&stp->stk, e);
+	    edge_stack_push_back(&stp->stk, e);
 	    dfs(g, v, stp, u);
 	    Low(u) = imin(Low(u), Low(v));
 	    if (Low(v) >= N(u)) {	/* u is an articulation point */
 		Cut(u) = 1;
 		sg = mkBlock(g, stp);
 		do {
-		    ep = stack_pop(&stp->stk);
+		    ep = edge_stack_pop_back(&stp->stk);
 		    agsubnode(sg, aghead(ep), 1);
 		    agsubnode(sg, agtail(ep), 1);
 		} while (ep != e);
@@ -180,7 +182,7 @@ dfs(Agraph_t * g, Agnode_t * u, bcstate * stp, Agnode_t * parent)
 	} else if (parent != v) {
 	    Low(u) = imin(Low(u), N(v));
 	    if (N(v) < N(u))
-		stack_push(&stp->stk, e);
+		edge_stack_push_back(&stp->stk, e);
 	}
     }
 }
@@ -214,7 +216,7 @@ static int process(Agraph_t * g, int gcnt)
 
     state.count = 0;
     state.nComp = 0;
-    state.stk = (gv_stack_t){0};
+    state.stk = (edge_stack_t){0};
     state.blks = 0;
 
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
@@ -249,7 +251,7 @@ static int process(Agraph_t * g, int gcnt)
 	fprintf(stderr, "%s: %d blocks %d cutpoints\n", agnameof(g), bcnt,
 		cuts);
     }
-    stack_reset(&state.stk);
+    edge_stack_free(&state.stk);
     if (state.blks && NEXTBLK(state.blks))
 	return 1;		/* >= 2 blocks */
     else
