@@ -722,10 +722,10 @@ boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb) {
     free(ver_traps.data);
 
     boxes_t rs = {0};
-    for (size_t i = 0; i < vert_decomp.size; ++i)
-	for (size_t j = 0; j < hor_decomp.size; ++j) {
+    for (size_t i = 0; i < boxes_size(&vert_decomp); ++i)
+	for (size_t j = 0; j < boxes_size(&hor_decomp); ++j) {
 	    boxf newbox = {0};
-	    if (rectIntersect(&newbox, &vert_decomp.data[i], &hor_decomp.data[j]))
+	    if (rectIntersect(&newbox, boxes_at(&vert_decomp, i), boxes_at(&hor_decomp, j)))
 		boxes_append(&rs, newbox);
 	}
 
@@ -733,6 +733,6 @@ boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb) {
     free (permute);
     boxes_free(&hor_decomp);
     boxes_free(&vert_decomp);
-    *nrects = rs.size;
-    return rs.data;
+    *nrects = boxes_size(&rs);
+    return boxes_detach(&rs);
 }
