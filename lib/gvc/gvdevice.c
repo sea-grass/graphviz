@@ -203,9 +203,11 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	crc = crc32(crc, (const unsigned char*)s, len);
 #endif
 
-	z->next_in = (unsigned char*)s;
-	z->avail_in = len;
-	while (z->avail_in) {
+	for (size_t offset = 0; offset < len; ) {
+	    z->next_in = (unsigned char *)s + offset;
+	    const unsigned chunk = len - offset > UINT_MAX
+	                         ? UINT_MAX : (unsigned)(len - offset);
+	    z->avail_in = chunk;
 	    z->next_out = df;
 	    z->avail_out = dfallocated;
 	    int r = deflate(z, Z_NO_FLUSH);
@@ -221,6 +223,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	            graphviz_exit(1);
 	        }
 	    }
+	    offset += chunk - z->avail_in;
 	}
 
 #else

@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   possible to select `overlap=ortho_xy` or `overlap=porthoxy`.
 - `splines = true` merging multiedges together when using the neato engine.
   #2241 (fixed on Windows by enabling GTS)
+- The GVC output writing APIs handle writes of compressed data `> UINT_MAX` more
+  correctly.
 
 ## [12.0.0] – 2024-07-04
 
