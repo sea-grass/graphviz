@@ -25,8 +25,8 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/exit.h>
+#include <cgraph/list.h>
 #include <cgraph/queue.h>
-#include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <common/globals.h>
 #include <gvpr/compile.h>
@@ -574,10 +574,12 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
     queue_free(&q);
 }
 
+DEFINE_LIST(edge_stack, Agedge_t *)
+
 static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * fns)
 {
     Agnode_t *n;
-    gv_stack_t stk = {0};
+    edge_stack_t stk = {0};
     Agnode_t *curn;
     Agedge_t *cure;
     Agedge_t *entry;
@@ -623,7 +625,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 			evalEdge(state, prog, xprog, cure);
 		} else {
 		    evalEdge(state, prog, xprog, cure);
-		    stack_push(&stk, entry);
+		    edge_stack_push_back(&stk, entry);
 		    state->tvedge = entry = cure;
 		    curn = cure->node;
 		    cure = 0;
@@ -638,7 +640,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 		nd = nData(curn);
 		POP(nd);
 		cure = entry;
-		entry = stack_is_empty(&stk) ? NULL : stack_pop(&stk);
+		entry = edge_stack_is_empty(&stk) ? NULL : edge_stack_pop_back(&stk);
 		if (entry == &(seed.out))
 		    state->tvedge = 0;
 		else
@@ -651,7 +653,7 @@ static void travDFS(Gpr_t * state, Expr_t* prog, comp_block * xprog, trav_fns * 
 	}
     }
     state->tvedge = 0;
-    stack_reset(&stk);
+    edge_stack_free(&stk);
 }
 
 static void travNodes(Gpr_t * state, Expr_t* prog, comp_block * xprog)
