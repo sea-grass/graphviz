@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (12.0.1)]
 
+### Changed
+
+- The GTK plugin, for which build system support was removed in Graphviz 10.0.1,
+  has been removed from the portable source tarball. #1848
+
 ### Fixed
 
 - `ccomps` now understands a cluster to be indicated by the common rules,
