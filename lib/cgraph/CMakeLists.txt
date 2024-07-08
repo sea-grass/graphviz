@@ -30,7 +30,6 @@ add_library(cgraph
   queue.h
   rdr.h
   sort.h
-  stack.h
   startswith.h
   strcasecmp.h
   streq.h
