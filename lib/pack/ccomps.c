@@ -14,16 +14,18 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
-#include <cgraph/stack.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
 #include <common/utils.h>
 #include <pack/pack.h>
 #include <stdbool.h>
 
+DEFINE_LIST(node_stack, Agnode_t *)
+
 typedef struct {
-    gv_stack_t data;
+    node_stack_t data;
     void (*actionfn) (Agnode_t *, void *);
     bool (*markfn)(Agnode_t *, int);
 } stk_t;
@@ -46,28 +48,28 @@ static void unmark(const stk_t *stk, Agnode_t *n) {
 static void initStk(stk_t *sp, void (*actionfn)(Agnode_t*, void*),
                     bool (*markfn)(Agnode_t *, int))
 {
-    sp->data = (gv_stack_t){0};
+    sp->data = (node_stack_t){0};
     sp->actionfn = actionfn;
     sp->markfn = markfn;
 }
 
 static void freeStk (stk_t* sp)
 {
-  stack_reset(&sp->data);
+  node_stack_free(&sp->data);
 }
 
 static void push(stk_t *sp, Agnode_t *np) {
   mark(sp, np);
-  stack_push(&sp->data, np);
+  node_stack_push_back(&sp->data, np);
 }
 
 static Agnode_t *pop(stk_t* sp)
 {
-  if (stack_is_empty(&sp->data)) {
+  if (node_stack_is_empty(&sp->data)) {
     return NULL;
   }
 
-  return stack_pop(&sp->data);
+  return node_stack_pop_back(&sp->data);
 }
 
 
