@@ -20,12 +20,14 @@
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/gv_ctype.h>
+#include    <cgraph/list.h>
 #include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
 #include    <limits.h>
 #include    <stdbool.h>
 #include    <stdio.h>
+#include    <stdlib.h>
 #include    <string.h>
 #include    "openFile.h"
 #ifdef HAVE_EXPAT
@@ -50,47 +52,44 @@ static char **Files;
 static int Verbose;
 static char* gname = "";
 
-static void pushString(gv_stack_t *stk, const char *s) {
+DEFINE_LIST_WITH_DTOR(strs, char *, free)
+
+static void pushString(strs_t *stk, const char *s) {
 
   // duplicate the string we will push
   char *copy = gv_strdup(s);
 
   // push this onto the stack
-  stack_push(stk, copy);
+  strs_push_back(stk, copy);
 }
 
-static void popString(gv_stack_t *stk) {
+static void popString(strs_t *stk) {
 
-  if (stack_is_empty(stk)) {
+  if (strs_is_empty(stk)) {
     fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
     graphviz_exit(EXIT_FAILURE);
   }
 
-  char *s = stack_pop(stk);
-  free(s);
+  strs_resize(stk, strs_size(stk) - 1, NULL);
 }
 
-static char *topString(gv_stack_t *stk) {
+static char *topString(strs_t *stk) {
 
-  if (stack_is_empty(stk)) {
+  if (strs_is_empty(stk)) {
     fprintf(stderr, "PANIC: graphml2gv: empty element stack\n");
     graphviz_exit(EXIT_FAILURE);
   }
 
-  return stack_top(stk);
+  return *strs_back(stk);
 }
 
-static void freeString(gv_stack_t *stk) {
-  while (!stack_is_empty(stk)) {
-    char *s = stack_pop(stk);
-    free(s);
-  }
-  stack_reset(stk);
+static void freeString(strs_t *stk) {
+  strs_free(stk);
 }
 
 typedef struct {
     char* gname;
-    gv_stack_t elements;
+    strs_t elements;
     int closedElementType;
     bool edgeinverted;
 } userdata_t;
@@ -103,7 +102,7 @@ static gv_stack_t Gstack;
 
 static userdata_t genUserdata(char *dfltname) {
   userdata_t user = {0};
-  user.elements = (gv_stack_t){0};
+  user.elements = (strs_t){0};
   user.closedElementType = TAG_NONE;
   user.edgeinverted = false;
   user.gname = dfltname;
