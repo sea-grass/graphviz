@@ -224,7 +224,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	        graphviz_exit(1);
 	    }
 
-	    if ((olen = z->next_out - df)) {
+	    if ((olen = (size_t)(z->next_out - df))) {
 		ret = gvwrite_no_z(job, df, olen);
 	        if (ret != olen) {
                     job->common->errorfn("gvwrite_no_z problem %d\n", ret);
