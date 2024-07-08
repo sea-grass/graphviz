@@ -15,6 +15,7 @@
 #include "config.h"
 
 #include <ctype.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -188,7 +189,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 
 	size_t dflen = deflateBound(z, len);
 	if (dfallocated < dflen) {
-	    dfallocated = dflen + 1;
+	    dfallocated = dflen > UINT_MAX - 1 ? UINT_MAX : (unsigned)dflen + 1;
 	    df = realloc(df, dfallocated);
 	    if (! df) {
                 job->common->errorfn("memory allocation failure\n");
