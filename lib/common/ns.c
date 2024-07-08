@@ -1150,12 +1150,12 @@ static int dfs_range(node_t * v, edge_t * par, int low)
 #ifdef DEBUG
 void tchk(void)
 {
-    int i, n_cnt, e_cnt;
+    int i;
     node_t *n;
     edge_t *e;
 
-    n_cnt = 0;
-    e_cnt = 0;
+    size_t n_cnt = 0;
+    size_t e_cnt = 0;
     for (n = agfstnode(G); n; n = agnxtnode(G, n)) {
 	n_cnt++;
 	for (i = 0; (e = ND_tree_out(n).list[i]); i++) {
