@@ -56,15 +56,13 @@ static uint64_t crc;
 #include <common/utils.h>
 #include <gvc/gvio.h>
 
-static const int PAGE_ALIGN = 4095;		/* align to a 4K boundary (less one), typical for Linux, Mac OS X and Windows memory allocation */
-
 static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
     if (job->gvc->write_fn)   /* externally provided write discipline */
 	return job->gvc->write_fn(job, s, len);
     if (job->output_data) {
 	if (len > job->output_data_allocated - (job->output_data_position + 1)) {
 	    /* ensure enough allocation for string = null terminator */
-	    job->output_data_allocated = (job->output_data_position + len + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
+	    job->output_data_allocated = job->output_data_position + len + 1;
 	    job->output_data = realloc(job->output_data, job->output_data_allocated);
 	    if (!job->output_data) {
                 job->common->errorfn("memory allocation failure\n");
@@ -190,7 +188,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 
 	size_t dflen = deflateBound(z, len);
 	if (dfallocated < dflen) {
-	    dfallocated = (dflen + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
+	    dfallocated = dflen + 1;
 	    df = realloc(df, dfallocated);
 	    if (! df) {
                 job->common->errorfn("memory allocation failure\n");
