@@ -204,7 +204,15 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 #endif
 
 	for (size_t offset = 0; offset < len; ) {
+// Suppress Clang/GCC -Wcast-qual warnings. `next_in` is morally const.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
 	    z->next_in = (unsigned char *)s + offset;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
 	    const unsigned chunk = len - offset > UINT_MAX
 	                         ? UINT_MAX : (unsigned)(len - offset);
 	    z->avail_in = chunk;
