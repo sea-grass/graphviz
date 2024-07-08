@@ -353,7 +353,7 @@ static subtree_t *find_tight_subtree(Agnode_t *v)
 
 typedef struct STheap_s {
         subtree_t       **elt;
-        int             size;
+        size_t          size;
 } STheap_t;
 
 static subtree_t *STsetFind(Agnode_t *n0)
