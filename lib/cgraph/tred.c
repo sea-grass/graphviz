@@ -22,7 +22,7 @@
 
 #include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
-#include <cgraph/stack.h>
+#include <cgraph/list.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,23 +44,25 @@ static unsigned char uchar_min(unsigned char a, unsigned char b) {
   return b;
 }
 
-static void push(gv_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
+DEFINE_LIST(edge_stack, Agedge_t *)
+
+static void push(edge_stack_t *sp, Agedge_t *ep, nodeinfo_t *ninfo) {
 
   // mark this edge on the stack
   ON_STACK(ninfo, aghead(ep)) = true;
 
   // insert the new edge
-  stack_push(sp, ep);
+  edge_stack_push_back(sp, ep);
 }
 
-static Agedge_t *pop(gv_stack_t *sp, nodeinfo_t *ninfo) {
+static Agedge_t *pop(edge_stack_t *sp, nodeinfo_t *ninfo) {
 
-  if (stack_is_empty(sp)) {
+  if (edge_stack_is_empty(sp)) {
     return NULL;
   }
 
   // remove the top
-  Agedge_t *e = stack_pop(sp);
+  Agedge_t *e = edge_stack_pop_back(sp);
 
   // mark it as no longer on the stack
   ON_STACK(ninfo, aghead(e)) = false;
@@ -68,13 +70,13 @@ static Agedge_t *pop(gv_stack_t *sp, nodeinfo_t *ninfo) {
   return e;
 }
 
-static Agedge_t *top(gv_stack_t *sp) {
+static Agedge_t *top(edge_stack_t *sp) {
 
-  if (stack_is_empty(sp)) {
+  if (edge_stack_is_empty(sp)) {
     return NULL;
   }
 
-  return stack_top(sp);
+  return *edge_stack_back(sp);
 }
 
 /* Main function for transitive reduction.
@@ -112,7 +114,7 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn,
   dummy.in.base.tag.objtype = AGINEDGE;
   dummy.in.node = NULL;
 
-  gv_stack_t estk = {0};
+  edge_stack_t estk = {0};
   push(&estk, &dummy.out, ninfo);
   prev = 0;
 
@@ -171,7 +173,7 @@ static int dfs(Agnode_t *n, nodeinfo_t *ninfo, int warn,
       agdelete(g, e);
     }
   }
-  stack_reset(&estk);
+  edge_stack_free(&estk);
   return warn;
 }
 
