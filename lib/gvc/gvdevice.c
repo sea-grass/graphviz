@@ -197,7 +197,11 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	    }
 	}
 
+#if ZLIB_VERNUM >= 0x1290
+	crc = crc32_z(crc, (const unsigned char*)s, len);
+#else
 	crc = crc32(crc, (const unsigned char*)s, len);
+#endif
 
 	z->next_in = (unsigned char*)s;
 	z->avail_in = len;
