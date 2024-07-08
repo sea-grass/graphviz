@@ -289,7 +289,7 @@ void gvputs_nonascii(GVJ_t *job, const char *s) {
 
 int gvputc(GVJ_t * job, int c)
 {
-    const char cc = c;
+    const char cc = (char)c;
 
     if (gvwrite (job, &cc, 1) != 1) {
 	return EOF;
