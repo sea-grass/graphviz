@@ -1420,7 +1420,7 @@ lint_cmake_format:
   needs:
     - docker_build_fedora40
   script:
-    - git ls-files -z -- '**/CMakeLists.txt' '**/*.cmake' '**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
+    - git ls-files -z -- ':(glob)**/CMakeLists.txt' ':(glob)**/*.cmake' ':(glob)**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
   except:
     - tags
 
