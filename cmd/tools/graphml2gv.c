@@ -21,7 +21,6 @@
 #include    <cgraph/exit.h>
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/list.h>
-#include    <cgraph/stack.h>
 #include    <cgraph/unreachable.h>
 #include    <getopt.h>
 #include    <limits.h>
@@ -98,7 +97,8 @@ static Agraph_t *root;		/* root graph */
 static Agraph_t *G;		/* Current graph */
 static Agedge_t *E; // current edge
 
-static gv_stack_t Gstack;
+DEFINE_LIST(graph_stack, Agraph_t *)
+static graph_stack_t Gstack;
 
 static userdata_t genUserdata(char *dfltname) {
   userdata_t user = {0};
@@ -124,12 +124,12 @@ static int isAnonGraph(const char *name) {
 static void push_subg(Agraph_t * g)
 {
   // save the root if this is the first graph
-  if (stack_is_empty(&Gstack)) {
+  if (graph_stack_is_empty(&Gstack)) {
     root = g;
   }
 
   // insert the new graph
-  stack_push(&Gstack, g);
+  graph_stack_push_back(&Gstack, g);
 
   // update the top graph
   G = g;
@@ -137,17 +137,17 @@ static void push_subg(Agraph_t * g)
 
 static Agraph_t *pop_subg(void)
 {
-  if (stack_is_empty(&Gstack)) {
+  if (graph_stack_is_empty(&Gstack)) {
     fprintf(stderr, "graphml2gv: Gstack underflow in graph parser\n");
     graphviz_exit(EXIT_FAILURE);
   }
 
   // pop the top graph
-  Agraph_t *g = stack_pop(&Gstack);
+  Agraph_t *g = graph_stack_pop_back(&Gstack);
 
   // update the top graph
-  if (!stack_is_empty(&Gstack)) {
-    G = stack_top(&Gstack);
+  if (!graph_stack_is_empty(&Gstack)) {
+    G = *graph_stack_back(&Gstack);
   }
 
   return g;
@@ -246,7 +246,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    edgeMode = atts[pos];
 	}
 
-	if (stack_is_empty(&Gstack)) {
+	if (graph_stack_is_empty(&Gstack)) {
 	    if (strcmp(edgeMode, "directed") == 0) {
 		dir = Agdirected;
 	    } else if (strcmp(edgeMode, "undirected") == 0) {
@@ -510,7 +510,7 @@ int main(int argc, char **argv)
 	}
     }
 
-    stack_reset(&Gstack);
+    graph_stack_free(&Gstack);
 
     agxbfree(&buf);
     graphviz_exit(rv);
