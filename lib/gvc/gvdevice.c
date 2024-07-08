@@ -347,7 +347,7 @@ void gvdevice_finalize(GVJ_t * job)
 	z->next_out = df;
 	z->avail_out = dfallocated;
 	while ((ret = deflate (z, Z_FINISH)) == Z_OK && (cnt++ <= 100)) {
-	    gvwrite_no_z(job, df, z->next_out - df);
+	    gvwrite_no_z(job, df, (size_t)(z->next_out - df));
 	    z->next_out = df;
 	    z->avail_out = dfallocated;
 	}
@@ -355,7 +355,7 @@ void gvdevice_finalize(GVJ_t * job)
             job->common->errorfn("deflation finish problem %d cnt=%d\n", ret, cnt);
 	    graphviz_exit(1);
 	}
-	gvwrite_no_z(job, df, z->next_out - df);
+	gvwrite_no_z(job, df, (size_t)(z->next_out - df));
 
 	ret = deflateEnd(z);
 	if (ret != Z_OK) {
