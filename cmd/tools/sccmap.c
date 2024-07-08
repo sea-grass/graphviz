@@ -32,7 +32,7 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/stack.h>
+#include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 
 #include <getopt.h>
@@ -109,7 +109,10 @@ static void nodeInduce(Agraph_t * g, Agraph_t* map)
     }
 }
 
-static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) {
+DEFINE_LIST(node_stack, Agnode_t *)
+
+static unsigned visit(Agnode_t *n, Agraph_t *map, node_stack_t *sp,
+                      sccstate *st) {
     unsigned int m, min;
     Agnode_t *t;
     Agraph_t *subg;
@@ -117,7 +120,7 @@ static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) 
 
     min = ++st->ID;
     setval(n, min);
-    stack_push(sp, n);
+    node_stack_push_back(sp, n);
 
     for (e = agfstout(n->root, n); e; e = agnxtout(n->root, e)) {
 	t = aghead(e);
@@ -130,9 +133,9 @@ static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) 
     }
 
     if (getval(n) == min) {
-	if (!wantDegenerateComp && stack_top(sp) == n) {
+	if (!wantDegenerateComp && *node_stack_back(sp) == n) {
 	    setval(n, INF);
-	    stack_pop(sp);
+	    (void)node_stack_pop_back(sp);
 	} else {
 	    char name[32];
 	    Agraph_t *G = agraphof(n);;
@@ -141,7 +144,7 @@ static unsigned visit(Agnode_t *n, Agraph_t *map, gv_stack_t *sp, sccstate *st) 
 	    agbindrec(subg, "scc_graph", sizeof(Agraphinfo_t), true);
 	    setrep(subg, agnode(map, name, 1));
 	    do {
-		t = stack_pop(sp);
+		t = node_stack_pop_back(sp);
 		agsubnode(subg, t, 1);
 		setval(t, INF);
 		setscc(t, subg);
@@ -217,7 +220,7 @@ static void process(Agraph_t * G)
     int nc = 0;
     float nontree_frac = 0;
     int Maxdegree = 0;
-    gv_stack_t stack = {0};
+    node_stack_t stack = {0};
     sccstate state;
 
     aginit(G, AGRAPH, "scc_graph", sizeof(Agraphinfo_t), true);
@@ -232,7 +235,7 @@ static void process(Agraph_t * G)
     for (n = agfstnode(G); n; n = agnxtnode(G, n))
 	if (getval(n) == 0)
 	    visit(n, map, &stack, &state);
-    stack_reset(&stack);
+    node_stack_free(&stack);
     if (!StatsOnly)
 	agwrite(map, outfp);
     agclose(map);
