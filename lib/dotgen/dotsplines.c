@@ -19,7 +19,6 @@
 #include <cgraph/list.h>
 #include <common/boxes.h>
 #include <dotgen/dot.h>
-#include <limits.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -1854,7 +1853,6 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        hend.boxes[hend.boxn++] = b;
 	    P->end.theta = M_PI / 2, P->end.constrained = true;
-	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
 	                        boxes.size, 1);
 	    pointf *ps = NULL;
@@ -1905,7 +1903,6 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    	   ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    hend.boxes[hend.boxn++] = b;
-	assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
 	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, boxes.size,
 	                    longedge);
 	boxes_free(&boxes);
