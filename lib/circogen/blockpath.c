@@ -12,6 +12,7 @@
 #include	<cgraph/agxbuf.h>
 #include	<cgraph/alloc.h>
 #include	<circogen/blockpath.h>
+#include	<circogen/circular.h>
 #include	<circogen/edgelist.h>
 #include	<stddef.h>
 #include	<stdbool.h>
@@ -26,9 +27,10 @@
  * Create two copies of the argument graph
  * One is a subgraph, the other is an actual copy since we will be
  * adding edges to it.
+ *
+ * @param state Context containing a counter to use for graph copy naming
  */
-static Agraph_t *clone_graph(Agraph_t * ing, Agraph_t ** xg)
-{
+static Agraph_t *clone_graph(Agraph_t *ing, Agraph_t **xg, circ_state *state) {
     Agraph_t *clone;
     Agraph_t *xclone;
     Agnode_t *n;
@@ -37,12 +39,11 @@ static Agraph_t *clone_graph(Agraph_t * ing, Agraph_t ** xg)
     Agedge_t *e;
     Agedge_t *xe;
     agxbuf gname = {0};
-    static int id = 0;
 
-    agxbprint(&gname, "_clone_%d", id++);
+    agxbprint(&gname, "_clone_%d", state->graphCopyCount++);
     clone = agsubg(ing, agxbuse(&gname), 1);
     agbindrec(clone, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
-    agxbprint(&gname, "_clone_%d", id++);
+    agxbprint(&gname, "_clone_%d", state->graphCopyCount++);
     xclone = agopen(agxbuse(&gname), ing->desc, NULL);
     agxbfree(&gname);
     for (n = agfstnode(ing); n; n = agnxtnode(ing, n)) {
@@ -198,8 +199,9 @@ static void find_pair_edges(Agraph_t * g, Agnode_t * n, Agraph_t * outg)
 }
 
 /// Create layout skeleton of ing. Why is returned graph connected?
-static Agraph_t *remove_pair_edges(Agraph_t * ing)
-{
+///
+/// @param state Context containing a counter to use for graph copy naming
+static Agraph_t *remove_pair_edges(Agraph_t *ing, circ_state *state) {
     int counter = 0;
     int nodeCount;
     Agraph_t *outg;
@@ -207,7 +209,7 @@ static Agraph_t *remove_pair_edges(Agraph_t * ing)
     Agnode_t *currnode, *adjNode;
     Agedge_t *e;
 
-    outg = clone_graph(ing, &g);
+    outg = clone_graph(ing, &g, state);
     nodeCount = agnnodes(g);
     deglist_t dl = getList(g);
 
@@ -588,7 +590,9 @@ static void place_residual_nodes(Agraph_t * g, nodelist_t * list)
     }
 }
 
-nodelist_t layout_block(Agraph_t *g, block_t *sn, double min_dist) {
+/// @param state Context containing a counter to use for graph copy naming
+nodelist_t layout_block(Agraph_t *g, block_t *sn, double min_dist,
+                        circ_state *state) {
     Agraph_t *copyG, *tree, *subg;
     int k;
     double theta, radius, largest_node;
@@ -597,7 +601,7 @@ nodelist_t layout_block(Agraph_t *g, block_t *sn, double min_dist) {
     subg = sn->sub_graph;
     block_graph(g, sn);		/* add induced edges */
 
-    copyG = remove_pair_edges(subg);
+    copyG = remove_pair_edges(subg, state);
 
     tree = spanning_tree(copyG);
     nodelist_t longest_path = find_longest_path(tree);

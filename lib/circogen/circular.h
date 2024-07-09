@@ -17,6 +17,7 @@ typedef struct {
     blocklist_t bl;
     int orderCount;
     int blockCount;
+    int graphCopyCount; ///< how many cloned graphs have we created?
     attrsym_t *N_root;
     char *rootname;
     double min_dist;

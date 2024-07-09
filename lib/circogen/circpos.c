@@ -393,20 +393,22 @@ static double position(size_t childCount, size_t length, nodelist_t *nodepath,
 }
 
 /// Set positions of block sn and its child blocks.
-static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
-{
+///
+/// @param state Context containing a counter to use for graph copy naming
+static void doBlock(Agraph_t *g, block_t *sn, double min_dist,
+                    circ_state *state) {
     block_t *child;
     double centerAngle = M_PI;
 
     /* layout child subtrees */
     size_t childCount = 0;
     for (child = sn->children.first; child; child = child->next) {
-	doBlock(g, child, min_dist);
+	doBlock(g, child, min_dist, state);
 	childCount++;
     }
 
     /* layout this block */
-    nodelist_t longest_path = layout_block(g, sn, min_dist);
+    nodelist_t longest_path = layout_block(g, sn, min_dist, state);
     sn->circle_list = longest_path;
     size_t length = nodelist_size(&longest_path); // path contains everything in block
 
@@ -423,5 +425,5 @@ static void doBlock(Agraph_t * g, block_t * sn, double min_dist)
 
 void circPos(Agraph_t * g, block_t * sn, circ_state * state)
 {
-    doBlock(g, sn, state->min_dist);
+  doBlock(g, sn, state->min_dist, state);
 }
