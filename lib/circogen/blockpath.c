@@ -360,14 +360,14 @@ static void dfs(Agraph_t * g, Agnode_t * n, Agraph_t * tree)
 }
 
 /// Construct spanning forest of g as subgraph
-static Agraph_t *spanning_tree(Agraph_t * g)
-{
+///
+/// @param state Context containing a counter to use for spanning tree naming
+static Agraph_t *spanning_tree(Agraph_t *g, circ_state *state) {
     Agnode_t *n;
     Agraph_t *tree;
     agxbuf gname = {0};
-    static int id = 0;
 
-    agxbprint(&gname, "_span_%d", id++);
+    agxbprint(&gname, "_span_%d", state->spanningTreeCount++);
     tree = agsubg(g, agxbuse(&gname), 1);
     agxbfree(&gname);
     agbindrec(tree, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	//node custom data
@@ -603,7 +603,7 @@ nodelist_t layout_block(Agraph_t *g, block_t *sn, double min_dist,
 
     copyG = remove_pair_edges(subg, state);
 
-    tree = spanning_tree(copyG);
+    tree = spanning_tree(copyG, state);
     nodelist_t longest_path = find_longest_path(tree);
     place_residual_nodes(subg, &longest_path);
     /* at this point, longest_path is a list of all nodes in the block */
