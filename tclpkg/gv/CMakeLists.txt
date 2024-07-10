@@ -1,4 +1,4 @@
-if(enable_swig)
+if(ENABLE_SWIG)
   set(UseSWIG_MODULE_VERSION 2) # cmake-lint: disable=C0103
   include(UseSWIG)
 
