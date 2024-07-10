@@ -390,18 +390,6 @@ ubuntu-22.04-static-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.10-build:
-    <<: *deb_build_definition
-    needs:
-        - job: docker_build_ubuntu-23.10
-          artifacts: false
-        - job: portable-source
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: ubuntu-23.10
-
 ubuntu-24.04-build:
     <<: *deb_build_definition
     needs:
@@ -632,23 +620,6 @@ ubuntu-22.04-cmake-build:
         - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
-
-ubuntu-23.10-cmake-build:
-    <<: *deb_build_definition
-    needs:
-        - job: docker_build_ubuntu-23.10
-          artifacts: false
-    before_script:
-        - export build_system="cmake"
-        # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-deprecated-declarations"
-        - export CXXFLAGS="-Werror -Wno-deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: ubuntu-23.10
 
 ubuntu-24.04-cmake-build:
     <<: *deb_build_definition
@@ -1024,18 +995,6 @@ ubuntu-22.04-test:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-23.10-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="autotools"
-    needs:
-        - job: "ubuntu-23.10-build"
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: ubuntu-23.10
-
 ubuntu-24.04-test:
     <<: *linux_test_definition
     before_script:
@@ -1141,19 +1100,6 @@ ubuntu-22.04-cmake-test:
         - saas-linux-small-amd64
     variables:
       IMAGE: ubuntu-22.04
-
-ubuntu-23.10-cmake-test:
-    <<: *linux_test_definition
-    before_script:
-        - export build_system="cmake"
-        - python3 gen_version.py --output GRAPHVIZ_VERSION
-    needs:
-        - job: "ubuntu-23.10-cmake-build"
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: ubuntu-23.10
 
 ubuntu-24.04-cmake-test:
     <<: *linux_test_definition
@@ -1399,11 +1345,6 @@ docker_build_ubuntu-22.04:
   variables:
     IMAGE: ubuntu-22.04
 
-docker_build_ubuntu-23.10:
-  <<: *docker_build_definition
-  variables:
-    IMAGE: ubuntu-23.10
-
 docker_build_ubuntu-24.04:
   <<: *docker_build_definition
   variables:
@@ -1450,13 +1391,6 @@ docker_push_ubuntu-22.04:
     IMAGE: ubuntu-22.04
   needs:
     - docker_build_ubuntu-22.04
-
-docker_push_ubuntu-23.10:
-  <<: *docker_push_definition
-  variables:
-    IMAGE: ubuntu-23.10
-  needs:
-    - docker_build_ubuntu-23.10
 
 docker_push_ubuntu-24.04:
   <<: *docker_push_definition
