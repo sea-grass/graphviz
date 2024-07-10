@@ -822,9 +822,7 @@ static const lookup_t adjustMode[] = {
 };
 
 /// Initialize and set prism values
-static void
-setPrismValues (Agraph_t* g, char* s, adjust_data* dp)
-{
+static void setPrismValues(Agraph_t *g, const char *s, adjust_data *dp) {
     int v;
 
     if (sscanf (s, "%d", &v) > 0 && v >= 0)
