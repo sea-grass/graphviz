@@ -33,9 +33,9 @@
 typedef struct {
     Agrec_t h;
     int dfs_mark;
-} Agnodeinfo_t;
+} nodeinfo_t;
 
-#define ND_dfs_mark(n) (((Agnodeinfo_t*)(n->base.data))->dfs_mark)
+#define ND_dfs_mark(n) (((nodeinfo_t*)(n->base.data))->dfs_mark)
 
 #include <getopt.h>
 
@@ -276,7 +276,7 @@ static int eval(Agraph_t * g, int root)
 	return 1;
 
     if (root) {
-	aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
+	aginit(g, AGNODE, "nodeinfo", sizeof(nodeinfo_t), true);
     }
 
     if ((flags & CL) && root)
