@@ -17,9 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   has been removed from the portable source tarball. #1848
 - To build from source, the required C++ standard has been upgraded from C++11
   to C++17. #2536
-- **Breaking**: the CMake variables `enable_ltdl`, `with_expat`, `with_gvedit`
-  and `with_smyrna` have been renamed to `ENABLE_LTDL`, `WITH_EXPAT`,
-  `WITH_GVEDIT` and `WITH_SMYRNA`, respectively.
+- **Breaking**: the CMake variables `enable_ltdl`, `with_expat`, `with_gvedit`,
+  `with_smyrna` and `with_zlib` have been renamed to `ENABLE_LTDL`, `WITH_EXPAT`,
+  `WITH_GVEDIT`, `WITH_SMYRNA` and `WITH_ZLIB`, respectively.
 
 ### Fixed
 

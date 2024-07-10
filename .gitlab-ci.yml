@@ -592,7 +592,7 @@ ubuntu-20.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
         # disable TCL components for which pkgIndex.tcl rule triggers a warning
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_tcl=OFF"
     tags:
@@ -615,7 +615,7 @@ ubuntu-22.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -656,7 +656,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ortho=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_sfdp=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=OFF"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -679,7 +679,7 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     # override the deb_build_definition artifacts since we need more
     # files from the build directory when running ctest in the test
     # stage.
@@ -727,7 +727,7 @@ rocky8-cmake-build:
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -746,7 +746,7 @@ rocky9-cmake-build:
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -766,7 +766,7 @@ fedora39-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -786,7 +786,7 @@ fedora40-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -803,7 +803,7 @@ macos-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-macos-medium-m1
 
