@@ -15,7 +15,7 @@ if [ "${build_system}" = "cmake" ]; then
     export CMAKE_OPTIONS="${CMAKE_OPTIONS:-} -Duse_win_pre_inst_libs=OFF"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-    export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+    export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
 fi
 

@@ -591,7 +591,7 @@ ubuntu-20.04-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
         # disable TCL components for which pkgIndex.tcl rule triggers a warning
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_tcl=OFF"
@@ -614,7 +614,7 @@ ubuntu-22.04-cmake-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-linux-small-amd64
@@ -651,7 +651,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_digcola=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ipsepcola=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ortho=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_sfdp=OFF"
@@ -678,7 +678,7 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     # override the deb_build_definition artifacts since we need more
     # files from the build directory when running ctest in the test
@@ -726,7 +726,7 @@ rocky8-cmake-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-linux-small-amd64
@@ -745,7 +745,7 @@ rocky9-cmake-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-linux-small-amd64
@@ -765,7 +765,7 @@ fedora39-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-linux-small-amd64
@@ -785,7 +785,7 @@ fedora40-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-linux-small-amd64
@@ -802,7 +802,7 @@ macos-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
         - saas-macos-medium-m1
