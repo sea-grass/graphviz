@@ -72,6 +72,7 @@ add_simple_tool(bcomps)
 add_simple_tool(ccomps)
 target_link_libraries(ccomps PRIVATE gvc)
 add_simple_tool(gc)
+target_link_libraries(gc PRIVATE gvc)
 add_simple_tool(nop)
 add_simple_tool(tred)
 target_link_libraries(tred PRIVATE gvc) # e.g. for start_timer
