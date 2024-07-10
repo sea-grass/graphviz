@@ -32,7 +32,7 @@ export CCACHE_DIR=ccache-cache
 # because we do not have Qt installed.
 export CMAKE_OPTIONS="-Duse_win_pre_inst_libs=OFF -Dwith_gvedit=OFF"
 export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
 export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
 
 ci/build.sh

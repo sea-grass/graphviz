@@ -590,7 +590,7 @@ ubuntu-20.04-cmake-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
         # disable TCL components for which pkgIndex.tcl rule triggers a warning
@@ -613,7 +613,7 @@ ubuntu-22.04-cmake-build:
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
@@ -649,7 +649,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS=""
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_digcola=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ipsepcola=OFF"
@@ -677,7 +677,7 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     # override the deb_build_definition artifacts since we need more
@@ -725,7 +725,7 @@ rocky8-cmake-build:
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
@@ -744,7 +744,7 @@ rocky9-cmake-build:
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
@@ -764,7 +764,7 @@ fedora39-cmake-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
@@ -784,7 +784,7 @@ fedora40-cmake-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:
@@ -801,7 +801,7 @@ macos-cmake-build:
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
     tags:

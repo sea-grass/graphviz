@@ -14,7 +14,7 @@ if [ "${build_system}" = "cmake" ]; then
     # https://gitlab.com/graphviz/graphviz-windows-dependencies.
     export CMAKE_OPTIONS="${CMAKE_OPTIONS:-} -Duse_win_pre_inst_libs=OFF"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
-    export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
+    export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
     export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
 fi
