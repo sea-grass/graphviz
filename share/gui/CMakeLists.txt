@@ -1,4 +1,4 @@
-if(with_smyrna)
+if(WITH_SMYRNA)
 
   install(
     FILES

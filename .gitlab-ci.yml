@@ -588,7 +588,7 @@ ubuntu-20.04-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
@@ -611,7 +611,7 @@ ubuntu-22.04-cmake-build:
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
@@ -631,7 +631,7 @@ ubuntu-24.04-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -655,7 +655,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ipsepcola=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ortho=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_sfdp=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=OFF"
     tags:
         - saas-linux-small-amd64
@@ -675,7 +675,7 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
         - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-error=deprecated-declarations"
         - export UBSAN_OPTIONS=print_stacktrace=1
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
@@ -762,7 +762,7 @@ fedora39-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
@@ -782,7 +782,7 @@ fedora40-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"

@@ -1,4 +1,4 @@
-if(with_smyrna)
+if(WITH_SMYRNA)
 
   if(WITH_EXPAT)
     find_package(EXPAT REQUIRED)
