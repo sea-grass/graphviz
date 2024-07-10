@@ -833,7 +833,7 @@ static void setPrismValues(Agraph_t *g, const char *s, adjust_data *dp) {
 }
 
 /// Convert string value to internal value of adjustment mode.
-static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
+static void getAdjustMode(Agraph_t *g, const char *s, adjust_data *dp) {
     const lookup_t *ap = adjustMode + 1;
     if (s == NULL || *s == '\0') {
 	dp->mode = adjustMode[0].mode;
