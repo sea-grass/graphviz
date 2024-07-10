@@ -31,7 +31,7 @@ export CCACHE_DIR=ccache-cache
 # https://gitlab.com/graphviz/graphviz-windows-dependencies. Also disable GVEdit
 # because we do not have Qt installed.
 export CMAKE_OPTIONS="-Duse_win_pre_inst_libs=OFF -Dwith_gvedit=OFF"
-export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
+export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
 export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
 export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
 
