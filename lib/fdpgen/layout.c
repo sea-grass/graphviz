@@ -37,6 +37,8 @@
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <cgraph/startswith.h>
+#include <common/render.h>
+#include <common/utils.h>
 #include <fdpgen/tlayout.h>
 #include <math.h>
 #include <neatogen/neatoprocs.h>
@@ -991,7 +993,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg))
 	{
-	if (startswith(agnameof(subg), "cluster")) {
+	if (is_a_cluster(subg)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    GD_alg(subg) = gv_alloc(sizeof(gdata)); // freed in cleanup_subgs
 	    GD_ndim(subg) = GD_ndim(agroot(parent));
