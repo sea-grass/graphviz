@@ -582,9 +582,11 @@ int cAdjust(graph_t * g, int mode)
 	case AM_ORTHO :
 	    constrainX(g, nlist, nnodes, intersectY0, 1);
 	    constrainY(g, nlist, nnodes, intersectX, 1);
+	    break;
 	case AM_ORTHO_YX :
 	    constrainY(g, nlist, nnodes, intersectX0, 1);
 	    constrainX(g, nlist, nnodes, intersectY, 1);
+	    break;
 	case AM_PORTHOXY:
 	    constrainX(g, nlist, nnodes, intersectY, 0);
 	    constrainY(g, nlist, nnodes, intersectX, 0);
