@@ -788,41 +788,37 @@ int normalize(graph_t * g)
 typedef struct {
     adjust_mode mode;
     char *attrib;
-    int len;
     char *print;
 } lookup_t;
-
-#define STRLEN(s) ((sizeof(s)-1)/sizeof(char))
-#define ITEM(i,s,v) {i, s, STRLEN(s), v}
 
 /* Translation table from overlap values to algorithms.
  * adjustMode[0] corresponds to overlap=true
  * adjustMode[1] corresponds to overlap=false
  */
 static const lookup_t adjustMode[] = {
-    ITEM(AM_NONE, "", "none"),
+    {AM_NONE, "", "none"},
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
-    ITEM(AM_PRISM, "prism", "prism"),
+    {AM_PRISM, "prism", "prism"},
 #endif
-    ITEM(AM_VOR, "voronoi", "Voronoi"),
-    ITEM(AM_NSCALE, "scale", "scaling"),
-    ITEM(AM_COMPRESS, "compress", "compress"),
-    ITEM(AM_VPSC, "vpsc", "vpsc"),
-    ITEM(AM_IPSEP, "ipsep", "ipsep"),
-    ITEM(AM_SCALE, "oscale", "old scaling"),
-    ITEM(AM_SCALEXY, "scalexy", "x and y scaling"),
-    ITEM(AM_ORTHO, "ortho", "orthogonal constraints"),
-    ITEM(AM_ORTHO_YX, "ortho_yx", "orthogonal constraints"),
-    ITEM(AM_ORTHOXY, "orthoxy", "xy orthogonal constraints"),
-    ITEM(AM_ORTHOYX, "orthoyx", "yx orthogonal constraints"),
-    ITEM(AM_PORTHO, "portho", "pseudo-orthogonal constraints"),
-    ITEM(AM_PORTHO_YX, "portho_yx", "pseudo-orthogonal constraints"),
-    ITEM(AM_PORTHOXY, "porthoxy", "xy pseudo-orthogonal constraints"),
-    ITEM(AM_PORTHOYX, "porthoyx", "yx pseudo-orthogonal constraints"),
+    {AM_VOR, "voronoi", "Voronoi"},
+    {AM_NSCALE, "scale", "scaling"},
+    {AM_COMPRESS, "compress", "compress"},
+    {AM_VPSC, "vpsc", "vpsc"},
+    {AM_IPSEP, "ipsep", "ipsep"},
+    {AM_SCALE, "oscale", "old scaling"},
+    {AM_SCALEXY, "scalexy", "x and y scaling"},
+    {AM_ORTHO, "ortho", "orthogonal constraints"},
+    {AM_ORTHO_YX, "ortho_yx", "orthogonal constraints"},
+    {AM_ORTHOXY, "orthoxy", "xy orthogonal constraints"},
+    {AM_ORTHOYX, "orthoyx", "yx orthogonal constraints"},
+    {AM_PORTHO, "portho", "pseudo-orthogonal constraints"},
+    {AM_PORTHO_YX, "portho_yx", "pseudo-orthogonal constraints"},
+    {AM_PORTHOXY, "porthoxy", "xy pseudo-orthogonal constraints"},
+    {AM_PORTHOYX, "porthoyx", "yx pseudo-orthogonal constraints"},
 #if !((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
-    ITEM(AM_PRISM, "prism", 0),
+    {AM_PRISM, "prism", 0},
 #endif
-    {AM_NONE, 0, 0, 0}
+    {0}
 };
 
 /// Initialize and set prism values
@@ -847,7 +843,11 @@ static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
     }
     else {
 	while (ap->attrib) {
-	    if (!strncasecmp(s, ap->attrib, ap->len)) {
+	    bool matches = strcasecmp(s, ap->attrib) == 0;
+	    // "prism" takes parameters, so needs to match "prism.*"
+	    matches |= ap->mode == AM_PRISM
+	            && strncasecmp(s, ap->attrib, strlen(ap->attrib)) == 0;
+	    if (matches) {
 		if (ap->print == NULL) {
 		    agwarningf("Overlap value \"%s\" unsupported - ignored\n", ap->attrib);
 		    ap = &adjustMode[1];
@@ -855,7 +855,7 @@ static void getAdjustMode(Agraph_t *g, char *s, adjust_data *dp) {
 		dp->mode = ap->mode;
 		dp->print = ap->print;
 		if (ap->mode == AM_PRISM)
-		    setPrismValues (g, s + ap->len, dp);
+		    setPrismValues(g, s + strlen(ap->attrib), dp);
 		break;
 	    }
 	    ap++;

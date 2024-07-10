@@ -4055,9 +4055,6 @@ def test_2559():
 
 
 @pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2563", strict=True
-)
 def test_2563():
     """
     `overlap` parameters should generate different results

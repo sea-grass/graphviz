@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ccomps` now understands a cluster to be indicated by the common rules,
   including the “cluster” prefix being case insensitive and the `cluster=true`
   attribute as an alternative. #2187
+- `overlap` values whose prefixes are themselves valid values (e.g.
+  `overlap=scalexy` where `overlap=scale` is also a valid setting) are once
+  again usable. Previously such values would silently select the shortest valid
+  prefix. This was a regression in Graphviz 2.24.0. #2563
 
 ## [12.0.0] – 2024-07-04
 
