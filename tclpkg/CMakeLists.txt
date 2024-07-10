@@ -9,7 +9,7 @@ else()
   list(APPEND CMAKE_INSTALL_RPATH "\$ORIGIN/../..")
 endif()
 
-if(enable_tcl)
+if(ENABLE_TCL)
   add_subdirectory(gdtclft)
   add_subdirectory(tcldot)
   add_subdirectory(tclhandle)
@@ -19,7 +19,7 @@ endif()
 
 add_subdirectory(gv)
 
-if(enable_tcl)
+if(ENABLE_TCL)
   if(GD_FOUND)
     set(GD_INDEX "gdtclft/pkgIndex.tcl")
   else()

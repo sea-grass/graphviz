@@ -28,7 +28,7 @@ if(enable_swig)
     )
   endif()
 
-  if(enable_tcl)
+  if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl
       SOURCES gv.i gv_tcl_init.c
