@@ -11,6 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `ccomps` now understands a cluster to be indicated by the common rules,
   including the “cluster” prefix being case insensitive and the `cluster=true`
   attribute as an alternative. #2187
+- `overlap` values whose prefixes are themselves valid values (e.g.
+  `overlap=scalexy` where `overlap=scale` is also a valid setting) are once
+  again usable. Previously such values would silently select the shortest valid
+  prefix. This was a regression in Graphviz 2.24.0. #2563
+- Setting `overlap=ortho_xy` no longer also runs the constraint pass of
+  `overlap=porthoxy`. Setting `overlap=ortho` no longer also runs the constraint
+  passes of `overlap=ortho_xy` and `ortho=porthoxy`. This bug has existed ever
+  since these overlap modes were introduced in Graphviz 2.4. However its effect
+  was masked by the bug discussed in the prior CHANGELOG entry that made it not
+  possible to select `overlap=ortho_xy` or `overlap=porthoxy`.
 
 ## [12.0.0] – 2024-07-04
 

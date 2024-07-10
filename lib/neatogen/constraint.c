@@ -538,7 +538,8 @@ static void initItem(node_t * n, nitem * p, expand_t margin)
  * we require relative positions to remain the same. That is, if two nodes
  * have the same x originally, they have the same x at the end, and if one
  * node is to the left of another, it remains to the left. In addition, if
- * two nodes could overlap by moving their X coordinates, we insert a constraint * to keep the two nodes sufficiently apart. Similarly, for Y.
+ * two nodes could overlap by moving their X coordinates, we insert a constraint
+ * to keep the two nodes sufficiently apart. Similarly, for Y.
  * 
  * mode = AM_ORTHOXY => first X, then Y
  * mode = AM_ORTHOYX => first Y, then X
@@ -550,11 +551,6 @@ static void initItem(node_t * n, nitem * p, expand_t margin)
  * but leave it for the Y pass to remove any remaining overlaps. Without this,
  * the X pass will remove all overlaps, and the Y pass only compresses in the
  * Y direction, causing a skewing of the aspect ratio.
- * 
- * mode = AM_ORTHOXY => first X, then Y
- * mode = AM_ORTHOYX => first Y, then X
- * mode = AM_ORTHO   => first X, then Y
- * mode = AM_ORTHO_YX   => first Y, then X
  */
 int cAdjust(graph_t * g, int mode)
 {
@@ -586,9 +582,11 @@ int cAdjust(graph_t * g, int mode)
 	case AM_ORTHO :
 	    constrainX(g, nlist, nnodes, intersectY0, 1);
 	    constrainY(g, nlist, nnodes, intersectX, 1);
+	    break;
 	case AM_ORTHO_YX :
 	    constrainY(g, nlist, nnodes, intersectX0, 1);
 	    constrainX(g, nlist, nnodes, intersectY, 1);
+	    break;
 	case AM_PORTHOXY:
 	    constrainX(g, nlist, nnodes, intersectY, 0);
 	    constrainY(g, nlist, nnodes, intersectX, 0);

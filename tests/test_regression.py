@@ -22,7 +22,7 @@ import textwrap
 import time
 import xml.etree.ElementTree as ET
 from pathlib import Path
-from typing import Iterator, List
+from typing import Iterator, List, Set
 
 import pytest
 
@@ -4052,6 +4052,46 @@ def test_2559():
     assert not parsed["edges"][-1]["pos"].startswith(
         "e"
     ), "concentrated edge drawn as a regular straight edge"
+
+
+@pytest.mark.skipif(which("fdp") is None, reason="fdp not available")
+def test_2563():
+    """
+    `overlap` parameters should generate different results
+    https://gitlab.com/graphviz/graphviz/-/issues/2563
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2563.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # try various `overlap=…` values
+    results: Set[str] = set()
+    for overlap in ("scale", "scalexy"):
+        # run this through sfdp
+        fdp = which("fdp")
+        p = subprocess.run(
+            [fdp, f"-Goverlap={overlap}", input],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+        )
+
+        # if fdp was built without libgts, it will not handle anything non-trivial
+        no_gts_error = "remove_overlap: Graphviz not built with triangulation library"
+        if no_gts_error in p.stderr:
+            assert p.returncode != 0, "fdp returned success after an error message"
+            return
+        p.check_returncode()
+
+        # remove the overlap parameter itself, that would otherwise cause each
+        # output to be unique
+        output = re.sub(r"\boverlap\s*=\s*scale(xy)?\b", "", p.stdout)
+
+        assert (
+            output not in results
+        ), "altering `overlap` attribute did not affect output"
+        results.add(output)
 
 
 def test_2564():
