@@ -538,7 +538,8 @@ static void initItem(node_t * n, nitem * p, expand_t margin)
  * we require relative positions to remain the same. That is, if two nodes
  * have the same x originally, they have the same x at the end, and if one
  * node is to the left of another, it remains to the left. In addition, if
- * two nodes could overlap by moving their X coordinates, we insert a constraint * to keep the two nodes sufficiently apart. Similarly, for Y.
+ * two nodes could overlap by moving their X coordinates, we insert a constraint
+ * to keep the two nodes sufficiently apart. Similarly, for Y.
  * 
  * mode = AM_ORTHOXY => first X, then Y
  * mode = AM_ORTHOYX => first Y, then X
