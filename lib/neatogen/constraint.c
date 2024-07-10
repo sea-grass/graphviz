@@ -551,11 +551,6 @@ static void initItem(node_t * n, nitem * p, expand_t margin)
  * but leave it for the Y pass to remove any remaining overlaps. Without this,
  * the X pass will remove all overlaps, and the Y pass only compresses in the
  * Y direction, causing a skewing of the aspect ratio.
- * 
- * mode = AM_ORTHOXY => first X, then Y
- * mode = AM_ORTHOYX => first Y, then X
- * mode = AM_ORTHO   => first X, then Y
- * mode = AM_ORTHO_YX   => first Y, then X
  */
 int cAdjust(graph_t * g, int mode)
 {
