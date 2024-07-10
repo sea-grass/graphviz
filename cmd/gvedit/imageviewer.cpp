@@ -33,8 +33,7 @@ ImageViewer::ImageViewer()
     setWindowTitle(tr(""));
     resize(800, 600);
 
-    setWindowIcon(QIcon(":/images/icon.png"));
-
+    setWindowIcon(QIcon(QStringLiteral(":/images/icon.png")));
 }
 
 bool ImageViewer::open(const QString &fileName)

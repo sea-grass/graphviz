@@ -40,7 +40,7 @@
 
 extern int errorPipe(char *errMsg);
 
-#define WIDGET(t, f) ((t *)findChild<t *>(#f))
+#define WIDGET(t, f) ((t *)findChild<t *>(QStringLiteral(#f)))
 
 #ifndef _WIN32
 /// `readlink`-alike but dynamically allocates
@@ -206,25 +206,24 @@ static std::string find_share(void) {
 
 bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
                QComboBox *cbNameE) {
-  QStringList lines;
   QFile file(fileName);
   if (file.open(QIODevice::ReadOnly)) {
     QTextStream stream(&file);
     QString line;
     while (!stream.atEnd()) {
       line = stream.readLine(); // line of text excluding '\n'
-      if (line.left(1) == ":") {
+      if (line.left(1) == QLatin1String(":")) {
         QString attrName;
-        QStringList sl = line.split(":");
+        QStringList sl = line.split(u':');
         for (int id = 0; id < sl.count(); id++) {
           if (id == 1)
             attrName = sl[id];
           if (id == 2) {
-            if (sl[id].contains("G"))
+            if (sl[id].contains(u'G'))
               cbNameG->addItem(attrName);
-            if (sl[id].contains("N"))
+            if (sl[id].contains(u'N'))
               cbNameN->addItem(attrName);
-            if (sl[id].contains("E"))
+            if (sl[id].contains(u'E'))
               cbNameE->addItem(attrName);
           }
         };
@@ -244,7 +243,7 @@ bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
 QString stripFileExtension(const QString &fileName) {
   int idx;
   for (idx = fileName.length(); idx >= 0; idx--) {
-    if (fileName.mid(idx, 1) == ".")
+    if (fileName.mid(idx, 1) == u'.')
       break;
   }
   return fileName.left(idx);
@@ -262,7 +261,7 @@ CFrmSettings::CFrmSettings() {
   s = getenv("GVEDIT_PATH");
 #endif
   if (s)
-    path = s;
+    path = QString::fromUtf8(s);
   else
     path = QString::fromStdString(find_share());
 
@@ -288,18 +287,18 @@ CFrmSettings::CFrmSettings() {
           &CFrmSettings::scopeChangedSlot);
   scopeChangedSlot(0);
 
-  if (path != "") {
-    loadAttrs(path + "/attrs.txt", WIDGET(QComboBox, cbNameG),
+  if (!path.isEmpty()) {
+    loadAttrs(path + QLatin1String("/attrs.txt"), WIDGET(QComboBox, cbNameG),
               WIDGET(QComboBox, cbNameN), WIDGET(QComboBox, cbNameE));
   }
-  setWindowIcon(QIcon(":/images/icon.png"));
+  setWindowIcon(QIcon(QStringLiteral(":/images/icon.png")));
 }
 
 void CFrmSettings::outputSlot() {
-  QString _filter =
-      "Output File(*." + WIDGET(QComboBox, cbExtension)->currentText() + ")";
-  QString fileName =
-      QFileDialog::getSaveFileName(this, tr("Save Graph As.."), "/", _filter);
+  QString _filter = QStringLiteral("Output File(*.%1)")
+                        .arg(WIDGET(QComboBox, cbExtension)->currentText());
+  QString fileName = QFileDialog::getSaveFileName(this, tr("Save Graph As.."),
+                                                  QStringLiteral("/"), _filter);
   if (!fileName.isEmpty())
     WIDGET(QLineEdit, leOutput)->setText(fileName);
 }
@@ -331,24 +330,24 @@ void CFrmSettings::addSlot() {
                          tr("Please enter a value for selected attribute!"),
                          QMessageBox::Ok, QMessageBox::Ok);
   else {
-    QString str = _scope + "[" + _name + "=\"";
+    QString str = _scope + QLatin1Char(u'[') + _name + QLatin1String("=\"");
     if (WIDGET(QTextEdit, teAttributes)->toPlainText().contains(str)) {
       QMessageBox::warning(this, tr("GvEdit"),
                            tr("Attribute is already defined!"), QMessageBox::Ok,
                            QMessageBox::Ok);
       return;
     } else {
-      str = str + _value + "\"]";
+      str = str + _value + QLatin1String("\"]");
       WIDGET(QTextEdit, teAttributes)
           ->setPlainText(WIDGET(QTextEdit, teAttributes)->toPlainText() + str +
-                         "\n");
+                         QLatin1Char('\n'));
     }
   }
 }
 
 void CFrmSettings::helpSlot() {
   QDesktopServices::openUrl(
-      QUrl("http://www.graphviz.org/doc/info/attrs.html"));
+      QUrl(QStringLiteral("http://www.graphviz.org/doc/info/attrs.html")));
 }
 
 void CFrmSettings::cancelSlot() { this->reject(); }
@@ -363,8 +362,8 @@ void CFrmSettings::newSlot() {
 }
 
 void CFrmSettings::openSlot() {
-  QString fileName = QFileDialog::getOpenFileName(this, tr("Open File"), "/",
-                                                  tr("Text file (*.*)"));
+  QString fileName = QFileDialog::getOpenFileName(
+      this, tr("Open File"), QStringLiteral("/"), tr("Text file (*.*)"));
   if (!fileName.isEmpty()) {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
@@ -388,8 +387,8 @@ void CFrmSettings::saveSlot() {
     return;
   }
 
-  QString fileName = QFileDialog::getSaveFileName(this, tr("Open File"), "/",
-                                                  tr("Text File(*.*)"));
+  QString fileName = QFileDialog::getSaveFileName(
+      this, tr("Open File"), QStringLiteral("/"), tr("Text File(*.*)"));
   if (!fileName.isEmpty()) {
 
     QFile file(fileName);
@@ -423,7 +422,8 @@ bool CFrmSettings::createLayout() {
   // first attach attributes to graph
   int _pos = graphData.indexOf(tr("{"));
   graphData.replace(_pos, 1,
-                    "{" + WIDGET(QTextEdit, teAttributes)->toPlainText());
+                    QLatin1Char('{') +
+                        WIDGET(QTextEdit, teAttributes)->toPlainText());
 
   /* Reset line number and file name;
    * If known, might want to use real name
@@ -480,18 +480,18 @@ bool CFrmSettings::renderLayout() {
   QString sfx = WIDGET(QComboBox, cbExtension)->currentText();
   QString fileName(WIDGET(QLineEdit, leOutput)->text());
 
-  if (fileName == "" || sfx == "NONE")
+  if (fileName.isEmpty() || sfx == QLatin1String("NONE"))
     doPreview(QString());
   else {
     fileName = stripFileExtension(fileName);
-    fileName = fileName + "." + sfx;
+    fileName = fileName + QLatin1Char('.') + sfx;
     if (fileName != activeWindow->outputFile)
       activeWindow->outputFile = fileName;
 
 #ifdef _WIN32
-    if (!fileName.contains('/') && !fileName.contains('\\'))
+    if (!fileName.contains(u'/') && !fileName.contains(u'\\'))
 #else
-    if (!fileName.contains('/'))
+    if (!fileName.contains(u'/'))
 #endif
     { // no directory info => can we create/write the file?
       QFile outf(fileName);
@@ -499,11 +499,10 @@ bool CFrmSettings::renderLayout() {
         outf.close();
       else {
         QString pathName = QDir::homePath();
-        pathName.append("/").append(fileName);
+        pathName.append(u'/').append(fileName);
         fileName = QDir::toNativeSeparators(pathName);
-        QString msg("Output written to ");
-        msg.append(fileName);
-        msg.append("\n");
+        const QString msg =
+            QStringLiteral("Output written to %1\n").arg(fileName);
         errorPipe(msg.toLatin1().data());
       }
     }
@@ -529,12 +528,13 @@ void CFrmSettings::refreshContent() {
     WIDGET(QLineEdit, leOutput)->setText(activeWindow->outputFile);
   else
     WIDGET(QLineEdit, leOutput)
-        ->setText(stripFileExtension(activeWindow->currentFile()) + "." +
+        ->setText(stripFileExtension(activeWindow->currentFile()) +
+                  QLatin1Char('.') +
                   WIDGET(QComboBox, cbExtension)->currentText());
 
   WIDGET(QTextEdit, teAttributes)->setText(activeWindow->attributes);
 
-  WIDGET(QLineEdit, leValue)->setText("");
+  WIDGET(QLineEdit, leValue)->clear();
 }
 
 void CFrmSettings::saveContent() {
