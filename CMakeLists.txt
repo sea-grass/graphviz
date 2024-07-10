@@ -21,7 +21,8 @@ set_property(CACHE WITH_ZLIB PROPERTY STRINGS AUTO ON OFF)
 option(use_coverage    "enables analyzing code coverage" OFF)
 option(with_cxx_api    "enables building the C++ API" OFF)
 option(with_cxx_tests  "enables building the C++ tests" OFF)
-option(use_win_pre_inst_libs "enables building using pre-installed Windows libraries" ON)
+option(use_win_pre_inst_libs
+       "enables building using pre-installed Windows libraries" ON)
 option(BUILD_SHARED_LIBS "Build in shared lib mode" ON)
 set(ENABLE_TCL AUTO CACHE STRING "Build TCL components")
 set_property(CACHE ENABLE_TCL PROPERTY STRINGS AUTO ON OFF)
@@ -88,14 +89,17 @@ set(PLUGIN_INSTALL_DIR      ${LIBRARY_INSTALL_DIR}/graphviz)
 set(PKGCONFIG_DIR           ${LIBRARY_INSTALL_DIR}/pkgconfig)
 # TODO: Find a way to check for groff and ps2pdf for manpage pdf generation
 # set(MAN_PDF_INSTALL_DIR share/graphviz/doc/pdf)
-set(WINDOWS_DEPENDENCY_DIR  "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries")
+set(WINDOWS_DEPENDENCY_DIR
+    "${CMAKE_CURRENT_SOURCE_DIR}/windows/dependencies/libraries")
 set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_DIR}/vcpkg/installed")
 if(CMAKE_CL_64)
   set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x64")
-  set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x64-windows")
+  set(WINDOWS_DEPENDENCY_VCPKG_DIR
+      "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x64-windows")
 else()
   set(WINDOWS_DEPENDENCY_DIR "${WINDOWS_DEPENDENCY_DIR}/x86")
-  set(WINDOWS_DEPENDENCY_VCPKG_DIR "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x86-windows")
+  set(WINDOWS_DEPENDENCY_VCPKG_DIR
+      "${WINDOWS_DEPENDENCY_VCPKG_DIR}/x86-windows")
 endif()
 
 set(GRAPHVIZ_PLUGIN_VERSION 6)
@@ -291,7 +295,8 @@ if(WIN32)
 
   # Find DLLs on Windows
   if(WITH_EXPAT)
-    find_program(EXPAT_RUNTIME_LIBRARIES NAMES libexpat.dll expat.dll msys-expat-1.dll)
+    find_program(EXPAT_RUNTIME_LIBRARIES
+                 NAMES libexpat.dll expat.dll msys-expat-1.dll)
   endif()
   if(CMAKE_CL_64)
     find_program(MSYS_RUNTIME_LIBRARIES NAMES msys-2.0.dll)
@@ -321,7 +326,8 @@ endif()
 
 # Set GRAPHVIZ_VERSION_BUILD to time of last commit, or to 0 if that fails.
 execute_process(
-  COMMAND           ${Python3_EXECUTABLE} gen_version.py --committer-date-graphviz
+  COMMAND           ${Python3_EXECUTABLE}
+                    gen_version.py --committer-date-graphviz
   WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
   RESULT_VARIABLE   gen_date_result
   OUTPUT_VARIABLE   GRAPHVIZ_VERSION_BUILD
@@ -344,10 +350,13 @@ string(REGEX REPLACE "[^.]*\\.[^.]*\\.(.*)$"
   ${GRAPHVIZ_VERSION_STRING})
 
 set(GRAPHVIZ_VERSION_FULL "${GRAPHVIZ_VERSION_STRING}")
-file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/builddate.h "#define BUILDDATE \"${GRAPHVIZ_VERSION_BUILD}\"")
+file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/builddate.h
+     "#define BUILDDATE \"${GRAPHVIZ_VERSION_BUILD}\"")
 
-configure_file(graphviz_version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/graphviz_version.h @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphviz_version.h DESTINATION ${HEADER_INSTALL_DIR})
+configure_file(graphviz_version.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/graphviz_version.h @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/graphviz_version.h
+        DESTINATION ${HEADER_INSTALL_DIR})
 
 message(STATUS "Graphviz version: ${GRAPHVIZ_VERSION_FULL}")
 
@@ -458,15 +467,26 @@ set(VERSION "${GRAPHVIZ_VERSION_STRING}")
 set(PREFIX "${CMAKE_INSTALL_PREFIX}")
 set(EXEC_PREFIX "${CMAKE_INSTALL_PREFIX}")
 set(PACKAGE "graphviz")
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cdt/libcdt.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libcdt.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cgraph/libcgraph.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libcgraph.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/gvc/libgvc.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libgvc.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/gvpr/libgvpr.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libgvpr.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/pathplan/libpathplan.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libpathplan.pc @ONLY)
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/xdot/libxdot.pc.in ${CMAKE_CURRENT_BINARY_DIR}/libxdot.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cdt/libcdt.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/libcdt.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cgraph/libcgraph.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/libcgraph.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/gvc/libgvc.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/libgvc.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/gvpr/libgvpr.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/libgvpr.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/pathplan/libpathplan.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/libpathplan.pc @ONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/xdot/libxdot.pc.in
+               ${CMAKE_CURRENT_BINARY_DIR}/libxdot.pc @ONLY)
 file(GLOB pcfiles "${CMAKE_CURRENT_BINARY_DIR}/*.pc")
 foreach(file "${pcfiles}")
 	install(FILES ${file} DESTINATION "${PKGCONFIG_DIR}")
 endforeach(file)
 
-feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)
+feature_summary(
+  WHAT
+  ALL
+  INCLUDE_QUIET_PACKAGES
+  FATAL_ON_MISSING_REQUIRED_PACKAGES
+)
