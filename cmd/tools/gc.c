@@ -59,7 +59,7 @@ static int verbose;
 static int gtype;
 static int flags;
 static char *fname;
-static char **Files;
+static char **Inputs;
 static FILE *outfile;
 
 static char *useString = "Usage: gc [-necCaDUrsv?] <files>\n\
@@ -139,7 +139,7 @@ static void init(int argc, char *argv[])
     argc -= optind;
 
     if (argc)
-	Files = argv;
+	Inputs = argv;
     if (flags == 0)
 	flags = NODES | EDGES;
     if (gtype == 0)
@@ -301,7 +301,7 @@ int main(int argc, char *argv[])
     int rv = 0;
 
     init(argc, argv);
-    newIngraph(&ig, Files);
+    newIngraph(&ig, Inputs);
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (prev)
