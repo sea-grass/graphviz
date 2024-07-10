@@ -483,7 +483,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/xdot/libxdot.pc.in
                ${CMAKE_CURRENT_BINARY_DIR}/libxdot.pc @ONLY)
 file(GLOB pcfiles "${CMAKE_CURRENT_BINARY_DIR}/*.pc")
 foreach(file "${pcfiles}")
-	install(FILES ${file} DESTINATION "${PKGCONFIG_DIR}")
+  install(FILES ${file} DESTINATION "${PKGCONFIG_DIR}")
 endforeach(file)
 
 feature_summary(
