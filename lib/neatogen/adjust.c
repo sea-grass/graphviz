@@ -42,30 +42,26 @@
 
 #define SEPFACT         0.8 // default esep/sep
 
-static double margin = 0.05;	/* Create initial bounding box by adding
-				 * margin * dimension around box enclosing
-				 * nodes.
-				 */
 static const double incr = 0.05;	/* Increase bounding box by adding
 				 * incr * dimension around box.
 				 */
-static bool doAll = false; // Move all nodes, regardless of overlap
-static Site **sites;		/* Array of pointers to sites; used in qsort */
-static Site **endSite;		/* Sentinel on sites array */
-static Point nw, ne, sw, se;	/* Corners of clipping window */
 
-static Site **nextSite;
+typedef struct {
+  Site **sites; ///< array of pointers to sites; used in qsort
+  Site **endSite; ///< sentinel on sites array
+  Point nw, ne, sw, se; ///< corners of clipping window
+  Site **nextSite;
+} state_t;
 
-static void setBoundBox(Point * ll, Point * ur)
-{
+static void setBoundBox(state_t *st, Point *ll, Point *ur) {
     pxmin = ll->x;
     pxmax = ur->x;
     pymin = ll->y;
     pymax = ur->y;
-    nw.x = sw.x = pxmin;
-    ne.x = se.x = pxmax;
-    nw.y = ne.y = pymax;
-    sw.y = se.y = pymin;
+    st->nw.x = st->sw.x = pxmin;
+    st->ne.x = st->se.x = pxmax;
+    st->nw.y = st->ne.y = pymax;
+    st->sw.y = st->se.y = pymin;
 }
 
 /// Free node resources.
@@ -86,8 +82,7 @@ static void freeNodes(void)
  *   graph extremes.
  *   In the first two cases, check that graph fits in bounding box.
  */
-static void chkBoundBox(Agraph_t * graph)
-{
+static void chkBoundBox(state_t *st, Agraph_t *graph) {
     Point ll, ur;
 
     double x_min = DBL_MAX;
@@ -106,10 +101,10 @@ static void chkBoundBox(Agraph_t * graph)
 	y_max = fmax(y_max, pp->corner.y + y);
     }
 
+    // create initial bounding box by adding margin × dimension around box
+    // enclosing nodes
     char *marg = agget(graph, "voro_margin");
-    if (marg && *marg != '\0') {
-	margin = atof(marg);
-    }
+    const double margin = (marg && *marg != '\0') ? atof(marg) : 0.05;
     double ydelta = margin * (y_max - y_min);
     double xdelta = margin * (x_max - x_min);
     ll.x = x_min - xdelta;
@@ -117,7 +112,7 @@ static void chkBoundBox(Agraph_t * graph)
     ur.x = x_max + xdelta;
     ur.y = y_max + ydelta;
 
-    setBoundBox(&ll, &ur);
+    setBoundBox(st, &ll, &ur);
 }
 
  /// For each node in the graph, create a Info data structure 
@@ -180,64 +175,61 @@ static int scomp(const void *S1, const void *S2)
 }
 
  /// Fill array of pointer to sites and sort the sites using scomp
-static void sortSites(void)
-{
-    if (sites == 0) {
-	sites = gv_calloc(nsites, sizeof(Site*));
-	endSite = sites + nsites;
+static void sortSites(state_t *st) {
+    if (st->sites == NULL) {
+	st->sites = gv_calloc(nsites, sizeof(Site*));
+	st->endSite = st->sites + nsites;
     }
 
     infoinit();
     for (size_t i = 0; i < nsites; i++) {
 	Info_t *ip = &nodeInfo[i];
-	sites[i] = &ip->site;
+	st->sites[i] = &ip->site;
 	ip->verts = NULL;
 	ip->site.refcnt = 1;
     }
 
-    qsort(sites, nsites, sizeof(Site *), scomp);
+    qsort(st->sites, nsites, sizeof(Site *), scomp);
 
     /* Reset site index for nextOne */
-    nextSite = sites;
+    st->nextSite = st->sites;
 
 }
 
-static void geomUpdate(int doSort)
-{
+static void geomUpdate(state_t *st, int doSort) {
     if (doSort)
-	sortSites();
+	sortSites(st);
 
     /* compute ranges */
     xmin = DBL_MAX;
     xmax = -DBL_MAX;
     assert(nsites > 0);
     for (size_t i = 0; i < nsites; ++i) {
-	xmin = fmin(xmin, sites[i]->coord.x);
-	xmax = fmax(xmax, sites[i]->coord.x);
+	xmin = fmin(xmin, st->sites[i]->coord.x);
+	xmax = fmax(xmax, st->sites[i]->coord.x);
     }
-    ymin = sites[0]->coord.y;
-    ymax = sites[nsites - 1]->coord.y;
+    ymin = st->sites[0]->coord.y;
+    ymax = st->sites[nsites - 1]->coord.y;
 
     deltay = ymax - ymin;
     deltax = xmax - xmin;
 }
 
-static Site *nextOne(void)
-{
-    if (nextSite < endSite) {
-	return *nextSite++;
+static Site *nextOne(void *state) {
+    state_t *st = state;
+    if (st->nextSite < st->endSite) {
+	return *st->nextSite++;
     } else
 	return NULL;
 }
 
 /// Check for nodes with identical positions and tweak the positions.
-static void rmEquality(void)
-{
-    sortSites();
+static void rmEquality(state_t *st) {
+    sortSites(st);
 
-    for (Site **ip = sites; ip < endSite; ) {
+    for (Site **ip = st->sites; ip < st->endSite; ) {
 	Site **jp = ip + 1;
-	if (jp >= endSite ||
+	if (jp >= st->endSite ||
 	    (*jp)->coord.x != (*ip)->coord.x ||
 	    (*jp)->coord.y != (*ip)->coord.y) {
 	    ip = jp;
@@ -247,7 +239,7 @@ static void rmEquality(void)
 	/* Find first node kp with position different from ip */
 	int cnt = 2;
 	Site **kp = jp + 1;
-	while (kp < endSite &&
+	while (kp < st->endSite &&
 	       (*kp)->coord.x == (*ip)->coord.x &&
 	       (*kp)->coord.y == (*ip)->coord.y) {
 	    cnt++;
@@ -256,7 +248,7 @@ static void rmEquality(void)
 	}
 
 	/* If next node exists and is on the same line */
-	if (kp < endSite && (*kp)->coord.y == (*ip)->coord.y) {
+	if (kp < st->endSite && (*kp)->coord.y == (*ip)->coord.y) {
 	    const double xdel = ((*kp)->coord.x - (*ip)->coord.x) / cnt;
 	    int i = 1;
 	    for (jp = ip + 1; jp < kp; jp++) {
@@ -302,8 +294,7 @@ static int countOverlap(int iter)
     return count;
 }
 
-static void increaseBoundBox(void)
-{
+static void increaseBoundBox(state_t *st) {
     Point ur = {.x = pxmax, .y = pymax};
     Point ll = {.x = pxmin, .y = pymin};
 
@@ -315,7 +306,7 @@ static void increaseBoundBox(void)
     ll.x -= xdelta;
     ll.y -= ydelta;
 
-    setBoundBox(&ll, &ur);
+    setBoundBox(st, &ll, &ur);
 }
 
 /// Area of triangle whose vertices are a,b,c
@@ -364,46 +355,45 @@ static void newpos(Info_t * ip)
  /* Add corners of clipping window to appropriate sites.
   * A site gets a corner if it is the closest site to that corner.
   */
-static void addCorners(void)
-{
+static void addCorners(const state_t *st) {
     Info_t *ip = nodeInfo;
     Info_t *sws = ip;
     Info_t *nws = ip;
     Info_t *ses = ip;
     Info_t *nes = ip;
-    double swd = dist_2(&ip->site.coord, &sw);
-    double nwd = dist_2(&ip->site.coord, &nw);
-    double sed = dist_2(&ip->site.coord, &se);
-    double ned = dist_2(&ip->site.coord, &ne);
+    double swd = dist_2(ip->site.coord, st->sw);
+    double nwd = dist_2(ip->site.coord, st->nw);
+    double sed = dist_2(ip->site.coord, st->se);
+    double ned = dist_2(ip->site.coord, st->ne);
 
     for (size_t i = 1; i < nsites; i++) {
 	ip = &nodeInfo[i];
-	double d = dist_2(&ip->site.coord, &sw);
+	double d = dist_2(ip->site.coord, st->sw);
 	if (d < swd) {
 	    swd = d;
 	    sws = ip;
 	}
-	d = dist_2(&ip->site.coord, &se);
+	d = dist_2(ip->site.coord, st->se);
 	if (d < sed) {
 	    sed = d;
 	    ses = ip;
 	}
-	d = dist_2(&ip->site.coord, &nw);
+	d = dist_2(ip->site.coord, st->nw);
 	if (d < nwd) {
 	    nwd = d;
 	    nws = ip;
 	}
-	d = dist_2(&ip->site.coord, &ne);
+	d = dist_2(ip->site.coord, st->ne);
 	if (d < ned) {
 	    ned = d;
 	    nes = ip;
 	}
     }
 
-    addVertex(&sws->site, sw.x, sw.y);
-    addVertex(&ses->site, se.x, se.y);
-    addVertex(&nws->site, nw.x, nw.y);
-    addVertex(&nes->site, ne.x, ne.y);
+    addVertex(&sws->site, st->sw.x, st->sw.y);
+    addVertex(&ses->site, st->se.x, st->se.y);
+    addVertex(&nws->site, st->nw.x, st->nw.y);
+    addVertex(&nes->site, st->ne.x, st->ne.y);
 }
 
  /* Calculate the new position of a site as the centroid
@@ -412,10 +402,12 @@ static void addCorners(void)
   * window.
   * We first add the corner of the clipping windows to the
   * vertex lists of the appropriate sites.
+  *
+  * @param st Algorithm state
+  * @param doAll Move all nodes, regardless of overlap
   */
-static void newPos(void)
-{
-    addCorners();
+static void newPos(const state_t *st, bool doAll) {
+    addCorners(st);
     for (size_t i = 0; i < nsites; i++) {
 	Info_t *ip = &nodeInfo[i];
 	if (doAll || ip->overlaps)
@@ -437,8 +429,7 @@ static void cleanup(void)
     edgeinit();			/* free memory */
 }
 
-static int vAdjust(void)
-{
+static int vAdjust(state_t *st) {
     int iterCnt = 0;
     int badLevel = 0;
     int increaseCnt = 0;
@@ -448,11 +439,11 @@ static int vAdjust(void)
     if (overlapCnt == 0)
 	return 0;
 
-    rmEquality();
-    geomUpdate(0);
-    voronoi(nextOne);
-    while (1) {
-	newPos();
+    rmEquality(st);
+    geomUpdate(st, 0);
+    voronoi(nextOne, st);
+    for (bool doAll = false;;) {
+	newPos(st, doAll);
 	iterCnt++;
 
 	const int cnt = countOverlap(iterCnt);
@@ -471,12 +462,12 @@ static int vAdjust(void)
 	default:
 	    doAll = true;
 	    increaseCnt++;
-	    increaseBoundBox();
+	    increaseBoundBox(st);
 	    break;
 	}
 
-	geomUpdate(1);
-	voronoi(nextOne);
+	geomUpdate(st, 1);
+	voronoi(nextOne, st);
     }
 
     if (Verbose) {
@@ -500,8 +491,7 @@ static double rePos(void)
     return f;
 }
 
-static int sAdjust(void)
-{
+static int sAdjust(state_t *st) {
     int iterCnt = 0;
 
     int overlapCnt = countOverlap(iterCnt);
@@ -509,7 +499,7 @@ static int sAdjust(void)
     if (overlapCnt == 0)
 	return 0;
 
-    rmEquality();
+    rmEquality(st);
     while (1) {
 	rePos();
 	iterCnt++;
@@ -1000,25 +990,23 @@ removeOverlapWith (graph_t * G, adjust_data* am)
     /* create main array */
     if (makeInfo(G)) {
 	freeNodes();
-	free(sites);
-	sites = 0;
 	return nret;
     }
 
     /* establish and verify bounding box */
-    chkBoundBox(G);
+    state_t st = {0};
+    chkBoundBox(&st, G);
 
     if (am->mode == AM_SCALE)
-	ret = sAdjust();
+	ret = sAdjust(&st);
     else
-	ret = vAdjust();
+	ret = vAdjust(&st);
 
     if (ret)
 	updateGraph();
 
     freeNodes();
-    free(sites);
-    sites = 0;
+    free(st.sites);
 
     return ret+nret;
 }

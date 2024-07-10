@@ -423,7 +423,6 @@ EXCLUDE = (
     "lib/neatogen/stress.h",
     "lib/neatogen/stuff.c",
     "lib/neatogen/voronoi.c",
-    "lib/neatogen/voronoi.h",
     "lib/ortho/fPQ.c",
     "lib/ortho/fPQ.h",
     "lib/ortho/maze.c",

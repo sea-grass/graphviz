@@ -15,8 +15,7 @@
 #include <neatogen/heap.h>
 #include <neatogen/voronoi.h>
 
-
-void voronoi(Site * (*nextsite) (void)) {
+void voronoi(Site *(*nextsite)(void *context), void *context) {
     Site *newsite, *bot, *top, *temp, *p;
     Site *v;
     Point newintstar = {0};
@@ -27,10 +26,10 @@ void voronoi(Site * (*nextsite) (void)) {
     edgeinit();
     siteinit();
     PQinitialize();
-    bottomsite = nextsite();
+    bottomsite = nextsite(context);
     ELinitialize();
 
-    newsite = nextsite();
+    newsite = nextsite(context);
     while (1) {
 	if (!PQempty())
 	    newintstar = PQ_min();
@@ -54,7 +53,7 @@ void voronoi(Site * (*nextsite) (void)) {
 	    ELinsert(lbnd, bisector);
 	    if ((p = hintersect(bisector, rbnd)) != NULL)
 		PQinsert(bisector, p, dist(p, newsite));
-	    newsite = nextsite();
+	    newsite = nextsite(context);
 	} else if (!PQempty()) {
 	    /* intersection is smallest */
 	    lbnd = PQextractmin();
