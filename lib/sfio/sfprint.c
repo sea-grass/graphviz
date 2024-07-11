@@ -465,7 +465,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    break;
 		if (lv < 0 && fmt == 'd') {
 		    flags |= SFFMT_MINUS;
-		    if (lv == HIGHBITL) {	/* avoid overflow */
+		    if ((unsigned long long)lv == HIGHBITL) { // avoid overflow
 			lv = (long long)(HIGHBITL / base);
 			*--sp = _Sfdigits[HIGHBITL - (unsigned long long)lv * base];
 		    } else
