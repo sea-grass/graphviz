@@ -518,7 +518,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    break;
 		if (v < 0 && fmt == 'd') {
 		    flags |= SFFMT_MINUS;
-		    if (v == HIGHBITI) {	/* avoid overflow */
+		    if ((unsigned)v == HIGHBITI) { // avoid overflow
 			v = (int) (HIGHBITI / base);
 			*--sp = _Sfdigits[HIGHBITI - (unsigned)v * base];
 		    } else
