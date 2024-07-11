@@ -434,6 +434,12 @@ include(CPack)
 include(CTest)
 
 # ======================= Specify subdirectories to build ======================
+if(APPLE)
+  set(CMAKE_OSX_ARCHITECTURES "arm64" "x86_64")
+  set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  add_subdirectory(macosx)
+endif()
 add_subdirectory(contrib/diffimg)
 add_subdirectory(contrib/prune)
 add_subdirectory(graphs)
@@ -464,5 +470,4 @@ file(GLOB pcfiles "${CMAKE_CURRENT_BINARY_DIR}/*.pc")
 foreach(file "${pcfiles}")
 	install(FILES ${file} DESTINATION "${PKGCONFIG_DIR}")
 endforeach(file)
-
 feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAGES)

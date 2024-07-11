@@ -42,6 +42,16 @@ if [ "${build_system}" = "cmake" ]; then
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
         mv build/*.zip ${DIR}/
+        mkdir build_package
+        pushd build_package
+        cmake --log-level=VERBOSE --warn-uninitialized -Werror=dev \
+          --install-prefix=/Applications/Graphviz.app/Contents/Resources \
+          ${CMAKE_OPTIONS:-} ..
+        cmake --build .
+        DESTDIR=${PWD}/macosx/Destdir cmake --install .
+        DESTDIR=${PWD}/macosx/Destdir make -C macosx pkg
+        mv graphviz.pkg ${DIR}/
+        popd
     elif [ "${OSTYPE}" = "msys" ]; then
         mv build/*.zip ${DIR}/
         mv build/*.exe ${DIR}/
@@ -85,7 +95,8 @@ else
         fi
     elif [[ "${OSTYPE}" =~ "darwin" ]]; then
         ./autogen.sh
-        ./configure --prefix=$( pwd )/build --with-quartz=yes
+        ./configure --prefix=$( pwd )/build
+        make pkg
         make
         make install
         tar cfz ${DIR}/graphviz-${GV_VERSION}-${ARCH}.tar.gz --options gzip:compression-level=9 build
