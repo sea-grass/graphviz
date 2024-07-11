@@ -32,6 +32,7 @@ IMPORT extern gvplugin_library_t gvplugin_webp_LTX_library;
 #endif
 #endif
 IMPORT extern gvplugin_library_t gvplugin_core_LTX_library;
+IMPORT extern gvplugin_library_t gvplugin_vt_LTX_library;
 
 
 lt_symlist_t lt_preloaded_symbols[] = {
@@ -47,6 +48,7 @@ lt_symlist_t lt_preloaded_symbols[] = {
 	{ "gvplugin_gd_LTX_library", &gvplugin_gd_LTX_library },
 #endif
 	{ "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
+	{ "gvplugin_vt_LTX_library", &gvplugin_vt_LTX_library },
 	{ 0, 0 }
 };
 

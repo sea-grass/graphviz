@@ -84,6 +84,7 @@ dot_static_LDADD = \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
 	$(top_builddir)/plugin/core/libgvplugin_core_C.la \
+	$(top_builddir)/plugin/vt/libgvplugin_vt_C.la \
 	$(top_builddir)/lib/gvc/libgvc_C.la \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
 	$(top_builddir)/lib/xdot/libxdot_C.la \
@@ -97,6 +98,7 @@ dot_builtins_LDADD = \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout.la \
 	$(top_builddir)/plugin/core/libgvplugin_core.la \
+	$(top_builddir)/plugin/vt/libgvplugin_vt.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/pathplan/libpathplan.la \
 	$(top_builddir)/lib/xdot/libxdot.la \

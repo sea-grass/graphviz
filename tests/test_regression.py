@@ -3500,7 +3500,8 @@ def test_2413(source: str):
 
 
 @pytest.mark.skipif(
-    platform.system() == "Windows", reason="vt target is not supported on Windows"
+    os.getenv("build_system") == "msbuild",
+    reason="vt target is not supported under MS Build",
 )
 def test_2429():
     """
