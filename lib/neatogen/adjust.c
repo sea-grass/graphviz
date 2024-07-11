@@ -71,7 +71,9 @@ static void freeNodes(void)
 	breakPoly(&nodeInfo[i].poly);
     }
     polyFree();
-    infoinit();			/* Free vertices */
+    if (nodeInfo != NULL) {
+	free(nodeInfo->verts); // Free vertices
+    }
     free(nodeInfo);
 }
 
@@ -153,6 +155,7 @@ static int makeInfo(Agraph_t * graph)
 	ip->site.refcnt = 1;
 	ip->node = node;
 	ip->verts = NULL;
+	ip->n_verts = 0;
 	node = agnxtnode(graph, node);
     }
     return 0;
@@ -181,11 +184,11 @@ static void sortSites(state_t *st) {
 	st->endSite = st->sites + nsites;
     }
 
-    infoinit();
     for (size_t i = 0; i < nsites; i++) {
 	Info_t *ip = &nodeInfo[i];
 	st->sites[i] = &ip->site;
 	ip->verts = NULL;
+	ip->n_verts = 0;
 	ip->site.refcnt = 1;
     }
 
@@ -329,23 +332,21 @@ static void centroidOf(Point a, Point b, Point c, double *x, double *y)
  */
 static void newpos(Info_t * ip)
 {
-    PtItem *anchor = ip->verts;
+    const Point anchor = ip->verts[0];
     double totalArea = 0.0;
     double cx = 0.0;
     double cy = 0.0;
     double x;
     double y;
 
-    PtItem *p = anchor->next;
-    PtItem *q = p->next;
-    while (q != NULL) {
-	const double area = areaOf(anchor->p, p->p, q->p);
-	centroidOf(anchor->p, p->p, q->p, &x, &y);
+    for (size_t i = 1; i + 1 < ip->n_verts; ++i) {
+	const Point p = ip->verts[i];
+	const Point q = ip->verts[i + 1];
+	const double area = areaOf(anchor, p, q);
+	centroidOf(anchor, p, q, &x, &y);
 	cx += area * x;
 	cy += area * y;
 	totalArea += area;
-	p = q;
-	q = q->next;
     }
 
     ip->site.coord.x = cx / totalArea;

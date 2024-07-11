@@ -8,19 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <stdio.h>
-#include <neatogen/mem.h>
 #include <neatogen/info.h>
-
+#include <stddef.h>
 
 Info_t *nodeInfo;		/* Array of node info */
-static Freelist pfl;
-
-void infoinit(void)
-{
-    freeinit(&pfl, sizeof(PtItem));
-}
 
 /* compare:
  * returns -1 if p < q.p
@@ -31,22 +25,20 @@ void infoinit(void)
  * For equal angles (which should not happen in our context)
  * ordering is by closeness to origin.
  */
-static int compare(Point o, Point p, PtItem *q) {
+static int compare(Point o, Point p, Point q) {
     double x0;
     double y0;
     double x1;
     double y1;
     double a, b;
 
-    if (q == NULL)
-	return -1;
-    if (p.x == q->p.x && p.y == q->p.y)
+    if (p.x == q.x && p.y == q.y)
 	return 0;
 
     x0 = (double)p.x - (double)o.x;
     y0 = (double)p.y - (double)o.y;
-    x1 = (double)q->p.x - (double)o.x;
-    y1 = (double)q->p.y - (double)o.y;
+    x1 = (double)q.x - (double)o.x;
+    y1 = (double)q.y - (double)o.y;
     if (x0 >= 0.0) {
 	if (x1 < 0.0)
 	    return -1;
@@ -109,40 +101,28 @@ static int compare(Point o, Point p, PtItem *q) {
 void addVertex(Site * s, double x, double y)
 {
     Info_t *ip;
-    PtItem *p;
-    PtItem *curr;
-    PtItem *prev;
     const Point origin_point = s->coord;
-    int cmp;
 
     ip = nodeInfo + s->sitenbr;
-    curr = ip->verts;
 
     const Point tmp = {.x = x, .y = y};
 
-    cmp = compare(origin_point, tmp, curr);
-    if (cmp == 0)
-	return;
-    else if (cmp < 0) {
-	p = getfree(&pfl);
-	p->p.x = x;
-	p->p.y = y;
-	p->next = curr;
-	ip->verts = p;
-	return;
+    size_t i;
+    for (i = 0; i < ip->n_verts; ++i) {
+	int cmp = compare(origin_point, tmp, ip->verts[i]);
+	if (cmp == 0) { // we already know this vertex; ignore
+	    return;
+	}
+	if (cmp < 0) { // found where to insert this vertex
+	    break;
+	}
     }
 
-    prev = curr;
-    curr = curr->next;
-    while ((cmp = compare(origin_point, tmp, curr)) > 0) {
-	prev = curr;
-	curr = curr->next;
-    }
-    if (cmp == 0)
-	return;
-    p = getfree(&pfl);
-    p->p.x = x;
-    p->p.y = y;
-    prev->next = p;
-    p->next = curr;
+    ip->verts = gv_recalloc(ip->verts, ip->n_verts, ip->n_verts + 1,
+                            sizeof(ip->verts[0]));
+    // shuffle existing entries upwards to make room
+    memmove(&ip->verts[i + 1], &ip->verts[i],
+            (ip->n_verts - i) * sizeof(ip->verts[0]));
+    ip->verts[i] = tmp;
+    ++ip->n_verts;
 }
