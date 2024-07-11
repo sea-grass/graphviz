@@ -466,8 +466,9 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		if (lv < 0 && fmt == 'd') {
 		    flags |= SFFMT_MINUS;
 		    if ((unsigned long long)lv == HIGHBITL) { // avoid overflow
-			lv = (long long)(HIGHBITL / base);
-			*--sp = _Sfdigits[HIGHBITL - (unsigned long long)lv * base];
+			lv = (long long)(HIGHBITL / (unsigned long long)base);
+			*--sp = _Sfdigits[HIGHBITL -
+			                  (unsigned long long)lv * (unsigned long long)base];
 		    } else
 			lv = -lv;
 		}
@@ -480,8 +481,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    } while ((lv = (unsigned long long)lv >> n));
 		} else {	/* general base */
 		    do {
-			*--sp = ssp[(unsigned long long)lv % base];
-		    } while ((lv = (unsigned long long)lv / base));
+			*--sp = ssp[(unsigned long long)lv % (unsigned long long)base];
+		    } while ((lv = (unsigned long long)lv / (unsigned long long)base));
 		}
 	    } else
 	    if (sizeof(short) < sizeof(int) && FMTCMP(size, short, long long)) {
