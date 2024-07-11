@@ -23,16 +23,15 @@ void infoinit(void)
 }
 
 /* compare:
- * returns -1 if p < q
- *          0 if p = q
- *          1 if p > q
+ * returns -1 if p < q.p
+ *          0 if p = q.p
+ *          1 if p > q.p
  * if q if NULL, returns -1
  * Ordering is by angle from -pi/2 to 3pi/4.
  * For equal angles (which should not happen in our context)
  * ordering is by closeness to origin.
  */
-static int compare(Point * o, PtItem * p, PtItem * q)
-{
+static int compare(Point *o, Point p, PtItem *q) {
     double x0;
     double y0;
     double x1;
@@ -41,11 +40,11 @@ static int compare(Point * o, PtItem * p, PtItem * q)
 
     if (q == NULL)
 	return -1;
-    if (p->p.x == q->p.x && p->p.y == q->p.y)
+    if (p.x == q->p.x && p.y == q->p.y)
 	return 0;
 
-    x0 = (double)p->p.x - (double)o->x;
-    y0 = (double)p->p.y - (double)o->y;
+    x0 = (double)p.x - (double)o->x;
+    y0 = (double)p.y - (double)o->y;
     x1 = (double)q->p.x - (double)o->x;
     y1 = (double)q->p.y - (double)o->y;
     if (x0 >= 0.0) {
@@ -114,16 +113,14 @@ void addVertex(Site * s, double x, double y)
     PtItem *curr;
     PtItem *prev;
     Point *origin_point = &s->coord;
-    PtItem tmp;
     int cmp;
 
     ip = nodeInfo + s->sitenbr;
     curr = ip->verts;
 
-    tmp.p.x = x;
-    tmp.p.y = y;
+    const Point tmp = {.x = x, .y = y};
 
-    cmp = compare(origin_point, &tmp, curr);
+    cmp = compare(origin_point, tmp, curr);
     if (cmp == 0)
 	return;
     else if (cmp < 0) {
@@ -137,7 +134,7 @@ void addVertex(Site * s, double x, double y)
 
     prev = curr;
     curr = curr->next;
-    while ((cmp = compare(origin_point, &tmp, curr)) > 0) {
+    while ((cmp = compare(origin_point, tmp, curr)) > 0) {
 	prev = curr;
 	curr = curr->next;
     }
