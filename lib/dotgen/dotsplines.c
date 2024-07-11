@@ -87,7 +87,7 @@ static Agnode_t *neighbor(graph_t*, Agnode_t *, Agedge_t *, Agedge_t *, int);
 static void place_vnlabel(Agnode_t *);
 static boxf rank_box(spline_info_t* sp, Agraph_t *, int);
 static void recover_slack(Agedge_t *, path *);
-static void resize_vn(Agnode_t *, int, int, int);
+static void resize_vn(Agnode_t *, double, double, double);
 static void setflags(Agedge_t *, int, int, int);
 static int straight_len(Agnode_t *);
 static Agedge_t *straight_path(Agedge_t*, int, points_t*);
@@ -2148,8 +2148,7 @@ static void recover_slack(edge_t * e, path * p)
     }
 }
 
-static void resize_vn(node_t *vn, int lx, int cx, int rx)
-{
+static void resize_vn(node_t *vn, double lx, double cx, double rx) {
     ND_coord(vn).x = cx;
     ND_lw(vn) = cx - lx, ND_rw(vn) = rx - cx;
 }
