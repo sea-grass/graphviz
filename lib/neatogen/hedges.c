@@ -80,7 +80,7 @@ Site *hintersect(Halfedge * el1, Halfedge * el2)
     } else {
 	el = el2;
 	e = e2;
-    };
+    }
     right_of_site = xint >= e->reg[1]->coord.x;
     if ((right_of_site && el->ELpm == le) || (!right_of_site && el->ELpm == re))
 	return NULL;
@@ -121,21 +121,21 @@ int right_of(Halfedge * el, Point * p)
 		above = !above;
 	    if (!above)
 		fast = 1;
-	};
+	}
 	if (!fast) {
 	    dxs = topsite->coord.x - (e->reg[0])->coord.x;
 	    above = e->b * (dxp * dxp - dyp * dyp) <
 		dxs * dyp * (1.0 + 2.0 * dxp / dxs + e->b * e->b);
 	    if (e->b < 0.0)
 		above = !above;
-	};
+	}
     } else {			/*e->b==1.0 */
 	yl = e->c - e->a * p->x;
 	t1 = p->y - yl;
 	t2 = p->x - topsite->coord.x;
 	t3 = yl - topsite->coord.y;
 	above = t1 * t1 > t2 * t2 + t3 * t3;
-    };
+    }
     return el->ELpm == le ? above : !above;
 }
 
@@ -196,8 +196,8 @@ Halfedge *ELleftbnd(Point * p)
 		break;
 	    if ((he = ELgethash(bucket + i)) != NULL)
 		break;
-	};
-    };
+	}
+    }
 /* Now search linear list of halfedges for the corect one */
     if (he == ELleftend || (he != ELrightend && right_of(he, p))) {
 	do {
@@ -215,7 +215,7 @@ Halfedge *ELleftbnd(Point * p)
 	    --ELhash[bucket]->ELrefcnt;
 	ELhash[bucket] = he;
 	++ELhash[bucket]->ELrefcnt;
-    };
+    }
     return he;
 }
 
