@@ -358,7 +358,7 @@ int sfvscanf(FILE *f, Sffmt_t *ft) {
 	    char *val;
 
 	    val = accept;
-	    if (width >= SF_MAXDIGITS)
+	    if (width >= 0 && (size_t)width >= SF_MAXDIGITS)
 		width = SF_MAXDIGITS - 1;
 	    int exponent = 0;
 	    bool seen_dot = false;
