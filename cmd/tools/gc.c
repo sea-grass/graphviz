@@ -28,14 +28,15 @@
 #include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/stack.h>
-#include <cgraph/startswith.h>
+#include <common/render.h>
+#include <common/utils.h>
 
 typedef struct {
     Agrec_t h;
     int dfs_mark;
-} Agnodeinfo_t;
+} nodeinfo_t;
 
-#define ND_dfs_mark(n) (((Agnodeinfo_t*)(n->base.data))->dfs_mark)
+#define ND_dfs_mark(n) (((nodeinfo_t*)(n->base.data))->dfs_mark)
 
 #include <getopt.h>
 
@@ -59,7 +60,7 @@ static int verbose;
 static int gtype;
 static int flags;
 static char *fname;
-static char **Files;
+static char **Inputs;
 static FILE *outfile;
 
 static char *useString = "Usage: gc [-necCaDUrsv?] <files>\n\
@@ -139,7 +140,7 @@ static void init(int argc, char *argv[])
     argc -= optind;
 
     if (argc)
-	Files = argv;
+	Inputs = argv;
     if (flags == 0)
 	flags = NODES | EDGES;
     if (gtype == 0)
@@ -186,9 +187,7 @@ static void cntCluster(Agraph_t * g, Agobj_t * sg, void *arg)
 {
     (void)g;
 
-    char *sgname = agnameof(sg);
-
-    if (startswith(sgname, "cluster"))
+    if (AGTYPE(sg) == AGRAPH && is_a_cluster((Agraph_t *)sg))
 	*(int *) (arg) += 1;
 }
 
@@ -276,7 +275,7 @@ static int eval(Agraph_t * g, int root)
 	return 1;
 
     if (root) {
-	aginit(g, AGNODE, "nodeinfo", sizeof(Agnodeinfo_t), true);
+	aginit(g, AGNODE, "nodeinfo", sizeof(nodeinfo_t), true);
     }
 
     if ((flags & CL) && root)
@@ -301,7 +300,7 @@ int main(int argc, char *argv[])
     int rv = 0;
 
     init(argc, argv);
-    newIngraph(&ig, Files);
+    newIngraph(&ig, Inputs);
 
     while ((g = nextGraph(&ig)) != 0) {
 	if (prev)
