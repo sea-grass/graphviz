@@ -290,17 +290,16 @@ int sfvscanf(FILE *f, Sffmt_t *ft) {
 	/* set object size */
 	if (flags & (SFFMT_TYPES & ~SFFMT_IFLAG)) {
 	    if ((_Sftype[fmt] & (SFFMT_INT | SFFMT_UINT)) || fmt == 'n') {
-		size = (flags & SFFMT_LLONG) ? sizeof(long long) :
-		    (flags & SFFMT_LONG) ? sizeof(long) :
-		    (flags & SFFMT_SHORT) ? sizeof(short) :
-		    (flags & SFFMT_SSHORT) ? sizeof(char) :
-		    (flags & SFFMT_JFLAG) ? sizeof(long long) :
-		    (flags & SFFMT_TFLAG) ? sizeof(ptrdiff_t) :
-		    (flags & SFFMT_ZFLAG) ? sizeof(size_t) : -1;
+		size = (flags & SFFMT_LLONG)  ? (ssize_t)sizeof(long long) :
+		       (flags & SFFMT_LONG)   ? (ssize_t)sizeof(long) :
+		       (flags & SFFMT_SHORT)  ? (ssize_t)sizeof(short) :
+		       (flags & SFFMT_SSHORT) ? (ssize_t)sizeof(char) :
+		       (flags & SFFMT_JFLAG)  ? (ssize_t)sizeof(long long) :
+		       (flags & SFFMT_TFLAG)  ? (ssize_t)sizeof(ptrdiff_t) :
+		       (flags & SFFMT_ZFLAG)  ? (ssize_t)sizeof(size_t) : -1;
 	    } else if (_Sftype[fmt] & SFFMT_FLOAT) {
-		size = (flags & SFFMT_LDOUBLE) ? sizeof(long double) :
-		    (flags & (SFFMT_LONG | SFFMT_LLONG)) ?
-		    sizeof(double) : -1;
+		size = (flags & SFFMT_LDOUBLE)              ? (ssize_t)sizeof(long double) :
+		       (flags & (SFFMT_LONG | SFFMT_LLONG)) ? (ssize_t)sizeof(double) : -1;
 	    }
 	}
 
