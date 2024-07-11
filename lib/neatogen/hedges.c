@@ -21,7 +21,6 @@ Halfedge *ELleftend, *ELrightend;
 static Freelist hfl;
 static int ELhashsize;
 static Halfedge **ELhash;
-static int totalsearch;
 
 void ELcleanup(void)
 {
@@ -198,7 +197,6 @@ Halfedge *ELleftbnd(Point * p)
 	    if ((he = ELgethash(bucket + i)) != NULL)
 		break;
 	};
-	totalsearch += i;
     };
 /* Now search linear list of halfedges for the corect one */
     if (he == ELleftend || (he != ELrightend && right_of(he, p))) {
