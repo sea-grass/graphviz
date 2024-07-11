@@ -81,7 +81,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>c:\Qt\4.8.3\lib\qtmaind.lib;C:/graphviz-ms/bin\gvc.lib;C:/graphviz-ms/bin\cgraph.lib;C:/graphviz-ms/bin\cdt.lib;C:/gtk/lib\expat.lib;C:/gtk/lib\z.lib;C:/gtk/lib\ltdl.lib;c:\Qt\4.8.3\lib\QtGuid4.lib;c:\Qt\4.8.3\lib\QtCored4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>c:\Qt\4.8.3\lib\qtmaind.lib;C:/graphviz-ms/bin\gvc.lib;C:/graphviz-ms/bin\cgraph.lib;C:/graphviz-ms/bin\cdt.lib;C:/gtk/lib\libexpat.lib;C:/gtk/lib\z.lib;C:/gtk/lib\ltdl.lib;c:\Qt\4.8.3\lib\QtGuid4.lib;c:\Qt\4.8.3\lib\QtCored4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>c:\Qt\4.8.3\lib;C:/gtk/lib;C:\Qt\4.8.3\bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -120,7 +120,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>"/MANIFESTDEPENDENCY:type=%27win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27 processorArchitecture=%27*%27" %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>c:\Qt\4.8.3\lib\qtmain.lib;C:/graphviz-ms/bin\gvc.lib;C:/graphviz-ms/bin\cgraph.lib;C:/graphviz-ms/bin\cdt.lib;C:/gtk/lib\expat.lib;C:/gtk/lib\z.lib;C:/gtk/lib\ltdl.lib;c:\Qt\4.8.3\lib\QtGui4.lib;c:\Qt\4.8.3\lib\QtCore4.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>c:\Qt\4.8.3\lib\qtmain.lib;C:/graphviz-ms/bin\gvc.lib;C:/graphviz-ms/bin\cgraph.lib;C:/graphviz-ms/bin\cdt.lib;C:/gtk/lib\libexpat.lib;C:/gtk/lib\z.lib;C:/gtk/lib\ltdl.lib;c:\Qt\4.8.3\lib\QtGui4.lib;c:\Qt\4.8.3\lib\QtCore4.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>c:\Qt\4.8.3\lib;C:/gtk/lib;C:/graphviz-ms/bin;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>

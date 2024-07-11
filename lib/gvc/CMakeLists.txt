@@ -143,3 +143,12 @@ if(WIN32 AND EXPAT_FOUND AND install_win_dependency_dlls)
     DESTINATION ${BINARY_INSTALL_DIR}
   )
 endif()
+
+if(WIN32 AND ZLIB_FOUND AND install_win_dependency_dlls)
+  find_program(ZLIB_RUNTIME_LIBRARY NAMES zlib1.dll)
+  install(
+    FILES
+      ${ZLIB_RUNTIME_LIBRARY}
+    DESTINATION ${BINARY_INSTALL_DIR}
+  )
+endif()

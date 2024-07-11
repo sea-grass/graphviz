@@ -2437,7 +2437,7 @@ def test_2215():
 
 
 @pytest.mark.xfail(
-    (platform.system() == "Windows" and not is_mingw()) or is_rocky(),
+    os.getenv("build_system") == "msbuild" or is_rocky(),
     strict=True,
     reason="https://gitlab.com/graphviz/graphviz/-/issues/2241",
 )
@@ -3705,7 +3705,7 @@ def test_2460():
 
 
 @pytest.mark.xfail(
-    strict=not is_mingw(),
+    strict=platform.system() != "Windows",
     reason="https://gitlab.com/graphviz/graphviz/-/issues/2470",
 )
 def test_2470():

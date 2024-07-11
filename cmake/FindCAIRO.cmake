@@ -1,23 +1,17 @@
 include(FindPackageHandleStandardArgs)
 
-if(WIN32)
-  find_path(
-    CAIRO_INCLUDE_DIR cairo.h
-    PATH_SUFFIXES cairo
-  )
-
-  find_library(CAIRO_LIBRARY NAMES cairo)
-
-  find_program(CAIRO_RUNTIME_LIBRARY NAMES cairo.dll libcairo-2.dll)
-  find_program(EXPAT_RUNTIME_LIBRARY NAMES expat.dll libexpat-1.dll)
-  find_program(FONTCONFIG_RUNTIME_LIBRARY
-               NAMES fontconfig.dll libfontconfig-1.dll)
-  find_program(PIXMAN_RUNTIME_LIBRARY NAMES pixman-1.dll libpixman-1-0.dll)
+find_package(PkgConfig)
+pkg_check_modules(CAIRO cairo)
+if(MINGW)
+  find_program(CAIRO_RUNTIME_LIBRARY NAMES libcairo-2.dll)
+  find_program(EXPAT_RUNTIME_LIBRARY NAMES libexpat-1.dll)
+  find_program(FONTCONFIG_RUNTIME_LIBRARY NAMES libfontconfig-1.dll)
+  find_program(PIXMAN_RUNTIME_LIBRARY NAMES libpixman-1-0.dll)
 
   find_package_handle_standard_args(CAIRO DEFAULT_MSG
-    CAIRO_INCLUDE_DIR
+    CAIRO_INCLUDE_DIRS
 
-    CAIRO_LIBRARY
+    CAIRO_LIBRARIES
 
     CAIRO_RUNTIME_LIBRARY
     EXPAT_RUNTIME_LIBRARY
@@ -25,22 +19,52 @@ if(WIN32)
     PIXMAN_RUNTIME_LIBRARY
   )
 
-  set(CAIRO_INCLUDE_DIRS ${CAIRO_INCLUDE_DIR})
-
-  set(CAIRO_LIBRARIES ${CAIRO_LIBRARY})
-
-  set(CAIRO_LINK_LIBRARIES ${CAIRO_LIBRARY})
-
   set(CAIRO_RUNTIME_LIBRARIES
     ${CAIRO_RUNTIME_LIBRARY}
     ${EXPAT_RUNTIME_LIBRARY}
     ${FONTCONFIG_RUNTIME_LIBRARY}
     ${PIXMAN_RUNTIME_LIBRARY}
   )
-else()
-  find_package(PkgConfig)
-  pkg_check_modules(CAIRO cairo)
+elseif(WIN32)
+  find_program(BZ2_RUNTIME_LIBRARY NAMES bz2.dll)
+  find_program(BROTLIDEC_RUNTIME_LIBRARY NAMES brotlidec.dll)
+  find_program(BROTLICOMMON_RUNTIME_LIBRARY NAMES brotlicommon.dll)
+  find_program(CAIRO_RUNTIME_LIBRARY NAMES cairo-2.dll)
+  find_program(EXPAT_RUNTIME_LIBRARY NAMES libexpat.dll)
+  find_program(FREETYPE_RUNTIME_LIBRARY NAMES freetype.dll)
+  find_program(FONTCONFIG_RUNTIME_LIBRARY NAMES fontconfig-1.dll)
+  find_program(FREETYPE_RUNTIME_LIBRARY NAMES freetype.dll)
+  find_program(PIXMAN_RUNTIME_LIBRARY NAMES pixman-1-0.dll)
+  find_program(LIBPNG_RUNTIME_LIBRARY NAMES libpng16.dll)
 
+  find_package_handle_standard_args(CAIRO DEFAULT_MSG
+    CAIRO_INCLUDE_DIRS
+
+    CAIRO_LIBRARIES
+
+    BZ2_RUNTIME_LIBRARY
+    BROTLIDEC_RUNTIME_LIBRARY
+    BROTLICOMMON_RUNTIME_LIBRARY
+    CAIRO_RUNTIME_LIBRARY
+    EXPAT_RUNTIME_LIBRARY
+    FONTCONFIG_RUNTIME_LIBRARY
+    FREETYPE_RUNTIME_LIBRARY
+    LIBPNG_RUNTIME_LIBRARY
+    PIXMAN_RUNTIME_LIBRARY
+  )
+
+  set(CAIRO_RUNTIME_LIBRARIES
+    ${BZ2_RUNTIME_LIBRARY}
+    ${BROTLIDEC_RUNTIME_LIBRARY}
+    ${BROTLICOMMON_RUNTIME_LIBRARY}
+    ${CAIRO_RUNTIME_LIBRARY}
+    ${EXPAT_RUNTIME_LIBRARY}
+    ${FONTCONFIG_RUNTIME_LIBRARY}
+    ${FREETYPE_RUNTIME_LIBRARY}
+    ${LIBPNG_RUNTIME_LIBRARY}
+    ${PIXMAN_RUNTIME_LIBRARY}
+  )
+else()
   find_package_handle_standard_args(CAIRO DEFAULT_MSG
     CAIRO_INCLUDE_DIRS
     CAIRO_LIBRARIES

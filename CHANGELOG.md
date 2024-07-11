@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - The GTK plugin, for which build system support was removed in Graphviz 10.0.1,
   has been removed from the portable source tarball. #1848
+### Added
+- Enable the GNU Triangulated Surface Library (GTS) in Windows builds. #2557
 
 ### Fixed
 
@@ -26,6 +28,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   since these overlap modes were introduced in Graphviz 2.4. However its effect
   was masked by the bug discussed in the prior CHANGELOG entry that made it not
   possible to select `overlap=ortho_xy` or `overlap=porthoxy`.
+- `splines = true` merging multiedges together when using the neato engine.
+  #2241 (fixed on Windows by enabling GTS)
 
 ## [12.0.0] – 2024-07-04
 
