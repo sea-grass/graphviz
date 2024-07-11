@@ -519,8 +519,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		if (v < 0 && fmt == 'd') {
 		    flags |= SFFMT_MINUS;
 		    if ((unsigned)v == HIGHBITI) { // avoid overflow
-			v = (int) (HIGHBITI / base);
-			*--sp = _Sfdigits[HIGHBITI - (unsigned)v * base];
+			v = (int)(HIGHBITI / (unsigned)base);
+			*--sp = _Sfdigits[HIGHBITI - (unsigned)v * (unsigned)base];
 		    } else
 			v = -v;
 		}
@@ -532,8 +532,8 @@ int sfprint(FILE *f, Sffmt_t *format) {
 		    } while ((v = (unsigned)v >> n));
 		} else {	/* n_s == 0, general base */
 		    do {
-			*--sp = ssp[(unsigned)v % base];
-		    } while ((v = (unsigned)v / base));
+			*--sp = ssp[(unsigned)v % (unsigned)base];
+		    } while ((v = (unsigned)v / (unsigned)base));
 		}
 	    }
 
