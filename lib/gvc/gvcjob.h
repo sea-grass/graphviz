@@ -52,8 +52,8 @@ extern "C" {
 
  GVDEVICE_DOES_PAGES		provides pagination support -Tps	
  GVDEVICE_DOES_LAYERS		provides support for layers -Tps	
- GVDEVICE_EVENTS		supports mouse events -Tgtk, -Txlib	
- GVDEVICE_DOES_TRUECOLOR	supports alpha channel -Tpng, -Tgtk, -Txlib 
+ GVDEVICE_EVENTS		supports mouse events -Txlib	
+ GVDEVICE_DOES_TRUECOLOR	supports alpha channel -Tpng, -Txlib
  GVDEVICE_BINARY_FORMAT		Suppresses \r\n substitution for linends 
  GVDEVICE_COMPRESSED_FORMAT	controls libz compression		
  GVDEVICE_NO_WRITER		used when gvdevice is not used because device uses its own writer, devil outputs   (FIXME seems to overlap OUTPUT_NOT_REQUIRED)
