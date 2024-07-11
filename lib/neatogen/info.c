@@ -31,7 +31,7 @@ void infoinit(void)
  * For equal angles (which should not happen in our context)
  * ordering is by closeness to origin.
  */
-static int compare(Point *o, Point p, PtItem *q) {
+static int compare(Point o, Point p, PtItem *q) {
     double x0;
     double y0;
     double x1;
@@ -43,10 +43,10 @@ static int compare(Point *o, Point p, PtItem *q) {
     if (p.x == q->p.x && p.y == q->p.y)
 	return 0;
 
-    x0 = (double)p.x - (double)o->x;
-    y0 = (double)p.y - (double)o->y;
-    x1 = (double)q->p.x - (double)o->x;
-    y1 = (double)q->p.y - (double)o->y;
+    x0 = (double)p.x - (double)o.x;
+    y0 = (double)p.y - (double)o.y;
+    x1 = (double)q->p.x - (double)o.x;
+    y1 = (double)q->p.y - (double)o.y;
     if (x0 >= 0.0) {
 	if (x1 < 0.0)
 	    return -1;
@@ -112,7 +112,7 @@ void addVertex(Site * s, double x, double y)
     PtItem *p;
     PtItem *curr;
     PtItem *prev;
-    Point *origin_point = &s->coord;
+    const Point origin_point = s->coord;
     int cmp;
 
     ip = nodeInfo + s->sitenbr;
