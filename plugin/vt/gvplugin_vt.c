@@ -211,6 +211,34 @@ static void process6up(GVJ_t *job) {
   processNup(job, y_stride, x_stride, tiles);
 }
 
+/// draw a 8-pixels-per-character monochrome image
+static void process8up(GVJ_t *job) {
+  // the Unicode “Braille Patterns” block
+  const char *tiles[] = {
+      " ", "⠁", "⠈", "⠉", "⠂", "⠃", "⠊", "⠋", "⠐", "⠑", "⠘", "⠙", "⠒", "⠓", "⠚",
+      "⠛", "⠄", "⠅", "⠌", "⠍", "⠆", "⠇", "⠎", "⠏", "⠔", "⠕", "⠜", "⠝", "⠖", "⠗",
+      "⠞", "⠟", "⠠", "⠡", "⠨", "⠩", "⠢", "⠣", "⠪", "⠫", "⠰", "⠱", "⠸", "⠹", "⠲",
+      "⠳", "⠺", "⠻", "⠤", "⠥", "⠬", "⠭", "⠦", "⠧", "⠮", "⠯", "⠴", "⠵", "⠼", "⠽",
+      "⠶", "⠷", "⠾", "⠿", "⡀", "⡁", "⡈", "⡉", "⡂", "⡃", "⡊", "⡋", "⡐", "⡑", "⡘",
+      "⡙", "⡒", "⡓", "⡚", "⡛", "⡄", "⡅", "⡌", "⡍", "⡆", "⡇", "⡎", "⡏", "⡔", "⡕",
+      "⡜", "⡝", "⡖", "⡗", "⡞", "⡟", "⡠", "⡡", "⡨", "⡩", "⡢", "⡣", "⡪", "⡫", "⡰",
+      "⡱", "⡸", "⡹", "⡲", "⡳", "⡺", "⡻", "⡤", "⡥", "⡬", "⡭", "⡦", "⡧", "⡮", "⡯",
+      "⡴", "⡵", "⡼", "⡽", "⡶", "⡷", "⡾", "⡿", "⢀", "⢁", "⢈", "⢉", "⢂", "⢃", "⢊",
+      "⢋", "⢐", "⢑", "⢘", "⢙", "⢒", "⢓", "⢚", "⢛", "⢄", "⢅", "⢌", "⢍", "⢆", "⢇",
+      "⢎", "⢏", "⢔", "⢕", "⢜", "⢝", "⢖", "⢗", "⢞", "⢟", "⢠", "⢡", "⢨", "⢩", "⢢",
+      "⢣", "⢪", "⢫", "⢰", "⢱", "⢸", "⢹", "⢲", "⢳", "⢺", "⢻", "⢤", "⢥", "⢬", "⢭",
+      "⢦", "⢧", "⢮", "⢯", "⢴", "⢵", "⢼", "⢽", "⢶", "⢷", "⢾", "⢿", "⣀", "⣁", "⣈",
+      "⣉", "⣂", "⣃", "⣊", "⣋", "⣐", "⣑", "⣘", "⣙", "⣒", "⣓", "⣚", "⣛", "⣄", "⣅",
+      "⣌", "⣍", "⣆", "⣇", "⣎", "⣏", "⣔", "⣕", "⣜", "⣝", "⣖", "⣗", "⣞", "⣟", "⣠",
+      "⣡", "⣨", "⣩", "⣢", "⣣", "⣪", "⣫", "⣰", "⣱", "⣸", "⣹", "⣲", "⣳", "⣺", "⣻",
+      "⣤", "⣥", "⣬", "⣭", "⣦", "⣧", "⣮", "⣯", "⣴", "⣵", "⣼", "⣽", "⣶", "⣷", "⣾",
+      "⣿"};
+  const unsigned y_stride = 4;
+  const unsigned x_stride = 2;
+  assert(sizeof(tiles) / sizeof(tiles[0]) == 1 << (y_stride * x_stride));
+  processNup(job, y_stride, x_stride, tiles);
+}
+
 static gvdevice_engine_t engine3 = {
     .format = process3,
 };
@@ -227,6 +255,10 @@ static gvdevice_engine_t engine6up = {
     .format = process6up,
 };
 
+static gvdevice_engine_t engine8up = {
+    .format = process8up,
+};
+
 static gvdevice_features_t device_features = {
     .default_dpi = {96, 96},
 };
@@ -236,6 +268,7 @@ static gvplugin_installed_t device_types[] = {
     {1 << 24, "vt-24bit:cairo", 0, &engine24, &device_features},
     {4, "vt-4up:cairo", 0, &engine4up, &device_features},
     {6, "vt-6up:cairo", 0, &engine6up, &device_features},
+    {7, "vt-8up:cairo", 0, &engine8up, &device_features},
     {0},
 };
 
