@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Enable the GNU Triangulated Surface Library (GTS) in Windows builds. #2557
 - `dot_builtins` now also includes the vt plugin (`-Tvt` output format).
-- The vt plugin gained a new output format, `-Tvt-4up`, for drawing a monochrome
-  4-pixel-per-character visualization.
+- The vt plugin gained new output formats, `-Tvt-4up` and `-Tvt-6up`, for
+  drawing monochrome 4- and 6-pixel-per-character visualizations, respectively.
 
 ### Changed
 
