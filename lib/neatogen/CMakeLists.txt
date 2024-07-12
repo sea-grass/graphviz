@@ -112,7 +112,7 @@ if(with_ipsepcola)
 endif()
 
 if(GTS_FOUND)
-  target_include_directories(neatogen PRIVATE
+  target_include_directories(neatogen SYSTEM PRIVATE
     ${GTS_INCLUDE_DIRS}
   )
 
