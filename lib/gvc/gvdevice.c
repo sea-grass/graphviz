@@ -15,6 +15,7 @@
 #include "config.h"
 
 #include <ctype.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -56,15 +57,13 @@ static uint64_t crc;
 #include <common/utils.h>
 #include <gvc/gvio.h>
 
-static const int PAGE_ALIGN = 4095;		/* align to a 4K boundary (less one), typical for Linux, Mac OS X and Windows memory allocation */
-
 static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
     if (job->gvc->write_fn)   /* externally provided write discipline */
 	return job->gvc->write_fn(job, s, len);
     if (job->output_data) {
 	if (len > job->output_data_allocated - (job->output_data_position + 1)) {
 	    /* ensure enough allocation for string = null terminator */
-	    job->output_data_allocated = (job->output_data_position + len + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
+	    job->output_data_allocated = job->output_data_position + len + 1;
 	    job->output_data = realloc(job->output_data, job->output_data_allocated);
 	    if (!job->output_data) {
                 job->common->errorfn("memory allocation failure\n");
@@ -190,7 +189,7 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 
 	size_t dflen = deflateBound(z, len);
 	if (dfallocated < dflen) {
-	    dfallocated = (dflen + 1 + PAGE_ALIGN) & ~PAGE_ALIGN;
+	    dfallocated = dflen > UINT_MAX - 1 ? UINT_MAX : (unsigned)dflen + 1;
 	    df = realloc(df, dfallocated);
 	    if (! df) {
                 job->common->errorfn("memory allocation failure\n");
@@ -198,11 +197,25 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	    }
 	}
 
+#if ZLIB_VERNUM >= 0x1290
+	crc = crc32_z(crc, (const unsigned char*)s, len);
+#else
 	crc = crc32(crc, (const unsigned char*)s, len);
+#endif
 
-	z->next_in = (unsigned char*)s;
-	z->avail_in = len;
-	while (z->avail_in) {
+	for (size_t offset = 0; offset < len; ) {
+// Suppress Clang/GCC -Wcast-qual warnings. `next_in` is morally const.
+#ifdef __GNUC__
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+#endif
+	    z->next_in = (unsigned char *)s + offset;
+#ifdef __GNUC__
+#pragma GCC diagnostic pop
+#endif
+	    const unsigned chunk = len - offset > UINT_MAX
+	                         ? UINT_MAX : (unsigned)(len - offset);
+	    z->avail_in = chunk;
 	    z->next_out = df;
 	    z->avail_out = dfallocated;
 	    int r = deflate(z, Z_NO_FLUSH);
@@ -211,13 +224,14 @@ size_t gvwrite (GVJ_t * job, const char *s, size_t len)
 	        graphviz_exit(1);
 	    }
 
-	    if ((olen = z->next_out - df)) {
+	    if ((olen = (size_t)(z->next_out - df))) {
 		ret = gvwrite_no_z(job, df, olen);
 	        if (ret != olen) {
                     job->common->errorfn("gvwrite_no_z problem %d\n", ret);
 	            graphviz_exit(1);
 	        }
 	    }
+	    offset += chunk - z->avail_in;
 	}
 
 #else
@@ -275,7 +289,7 @@ void gvputs_nonascii(GVJ_t *job, const char *s) {
 
 int gvputc(GVJ_t * job, int c)
 {
-    const char cc = c;
+    const char cc = (char)c;
 
     if (gvwrite (job, &cc, 1) != 1) {
 	return EOF;
@@ -333,7 +347,7 @@ void gvdevice_finalize(GVJ_t * job)
 	z->next_out = df;
 	z->avail_out = dfallocated;
 	while ((ret = deflate (z, Z_FINISH)) == Z_OK && (cnt++ <= 100)) {
-	    gvwrite_no_z(job, df, z->next_out - df);
+	    gvwrite_no_z(job, df, (size_t)(z->next_out - df));
 	    z->next_out = df;
 	    z->avail_out = dfallocated;
 	}
@@ -341,7 +355,7 @@ void gvdevice_finalize(GVJ_t * job)
             job->common->errorfn("deflation finish problem %d cnt=%d\n", ret, cnt);
 	    graphviz_exit(1);
 	}
-	gvwrite_no_z(job, df, z->next_out - df);
+	gvwrite_no_z(job, df, (size_t)(z->next_out - df));
 
 	ret = deflateEnd(z);
 	if (ret != Z_OK) {
