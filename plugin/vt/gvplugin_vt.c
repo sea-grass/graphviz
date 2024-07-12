@@ -132,24 +132,34 @@ static unsigned rgb_to_grayscale(unsigned red, unsigned green, unsigned blue) {
   return (unsigned)(y_linear * 255.999);
 }
 
-/// draw a 4-pixels-per-character monochrome image
-static void process4up(GVJ_t *job) {
+/// draw a y_stride×x_stride-pixels-per-character monochrome image
+///
+/// @param job GVC job to operate on
+/// @param y_stride How many Y pixels fit in a character
+/// @param x_stride How many X pixels fit in a character
+/// @param tiles In-order list of characters for each representation
+static void processNup(GVJ_t *job, unsigned y_stride, unsigned x_stride,
+                       const char **tiles) {
+  assert(y_stride > 0);
+  assert(x_stride > 0);
+  assert(tiles != NULL);
+  for (unsigned i = 0; i < y_stride; ++i) {
+    for (unsigned j = 0; j < x_stride; ++j) {
+      assert(tiles[i * x_stride + j] != NULL && "missing or not enough tiles");
+    }
+  }
 
   unsigned char *data = (unsigned char *)job->imagedata;
 
-  for (unsigned y = 0; y < job->height; y += 2) {
-    for (unsigned x = 0; x < job->width; x += 2) {
-
-      // block characters from the “Amstrad CPC character set”
-      const char *tiles[] = {" ", "▘", "▝", "▀", "▖", "▍", "▞", "▛",
-                             "▗", "▚", "▐", "▜", "▃", "▙", "▟", "█"};
+  for (unsigned y = 0; y < job->height; y += y_stride) {
+    for (unsigned x = 0; x < job->width; x += x_stride) {
 
       unsigned index = 0;
 
-      for (unsigned y_offset = 0; y + y_offset < job->height && y_offset < 2;
-           ++y_offset) {
-        for (unsigned x_offset = 0; x + x_offset < job->width && x_offset < 2;
-             ++x_offset) {
+      for (unsigned y_offset = 0;
+           y + y_offset < job->height && y_offset < y_stride; ++y_offset) {
+        for (unsigned x_offset = 0;
+             x + x_offset < job->width && x_offset < x_stride; ++x_offset) {
 
           const unsigned offset =
               (y + y_offset) * job->width * BPP + (x + x_offset) * BPP;
@@ -165,7 +175,7 @@ static void process4up(GVJ_t *job) {
           // generate reasonable results.
           const unsigned pixel = gray >= 240;
 
-          index |= pixel << (y_offset * 2 + x_offset);
+          index |= pixel << (y_offset * x_stride + x_offset);
         }
       }
 
@@ -173,6 +183,17 @@ static void process4up(GVJ_t *job) {
     }
     gvputc(job, '\n');
   }
+}
+
+/// draw a 4-pixels-per-character monochrome image
+static void process4up(GVJ_t *job) {
+  // block characters from the “Amstrad CPC character set”
+  const char *tiles[] = {" ", "▘", "▝", "▀", "▖", "▍", "▞", "▛",
+                         "▗", "▚", "▐", "▜", "▃", "▙", "▟", "█"};
+  const unsigned y_stride = 2;
+  const unsigned x_stride = 2;
+  assert(sizeof(tiles) / sizeof(tiles[0]) == 1 << (y_stride * x_stride));
+  processNup(job, y_stride, x_stride, tiles);
 }
 
 static gvdevice_engine_t engine3 = {
