@@ -4,12 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (12.0.1)]
+## [Unreleased (12.1.0)]
 
 ### Added
 
 - Enable the GNU Triangulated Surface Library (GTS) in Windows builds. #2557
 - `dot_builtins` now also includes the vt plugin (`-Tvt` output format).
+- The vt plugin gained a new output format, `-Tvt-4up`, for drawing a monochrome
+  4-pixel-per-character visualization.
 
 ### Changed
 
@@ -2747,7 +2749,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (12.0.1)]: https://gitlab.com/graphviz/graphviz/compare/12.0.0...main
+[Unreleased (12.1.0)]: https://gitlab.com/graphviz/graphviz/compare/12.0.0...main
 [12.0.0]: https://gitlab.com/graphviz/graphviz/compare/11.0.0...12.0.0
 [11.0.0]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...11.0.0
 [10.0.1]: https://gitlab.com/graphviz/graphviz/compare/9.0.0...10.0.1

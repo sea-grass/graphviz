@@ -54,6 +54,9 @@ static unsigned get_color(unsigned red, unsigned green, unsigned blue) {
   return winner;
 }
 
+// number of bytes per pixel
+static const unsigned BPP = 4;
+
 static void process(GVJ_t *job, int color_depth) {
 
   unsigned char *data = (unsigned char *)job->imagedata;
@@ -62,9 +65,6 @@ static void process(GVJ_t *job, int color_depth) {
 
   for (unsigned y = 0; y < job->height; y += 2) {
     for (unsigned x = 0; x < job->width; ++x) {
-
-      // number of bytes per pixel
-      const unsigned BPP = 4;
 
       {
         // extract the upper pixel
@@ -117,12 +117,100 @@ static void process3(GVJ_t *job) { process(job, 3); }
 
 static void process24(GVJ_t *job) { process(job, 24); }
 
+/// convert an RGB color to grayscale
+static unsigned rgb_to_grayscale(unsigned red, unsigned green, unsigned blue) {
+
+  /// use “perceptual” scaling,
+  /// https://en.wikipedia.org/wiki/Grayscale#Colorimetric_(perceptual_luminance-preserving)_conversion_to_grayscale
+
+  const double r_linear = red / 255.0;
+  const double g_linear = green / 255.0;
+  const double b_linear = blue / 255.0;
+
+  const double y_linear =
+      0.2126 * r_linear + 0.7152 * g_linear + 0.0722 * b_linear;
+  return (unsigned)(y_linear * 255.999);
+}
+
+/// draw a 4-pixels-per-character monochrome image
+static void process4up(GVJ_t *job) {
+
+  unsigned char *data = (unsigned char *)job->imagedata;
+
+  for (unsigned y = 0; y < job->height; y += 2) {
+    for (unsigned x = 0; x < job->width; x += 2) {
+
+      unsigned upper_left;
+      {
+        const unsigned offset = y * job->width * BPP + x * BPP;
+        const unsigned red = data[offset + 2];
+        const unsigned green = data[offset + 1];
+        const unsigned blue = data[offset];
+
+        const unsigned gray = rgb_to_grayscale(red, green, blue);
+        // The [0, 256) grayscale measurement can be quantized into 16 16-stride
+        // buckets. I.e. [0, 16) as bucket 1, [16, 32) as bucket 2, … Drawing a
+        // threshold at 240, and considering only the last bucket to be white
+        // when converting to monochrome empirically seems to generate
+        // reasonable results.
+        upper_left = gray >= 240;
+      }
+
+      unsigned upper_right = 0;
+      if (x + 1 < job->width) {
+        const unsigned offset = y * job->width * BPP + (x + 1) * BPP;
+        const unsigned red = data[offset + 2];
+        const unsigned green = data[offset + 1];
+        const unsigned blue = data[offset];
+
+        const unsigned gray = rgb_to_grayscale(red, green, blue);
+        upper_right = gray >= 240;
+      }
+
+      unsigned lower_left = 0;
+      if (y + 1 < job->height) {
+        const unsigned offset = (y + 1) * job->width * BPP + x * BPP;
+        const unsigned red = data[offset + 2];
+        const unsigned green = data[offset + 1];
+        const unsigned blue = data[offset];
+
+        const unsigned gray = rgb_to_grayscale(red, green, blue);
+        lower_left = gray >= 240;
+      }
+
+      unsigned lower_right = 0;
+      if (x + 1 < job->width && y + 1 < job->height) {
+        const unsigned offset = (y + 1) * job->width * BPP + (x + 1) * BPP;
+        const unsigned red = data[offset + 2];
+        const unsigned green = data[offset + 1];
+        const unsigned blue = data[offset];
+
+        const unsigned gray = rgb_to_grayscale(red, green, blue);
+        lower_right = gray >= 240;
+      }
+
+      // block characters from the “Amstrad CPC character set”
+      const char *tiles[] = {" ", "▘", "▝", "▀", "▖", "▍", "▞", "▛",
+                             "▗", "▚", "▐", "▜", "▃", "▙", "▟", "█"};
+
+      const unsigned index = upper_left | (upper_right << 1) |
+                             (lower_left << 2) | (lower_right << 3);
+      gvputs(job, tiles[index]);
+    }
+    gvputc(job, '\n');
+  }
+}
+
 static gvdevice_engine_t engine3 = {
     .format = process3,
 };
 
 static gvdevice_engine_t engine24 = {
     .format = process24,
+};
+
+static gvdevice_engine_t engine4up = {
+    .format = process4up,
 };
 
 static gvdevice_features_t device_features = {
@@ -132,6 +220,7 @@ static gvdevice_features_t device_features = {
 static gvplugin_installed_t device_types[] = {
     {8, "vt:cairo", 0, &engine3, &device_features},
     {1 << 24, "vt-24bit:cairo", 0, &engine24, &device_features},
+    {4, "vt-4up:cairo", 0, &engine4up, &device_features},
     {0},
 };
 
