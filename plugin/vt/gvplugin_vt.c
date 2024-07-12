@@ -140,61 +140,35 @@ static void process4up(GVJ_t *job) {
   for (unsigned y = 0; y < job->height; y += 2) {
     for (unsigned x = 0; x < job->width; x += 2) {
 
-      unsigned upper_left;
-      {
-        const unsigned offset = y * job->width * BPP + x * BPP;
-        const unsigned red = data[offset + 2];
-        const unsigned green = data[offset + 1];
-        const unsigned blue = data[offset];
-
-        const unsigned gray = rgb_to_grayscale(red, green, blue);
-        // The [0, 256) grayscale measurement can be quantized into 16 16-stride
-        // buckets. I.e. [0, 16) as bucket 1, [16, 32) as bucket 2, … Drawing a
-        // threshold at 240, and considering only the last bucket to be white
-        // when converting to monochrome empirically seems to generate
-        // reasonable results.
-        upper_left = gray >= 240;
-      }
-
-      unsigned upper_right = 0;
-      if (x + 1 < job->width) {
-        const unsigned offset = y * job->width * BPP + (x + 1) * BPP;
-        const unsigned red = data[offset + 2];
-        const unsigned green = data[offset + 1];
-        const unsigned blue = data[offset];
-
-        const unsigned gray = rgb_to_grayscale(red, green, blue);
-        upper_right = gray >= 240;
-      }
-
-      unsigned lower_left = 0;
-      if (y + 1 < job->height) {
-        const unsigned offset = (y + 1) * job->width * BPP + x * BPP;
-        const unsigned red = data[offset + 2];
-        const unsigned green = data[offset + 1];
-        const unsigned blue = data[offset];
-
-        const unsigned gray = rgb_to_grayscale(red, green, blue);
-        lower_left = gray >= 240;
-      }
-
-      unsigned lower_right = 0;
-      if (x + 1 < job->width && y + 1 < job->height) {
-        const unsigned offset = (y + 1) * job->width * BPP + (x + 1) * BPP;
-        const unsigned red = data[offset + 2];
-        const unsigned green = data[offset + 1];
-        const unsigned blue = data[offset];
-
-        const unsigned gray = rgb_to_grayscale(red, green, blue);
-        lower_right = gray >= 240;
-      }
-
       // block characters from the “Amstrad CPC character set”
       const char *tiles[] = {" ", "▘", "▝", "▀", "▖", "▍", "▞", "▛",
                              "▗", "▚", "▐", "▜", "▃", "▙", "▟", "█"};
 
-      const unsigned index = upper_left | (upper_right << 1) |
-                             (lower_left << 2) | (lower_right << 3);
+      unsigned index = 0;
+
+      for (unsigned y_offset = 0; y + y_offset < job->height && y_offset < 2;
+           ++y_offset) {
+        for (unsigned x_offset = 0; x + x_offset < job->width && x_offset < 2;
+             ++x_offset) {
+
+          const unsigned offset =
+              (y + y_offset) * job->width * BPP + (x + x_offset) * BPP;
+          const unsigned red = data[offset + 2];
+          const unsigned green = data[offset + 1];
+          const unsigned blue = data[offset];
+
+          const unsigned gray = rgb_to_grayscale(red, green, blue);
+          // The [0, 256) grayscale measurement can be quantized into 16
+          // 16-stride buckets. I.e. [0, 16) as bucket 1, [16, 32) as bucket 2,
+          // … Drawing a threshold at 240, and considering only the last bucket
+          // to be white when converting to monochrome empirically seems to
+          // generate reasonable results.
+          const unsigned pixel = gray >= 240;
+
+          index |= pixel << (y_offset * 2 + x_offset);
+        }
+      }
+
       gvputs(job, tiles[index]);
     }
     gvputc(job, '\n');
