@@ -256,7 +256,7 @@ CFrmSettings::CFrmSettings() {
   graph = nullptr;
   activeWindow = nullptr;
   QString path;
-  char *s = NULL;
+  char *s = nullptr;
 #ifndef _WIN32
   s = getenv("GVEDIT_PATH");
 #endif
@@ -545,15 +545,12 @@ void CFrmSettings::saveContent() {
 }
 
 int CFrmSettings::drawGraph() {
-  int rc;
   if (createLayout() && renderLayout()) {
     getActiveWindow()->settingsSet = false;
-    rc = QDialog::Accepted;
-  } else
-    rc = QDialog::Accepted;
+  }
   agreseterrors();
 
-  return rc;
+  return QDialog::Accepted;
 }
 
 int CFrmSettings::runSettings(MdiChild *m) {

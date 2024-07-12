@@ -19,17 +19,6 @@
 
 static const int dim = 4; // dimension
 
-/*
-static void printPt(ostream &out, ANNpoint p)			// print point
-{
-  out << "" << p[0];
-  for (int i = 1; i < dim; i++) {
-    out << "," << p[i];
-  }
-  out << "";
-}
-*/
-
 static void sortPtsX(int n, ANNpointArray pts){
   /* sort so that edges always go from left to right in x-doordinate */
   for (int i = 0; i < n; i++){
@@ -100,11 +89,6 @@ void nearest_neighbor_graph_ann(int nPts, int k, const std::vector<double> &x,
       val[nz] = dists[i];
       irn[nz] = ip;
       jcn[nz++] = nnIdx[i];
-      //cout << ip << "--" << nnIdx[i] << " [len = " << dists[i]<< ", weight = \"" << 1./(dists[i]) << "\", wt = \"" << 1./(dists[i]) << "\"]\n";
-      //printPt(cout, dataPts[ip]);
-      //cout << "--";
-      //printPt(cout, dataPts[nnIdx[i]]);
-      //cout << "\n";
     }
   }
   
@@ -128,7 +112,6 @@ void nearest_neighbor_graph_ann(int nPts, int k, const std::vector<double> &x,
       val[nz] = dists[i];
       irn[nz] = ip;
       jcn[nz++] = nnIdx[i];
-      // cout << ip << "--" << nnIdx[i] << " [len = " << dists[i]<< ", weight = \"" << 1./(dists[i]) << "\", wt = \"" << 1./(dists[i]) << "\"]\n";
     }
   }
     

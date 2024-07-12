@@ -118,10 +118,9 @@ static void usage(int v)
  */
 static int setNameValue(char *arg)
 {
-    char *p;
     char *rhs = const_cast<char*>("true");
 
-    if ((p = strchr(arg, '='))) {
+    if (char *p = strchr(arg, '=')) {
 	*p++ = '\0';
 	rhs = p;
     }
@@ -280,8 +279,7 @@ static void init_graph(Agraph_t *g, bool fill, GVC_t *gvc) {
     Ndim = GD_ndim(g) = 2;
     init_node_edge(g);
     if (fill) {
-	int ret = init_nop(g,0);
-	if (ret) {
+	if (int ret = init_nop(g, 0)) {
 	    if (ret < 0)
 		std::cerr << "Error loading layout info from graph " << agnameof(g) << '\n';
 	    else if (ret > 0)
@@ -558,7 +556,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
     Agnode_t *n;
     Agnode_t *np;
     Agsym_t *G_bb;
-    Agsym_t *rv;
     bool doWarn = true;
 
     if (verbose)
@@ -570,8 +567,7 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 
     /* add command-line attributes */
     for (attr_t &a : G_args) {
-	rv = agfindgraphattr(root, a.name);
-	if (rv)
+	if (Agsym_t *rv = agfindgraphattr(root, a.name))
 	    agxset(root, rv, a.value);
 	else
 	    agattr(root, AGRAPH, a.name, a.value);
@@ -641,7 +637,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
  * be non-strict.
  */
 static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
-    Agraph_t *g;
     std::vector<Agraph_t*> gs;
     ingraph_state ig;
     int kindUnset = 1;
@@ -651,7 +646,7 @@ static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
     Nop = 2;
 
     newIngraph(&ig, myFiles);
-    while ((g = nextGraph(&ig)) != 0) {
+    while (Agraph_t *g = nextGraph(&ig)) {
 	if (verbose)
 	    std::cerr << "Reading graph " << agnameof(g) << '\n';
 	if (agnnodes(g) == 0) {

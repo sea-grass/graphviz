@@ -14,9 +14,9 @@
 #include "mdichild.h"
 #include <QStringList>
 #include <QtWidgets>
+#include <optional>
 #include <qframe.h>
-
-#include <string.h>
+#include <string_view>
 
 QTextEdit *globTextEdit;
 
@@ -33,15 +33,15 @@ static void freeList(char **lp, int count) {
 }
 
 static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
-                       const QStringList &more, const char *prefer) {
+                       const QStringList &more, std::string_view prefer) {
   int count;
   char **lp = gvPluginList(gvc, kind, &count);
-  int idx = -1;
+  std::optional<int> idx;
 
   cb.clear();
   for (int id = 0; id < count; id++) {
     cb.addItem(QString::fromUtf8(lp[id]));
-    if (prefer && idx < 0 && !strcmp(prefer, lp[id]))
+    if (!idx.has_value() && prefer == lp[id])
       idx = id;
   };
   freeList(lp, count);
@@ -49,12 +49,10 @@ static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
   /* Add additional items if supplied */
   cb.addItems(more);
 
-  if (idx > 0)
-    cb.setCurrentIndex(idx);
-  else
-    idx = 0;
+  if (idx.has_value())
+    cb.setCurrentIndex(*idx);
 
-  return idx;
+  return idx.value_or(0);
 }
 
 void CMainWindow::createConsole() {
@@ -404,9 +402,7 @@ void CMainWindow::actions() {
   connect(saveAsAct, &QAction::triggered, this, &CMainWindow::slotSaveAs);
 
   exitAct = new QAction(tr("E&xit"), this);
-#if (QT_VERSION >= QT_VERSION_CHECK(4, 6, 0))
   exitAct->setShortcuts(QKeySequence::Quit);
-#endif
   exitAct->setStatusTip(tr("Exit the application"));
   connect(exitAct, &QAction::triggered, qApp, &QApplication::closeAllWindows);
 

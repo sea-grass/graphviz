@@ -27,30 +27,10 @@ public:
 	double getMaxY() const { return maxY; }
 	double getMinX() const { return minX; }
 	double getMinY() const { return minY; }
-	double getMinD(unsigned const d) const {
-		return ( d == 0 ? getMinX() : getMinY() );
-	}
-	double getMaxD(unsigned const d) const {
-		return ( d == 0 ? getMaxX() : getMaxY() );
-	}
 	double getCentreX() const { return minX+width()/2.0; }
 	double getCentreY() const { return minY+height()/2.0; }
 	double width() const { return getMaxX()-minX; }
 	double height() const { return getMaxY()-minY; }
-	void moveCentreX(double x) {
-		moveMinX(x-width()/2.0);
-	}
-	void moveCentreY(double y) {
-		moveMinY(y-height()/2.0);
-	}
-	void moveMinX(double x) {
-		maxX=x+width();
-		minX=x;
-	}
-	void moveMinY(double y) {
-		maxY=y+height();
-		minY=y;
-	}
 	double overlapX(const Rectangle &r) const {
 		if (getCentreX() <= r.getCentreX() && r.minX < getMaxX())
 			return getMaxX() - r.minX;
