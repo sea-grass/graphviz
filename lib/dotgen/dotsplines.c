@@ -19,7 +19,6 @@
 #include <cgraph/list.h>
 #include <common/boxes.h>
 #include <dotgen/dot.h>
-#include <limits.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -75,7 +74,7 @@ static bool pathscross(Agnode_t *, Agnode_t *, Agedge_t *, Agedge_t *);
 static Agraph_t *cl_bound(graph_t*, Agnode_t *, Agnode_t *);
 static bool cl_vninside(Agraph_t *, Agnode_t *);
 static void completeregularpath(path *, Agedge_t *, Agedge_t *,
-                                pathend_t *, pathend_t *, boxf *, size_t, int);
+                                pathend_t *, pathend_t *, const boxes_t *);
 static int edgecmp(const void *, const void *);
 static void make_flat_edge(graph_t *, spline_info_t *, path *, Agedge_t **,
                            unsigned, unsigned, int);
@@ -1764,7 +1763,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
     edge_t *e, *fe, *le, *segfirst;
     pathend_t tend, hend;
     boxf b;
-    int sl, si, longedge;
+    int sl, si;
     points_t pointfs = {0};
     points_t pointfs2 = {0};
 
@@ -1827,11 +1826,9 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    	   ND_coord(tn).y - GD_rank(g)[ND_rank(tn)].ht1);
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    tend.boxes[tend.boxn++] = b;
-	longedge = 0;
 	bool smode = false;
 	si = -1;
 	while (ND_node_type(hn) == VIRTUAL && !sinfo.splineMerge(hn)) {
-	    longedge = 1;
 	    boxes_append(&boxes, rank_box(sp, g, ND_rank(tn)));
 	    if (!smode
 	        && ((sl = straight_len(hn)) >=
@@ -1854,9 +1851,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	        hend.boxes[hend.boxn++] = b;
 	    P->end.theta = M_PI / 2, P->end.constrained = true;
-	    assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
-	    completeregularpath(P, segfirst, e, &tend, &hend, boxes.data,
-	                        boxes.size, 1);
+	    completeregularpath(P, segfirst, e, &tend, &hend, &boxes);
 	    pointf *ps = NULL;
 	    size_t pn = 0;
 	    if (is_spline) ps = routesplines(P, &pn);
@@ -1905,9 +1900,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	    	   ND_coord(hn).y + GD_rank(g)[ND_rank(hn)].ht2);
 	if (b.LL.x < b.UR.x && b.LL.y < b.UR.y)
 	    hend.boxes[hend.boxn++] = b;
-	assert(boxes.size <= (size_t)INT_MAX && "integer overflow");
-	completeregularpath(P, segfirst, e, &tend, &hend, boxes.data, boxes.size,
-	                    longedge);
+	completeregularpath(P, segfirst, e, &tend, &hend, &boxes);
 	boxes_free(&boxes);
 	pointf *ps = NULL;
 	size_t pn = 0;
@@ -1973,13 +1966,9 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 
 /* regular edges */
 
-static void
-completeregularpath(path * P, edge_t * first, edge_t * last,
-		    pathend_t * tendp, pathend_t * hendp, boxf * boxes,
-		    size_t boxn, int flag) {
-    // this implementation of completeregularpath ignores the flag
-    (void)flag;
-
+static void completeregularpath(path *P, edge_t *first, edge_t *last,
+                                pathend_t *tendp, pathend_t *hendp,
+                                const boxes_t *boxes) {
     edge_t *uleft, *uright, *lleft, *lright;
 
     uleft = uright = NULL;
@@ -2001,9 +1990,9 @@ completeregularpath(path * P, edge_t * first, edge_t * last,
     for (int i = 0; i < tendp->boxn; i++)
 	add_box(P, tendp->boxes[i]);
     const size_t fb = P->nbox + 1;
-    const size_t lb = fb + boxn - 3;
-    for (size_t i = 0; i < boxn; i++)
-	add_box(P, boxes[i]);
+    const size_t lb = fb + boxes_size(boxes) - 3;
+    for (size_t i = 0; i < boxes_size(boxes); i++)
+	add_box(P, boxes_get(boxes, i));
     for (int i = hendp->boxn - 1; i >= 0; i--)
 	add_box(P, hendp->boxes[i]);
     adjustregularpath(P, fb, lb);
