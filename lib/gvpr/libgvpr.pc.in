@@ -1,6 +1,6 @@
 prefix=@prefix@
 exec_prefix=@EXEC_PREFIX@
-libdir=@libdir@
+libdir=@LIBDIR@
 includedir=@INCLUDEDIR@
 
 Name: libgvpr
