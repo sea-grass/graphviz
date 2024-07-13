@@ -198,7 +198,8 @@ static Exnode_t *extract(Expr_t * p, Exnode_t ** argp, int type) {
  * Generate split/tokens node.
  * Fifth argument is optional.
  */
-static Exnode_t *exnewsplit(Expr_t * p, int op, Exid_t* dyn, Exnode_t * s, Exnode_t* seps) {
+static Exnode_t *exnewsplit(Expr_t *p, long op, Exid_t *dyn, Exnode_t *s,
+                            Exnode_t *seps) {
 	Exnode_t *ss = 0;
 
 	if (dyn->local == NULL)
