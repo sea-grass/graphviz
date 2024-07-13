@@ -1,4 +1,4 @@
-prefix=@prefix@
+prefix=@PREFIX@
 exec_prefix=@EXEC_PREFIX@
 libdir=@LIBDIR@
 includedir=@INCLUDEDIR@
