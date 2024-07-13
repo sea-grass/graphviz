@@ -53,9 +53,7 @@ static void		gen(Excc_t*, Exnode_t*);
  * return C name for op
  */
 
-char*
-exopname(int op)
-{
+char *exopname(long op) {
 	static char	buf[16];
 
 	switch (op)
@@ -113,7 +111,7 @@ exopname(int op)
 	default:
 		break;
 	}
-	snprintf(buf, sizeof(buf) - 1, "(OP=%03o)", op);
+	snprintf(buf, sizeof(buf) - 1, "(OP=%03lo)", op);
 	return buf;
 }
 

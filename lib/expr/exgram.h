@@ -50,7 +50,7 @@ static int T(long t) {
  * allocate and initialize a new expression node in the current program
  */
 
-Exnode_t *exnewnode(Expr_t *p, int op, bool binary, long type, Exnode_t *left,
+Exnode_t *exnewnode(Expr_t *p, long op, bool binary, long type, Exnode_t *left,
                     Exnode_t *right) {
 	Exnode_t*	x;
 

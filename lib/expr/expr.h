@@ -150,7 +150,7 @@ union Exdata_u
 struct Exnode_s				/* expression tree node		*/
 {
 	long	type; ///< value type
-	int	op;		/* operator			*/
+	long op; ///< operator
 	bool binary; ///< data.operand.{left,right} ok
 	void *local; ///< user defined local stuff
 	union
@@ -243,7 +243,7 @@ extern void		exwarn(const char *, ...);
 extern Extype_t		exeval(Expr_t*, Exnode_t*, void*);
 extern Exnode_t*	exexpr(Expr_t*, const char*, Exid_t*, int);
 extern void		exfreenode(Expr_t*, Exnode_t*);
-extern Exnode_t *exnewnode(Expr_t *, int, bool, long, Exnode_t *, Exnode_t *);
+extern Exnode_t *exnewnode(Expr_t *, long, bool, long, Exnode_t *, Exnode_t *);
 extern char*		exnospace(void);
 extern Expr_t*		exopen(Exdisc_t*);
 extern int		expop(Expr_t*);
@@ -253,7 +253,7 @@ extern char*		exstring(Expr_t *, char *);
 extern void*		exstralloc(Expr_t *, size_t);
 extern char* extype(long int);
 extern Extype_t exzero(long int);
-extern char*	exopname(int);
+extern char *exopname(long);
 extern void		exinit(void);
 extern char *extypename(Expr_t *p, long);
 extern int		exisAssign(Exnode_t *);
