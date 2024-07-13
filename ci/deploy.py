@@ -75,7 +75,7 @@ def upload(dry_run: bool, version: str, path: Path, name: Optional[str] = None) 
 
     resp = proc.stdout.split("\n")[-1]
     if json.loads(resp)["message"] != "201 Created":
-        raise Exception(f"upload failed: {resp}")
+        raise RuntimeError(f"upload failed: {resp}")
 
     return target
 
