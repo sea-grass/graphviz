@@ -1,7 +1,7 @@
 prefix=@prefix@
 exec_prefix=@EXEC_PREFIX@
 libdir=@libdir@
-includedir=@includedir@
+includedir=@INCLUDEDIR@
 
 Name: libpack
 Description: Graph packer

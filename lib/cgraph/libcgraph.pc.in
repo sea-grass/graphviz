@@ -1,7 +1,7 @@
 prefix=@prefix@
 exec_prefix=@EXEC_PREFIX@
 libdir=@libdir@
-includedir=@includedir@
+includedir=@INCLUDEDIR@
 
 Name: libcgraph
 Description: Graph library (file i/o, dot language parsing, graph, subgraph, node, edge, attribute, data structure manipulation)
