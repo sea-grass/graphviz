@@ -505,7 +505,7 @@ Exnode_t *excast(Expr_t *p, Exnode_t *x, long type, Exnode_t *xref, int arg) {
 			break;
 		case S2F:
 			s =  x->data.constant.value.string;
-			x->data.constant.value.integer = strtod(s, &e);
+			x->data.constant.value.floating = strtod(s, &e);
 			if (*e)
 				x->data.constant.value.floating = (*s != 0);
 			break;

@@ -4507,7 +4507,6 @@ def test_fig_max_colors():
 
 
 @pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
-@pytest.mark.xfail(strict=True)
 def test_gvpr_s2f():
     """
     casting a string to floating point in GVPR should work
