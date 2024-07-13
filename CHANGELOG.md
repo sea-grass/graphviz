@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Enable the GNU Triangulated Surface Library (GTS) in Windows builds. #2557
+- `dot_builtins` now also includes the vt plugin (`-Tvt` output format).
 
 ### Changed
 
