@@ -57,7 +57,6 @@
 %token	FLOATING
 %token	STRING
 %token	VOIDTYPE
-%token	STATIC
 
 %token	ADDRESS
 %token	ARRAY
@@ -157,7 +156,6 @@
 %type <id>		SCANF		SSCANF		scan
 %type <floating>	FLOATING
 %type <integer>		INTEGER		UNSIGNED	array
-%type <integer>		static
 %type <string>		STRING
 
 %token	MAXTOKEN
@@ -267,9 +265,9 @@ statement	:	'{' statement_list '}'
 		{
 			$$ = ($1 && $1->type == STRING) ? exnewnode(expr.program, S2B, 1, INTEGER, $1, NULL) : $1;
 		}
-		|	static {expr.instatic=$1;} DECLARE {expr.declare=$3->type;} dcl_list ';'
+		|	DECLARE {expr.declare = $1->type;} dcl_list ';'
 		{
-			$$ = $5;
+			$$ = $3;
 			expr.declare = 0;
 		}
 		|	IF '(' expr ')' statement else_opt
@@ -481,16 +479,6 @@ case_item	:	CASE constant ':'
 		|	DEFAULT ':'
 		{
 			expr.swstate->def = 1;
-		}
-		;
-
-static	:	/* empty */
-		{
-			$$ = 0;
-		}
-		|	STATIC
-		{
-			$$ = 1;
 		}
 		;
 

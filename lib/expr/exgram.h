@@ -862,7 +862,6 @@ void exinit(void) {
 }
 
 int excomp(Expr_t *p, const char *name, int line, FILE *fp, char *prefix) {
-	Exid_t*	v;
 	int	eof;
 
 	eof = p->eof;
@@ -875,17 +874,6 @@ int excomp(Expr_t *p, const char *name, int line, FILE *fp, char *prefix) {
 	p->input->unit = 0;
 	expop(p);
 	p->eof = eof;
-	if (expr.statics)
-	{
-		for (v = dtfirst(p->symbols); v; v = dtnext(p->symbols, v))
-			if (v->isstatic)
-			{
-				dtdelete(p->symbols, v);
-				if (!--expr.statics)
-					break;
-			}
-		expr.statics = 0;
-	}
 	return 0;
 }
 

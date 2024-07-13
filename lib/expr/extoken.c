@@ -625,7 +625,6 @@ extoken_fn(Expr_t* ex)
 					}
 					strcpy(ex_lval.id->name, s);
 					ex_lval.id->lex = NAME;
-					expr.statics += ex_lval.id->isstatic = expr.instatic;
 
 					/*
 					 * LABELs are in the parent scope!

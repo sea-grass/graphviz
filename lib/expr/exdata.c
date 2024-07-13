@@ -56,7 +56,6 @@ Exid_t		exbuiltin[] =
 	EX_ID("split",	SPLIT,		SPLIT,		INTEGER),
 	EX_ID("sprintf",	SPRINTF,	SPRINTF,	STRING),
 	EX_ID("srand",	SRAND,		SRAND,		INTEGER),
-	EX_ID("static",	STATIC,		STATIC,		0),
 	EX_ID("sub",	SUB,		SUB,		STRING),
 	EX_ID("substr",	SUBSTR,		SUBSTR,		STRING),
 	EX_ID("switch",	SWITCH,		SWITCH,		0),

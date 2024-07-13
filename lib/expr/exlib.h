@@ -158,8 +158,6 @@ typedef struct Exstate_s		/* ex global state		*/
 	Exnode_t*	procedure;	/* current procedure		*/
 	Exref_t*	refs;		/* . reference list		*/
 	int		assigned;	/* declaration assignment	*/
-	int		instatic;	/* static declaration		*/
-	int		statics;	/* static used			*/
 	Switch_t*	swstate;	/* switch parse state		*/
 	char		nullstring[1];	/* ""				*/
 } Exstate_t;
