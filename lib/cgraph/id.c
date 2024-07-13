@@ -12,6 +12,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <cgraph/cghdr.h>
@@ -41,6 +42,11 @@ static long idmap(void *state, int objtype, char *str, IDTYPE *id,
             s = agstrdup(g, str);
         else
             s = agstrbind(g, str);
+        // The scheme of using pointers as the IDs of named objects and odd
+        // numbers as the IDs of unnamed objects relies on heap pointers being
+        // even, to avoid collisions. So the low bit had better be unset.
+        assert((uintptr_t)s % 2 == 0 &&
+               "heap pointer with low bit set will collide with anonymous IDs");
         *id = (IDTYPE)(uintptr_t)s;
     } else {
         *id = ctr;
