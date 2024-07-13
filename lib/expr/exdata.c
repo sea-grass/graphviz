@@ -39,7 +39,7 @@ Exid_t		exbuiltin[] =
 	EX_ID("else",	ELSE,		ELSE,		0),
 	EX_ID("exit",	EXIT,		EXIT,		INTEGER),
 	EX_ID("for",	FOR,		FOR,		0),
-	EX_ID("forr",	ITERATER,	ITERATER,	0),
+	EX_ID("forr",	ITERATOR,	ITERATOR,	0),
 	EX_ID("float",	DECLARE,	FLOATING,	FLOATING),
 	EX_ID("gsub",	GSUB,		GSUB,		STRING),
 	EX_ID("if",	IF,		IF,		0),

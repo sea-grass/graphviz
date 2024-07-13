@@ -75,7 +75,7 @@
 %token	FUNCTION
 %token	GSUB
 %token	ITERATE
-%token	ITERATER
+%token	ITERATOR
 %token	ID
 %token	IF
 %token	LABEL
@@ -151,7 +151,7 @@
 %type <id>		SPRINTF		PROCEDURE	name		dcl_name
 %type <id>		GSUB		SUB		SUBSTR
 %type <id>		SPLIT		TOKENS          splitop
-%type <id>		IF		WHILE		FOR		ITERATER
+%type <id>		IF		WHILE		FOR		ITERATOR
 %type <id>		BREAK		CONTINUE	print		member
 %type <id>		RETURN		DYNAMIC		SWITCH		UNSET
 %type <id>		SCANF		SSCANF		scan
@@ -309,9 +309,9 @@ statement	:	'{' statement_list '}'
 			if ($3)
 				$$ = exnewnode(expr.program, ';', true, INTEGER, $3, $$);
 		}
-		|	ITERATER '(' variable ')' statement
+		|	ITERATOR '(' variable ')' statement
 		{
-			$$ = exnewnode(expr.program, ITERATER, false, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, ITERATOR, false, INTEGER, NULL, NULL);
 			$$->data.generate.array = $3;
 			if (!$3->data.variable.index || $3->data.variable.index->op != DYNAMIC)
 				exerror("simple index variable expected");

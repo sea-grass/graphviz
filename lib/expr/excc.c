@@ -329,7 +329,7 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 		agxbprint(cc->ccdisc->text, "%s++", x->data.variable.symbol->name);
 		return;
 	case ITERATE:
-	case ITERATER:
+	case ITERATOR:
 		if (exnode->op == DYNAMIC)
 		{
 			agxbprint(cc->ccdisc->text, "{ Exassoc_t* %stmp_%d;", cc->id, ++cc->tmp);

@@ -159,7 +159,7 @@ trace(Expr_t* ex, int lev, char* op, int c)
 	case FOR:
 		s = " for";
 		break;
-	case ITERATER:
+	case ITERATOR:
 		s = " forf";
 		break;
 	case GSUB:

@@ -114,7 +114,7 @@ exfreenode(Expr_t* p, Exnode_t* x)
 		}
 		break;
 	case ITERATE:
-	case ITERATER:
+	case ITERATOR:
 		if (x->data.generate.statement)
 			exfreenode(p, x->data.generate.statement);
 		break;
