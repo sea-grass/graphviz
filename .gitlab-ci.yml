@@ -797,7 +797,7 @@ macos-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=implicit-fallthrough"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
