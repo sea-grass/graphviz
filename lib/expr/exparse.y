@@ -29,6 +29,7 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/streq.h>
 #include <expr/exop.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -190,7 +191,7 @@ program		:	statement_list action_list
 					exfreenode(expr.program, x);
 				}
 				expr.program->main.lex = PROCEDURE;
-				expr.program->main.value = exnewnode(expr.program, PROCEDURE, 1, $1->type, NULL, $1);
+				expr.program->main.value = exnewnode(expr.program, PROCEDURE, true, $1->type, NULL, $1);
 			}
 		}
 		;
@@ -205,7 +206,7 @@ action		:	LABEL ':' {
 				if (expr.procedure)
 					exerror("no nested function definitions");
 				$1->lex = PROCEDURE;
-				expr.procedure = $1->value = exnewnode(expr.program, PROCEDURE, 1, $1->type, NULL, NULL);
+				expr.procedure = $1->value = exnewnode(expr.program, PROCEDURE, true, $1->type, NULL, NULL);
 				expr.procedure->type = INTEGER;
 				if (!(disc = calloc(1, sizeof(Dtdisc_t))))
 					exnospace();
@@ -253,7 +254,7 @@ statement_list	:	/* empty */
 				exfreenode(expr.program, $1);
 				$$ = $2;
 			}
-			else $$ = exnewnode(expr.program, ';', 1, $2->type, $1, $2);
+			else $$ = exnewnode(expr.program, ';', true, $2->type, $1, $2);
 		}
 		;
 
@@ -263,7 +264,7 @@ statement	:	'{' statement_list '}'
 		}
 		|	expr_opt ';'
 		{
-			$$ = ($1 && $1->type == STRING) ? exnewnode(expr.program, S2B, 1, INTEGER, $1, NULL) : $1;
+			$$ = ($1 && $1->type == STRING) ? exnewnode(expr.program, S2B, true, INTEGER, $1, NULL) : $1;
 		}
 		|	DECLARE {expr.declare = $1->type;} dcl_list ';'
 		{
@@ -275,14 +276,14 @@ statement	:	'{' statement_list '}'
 			if (exisAssign ($3))
 				exwarn ("assignment used as boolean in if statement");
 			if ($3->type == STRING)
-				$3 = exnewnode(expr.program, S2B, 1, INTEGER, $3, NULL);
+				$3 = exnewnode(expr.program, S2B, true, INTEGER, $3, NULL);
 			else if (!INTEGRAL($3->type))
 				$3 = excast(expr.program, $3, INTEGER, NULL, 0);
-			$$ = exnewnode(expr.program, $1->index, 1, INTEGER, $3, exnewnode(expr.program, ':', 1, $5 ? $5->type : 0, $5, $6));
+			$$ = exnewnode(expr.program, $1->index, true, INTEGER, $3, exnewnode(expr.program, ':', true, $5 ? $5->type : 0, $5, $6));
 		}
 		|	FOR '(' variable ')' statement
 		{
-			$$ = exnewnode(expr.program, ITERATE, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, ITERATE, false, INTEGER, NULL, NULL);
 			$$->data.generate.array = $3;
 			if (!$3->data.variable.index || $3->data.variable.index->op != DYNAMIC)
 				exerror("simple index variable expected");
@@ -297,20 +298,20 @@ statement	:	'{' statement_list '}'
 		{
 			if (!$5)
 			{
-				$5 = exnewnode(expr.program, CONSTANT, 0, INTEGER, NULL, NULL);
+				$5 = exnewnode(expr.program, CONSTANT, false, INTEGER, NULL, NULL);
 				$5->data.constant.value.integer = 1;
 			}
 			else if ($5->type == STRING)
-				$5 = exnewnode(expr.program, S2B, 1, INTEGER, $5, NULL);
+				$5 = exnewnode(expr.program, S2B, true, INTEGER, $5, NULL);
 			else if (!INTEGRAL($5->type))
 				$5 = excast(expr.program, $5, INTEGER, NULL, 0);
-			$$ = exnewnode(expr.program, $1->index, 1, INTEGER, $5, exnewnode(expr.program, ';', 1, 0, $7, $9));
+			$$ = exnewnode(expr.program, $1->index, true, INTEGER, $5, exnewnode(expr.program, ';', 1, 0, $7, $9));
 			if ($3)
-				$$ = exnewnode(expr.program, ';', 1, INTEGER, $3, $$);
+				$$ = exnewnode(expr.program, ';', true, INTEGER, $3, $$);
 		}
 		|	ITERATER '(' variable ')' statement
 		{
-			$$ = exnewnode(expr.program, ITERATER, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, ITERATER, false, INTEGER, NULL, NULL);
 			$$->data.generate.array = $3;
 			if (!$3->data.variable.index || $3->data.variable.index->op != DYNAMIC)
 				exerror("simple index variable expected");
@@ -325,7 +326,7 @@ statement	:	'{' statement_list '}'
 		{
 			if ($3->local == NULL)
               			exerror("cannot apply unset to non-array %s", $3->name);
-			$$ = exnewnode(expr.program, UNSET, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, UNSET, false, INTEGER, NULL, NULL);
 			$$->data.variable.symbol = $3;
 			$$->data.variable.index = NULL;
 		}
@@ -336,7 +337,7 @@ statement	:	'{' statement_list '}'
 			if (($3->index_type > 0) && ($5->type != $3->index_type))
             		    exerror("%s indices must have type %s, not %s", 
 				$3->name, extypename(expr.program, $3->index_type),extypename(expr.program, $5->type));
-			$$ = exnewnode(expr.program, UNSET, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, UNSET, false, INTEGER, NULL, NULL);
 			$$->data.variable.symbol = $3;
 			$$->data.variable.index = $5;
 		}
@@ -345,16 +346,16 @@ statement	:	'{' statement_list '}'
 			if (exisAssign ($3))
 				exwarn ("assignment used as boolean in while statement");
 			if ($3->type == STRING)
-				$3 = exnewnode(expr.program, S2B, 1, INTEGER, $3, NULL);
+				$3 = exnewnode(expr.program, S2B, true, INTEGER, $3, NULL);
 			else if (!INTEGRAL($3->type))
 				$3 = excast(expr.program, $3, INTEGER, NULL, 0);
-			$$ = exnewnode(expr.program, $1->index, 1, INTEGER, $3, exnewnode(expr.program, ';', 1, 0, NULL, $5));
+			$$ = exnewnode(expr.program, $1->index, true, INTEGER, $3, exnewnode(expr.program, ';', true, 0, NULL, $5));
 		}
 		|	SWITCH '(' expr {expr.declare=$3->type;} ')' '{' switch_list '}'
 		{
 			Switch_t*	sw = expr.swstate;
 
-			$$ = exnewnode(expr.program, $1->index, 1, INTEGER, $3, exnewnode(expr.program, DEFAULT, 1, 0, sw->defcase, sw->firstcase));
+			$$ = exnewnode(expr.program, $1->index, true, INTEGER, $3, exnewnode(expr.program, DEFAULT, true, 0, sw->defcase, sw->firstcase));
 			expr.swstate = expr.swstate->prev;
 			free(sw->base);
 			if (sw != &swstate)
@@ -366,12 +367,12 @@ statement	:	'{' statement_list '}'
 		loopop:
 			if (!$2)
 			{
-				$2 = exnewnode(expr.program, CONSTANT, 0, INTEGER, NULL, NULL);
+				$2 = exnewnode(expr.program, CONSTANT, false, INTEGER, NULL, NULL);
 				$2->data.constant.value.integer = 1;
 			}
 			else if (!INTEGRAL($2->type))
 				$2 = excast(expr.program, $2, INTEGER, NULL, 0);
-			$$ = exnewnode(expr.program, $1->index, 1, INTEGER, $2, NULL);
+			$$ = exnewnode(expr.program, $1->index, true, INTEGER, $2, NULL);
 		}
 		|	CONTINUE expr_opt ';'
 		{
@@ -385,7 +386,7 @@ statement	:	'{' statement_list '}'
 					exerror("return in void function");
 				$2 = excast(expr.program, $2, expr.procedure ? expr.procedure->type : INTEGER, NULL, 0);
 			}
-			$$ = exnewnode(expr.program, RETURN, 1, $2 ? $2->type : 0, $2, NULL);
+			$$ = exnewnode(expr.program, RETURN, true, $2 ? $2->type : 0, $2, NULL);
 		}
 		;
 
@@ -426,7 +427,7 @@ switch_item	:	case_list statement_list
 		{
 			Switch_t*	sw = expr.swstate;
 
-			$$ = exnewnode(expr.program, CASE, 1, 0, $2, NULL);
+			$$ = exnewnode(expr.program, CASE, true, 0, $2, NULL);
 			if (sw->cur > sw->base)
 			{
 				if (sw->lastcase)
@@ -486,7 +487,7 @@ dcl_list	:	dcl_item
 		|	dcl_list ',' dcl_item
 		{
 			if ($3)
-				$$ = $1 ? exnewnode(expr.program, ',', 1, $3->type, $1, $3) : $3;
+				$$ = $1 ? exnewnode(expr.program, ',', true, $3->type, $1, $3) : $3;
 		}
 		;
 
@@ -504,7 +505,7 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 			else
 			{
 				$1->lex = DYNAMIC;
-				$1->value = exnewnode(expr.program, 0, 0, 0, NULL, NULL);
+				$1->value = exnewnode(expr.program, 0, false, 0, NULL, NULL);
 				if ($3 && $1->local == NULL)
 				{
 					Dtdisc_t*	disc;
@@ -529,7 +530,7 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 						$4->type = $1->type;
 						$4->data.operand.right = excast(expr.program, $4->data.operand.right, $1->type, NULL, 0);
 					}
-					$4->data.operand.left = exnewnode(expr.program, DYNAMIC, 0, $1->type, NULL, NULL);
+					$4->data.operand.left = exnewnode(expr.program, DYNAMIC, false, $1->type, NULL, NULL);
 					$4->data.operand.left->data.variable.symbol = $1;
 					$$ = $4;
 				}
@@ -606,7 +607,7 @@ expr		:	'(' expr ')'
 			}
 			if (!rel)
 				rel = ($1->type == STRING) ? STRING : (($1->type == UNSIGNED) ? UNSIGNED : $3->type);
-			$$ = exnewnode(expr.program, $2, 1, rel, $1, $3);
+			$$ = exnewnode(expr.program, $2, true, rel, $1, $3);
 			if (!expr.program->errors && $1->op == CONSTANT && $3->op == CONSTANT)
 			{
 				$$->data.constant.value = exeval(expr.program, $$, NULL);
@@ -618,7 +619,7 @@ expr		:	'(' expr ')'
 					$$->data.constant.value.string =
 						vmstrdup(expr.program->vm, $$->data.constant.value.string);
 				}
-				$$->binary = 0;
+				$$->binary = false;
 				$$->op = CONSTANT;
 				exfreenode(expr.program, $1);
 				exfreenode(expr.program, $3);
@@ -691,11 +692,11 @@ expr		:	'(' expr ')'
 		{
 		logical:
 			if ($1->type == STRING)
-				$1 = exnewnode(expr.program, S2B, 1, INTEGER, $1, NULL);
+				$1 = exnewnode(expr.program, S2B, true, INTEGER, $1, NULL);
 			else if (!BUILTIN($1->type))
 				$1 = excast(expr.program, $1, INTEGER, NULL, 0);
 			if ($3->type == STRING)
-				$3 = exnewnode(expr.program, S2B, 1, INTEGER, $3, NULL);
+				$3 = exnewnode(expr.program, S2B, true, INTEGER, $3, NULL);
 			else if (!BUILTIN($3->type))
 				$3 = excast(expr.program, $3, INTEGER, NULL, 0);
 			goto binary;
@@ -712,7 +713,7 @@ expr		:	'(' expr ')'
 				$$ = $3;
 			}
 			else
-				$$ = exnewnode(expr.program, ',', 1, $3->type, $1, $3);
+				$$ = exnewnode(expr.program, ',', true, $3->type, $1, $3);
 		}
 		|	expr '?' {expr.nolabel=1;} expr ':' {expr.nolabel=0;} expr
 		{
@@ -726,7 +727,7 @@ expr		:	'(' expr ')'
 			else if (!$7->type)
 				$7->type = $4->type;
 			if ($1->type == STRING)
-				$1 = exnewnode(expr.program, S2B, 1, INTEGER, $1, NULL);
+				$1 = exnewnode(expr.program, S2B, true, INTEGER, $1, NULL);
 			else if (!INTEGRAL($1->type))
 				$1 = excast(expr.program, $1, INTEGER, NULL, 0);
 			if ($4->type != $7->type)
@@ -753,21 +754,21 @@ expr		:	'(' expr ')'
 				exfreenode(expr.program, $1);
 			}
 			else
-				$$ = exnewnode(expr.program, '?', 1, $4->type, $1, exnewnode(expr.program, ':', 1, $4->type, $4, $7));
+				$$ = exnewnode(expr.program, '?', true, $4->type, $1, exnewnode(expr.program, ':', true, $4->type, $4, $7));
 		}
 		|	'!' expr
 		{
 		iunary:
 			if ($2->type == STRING)
-				$2 = exnewnode(expr.program, S2B, 1, INTEGER, $2, NULL);
+				$2 = exnewnode(expr.program, S2B, true, INTEGER, $2, NULL);
 			else if (!INTEGRAL($2->type))
 				$2 = excast(expr.program, $2, INTEGER, NULL, 0);
 		unary:
-			$$ = exnewnode(expr.program, $1, 1, $2->type == UNSIGNED ? INTEGER : $2->type, $2, NULL);
+			$$ = exnewnode(expr.program, $1, true, $2->type == UNSIGNED ? INTEGER : $2->type, $2, NULL);
 			if ($2->op == CONSTANT)
 			{
 				$$->data.constant.value = exeval(expr.program, $$, NULL);
-				$$->binary = 0;
+				$$->binary = false;
 				$$->op = CONSTANT;
 				exfreenode(expr.program, $2);
 			}
@@ -779,7 +780,7 @@ expr		:	'(' expr ')'
 		{
 			if ($2->local == NULL)
               			exerror("cannot apply '#' operator to non-array %s", $2->name);
-			$$ = exnewnode(expr.program, '#', 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, '#', false, INTEGER, NULL, NULL);
 			$$->data.variable.symbol = $2;
 		}
 		|	'~' expr
@@ -796,15 +797,15 @@ expr		:	'(' expr ')'
 		}
 		|	'&' variable	%prec UNARY
 		{
-			$$ = exnewnode(expr.program, ADDRESS, 0, T($2->type), $2, NULL);
+			$$ = exnewnode(expr.program, ADDRESS, false, T($2->type), $2, NULL);
 		}
 		|	ARRAY '[' args ']'
 		{
-			$$ = exnewnode(expr.program, ARRAY, 1, T($1->type), call(0, $1, $3), $3);
+			$$ = exnewnode(expr.program, ARRAY, true, T($1->type), call(0, $1, $3), $3);
 		}
 		|	FUNCTION '(' args ')'
 		{
-			$$ = exnewnode(expr.program, FUNCTION, 1, T($1->type), call(0, $1, $3), $3);
+			$$ = exnewnode(expr.program, FUNCTION, true, T($1->type), call(0, $1, $3), $3);
 		}
 		|	GSUB '(' args ')'
 		{
@@ -830,25 +831,25 @@ expr		:	'(' expr ')'
 		{
 			if (!INTEGRAL($3->type))
 				$3 = excast(expr.program, $3, INTEGER, NULL, 0);
-			$$ = exnewnode(expr.program, EXIT, 1, INTEGER, $3, NULL);
+			$$ = exnewnode(expr.program, EXIT, true, INTEGER, $3, NULL);
 		}
 		|	RAND '(' ')'
 		{
-			$$ = exnewnode(expr.program, RAND, 0, FLOATING, NULL, NULL);
+			$$ = exnewnode(expr.program, RAND, false, FLOATING, NULL, NULL);
 		}
 		|	SRAND '(' ')'
 		{
-			$$ = exnewnode(expr.program, SRAND, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, SRAND, false, INTEGER, NULL, NULL);
 		}
 		|	SRAND '(' expr ')'
 		{
 			if (!INTEGRAL($3->type))
 				$3 = excast(expr.program, $3, INTEGER, NULL, 0);
-			$$ = exnewnode(expr.program, SRAND, 1, INTEGER, $3, NULL);
+			$$ = exnewnode(expr.program, SRAND, true, INTEGER, $3, NULL);
 		}
 		|	PROCEDURE '(' args ')'
 		{
-			$$ = exnewnode(expr.program, CALL, 1, $1->type, NULL, $3);
+			$$ = exnewnode(expr.program, CALL, true, $1->type, NULL, $3);
 			$$->data.call.procedure = $1;
 		}
 		|	PRINT '(' args ')'
@@ -857,7 +858,7 @@ expr		:	'(' expr ')'
 		}
 		|	print '(' args ')'
 		{
-			$$ = exnewnode(expr.program, $1->index, 0, $1->type, NULL, NULL);
+			$$ = exnewnode(expr.program, $1->index, false, $1->type, NULL, NULL);
 			if ($3 && $3->data.operand.left->type == INTEGER)
 			{
 				$$->data.print.descriptor = $3->data.operand.left;
@@ -867,11 +868,11 @@ expr		:	'(' expr ')'
 				switch ($1->index)
 				{
 				case QUERY:
-					$$->data.print.descriptor = exnewnode(expr.program, CONSTANT, 0, INTEGER, NULL, NULL);
+					$$->data.print.descriptor = exnewnode(expr.program, CONSTANT, false, INTEGER, NULL, NULL);
 					$$->data.print.descriptor->data.constant.value.integer = 2;
 					break;
 				case PRINTF:
-					$$->data.print.descriptor = exnewnode(expr.program, CONSTANT, 0, INTEGER, NULL, NULL);
+					$$->data.print.descriptor = exnewnode(expr.program, CONSTANT, false, INTEGER, NULL, NULL);
 					$$->data.print.descriptor->data.constant.value.integer = 1;
 					break;
 				case SPRINTF:
@@ -884,7 +885,7 @@ expr		:	'(' expr ')'
 		{
 			Exnode_t*	x;
 
-			$$ = exnewnode(expr.program, $1->index, 0, $1->type, NULL, NULL);
+			$$ = exnewnode(expr.program, $1->index, false, $1->type, NULL, NULL);
 			if ($3 && $3->data.operand.left->type == INTEGER)
 			{
 				$$->data.scan.descriptor = $3->data.operand.left;
@@ -941,7 +942,7 @@ expr		:	'(' expr ')'
 		pre:
 			if ($2->type == STRING)
 				exerror("++ and -- invalid for string variables");
-			$$ = exnewnode(expr.program, $1, 0, $2->type, $2, NULL);
+			$$ = exnewnode(expr.program, $1, false, $2->type, $2, NULL);
 			$$->subop = PRE;
 		}
 		|	variable INC
@@ -949,7 +950,7 @@ expr		:	'(' expr ')'
 		pos:
 			if ($1->type == STRING)
 				exerror("++ and -- invalid for string variables");
-			$$ = exnewnode(expr.program, $2, 0, $1->type, $1, NULL);
+			$$ = exnewnode(expr.program, $2, false, $1->type, $1, NULL);
 			$$->subop = POS;
 		}
 		|	expr IN_OP DYNAMIC
@@ -959,7 +960,7 @@ expr		:	'(' expr ')'
 			if (($3->index_type > 0) && ($1->type != $3->index_type))
             		    exerror("%s indices must have type %s, not %s", 
 				$3->name, extypename(expr.program, $3->index_type),extypename(expr.program, $1->type));
-			$$ = exnewnode(expr.program, IN_OP, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, IN_OP, false, INTEGER, NULL, NULL);
 			$$->data.variable.symbol = $3;
 			$$->data.variable.index = $1;
 		}
@@ -979,7 +980,7 @@ splitop		:	SPLIT
 		;
 constant	:	CONSTANT
 		{
-			$$ = exnewnode(expr.program, CONSTANT, 0, $1->type, NULL, NULL);
+			$$ = exnewnode(expr.program, CONSTANT, false, $1->type, NULL, NULL);
 			if (!expr.program->disc->reff)
 				exerror("%s: identifier references not supported", $1->name);
 			else
@@ -987,22 +988,22 @@ constant	:	CONSTANT
 		}
 		|	FLOATING
 		{
-			$$ = exnewnode(expr.program, CONSTANT, 0, FLOATING, NULL, NULL);
+			$$ = exnewnode(expr.program, CONSTANT, false, FLOATING, NULL, NULL);
 			$$->data.constant.value.floating = $1;
 		}
 		|	INTEGER
 		{
-			$$ = exnewnode(expr.program, CONSTANT, 0, INTEGER, NULL, NULL);
+			$$ = exnewnode(expr.program, CONSTANT, false, INTEGER, NULL, NULL);
 			$$->data.constant.value.integer = $1;
 		}
 		|	STRING
 		{
-			$$ = exnewnode(expr.program, CONSTANT, 0, STRING, NULL, NULL);
+			$$ = exnewnode(expr.program, CONSTANT, false, STRING, NULL, NULL);
 			$$->data.constant.value.string = $1;
 		}
 		|	UNSIGNED
 		{
-			$$ = exnewnode(expr.program, CONSTANT, 0, UNSIGNED, NULL, NULL);
+			$$ = exnewnode(expr.program, CONSTANT, false, UNSIGNED, NULL, NULL);
 			$$->data.constant.value.integer = $1;
 		}
 		;
@@ -1022,9 +1023,7 @@ variable	:	ID members
 		}
 		|	DYNAMIC index members
 		{
-			Exnode_t*   n;
-
-			n = exnewnode(expr.program, DYNAMIC, 0, $1->type, NULL, NULL);
+			Exnode_t *n = exnewnode(expr.program, DYNAMIC, false, $1->type, NULL, NULL);
 			n->data.variable.symbol = $1;
 			n->data.variable.reference = 0;
 			if (((n->data.variable.index = $2) == 0) != ($1->local == NULL))
@@ -1035,14 +1034,14 @@ variable	:	ID members
 						$1->name, extypename(expr.program, $1->index_type),extypename(expr.program, $2->type));
 			}
 			if ($3) {
-				n->data.variable.dyna =exnewnode(expr.program, 0, 0, 0, NULL, NULL);
+				n->data.variable.dyna = exnewnode(expr.program, 0, false, 0, NULL, NULL);
 				$$ = makeVar(expr.program, $1, $2, n, $3);
 			}
 			else $$ = n;
 		}
 		|	NAME
 		{
-			$$ = exnewnode(expr.program, ID, 0, STRING, NULL, NULL);
+			$$ = exnewnode(expr.program, ID, false, STRING, NULL, NULL);
 			$$->data.variable.symbol = $1;
 			$$->data.variable.reference = 0;
 			$$->data.variable.index = 0;
@@ -1097,12 +1096,12 @@ args		:	/* empty */
 
 arg_list	:	expr		%prec ','
 		{
-			$$ = exnewnode(expr.program, ',', 1, 0, exnewnode(expr.program, ',', 1, $1->type, $1, NULL), NULL);
+			$$ = exnewnode(expr.program, ',', true, 0, exnewnode(expr.program, ',', true, $1->type, $1, NULL), NULL);
 			$$->data.operand.right = $$->data.operand.left;
 		}
 		|	arg_list ',' expr
 		{
-			$1->data.operand.right = $1->data.operand.right->data.operand.right = exnewnode(expr.program, ',', 1, $1->type, $3, NULL);
+			$1->data.operand.right = $1->data.operand.right->data.operand.right = exnewnode(expr.program, ',', true, $1->type, $3, NULL);
 		}
 		;
 
@@ -1121,7 +1120,7 @@ formals		:	/* empty */
 
 formal_list	:	formal_item
 		{
-			$$ = exnewnode(expr.program, ',', 1, $1->type, $1, NULL);
+			$$ = exnewnode(expr.program, ',', true, $1->type, $1, NULL);
 		}
 		|	formal_list ',' formal_item
 		{
@@ -1130,17 +1129,17 @@ formal_list	:	formal_item
 
 			$$ = $1;
 			for (x = $1; (y = x->data.operand.right); x = y);
-			x->data.operand.right = exnewnode(expr.program, ',', 1, $3->type, $3, NULL);
+			x->data.operand.right = exnewnode(expr.program, ',', true, $3->type, $3, NULL);
 		}
 		;
 
 formal_item	:	DECLARE {expr.declare=$1->type;} name
 		{
-			$$ = exnewnode(expr.program, ID, 0, $1->type, NULL, NULL);
+			$$ = exnewnode(expr.program, ID, false, $1->type, NULL, NULL);
 			$$->data.variable.symbol = $3;
 			$3->lex = DYNAMIC;
 			$3->type = $1->type;
-			$3->value = exnewnode(expr.program, 0, 0, 0, NULL, NULL);
+			$3->value = exnewnode(expr.program, 0, false, 0, NULL, NULL);
 			expr.procedure->data.procedure.arity++;
 			expr.declare = 0;
 		}
@@ -1197,7 +1196,7 @@ assign		:	/* empty */
 		}
 		|	'=' expr
 		{
-			$$ = exnewnode(expr.program, '=', 1, $2->type, NULL, $2);
+			$$ = exnewnode(expr.program, '=', true, $2->type, NULL, $2);
 			$$->subop = $1;
 		}
 		;
@@ -1208,7 +1207,7 @@ initialize	:	assign
 
 				if (expr.procedure)
 					exerror("%s: nested function definitions not supported", expr.id->name);
-				expr.procedure = exnewnode(expr.program, PROCEDURE, 1, expr.declare, NULL, NULL);
+				expr.procedure = exnewnode(expr.program, PROCEDURE, true, expr.declare, NULL, NULL);
 				if (!(disc = calloc(1, sizeof(Dtdisc_t))))
 					exnospace();
 				disc->key = offsetof(Exid_t, name);

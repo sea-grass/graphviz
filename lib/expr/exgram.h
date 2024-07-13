@@ -25,6 +25,7 @@ extern "C" {
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
 #include <expr/exlib.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,7 +50,7 @@ static int T(long t) {
  * allocate and initialize a new expression node in the current program
  */
 
-Exnode_t *exnewnode(Expr_t *p, int op, int binary, long type, Exnode_t *left,
+Exnode_t *exnewnode(Expr_t *p, int op, bool binary, long type, Exnode_t *left,
                     Exnode_t *right) {
 	Exnode_t*	x;
 
@@ -214,7 +215,7 @@ static Exnode_t *exnewsplit(Expr_t * p, int op, Exid_t* dyn, Exnode_t * s, Exnod
 	if (seps && (seps->type != STRING))
             exerror("third argument to %s must have string type, not %s", 
 		exopname(op), extypename(p, seps->type));
-	ss = exnewnode(p, op, 0, INTEGER, NULL, NULL);
+	ss = exnewnode(p, op, false, INTEGER, NULL, NULL);
 	ss->data.split.array = dyn;
 	ss->data.split.string = s;
 	ss->data.split.seps = seps;
@@ -245,7 +246,7 @@ static Exnode_t *exnewsub(Expr_t * p, Exnode_t * args, int op) {
 	    repl = 0;
 	if (args)
 	    exerror("too many arguments to sub operator");
-	ss = exnewnode(p, op, 0, STRING, NULL, NULL);
+	ss = exnewnode(p, op, false, STRING, NULL, NULL);
 	ss->data.string.base = base;
 	ss->data.string.pat = pat;
 	ss->data.string.repl = repl;
@@ -275,7 +276,7 @@ static Exnode_t *exnewsubstr(Expr_t * p, Exnode_t * args) {
 	    repl = 0;
 	if (args)
 	    exerror("too many arguments to substr operator");
-	ss = exnewnode(p, SUBSTR, 0, STRING, NULL, NULL);
+	ss = exnewnode(p, SUBSTR, false, STRING, NULL, NULL);
 	ss->data.string.base = base;
 	ss->data.string.pat = pat;
 	ss->data.string.repl = repl;
@@ -312,7 +313,7 @@ static Exnode_t *exstringOf(Expr_t * p, Exnode_t * x) {
 		    cvt = I2S;
 		    break;
 		}
-	    x = exnewnode(p, cvt, 0, STRING, x, 0);
+	    x = exnewnode(p, cvt, false, STRING, x, 0);
 	} else if (!BUILTIN(type)) {
 	    if (p->disc->stringof(p, x, 0) < 0)
 		exerror("cannot convert constant %s to STRING",
@@ -348,7 +349,7 @@ static Exnode_t *exprint(Expr_t * p, Exid_t * ex, Exnode_t * args) {
 		    exstringOf(p, arg->data.operand.left);
 	    arg = arg->data.operand.right;
 	}
-	pr = exnewnode(p, ex->index, 1, ex->type, args, NULL);
+	pr = exnewnode(p, ex->index, true, ex->type, args, NULL);
 	return pr;
 }
 
@@ -379,7 +380,7 @@ static Exnode_t *makeVar(Expr_t * prog, Exid_t * s, Exnode_t * idx,
 
 	const long kind = sym->type ? sym->type : STRING;
 
-	nn = exnewnode(prog, ID, 0, kind, NULL, NULL);
+	nn = exnewnode(prog, ID, false, kind, NULL, NULL);
 	nn->data.variable.symbol = sym;
 	nn->data.variable.reference = refs;
 	nn->data.variable.index = 0;
@@ -468,7 +469,7 @@ Exnode_t *excast(Expr_t *p, Exnode_t *x, long type, Exnode_t *xref, int arg) {
 					}
 				}
 			}
-			x = exnewnode(p, t2t, 0, type, x, xref);
+			x = exnewnode(p, t2t, false, type, x, xref);
 		}
 		else switch (t2t)
 		{
@@ -535,7 +536,7 @@ call(Exref_t* ref, Exid_t* fun, Exnode_t* args)
 	Exnode_t*	x;
 	int		num;
 
-	x = exnewnode(expr.program, ID, 0, 0, NULL, NULL);
+	x = exnewnode(expr.program, ID, false, 0, NULL, NULL);
 	t = fun->type;
 	x->data.variable.symbol = fun;
 	x->data.variable.reference = ref;
@@ -723,12 +724,18 @@ preprint(Exnode_t* args)
 			{
 			case FLOATING:
 				if (x->arg->type != FLOATING)
-					x->arg = exnewnode(expr.program, x->arg->type == STRING ? S2F : INTEGRAL(x->arg->type) ? I2F : X2F, 0, FLOATING, x->arg, x->arg->op == ID ? x->arg : NULL);
+					x->arg = exnewnode(expr.program,
+					                   x->arg->type == STRING ? S2F : INTEGRAL(x->arg->type) ? I2F : X2F,
+					                   false, FLOATING, x->arg,
+					                   x->arg->op == ID ? x->arg : NULL);
 				break;
 			case INTEGER:
 			case UNSIGNED:
 				if (!INTEGRAL(x->arg->type))
-					x->arg = exnewnode(expr.program, x->arg->type == STRING ? S2I : x->arg->type == FLOATING ? F2I : X2I, 0, INTEGER, x->arg, x->arg->op == ID ? x->arg : NULL);
+					x->arg = exnewnode(expr.program,
+					                   x->arg->type == STRING ? S2I : x->arg->type == FLOATING ? F2I : X2I,
+					                   false, INTEGER, x->arg,
+					                   x->arg->op == ID ? x->arg : NULL);
 				x->arg->type = t;
 				break;
 			case STRING:
@@ -743,7 +750,10 @@ preprint(Exnode_t* args)
 					else if (!expr.program->disc->convertf || (x->arg->op != ID && x->arg->op != DYNAMIC && x->arg->op != F2X && x->arg->op != I2X && x->arg->op != S2X))
 						exerror("string format argument expected");
 					else
-						x->arg = exnewnode(expr.program, x->arg->type == FLOATING ? F2S : INTEGRAL(x->arg->type) ? I2S : X2S, 0, STRING, x->arg, x->arg->op == ID ? x->arg : NULL);
+						x->arg = exnewnode(expr.program,
+						                   x->arg->type == FLOATING ? F2S : INTEGRAL(x->arg->type) ? I2S : X2S,
+						                   false, STRING, x->arg,
+						                   x->arg->op == ID ? x->arg : NULL);
 				}
 				break;
 			}

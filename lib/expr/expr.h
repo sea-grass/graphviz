@@ -31,6 +31,7 @@ extern "C" {
 #include <cdt.h>
 #include <cgraph/agxbuf.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <vmalloc/vmalloc.h>
@@ -150,7 +151,7 @@ struct Exnode_s				/* expression tree node		*/
 {
 	long	type; ///< value type
 	int	op;		/* operator			*/
-	int	binary;		/* data.operand.{left,right} ok	*/
+	bool binary; ///< data.operand.{left,right} ok
 	void *local; ///< user defined local stuff
 	union
 	{
@@ -242,7 +243,7 @@ extern void		exwarn(const char *, ...);
 extern Extype_t		exeval(Expr_t*, Exnode_t*, void*);
 extern Exnode_t*	exexpr(Expr_t*, const char*, Exid_t*, int);
 extern void		exfreenode(Expr_t*, Exnode_t*);
-extern Exnode_t*	exnewnode(Expr_t*, int, int, long, Exnode_t*, Exnode_t*);
+extern Exnode_t *exnewnode(Expr_t *, int, bool, long, Exnode_t *, Exnode_t *);
 extern char*		exnospace(void);
 extern Expr_t*		exopen(Exdisc_t*);
 extern int		expop(Expr_t*);
