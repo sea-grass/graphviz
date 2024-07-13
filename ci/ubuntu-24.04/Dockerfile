@@ -3,6 +3,7 @@ FROM ubuntu:24.04
 ARG DEBIAN_FRONTEND=noninteractive
 
 COPY requirements.txt ./requirements.txt
+COPY doc/infosrc/requirements.txt ./doc-infosrc-requirements.txt
 
 RUN apt-get update -y \
 && apt-get install --no-install-recommends -y \
@@ -90,5 +91,6 @@ libsvgpp-dev \
 && python3 -m venv /opt/virtualenv \
 # install Python dependencies within the virtual environment
 && env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt \
+&& env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement doc-infosrc-requirements.txt \
 # Clean up
 && rm -rf /var/lib/apt/lists/*

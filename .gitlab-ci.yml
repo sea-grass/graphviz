@@ -1438,10 +1438,10 @@ lint_html:
     - tags
 
 lint_python:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-24.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-22.04
+    - docker_build_ubuntu-24.04
   script:
     - source /opt/virtualenv/bin/activate
     - git ls-files -z -- '**.py' | xargs -0 -- python3 -m pylint --rcfile=.pylintrc --disable=fixme
