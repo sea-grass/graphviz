@@ -67,7 +67,8 @@ libX11-devel \
 libXrender-devel \
 tk-devel \
 # create a Python virtual environment
-&& python3 -m venv /opt/virtualenv \
+python3.11 \
+&& python3.11 -m venv /opt/virtualenv \
 # install Python dependencies within the virtual environment
 && env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt \
 # Clean up

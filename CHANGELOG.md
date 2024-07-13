@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   have been renamed  to `ENABLE_LTDL`, `WITH_EXPAT`, `WITH_GVEDIT`,
   `WITH_SMYRNA`, `WITH_ZLIB`, `ENABLE_TCL`, `ENABLE_SWIG` and `ENABLE_SHARP`,
   respectively.
+- To build from source, the required Python version has been upgraded from 3.6
+  to 3.8. #2549
 
 ### Fixed
 
