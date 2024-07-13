@@ -34,7 +34,7 @@ static void *idopen(Agraph_t * g, Agdisc_t* disc)
     (void)disc;
 
   state_t *s = gv_alloc(sizeof(state_t));
-  *s = (state_t){.counter = 1, .g = g};
+  *s = (state_t){.g = g};
   return s;
 }
 
@@ -57,8 +57,8 @@ static long idmap(void *state, int objtype, char *str, IDTYPE *id,
                "heap pointer with low bit set will collide with anonymous IDs");
         *id = (IDTYPE)(uintptr_t)s;
     } else {
-        *id = st->counter;
-        st->counter += 2;
+        *id = st->counter * 2 + 1;
+        ++st->counter;
     }
     return 1;
 }
