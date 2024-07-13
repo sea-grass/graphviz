@@ -532,13 +532,12 @@ Exnode_t *excast(Expr_t *p, Exnode_t *x, long type, Exnode_t *xref, int arg) {
 static Exnode_t*
 call(Exref_t* ref, Exid_t* fun, Exnode_t* args)
 {
-	int	t;
 	int	type;
 	Exnode_t*	x;
 	int		num;
 
 	x = exnewnode(expr.program, ID, false, 0, NULL, NULL);
-	t = fun->type;
+	long t = fun->type;
 	x->data.variable.symbol = fun;
 	x->data.variable.reference = ref;
 	num = 0;
