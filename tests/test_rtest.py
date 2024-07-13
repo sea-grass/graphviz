@@ -409,10 +409,9 @@ def test_graph(name: str, input: Path, algorithm: str, format: str, flags: List[
     """
     Run a single test.
     """
-    if input.suffix == ".gv":
-        INFILE = GRAPHDIR / input
-    else:
+    if input.suffix != ".gv":
         pytest.skip(f"Unknown graph spec, test {name} - ignoring")
+    INFILE = GRAPHDIR / input
 
     OUTFILE = genOutname(name, algorithm, format, flags)
     OUTDIR.mkdir(exist_ok=True)
