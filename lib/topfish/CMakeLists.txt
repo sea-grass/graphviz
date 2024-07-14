@@ -1,4 +1,4 @@
-if(with_smyrna)
+if(WITH_SMYRNA)
 
   add_library(topfish STATIC
     # Header files

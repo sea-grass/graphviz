@@ -1,10 +1,10 @@
-if(enable_swig)
+if(ENABLE_SWIG)
   set(UseSWIG_MODULE_VERSION 2) # cmake-lint: disable=C0103
   include(UseSWIG)
 
   set_property(SOURCE gv.i PROPERTY CPLUSPLUS ON)
 
-  if(enable_sharp)
+  if(ENABLE_SHARP)
     swig_add_library(gv_sharp
       LANGUAGE csharp
       SOURCES gv.i gv_dummy_init.c
@@ -28,7 +28,7 @@ if(enable_swig)
     )
   endif()
 
-  if(enable_tcl)
+  if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl
       SOURCES gv.i gv_tcl_init.c
@@ -87,7 +87,7 @@ if(enable_swig)
       )
     endif()
 
-    if(enable_sharp)
+    if(ENABLE_SHARP)
       if(GZIP)
         add_custom_target(man-gv_sharp ALL DEPENDS gv.3sharp.gz
                           COMMENT "gv_sharp man page")

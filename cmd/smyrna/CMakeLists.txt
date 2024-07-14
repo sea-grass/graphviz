@@ -1,6 +1,6 @@
-if(with_smyrna)
+if(WITH_SMYRNA)
 
-  if(with_expat)
+  if(WITH_EXPAT)
     find_package(EXPAT REQUIRED)
   endif()
   find_package(Freetype REQUIRED)

@@ -588,13 +588,13 @@ ubuntu-20.04-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
         # disable TCL components for which pkgIndex.tcl rule triggers a warning
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_tcl=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_TCL=OFF"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -611,11 +611,11 @@ ubuntu-22.04-cmake-build:
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -631,7 +631,7 @@ ubuntu-24.04-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -648,15 +648,15 @@ ubuntu-22.04-cmake-minimal-build:
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS=""
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_digcola=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ipsepcola=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_ortho=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_sfdp=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=OFF"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=OFF"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=OFF"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -675,11 +675,11 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
         - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-error=deprecated-declarations"
         - export UBSAN_OPTIONS=print_stacktrace=1
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_smyrna=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     # override the deb_build_definition artifacts since we need more
     # files from the build directory when running ctest in the test
     # stage.
@@ -724,10 +724,10 @@ rocky8-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
-        - export CMAKE_OPTIONS="-Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -743,10 +743,10 @@ rocky9-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
-        - export CMAKE_OPTIONS="-Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -762,11 +762,11 @@ fedora39-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -782,11 +782,11 @@ fedora40-cmake-build:
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
-        - export CMAKE_OPTIONS="-Dwith_smyrna=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-linux-small-amd64
     variables:
@@ -800,10 +800,10 @@ macos-cmake-build:
         - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Denable_ltdl=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_expat=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_gvedit=ON"
-        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -Dwith_zlib=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
+        - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
     tags:
         - saas-macos-medium-m1
 
@@ -1420,7 +1420,7 @@ lint_cmake_format:
   needs:
     - docker_build_fedora40
   script:
-    - git ls-files -z -- '**/CMakeLists.txt' '**/*.cmake' '**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
+    - git ls-files -z -- ':(glob)**/CMakeLists.txt' ':(glob)**/*.cmake' ':(glob)**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
   except:
     - tags
 

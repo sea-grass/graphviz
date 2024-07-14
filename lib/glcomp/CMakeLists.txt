@@ -1,4 +1,4 @@
-if(with_smyrna)
+if(WITH_SMYRNA)
 
   find_package(Freetype REQUIRED)
   find_package(GLUT REQUIRED)
