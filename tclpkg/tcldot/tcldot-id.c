@@ -77,9 +77,7 @@ static char *myiddisc_print(void *state, int objtype, uint64_t id) {
     else
         return "";
 }
-static void myiddisc_close(void *state) {
-    free(state);
-}
+
 static void myiddisc_idregister(void *state, int objtype, void *obj) {
     gctx_t *gctx = state;
     ictx_t *ictx = gctx->ictx;
@@ -105,6 +103,6 @@ Agiddisc_t myiddisc = {
     myiddisc_alloc,
     myiddisc_free,
     myiddisc_print,
-    myiddisc_close,
+    free,
     myiddisc_idregister
 };

@@ -12,39 +12,53 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 #include <inttypes.h>
-#include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 /* a default ID allocator that works off the shared string lib */
+
+/// information the ID allocator needs to do its job
+typedef struct {
+  IDTYPE counter; ///< base to derive next identifier from
+  Agraph_t *g;    ///< graph in use
+} state_t;
 
 static void *idopen(Agraph_t * g, Agdisc_t* disc)
 {
     (void)disc;
-    return g;
+
+  state_t *s = gv_alloc(sizeof(state_t));
+  *s = (state_t){.g = g};
+  return s;
 }
 
 static long idmap(void *state, int objtype, char *str, IDTYPE *id,
 		  int createflag)
 {
     char *s;
-    static IDTYPE ctr = 1;
+    state_t *st = state;
 
     (void)objtype;
     if (str) {
-        Agraph_t *g;
-        g = state;
         if (createflag)
-            s = agstrdup(g, str);
+            s = agstrdup(st->g, str);
         else
-            s = agstrbind(g, str);
+            s = agstrbind(st->g, str);
+        // The scheme of using pointers as the IDs of named objects and odd
+        // numbers as the IDs of unnamed objects relies on heap pointers being
+        // even, to avoid collisions. So the low bit had better be unset.
+        assert((uintptr_t)s % 2 == 0 &&
+               "heap pointer with low bit set will collide with anonymous IDs");
         *id = (IDTYPE)(uintptr_t)s;
     } else {
-        *id = ctr;
-        ctr += 2;
+        *id = st->counter * 2 + 1;
+        ++st->counter;
     }
     return 1;
 }
@@ -61,8 +75,9 @@ static long idalloc(void *state, int objtype, IDTYPE request)
 static void idfree(void *state, int objtype, IDTYPE id)
 {
     (void)objtype;
+    state_t *st = state;
     if (id % 2 == 0)
-	agstrfree(state, (char *)(uintptr_t)id);
+	agstrfree(st->g, (char *)(uintptr_t)id);
 }
 
 static char *idprint(void *state, int objtype, IDTYPE id)
@@ -73,11 +88,6 @@ static char *idprint(void *state, int objtype, IDTYPE id)
 	return (char *)(uintptr_t)id;
     else
 	return NULL;
-}
-
-static void idclose(void *state)
-{
-    (void)state;
 }
 
 static void idregister(void *state, int objtype, void *obj)
@@ -93,7 +103,7 @@ Agiddisc_t AgIdDisc = {
     idalloc,
     idfree,
     idprint,
-    idclose,
+    free,
     idregister
 };
 
