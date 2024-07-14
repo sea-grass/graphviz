@@ -41,8 +41,14 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvplugin_gd", "plugin\gd\gvplugin_gd.vcxproj", "{2FDDC7C5-66E5-4520-B735-FD1A065AA9BA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfio", "lib\sfio\sfio.vcxproj", "{7DC8987A-C87D-465A-94CF-1F6DF59B38FB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ast", "lib\ast\ast.vcxproj", "{7D3723C5-06C8-4730-BDA1-1B61D6CCBEB8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "expr", "lib\expr\expr.vcxproj", "{5A6981A7-A652-4187-B636-3E5120C7CE52}"
 EndProject
@@ -114,12 +120,24 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "smyrna", "cmd\smyrna\smyrna
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "topfish", "lib\topfish\topfish.vcxproj", "{3CD86498-8B4C-4018-A9BF-F9E008F376DD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osage", "lib\osage\osage.vcxproj", "{8E82D6BD-74D0-48C3-887A-1754EA71DA5A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfdp", "lib\sfdpgen\sfdp.vcxproj", "{443EB1A7-C634-4292-9F2D-C752BB2BF40F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rbtree", "lib\rbtree\rbtree.vcxproj", "{D6CEB142-BF8E-471C-AE16-4300F2D5DEDA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{320318AF-81FB-446A-9DB4-7D561F712761} = {320318AF-81FB-446A-9DB4-7D561F712761}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gvprlib", "lib\gvpr\gvprlib.vcxproj", "{8C103DE9-BC35-4173-A08D-63906EC5EEFD}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -393,18 +411,6 @@ Global
 		{AC95C5B1-0EDB-4127-858E-0F08A3FC7B69}.Release|Win32.ActiveCfg = Release|Win32
 		{AC95C5B1-0EDB-4127-858E-0F08A3FC7B69}.Release|Win32.Build.0 = Release|Win32
 		{AC95C5B1-0EDB-4127-858E-0F08A3FC7B69}.Release|x64.ActiveCfg = Release|Win32
-		{863A7931-DC7C-47C4-94E6-3D053BFE771A}.Debug|Win32.ActiveCfg = Debug|Win32
-		{863A7931-DC7C-47C4-94E6-3D053BFE771A}.Debug|Win32.Build.0 = Debug|Win32
-		{863A7931-DC7C-47C4-94E6-3D053BFE771A}.Debug|x64.ActiveCfg = Debug|Win32
-		{863A7931-DC7C-47C4-94E6-3D053BFE771A}.Release|Win32.ActiveCfg = Release|Win32
-		{863A7931-DC7C-47C4-94E6-3D053BFE771A}.Release|Win32.Build.0 = Release|Win32
-		{863A7931-DC7C-47C4-94E6-3D053BFE771A}.Release|x64.ActiveCfg = Release|Win32
-		{23D7A1F0-621B-474A-A45F-2490C9935C1E}.Debug|Win32.ActiveCfg = Debug|Win32
-		{23D7A1F0-621B-474A-A45F-2490C9935C1E}.Debug|Win32.Build.0 = Debug|Win32
-		{23D7A1F0-621B-474A-A45F-2490C9935C1E}.Debug|x64.ActiveCfg = Debug|Win32
-		{23D7A1F0-621B-474A-A45F-2490C9935C1E}.Release|Win32.ActiveCfg = Release|Win32
-		{23D7A1F0-621B-474A-A45F-2490C9935C1E}.Release|Win32.Build.0 = Release|Win32
-		{23D7A1F0-621B-474A-A45F-2490C9935C1E}.Release|x64.ActiveCfg = Release|Win32
 		{0062B64B-88F1-4104-A063-3823925A7A34}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0062B64B-88F1-4104-A063-3823925A7A34}.Debug|Win32.Build.0 = Debug|Win32
 		{0062B64B-88F1-4104-A063-3823925A7A34}.Debug|x64.ActiveCfg = Debug|Win32
@@ -543,14 +549,6 @@ Global
 		{0F4D5D8F-F4D6-4A5D-97E0-9B482257F493}.Release|Win32.ActiveCfg = Release|Win32
 		{0F4D5D8F-F4D6-4A5D-97E0-9B482257F493}.Release|Win32.Build.0 = Release|Win32
 		{0F4D5D8F-F4D6-4A5D-97E0-9B482257F493}.Release|x64.ActiveCfg = Release|Win32
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Debug|Win32.ActiveCfg = Debug|Win32
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Debug|Win32.Build.0 = Debug|Win32
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Debug|x64.ActiveCfg = Debug|x64
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Debug|x64.Build.0 = Debug|x64
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Release|Win32.ActiveCfg = Release|Win32
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Release|Win32.Build.0 = Release|Win32
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Release|x64.ActiveCfg = Release|x64
-		{4DBC1707-9797-4BAD-8989-08AF459F8840}.Release|x64.Build.0 = Release|x64
 		{320318AF-81FB-446A-9DB4-7D561F712761}.Debug|Win32.ActiveCfg = Debug|Win32
 		{320318AF-81FB-446A-9DB4-7D561F712761}.Debug|Win32.Build.0 = Debug|Win32
 		{320318AF-81FB-446A-9DB4-7D561F712761}.Debug|x64.ActiveCfg = Debug|x64
@@ -559,12 +557,6 @@ Global
 		{320318AF-81FB-446A-9DB4-7D561F712761}.Release|Win32.Build.0 = Release|Win32
 		{320318AF-81FB-446A-9DB4-7D561F712761}.Release|x64.ActiveCfg = Release|x64
 		{320318AF-81FB-446A-9DB4-7D561F712761}.Release|x64.Build.0 = Release|x64
-		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Debug|Win32.ActiveCfg = Debug|Win32
-		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Debug|Win32.Build.0 = Debug|Win32
-		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Debug|x64.ActiveCfg = Debug|Win32
-		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Release|Win32.ActiveCfg = Release|Win32
-		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Release|Win32.Build.0 = Release|Win32
-		{40597156-1B95-4A22-8F2B-D6B81B747CF0}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
