@@ -150,7 +150,7 @@ static Dtdisc_t gridDisc = {
     offsetof(cell, p),
     sizeof(gridpt),
     offsetof(cell, link),
-    (Dtmake_f) newCell,
+    newCell,
     NULL,
     ijcmpf,
 };
