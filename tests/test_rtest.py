@@ -348,13 +348,6 @@ def doDiff(OUTFILE, testname, fmt):
             b = re.sub(r"^<!--.*-->$", "", f.read(), flags=re.MULTILINE)
         returncode = 0 if a.strip() == b.strip() else -1
     elif F == "png":
-        # FIXME: remove when https://gitlab.com/graphviz/graphviz/-/issues/1788 is fixed
-        if os.environ.get("build_system") == "cmake" and platform.system() == "Windows":
-            pytest.skip(
-                f"Warning: Skipping PNG image comparison for test {testname}:"
-                f" format: {fmt} because CMake builds on Windows "
-                "do not contain the diffimg utility (#1788)"
-            )
         OUTHTML.mkdir(exist_ok=True)
         returncode = subprocess.call(
             ["diffimg", FILE1, FILE2, OUTHTML / f"dif_{OUTFILE}"],
