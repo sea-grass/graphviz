@@ -11,51 +11,45 @@
 #import "GVExportViewController.h"
 #import "GVZGraph.h"
 
-static NSMutableArray *_formatRenders = nil;
+static NSMutableArray *_formatRenders;
 
 @implementation GVExportViewController
 
 @synthesize URL = _url;
-@synthesize render = _render;
 
 + (void)initialize
 {
 	if (!_formatRenders) {
 		_formatRenders = [[NSMutableArray alloc] init];
 		
-		NSString *lastFormat = nil;
-		NSMutableArray *lastRenders = nil;
+		NSString *lastFormat;
+		NSMutableArray *lastRenders;
 		for (NSString *device in [GVZGraph pluginsWithAPI:API_device]) {
 			NSArray *deviceComponents = [device componentsSeparatedByString:@":"];
-			NSUInteger componentCount = [deviceComponents count];
+			NSUInteger componentCount = deviceComponents.count;
 			
 			if (componentCount > 0) {
-				NSString *format = [deviceComponents objectAtIndex:0];
+				NSString *format = deviceComponents[0];
 				if (![lastFormat isEqualToString:format]) {
 					lastFormat = format;
 					lastRenders = [NSMutableArray array];
-					[_formatRenders addObject:[NSDictionary dictionaryWithObjectsAndKeys:lastFormat, @"format", lastRenders, @"renders", nil]];
+					[_formatRenders addObject:@{@"format": lastFormat, @"renders": lastRenders}];
 				}
 			}
 			
 			if (componentCount > 1)
-				[lastRenders addObject:[deviceComponents objectAtIndex:1]];
+				[lastRenders addObject:deviceComponents[1]];
 		}
 	}
 }
 
-- (id)init
+- (instancetype)init
 {
 	if (self = [super initWithNibName:@"Export" bundle:nil]) {
-		_panel = nil;
-		_url = nil;
-		
-		_formatRender = nil;
-		_render = nil;
 		for (NSDictionary *formatRender in _formatRenders)
-			if ([[formatRender objectForKey:@"format"] isEqualToString:@"pdf"]) {
-				_formatRender = [formatRender retain];
-				if ([[formatRender objectForKey:@"renders"] containsObject:@"quartz"])
+			if ([formatRender[@"format"] isEqualToString:@"pdf"]) {
+				_formatRender = formatRender;
+				if ([formatRender[@"renders"] containsObject:@"quartz"])
 					_render = @"quartz";
 				break;
 			}
@@ -70,7 +64,7 @@ static NSMutableArray *_formatRenders = nil;
 
 - (NSString *)device
 {
-	NSString *format = [_formatRender objectForKey:@"format"];
+	NSString *format = _formatRender[@"format"];
 	return _render ? [NSString stringWithFormat:@"%@:%@", format, _render] : format;
 }
 
@@ -82,15 +76,15 @@ static NSMutableArray *_formatRenders = nil;
 - (void)setFormatRender:(NSDictionary *)formatRender
 {
 	if (_formatRender != formatRender) {
-		[_formatRender release];
-		_formatRender = [formatRender retain];
+		_formatRender = formatRender;
 		
 		/* force save panel to use this file type */
-		[_panel setAllowedFileTypes:[NSArray arrayWithObject:[_formatRender objectForKey:@"format"]]];
-		
+		UTType *type = [UTType typeWithFilenameExtension:_formatRender[@"format"]];
+		_panel.allowedContentTypes = @[type];
+
 		/* remove existing render if it's not compatible with format */
-		if (![[_formatRender objectForKey:@"renders"] containsObject:_render])
-			[self setRender:nil];
+		if (![_formatRender[@"renders"] containsObject:_render])
+			_render = nil;
 	}
 }
 
@@ -98,41 +92,23 @@ static NSMutableArray *_formatRenders = nil;
 {
 	/* remember to invoke end selector on the modal delegate */
 	NSInvocation *endInvocation = [NSInvocation invocationWithMethodSignature:[modalDelegate methodSignatureForSelector:selector]];
-	[endInvocation setTarget:modalDelegate];
-	[endInvocation setSelector:selector];
-	[endInvocation setArgument:&self atIndex:2];
-	[endInvocation retain];
+	endInvocation.target = modalDelegate;
+	endInvocation.selector = selector;
 
 	_panel = [NSSavePanel savePanel];
-	[_panel setAccessoryView:[self view]];
-	[_panel setAllowedFileTypes:[NSArray arrayWithObject:[_formatRender objectForKey:@"format"]]];
-	[_panel setDirectoryURL:[_url URLByDeletingLastPathComponent]];
-	[_panel setNameFieldStringValue:[_url lastPathComponent]];
+	_panel.accessoryView = self.view;
+	UTType *type = [UTType typeWithFilenameExtension:_formatRender[@"format"]];
+	_panel.allowedContentTypes = @[type];
+	_panel.directoryURL = _url.URLByDeletingLastPathComponent;
+	_panel.nameFieldStringValue = _url.lastPathComponent;
+	__weak typeof(self) weakSelf = self;
 	[_panel beginSheetModalForWindow:window completionHandler:^(NSInteger result) {
-		if (result == NSOKButton) {
-			NSURL *url = [_panel URL];
-			if (_url != url) {
-				[_url release];
-				_url = [url retain];
-			}
-
+		if (result == NSModalResponseOK) {
+			weakSelf.URL = weakSelf.panel.URL;
 			/* invoke the end selector on the modal delegate */
 			[endInvocation invoke];
 		}
-
-		[endInvocation release];
-		[_panel setAccessoryView:nil];
-		_panel = nil;
 	}];
-}
-
-- (void)dealloc
-{
-	[_panel release];
-	[_url release];
-	[_formatRender release];
-	[_render release];
-	[super dealloc];
 }
 
 @end

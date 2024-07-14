@@ -8,23 +8,20 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Cocoa/Cocoa.h>
+@import AppKit;
+@import UniformTypeIdentifiers;
 
 @interface GVExportViewController : NSViewController
 {
-	NSSavePanel *_panel;
-	NSURL *_url;
 	NSDictionary *_formatRender;
 	NSString *_render;
 }
 
-@property(readonly) NSArray *formatRenders;
+@property(readonly) NSSavePanel *panel;
 @property(readonly) NSString *device;
-@property(retain) NSURL *URL;
-@property(retain) NSDictionary *formatRender;
-@property(retain) NSString *render;
+@property(readwrite) NSURL *URL;
 
-- (id)init;
+- (instancetype)init;
 
 - (void)beginSheetModalForWindow:(NSWindow *)window modalDelegate:(id)modalDelegate didEndSelector:(SEL)selector;
 

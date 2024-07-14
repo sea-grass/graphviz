@@ -16,12 +16,10 @@
 
 @implementation GVAttributeInspectorController
 
-- (id)init
+- (instancetype)init
 {
 	if (self = [super initWithWindowNibName: @"Attributes"]) {
-		_allSchemas = nil;
 		_allAttributes = [[NSMutableDictionary alloc] init];
-		_inspectedDocument = nil;
 		_otherChangedGraph = YES;
 	}
 	return self;
@@ -30,15 +28,14 @@
 - (void)awakeFromNib
 {
 	/* set component toolbar */
-	[_allSchemas release];
 	_allSchemas = [[NSDictionary alloc] initWithObjectsAndKeys:
-		[GVAttributeSchema attributeSchemasWithComponent:@"graph"], [graphToolbarItem itemIdentifier],
-		[GVAttributeSchema attributeSchemasWithComponent:@"node"], [nodeDefaultToolbarItem itemIdentifier],
-		[GVAttributeSchema attributeSchemasWithComponent:@"edge"], [edgeDefaultToolbarItem itemIdentifier],
+		[GVAttributeSchema attributeSchemasWithComponent:@"graph"], _graphToolbarItem.itemIdentifier,
+		[GVAttributeSchema attributeSchemasWithComponent:@"node"], _nodeDefaultToolbarItem.itemIdentifier,
+		[GVAttributeSchema attributeSchemasWithComponent:@"edge"], _edgeDefaultToolbarItem.itemIdentifier,
 		nil];
-	[componentToolbar setSelectedItemIdentifier:[graphToolbarItem itemIdentifier]];
+	_componentToolbar.selectedItemIdentifier = _graphToolbarItem.itemIdentifier;
 	[self toolbarItemDidSelect:nil];
-		
+
 	/* start observing whenever a window becomes main */
 	[self graphWindowDidBecomeMain:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(graphWindowDidBecomeMain:) name:NSWindowDidBecomeMainNotification object:nil];
@@ -47,16 +44,16 @@
 - (IBAction)toolbarItemDidSelect:(id)sender
 {
 	/* reload the table */
-	[attributeTable reloadData];
+	[_attributeTable reloadData];
 }
 
 - (void)graphWindowDidBecomeMain:(NSNotification *)notification
 {
-	NSWindow* mainWindow = notification ? [notification object] : [NSApp mainWindow];
-	GVDocument* mainWindowDocument = [[mainWindow windowController] document];
-		
+	NSWindow *mainWindow = notification ? notification.object : NSApp.mainWindow;
+	GVDocument *mainWindowDocument = mainWindow.windowController.document;
+
 	/* update and observe referenced document */
-			NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+	NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
 	if (_inspectedDocument)
 		[defaultCenter removeObserver:self name:@"GVGraphDocumentDidChange" object:_inspectedDocument];
 	_inspectedDocument = mainWindowDocument;
@@ -64,9 +61,9 @@
 
 	[self reloadAttributes];
 		
-			/* update the UI */
-			[[self window] setTitle:[NSString stringWithFormat:@"%@ Attributes", [mainWindow title]]];
-			[attributeTable reloadData];
+	/* update the UI */
+	self.window.title = [NSString stringWithFormat:@"%@ Attributes", mainWindow.title];
+	[_attributeTable reloadData];
 }
 
 - (void)graphDocumentDidChange:(NSNotification *)notification
@@ -74,7 +71,7 @@
 	/* if we didn't instigate the change, update the UI */
 	if (_otherChangedGraph) {
 		[self reloadAttributes];
-		[attributeTable reloadData];
+		[_attributeTable reloadData];
 	}
 }
 
@@ -83,29 +80,27 @@
 	/* reload the attributes from the inspected document's graph */
 	[_allAttributes removeAllObjects];
 	if ([_inspectedDocument respondsToSelector:@selector(graph)]) {
-		GVZGraph *graph = [_inspectedDocument graph];
-		[_allAttributes setObject:graph.graphAttributes forKey:[graphToolbarItem itemIdentifier]];
-		[_allAttributes setObject:graph.defaultNodeAttributes forKey:[nodeDefaultToolbarItem itemIdentifier]];
-		[_allAttributes setObject:graph.defaultEdgeAttributes forKey:[edgeDefaultToolbarItem itemIdentifier]];
+		GVZGraph *graph = _inspectedDocument.graph;
+		_allAttributes[_graphToolbarItem.itemIdentifier] = graph.graphAttributes;
+		_allAttributes[_nodeDefaultToolbarItem.itemIdentifier] = graph.defaultNodeAttributes;
+		_allAttributes[_edgeDefaultToolbarItem.itemIdentifier] = graph.defaultEdgeAttributes;
 	}
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
 {
 	/* which toolbar items are selectable */
-	return [NSArray arrayWithObjects:
-		[graphToolbarItem itemIdentifier],
-		[nodeDefaultToolbarItem itemIdentifier],
-		[edgeDefaultToolbarItem itemIdentifier],
-		nil];
+	return @[_graphToolbarItem.itemIdentifier,
+		_nodeDefaultToolbarItem.itemIdentifier,
+		_edgeDefaultToolbarItem.itemIdentifier];
 }
 
 - (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	if ([[tableColumn identifier] isEqualToString:@"value"]) {
+	if ([tableColumn.identifier isEqualToString:@"value"]) {
 		/* use the row's schema's cell */
-		NSCell *cell = [[[_allSchemas objectForKey:[componentToolbar selectedItemIdentifier]] objectAtIndex:row] cell];
-		[cell setEnabled:[_allAttributes count] > 0];
+		NSCell *cell = _allSchemas[_componentToolbar.selectedItemIdentifier][row].cell;
+		cell.enabled = _allAttributes.count > 0;
 		return cell;
 	}
 	else
@@ -113,58 +108,52 @@
 		return nil;
 }
 
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+- (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
-	NSInteger selectedRow = [[aNotification object] selectedRow];
-	NSString* documentation = selectedRow == -1 ? nil : [[[_allSchemas objectForKey:[componentToolbar selectedItemIdentifier]] objectAtIndex: selectedRow] documentation];
-	[[documentationWeb mainFrame] loadHTMLString:documentation baseURL:[NSURL URLWithString:@"http://www.graphviz.org/"]];
+	NSInteger selectedRow = [notification.object selectedRow];
+	NSString *documentation = selectedRow == -1 ? nil : _allSchemas[_componentToolbar.selectedItemIdentifier][selectedRow].documentation;
+	[_documentationWeb loadHTMLString:documentation baseURL:[NSURL URLWithString:@"http://www.graphviz.org/"]];
 }
 
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return [[_allSchemas objectForKey:[componentToolbar selectedItemIdentifier]] count];
+	return _allSchemas[_componentToolbar.selectedItemIdentifier].count;
 }
 
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	NSString *selectedComponentIdentifier = [componentToolbar selectedItemIdentifier];
-	NSString *attributeName = [[[_allSchemas objectForKey:selectedComponentIdentifier] objectAtIndex:rowIndex] name];
-	if ([[tableColumn identifier] isEqualToString:@"key"])
+	NSString *selectedComponentIdentifier = _componentToolbar.selectedItemIdentifier;
+	NSString *attributeName = _allSchemas[selectedComponentIdentifier][row].name;
+	if ([tableColumn.identifier isEqualToString:@"key"])
 		return attributeName;
-	else if ([[tableColumn identifier] isEqualToString:@"value"])
+	else if ([tableColumn.identifier isEqualToString:@"value"])
 		/* return the inspected graph's attribute value, if any */
-		return [[_allAttributes objectForKey:selectedComponentIdentifier] valueForKey:attributeName];
+		return _allAttributes[selectedComponentIdentifier][attributeName];
 	else
 		return nil;
 }
 
-- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row
 {
-	if ([[tableColumn identifier] isEqualToString:@"value"])
-		{
-			NSString *selectedComponentIdentifier = [componentToolbar selectedItemIdentifier];
-			NSString *attributeName = [[[_allSchemas objectForKey:selectedComponentIdentifier] objectAtIndex:rowIndex] name];
-			
-			/* set or remove the key-value on the selected attributes */
-			/* NOTE: to avoid needlessly reloading the table in graphDocumentDidChange:, we fence this change with _otherChangedGraph = NO */
-			_otherChangedGraph = NO;
-			@try {
-				[[_allAttributes objectForKey:selectedComponentIdentifier] setValue:anObject forKey:attributeName];
-			}
-			@finally {
-				_otherChangedGraph = YES;
-			}
+	if ([tableColumn.identifier isEqualToString:@"value"]) {
+		NSString *selectedComponentIdentifier = _componentToolbar.selectedItemIdentifier;
+		NSString *attributeName = _allSchemas[selectedComponentIdentifier][row].name;
+
+		/* set or remove the key-value on the selected attributes */
+		/* NOTE: to avoid needlessly reloading the table in graphDocumentDidChange:, we fence this change with _otherChangedGraph = NO */
+		_otherChangedGraph = NO;
+		@try {
+			_allAttributes[selectedComponentIdentifier][attributeName] = object;
 		}
-
+		@finally {
+			_otherChangedGraph = YES;
+		}
+	}
 }
-
 
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:nil];
-	[_allSchemas release];
-	[_allAttributes release];
-	[super dealloc];
 }
 
 @end

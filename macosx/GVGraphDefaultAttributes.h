@@ -8,27 +8,27 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
-
 #include "gvc.h"
+
+@import Foundation;
 
 @class GVZGraph;
 
-@interface GVGraphDefaultAttributes : NSMutableDictionary
+@interface GVGraphDefaultAttributes : NSMutableDictionary<NSString *, NSString *>
 {
-	GVZGraph *_graph;
+	__weak GVZGraph *_graph;
 	int _kind;
 }
 
-- (id)initWithGraph:(GVZGraph *)graph prototype:(int)kind;
+- (instancetype)initWithGraph:(GVZGraph *)graph prototype:(int)kind;
 
 /* dictionary primitive methods */
 - (NSUInteger)count;
 - (NSEnumerator *)keyEnumerator;
-- (id)objectForKey:(id)aKey;
+- (NSString *)objectForKey:(NSString *)key;
 
 /* mutable dictionary primitive methods */
-- (void)setObject:(id)anObject forKey:(id)aKey;
-- (void)removeObjectForKey:(id)aKey;
+- (void)setObject:(NSString *)object forKey:(NSString *)key;
+- (void)removeObjectForKey:(NSString *)key;
 
 @end

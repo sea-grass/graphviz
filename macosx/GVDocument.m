@@ -13,85 +13,81 @@
 #import "GVFileNotificationCenter.h"
 #import "GVZGraph.h"
 #import "GVWindowController.h"
+#import "GVGraphArguments.h"
 
 @implementation GVDocument
 
-@synthesize graph = _graph;
-
-- (id)init
+- (instancetype)init
 {
 	if (self = [super init]) {
-		_exporter = nil;
-		_graph = nil;
 	}
     return self;
 }
 
-- (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
+- (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
 {
-	[_graph release];
-	_graph = [[GVZGraph alloc] initWithURL:absoluteURL error:outError];
-	[_graph.arguments setValue:@"dot" forKey:@"layout"];
-	
+	_graph = [[GVZGraph alloc] initWithURL:url error:outError];
+	if (*outError) {
+		return NO;
+	}
+	_graph.arguments[@"layout"] = @"dot";
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(graphDidChange:) name:@"GVGraphDidChange" object:_graph];
-	[[GVFileNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDidChange:) path:[absoluteURL path]];
-	
-	return _graph != nil;
+	[[GVFileNotificationCenter defaultCenter] addObserver:self selector:@selector(fileDidChange:) path:url.path];
+
+	return YES;
 }
 
-- (BOOL)writeToURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError
+- (BOOL)writeToURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)outError
 {
-	return [_graph writeToURL:absoluteURL error:outError];
+	return [_graph writeToURL:url error:outError];
 }
 
 - (void)makeWindowControllers
 {
-	[self addWindowController: [[[GVWindowController alloc] init] autorelease]];
+	[self addWindowController:[[GVWindowController alloc] init]];
 }
 
 - (void)setPrintInfo:(NSPrintInfo *)printInfo
 {
 	/* after Page Setup is run, change the page size and margins of the graph to fit the page setup parameters */
-	[super setPrintInfo:printInfo];
-	NSSize paperSize = [printInfo paperSize];
-	NSRect imageablePageBounds = [printInfo imageablePageBounds];
-	double scalingFactor = 72.0 * [[[printInfo dictionary] objectForKey:NSPrintScalingFactor] doubleValue];
-	
-	[_graph.graphAttributes setObject:[NSString stringWithFormat:@"%f,%f",
-		paperSize.width / scalingFactor,
-		paperSize.height / scalingFactor]
-		forKey:@"page"];
-	[_graph.graphAttributes setObject:[NSString stringWithFormat:@"%f,%f",
-		fmax(imageablePageBounds.origin.x, paperSize.width - imageablePageBounds.size.width - imageablePageBounds.origin.x) / scalingFactor,
-		fmax(imageablePageBounds.origin.y, paperSize.height - imageablePageBounds.size.height - imageablePageBounds.origin.y) / scalingFactor]
-		forKey:@"margin"];
+	super.printInfo = printInfo;
+	NSSize paperSize = printInfo.paperSize;
+	NSRect imageablePageBounds = printInfo.imageablePageBounds;
+	double scalingFactor = 72.0 * [[printInfo dictionary][NSPrintScalingFactor] doubleValue];
+
+	_graph.graphAttributes[@"page"] = [NSString stringWithFormat:@"%f,%f", paperSize.width / scalingFactor, paperSize.height / scalingFactor];
+	_graph.graphAttributes[@"margin"] = [NSString stringWithFormat:@"%f,%f", fmax(imageablePageBounds.origin.x, paperSize.width - imageablePageBounds.size.width - imageablePageBounds.origin.x) / scalingFactor, fmax(imageablePageBounds.origin.y, paperSize.height - imageablePageBounds.size.height - imageablePageBounds.origin.y) / scalingFactor];
 }
 
 - (IBAction)exportDocument:(id)sender
 {
 	if (!_exporter) {
 		_exporter = [[GVExportViewController alloc] init];
-		[_exporter setURL:[[self fileURL] URLByDeletingPathExtension]];
+		_exporter.URL = self.fileURL.URLByDeletingPathExtension;
 	}
-	[_exporter beginSheetModalForWindow:[self windowForSheet] modalDelegate:self didEndSelector:@selector(exporterDidEnd:)];
+	[_exporter beginSheetModalForWindow:self.windowForSheet modalDelegate:self didEndSelector:@selector(exporterDidEnd)];
 }
 
-- (void)exporterDidEnd:(GVExportViewController *)exporter
+- (void)exporterDidEnd
 {
-	[_graph renderWithFormat:[exporter device] toURL:[exporter URL]];
+	[_graph renderWithFormat:_exporter.device toURL:_exporter.URL];
 }
 
 - (void)fileDidChange:(NSString *)path
 {
 	NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
 	[defaultCenter removeObserver:self name:@"GVGraphDidChange" object:_graph];
-	
+
 	/* reparse the graph fresh from the file */
-	[_graph release];
-	_graph = [[GVZGraph alloc] initWithURL:[self fileURL] error:nil];
-	[_graph.arguments setValue:@"dot" forKey:@"layout"];
+	NSError *error;
+	_graph = [[GVZGraph alloc] initWithURL:self.fileURL error:&error];
+	if (error) {
+		return;
+	}
+	_graph.arguments[@"layout"] = @"dot";
+
 	[defaultCenter addObserver:self selector:@selector(graphDidChange:) name:@"GVGraphDidChange" object:_graph];
-	
 	[defaultCenter postNotificationName:@"GVGraphDocumentDidChange" object:self];
 }
 
@@ -103,11 +99,7 @@
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"GVGraphDidChange" object:_graph];
-	[[GVFileNotificationCenter defaultCenter] removeObserver:self path:[[self fileURL] path]];
-
-	[_exporter release];
-	[_graph release];
-	[super dealloc];
+	[[GVFileNotificationCenter defaultCenter] removeObserver:self path:self.fileURL.path];
 }
 
 @end

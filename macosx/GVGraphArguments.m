@@ -13,10 +13,10 @@
 
 @implementation GVGraphArguments
 
-- (id)initWithGraph:(GVZGraph *)graph
+- (instancetype)initWithGraph:(GVZGraph *)graph
 {
 	if (self = [super init]) {
-		_graph = graph;	/* no retain to avoid a retain cycle */
+		_graph = graph;
 		_arguments = [[NSMutableDictionary alloc] init];
 	}
 	return self;
@@ -24,7 +24,7 @@
 
 - (NSUInteger)count
 {
-	return [_arguments count];
+	return _arguments.count;
 }
 
 - (NSEnumerator *)keyEnumerator
@@ -32,28 +32,22 @@
 	return [_arguments keyEnumerator];
 }
 
-- (id)objectForKey:(id)aKey
+- (id)objectForKey:(id)key
 {
-	return [_arguments objectForKey:aKey];
+	return _arguments[key];
 }
 
 /* mutable dictionary primitive methods */
-- (void)setObject:(id)anObject forKey:(id)aKey
+- (void)setObject:(id)object forKey:(id)key
 {
-	[_arguments setObject:anObject forKey:aKey];
+	_arguments[key] = object;
 	[_graph noteChanged:YES];
 }
 
-- (void)removeObjectForKey:(id)aKey
+- (void)removeObjectForKey:(id)key
 {
-	[_arguments removeObjectForKey:aKey];
+	[_arguments removeObjectForKey:key];
 	[_graph noteChanged:YES];
-}
-
-- (void)dealloc
-{
-	[_arguments release];
-	[super dealloc];
 }
 
 @end

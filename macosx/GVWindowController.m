@@ -14,49 +14,49 @@
 
 @implementation GVWindowController
 
-- (id)init
+- (instancetype)init
 {
 	if (self = [super initWithWindowNibName: @"Document"])
 		;
 	return self;
 }
 
-- (void)setDocument: (NSDocument *)document
+- (void)setDocument:(NSDocument *)document
 {
-			NSNotificationCenter* defaultCenter = [NSNotificationCenter defaultCenter];
-	
-	GVDocument *oldDocument = [self document];
+	NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+
+	GVDocument *oldDocument = self.document;
 	if (oldDocument)
 		[defaultCenter removeObserver:self name:@"GVGraphDocumentDidChange" object:oldDocument];
-	[super setDocument:document];
+	super.document = document;
 	[defaultCenter addObserver:self selector:@selector(graphDocumentDidChange:) name:@"GVGraphDocumentDidChange" object:document];
 }
 
 - (void)awakeFromNib
 {
 	[self graphDocumentDidChange:nil];
-	
+
 	/* if window is not at standard size, make it standard size */
-	NSWindow *window = [self window];
-	if (![window isZoomed])
+	NSWindow *window = self.window;
+	if (!window.zoomed)
 		[window zoom:self];
 
-	[documentView setDelegate:self];
+	documentView.delegate = self;
 }
 
-- (void)graphDocumentDidChange:(NSNotification*)notification
+- (void)graphDocumentDidChange:(NSNotification *)notification
 {
 	/* whenever the graph changes, rerender its PDF and display that */
-	GVDocument *document = [self document];
+	GVDocument *document = self.document;
 	if ([document respondsToSelector:@selector(graph)])
-		[documentView setDocument:[[[PDFDocument alloc] initWithData:[[document graph] renderWithFormat:@"pdf:quartz"]] autorelease]];
+		documentView.document = [[PDFDocument alloc] initWithData:[document.graph renderWithFormat:@"pdf:quartz"]];
 }
 
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)window defaultFrame:(NSRect)defaultFrame
 {
 	/* standard size for zooming is whatever will fit the content exactly */
-	NSRect currentFrame = [window frame];
-	NSRect standardFrame = [window frameRectForContentRect:[[documentView documentView] bounds]];
+	NSRect currentFrame = window.frame;
+	NSRect standardFrame = [window frameRectForContentRect:documentView.documentView.bounds];
 	standardFrame.origin.x = currentFrame.origin.x;
 	standardFrame.origin.y = currentFrame.origin.y + currentFrame.size.height - standardFrame.size.height;
 	return standardFrame;
@@ -64,7 +64,7 @@
 
 - (IBAction)actualSizeView:(id)sender
 {
-	[documentView setScaleFactor:1.0];
+	documentView.scaleFactor = 1.0;
 }
 
 - (IBAction)zoomInView:(id)sender
@@ -85,37 +85,35 @@
 
 - (IBAction)printGraphDocument:(id)sender
 {
-	[documentView printWithInfo:[[self document] printInfo] autoRotate:NO pageScaling:kPDFPrintPageScaleDownToFit];
+	[documentView printWithInfo:[self.document printInfo] autoRotate:NO pageScaling:kPDFPrintPageScaleDownToFit];
 }
 
-- (void)PDFViewWillClickOnLink:(PDFView *)sender withURL:(NSURL *)URL
+- (void)PDFViewWillClickOnLink:(PDFView *)sender withURL:(NSURL *)url
 {
-	NSURL* baseURL = [[self document] fileURL];
-	NSURL* targetURL = [NSURL URLWithString:[URL absoluteString] relativeToURL:baseURL];
+	NSURL *baseURL = [self.document fileURL];
+	NSURL *targetURL = [NSURL URLWithString:url.absoluteString relativeToURL:baseURL];
 	[[NSWorkspace sharedWorkspace] openURL:targetURL];
 }
 
 - (BOOL)validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
 {
 	/* validate toolbar or menu items */
-	if ([anItem action] == @selector(actualSizeView:))
+	if (anItem.action == @selector(actualSizeView:))
 		return YES;
-	else if ([anItem action] == @selector(zoomInView:))
-		return [documentView canZoomIn];
-	else if ([anItem action] == @selector(zoomOutView:))
-		return [documentView canZoomOut];
-	else if ([anItem action] == @selector(zoomToFitView:))
+	else if (anItem.action == @selector(zoomInView:))
+		return documentView.canZoomIn;
+	else if (anItem.action == @selector(zoomOutView:))
+		return documentView.canZoomOut;
+	else if (anItem.action == @selector(zoomToFitView:))
 		return YES;
-	else if ([anItem action] == @selector(printGraphDocument:))
+	else if (anItem.action == @selector(printGraphDocument:))
 		return YES;
 	else
 		return NO;
 }
 - (void)dealloc
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"GVGraphDocumentDidChange" object:[self document]];
-    [super dealloc];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:@"GVGraphDocumentDidChange" object:self.document];
 }
-
 
 @end

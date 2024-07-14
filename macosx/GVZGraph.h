@@ -8,24 +8,17 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
-
 #include "gvc.h"
 
+@import Foundation;
+
+#import "GVGraphDefaultAttributes.h"
+
 @class GVGraphArguments;
-@class GVGraphDefaultAttributes;
 
 @interface GVZGraph : NSObject
 {
-@public
-	graph_t *_graph;
-@protected
 	BOOL _freeLastLayout;
-	
-	GVGraphArguments *_arguments;
-	GVGraphDefaultAttributes *_graphAttributes;
-	GVGraphDefaultAttributes *_defaultNodeAttributes;
-	GVGraphDefaultAttributes *_defaultEdgeAttributes;
 }
 
 @property(readonly) graph_t *graph;
@@ -37,13 +30,13 @@
 + (void)initialize;
 + (NSArray *)pluginsWithAPI:(api_t)api;
 
-- (id)initWithURL:(NSURL *)URL error:(NSError **)outError;
+- (instancetype)initWithURL:(NSURL *)url error:(NSError **)outError;
 
 - (NSData *)renderWithFormat:(NSString *)format;
-- (void)renderWithFormat:(NSString*)format toURL:(NSURL *)URL;
+- (void)renderWithFormat:(NSString *)format toURL:(NSURL *)url;
 - (void)noteChanged:(BOOL)relayout;
 
-- (BOOL)writeToURL:(NSURL *)URL error:(NSError **)outError;
+- (BOOL)writeToURL:(NSURL *)url error:(NSError **)outError;
 
 - (void)dealloc;
 

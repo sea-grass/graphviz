@@ -8,26 +8,19 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-
 #import "GVZGraph.h"
 #import "GVGraphArguments.h"
 #import "GVGraphDefaultAttributes.h"
 
 NSString *const GVGraphvizErrorDomain = @"GVGraphvizErrorDomain";
 
+extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
+
 extern double PSinputscale;
 
-static GVC_t *_graphContext = nil;
+static GVC_t *_graphContext = nil; // initialize non-object type
 
 @implementation GVZGraph
-
-@synthesize graph = _graph;
-@synthesize arguments = _arguments;
-@synthesize graphAttributes = _graphAttributes;
-@synthesize defaultNodeAttributes = _defaultNodeAttributes;
-@synthesize defaultEdgeAttributes = _defaultEdgeAttributes;
-
-extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
 
 + (void)initialize
 {
@@ -37,7 +30,7 @@ extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
 + (NSArray *)pluginsWithAPI:(api_t)api
 {
 	NSMutableSet *plugins = [NSMutableSet set];
-	
+
 	/* go through each non-empty plugin in the list, ignoring the package part */
 	char *pluginList = gvplugin_list(_graphContext, api, ":");
 	char *restOfPlugins;
@@ -47,49 +40,45 @@ extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
 			char *lastColon = strrchr(nextPlugin, ':');
 			if (lastColon) {
 				*lastColon = '\0';
-				[plugins addObject:[NSString stringWithCString:nextPlugin encoding:NSUTF8StringEncoding]];
+				[plugins addObject:@(nextPlugin)];
 			}
 		}
 	}
 	free(pluginList);
 
-	return [[plugins allObjects] sortedArrayUsingSelector:@selector(compare:)];
+	return [plugins.allObjects sortedArrayUsingSelector:@selector(compare:)];
 }
 
-- (id)initWithURL:(NSURL *)URL error:(NSError **)outError
+- (instancetype)initWithURL:(NSURL *)url error:(NSError **)outError
 {
-	char *parentDir,*ptr;
 	if (self = [super init]) {
-		if ([URL isFileURL]) {
+		if (url.fileURL) {
 			/* open a FILE* on the file URL */
-			FILE *file = fopen([[URL path] fileSystemRepresentation], "r");
+			FILE *file = fopen(url.path.fileSystemRepresentation, "r");
 			if (!file) {
 				if (outError)
 					*outError = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
-				[self autorelease];
 				return nil;
 			}
 			
-			_graph = agread(file,0);
+			_graph = agread(file, 0);
 			if (!_graph) {
 				if (outError)
 					*outError = [NSError errorWithDomain:GVGraphvizErrorDomain code:GVFileParseError userInfo:nil];
-				[self autorelease];
 				return nil;
 			}
-			if(!agget(_graph,"imagepath")){
-					parentDir = (char *)[[URL path] fileSystemRepresentation];
-					ptr = strrchr(parentDir,'/');
+			if(!agget(_graph, "imagepath")) {
+					const char *parentDir = url.path.fileSystemRepresentation;
+					char *ptr = strrchr(parentDir,'/');
 					*ptr = 0;
-					agattr(_graph,AGRAPH,"imagepath",parentDir);
+					agattr(_graph, AGRAPH, "imagepath", parentDir);
 			}
 			fclose(file);
 		}
 		else {
 			/* read the URL into memory */
-			NSMutableData *memory = [NSMutableData dataWithContentsOfURL:URL options:0 error:outError];
+			NSMutableData *memory = [NSMutableData dataWithContentsOfURL:url options:0 error:outError];
 			if (!memory) {
-				[self autorelease];
 				return nil;
 			}
 			
@@ -97,11 +86,10 @@ extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
 			char nullByte = '\0';
 			[memory appendBytes:&nullByte length:1];
 			
-			_graph = agmemread((char*)[memory bytes]);
+			_graph = agmemread((char *)memory.bytes);
 			if (!_graph) {
 				if (outError)
 					*outError = [NSError errorWithDomain:GVGraphvizErrorDomain code:GVFileParseError userInfo:nil];
-				[self autorelease];
 				return nil;
 			}
 		}
@@ -112,15 +100,15 @@ extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
 		_defaultNodeAttributes = [[GVGraphDefaultAttributes alloc] initWithGraph:self prototype:AGNODE];
 		_defaultEdgeAttributes = [[GVGraphDefaultAttributes alloc] initWithGraph:self prototype:AGEDGE];
 	}
-	
+
 	return self;
 }
 
-- (BOOL)writeToURL:(NSURL *)URL error:(NSError **)outError
+- (BOOL)writeToURL:(NSURL *)url error:(NSError **)outError
 {
-	if ([URL isFileURL]) {
+	if (url.fileURL) {
 		/* open a FILE* on the file URL */
-		FILE *file = fopen([[URL path] fileSystemRepresentation], "w");
+		FILE *file = fopen(url.path.fileSystemRepresentation, "w");
 		if (!file) {
 			if (outError)
 				*outError = [NSError errorWithDomain:NSPOSIXErrorDomain code:errno userInfo:nil];
@@ -146,58 +134,50 @@ extern char *gvplugin_list(GVC_t * gvc, api_t api, const char *str);
 {
 	/* if we need to layout, apply globals and then relayout */
 	if (relayout) {
-		NSString* layout = [_arguments objectForKey:@"layout"];
+		NSString *layout = _arguments[@"layout"];
 		if (layout) {
 			if (_freeLastLayout)
 				gvFreeLayout(_graphContext, _graph);
 				
 			/* apply scale */
-			NSString* scale = [_arguments objectForKey:@"scale"];
-			PSinputscale = scale ? [scale doubleValue] : 0.0;
+			NSString *scale = _arguments[@"scale"];
+			PSinputscale = scale ? scale.doubleValue : 0.0;
 			if (PSinputscale == 0.0)
 				PSinputscale = 72.0;
 		
-			if (gvLayout(_graphContext, _graph, (char*)[layout UTF8String]) != 0)
+			if (gvLayout(_graphContext, _graph, (char *)layout.UTF8String) != 0)
 				@throw [NSException exceptionWithName:@"GVException" reason:@"bad layout" userInfo:nil];
 			_freeLastLayout = YES;
 		}
 	}
-	
 
 	[[NSNotificationCenter defaultCenter] postNotificationName: @"GVGraphDidChange" object:self];
 }
 
-- (NSData*)renderWithFormat:(NSString *)format
+- (NSData *)renderWithFormat:(NSString *)format
 {
 	char *renderedData = NULL;
 	unsigned int renderedLength = 0;
-	if (gvRenderData(_graphContext, _graph, (char*)[format UTF8String], &renderedData, &renderedLength) != 0)
+	if (gvRenderData(_graphContext, _graph, (char *)format.UTF8String, &renderedData, &renderedLength) != 0)
 		@throw [NSException exceptionWithName:@"GVException" reason:@"bad render" userInfo:nil];
 	return [NSData dataWithBytesNoCopy:renderedData length:renderedLength freeWhenDone:YES];
-
 }
 
-- (void)renderWithFormat:(NSString *)format toURL:(NSURL *)URL
+- (void)renderWithFormat:(NSString *)format toURL:(NSURL *)url
 {
-	if ([URL isFileURL]) {
-		if (gvRenderFilename(_graphContext, _graph, (char*)[format UTF8String], (char*)[[URL path] UTF8String]) != 0)
+	if (url.fileURL) {
+		if (gvRenderFilename(_graphContext, _graph, (char *)format.UTF8String, (char *)url.path.UTF8String) != 0)
 			@throw [NSException exceptionWithName:@"GVException" reason:@"bad render" userInfo:nil];
 	}
 	else
-		[[self renderWithFormat:format] writeToURL:URL atomically:NO];
+		[[self renderWithFormat:format] writeToURL:url atomically:NO];
 }
-
 
 - (void)dealloc
 {
 	if (_graph)
 		agclose(_graph);
-	
-	[_arguments release];
-	[_graphAttributes release];
-	[_defaultNodeAttributes release];
-	[_defaultEdgeAttributes release];
-	[super dealloc];
+	_graph = nil; // reinitialize non-object type
 }
 
 @end

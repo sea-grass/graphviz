@@ -8,33 +8,30 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
-#import <WebKit/WebKit.h>
+@import WebKit;
+
+#import "GVGraphDefaultAttributes.h"
 
 @class GVAttributeSchema;
 @class GVDocument;
-@class GVGraphDefaultAttributes;
 
-@interface GVAttributeInspectorController : NSWindowController {
-	IBOutlet NSToolbar *componentToolbar;
-	IBOutlet NSToolbarItem *graphToolbarItem;
-	IBOutlet NSToolbarItem *nodeDefaultToolbarItem;
-	IBOutlet NSToolbarItem *edgeDefaultToolbarItem;
-	
-	IBOutlet NSTableView *attributeTable;
-	IBOutlet WebView *documentationWeb;
-	
-    // 'NSDictionary<NSToolbarItemIdentifier, NSArray<GVAttributeSchema *> *>'
-	__GENERICS(NSDictionary, NSToolbarItemIdentifier, __GENERICS(NSArray, GVAttributeSchema *) *) *_allSchemas;
-    // 'NSMutableDictionary<NSToolbarItemIdentifier, GVGraphDefaultAttributes *>'
-	__GENERICS(NSMutableDictionary, NSToolbarItemIdentifier, GVGraphDefaultAttributes *) *_allAttributes;
-	
+@interface GVAttributeInspectorController : NSWindowController
+{
+	NSDictionary<NSToolbarItemIdentifier, NSArray<GVAttributeSchema *> *> *_allSchemas;
+	NSMutableDictionary<NSToolbarItemIdentifier, GVGraphDefaultAttributes *> *_allAttributes;
 	GVDocument *_inspectedDocument;
 	BOOL _otherChangedGraph;
 }
 
-- (id)init;
+@property(readwrite) IBOutlet NSToolbar *componentToolbar;
+@property(readwrite) IBOutlet NSToolbarItem *graphToolbarItem;
+@property(readwrite) IBOutlet NSToolbarItem *nodeDefaultToolbarItem;
+@property(readwrite) IBOutlet NSToolbarItem *edgeDefaultToolbarItem;
+
+@property(readwrite) IBOutlet NSTableView *attributeTable;
+@property(readwrite) IBOutlet WKWebView *documentationWeb;
+
+- (instancetype)init;
 
 - (void)awakeFromNib;
 
@@ -46,15 +43,15 @@
 
 /* toolbar delegate methods */
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar;
- 
+
 /* table delegate methods */
 - (NSCell *)tableView:(NSTableView *)tableView dataCellForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification;
+- (void)tableViewSelectionDidChange:(NSNotification *)notification;
 
 /* table data source methods */
-- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView;
-- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex;
-- (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)rowIndex;
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView;
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
+- (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row;
 
 - (void)dealloc;
 

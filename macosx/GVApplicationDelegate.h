@@ -8,18 +8,19 @@
  * Contributors: Details at http://www.graphviz.org/
  *************************************************************************/
 
-#import <Cocoa/Cocoa.h>
+@import AppKit;
 
 @class GVAttributeInspectorController;
 
-@interface GVApplicationDelegate : NSObject {
+@interface GVApplicationDelegate : NSObject
+{
 	GVAttributeInspectorController *_attributeInspectorController;
 	BOOL _applicationStarted;
 }
 
 - (IBAction)showAttributeInspector:(id)sender;
 
-- (BOOL)applicationOpenUntitledFile:(NSApplication*)theApplication;
-- (void)applicationDidFinishLaunching:(NSNotification*)aNotification;
+- (BOOL)applicationOpenUntitledFile:(NSApplication *)application;
+- (void)applicationDidFinishLaunching:(NSNotification *)notification;
 
 @end

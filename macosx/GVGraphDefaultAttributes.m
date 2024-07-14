@@ -13,24 +13,26 @@
 
 @interface GVGraphDefaultAttributeKeyEnumerator : NSEnumerator
 {
-	graph_t *_graph; 
+	graph_t *_graph;
 	int _kind;
 	Agsym_t *_nextSymbol;
 }
 
-- (id)initWithGraphLoc:(graph_t *)graph prototype:(int)kind;
-- (NSArray *)allObjects;
-- (id)nextObject;
+@property(readonly, copy) NSArray *allObjects;
+@property(readonly) id nextObject;
+
+- (instancetype)init NS_UNAVAILABLE;
+- (instancetype)initWithGraphLoc:(graph_t *)graph prototype:(int)kind NS_DESIGNATED_INITIALIZER;
 
 @end
 
 @implementation GVGraphDefaultAttributeKeyEnumerator
 
-- (id)initWithGraphLoc:(graph_t *)graph prototype:(int)kind;
+- (instancetype)initWithGraphLoc:(graph_t *)graph prototype:(int)kind;
 {
 	if (self = [super init]) {
-		_kind = kind;
 		_graph = graph;
+		_kind = kind;
 		_nextSymbol = agnxtattr(_graph, _kind, NULL);
 	}
 	return self;
@@ -38,13 +40,13 @@
 
 - (NSArray *)allObjects
 {
-	NSMutableArray* all = [NSMutableArray array];
+	NSMutableArray *all = [NSMutableArray array];
 	for (; _nextSymbol; _nextSymbol = agnxtattr(_graph, _kind, _nextSymbol)) {
 		char *attributeValue = _nextSymbol->defval;
 		if (attributeValue && *attributeValue)
-			[all addObject:[NSString stringWithUTF8String:attributeValue]];
+			[all addObject:@(attributeValue)];
 	}
-			
+
 	return all;
 }
 
@@ -53,7 +55,7 @@
 	for (; _nextSymbol; _nextSymbol = agnxtattr(_graph, _kind, _nextSymbol)) {
 		char *attributeValue = _nextSymbol->defval;
 		if (attributeValue && *attributeValue)
-			return [NSString stringWithUTF8String:attributeValue];
+			return @(attributeValue);
 	}
 	return nil;
 }
@@ -62,7 +64,7 @@
 
 @implementation GVGraphDefaultAttributes
 
-- (id)initWithGraph:(GVZGraph *)graph prototype:(int)kind
+- (instancetype)initWithGraph:(GVZGraph *)graph prototype:(int)kind
 {
 	if (self = [super init]) {
 		_graph = graph;
@@ -75,7 +77,7 @@
 {
 	NSUInteger symbolCount = 0;
 	Agsym_t *nextSymbol = NULL;
-	for (nextSymbol = agnxtattr(_graph->_graph,_kind, nextSymbol); nextSymbol; nextSymbol = agnxtattr(_graph->_graph, _kind, nextSymbol))
+	for (nextSymbol = agnxtattr(_graph.graph, _kind, nextSymbol); nextSymbol; nextSymbol = agnxtattr(_graph.graph, _kind, nextSymbol))
 		if (nextSymbol->defval && *(nextSymbol->defval))
 			++symbolCount;
 	return symbolCount;
@@ -83,30 +85,30 @@
 
 - (NSEnumerator *)keyEnumerator
 {
-	return [[[GVGraphDefaultAttributeKeyEnumerator alloc] initWithGraphLoc:_graph->_graph prototype:_kind] autorelease];
+	return [[GVGraphDefaultAttributeKeyEnumerator alloc] initWithGraphLoc:_graph.graph prototype:_kind];
 }
 
-- (id)objectForKey:(id)aKey
+- (NSString *)objectForKey:(NSString *)key
 {
-	id object = nil;
-	Agsym_t *attributeSymbol = agattr(_graph->_graph, _kind, (char*)[aKey UTF8String], 0);
+	NSString *object;
+	Agsym_t *attributeSymbol = agattr(_graph.graph, _kind, (char *)key.UTF8String, 0);
 	if (attributeSymbol) {
 		char *attributeValue = attributeSymbol->defval;
 		if (attributeValue && *attributeValue)
-			object = [NSString stringWithUTF8String:attributeValue];
+			object = @(attributeValue);
 	}
 	return object;
 }
 
-- (void)setObject:(id)anObject forKey:(id)aKey
+- (void)setObject:(NSString *)object forKey:(NSString *)key
 {
-	agattr(_graph->_graph, _kind, (char *)[aKey UTF8String], (char *)[anObject UTF8String]);
+	agattr(_graph.graph, _kind, (char *)key.UTF8String, (char *)object.UTF8String);
 	[_graph noteChanged:YES];
 }
 
-- (void)removeObjectForKey:(id)aKey
+- (void)removeObjectForKey:(NSString *)key
 {
-	agattr(_graph->_graph, _kind, (char *)[aKey UTF8String], "");
+	agattr(_graph.graph, _kind, (char *)key.UTF8String, "");
 	[_graph noteChanged:YES];
 }
 @end

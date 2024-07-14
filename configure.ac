@@ -149,6 +149,7 @@ AC_SUBST([JSHEXT])
 AM_CONDITIONAL(WITH_WIN32, [test "$UWIN" = "yes" -o "$CYGWIN" = "yes" -o "$MINGW32" = "yes"])
 AM_CONDITIONAL(WITH_CYGWIN, [test "$CYGWIN" = "yes"])
 AM_CONDITIONAL(WITH_MINGW, [test "$MINGW32" = "yes"])
+AM_CONDITIONAL(WITH_DARWIN, [test "$DARWIN" = "yes"])
 
 DEFAULT_DPI=96
 AC_DEFINE_UNQUOTED(DEFAULT_DPI,$DEFAULT_DPI,Default DPI.)
@@ -1735,23 +1736,33 @@ AM_CONDITIONAL([WITH_QT], [test "$use_qt" = "Yes"])
 dnl -----------------------------------
 dnl INCLUDES and LIBS for QUARTZ
 
-AC_ARG_WITH(quartz,
-  [AS_HELP_STRING([--with-quartz=no],[Quartz framework (Mac OS X)])],
-  [], [with_quartz=no])
-
-if test "$with_quartz" != "yes"; then
-  use_quartz="No (disabled by default - Mac only)"
-else
-  if test -d "/System/Library/Frameworks/ApplicationServices.framework"; then
-    use_quartz="Yes"
-    QUARTZ_CFLAGS=''
-    QUARTZ_LIBS='-framework ApplicationServices'
-    AC_SUBST([QUARTZ_CFLAGS])
-    AC_SUBST([QUARTZ_LIBS])
-  else
-    use_quartz="No (missing ApplicationServices.framework)"
-  fi
-fi
+case "${host_os}" in
+  *darwin* )
+    AC_ARG_WITH(quartz,
+      [AS_HELP_STRING([--with-quartz=yes],[Quartz framework (Mac OS X)])],
+      [],[with_quartz=yes])
+    case "$with_quartz" in
+      yes )
+        if test -d "/System/Library/Frameworks/ApplicationServices.framework"; then
+          use_quartz="Yes"
+          QUARTZ_CFLAGS=''
+          QUARTZ_LIBS='-framework ApplicationServices'
+          AC_SUBST([QUARTZ_CFLAGS])
+          AC_SUBST([QUARTZ_LIBS])
+        else
+          use_quartz="No (missing ApplicationServices.framework)"
+        fi
+        ;;
+      * )
+        use_quartz="No (disabled)"
+        ;;
+    esac
+    ;;
+  * )
+    with_quartz=no
+    use_quartz="No (disabled by default - Mac only)"
+    ;;
+esac
 AM_CONDITIONAL(WITH_QUARTZ, [test "$use_quartz" = "Yes"])
 
 dnl -----------------------------------
@@ -2162,9 +2173,8 @@ AC_CONFIG_FILES(Makefile
 	lib/xdot/libxdot.pc
 	lib/topfish/Makefile
 	lib/glcomp/Makefile
+	macosx/Distribution.xml
 	macosx/Info.plist
-	macosx/build/graphviz.pmdoc/01local.xml
-	macosx/build/graphviz.pmdoc/02graphviz.xml
 	plugin/Makefile
 	plugin/core/Makefile
 	plugin/devil/Makefile
