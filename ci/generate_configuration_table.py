@@ -44,10 +44,9 @@ def main():  # pylint: disable=missing-function-docstring
             "No": "",
         }
     else:
-        if opts.colors == "":
-            yes_color = "green"
-            no_color = "red"
-        else:
+        yes_color = "green"
+        no_color = "red"
+        if opts.colors != "":
             colors = opts.colors.split(":")
             if len(colors) == 2:
                 yes_color, no_color = colors

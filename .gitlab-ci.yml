@@ -229,6 +229,7 @@ portable-source:
     script:
         - ci/install-packages.sh
         - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
+        - source /opt/virtualenv/bin/activate
         - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
     artifacts:
         reports:
@@ -257,6 +258,7 @@ portable-source:
         # memory leak detections. Disable those for now.
         - export ASAN_OPTIONS=detect_leaks=0
         - export UBSAN_OPTIONS=print_stacktrace=1
+        - source /opt/virtualenv/bin/activate
         - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
         - ci/test_coverage.py --analyze
     # enable test coverage visualization in MR diff view
@@ -1420,6 +1422,7 @@ lint_cmake_format:
   needs:
     - docker_build_fedora40
   script:
+    - source /opt/virtualenv/bin/activate
     - git ls-files -z -- ':(glob)**/CMakeLists.txt' ':(glob)**/*.cmake' ':(glob)**/*.cmake.in' | xargs -0 -- python3 -m cmakelang.lint
   except:
     - tags
@@ -1435,11 +1438,12 @@ lint_html:
     - tags
 
 lint_python:
-  image: "$CI_REGISTRY_IMAGE/ubuntu-22.04:$CI_COMMIT_SHA"
+  image: "$CI_REGISTRY_IMAGE/ubuntu-24.04:$CI_COMMIT_SHA"
   stage: test
   needs:
-    - docker_build_ubuntu-22.04
+    - docker_build_ubuntu-24.04
   script:
+    - source /opt/virtualenv/bin/activate
     - git ls-files -z -- '**.py' | xargs -0 -- python3 -m pylint --rcfile=.pylintrc --disable=fixme
     - git ls-files -z -- '**.py' | xargs -0 -- python3 -m black --check
     - git ls-files -z -- '**.py' | xargs -0 -- python3 -m isort --profile=black --check

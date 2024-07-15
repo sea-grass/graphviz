@@ -53,4 +53,10 @@ export PATH=/opt/local/bin:${PATH}
 # lib/mingle dependency
 sudo port install libANN
 
-python3 -m pip install --requirement requirements.txt
+# create a Python virtual environment
+sudo mkdir /opt/virtualenv
+sudo chown $(whoami) /opt/virtualenv
+python3 -m venv /opt/virtualenv
+
+# install Python dependencies within the virtual environment
+env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt

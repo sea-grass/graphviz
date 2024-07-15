@@ -144,6 +144,7 @@ if collection == "development":
 else:
     patch_version = str(patch_version)
 
+committer_date = "0"
 if not patch_version.isnumeric() or args.date_format:
     os.environ["TZ"] = "UTC"
     try:
@@ -164,7 +165,6 @@ if not patch_version.isnumeric() or args.date_format:
             "Warning: build not started in a Git clone, or Git is not "
             "installed: setting version date to 0.\n"
         )
-        committer_date = "0"
 
 if not patch_version.isnumeric():
     # Non-numerical patch version; add committer date
