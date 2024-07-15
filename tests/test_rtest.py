@@ -321,18 +321,6 @@ def doDiff(OUTFILE, testname, fmt):
     FILE1 = OUTDIR / OUTFILE
     FILE2 = REFDIR / OUTFILE
     F = fmt.split(":")[0]
-    # FIXME: Remove when https://gitlab.com/graphviz/graphviz/-/issues/1789 is
-    # fixed
-    if (
-        platform.system() == "Windows"
-        and F in ["ps", "gv"]
-        and testname in ["clusters", "compound", "rootlabel"]
-    ):
-        pytest.skip(
-            f"Warning: Skipping {F} output comparison for test "
-            f"{testname}: format {fmt} because the order of "
-            "clusters in gv or ps output is not stable on Windows (#1789)"
-        )
     if F in ["ps", "ps2"]:
         with open(FILE1, "rt", encoding="latin-1") as src:
             dst1 = io.StringIO()
