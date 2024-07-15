@@ -78,16 +78,15 @@ if(BUILD_SHARED_LIBS)
     target_link_libraries(dot_builtins PRIVATE gvplugin_gd)
   endif()
 
+  if(GTS_FOUND)
+    target_include_directories(dot_builtins SYSTEM PRIVATE
+      ${GTS_INCLUDE_DIRS}
+    )
+    target_link_libraries(dot_builtins PRIVATE ${GTS_LINK_LIBRARIES})
+  endif()
+
   find_package(PkgConfig)
   if(PkgConfig_FOUND)
-    pkg_check_modules(GTS gts)
-    if(GTS_FOUND)
-      target_include_directories(dot_builtins SYSTEM PRIVATE
-        ${GTS_INCLUDE_DIRS}
-      )
-      target_link_libraries(dot_builtins PRIVATE ${GTS_LINK_LIBRARIES})
-    endif()
-
     pkg_check_modules(LASI lasi)
     if(LASI_FOUND)
       target_link_libraries(dot_builtins PRIVATE gvplugin_lasi)
