@@ -623,7 +623,7 @@ preprint(Exnode_t* args)
 					exerror("unterminated %%... in format");
 					goto done;
 				case '*':
-					if (i >= elementsof(x->param))
+					if (i >= (int)elementsof(x->param))
 					{
 						*s = 0;
 						exerror("format %s has too many * arguments", f);

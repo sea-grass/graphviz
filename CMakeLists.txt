@@ -422,6 +422,12 @@ check_c_compiler_flag(-Wimplicit-fallthrough HAVE_C_WIMPLICIT_FALLTHROUGH)
 if(HAVE_C_WIMPLICIT_FALLTHROUGH)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wimplicit-fallthrough")
 endif()
+check_c_compiler_flag(
+  -Wmissing-field-initializers HAVE_C_WMISSING_FIELD_INITIALIZERS
+)
+if(HAVE_C_WMISSING_FIELD_INITIALIZERS)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wmissing-field-initializers")
+endif()
 check_c_compiler_flag(-Wmissing-prototypes HAVE_C_WMISSING_PROTOTYPES)
 if(HAVE_C_WMISSING_PROTOTYPES)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wmissing-prototypes")

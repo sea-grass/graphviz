@@ -1337,7 +1337,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 		x = exnode->data.call.args;
 		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args; a && x; a = a->data.operand.right)
 		{
-			if (n < elementsof(args))
+			if (n < (int)elementsof(args))
 			{
 				save[n] = a->data.operand.left->data.variable.symbol->value->data.constant.value;
 				args[n++] = eval(ex, x->data.operand.left, env);
@@ -1346,19 +1346,22 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 				a->data.operand.left->data.variable.symbol->value->data.constant.value = eval(ex, x->data.operand.left, env);
 			x = x->data.operand.right;
 		}
-		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args; a && n < elementsof(save); a = a->data.operand.right)
+		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args;
+		     a && n < (int)elementsof(save); a = a->data.operand.right)
 			a->data.operand.left->data.variable.symbol->value->data.constant.value = args[n++];
 		if (x)
 			exerror("too many actual args");
 		else if (a)
 			exerror("not enough actual args");
 		v = exeval(ex, exnode->data.call.procedure->value->data.procedure.body, env);
-		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args; a && n < elementsof(save); a = a->data.operand.right)
+		for (n = 0, a = exnode->data.call.procedure->value->data.procedure.args;
+		     a && n < (int)elementsof(save); a = a->data.operand.right)
 			a->data.operand.left->data.variable.symbol->value->data.constant.value = save[n++];
 		return v;
 	case ARRAY:
 		n = 0;
-		for (x = exnode->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
+		for (x = exnode->data.operand.right; x && n < (int)elementsof(args);
+		     x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
 		return ex->disc->getf(ex, exnode->data.operand.left,
 		                      exnode->data.operand.left->data.variable.symbol,
@@ -1367,7 +1370,8 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 	case FUNCTION:
 		n = 0;
 		args[n++].string = env;
-		for (x = exnode->data.operand.right; x && n < elementsof(args); x = x->data.operand.right)
+		for (x = exnode->data.operand.right; x && n < (int)elementsof(args);
+		     x = x->data.operand.right)
 			args[n++] = eval(ex, x->data.operand.left, env);
 		return ex->disc->getf(ex, exnode->data.operand.left,
 		                      exnode->data.operand.left->data.variable.symbol,
