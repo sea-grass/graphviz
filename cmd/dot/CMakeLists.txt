@@ -96,11 +96,8 @@ if(BUILD_SHARED_LIBS)
 
   if(PANGOCAIRO_FOUND)
     target_link_libraries(dot_builtins PRIVATE gvplugin_pango)
-    if(PkgConfig_FOUND)
-      pkg_check_modules(WEBP libwebp)
-      if(WEBP_FOUND)
-        target_link_libraries(dot_builtins PRIVATE gvplugin_webp)
-      endif()
+    if(WEBP_FOUND)
+      target_link_libraries(dot_builtins PRIVATE gvplugin_webp)
     endif()
   endif()
 
