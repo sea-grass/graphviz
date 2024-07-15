@@ -90,15 +90,6 @@ if(GD_LIBRARY)
     set(HAVE_GD_FONTCONFIG 1)
     set(HAVE_GD_FREETYPE 1)
     set(HAVE_GD_GIF 1)
-  elseif(WIN32)
-    # Windows has neither pkg-config nor gdlibg-config. If we have reached here
-    # and thus found gdlib, assume it was installed via vcpkg. That version of
-    # gdlib has enabled [core,fontconfig,freetype,jpeg,png,tiff,webp], so take
-    # the subset of that we use, [fontconfig,freetyp,jpeg,png].
-    set(HAVE_GD_PNG 1)
-    set(HAVE_GD_JPEG 1)
-    set(HAVE_GD_FONTCONFIG 1)
-    set(HAVE_GD_FREETYPE 1)
   else()
     message(
       WARNING
