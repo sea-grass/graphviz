@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-static struct entities_s {
+static const struct entities_s {
 	char	*name;
 	int	value;
 } entities[] = {
