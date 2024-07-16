@@ -54,6 +54,9 @@ static unsigned get_color(unsigned red, unsigned green, unsigned blue) {
   return winner;
 }
 
+// number of bytes per pixel
+static const unsigned BPP = 4;
+
 static void process(GVJ_t *job, int color_depth) {
 
   unsigned char *data = (unsigned char *)job->imagedata;
@@ -62,9 +65,6 @@ static void process(GVJ_t *job, int color_depth) {
 
   for (unsigned y = 0; y < job->height; y += 2) {
     for (unsigned x = 0; x < job->width; ++x) {
-
-      // number of bytes per pixel
-      const unsigned BPP = 4;
 
       {
         // extract the upper pixel
@@ -117,12 +117,146 @@ static void process3(GVJ_t *job) { process(job, 3); }
 
 static void process24(GVJ_t *job) { process(job, 24); }
 
+/// convert an RGB color to grayscale
+static unsigned rgb_to_grayscale(unsigned red, unsigned green, unsigned blue) {
+
+  /// use “perceptual” scaling,
+  /// https://en.wikipedia.org/wiki/Grayscale#Colorimetric_(perceptual_luminance-preserving)_conversion_to_grayscale
+
+  const double r_linear = red / 255.0;
+  const double g_linear = green / 255.0;
+  const double b_linear = blue / 255.0;
+
+  const double y_linear =
+      0.2126 * r_linear + 0.7152 * g_linear + 0.0722 * b_linear;
+  return (unsigned)(y_linear * 255.999);
+}
+
+/// draw a y_stride×x_stride-pixels-per-character monochrome image
+///
+/// @param job GVC job to operate on
+/// @param y_stride How many Y pixels fit in a character
+/// @param x_stride How many X pixels fit in a character
+/// @param tiles In-order list of characters for each representation
+static void processNup(GVJ_t *job, unsigned y_stride, unsigned x_stride,
+                       const char **tiles) {
+  assert(y_stride > 0);
+  assert(x_stride > 0);
+  assert(tiles != NULL);
+  for (unsigned i = 0; i < y_stride; ++i) {
+    for (unsigned j = 0; j < x_stride; ++j) {
+      assert(tiles[i * x_stride + j] != NULL && "missing or not enough tiles");
+    }
+  }
+
+  unsigned char *data = (unsigned char *)job->imagedata;
+
+  for (unsigned y = 0; y < job->height; y += y_stride) {
+    for (unsigned x = 0; x < job->width; x += x_stride) {
+
+      unsigned index = 0;
+
+      for (unsigned y_offset = 0;
+           y + y_offset < job->height && y_offset < y_stride; ++y_offset) {
+        for (unsigned x_offset = 0;
+             x + x_offset < job->width && x_offset < x_stride; ++x_offset) {
+
+          const unsigned offset =
+              (y + y_offset) * job->width * BPP + (x + x_offset) * BPP;
+          const unsigned red = data[offset + 2];
+          const unsigned green = data[offset + 1];
+          const unsigned blue = data[offset];
+
+          const unsigned gray = rgb_to_grayscale(red, green, blue);
+          // The [0, 256) grayscale measurement can be quantized into 16
+          // 16-stride buckets. I.e. [0, 16) as bucket 1, [16, 32) as bucket 2,
+          // … Drawing a threshold at 240, and considering only the last bucket
+          // to be white when converting to monochrome empirically seems to
+          // generate reasonable results.
+          const unsigned pixel = gray >= 240;
+
+          index |= pixel << (y_offset * x_stride + x_offset);
+        }
+      }
+
+      gvputs(job, tiles[index]);
+    }
+    gvputc(job, '\n');
+  }
+}
+
+/// draw a 4-pixels-per-character monochrome image
+static void process4up(GVJ_t *job) {
+  // block characters from the “Amstrad CPC character set”
+  const char *tiles[] = {" ", "▘", "▝", "▀", "▖", "▍", "▞", "▛",
+                         "▗", "▚", "▐", "▜", "▃", "▙", "▟", "█"};
+  const unsigned y_stride = 2;
+  const unsigned x_stride = 2;
+  assert(sizeof(tiles) / sizeof(tiles[0]) == 1 << (y_stride * x_stride));
+  processNup(job, y_stride, x_stride, tiles);
+}
+
+/// draw a 6-pixels-per-character monochrome image
+static void process6up(GVJ_t *job) {
+  // the “Teletext G1 Block Mosaics Set”
+  const char *tiles[] = {" ", "🬀", "🬁", "🬂", "🬃", "🬄", "🬅", "🬆", "🬇", "🬈", "🬉",
+                         "🬊", "🬋", "🬌", "🬍", "🬎", "🬏", "🬐", "🬑", "🬒", "🬓", "▌",
+                         "🬔", "🬕", "🬖", "🬗", "🬘", "🬙", "🬚", "🬛", "🬜", "🬝", "🬞",
+                         "🬟", "🬠", "🬡", "🬢", "🬣", "🬤", "🬥", "🬦", "🬧", "▐", "🬨",
+                         "🬩", "🬪", "🬫", "🬬", "🬭", "🬮", "🬯", "🬰", "🬱", "🬲", "🬳",
+                         "🬴", "🬵", "🬶", "🬷", "🬸", "🬹", "🬺", "🬻", "█"};
+  const unsigned y_stride = 3;
+  const unsigned x_stride = 2;
+  assert(sizeof(tiles) / sizeof(tiles[0]) == 1 << (y_stride * x_stride));
+  processNup(job, y_stride, x_stride, tiles);
+}
+
+/// draw a 8-pixels-per-character monochrome image
+static void process8up(GVJ_t *job) {
+  // the Unicode “Braille Patterns” block
+  const char *tiles[] = {
+      " ", "⠁", "⠈", "⠉", "⠂", "⠃", "⠊", "⠋", "⠐", "⠑", "⠘", "⠙", "⠒", "⠓", "⠚",
+      "⠛", "⠄", "⠅", "⠌", "⠍", "⠆", "⠇", "⠎", "⠏", "⠔", "⠕", "⠜", "⠝", "⠖", "⠗",
+      "⠞", "⠟", "⠠", "⠡", "⠨", "⠩", "⠢", "⠣", "⠪", "⠫", "⠰", "⠱", "⠸", "⠹", "⠲",
+      "⠳", "⠺", "⠻", "⠤", "⠥", "⠬", "⠭", "⠦", "⠧", "⠮", "⠯", "⠴", "⠵", "⠼", "⠽",
+      "⠶", "⠷", "⠾", "⠿", "⡀", "⡁", "⡈", "⡉", "⡂", "⡃", "⡊", "⡋", "⡐", "⡑", "⡘",
+      "⡙", "⡒", "⡓", "⡚", "⡛", "⡄", "⡅", "⡌", "⡍", "⡆", "⡇", "⡎", "⡏", "⡔", "⡕",
+      "⡜", "⡝", "⡖", "⡗", "⡞", "⡟", "⡠", "⡡", "⡨", "⡩", "⡢", "⡣", "⡪", "⡫", "⡰",
+      "⡱", "⡸", "⡹", "⡲", "⡳", "⡺", "⡻", "⡤", "⡥", "⡬", "⡭", "⡦", "⡧", "⡮", "⡯",
+      "⡴", "⡵", "⡼", "⡽", "⡶", "⡷", "⡾", "⡿", "⢀", "⢁", "⢈", "⢉", "⢂", "⢃", "⢊",
+      "⢋", "⢐", "⢑", "⢘", "⢙", "⢒", "⢓", "⢚", "⢛", "⢄", "⢅", "⢌", "⢍", "⢆", "⢇",
+      "⢎", "⢏", "⢔", "⢕", "⢜", "⢝", "⢖", "⢗", "⢞", "⢟", "⢠", "⢡", "⢨", "⢩", "⢢",
+      "⢣", "⢪", "⢫", "⢰", "⢱", "⢸", "⢹", "⢲", "⢳", "⢺", "⢻", "⢤", "⢥", "⢬", "⢭",
+      "⢦", "⢧", "⢮", "⢯", "⢴", "⢵", "⢼", "⢽", "⢶", "⢷", "⢾", "⢿", "⣀", "⣁", "⣈",
+      "⣉", "⣂", "⣃", "⣊", "⣋", "⣐", "⣑", "⣘", "⣙", "⣒", "⣓", "⣚", "⣛", "⣄", "⣅",
+      "⣌", "⣍", "⣆", "⣇", "⣎", "⣏", "⣔", "⣕", "⣜", "⣝", "⣖", "⣗", "⣞", "⣟", "⣠",
+      "⣡", "⣨", "⣩", "⣢", "⣣", "⣪", "⣫", "⣰", "⣱", "⣸", "⣹", "⣲", "⣳", "⣺", "⣻",
+      "⣤", "⣥", "⣬", "⣭", "⣦", "⣧", "⣮", "⣯", "⣴", "⣵", "⣼", "⣽", "⣶", "⣷", "⣾",
+      "⣿"};
+  const unsigned y_stride = 4;
+  const unsigned x_stride = 2;
+  assert(sizeof(tiles) / sizeof(tiles[0]) == 1 << (y_stride * x_stride));
+  processNup(job, y_stride, x_stride, tiles);
+}
+
 static gvdevice_engine_t engine3 = {
     .format = process3,
 };
 
 static gvdevice_engine_t engine24 = {
     .format = process24,
+};
+
+static gvdevice_engine_t engine4up = {
+    .format = process4up,
+};
+
+static gvdevice_engine_t engine6up = {
+    .format = process6up,
+};
+
+static gvdevice_engine_t engine8up = {
+    .format = process8up,
 };
 
 static gvdevice_features_t device_features = {
@@ -132,6 +266,9 @@ static gvdevice_features_t device_features = {
 static gvplugin_installed_t device_types[] = {
     {8, "vt:cairo", 0, &engine3, &device_features},
     {1 << 24, "vt-24bit:cairo", 0, &engine24, &device_features},
+    {4, "vt-4up:cairo", 0, &engine4up, &device_features},
+    {6, "vt-6up:cairo", 0, &engine6up, &device_features},
+    {7, "vt-8up:cairo", 0, &engine8up, &device_features},
     {0},
 };
 
