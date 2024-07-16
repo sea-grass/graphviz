@@ -1082,8 +1082,6 @@ static int comp_entities(const void *e1, const void *e2) {
   return strview_cmp(*key, strview(candidate->name, '\0'));
 }
 
-#define MAXENTLEN 8
-
 /** Scan non-numeric entity, convert to &#...; form and store in xbuf.
  * t points to first char after '&'. Return after final semicolon.
  * If unknown, we return t and let libexpat flag the error.
@@ -1095,7 +1093,7 @@ char* scanEntity (char* t, agxbuf* xb)
 
     agxbputc(xb, '&');
     if (key.data[key.size] == '\0') return t;
-    if (key.size > MAXENTLEN || key.size < 2) return t;
+    if (key.size > ENTITY_NAME_LENGTH_MAX || key.size < 2) return t;
     res = bsearch(&key, entities, NR_OF_ENTITIES,
         sizeof(entities[0]), comp_entities);
     if (!res) return t;
