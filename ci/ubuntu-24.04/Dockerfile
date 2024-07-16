@@ -42,6 +42,8 @@ libann-dev \
 libdevil-dev \
 # Plugin library gd
 libgd-dev \
+# Plugin library gdk
+libgtk-3-dev \
 # Documentation
 ghostscript \
 # Plugin library ghostscipt

@@ -31,6 +31,8 @@ DevIL-devel \
 gd-devel \
 # Documentation and Plugin library ghostscipt
 ghostscript ghostscript-devel \
+# Plugin library gdk
+gtk3-devel \
 # Plugin library gtk
 gtkglext-devel \
 # Plugin library lasi

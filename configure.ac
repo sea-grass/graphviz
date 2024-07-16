@@ -1488,7 +1488,7 @@ AC_ARG_WITH(gdk,
 if test "$with_gdk" != "yes"; then
   use_gdk="No (disabled)"
 else
-  PKG_CHECK_MODULES(GDK, [gdk-2.0],[
+  PKG_CHECK_MODULES(GDK, [gdk-3.0],[
     use_gdk="Yes"
     AC_SUBST([GDK_CFLAGS])
     AC_SUBST([GDK_LIBS])

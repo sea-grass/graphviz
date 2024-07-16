@@ -19,7 +19,7 @@
 #ifdef HAVE_PANGOCAIRO
 #include <cairo.h>
 #include <gdk-pixbuf/gdk-pixbuf.h>
-#include <gdk/gdkcairo.h>
+#include <gdk/gdk.h>
 
 #ifdef _MSC_VER //*dependencies
     #pragma comment( lib, "gvc.lib" )

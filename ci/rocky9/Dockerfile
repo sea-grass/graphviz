@@ -34,6 +34,8 @@ gd-devel \
 ghostscript \
 # Plugin library
 ghostscript-devel \
+# Plugin library gdk
+gtk3-devel \
 # Plugin library gtk
 gtk2-devel \
 # Plugin library lasi
