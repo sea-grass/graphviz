@@ -57,6 +57,7 @@ smyrna_LDADD = \
 	$(top_builddir)/lib/xdot/libxdot_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(GTK_LIBS) $(GLUT_LIBS) $(GTKGLEXT_LIBS) $(GLADE_LIBS) $(X_LIBS) $(EXPAT_LIBS) $(GTS_LIBS) $(MATH_LIBS)
 
 smyrna_static_SOURCES = $(smyrna_SOURCES)
@@ -72,6 +73,7 @@ smyrna_static_LDADD = \
 	$(top_builddir)/lib/xdot/libxdot_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(GTK_LIBS) $(GLUT_LIBS) $(GTKGLEXT_LIBS) $(GLADE_LIBS) $(X_LIBS) $(EXPAT_LIBS) $(GTS_LIBS) $(MATH_LIBS)
 
 .1.1.pdf:

@@ -27,6 +27,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/gv_fopen.h>
 
 static char *usageFmt =
     "Usage: %s [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>\n";
@@ -517,7 +518,7 @@ graph_t *gvNextInputGraph(GVC_t *gvc)
 		    fp = stdin;
 	    }
 	    else {
-		while ((fn = gvc->input_filenames[gvc->fidx++]) && !(fp = fopen(fn, "r")))  {
+		while ((fn = gvc->input_filenames[gvc->fidx++]) && !(fp = gv_fopen(fn, "r")))  {
 		    agerrorf("%s: can't open %s: %s\n", gvc->common.cmdname, fn, strerror(errno));
 		    graphviz_errors++;
 		}

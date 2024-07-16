@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include	<string.h>
 #include <unistd.h>
+#include <util/gv_fopen.h>
 
 #ifdef ENABLE_LTDL
 #ifdef HAVE_DL_ITERATE_PHDR
@@ -488,7 +489,7 @@ static void config_rescan(GVC_t *gvc, char *config_path)
 #endif
 
     if (config_path) {
-	f = fopen(config_path,"w");
+	f = gv_fopen(config_path, "w");
 	if (!f) {
 	    agerrorf("failed to open %s for write.\n", config_path);
 	    graphviz_exit(1);

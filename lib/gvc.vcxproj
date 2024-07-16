@@ -218,6 +218,9 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bi
       <Project>{bd347753-a09d-48b4-8752-f1d8d9cf235d}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="util\util.vcxproj">
+      <Project>{e19e48f9-aa0a-40f8-a72a-7a63f87f0451}</Project>
+    </ProjectReference>
     <ProjectReference Include="xdot\xdot.vcxproj">
       <Project>{c99c1195-2032-408b-9822-f09f49006a3c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

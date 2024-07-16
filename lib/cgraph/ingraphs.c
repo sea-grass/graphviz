@@ -23,7 +23,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <util/gv_fopen.h>
 
 /* Set next available file.
  * If Files is NULL, we just read from stdin.
@@ -42,7 +42,7 @@ static void nextFile(ingraph_state * sp)
 	    if (*fname == '-') {
 		rv = stdin;
 		break;
-	    } else if ((rv = fopen(fname, "r")) != 0)
+	    } else if ((rv = gv_fopen(fname, "r")) != 0)
 		break;
 	    else {
 		fprintf(stderr, "Can't open %s\n", sp->u.Files[sp->ctr - 1]);

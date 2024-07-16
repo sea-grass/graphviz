@@ -88,6 +88,7 @@ ccomps_LDADD = \
 	$(top_builddir)/lib/pathplan/libpathplan.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(MATH_LIBS)
 
 tred_SOURCES = tred.c
@@ -135,6 +136,7 @@ gc_LDADD = \
 	$(top_builddir)/lib/pathplan/libpathplan.la \
 	$(top_builddir)/lib/cgraph/libcgraph.la \
 	$(top_builddir)/lib/cdt/libcdt.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(MATH_LIBS)
 
 gvpack_SOURCES = gvpack.cpp
@@ -155,6 +157,7 @@ gvpack_static_LDADD = \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(EXPAT_LIBS) $(Z_LIBS) $(GTS_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 endif
 
@@ -166,7 +169,9 @@ mm2gv_LDADD = \
 	$(top_builddir)/lib/common/libcommon_C.la \
 	$(top_builddir)/lib/gvc/libgvc_C.la \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
-	$(top_builddir)/lib/cgraph/libcgraph.la $(MATH_LIBS)
+	$(top_builddir)/lib/cgraph/libcgraph.la \
+	$(top_builddir)/lib/util/libutil_C.la \
+	$(MATH_LIBS)
 
 
 gv2gml_SOURCES = gv2gml.c

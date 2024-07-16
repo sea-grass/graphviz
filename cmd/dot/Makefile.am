@@ -90,6 +90,7 @@ dot_static_LDADD = \
 	$(top_builddir)/lib/xdot/libxdot_C.la \
 	$(top_builddir)/lib/cgraph/libcgraph_C.la \
 	$(top_builddir)/lib/cdt/libcdt_C.la \
+	$(top_builddir)/lib/util/libutil_C.la \
 	$(PANGOCAIRO_LIBS) $(PANGOFT2_LIBS) $(GTS_LIBS) $(EXPAT_LIBS) $(Z_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 
 dot_builtins_SOURCES = dot.c dot_builtins.cpp
