@@ -272,7 +272,7 @@ static const struct entities_s {
 };
 
 #define ENTITY_NAME_LENGTH_MAX 8
-#define NR_OF_ENTITIES 252
+#define NR_OF_ENTITIES (sizeof(entities) / sizeof(entities[0]))
 
 #ifdef __cplusplus
 }
