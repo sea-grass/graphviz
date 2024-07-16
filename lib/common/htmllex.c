@@ -1090,7 +1090,7 @@ int htmllex(void)
 
 	state.prevtok = state.currtok;
 	state.currtok = (strview_t){.data = s, .size = len};
-	if ((llen = (size_t)agxblen(&state.lb))) {
+	if ((llen = agxblen(&state.lb))) {
 	    assert(llen <= (size_t)INT_MAX && "XML token too long for expat API");
 	    rv = XML_Parse(state.parser, agxbuse(&state.lb), (int)llen, 0);
 	} else {
