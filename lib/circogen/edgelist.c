@@ -12,8 +12,9 @@
 #include	<circogen/edgelist.h>
 #include	<assert.h>
 
-static edgelistitem *mkItem(edgelistitem *obj, Dtdisc_t *disc) {
+static void *mkItem(void *p, Dtdisc_t *disc) {
     (void)disc;
+    edgelistitem *obj = p;
 
     edgelistitem *ap = gv_alloc(sizeof(edgelistitem));
 
@@ -37,7 +38,7 @@ static Dtdisc_t ELDisc = {
     offsetof(edgelistitem, edge),	/* key */
     sizeof(Agedge_t *),		/* size */
     offsetof(edgelistitem, link),	/* link */
-    (Dtmake_f) mkItem,
+    mkItem,
     free,
     cmpItem,
 };

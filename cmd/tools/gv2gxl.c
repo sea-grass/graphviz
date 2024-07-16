@@ -53,8 +53,9 @@ typedef struct {
     char *unique_name;
 } namev_t;
 
-static namev_t *make_nitem(namev_t *objp, Dtdisc_t *disc) {
+static void *make_nitem(void *p, Dtdisc_t *disc) {
     (void)disc;
+    namev_t *objp = p;
 
     namev_t *np = gv_alloc(sizeof(*np));
     np->name = objp->name;
@@ -66,7 +67,7 @@ static Dtdisc_t nameDisc = {
     offsetof(namev_t, name),
     -1,
     offsetof(namev_t, link),
-    (Dtmake_f) make_nitem,
+    make_nitem,
     free,
     NULL,
 };

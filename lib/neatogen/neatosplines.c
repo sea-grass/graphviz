@@ -105,7 +105,8 @@ typedef struct {
     edge_t *e;
 } edgeitem;
 
-static void *newitem(edgeitem *obj, Dtdisc_t *disc) {
+static void *newitem(void *p, Dtdisc_t *disc) {
+    edgeitem *obj = p;
     edgeitem *newp;
 
     (void)disc;
@@ -152,7 +153,7 @@ Dtdisc_t edgeItemDisc = {
     offsetof(edgeitem, id),
     sizeof(edgeinfo),
     offsetof(edgeitem, link),
-    (Dtmake_f) newitem,
+    newitem,
     free,
     cmpitems,
 };

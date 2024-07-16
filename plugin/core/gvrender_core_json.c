@@ -612,9 +612,9 @@ static Dtdisc_t intDisc = {
     offsetof(intm, id),
     -1,
     offsetof(intm, link),
-    (Dtmake_f) NULL,
+    NULL,
     freef,
-    (Dtcompar_f) NULL,
+    NULL,
 };
 
 static int lookup (Dt_t* map, char* name)

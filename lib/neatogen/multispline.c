@@ -71,7 +71,8 @@ static int cmpItem(void *item1, void *item2) {
 
 /* newItem:
  */
-static void *newItem(item *objp, Dtdisc_t *disc) {
+static void *newItem(void *p, Dtdisc_t *disc) {
+    item *objp = p;
     item *newp = gv_alloc(sizeof(item));
 
     (void)disc;
@@ -86,7 +87,7 @@ static Dtdisc_t itemdisc = {
     .key = offsetof(item, a),
     .size = 2 * sizeof(int),
     .link = offsetof(item, link),
-    .makef = (Dtmake_f)newItem,
+    .makef = newItem,
     .freef = free,
     .comparf = cmpItem,
 };
@@ -165,7 +166,8 @@ static int cmpIpair(void *pair1, void *pair2) {
     return 0;
 }
 
-static void *newIpair(Ipair *objp, Dtdisc_t *disc) {
+static void *newIpair(void *p, Dtdisc_t *disc) {
+    Ipair *objp = p;
     Ipair *newp = gv_alloc(sizeof(Ipair));
 
     (void)disc;
@@ -179,7 +181,7 @@ static Dtdisc_t ipairdisc = {
     .key = offsetof(Ipair, i),
     .size = sizeof(int),
     .link = offsetof(Ipair, link),
-    .makef = (Dtmake_f)newIpair,
+    .makef = newIpair,
     .freef = free,
     .comparf = cmpIpair,
 };
