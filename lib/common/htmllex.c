@@ -65,11 +65,8 @@ static lexstate_t state;
  */
 static void error_context(void)
 {
-    agxbclear(state.xb);
-    if (state.prevtoklen > 0)
-	agxbput_n(state.xb, state.prevtok, state.prevtoklen);
-    agxbput_n(state.xb, state.currtok, state.currtoklen);
-    agerr(AGPREV, "... %s ...\n", agxbuse(state.xb));
+  agerr(AGPREV, "... %.*s%.*s ...\n", (int)state.prevtoklen, state.prevtok,
+        (int)state.currtoklen, state.currtok);
 }
 
 /* htmlerror:
