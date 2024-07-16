@@ -1285,7 +1285,7 @@ static Extype_t eval(Expr_t *ex, Exnode_t *exnode, void *env) {
 			}
 		}
 		return v;
-    case ITERATER:
+    case ITERATOR:
 		v.integer = 0;
 		if (exnode->data.generate.array->op == DYNAMIC) {
 			n = exnode->data.generate.index->type == STRING;

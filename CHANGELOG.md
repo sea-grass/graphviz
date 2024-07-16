@@ -47,6 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   #2241 (fixed on Windows by enabling GTS)
 - The GVC output writing APIs handle writes of compressed data `> UINT_MAX` more
   correctly.
+- GVPR casts of strings to floats now produce the expected values. This was a
+  regression in Graphviz 2.30.
 
 ## [12.0.0] – 2024-07-04
 

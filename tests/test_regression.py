@@ -4504,3 +4504,22 @@ def test_fig_max_colors():
 
     # render this using the FIG renderer
     dot("fig", source=buf.getvalue())
+
+
+@pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
+def test_gvpr_s2f():
+    """
+    casting a string to floating point in GVPR should work
+    """
+
+    # a GVPR program that casts a string to floating point and prints the result
+    program = 'BEGIN { float x = (float)"1.5"; printf("%0.1f\\n", x); }'
+
+    # run this through GVPR with no input graph
+    gvpr_bin = which("gvpr")
+    result = subprocess.check_output(
+        [gvpr_bin, program], stdin=subprocess.DEVNULL, universal_newlines=True
+    )
+
+    # confirm we got the expected output
+    assert result == "1.5\n", "incorrect GVPR float cast behavior"

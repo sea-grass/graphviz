@@ -39,7 +39,6 @@ struct Excc_s				/* excc() state			*/
 	Expr_t*		expr;		/* exopen() state		*/
 	Exdisc_t*	disc;		/* exopen() discipline		*/
 	char*		id;		/* prefix + _			*/
-	int		lastop;		/* last op			*/
 	int		tmp;		/* temp var index		*/
 	Exccdisc_t*	ccdisc;		/* excc() discipline		*/
 };
@@ -54,9 +53,7 @@ static void		gen(Excc_t*, Exnode_t*);
  * return C name for op
  */
 
-char*
-exopname(int op)
-{
+char *exopname(long op) {
 	static char	buf[16];
 
 	switch (op)
@@ -114,7 +111,7 @@ exopname(int op)
 	default:
 		break;
 	}
-	snprintf(buf, sizeof(buf) - 1, "(OP=%03o)", op);
+	snprintf(buf, sizeof(buf) - 1, "(OP=%03lo)", op);
 	return buf;
 }
 
@@ -329,7 +326,7 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 		agxbprint(cc->ccdisc->text, "%s++", x->data.variable.symbol->name);
 		return;
 	case ITERATE:
-	case ITERATER:
+	case ITERATOR:
 		if (exnode->op == DYNAMIC)
 		{
 			agxbprint(cc->ccdisc->text, "{ Exassoc_t* %stmp_%d;", cc->id, ++cc->tmp);
@@ -459,7 +456,7 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 		for (;;)
 		{
 			if (!(x = exnode->data.operand.right))
-				switch (cc->lastop = exnode->data.operand.left->op)
+				switch (exnode->data.operand.left->op)
 				{
 				case FOR:
 				case IF:
@@ -476,7 +473,7 @@ static void gen(Excc_t *cc, Exnode_t *exnode) {
 			agxbput(cc->ccdisc->text, ";\n");
 			if (!(exnode = x))
 				break;
-			switch (cc->lastop = exnode->op)
+			switch (exnode->op)
 			{
 			case ';':
 				continue;
