@@ -19,6 +19,8 @@ while {! [eof $f]} {
 close $f
 
 set f [open entities.h w]
+puts $f "/// @file"
+puts $f "/// @ingroup common_utils"
 puts $f "/*"
 puts $f " * Generated file - do not edit directly."
 puts $f " *"
