@@ -17,13 +17,11 @@
 
 double pxmin, pxmax, pymin, pymax;	/* clipping window */
 
-static int nedges;
 static Freelist efl;
 
 void edgeinit(void)
 {
     freeinit(&efl, sizeof(Edge));
-    nedges = 0;
 }
 
 Edge *gvbisect(Site * s1, Site * s2)
@@ -56,8 +54,6 @@ Edge *gvbisect(Site * s1, Site * s2)
 	newedge->c /= dy;
     };
 
-    newedge->edgenbr = nedges;
-    nedges += 1;
     return (newedge);
 }
 

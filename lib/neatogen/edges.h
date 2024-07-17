@@ -20,7 +20,6 @@ extern "C" {
 	double a, b, c;		/* edge on line ax + by = c */
 	Site *ep[2];		/* endpoints (vertices) of edge; initially NULL */
 	Site *reg[2];		/* sites forming edge */
-	int edgenbr;
     } Edge;
 
 #define le 0

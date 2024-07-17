@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -17,23 +19,17 @@ extern "C" {
 #include <neatogen/voronoi.h>
 #include <neatogen/poly.h>
 
-    typedef struct ptitem {	/* Point list */
-	struct ptitem *next;
-	Point p;
-    } PtItem;
-
     typedef struct {		/* Info concerning site */
 	Agnode_t *node;		/* libgraph node */
 	Site site;		/* site used by voronoi code */
 	int overlaps;		/* true if node overlaps other nodes */
 	Poly poly;		/* polygon at node */
-	PtItem *verts;		/* sorted list of vertices of */
-	/* voronoi polygon */
+	Point *verts; ///< sorted list of vertices of voronoi polygon
+	size_t n_verts; ///< number of elements in `verts`
     } Info_t;
 
     extern Info_t *nodeInfo;	/* Array of node info */
 
-    extern void infoinit(void);
     /* Insert vertex into sorted list */
     extern void addVertex(Site *, double, double);
 
