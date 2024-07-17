@@ -477,7 +477,7 @@ MATH(EXPR GRAPHVIZ_PLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}+1")
 set(GVPLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}")
 set(VERSION "${GRAPHVIZ_VERSION_STRING}")
 set(prefix "${CMAKE_INSTALL_PREFIX}") # cmake-lint: disable=C0103
-set(EXEC_PREFIX "${CMAKE_INSTALL_PREFIX}")
+set(exec_prefix "${CMAKE_INSTALL_PREFIX}") # cmake-lint: disable=C0103
 set(PACKAGE "graphviz")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cdt/libcdt.pc.in
                ${CMAKE_CURRENT_BINARY_DIR}/libcdt.pc @ONLY)
