@@ -79,6 +79,7 @@ env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
   LD_LIBRARY_PATH=${PREFIX}/lib LIBRARY_PATH=${PREFIX}/lib \
   PYTHONPATH=${PREFIX}/lib/graphviz/python3 \
   TCLLIBPATH=${PREFIX}/lib/graphviz/tcl \
+  PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig \
   python3 -m pytest tests --verbose
 ```
 
@@ -92,6 +93,7 @@ env PATH=${PREFIX}/bin:${PATH} C_INCLUDE_PATH=${PREFIX}/include \
   LD_LIBRARY_PATH=${PREFIX}/lib LIBRARY_PATH=${PREFIX}/lib \
   PYTHONPATH=${PREFIX}/lib/graphviz/python3 \
   TCLLIBPATH=${PREFIX}/lib/graphviz/tcl \
+  PKG_CONFIG_PATH=${PREFIX}/lib/pkgconfig \
   python3 -m pytest tests/test_regression::test_2225 --verbose
 ```
 
