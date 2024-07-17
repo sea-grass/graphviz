@@ -72,16 +72,20 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(LIBRARY_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}")
   set(HEADER_INSTALL_DIR  "${CMAKE_INSTALL_INCLUDEDIR}/graphviz")
   set(MAN_INSTALL_DIR     "${CMAKE_INSTALL_MANDIR}")
-  set(LIBDIR              "${CMAKE_INSTALL_FULL_LIBDIR}")
-  set(INCLUDEDIR          "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+  set(libdir # cmake-lint: disable=C0103
+                          "${CMAKE_INSTALL_FULL_LIBDIR}")
+  set(includedir # cmake-lint: disable=C0103
+                          "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
   set(DATA_INSTALL_DIR    "${CMAKE_INSTALL_DATAROOTDIR}")
 else()
   set(BINARY_INSTALL_DIR  bin)
   set(LIBRARY_INSTALL_DIR lib)
   set(HEADER_INSTALL_DIR  include/graphviz)
   set(MAN_INSTALL_DIR     share/man)
-  set(LIBDIR              "${CMAKE_INSTALL_PREFIX}/${LIBRARY_INSTALL_DIR}")
-  set(INCLUDEDIR          "${CMAKE_INSTALL_PREFIX}/include")
+  set(libdir # cmake-lint: disable=C0103
+                          "${CMAKE_INSTALL_PREFIX}/${LIBRARY_INSTALL_DIR}")
+  set(includedir # cmake-lint: disable=C0103
+                          "${CMAKE_INSTALL_PREFIX}/include")
   set(DATA_INSTALL_DIR    share)
 endif()
 
@@ -472,8 +476,8 @@ endif()
 MATH(EXPR GRAPHVIZ_PLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}+1")
 set(GVPLUGIN_VERSION "${GRAPHVIZ_PLUGIN_VERSION}")
 set(VERSION "${GRAPHVIZ_VERSION_STRING}")
-set(PREFIX "${CMAKE_INSTALL_PREFIX}")
-set(EXEC_PREFIX "${CMAKE_INSTALL_PREFIX}")
+set(prefix "${CMAKE_INSTALL_PREFIX}") # cmake-lint: disable=C0103
+set(exec_prefix "${CMAKE_INSTALL_PREFIX}") # cmake-lint: disable=C0103
 set(PACKAGE "graphviz")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/lib/cdt/libcdt.pc.in
                ${CMAKE_CURRENT_BINARY_DIR}/libcdt.pc @ONLY)

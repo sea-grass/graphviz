@@ -1,7 +1,7 @@
-prefix=@PREFIX@
-exec_prefix=@EXEC_PREFIX@
-libdir=@LIBDIR@
-includedir=@INCLUDEDIR@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
 
 Name: libpathplan
 Description: Library for planning polyline and bezier paths around polygon obstacles

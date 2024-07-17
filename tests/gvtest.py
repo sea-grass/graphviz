@@ -33,6 +33,24 @@ def compile_c(
     cflags = os.environ.get("CFLAGS", "").split() + cflags
     ldflags = os.environ.get("LDFLAGS", "").split()
 
+    # expand link libraries into command line options
+    pkgconf = shutil.which("pkg-config") or shutil.which("pkgconf")
+    if pkgconf is not None and not is_cmake():
+        # assume pkg-config can pick up Graphviz’ .pc files
+        if len(link) > 0:
+            libraries = [f"lib{l}" for l in link]
+            cflags += subprocess.check_output(
+                [pkgconf, "--cflags", "--"] + libraries, universal_newlines=True
+            ).split()
+            ldflags += subprocess.check_output(
+                [pkgconf, "--libs", "--"] + libraries, universal_newlines=True
+            ).split()
+    elif platform.system() == "Windows" and not is_mingw():
+        if len(link) > 0:
+            ldflags += ["-link"] + [f"{l}.lib" for l in link]
+    else:
+        ldflags += [f"-l{l}" for l in link]
+
     # if the user did not give us destination, use a temporary path
     if dst is None:
         _, dst = tempfile.mkstemp(".exe")
@@ -42,16 +60,12 @@ def compile_c(
         rtflag = "-MDd" if os.environ.get("configuration") == "Debug" else "-MD"
 
         # construct an invocation of MSVC
-        args = ["cl", src, "-Fe:", dst, "-nologo", rtflag] + cflags
-        if len(link) > 0:
-            args += ["-link"] + [f"{l}.lib" for l in link] + ldflags
+        args = ["cl", src, "-Fe:", dst, "-nologo", rtflag] + cflags + ldflags
 
     else:
         # construct an invocation of the default C compiler
         cc = os.environ.get("CC", "cc")
-        args = [cc, "-std=c99", src, "-o", dst] + cflags
-        if len(link) > 0:
-            args += [f"-l{l}" for l in link] + ldflags
+        args = [cc, "-std=c99", src, "-o", dst] + cflags + ldflags
 
     # dump the command being run for the user to observe if the test fails
     print(f'+ {" ".join(shlex.quote(str(x)) for x in args)}')
