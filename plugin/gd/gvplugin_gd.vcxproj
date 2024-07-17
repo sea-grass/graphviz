@@ -51,7 +51,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\cairo;$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\gvc;$(SolutionDir)lib\pathplan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\cairo;$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\gvc;$(SolutionDir)lib\pathplan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GVDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -70,7 +70,12 @@
       <AdditionalDependencies>cgraph.lib;libgd.lib;gvc.lib;pathplan.lib;cairo.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)windows\dependencies\libraries\x86\bin\libgd.dll $(OutDir)libgd.dll
+      <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libgd.dll $(OutDir)libgd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\jpeg62.dll $(OutDir)jpeg62.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\tiffd.dll $(OutDir)tiffd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libwebp.dll $(OutDir)libwebp.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\liblzma.dll $(OutDir)liblzma.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libsharpyuv.dll $(OutDir)libsharpyuv.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\cairo-2.dll $(OutDir)cairo-2.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libexpatd.dll $(OutDir)libexpatd.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\fontconfig-1.dll $(OutDir)fontconfig-1.dll
@@ -79,7 +84,7 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\de
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\cairo;$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\gvc;$(SolutionDir)lib\pathplan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include;$(SolutionDir)windows\include;$(SolutionDir)windows\dependencies\libraries\x86\include;$(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\include\cairo;$(SolutionDir)lib;$(SolutionDir)lib\cdt;$(SolutionDir)lib\cgraph;$(SolutionDir)lib\common;$(SolutionDir)lib\gvc;$(SolutionDir)lib\pathplan;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GVDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PrecompiledHeader />
@@ -98,7 +103,12 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\de
       <AdditionalDependencies>cgraph.lib;libgd.lib;gvc.lib;pathplan.lib;cairo.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy $(SolutionDir)windows\dependencies\libraries\x86\bin\libgd.dll $(OutDir)libgd.dll
+      <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libgd.dll $(OutDir)libgd.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\jpeg62.dll $(OutDir)jpeg62.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\tiff.dll $(OutDir)tiff.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libwebp.dll $(OutDir)libwebp.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\liblzma.dll $(OutDir)liblzma.dll
+copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libsharpyuv.dll $(OutDir)libsharpyuv.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\cairo-2.dll $(OutDir)cairo-2.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libexpat.dll $(OutDir)libexpat.dll
 copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\fontconfig-1.dll $(OutDir)fontconfig-1.dll

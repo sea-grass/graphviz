@@ -51,6 +51,18 @@ if(WEBP_FOUND)
     )
   endif()
 
+  if(WIN32 AND install_win_dependency_dlls)
+    find_program(WEBP_RUNTIME_LIBRARY NAMES libwebp.dll)
+    find_program(SHARPYUV_RUNTIME_LIBRARY NAMES libsharpyuv.dll)
+
+    install(
+      FILES
+        ${WEBP_RUNTIME_LIBRARY}
+        ${SHARPYUV_RUNTIME_LIBRARY}
+      DESTINATION ${BINARY_INSTALL_DIR}
+    )
+  endif()
+
   set_target_properties(gvplugin_webp PROPERTIES
     VERSION ${GRAPHVIZ_PLUGIN_VERSION}.0.0
     SOVERSION ${GRAPHVIZ_PLUGIN_VERSION}

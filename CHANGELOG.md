@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The vt plugin gained new output formats, `-Tvt-4up`, `-Tvt-6up`, and
   `-Tvt-8up`, for drawing monochrome 4-, 6-, and 8-pixel-per-character
   visualizations, respectively.
+- The CMake build system now includes the WebP plugin also on Windows.
 
 ### Changed
 
@@ -50,6 +51,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   correctly.
 - GVPR casts of strings to floats now produce the expected values. This was a
   regression in Graphviz 2.30.
+- CMake builds do not support format png:gd #1786
+- The diffimg utility is not built in CMake builds #1788 (fixed also for
+  Windows x64 builds)
 
 ## [12.0.0] – 2024-07-04
 
