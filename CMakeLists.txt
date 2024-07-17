@@ -74,7 +74,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   set(MAN_INSTALL_DIR     "${CMAKE_INSTALL_MANDIR}")
   set(libdir # cmake-lint: disable=C0103
                           "${CMAKE_INSTALL_FULL_LIBDIR}")
-  set(INCLUDEDIR          "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
+  set(includedir # cmake-lint: disable=C0103
+                          "${CMAKE_INSTALL_FULL_INCLUDEDIR}")
   set(DATA_INSTALL_DIR    "${CMAKE_INSTALL_DATAROOTDIR}")
 else()
   set(BINARY_INSTALL_DIR  bin)
@@ -83,7 +84,8 @@ else()
   set(MAN_INSTALL_DIR     share/man)
   set(libdir # cmake-lint: disable=C0103
                           "${CMAKE_INSTALL_PREFIX}/${LIBRARY_INSTALL_DIR}")
-  set(INCLUDEDIR          "${CMAKE_INSTALL_PREFIX}/include")
+  set(includedir # cmake-lint: disable=C0103
+                          "${CMAKE_INSTALL_PREFIX}/include")
   set(DATA_INSTALL_DIR    share)
 endif()
 

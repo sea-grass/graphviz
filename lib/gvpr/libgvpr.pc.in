@@ -1,7 +1,7 @@
 prefix=@prefix@
 exec_prefix=@EXEC_PREFIX@
 libdir=@libdir@
-includedir=@INCLUDEDIR@
+includedir=@includedir@
 
 Name: libgvpr
 Description: The GVPR library
