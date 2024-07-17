@@ -1,6 +1,6 @@
 prefix=@prefix@
 exec_prefix=@EXEC_PREFIX@
-libdir=@LIBDIR@
+libdir=@libdir@
 includedir=@INCLUDEDIR@
 
 Name: libcdt
