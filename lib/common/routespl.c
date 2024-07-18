@@ -834,7 +834,7 @@ static void dfs(graph_t *g, node_t *search, nodes_t *visited, node_t *end,
 			dfs(g, n, visited, end, cycles);
 		}
 		if (!nodes_is_empty(visited)) {
-			(void)nodes_pop(visited);
+			(void)nodes_pop_back(visited);
 		}
 	}
 }

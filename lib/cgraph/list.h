@@ -297,7 +297,7 @@
   }                                                                            \
                                                                                \
   /** remove and return last element */                                        \
-  static inline LIST_UNUSED type name##_pop(name##_t *list) {                  \
+  static inline LIST_UNUSED type name##_pop_back(name##_t *list) {             \
     assert(list != NULL);                                                      \
     assert(list->size > 0);                                                    \
                                                                                \

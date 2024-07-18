@@ -366,7 +366,7 @@ static void test_push_back(void) {
   ints_free(&xs);
 }
 
-static void test_pop(void) {
+static void test_pop_back(void) {
   ints_t xs = {0};
 
   for (size_t i = 0; i < 10; ++i) {
@@ -374,13 +374,13 @@ static void test_pop(void) {
   }
   for (size_t i = 0; i < 10; ++i) {
     assert(ints_size(&xs) == 10 - i);
-    int x = ints_pop(&xs);
+    int x = ints_pop_back(&xs);
     assert(x == 10 - (int)i - 1);
   }
 
   for (size_t i = 0; i < 10; ++i) {
     ints_push_back(&xs, (int)i);
-    (void)ints_pop(&xs);
+    (void)ints_pop_back(&xs);
     assert(ints_is_empty(&xs));
   }
 
@@ -489,7 +489,7 @@ int main(void) {
   RUN(shrink_empty);
   RUN(free);
   RUN(push_back);
-  RUN(pop);
+  RUN(pop_back);
   RUN(large);
   RUN(attach_detach);
   RUN(dtor);

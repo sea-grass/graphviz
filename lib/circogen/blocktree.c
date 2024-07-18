@@ -75,7 +75,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 		Agnode_t *np;
 		Agedge_t *ep;
                 do {
-                    ep = estack_pop(stk);
+                    ep = estack_pop_back(stk);
 		    if (EDGEORDER(ep) == 1)
 			np = aghead (ep);
 		    else

@@ -30,6 +30,8 @@ static inline void *stack_top(gv_stack_t *stack) {
   return gv_stack_get(stack, gv_stack_size(stack) - 1);
 }
 
-static inline void *stack_pop(gv_stack_t *stack) { return gv_stack_pop(stack); }
+static inline void *stack_pop(gv_stack_t *stack) {
+  return gv_stack_pop_back(stack);
+}
 
 static inline void stack_reset(gv_stack_t *stack) { gv_stack_free(stack); }
