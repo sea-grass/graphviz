@@ -76,7 +76,7 @@ static int DFS_visit(rawgraph *g, size_t v, int time, int_stack_t *sp) {
             time = DFS_visit(g, id, time, sp);
     }
     vp->color = SCANNED;
-    int_stack_push(sp, v);
+    int_stack_push_back(sp, v);
     return time + 1;
 }
 
@@ -99,7 +99,7 @@ top_sort(rawgraph* g)
             time = DFS_visit(g, i, time, &sp);
     }
     while (!int_stack_is_empty(&sp)) {
-        const size_t v = int_stack_pop(&sp);
+        const size_t v = int_stack_pop_back(&sp);
         g->vertices[v].topsort_order = count;
         count++;
     }

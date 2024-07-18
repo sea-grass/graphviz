@@ -214,7 +214,7 @@ static Agraph_t *remove_pair_edges(Agraph_t *ing, circ_state *state) {
     deglist_t dl = getList(g);
 
     while (counter < nodeCount - 3) {
-	currnode = deglist_is_empty(&dl) ? NULL : deglist_pop(&dl);
+	currnode = deglist_is_empty(&dl) ? NULL : deglist_pop_back(&dl);
 
 	/* Remove all adjacent nodes since they have to be reinserted */
 	for (e = agfstedge(g, currnode); e; e = agnxtedge(g, e, currnode)) {

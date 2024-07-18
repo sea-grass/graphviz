@@ -23,7 +23,7 @@
  * \param name Type name to give the list container
  * \param type Type of the elements the list will store
  */
-#define DEFINE_LIST(name, type) DEFINE_LIST_WITH_DTOR(name, type, NULL)
+#define DEFINE_LIST(name, type) DEFINE_LIST_WITH_DTOR(name, type, name##_noop_)
 
 /** \p DEFINE_LIST but with a custom element destructor
  *
@@ -43,6 +43,9 @@
     size_t size;     /* number of elements in the list */                      \
     size_t capacity; /* available storage slots */                             \
   } name##_t;                                                                  \
+                                                                               \
+  /* default “do nothing” destructor */                                    \
+  static inline void name##_noop_(type item) { (void)item; }                   \
                                                                                \
   /** get the number of elements in a list */                                  \
   static inline LIST_UNUSED size_t name##_size(const name##_t *list) {         \
@@ -101,11 +104,42 @@
    * \param index Element index to get                                         \
    * \return Element at the given index                                        \
    */                                                                          \
-  static inline LIST_UNUSED type name##_get(const name##_t *list,              \
-                                            size_t index) {                    \
+  static inline type name##_get(const name##_t *list, size_t index) {          \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
     return list->data[index];                                                  \
+  }                                                                            \
+                                                                               \
+  /** access an element in a list for the purpose of modification              \
+   *                                                                           \
+   * Because this acquires an internal pointer into the list structure, `get`  \
+   * and `set` should be preferred over this function. `get` and `set` are     \
+   * easier to reason about. In particular, the pointer returned by this       \
+   * function is invalidated by any list operation that may reallocate the     \
+   * backing storage (e.g. `shrink_to_fit`).                                   \
+   *                                                                           \
+   * \param list List to operate on                                            \
+   * \param index Element to get a pointer to                                  \
+   * \return Pointer to the requested element                                  \
+   */                                                                          \
+  static inline type *name##_at(name##_t *list, size_t index) {                \
+    assert(list != NULL);                                                      \
+    assert(index < list->size && "index out of bounds");                       \
+    return &list->data[index];                                                 \
+  }                                                                            \
+                                                                               \
+  /** get a handle to the first element */                                     \
+  static inline type *name##_front(name##_t *list) {                           \
+    assert(list != NULL);                                                      \
+    assert(!name##_is_empty(list));                                            \
+    return name##_at(list, 0);                                                 \
+  }                                                                            \
+                                                                               \
+  /** get a handle to the last element */                                      \
+  static inline type *name##_back(name##_t *list) {                            \
+    assert(list != NULL);                                                      \
+    assert(!name##_is_empty(list));                                            \
+    return name##_at(list, name##_size(list) - 1);                             \
   }                                                                            \
                                                                                \
   /** assign to an element in a list                                           \
@@ -114,15 +148,12 @@
    * \param index Element to assign to                                         \
    * \param item Value to assign                                               \
    */                                                                          \
-  static inline LIST_UNUSED void name##_set(name##_t *list, size_t index,      \
-                                            type item) {                       \
+  static inline void name##_set(name##_t *list, size_t index, type item) {     \
     assert(list != NULL);                                                      \
-    assert(index < list->size && "index out of bounds");                       \
-    void (*dtor_)(type) = (void (*)(type))(dtor);                              \
-    if (dtor_ != NULL) {                                                       \
-      dtor_(list->data[index]);                                                \
-    }                                                                          \
-    list->data[index] = item;                                                  \
+    assert(index < name##_size(list) && "index out of bounds");                \
+    type *target = name##_at(list, index);                                     \
+    dtor(*target);                                                             \
+    *target = item;                                                            \
   }                                                                            \
                                                                                \
   /** remove an element from a list                                            \
@@ -139,10 +170,7 @@
       if (memcmp(&list->data[i], &item, sizeof(type)) == 0) {                  \
                                                                                \
         /* destroy the element we are about to remove */                       \
-        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
-        if (dtor_ != NULL) {                                                   \
-          dtor_(list->data[i]);                                                \
-        }                                                                      \
+        dtor(list->data[i]);                                                   \
                                                                                \
         /* shrink the list */                                                  \
         size_t remainder = (list->size - i - 1) * sizeof(type);                \
@@ -153,33 +181,12 @@
     }                                                                          \
   }                                                                            \
                                                                                \
-  /** access an element in a list for the purpose of modification              \
-   *                                                                           \
-   * Because this acquires an internal pointer into the list structure, `get`  \
-   * and `set` should be preferred over this function. `get` and `set` are     \
-   * easier to reason about. In particular, the pointer returned by this       \
-   * function is invalidated by any list operation that may reallocate the     \
-   * backing storage (e.g. `shrink_to_fit`).                                   \
-   *                                                                           \
-   * \param list List to operate on                                            \
-   * \param index Element to get a pointer to                                  \
-   * \return Pointer to the requested element                                  \
-   */                                                                          \
-  static inline LIST_UNUSED type *name##_at(name##_t *list, size_t index) {    \
-    assert(list != NULL);                                                      \
-    assert(index < list->size && "index out of bounds");                       \
-    return &list->data[index];                                                 \
-  }                                                                            \
-                                                                               \
   /** remove all elements from a list */                                       \
   static inline LIST_UNUSED void name##_clear(name##_t *list) {                \
     assert(list != NULL);                                                      \
                                                                                \
-    void (*dtor_)(type) = (void (*)(type))(dtor);                              \
-    if (dtor_ != NULL) {                                                       \
-      for (size_t i = 0; i < list->size; ++i) {                                \
-        dtor_(list->data[i]);                                                  \
-      }                                                                        \
+    for (size_t i = 0; i < list->size; ++i) {                                  \
+      dtor(list->data[i]);                                                     \
     }                                                                          \
                                                                                \
     list->size = 0;                                                            \
@@ -222,10 +229,7 @@
     } else if (list->size > size) {                                            \
       /* we are shrinking the list */                                          \
       while (list->size > size) {                                              \
-        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
-        if (dtor_ != NULL) {                                                   \
-          dtor_(list->data[list->size - 1]);                                   \
-        }                                                                      \
+        dtor(list->data[list->size - 1]);                                      \
         --list->size;                                                          \
       }                                                                        \
     }                                                                          \
@@ -273,18 +277,11 @@
   static inline LIST_UNUSED void name##_reverse(name##_t *list) {              \
     assert(list != NULL);                                                      \
                                                                                \
-    if (list->size == 0) {                                                     \
-      return;                                                                  \
-    }                                                                          \
-                                                                               \
-    size_t left = 0;                                                           \
-    size_t right = list->size - 1;                                             \
-    while (left < right) {                                                     \
-      type temp = list->data[left];                                            \
-      list->data[left] = list->data[right];                                    \
-      list->data[right] = temp;                                                \
-      ++left;                                                                  \
-      --right;                                                                 \
+    for (size_t i = 0; i < name##_size(list) / 2; ++i) {                       \
+      type const temp1 = name##_get(list, i);                                  \
+      type const temp2 = name##_get(list, name##_size(list) - i - 1);          \
+      name##_set(list, i, temp2);                                              \
+      name##_set(list, name##_size(list) - i - 1, temp1);                      \
     }                                                                          \
   }                                                                            \
                                                                                \
@@ -308,12 +305,13 @@
   }                                                                            \
                                                                                \
   /** alias for append */                                                      \
-  static inline LIST_UNUSED void name##_push(name##_t *list, type value) {     \
+  static inline LIST_UNUSED void name##_push_back(name##_t *list,              \
+                                                  type value) {                \
     name##_append(list, value);                                                \
   }                                                                            \
                                                                                \
   /** remove and return last element */                                        \
-  static inline LIST_UNUSED type name##_pop(name##_t *list) {                  \
+  static inline LIST_UNUSED type name##_pop_back(name##_t *list) {             \
     assert(list != NULL);                                                      \
     assert(list->size > 0);                                                    \
                                                                                \

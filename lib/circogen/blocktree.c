@@ -67,7 +67,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 
         if (VAL(v) == 0) {   /* Since VAL(root) == 0, it gets treated as artificial cut point */
 	    PARENT(v) = u;
-            estack_push(stk, e);
+            estack_push_back(stk, e);
             dfs(g, v, state, false, stk);
             LOWVAL(u) = imin(LOWVAL(u), LOWVAL(v));
             if (LOWVAL(v) >= VAL(u)) {       /* u is an articulation point */
@@ -75,7 +75,7 @@ static void dfs(Agraph_t *g, Agnode_t *u, circ_state *state, bool isRoot,
 		Agnode_t *np;
 		Agedge_t *ep;
                 do {
-                    ep = estack_pop(stk);
+                    ep = estack_pop_back(stk);
 		    if (EDGEORDER(ep) == 1)
 			np = aghead (ep);
 		    else

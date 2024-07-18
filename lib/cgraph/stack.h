@@ -19,17 +19,15 @@ static inline bool stack_is_empty(const gv_stack_t *stack) {
 }
 
 static inline void stack_push(gv_stack_t *stack, void *item) {
-  gv_stack_push(stack, item);
+  gv_stack_push_back(stack, item);
 }
 
 static inline void *stack_top(gv_stack_t *stack) {
-
-  assert(stack != NULL);
-  assert(!stack_is_empty(stack) && "access to top of an empty stack");
-
-  return gv_stack_get(stack, gv_stack_size(stack) - 1);
+  return *gv_stack_back(stack);
 }
 
-static inline void *stack_pop(gv_stack_t *stack) { return gv_stack_pop(stack); }
+static inline void *stack_pop(gv_stack_t *stack) {
+  return gv_stack_pop_back(stack);
+}
 
 static inline void stack_reset(gv_stack_t *stack) { gv_stack_free(stack); }
