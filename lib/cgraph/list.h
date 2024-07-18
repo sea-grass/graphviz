@@ -23,7 +23,7 @@
  * \param name Type name to give the list container
  * \param type Type of the elements the list will store
  */
-#define DEFINE_LIST(name, type) DEFINE_LIST_WITH_DTOR(name, type, NULL)
+#define DEFINE_LIST(name, type) DEFINE_LIST_WITH_DTOR(name, type, name##_noop_)
 
 /** \p DEFINE_LIST but with a custom element destructor
  *
@@ -43,6 +43,9 @@
     size_t size;     /* number of elements in the list */                      \
     size_t capacity; /* available storage slots */                             \
   } name##_t;                                                                  \
+                                                                               \
+  /* default “do nothing” destructor */                                    \
+  static inline void name##_noop_(type item) { (void)item; }                   \
                                                                                \
   /** get the number of elements in a list */                                  \
   static inline LIST_UNUSED size_t name##_size(const name##_t *list) {         \
@@ -118,10 +121,7 @@
                                             type item) {                       \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
-    void (*dtor_)(type) = (void (*)(type))(dtor);                              \
-    if (dtor_ != NULL) {                                                       \
-      dtor_(list->data[index]);                                                \
-    }                                                                          \
+    dtor(list->data[index]);                                                   \
     list->data[index] = item;                                                  \
   }                                                                            \
                                                                                \
@@ -139,10 +139,7 @@
       if (memcmp(&list->data[i], &item, sizeof(type)) == 0) {                  \
                                                                                \
         /* destroy the element we are about to remove */                       \
-        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
-        if (dtor_ != NULL) {                                                   \
-          dtor_(list->data[i]);                                                \
-        }                                                                      \
+        dtor(list->data[i]);                                                   \
                                                                                \
         /* shrink the list */                                                  \
         size_t remainder = (list->size - i - 1) * sizeof(type);                \
@@ -175,11 +172,8 @@
   static inline LIST_UNUSED void name##_clear(name##_t *list) {                \
     assert(list != NULL);                                                      \
                                                                                \
-    void (*dtor_)(type) = (void (*)(type))(dtor);                              \
-    if (dtor_ != NULL) {                                                       \
-      for (size_t i = 0; i < list->size; ++i) {                                \
-        dtor_(list->data[i]);                                                  \
-      }                                                                        \
+    for (size_t i = 0; i < list->size; ++i) {                                  \
+      dtor(list->data[i]);                                                     \
     }                                                                          \
                                                                                \
     list->size = 0;                                                            \
@@ -222,10 +216,7 @@
     } else if (list->size > size) {                                            \
       /* we are shrinking the list */                                          \
       while (list->size > size) {                                              \
-        void (*dtor_)(type) = (void (*)(type))(dtor);                          \
-        if (dtor_ != NULL) {                                                   \
-          dtor_(list->data[list->size - 1]);                                   \
-        }                                                                      \
+        dtor(list->data[list->size - 1]);                                      \
         --list->size;                                                          \
       }                                                                        \
     }                                                                          \
