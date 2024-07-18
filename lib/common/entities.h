@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-static struct entities_s {
+static const struct entities_s {
 	char	*name;
 	int	value;
 } entities[] = {
@@ -272,7 +272,7 @@ static struct entities_s {
 };
 
 #define ENTITY_NAME_LENGTH_MAX 8
-#define NR_OF_ENTITIES 252
+#define NR_OF_ENTITIES (sizeof(entities) / sizeof(entities[0]))
 
 #ifdef __cplusplus
 }

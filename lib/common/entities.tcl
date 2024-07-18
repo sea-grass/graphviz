@@ -4,7 +4,6 @@
 #          http://www.w3.org/TR/REC-html40/sgml/entities.html
 set f [open entities.html r]
 set entity_name_length_max 0
-set nr_of_entities 0
 while {! [eof $f]} {
         set rec [gets $f]
         if {[scan $rec {&lt;!ENTITY %s CDATA "&amp;#%d;"; --} name val] == 2} {
@@ -13,12 +12,13 @@ while {! [eof $f]} {
 		if {$entity_name_length > $entity_name_length_max} {
 			set entity_name_length_max $entity_name_length
 		}
-		incr nr_of_entities
         }
 }
 close $f
 
 set f [open entities.h w]
+puts $f "/// @file"
+puts $f "/// @ingroup common_utils"
 puts $f "/*"
 puts $f " * Generated file - do not edit directly."
 puts $f " *"
@@ -32,7 +32,7 @@ puts $f "#ifdef __cplusplus"
 puts $f "extern \"C\" {"
 puts $f "#endif"
 puts $f ""
-puts $f "static struct entities_s {"
+puts $f "static const struct entities_s {"
 puts $f "	char	*name;"
 puts $f "	int	value;"
 puts $f "} entities\[\] = {"
@@ -42,7 +42,7 @@ foreach name [lsort [array names entity]] {
 puts $f "};"
 puts $f ""
 puts $f "#define ENTITY_NAME_LENGTH_MAX $entity_name_length_max"
-puts $f "#define NR_OF_ENTITIES $nr_of_entities"
+puts $f "#define NR_OF_ENTITIES (sizeof(entities) / sizeof(entities\[0\]))"
 puts $f ""
 puts $f "#ifdef __cplusplus"
 puts $f "}"

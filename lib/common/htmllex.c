@@ -53,10 +53,8 @@ typedef struct {
     int error;         // set if error given
     char inCell;       // set if in TD to allow T_string
     char mode;         // for handling artificial <HTML>..</HTML>
-    char *currtok;     // for error reporting
-    char *prevtok;     // for error reporting
-    size_t currtoklen;
-    size_t prevtoklen;
+    strview_t currtok; // for error reporting
+    strview_t prevtok; // for error reporting
 } lexstate_t;
 static lexstate_t state;
 
@@ -65,11 +63,8 @@ static lexstate_t state;
  */
 static void error_context(void)
 {
-    agxbclear(state.xb);
-    if (state.prevtoklen > 0)
-	agxbput_n(state.xb, state.prevtok, state.prevtoklen);
-    agxbput_n(state.xb, state.currtok, state.currtoklen);
-    agerr(AGPREV, "... %s ...\n", agxbuse(state.xb));
+  agerr(AGPREV, "... %.*s%.*s ...\n", (int)state.prevtok.size,
+        state.prevtok.data, (int)state.currtok.size, state.currtok.data);
 }
 
 /* htmlerror:
@@ -770,8 +765,8 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
     state.mode = 0;
     state.warn = 0;
     state.error = 0;
-    state.currtoklen = 0;
-    state.prevtoklen = 0;
+    state.currtok = (strview_t){0};
+    state.prevtok = (strview_t){0};
     state.inCell = 1;
     state.parser = XML_ParserCreate(charsetToStr(GD_charset(env->g)));
     XML_SetUserData(state.parser, GD_gvc(env->g));
@@ -1094,10 +1089,8 @@ int htmllex(void)
 	protect_rsqb(&state.lb);
 
 	state.prevtok = state.currtok;
-	state.prevtoklen = state.currtoklen;
-	state.currtok = s;
-	state.currtoklen = len;
-	if ((llen = (size_t)agxblen(&state.lb))) {
+	state.currtok = (strview_t){.data = s, .size = len};
+	if ((llen = agxblen(&state.lb))) {
 	    assert(llen <= (size_t)INT_MAX && "XML token too long for expat API");
 	    rv = XML_Parse(state.parser, agxbuse(&state.lb), (int)llen, 0);
 	} else {

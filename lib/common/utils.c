@@ -25,6 +25,7 @@
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
 #include <cgraph/streq.h>
+#include <cgraph/strview.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -1076,10 +1077,10 @@ attrsym_t *safe_dcl(graph_t *g, int obj_kind, char *name, char *defaultValue) {
 }
 
 static int comp_entities(const void *e1, const void *e2) {
-  return strcmp(e1, ((const struct entities_s *)e2)->name);
+  const strview_t *key = e1;
+  const struct entities_s *candidate = e2;
+  return strview_cmp(*key, strview(candidate->name, '\0'));
 }
-
-#define MAXENTLEN 8
 
 /** Scan non-numeric entity, convert to &#...; form and store in xbuf.
  * t points to first char after '&'. Return after final semicolon.
@@ -1087,21 +1088,17 @@ static int comp_entities(const void *e1, const void *e2) {
  *     */
 char* scanEntity (char* t, agxbuf* xb)
 {
-    char*  endp = strchr (t, ';');
+    const strview_t key = strview(t, ';');
     struct entities_s *res;
-    size_t len;
-    char   buf[MAXENTLEN+1];
 
     agxbputc(xb, '&');
-    if (!endp) return t;
-    if ((len = (size_t)(endp - t)) > MAXENTLEN || len < 2) return t;
-    strncpy (buf, t, len);
-    buf[len] = '\0';
-    res = bsearch(buf, entities, NR_OF_ENTITIES,
+    if (key.data[key.size] == '\0') return t;
+    if (key.size > ENTITY_NAME_LENGTH_MAX || key.size < 2) return t;
+    res = bsearch(&key, entities, NR_OF_ENTITIES,
         sizeof(entities[0]), comp_entities);
     if (!res) return t;
     agxbprint(xb, "#%d;", res->value);
-    return endp + 1;
+    return t + key.size + 1;
 }
 
 /** Check for an HTML entity for a special character.
@@ -1113,9 +1110,7 @@ char* scanEntity (char* t, agxbuf* xb)
 static int
 htmlEntity (char** s)
 {
-    char *p;
     struct entities_s *res;
-    char entity_name_buf[ENTITY_NAME_LENGTH_MAX+1];
     unsigned char* str = *(unsigned char**)s;
     unsigned int byte;
     int i, n = 0;
@@ -1154,13 +1149,12 @@ htmlEntity (char** s)
 	}
     }
     else {
-	p = entity_name_buf;
+	strview_t key = {.data = (char *)str};
 	for (i = 0; i <  ENTITY_NAME_LENGTH_MAX; i++) {
 	    byte = *(str + i);
 	    if (byte == '\0') break;
 	    if (byte == ';') {
-		*p++ = '\0';
-		res = bsearch(entity_name_buf, entities, NR_OF_ENTITIES,
+		res = bsearch(&key, entities, NR_OF_ENTITIES,
 		    sizeof(entities[0]), comp_entities);
 		if (res) {
 		    n = res->value;
@@ -1168,7 +1162,7 @@ htmlEntity (char** s)
 		}
 		break;
 	    }
-	    *p++ = (char)byte;
+	    ++key.size;
 	}
     }
     *s = (char*)str;
