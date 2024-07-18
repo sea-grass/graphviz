@@ -291,7 +291,8 @@
   }                                                                            \
                                                                                \
   /** alias for append */                                                      \
-  static inline LIST_UNUSED void name##_push(name##_t *list, type value) {     \
+  static inline LIST_UNUSED void name##_push_back(name##_t *list,              \
+                                                  type value) {                \
     name##_append(list, value);                                                \
   }                                                                            \
                                                                                \

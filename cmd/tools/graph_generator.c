@@ -519,8 +519,8 @@ static void treeDup(tree_t *tp, unsigned J) {
 DEFINE_LIST(int_stack, unsigned)
 
 static void push(int_stack_t *sp, unsigned j, unsigned d) {
-  int_stack_push(sp, j);
-  int_stack_push(sp, d);
+  int_stack_push_back(sp, j);
+  int_stack_push_back(sp, d);
 }
 
 static pair pop(int_stack_t *sp) {

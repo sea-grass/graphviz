@@ -19,7 +19,7 @@ static inline bool stack_is_empty(const gv_stack_t *stack) {
 }
 
 static inline void stack_push(gv_stack_t *stack, void *item) {
-  gv_stack_push(stack, item);
+  gv_stack_push_back(stack, item);
 }
 
 static inline void *stack_top(gv_stack_t *stack) {

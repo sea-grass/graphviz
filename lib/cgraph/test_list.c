@@ -350,13 +350,13 @@ static void test_free(void) {
   assert(xs.capacity == 0);
 }
 
-static void test_push(void) {
+static void test_push_back(void) {
   ints_t xs = {0};
   ints_t ys = {0};
 
   for (size_t i = 0; i < 10; ++i) {
     ints_append(&xs, (int)i);
-    ints_push(&ys, (int)i);
+    ints_push_back(&ys, (int)i);
     assert(ints_size(&xs) == ints_size(&ys));
     for (size_t j = 0; j <= i; ++j) {
       assert(ints_get(&xs, j) == ints_get(&ys, j));
@@ -370,7 +370,7 @@ static void test_pop(void) {
   ints_t xs = {0};
 
   for (size_t i = 0; i < 10; ++i) {
-    ints_push(&xs, (int)i);
+    ints_push_back(&xs, (int)i);
   }
   for (size_t i = 0; i < 10; ++i) {
     assert(ints_size(&xs) == 10 - i);
@@ -379,7 +379,7 @@ static void test_pop(void) {
   }
 
   for (size_t i = 0; i < 10; ++i) {
-    ints_push(&xs, (int)i);
+    ints_push_back(&xs, (int)i);
     (void)ints_pop(&xs);
     assert(ints_is_empty(&xs));
   }
@@ -488,7 +488,7 @@ int main(void) {
   RUN(shrink);
   RUN(shrink_empty);
   RUN(free);
-  RUN(push);
+  RUN(push_back);
   RUN(pop);
   RUN(large);
   RUN(attach_detach);
