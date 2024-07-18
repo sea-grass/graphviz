@@ -135,6 +135,13 @@
     return name##_at(list, 0);                                                 \
   }                                                                            \
                                                                                \
+  /** get a handle to the last element */                                      \
+  static inline type *name##_back(name##_t *list) {                            \
+    assert(list != NULL);                                                      \
+    assert(!name##_is_empty(list));                                            \
+    return name##_at(list, name##_size(list) - 1);                             \
+  }                                                                            \
+                                                                               \
   /** assign to an element in a list                                           \
    *                                                                           \
    * \param list List to operate on                                            \

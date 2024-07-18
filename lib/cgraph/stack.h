@@ -23,11 +23,7 @@ static inline void stack_push(gv_stack_t *stack, void *item) {
 }
 
 static inline void *stack_top(gv_stack_t *stack) {
-
-  assert(stack != NULL);
-  assert(!stack_is_empty(stack) && "access to top of an empty stack");
-
-  return gv_stack_get(stack, gv_stack_size(stack) - 1);
+  return *gv_stack_back(stack);
 }
 
 static inline void *stack_pop(gv_stack_t *stack) {
