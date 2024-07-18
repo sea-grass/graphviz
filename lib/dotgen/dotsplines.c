@@ -1932,7 +1932,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
     /* make copies of the spline points, one per multi-edge */
 
     if (cnt == 1) {
-	clip_and_install(fe, hn, points_at(&pointfs, 0), points_size(&pointfs),
+	clip_and_install(fe, hn, points_front(&pointfs), points_size(&pointfs),
 	                 &sinfo);
 	points_free(&pointfs);
 	points_free(&pointfs2);
@@ -1944,7 +1944,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 
     for (size_t k = 0; k < points_size(&pointfs); k++)
 	points_append(&pointfs2, points_get(&pointfs, k));
-    clip_and_install(fe, hn, points_at(&pointfs2, 0),
+    clip_and_install(fe, hn, points_front(&pointfs2),
                      points_size(&pointfs2), &sinfo);
     for (unsigned j = 1; j < cnt; j++) {
 	e = edges[ind + j];
@@ -1957,7 +1957,7 @@ static void make_regular_edge(graph_t *g, spline_info_t *sp, path *P,
 	points_clear(&pointfs2);
 	for (size_t k = 0; k < points_size(&pointfs); k++)
 	    points_append(&pointfs2, points_get(&pointfs, k));
-	clip_and_install(e, aghead(e), points_at(&pointfs2, 0),
+	clip_and_install(e, aghead(e), points_front(&pointfs2),
 	                 points_size(&pointfs2), &sinfo);
     }
     points_free(&pointfs);

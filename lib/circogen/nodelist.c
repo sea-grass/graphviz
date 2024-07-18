@@ -38,7 +38,7 @@ void realignNodelist(nodelist_t *list, size_t np) {
     nodelist_append(list, nodelist_get(list, 0));
     size_t to_move = sizeof(node_t*) * (nodelist_size(list) - 1);
     if (to_move > 0) {
-      memmove(nodelist_at(list, 0), nodelist_at(list, 1), to_move);
+      memmove(nodelist_front(list), nodelist_at(list, 1), to_move);
     }
     nodelist_resize(list, nodelist_size(list) - 1, NULL);
   }

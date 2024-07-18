@@ -4009,7 +4009,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
                  * until splines are generated in dot 
                  */
 	    show_boxes_append(&Show_boxes, NULL);
-	    job->common->show_boxes = show_boxes_at(&Show_boxes, 0);
+	    job->common->show_boxes = show_boxes_front(&Show_boxes);
 #endif
 	    emit_graph(job, g);
 	}

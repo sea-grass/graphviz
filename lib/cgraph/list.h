@@ -128,6 +128,13 @@
     return &list->data[index];                                                 \
   }                                                                            \
                                                                                \
+  /** get a handle to the first element */                                     \
+  static inline type *name##_front(name##_t *list) {                           \
+    assert(list != NULL);                                                      \
+    assert(!name##_is_empty(list));                                            \
+    return name##_at(list, 0);                                                 \
+  }                                                                            \
+                                                                               \
   /** assign to an element in a list                                           \
    *                                                                           \
    * \param list List to operate on                                            \
