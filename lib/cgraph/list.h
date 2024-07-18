@@ -123,7 +123,7 @@
    * \param index Element to get a pointer to                                  \
    * \return Pointer to the requested element                                  \
    */                                                                          \
-  static inline LIST_UNUSED type *name##_at(name##_t *list, size_t index) {    \
+  static inline type *name##_at(name##_t *list, size_t index) {                \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
     return &list->data[index];                                                 \
@@ -138,9 +138,10 @@
   static inline LIST_UNUSED void name##_set(name##_t *list, size_t index,      \
                                             type item) {                       \
     assert(list != NULL);                                                      \
-    assert(index < list->size && "index out of bounds");                       \
-    dtor(list->data[index]);                                                   \
-    list->data[index] = item;                                                  \
+    assert(index < name##_size(list) && "index out of bounds");                \
+    type *target = name##_at(list, index);                                     \
+    dtor(*target);                                                             \
+    *target = item;                                                            \
   }                                                                            \
                                                                                \
   /** remove an element from a list                                            \
