@@ -111,6 +111,24 @@
     return list->data[index];                                                  \
   }                                                                            \
                                                                                \
+  /** access an element in a list for the purpose of modification              \
+   *                                                                           \
+   * Because this acquires an internal pointer into the list structure, `get`  \
+   * and `set` should be preferred over this function. `get` and `set` are     \
+   * easier to reason about. In particular, the pointer returned by this       \
+   * function is invalidated by any list operation that may reallocate the     \
+   * backing storage (e.g. `shrink_to_fit`).                                   \
+   *                                                                           \
+   * \param list List to operate on                                            \
+   * \param index Element to get a pointer to                                  \
+   * \return Pointer to the requested element                                  \
+   */                                                                          \
+  static inline LIST_UNUSED type *name##_at(name##_t *list, size_t index) {    \
+    assert(list != NULL);                                                      \
+    assert(index < list->size && "index out of bounds");                       \
+    return &list->data[index];                                                 \
+  }                                                                            \
+                                                                               \
   /** assign to an element in a list                                           \
    *                                                                           \
    * \param list List to operate on                                            \
@@ -148,24 +166,6 @@
         return;                                                                \
       }                                                                        \
     }                                                                          \
-  }                                                                            \
-                                                                               \
-  /** access an element in a list for the purpose of modification              \
-   *                                                                           \
-   * Because this acquires an internal pointer into the list structure, `get`  \
-   * and `set` should be preferred over this function. `get` and `set` are     \
-   * easier to reason about. In particular, the pointer returned by this       \
-   * function is invalidated by any list operation that may reallocate the     \
-   * backing storage (e.g. `shrink_to_fit`).                                   \
-   *                                                                           \
-   * \param list List to operate on                                            \
-   * \param index Element to get a pointer to                                  \
-   * \return Pointer to the requested element                                  \
-   */                                                                          \
-  static inline LIST_UNUSED type *name##_at(name##_t *list, size_t index) {    \
-    assert(list != NULL);                                                      \
-    assert(index < list->size && "index out of bounds");                       \
-    return &list->data[index];                                                 \
   }                                                                            \
                                                                                \
   /** remove all elements from a list */                                       \
