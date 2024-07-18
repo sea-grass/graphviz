@@ -104,8 +104,7 @@
    * \param index Element index to get                                         \
    * \return Element at the given index                                        \
    */                                                                          \
-  static inline LIST_UNUSED type name##_get(const name##_t *list,              \
-                                            size_t index) {                    \
+  static inline type name##_get(const name##_t *list, size_t index) {          \
     assert(list != NULL);                                                      \
     assert(index < list->size && "index out of bounds");                       \
     return list->data[index];                                                  \
@@ -135,8 +134,7 @@
    * \param index Element to assign to                                         \
    * \param item Value to assign                                               \
    */                                                                          \
-  static inline LIST_UNUSED void name##_set(name##_t *list, size_t index,      \
-                                            type item) {                       \
+  static inline void name##_set(name##_t *list, size_t index, type item) {     \
     assert(list != NULL);                                                      \
     assert(index < name##_size(list) && "index out of bounds");                \
     type *target = name##_at(list, index);                                     \
@@ -265,18 +263,11 @@
   static inline LIST_UNUSED void name##_reverse(name##_t *list) {              \
     assert(list != NULL);                                                      \
                                                                                \
-    if (list->size == 0) {                                                     \
-      return;                                                                  \
-    }                                                                          \
-                                                                               \
-    size_t left = 0;                                                           \
-    size_t right = list->size - 1;                                             \
-    while (left < right) {                                                     \
-      type temp = list->data[left];                                            \
-      list->data[left] = list->data[right];                                    \
-      list->data[right] = temp;                                                \
-      ++left;                                                                  \
-      --right;                                                                 \
+    for (size_t i = 0; i < name##_size(list) / 2; ++i) {                       \
+      type const temp1 = name##_get(list, i);                                  \
+      type const temp2 = name##_get(list, name##_size(list) - i - 1);          \
+      name##_set(list, i, temp2);                                              \
+      name##_set(list, name##_size(list) - i - 1, temp1);                      \
     }                                                                          \
   }                                                                            \
                                                                                \
