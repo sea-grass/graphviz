@@ -45,7 +45,7 @@
   } name##_t;                                                                  \
                                                                                \
   /* default “do nothing” destructor */                                    \
-  static inline void name##_noop_(type item) { (void)item; }                   \
+  static inline LIST_UNUSED void name##_noop_(type item) { (void)item; }       \
                                                                                \
   /** get the number of elements in a list */                                  \
   static inline LIST_UNUSED size_t name##_size(const name##_t *list) {         \
@@ -129,14 +129,14 @@
   }                                                                            \
                                                                                \
   /** get a handle to the first element */                                     \
-  static inline type *name##_front(name##_t *list) {                           \
+  static inline LIST_UNUSED type *name##_front(name##_t *list) {               \
     assert(list != NULL);                                                      \
     assert(!name##_is_empty(list));                                            \
     return name##_at(list, 0);                                                 \
   }                                                                            \
                                                                                \
   /** get a handle to the last element */                                      \
-  static inline type *name##_back(name##_t *list) {                            \
+  static inline LIST_UNUSED type *name##_back(name##_t *list) {                \
     assert(list != NULL);                                                      \
     assert(!name##_is_empty(list));                                            \
     return name##_at(list, name##_size(list) - 1);                             \
