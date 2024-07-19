@@ -4069,7 +4069,7 @@ def test_2563():
     # try various `overlap=…` values
     results: Set[str] = set()
     for overlap in ("scale", "scalexy"):
-        # run this through sfdp
+        # run this through fdp
         fdp = which("fdp")
         p = subprocess.run(
             [fdp, f"-Goverlap={overlap}", input],
