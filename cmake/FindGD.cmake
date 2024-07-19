@@ -1,12 +1,40 @@
 find_path(GD_INCLUDE_DIR gd.h)
 find_library(GD_LIBRARY NAMES gd libgd)
-find_program(GD_RUNTIME_LIBRARY libgd.dll)
 
 include(FindPackageHandleStandardArgs)
 if(WIN32)
+  find_program(GD_RUNTIME_LIBRARY libgd.dll)
+  if(MINGW)
+    find_program(JPEG_RUNTIME_LIBRARY libjpeg-8.dll)
+    find_program(TIFF_RUNTIME_LIBRARY libtiff-6.dll)
+    find_program(WEBP_RUNTIME_LIBRARY libwebp-7.dll)
+    find_program(LZMA_RUNTIME_LIBRARY liblzma-5.dll)
+    find_program(SHARPYUV_RUNTIME_LIBRARY libsharpyuv-0.dll)
+  else()
+    find_program(JPEG_RUNTIME_LIBRARY jpeg62.dll)
+    find_program(TIFF_RUNTIME_LIBRARY tiff.dll)
+    find_program(WEBP_RUNTIME_LIBRARY libwebp.dll)
+    find_program(LZMA_RUNTIME_LIBRARY liblzma.dll)
+    find_program(SHARPYUV_RUNTIME_LIBRARY libsharpyuv.dll)
+  endif()
+
   find_package_handle_standard_args(GD DEFAULT_MSG
                                     GD_LIBRARY GD_INCLUDE_DIR
-                                    GD_RUNTIME_LIBRARY)
+                                    GD_RUNTIME_LIBRARY
+                                    JPEG_RUNTIME_LIBRARY
+                                    TIFF_RUNTIME_LIBRARY
+                                    WEBP_RUNTIME_LIBRARY
+                                    LZMA_RUNTIME_LIBRARY
+                                    SHARPYUV_RUNTIME_LIBRARY)
+
+  set(GD_RUNTIME_LIBRARIES
+    ${GD_RUNTIME_LIBRARY}
+    ${JPEG_RUNTIME_LIBRARY}
+    ${TIFF_RUNTIME_LIBRARY}
+    ${WEBP_RUNTIME_LIBRARY}
+    ${LZMA_RUNTIME_LIBRARY}
+    ${SHARPYUV_RUNTIME_LIBRARY}
+  )
 else()
   find_package_handle_standard_args(GD DEFAULT_MSG
                                     GD_LIBRARY GD_INCLUDE_DIR)
@@ -16,7 +44,6 @@ mark_as_advanced(GD_INCLUDE_DIR GD_LIBRARY GD_RUNTIME_LIBRARY)
 
 set(GD_INCLUDE_DIRS ${GD_INCLUDE_DIR})
 set(GD_LIBRARIES ${GD_LIBRARY})
-set(GD_RUNTIME_LIBRARIES ${GD_RUNTIME_LIBRARY})
 
 find_package(PkgConfig)
 if(PkgConfig_FOUND)
@@ -63,15 +90,6 @@ if(GD_LIBRARY)
     set(HAVE_GD_FONTCONFIG 1)
     set(HAVE_GD_FREETYPE 1)
     set(HAVE_GD_GIF 1)
-  elseif(WIN32)
-    # Windows has neither pkg-config nor gdlibg-config. If we have reached here
-    # and thus found gdlib, assume it was installed via vcpkg. That version of
-    # gdlib has enabled [core,fontconfig,freetype,jpeg,png,tiff,webp], so take
-    # the subset of that we use, [fontconfig,freetyp,jpeg,png].
-    set(HAVE_GD_PNG 1)
-    set(HAVE_GD_JPEG 1)
-    set(HAVE_GD_FONTCONFIG 1)
-    set(HAVE_GD_FREETYPE 1)
   else()
     message(
       WARNING

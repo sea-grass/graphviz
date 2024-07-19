@@ -26,6 +26,11 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvcint.h>	/* for gvc->g for agget */
 #include <gd.h>
+#include <gdfontt.h>
+#include <gdfonts.h>
+#include <gdfontmb.h>
+#include <gdfontl.h>
+#include <gdfontg.h>
 
 typedef enum {
 	FORMAT_GIF,
@@ -234,13 +239,6 @@ static void gdgen_end_page(GVJ_t * job)
 #define FONTSIZE_MUCH_TOO_SMALL 0.15
 /* fontsize at which text is rendered by a simple line */
 #define FONTSIZE_TOO_SMALL 1.5
-
-#ifdef GVDLL
-#define GD_IMPORT __declspec(dllimport)
-#else
-#define GD_IMPORT
-#endif
-GD_IMPORT extern gdFontPtr gdFontTiny, gdFontSmall, gdFontMediumBold, gdFontLarge, gdFontGiant;
 
 void gdgen_text(gdImagePtr im, pointf spf, pointf epf, int fontcolor, double fontsize, int fontdpi, double fontangle, char *fontname, char *str)
 {

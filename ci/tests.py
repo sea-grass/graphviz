@@ -118,10 +118,6 @@ def test_existence(binary: str):
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built on some Windows due to lacking libANN")
 
-    if binary == "diffimg" and is_win64():
-        check_that_tool_does_not_exist(binary, os_id)
-        pytest.skip(f"{binary} is not built on 64-bit Windows due to lacking libgd")
-
     if binary == "gvedit" and platform.system() == "Windows" and not is_mingw():
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built on Windows due to lacking Qt")
@@ -163,11 +159,6 @@ def check_that_tool_does_not_exist(tool, os_id):
     )
 
 
-@pytest.mark.xfail(
-    is_cmake() and not is_mingw() and is_win64(),
-    reason="png:gd unavailable when built with CMake",
-    strict=True,
-)  # FIXME
 def test_1786():
     """
     png:gd format should be supported

@@ -23,17 +23,6 @@
 #include <cairo.h>
 #include <webp/decode.h>
 
-#ifdef _MSC_VER //*dependencies
-    #pragma comment( lib, "gvc.lib" )
-    #pragma comment( lib, "glib-2.0.lib" )
-    #pragma comment( lib, "pango-1.0.lib" )
-    #pragma comment( lib, "pangocairo-1.0.lib" )
-    #pragma comment( lib, "libcairo-2.lib" )
-    #pragma comment( lib, "gobject-2.0.lib" )
-    #pragma comment( lib, "graph.lib" )
-    #pragma comment( lib, "webp.lib" )
-#endif
-
 static const char* const kStatusMessages[] = {
     "OK", "OUT_OF_MEMORY", "INVALID_PARAM", "BITSTREAM_ERROR",
     "UNSUPPORTED_FEATURE", "SUSPENDED", "USER_ABORT", "NOT_ENOUGH_DATA"
