@@ -10,6 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <util/gv_fopen.h>
+#include <util/streq.h>
 
 /// platform abstraction over `fopen`
 static FILE *fopen_(const char *filename, const char *mode) {
@@ -31,8 +32,8 @@ static FILE *fopen_(const char *filename, const char *mode) {
 FILE *gv_fopen(const char *filename, const char *mode) {
   assert(filename != NULL);
   assert(mode != NULL);
-  assert(strcmp(mode, "r") == 0 || strcmp(mode, "rb") == 0 ||
-         strcmp(mode, "w") == 0 || strcmp(mode, "wb") == 0);
+  assert(streq(mode, "r") || streq(mode, "rb") || streq(mode, "w") ||
+         streq(mode, "wb"));
 
   // does `fopen` support 'e' for setting close-on-exec?
   bool have_e = false;
