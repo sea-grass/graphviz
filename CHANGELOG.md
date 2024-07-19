@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased (12.1.0)]
+## [Unreleased (13.0.0)]
 
 ### Added
 
@@ -29,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - To build from source, the required Python version has been upgraded from 3.6
   to 3.8. #2549
 - Build system discovery of GDK now looks for GDK 3.0 instead of GDK 2.0. #1848
+- **Breaking**: the `BF2B` macro has been restored.
 
 ### Fixed
 
@@ -2757,7 +2758,7 @@ March 13, 2000: Use AM_PROG_LIBTOOL instead of AC_PROG_LIBTOOL
    in configure.in.  John Ellson <ellson@graphviz.org>
 ```
 
-[Unreleased (12.1.0)]: https://gitlab.com/graphviz/graphviz/compare/12.0.0...main
+[Unreleased (13.0.0)]: https://gitlab.com/graphviz/graphviz/compare/12.0.0...main
 [12.0.0]: https://gitlab.com/graphviz/graphviz/compare/11.0.0...12.0.0
 [11.0.0]: https://gitlab.com/graphviz/graphviz/compare/10.0.1...11.0.0
 [10.0.1]: https://gitlab.com/graphviz/graphviz/compare/9.0.0...10.0.1
