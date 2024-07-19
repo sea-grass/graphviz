@@ -38,10 +38,10 @@
 #include <cgraph/prisize_t.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
-#include <cgraph/streq.h>
 #include <float.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/streq.h>
 
 #ifndef HAVE_SRAND48
 #define srand48 srand

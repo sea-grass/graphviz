@@ -13,7 +13,6 @@
 
 
 #include <assert.h>
-#include <cgraph/streq.h>
 #include <cgraph/startswith.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
@@ -21,6 +20,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/streq.h>
 
 #define EPSILON .0001
 

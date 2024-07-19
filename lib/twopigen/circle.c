@@ -13,7 +13,6 @@
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/gv_math.h>
 #include    <cgraph/queue.h>
-#include    <cgraph/streq.h>
 #include    <twopigen/circle.h>
 #include    <inttypes.h>
 #include    <limits.h>
@@ -22,6 +21,7 @@
 #include    <stdint.h>
 #include    <stdlib.h>
 #include    <string.h>
+#include    <util/streq.h>
 #define DEF_RANKSEP 1.00
 #define UNSET 10.00
 

@@ -18,13 +18,13 @@
 #include "config.h"
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <expr/exlib.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/streq.h>
 
 #if defined(TRACE_lex) && TRACE_lex
 

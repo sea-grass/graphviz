@@ -17,10 +17,10 @@
 #include <cgraph/cghdr.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
-#include <cgraph/streq.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <util/streq.h>
 
 static agerrlevel_t agerrno;             /* Last error level */
 static agerrlevel_t agerrlevel = AGWARN; /* Report errors >= agerrlevel */

@@ -24,12 +24,12 @@
 #include <gvc/gvc.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
-#include <cgraph/streq.h>
 #include <cgraph/strview.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <util/streq.h>
 
 int late_int(void *obj, attrsym_t *attr, int defaultValue, int minimum) {
     if (attr == NULL)

@@ -24,11 +24,11 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
-#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
+#include <util/streq.h>
 #include "core_loadimage_xdot.h"
 
 typedef enum {

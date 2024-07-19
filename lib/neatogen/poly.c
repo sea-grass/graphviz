@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
-#include <cgraph/streq.h>
 #include <neatogen/neato.h>
 #include <assert.h>
 #include <string.h>
@@ -18,6 +17,7 @@
 #include <common/geom.h>
 #include <neatogen/mem.h>
 #include <stdbool.h>
+#include <util/streq.h>
 
 static const int BOX = 1;
 static const int CIRCLE = 2;

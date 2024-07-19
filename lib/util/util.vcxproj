@@ -134,6 +134,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="gv_fopen.h" />
+    <ClInclude Include="streq.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gv_fopen.c" />

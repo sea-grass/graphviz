@@ -14,10 +14,10 @@
  *************************************************************************/
 
 #include	<cgraph/cghdr.h>
-#include	<cgraph/streq.h>
 #include	<cgraph/unreachable.h>
 #include	<stdbool.h>
 #include	<stddef.h>
+#include	<util/streq.h>
 
 /*
  * run time records

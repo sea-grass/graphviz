@@ -28,12 +28,12 @@
 #include <cgraph/exit.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/streq.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
+#include <util/streq.h>
 #include "openFile.h"
 
 static FILE *outFile;
