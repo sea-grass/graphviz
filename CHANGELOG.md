@@ -42,10 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- `ccomps`, `gc`, the fdp layout engine, and the patchwork algorithm now
-  understand a cluster to be indicated by the common rules, including the
-  “cluster” prefix being case insensitive and the `cluster=true` attribute as an
-  alternative. #2187
+- `ccomps`, `gc`, the fdp layout engine, the neato layout engine, and the
+  patchwork algorithm now understand a cluster to be indicated by the common
+  rules, including the “cluster” prefix being case insensitive and the
+  `cluster=true` attribute as an alternative. #2187
 - `overlap` values whose prefixes are themselves valid values (e.g.
   `overlap=scalexy` where `overlap=scale` is also a valid setting) are once
   again usable. Previously such values would silently select the shortest valid

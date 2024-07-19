@@ -30,6 +30,8 @@
 #endif
 #include <neatogen/kkutils.h>
 #include <common/pointset.h>
+#include <common/render.h>
+#include <common/utils.h>
 #include <neatogen/sgd.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
@@ -202,7 +204,7 @@ static cluster_data cluster_map(graph_t *mastergraph, graph_t *g) {
 
     cdata.ntoplevel = agnnodes(g);
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
-        if (startswith(agnameof(subg), "cluster")) {
+        if (is_a_cluster(subg)) {
             nclusters++;
         }
     }
@@ -212,7 +214,7 @@ static cluster_data cluster_map(graph_t *mastergraph, graph_t *g) {
     cn = cdata.clustersizes = gv_calloc(nclusters, sizeof(int));
     for (subg = agfstsubg(mastergraph); subg; subg = agnxtsubg(subg)) {
         /* clusters are processed by separate calls to ordered_edges */
-        if (startswith(agnameof(subg), "cluster")) {
+        if (is_a_cluster(subg)) {
             int *c;
 
             *cn = agnnodes(subg);
@@ -476,7 +478,7 @@ dfs(Agraph_t * subg, Agraph_t * parentg, attrsym_t * G_lp, attrsym_t * G_bb)
 {
     boxf bb;
 
-    if (startswith(agnameof(subg), "cluster") && chkBB(subg, G_bb, &bb)) {
+    if (is_a_cluster(subg) && chkBB(subg, G_bb, &bb)) {
 	agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	GD_bb(subg) = bb;
 	add_cluster(parentg, subg);
@@ -1367,7 +1369,7 @@ addCluster (graph_t* g)
 {
     graph_t *subg;
     for (subg = agfstsubg(agroot(g)); subg; subg = agnxtsubg(subg)) {
-	if (startswith(agnameof(subg), "cluster")) {
+	if (is_a_cluster(subg)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	    add_cluster(g, subg);
 	    compute_bb(subg);
