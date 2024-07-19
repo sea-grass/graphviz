@@ -10,7 +10,8 @@
 
 #include    <assert.h>
 #include    <cgraph/list.h>
-#include    <cgraph/startswith.h>
+#include    <common/render.h>
+#include    <common/utils.h>
 #include    <patchwork/patchwork.h>
 #include    <limits.h>
 #include    <neatogen/adjust.h>
@@ -46,7 +47,7 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
         clist = pclist;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-        if (startswith(agnameof(subg), "cluster")) {
+        if (is_a_cluster(subg)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
             clist_append(clist, subg);
             mkClusters(subg, NULL, subg);
