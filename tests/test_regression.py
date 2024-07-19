@@ -4123,9 +4123,6 @@ def test_2564():
 
 
 @pytest.mark.skipif(which("sfdp") is None, reason="sfdp not available")
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2572", strict=True
-)
 def test_2572():
     """
     sfdp should be able to find non-overlapping layouts

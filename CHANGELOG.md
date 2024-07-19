@@ -55,6 +55,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CMake builds do not support format png:gd #1786
 - The diffimg utility is not built in CMake builds #1788 (fixed also for
   Windows x64 builds)
+- **Breaking**: the libpack functions `putGraphs`, `putRects`, and `shiftGraphs`
+  once again operate on integer points (`point`) instead of floating-point
+  points (`pointf`). This fixes a regression in Graphviz 12.0.0 that caused the
+  sfdp layout engine to unnecessarily overlap nodes. #2572
 
 ## [12.0.0] – 2024-07-04
 
