@@ -96,7 +96,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     if (!fontname || strcmp(fontname, span->font->name) != 0 || fontsize != span->font->size) {
 
 	/* check if the conversion to Pango units below will overflow */
-	if ((double)(G_MAXINT / PANGO_SCALE) < span->font->size) {
+	if ((double)(INT_MAX / PANGO_SCALE) < span->font->size) {
 	    return false;
 	}
 
@@ -119,7 +119,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 
 	desc = pango_font_description_from_string(fnt);
         /* all text layout is done at a scale of FONT_DPI (nominaly 96.) */
-        pango_font_description_set_size (desc, (gint)(fontsize * PANGO_SCALE));
+        pango_font_description_set_size (desc, (int)(fontsize * PANGO_SCALE));
 
         if (fontpath && (font = pango_font_map_load_font(fontmap, context, desc))) {  /* -v support */
 	    const char *fontclass = G_OBJECT_CLASS_NAME(G_OBJECT_GET_CLASS(font));

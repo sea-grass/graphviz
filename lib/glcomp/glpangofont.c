@@ -35,7 +35,7 @@ static PangoLayout *get_pango_layout(char *markup_text,
 					  CAIRO_SUBPIXEL_ORDER_BGR);
 
     desc = pango_font_description_from_string(fontdescription);
-    pango_font_description_set_size(desc, (gint) (fontsize * PANGO_SCALE));
+    pango_font_description_set_size(desc, (int)(fontsize * PANGO_SCALE));
 
     if (!pango_parse_markup
 	(markup_text, -1, '\0', &attr_list, &text, NULL, NULL))

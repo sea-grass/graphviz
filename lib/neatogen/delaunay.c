@@ -23,8 +23,7 @@
 #ifdef HAVE_GTS
 #include <gts.h>
 
-static gint triangle_is_hole(void *triangle, void *ignored)
-{
+static int triangle_is_hole(void *triangle, void *ignored) {
     GtsTriangle *t = triangle;
     (void)ignored;
 
@@ -230,7 +229,7 @@ typedef struct {
     v_data *delaunay;
 } estats;
     
-static gint cnt_edge(void *edge, void *stats) {
+static int cnt_edge(void *edge, void *stats) {
     GtsSegment *e = edge;
     estats *sp = stats;
 
@@ -249,7 +248,7 @@ edgeStats (GtsSurface* s, estats* sp)
     gts_surface_foreach_edge(s, cnt_edge, sp);
 }
 
-static gint add_edge(void *edge, void *data) {
+static int add_edge(void *edge, void *data) {
     GtsSegment *e = edge;
     v_data *delaunay = data;
 
@@ -300,7 +299,7 @@ typedef struct {
     int* edges;
 } estate;
 
-static gint addEdge(void *edge, void *state) {
+static int addEdge(void *edge, void *state) {
     GtsSegment *e = edge;
     estate *es = state;
 
@@ -388,7 +387,7 @@ int *delaunay_tri(double *x, double *y, int n, int* pnedges)
     return edges;
 }
 
-static gint cntFace(void *face, void *data) {
+static int cntFace(void *face, void *data) {
     GFace *fp = face;
     int *ip = data;
 
@@ -409,7 +408,7 @@ typedef struct {
     int* neigh;
 } ninfo;
 
-static gint addNeighbor(void *face, void *ni) {
+static int addNeighbor(void *face, void *ni) {
     GFace *f = face;
     ninfo *es = ni;
 
@@ -419,7 +418,7 @@ static gint addNeighbor(void *face, void *ni) {
     return 0;
 }
 
-static gint addFace(void *face, void *state) {
+static int addFace(void *face, void *state) {
     GFace *f = face;
     fstate *es = state;
 
@@ -443,7 +442,7 @@ static gint addFace(void *face, void *state) {
     return 0;
 }
 
-static gint addTri(void *face, void *state) {
+static int addTri(void *face, void *state) {
     GFace *f = face;
     fstate *es = state;
 
