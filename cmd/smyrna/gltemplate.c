@@ -362,14 +362,6 @@ GdkGLConfig *configure_gl(void)
 */
 void create_window(GdkGLConfig * glconfig, GtkWidget * vbox)
 {
-    gint major, minor;
-
-    /*
-     * Query OpenGL extension version.
-     */
-
-    gdk_gl_query_version(&major, &minor);
-
     /* Try double-buffered visual */
 
     /* Drawing area for drawing OpenGL scene. */
