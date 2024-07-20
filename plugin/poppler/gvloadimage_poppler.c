@@ -35,7 +35,6 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 {
     PopplerDocument *document = NULL;
     GError *error;
-    gchar *absolute, *uri;
     int num_pages;
 
     assert(job);
@@ -57,17 +56,18 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 	if (!gvusershape_file_access(us))
 	    return NULL;
         switch (us->type) {
-            case FT_PDF:
+            case FT_PDF: {
 
+		char *absolute;
 		if (g_path_is_absolute(us->name)) {
 		    absolute = g_strdup (us->name);
 		} else {
-		    gchar *dir = g_get_current_dir ();
+		    char *dir = g_get_current_dir();
 		    absolute = g_build_filename(dir, us->name, NULL);
 		    free (dir);
 		}
 
-		uri = g_filename_to_uri (absolute, NULL, &error);
+		char *uri = g_filename_to_uri(absolute, NULL, &error);
 
 		g_free(absolute);
 		if (uri == NULL) {
@@ -89,6 +89,7 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
                     return NULL;
                 }
                 break;
+	    }
 
 	    default:
 		break;
