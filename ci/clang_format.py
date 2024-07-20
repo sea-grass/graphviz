@@ -46,7 +46,6 @@ EXCLUDE = (
     "cmd/smyrna/gui/appmouse.c",
     "cmd/smyrna/gui/appmouse.h",
     "cmd/smyrna/gui/callbacks.c",
-    "cmd/smyrna/gui/callbacks.h",
     "cmd/smyrna/gui/datalistcallbacks.c",
     "cmd/smyrna/gui/datalistcallbacks.h",
     "cmd/smyrna/gui/frmobjectui.c",
