@@ -13,13 +13,10 @@
 #include "gui.h"
 #include "tvnodes.h"
 
-    _BB void on_TVNodes_close (GtkWidget * widget, gpointer user_data);
-    _BB void btnTVOK_clicked_cb(GtkWidget * widget, gpointer user_data);
-    _BB void btnTVShowAll_clicked_cb(GtkWidget * widget,
-				     gpointer user_data);
-    _BB void btnTVHideAll_clicked_cb(GtkWidget * widget,
-				     gpointer user_data);
+_BB void on_TVNodes_close(GtkWidget *widget, void *user_data);
+_BB void btnTVOK_clicked_cb(GtkWidget *widget, void *user_data);
+_BB void btnTVShowAll_clicked_cb(GtkWidget *widget, void *user_data);
+_BB void btnTVHideAll_clicked_cb(GtkWidget *widget, void *user_data);
 
-    _BB void btnTVSaveAs_clicked_cb(GtkWidget * widget,
-				    gpointer user_data);
-    _BB void btnTVSaveWith_clicked_cb(GtkWidget * widget, gpointer user_data);
+_BB void btnTVSaveAs_clicked_cb(GtkWidget *widget, void *user_data);
+_BB void btnTVSaveWith_clicked_cb(GtkWidget *widget, void *user_data);

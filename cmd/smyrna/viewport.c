@@ -170,8 +170,7 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
 	glClearColor(vi->bgColor.R, vi->bgColor.G, vi->bgColor.B, vi->bgColor.A);	//background color
 }
 
-static gboolean gl_main_expose(gpointer data)
-{
+static gboolean gl_main_expose(void *data) {
     (void)data;
 
     if (view->activeGraph >= 0) {

@@ -56,7 +56,7 @@ argb2rgba ( unsigned int width, unsigned int height, char *data)
 }
 
 static gboolean writer(const char *buf, gsize count, GError **error,
-                       gpointer data) {
+                       void *data) {
   (void)error;
   return count == gvwrite(data, buf, count);
 }

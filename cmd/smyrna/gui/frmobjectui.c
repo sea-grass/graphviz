@@ -350,8 +350,7 @@ static void filter_attributes(const char *prefix, topview *t) {
 
 // attribute text changed call back
 
-_BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_txtAttr_changed(GtkWidget *widget, void *user_data) {
   (void)user_data;
   filter_attributes(gtk_entry_get_text((GtkEntry*)widget), view->Topview);
 }
@@ -423,16 +422,14 @@ static void doApply(void)
     set_refresh_filters(view, attr_name);
 }
 
-_BB void on_attrApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_attrApplyBtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     doApply();
 }
 
-_BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_attrRB0_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -444,15 +441,13 @@ _BB void on_attrRB0_clicked(GtkWidget * widget, gpointer user_data)
 /* This is the action attached to the publish button on the attributes
  * window. What should happen?
  */
-_BB void on_attrProg_toggled(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_attrProg_toggled(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
   /* FIX */
 }
 
-_BB void on_attrAddBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_attrAddBtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -652,8 +647,7 @@ static void gvpr_select(const char *attrname, const char *regex_str,
     set_header_text();
 }
 
-_BB void on_attrSearchBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_attrSearchBtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 

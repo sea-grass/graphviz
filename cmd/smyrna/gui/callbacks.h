@@ -20,23 +20,19 @@
 #define _BB
 #endif
 
-    _BB void save_as_graph_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void remove_graph_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btn_dot_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btn_neato_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btn_twopi_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btn_circo_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void btn_fdp_clicked(GtkWidget * widget, gpointer user_data);
+_BB void save_as_graph_clicked(GtkWidget *widget, void *user_data);
+_BB void remove_graph_clicked(GtkWidget *widget, void *user_data);
+_BB void btn_dot_clicked(GtkWidget *widget, void *user_data);
+_BB void btn_neato_clicked(GtkWidget *widget, void *user_data);
+_BB void btn_twopi_clicked(GtkWidget *widget, void *user_data);
+_BB void btn_circo_clicked(GtkWidget *widget, void *user_data);
+_BB void btn_fdp_clicked(GtkWidget *widget, void *user_data);
 
-    _BB void graph_select_change(GtkWidget * widget, gpointer user_data);
-    _BB void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data);
+_BB void graph_select_change(GtkWidget *widget, void *user_data);
+_BB void mGraphPropertiesSlot(GtkWidget *widget, void *user_data);
 
 /*console output widgets*/
-    _BB void on_clearconsolebtn_clicked(GtkWidget * widget,
-					gpointer user_data);
-    _BB void on_hideconsolebtn_clicked(GtkWidget * widget,
-				       gpointer user_data);
-    _BB void on_consoledecbtn_clicked(GtkWidget * widget,
-				      gpointer user_data);
-    _BB void on_consoleincbtn_clicked(GtkWidget * widget,
-				      gpointer user_data);
+_BB void on_clearconsolebtn_clicked(GtkWidget *widget, void *user_data);
+_BB void on_hideconsolebtn_clicked(GtkWidget *widget, void *user_data);
+_BB void on_consoledecbtn_clicked(GtkWidget *widget, void *user_data);
+_BB void on_consoleincbtn_clicked(GtkWidget *widget, void *user_data);

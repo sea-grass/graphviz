@@ -16,27 +16,24 @@
 #include <stdint.h>
 #include "viewport.h"
 
-void color_change_request(GtkWidget * widget, gpointer user_data)
-{
+void color_change_request(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     view->refresh.color=1;
 }
-void size_change_request(GtkWidget * widget, gpointer user_data)
-{
+
+void size_change_request(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 }
 
-void on_settingsOKBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+void on_settingsOKBtn_clicked(GtkWidget *widget, void *user_data) {
     on_settingsApplyBtn_clicked(widget, user_data);
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 }
 
-void on_settingsApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+void on_settingsApplyBtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -44,16 +41,15 @@ void on_settingsApplyBtn_clicked(GtkWidget * widget, gpointer user_data)
     set_viewport_settings_from_template(view, view->g[view->activeGraph]);
     updateSmGraph(view->g[view->activeGraph],view->Topview);
 }
-void on_dlgSettings_close (GtkWidget * widget, gpointer user_data)
-{
+
+void on_dlgSettings_close(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     gtk_widget_hide(glade_xml_get_widget(xml, "dlgSettings"));
 }
 
-void on_settingsCancelBtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+void on_settingsCancelBtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 

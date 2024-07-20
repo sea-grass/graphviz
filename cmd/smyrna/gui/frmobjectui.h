@@ -15,12 +15,12 @@
 
 #define ATTR_NOTEBOOK_IDX 6
 
-_BB void on_txtAttr_changed(GtkWidget * widget, gpointer user_data);
-_BB void on_attrApplyBtn_clicked (GtkWidget * widget, gpointer user_data);
-_BB void on_attrAddBtn_clicked (GtkWidget * widget, gpointer user_data);
-_BB void on_attrSearchBtn_clicked (GtkWidget * widget, gpointer user_data);
-_BB void on_attrRB0_clicked(GtkWidget *widget, gpointer user_data);
-_BB void on_attrProg_toggled(GtkWidget *widget, gpointer user_data);
+_BB void on_txtAttr_changed(GtkWidget *widget, void *user_data);
+_BB void on_attrApplyBtn_clicked(GtkWidget *widget, void *user_data);
+_BB void on_attrAddBtn_clicked(GtkWidget *widget, void *user_data);
+_BB void on_attrSearchBtn_clicked(GtkWidget *widget, void *user_data);
+_BB void on_attrRB0_clicked(GtkWidget *widget, void *user_data);
+_BB void on_attrProg_toggled(GtkWidget *widget, void *user_data);
 
 extern attr_list* load_attr_list(Agraph_t* g);
 extern void showAttrsWidget(void);

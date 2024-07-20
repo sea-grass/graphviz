@@ -18,10 +18,7 @@
 #define _BB /**/
 #endif
 
-    _BB void btnToolZoomOut_clicked(GtkWidget * widget,
-				    gpointer user_data);
-    _BB void btnToolZoomFit_clicked(GtkWidget * widget,
-				    gpointer user_data);
-    _BB void btnToolFit_clicked(GtkWidget * widget, gpointer user_data);
-    _BB void on_btnActivateGraph_clicked(GtkWidget * widget,
-					 gpointer user_data);
+_BB void btnToolZoomOut_clicked(GtkWidget *widget, void *user_data);
+_BB void btnToolZoomFit_clicked(GtkWidget *widget, void *user_data);
+_BB void btnToolFit_clicked(GtkWidget *widget, void *user_data);
+_BB void on_btnActivateGraph_clicked(GtkWidget *widget, void *user_data);
