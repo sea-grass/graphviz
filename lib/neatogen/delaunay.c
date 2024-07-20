@@ -40,8 +40,7 @@ static int triangle_is_hole(void *triangle, void *ignored) {
     return FALSE;
 }
 
-static guint delaunay_remove_holes(GtsSurface * surface)
-{
+static unsigned delaunay_remove_holes(GtsSurface *surface) {
     return gts_surface_foreach_face_remove(surface, triangle_is_hole, NULL);
 }
 
