@@ -37,7 +37,7 @@ static void gvloadimage_rsvg_free(usershape_t *us)
 static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 {
     RsvgHandle* rsvgh = NULL;
-    guchar *fileBuf = NULL;
+    unsigned char *fileBuf = NULL;
     GError *err = NULL;
     size_t fileSize;
 
@@ -74,7 +74,7 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 		fstat(fd, &stbuf);
   		fileSize = (size_t)stbuf.st_size;	
 
-		fileBuf = calloc(fileSize + 1, sizeof(guchar));
+		fileBuf = calloc(fileSize + 1, sizeof(unsigned char));
 
 		if (fileBuf == NULL) {
 			g_object_unref(rsvgh);
