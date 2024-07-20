@@ -13,6 +13,7 @@
 #include "gui.h"
 #include <cgraph/startswith.h>
 #include <common/colorprocs.h>
+#include <stdint.h>
 #include "viewport.h"
 
 void color_change_request(GtkWidget * widget, gpointer user_data)
@@ -77,9 +78,9 @@ static void set_color_button_widget(char *attrib, char *widget_name) {
     }
     if (buf) {
 	colorxlate(buf, &cl, RGBA_DOUBLE);
-	color.red = (guint16)(cl.u.RGBA[0] * 65535.0);
-	color.green = (guint16)(cl.u.RGBA[1] * 65535.0);
-	color.blue = (guint16)(cl.u.RGBA[2] * 65535.0);
+	color.red = (uint16_t)(cl.u.RGBA[0] * 65535.0);
+	color.green = (uint16_t)(cl.u.RGBA[1] * 65535.0);
+	color.blue = (uint16_t)(cl.u.RGBA[2] * 65535.0);
 	gtk_color_button_set_color((GtkColorButton *)
 				   glade_xml_get_widget(xml, widget_name),
 				   &color);
