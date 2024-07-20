@@ -96,7 +96,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     if (!fontname || strcmp(fontname, span->font->name) != 0 || fontsize != span->font->size) {
 
 	/* check if the conversion to Pango units below will overflow */
-	if ((double)(INT_MAX / PANGO_SCALE) < span->font->size) {
+	if (INT_MAX / PANGO_SCALE < span->font->size) {
 	    return false;
 	}
 
