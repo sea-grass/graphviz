@@ -1,6 +1,9 @@
-find_path(LTDL_INCLUDE_DIR ltdl.h)
 if(NOT WIN32 OR MINGW)
+  find_path(LTDL_INCLUDE_DIR ltdl.h)
   find_library(LTDL_LIBRARY NAMES ltdl)
+else()
+  find_path(LTDL_INCLUDE_DIR ltdl.h
+            PATHS ${CMAKE_CURRENT_SOURCE_DIR}/windows/include/ltdl)
 endif()
 
 include(FindPackageHandleStandardArgs)
