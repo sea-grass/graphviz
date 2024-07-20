@@ -70,9 +70,6 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     static double fontsize;
     static gv_font_map* gv_fmap;
     char *fnt, *psfnt = NULL;
-    PangoLayout *layout;
-    PangoRectangle logical_rect;
-    cairo_font_options_t* options;
     PangoFont *font;
 #ifdef ENABLE_PANGO_MARKUP
     PangoAttrList *attrs;
@@ -80,14 +77,12 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     int flags;
 #endif
     char *text;
-    double textlayout_scale;
-    PostscriptAlias *pA;
 
     if (!context) {
 	fontmap = pango_cairo_font_map_new();
 	gv_fmap = get_font_mapping(fontmap);
 	context = pango_font_map_create_context (fontmap);
-	options=cairo_font_options_create();
+	cairo_font_options_t* options = cairo_font_options_create();
 	cairo_font_options_set_antialias(options,CAIRO_ANTIALIAS_GRAY);
 	cairo_font_options_set_hint_style(options,CAIRO_HINT_STYLE_FULL);
 	cairo_font_options_set_hint_metrics(options,CAIRO_HINT_METRICS_ON);
@@ -110,7 +105,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	fontsize = span->font->size;
 	pango_font_description_free (desc);
 
-	pA = span->font->postscript_alias;
+	PostscriptAlias *pA = span->font->postscript_alias;
 	bool psfnt_needs_free = false;
 	if (pA) {
 	    psfnt = fnt = gv_fmap[pA->xfig_code].gv_font;
@@ -127,9 +122,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
         pango_font_description_set_size (desc, (gint)(fontsize * PANGO_SCALE));
 
         if (fontpath && (font = pango_font_map_load_font(fontmap, context, desc))) {  /* -v support */
-	    const char *fontclass;
-
-	    fontclass = G_OBJECT_CLASS_NAME(G_OBJECT_GET_CLASS(font));
+	    const char *fontclass = G_OBJECT_CLASS_NAME(G_OBJECT_GET_CLASS(font));
 
 	    agxbclear(&buf);
 	    if (psfnt) {
@@ -138,18 +131,14 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	    agxbprint(&buf, "(%s) ", fontclass);
 #ifdef HAVE_PANGO_FC_FONT_LOCK_FACE
 	    if (strcmp(fontclass, "PangoCairoFcFont") == 0) {
-	        FT_Face face;
-	        PangoFcFont *fcfont;
-	        FT_Stream stream;
-	        FT_StreamDesc streamdesc;
-	        fcfont = PANGO_FC_FONT(font);
-	        face = pango_fc_font_lock_face(fcfont);
+	        PangoFcFont *fcfont = PANGO_FC_FONT(font);
+	        FT_Face face = pango_fc_font_lock_face(fcfont);
 	        if (face) {
 		    agxbprint(&buf, "\"%s, %s\" ", face->family_name, face->style_name);
 
-		    stream = face->stream;
+		    FT_Stream stream = face->stream;
 		    if (stream) {
-			streamdesc = stream->pathname;
+			FT_StreamDesc streamdesc = stream->pathname;
 			if (streamdesc.pointer)
 			    agxbput(&buf, streamdesc.pointer);
 		        else
@@ -163,11 +152,8 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	    else
 #endif
 	    {
-    		PangoFontDescription *tdesc;
-		char *tfont;
-
-	        tdesc = pango_font_describe(font);
-	        tfont = pango_font_description_to_string(tdesc);
+    		PangoFontDescription *tdesc = pango_font_describe(font);
+		char *tfont = pango_font_description_to_string(tdesc);
 	        agxbprint(&buf, "\"%s\" ", tfont);
 	        g_free(tfont);
 	    }
@@ -223,7 +209,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     text = span->str;
 #endif
 
-    layout = pango_layout_new (context);
+    PangoLayout *layout = pango_layout_new (context);
     span->layout = layout;    /* layout free with textspan - see labels.c */
     span->free_layout = pango_free_layout;    /* function for freeing pango layout */
 
@@ -234,13 +220,14 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	pango_layout_set_attributes (layout, attrs);
 #endif
 
+    PangoRectangle logical_rect;
     pango_layout_get_extents (layout, NULL, &logical_rect);
 
     /* if pango doesn't like the font then it sets width=0 but height = garbage */
     if (logical_rect.width == 0)
 	logical_rect.height = 0;
 
-    textlayout_scale = POINTS_PER_INCH / (FONT_DPI * PANGO_SCALE);
+    const double textlayout_scale = POINTS_PER_INCH / (FONT_DPI * PANGO_SCALE);
     span->size.x = logical_rect.width * textlayout_scale;
     span->size.y = logical_rect.height * textlayout_scale;
 
