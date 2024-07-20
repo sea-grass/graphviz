@@ -53,7 +53,6 @@ EXCLUDE = (
     "cmd/smyrna/gui/gui.c",
     "cmd/smyrna/gui/gui.h",
     "cmd/smyrna/gui/menucallbacks.c",
-    "cmd/smyrna/gui/menucallbacks.h",
     "cmd/smyrna/gui/toolboxcallbacks.c",
     "cmd/smyrna/gui/toolboxcallbacks.h",
     "cmd/smyrna/gui/topviewsettings.c",
