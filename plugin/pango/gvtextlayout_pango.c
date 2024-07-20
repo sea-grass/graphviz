@@ -66,7 +66,7 @@ static int agxbput_int(void *buffer, const char *s) {
 
 static bool pango_textlayout(textspan_t * span, char **fontpath)
 {
-    static char buf[1024];  /* returned in fontpath, only good until next call */
+    static agxbuf buf; // returned in fontpath, only good until next call
     static PangoFontMap *fontmap;
     static PangoContext *context;
     static PangoFontDescription *desc;
@@ -132,15 +132,11 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 
 	    fontclass = G_OBJECT_CLASS_NAME(G_OBJECT_GET_CLASS(font));
 
-	    buf[0] = '\0';
+	    agxbclear(&buf);
 	    if (psfnt) {
-		strcat(buf, "(ps:pango  ");
-		strcat(buf, psfnt);
-		strcat(buf, ") ");
+		agxbprint(&buf, "(ps:pango  %s) ", psfnt);
 	    }
-	    strcat(buf, "(");
-	    strcat(buf, fontclass);
-	    strcat(buf, ") ");
+	    agxbprint(&buf, "(%s) ", fontclass);
 #ifdef HAVE_PANGO_FC_FONT_LOCK_FACE
 	    if (strcmp(fontclass, "PangoCairoFcFont") == 0) {
 	        FT_Face face;
@@ -150,22 +146,18 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	        fcfont = PANGO_FC_FONT(font);
 	        face = pango_fc_font_lock_face(fcfont);
 	        if (face) {
-		    strcat(buf, "\"");
-		    strcat(buf, face->family_name);
-		    strcat(buf, ", ");
-		    strcat(buf, face->style_name);
-		    strcat(buf, "\" ");
+		    agxbprint(&buf, "\"%s, %s\" ", face->family_name, face->style_name);
 
 		    stream = face->stream;
 		    if (stream) {
 			streamdesc = stream->pathname;
 			if (streamdesc.pointer)
-			    strcat(buf, (char*)streamdesc.pointer);
+			    agxbput(&buf, streamdesc.pointer);
 		        else
-			    strcat(buf, "*no pathname available*");
+			    agxbput(&buf, "*no pathname available*");
 		    }
 		    else
-			strcat(buf, "*no stream available*");
+			agxbput(&buf, "*no stream available*");
 		}
 	        pango_fc_font_unlock_face(fcfont);
 	    }
@@ -177,12 +169,10 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 
 	        tdesc = pango_font_describe(font);
 	        tfont = pango_font_description_to_string(tdesc);
-	        strcat(buf, "\"");
-	        strcat(buf, tfont);
-	        strcat(buf, "\" ");
+	        agxbprint(&buf, "\"%s\" ", tfont);
 	        g_free(tfont);
 	    }
-            *fontpath = buf;
+            *fontpath = agxbuse(&buf);
         }
     }
 
