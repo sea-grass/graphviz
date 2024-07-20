@@ -1656,8 +1656,6 @@ if test "$with_glade" != "yes"; then
 else
   PKG_CHECK_MODULES(GLADE, [libglade-2.0],[
     use_glade="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GLADE,1,
-      [Define if you have the glade library])
     AC_SUBST([GLADE_CFLAGS])
     AC_SUBST([GLADE_LIBS])
   ],[

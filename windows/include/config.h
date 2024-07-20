@@ -72,9 +72,6 @@
 /* Define if the GD library supports XPM */
 /* #undef HAVE_GD_XPM */
 
-/* Define if you have the glade library */
-#define HAVE_GLADE 1
-
 /* Define if you have the gs library */
 /* #undef HAVE_GS */
 
