@@ -313,10 +313,8 @@ static void drawtopfishedges(topview * t)
 
 static int get_active_frame(void)
 {
-    gulong microseconds;
-    gdouble seconds;
     int fr;
-    seconds = g_timer_elapsed(view->timer, &microseconds);
+    gdouble seconds = g_timer_elapsed(view->timer, NULL);
     fr = (int)(seconds * 1000.0);
     if (fr < view->total_frames) {
 
