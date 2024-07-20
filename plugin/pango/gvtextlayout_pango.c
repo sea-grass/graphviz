@@ -34,22 +34,18 @@ static void pango_free_layout (void *layout)
 
 static char* pango_psfontResolve (PostscriptAlias* pa)
 {
-    static char buf[1024];
-    strcpy(buf, pa->family);
-    strcat(buf, ",");
+    agxbuf buf = {0};
+    agxbprint(&buf, "%s,", pa->family);
     if (pa->weight) {
-        strcat(buf, " ");
-        strcat(buf, pa->weight);
+        agxbprint(&buf, " %s", pa->weight);
     }
     if (pa->stretch) {
-        strcat(buf, " ");
-        strcat(buf, pa->stretch);
+        agxbprint(&buf, " %s", pa->stretch);
     }
     if (pa->style) {
-        strcat(buf, " ");
-        strcat(buf, pa->style);
+        agxbprint(&buf, " %s", pa->style);
     }
-    return buf;
+    return agxbdisown(&buf);
 }
 
 #define FONT_DPI 96.
@@ -115,10 +111,13 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	pango_font_description_free (desc);
 
 	pA = span->font->postscript_alias;
+	bool psfnt_needs_free = false;
 	if (pA) {
 	    psfnt = fnt = gv_fmap[pA->xfig_code].gv_font;
-	    if(!psfnt)
+	    if(!psfnt) {
 		psfnt = fnt = pango_psfontResolve (pA);
+		psfnt_needs_free = true;
+	    }
 	}
 	else
 	    fnt = fontname;
@@ -173,6 +172,9 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	        g_free(tfont);
 	    }
             *fontpath = agxbuse(&buf);
+        }
+        if (psfnt_needs_free) {
+            free(psfnt);
         }
     }
 
