@@ -18,6 +18,7 @@ typedef struct {
     int orderCount;
     int blockCount;
     int graphCopyCount; ///< how many cloned graphs have we created?
+    int spanningTreeCount; ///< how many spanning trees have we created?
     attrsym_t *N_root;
     char *rootname;
     double min_dist;
