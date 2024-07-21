@@ -150,12 +150,6 @@
 /* Define if you have the tcl library */
 /* #undef HAVE_TCL */
 
-/* Define to 1 if you have the <tkInt.h> header file. */
-/* #undef HAVE_TKINT_H */
-
-/* Define to 1 if you have the <tk.h> header file. */
-/* #undef HAVE_TK_H */
-
 /* Define if triangle.[ch] are available. */
 /* #undef HAVE_TRIANGLE */
 
