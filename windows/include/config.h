@@ -72,9 +72,6 @@
 /* Define if the GD library supports XPM */
 /* #undef HAVE_GD_XPM */
 
-/* Define if you have the glade library */
-#define HAVE_GLADE 1
-
 /* Define if you have the gs library */
 /* #undef HAVE_GS */
 
@@ -113,9 +110,6 @@
 
 /* Define to 1 if you have the `pango_fc_font_lock_face' function. */
 /* #undef HAVE_PANGO_FC_FONT_LOCK_FACE */
-
-/* Define to 1 if you have the `pango_fc_font_unlock_face' function. */
-/* #undef HAVE_PANGO_FC_FONT_UNLOCK_FACE */
 
 /* Define if you have the rsvg library */
 #define HAVE_RSVG 1

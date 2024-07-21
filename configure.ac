@@ -1429,7 +1429,7 @@ if test "$use_pangocairo" = "Yes"; then
     save_LIBS=$LIBS
     PKG_CHECK_MODULES(PANGOFT2, [pangoft2])
     LIBS="$LIBS $PANGOCAIRO_LIBS $PANGOFT2_LIBS"
-    AC_CHECK_FUNCS([pango_fc_font_lock_face pango_fc_font_unlock_face pango_font_map_create_context])
+    AC_CHECK_FUNCS([pango_fc_font_lock_face])
     LIBS=$save_LIBS
 fi
 
@@ -1656,8 +1656,6 @@ if test "$with_glade" != "yes"; then
 else
   PKG_CHECK_MODULES(GLADE, [libglade-2.0],[
     use_glade="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_GLADE,1,
-      [Define if you have the glade library])
     AC_SUBST([GLADE_CFLAGS])
     AC_SUBST([GLADE_LIBS])
   ],[
