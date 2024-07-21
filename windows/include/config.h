@@ -188,10 +188,6 @@
 /* Define if you want CGRAPH */
 #define WITH_CGRAPH 1
 
-/* Define to 1 if `lex' declares `yytext' as a `char *' by default, not a
-   `char[]'. */
-/* #undef YYTEXT_POINTER */
-
 /* Define to `int' if <sys/types.h> does not define. */
 /* #undef pid_t */
 
