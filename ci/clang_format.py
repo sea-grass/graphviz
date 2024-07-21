@@ -630,7 +630,6 @@ EXCLUDE = (
     "windows/gvedit/USettings.h",
     "windows/gvedit/Umain.cpp",
     "windows/gvedit/Umain.h",
-    "windows/include/ltdl/ltdl.h",
     "windows/include/unistd/unistd.h",
 )
 
