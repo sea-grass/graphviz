@@ -241,12 +241,10 @@ bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
 }
 
 QString stripFileExtension(const QString &fileName) {
-  int idx;
-  for (idx = fileName.length(); idx >= 0; idx--) {
-    if (fileName.mid(idx, 1) == u'.')
-      break;
-  }
-  return fileName.left(idx);
+  // `lastIndexOf` returns -1 if not found and `left` takes a negative number to
+  // mean “the entire string”, so this is a no-op if the filename has no
+  // extension
+  return fileName.left(fileName.lastIndexOf(u'.', fileName.size() - 1));
 }
 
 CFrmSettings::CFrmSettings() {
