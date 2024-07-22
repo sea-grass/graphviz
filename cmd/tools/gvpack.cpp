@@ -36,6 +36,7 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <optional>
 #include <pack/pack.h>
 #include <set>
 #include <stddef.h>
@@ -85,7 +86,7 @@ typedef struct {
 static int verbose = 0;
 static char **myFiles = 0;
 static FILE *outfp;		/* output; stdout by default */
-static Agdesc_t kind;		/* type of graph */
+static std::optional<Agdesc_t> kind; ///< type of graph
 static std::vector<attr_t> G_args; // Storage for -G arguments
 static bool doPack;              /* Do packing if true */
 static char* gname = const_cast<char*>("root");
@@ -560,7 +561,8 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 
     if (verbose)
 	std::cerr << "Creating clone graph\n";
-    root = agopen(gname, kind, &AgDefaultDisc);
+    assert(kind.has_value());
+    root = agopen(gname, *kind, &AgDefaultDisc);
     initAttrs(root, gs);
     G_bb = agfindgraphattr(root, const_cast<char*>("bb"));
     if (doPack) assert(G_bb);
@@ -639,7 +641,6 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
     std::vector<Agraph_t*> gs;
     ingraph_state ig;
-    int kindUnset = 1;
 
     /* set various state values */
     PSinputscale = POINTS_PER_INCH;
@@ -653,11 +654,10 @@ static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
 	    std::cerr << "Graph " << agnameof(g) << " is empty - ignoring\n";
 	    continue;
 	}
-	if (kindUnset) {
-	    kindUnset = 0;
+	if (!kind.has_value()) {
 	    kind = g->desc;
 	}
-	else if (kind.directed != g->desc.directed) {
+	else if (kind->directed != g->desc.directed) {
 	    std::cerr << "Error: all graphs must be directed or undirected\n";
 	    graphviz_exit(1);
 	} else if (!agisstrict(g))
