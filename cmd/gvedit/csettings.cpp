@@ -334,12 +334,11 @@ void CFrmSettings::addSlot() {
                            tr("Attribute is already defined!"), QMessageBox::Ok,
                            QMessageBox::Ok);
       return;
-    } else {
-      str = str + _value + QLatin1String("\"]");
-      WIDGET(QTextEdit, teAttributes)
-          ->setPlainText(WIDGET(QTextEdit, teAttributes)->toPlainText() + str +
-                         QLatin1Char('\n'));
     }
+    str = str + _value + QLatin1String("\"]");
+    WIDGET(QTextEdit, teAttributes)
+        ->setPlainText(WIDGET(QTextEdit, teAttributes)->toPlainText() + str +
+                       QLatin1Char('\n'));
   }
 }
 
@@ -400,7 +399,6 @@ void CFrmSettings::saveSlot() {
 
     QTextStream out(&file);
     out << WIDGET(QTextEdit, teAttributes)->toPlainText();
-    return;
   }
 }
 
@@ -558,12 +556,10 @@ int CFrmSettings::runSettings(MdiChild *m) {
   if (m && m == getActiveWindow()) {
     if (this->loadGraph(m))
       return drawGraph();
-    else
-      return QDialog::Rejected;
+    return QDialog::Rejected;
   }
 
-  else
-    return showSettings(m);
+  return showSettings(m);
 }
 
 int CFrmSettings::showSettings(MdiChild *m) {
@@ -571,8 +567,8 @@ int CFrmSettings::showSettings(MdiChild *m) {
   if (this->loadGraph(m)) {
     refreshContent();
     return this->exec();
-  } else
-    return QDialog::Rejected;
+  }
+  return QDialog::Rejected;
 }
 
 void CFrmSettings::setActiveWindow(MdiChild *m) { this->activeWindow = m; }

@@ -277,7 +277,6 @@ void CMainWindow::slotSaveLog() {
 
     QTextStream out(&file);
     out << globTextEdit->toPlainText();
-    return;
   }
 }
 
@@ -557,9 +556,7 @@ MdiChild *CMainWindow::activeMdiChild() {
   if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow()) {
     if (activeSubWindow->widget()->inherits("MdiChild"))
       return qobject_cast<MdiChild *>(activeSubWindow->widget());
-    else
-      return qobject_cast<ImageViewer *>(activeSubWindow->widget())
-          ->graphWindow;
+    return qobject_cast<ImageViewer *>(activeSubWindow->widget())->graphWindow;
   }
   return 0;
 }
