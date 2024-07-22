@@ -98,6 +98,51 @@ if(WITH_GVEDIT)
         $<$<CONFIG:DEBUG>:--qtpaths ${QTPATHS_DEBUG_BAT}>
     )
     install(SCRIPT ${deploy_script})
+
+    find_program(DOUBLE_CONVERSION_RT_LIB NAMES double-conversion.dll)
+    find_program(PCRE_DBG_RT_LIB
+                 NAMES pcre2-16d.dll
+                 PATHS ${WINDOWS_DEPENDENCY_VCPKG_DIR}/debug/bin
+    )
+    find_program(PCRE_REL_RT_LIB NAMES pcre2-16.dll)
+    find_program(ZLIB_DBG_RT_LIB
+                 NAMES zlibd1.dll
+                 PATHS ${WINDOWS_DEPENDENCY_VCPKG_DIR}/debug/bin
+    )
+    find_program(ZLIB_REL_RT_LIB NAMES zlib1.dll)
+    find_program(LIBPNG_DBG_RT_LIB
+                 NAMES libpng16d.dll
+                 PATHS ${WINDOWS_DEPENDENCY_VCPKG_DIR}/debug/bin
+    )
+    find_program(LIBPNG_REL_RT_LIB NAMES libpng16.dll)
+    find_program(FREETYPE_DBG_RT_LIB
+                 NAMES freetyped.dll
+                 PATHS ${WINDOWS_DEPENDENCY_VCPKG_DIR}/debug/bin
+    )
+    find_program(BZ2_DBG_RT_LIB
+                 NAMES bz2d.dll
+                 PATHS ${WINDOWS_DEPENDENCY_VCPKG_DIR}/debug/bin
+    )
+    find_program(BZ2_REL_RT_LIB NAMES bz2.dll)
+    find_program(FREETYPE_REL_RT_LIB NAMES freetype.dll)
+    find_program(ZSTD_RT_LIB NAMES zstd.dll)
+    if(CMAKE_CL_64)
+      find_program(LIBCRYPTO_3_RT_LIB NAMES libcrypto-3-x64.dll)
+    else()
+      find_program(LIBCRYPTO_3_RT_LIB NAMES libcrypto-3.dll)
+    endif()
+    install(
+      FILES
+        ${DOUBLE_CONVERSION_RT_LIB}
+        $<IF:$<CONFIG:DEBUG>,${PCRE_DBG_RT_LIB},${PCRE_REL_RT_LIB}>
+        $<IF:$<CONFIG:DEBUG>,${ZLIB_DBG_RT_LIB},${ZLIB_REL_RT_LIB}>
+        $<IF:$<CONFIG:DEBUG>,${LIBPNG_DBG_RT_LIB},${LIBPNG_REL_RT_LIB}>
+        $<IF:$<CONFIG:DEBUG>,${BZ2_DBG_RT_LIB},${BZ2_REL_RT_LIB}>
+        $<IF:$<CONFIG:DEBUG>,${FREETYPE_DBG_RT_LIB},${FREETYPE_REL_RT_LIB}>
+        ${ZSTD_RT_LIB}
+        ${LIBCRYPTO_3_RT_LIB}
+      DESTINATION ${BINARY_INSTALL_DIR}
+    )
   endif()
 
   install(
