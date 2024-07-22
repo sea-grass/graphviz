@@ -61,4 +61,11 @@ if(with_sfdp AND ANN_FOUND)
     )
   endif()
 
+  if(WIN32 AND install_win_dependency_dlls)
+    install(
+      FILES ${ANN_RUNTIME_LIBRARIES}
+      DESTINATION ${BINARY_INSTALL_DIR}
+    )
+  endif()
+
 endif()

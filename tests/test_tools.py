@@ -16,7 +16,6 @@ import pytest
 
 sys.path.append(os.path.dirname(__file__))
 from gvtest import (  # pylint: disable=wrong-import-position
-    is_cmake,
     is_mingw,
     remove_xtype_warnings,
     which,
@@ -109,11 +108,6 @@ def test_tools(tool):
     ) as p:
         output, _ = p.communicate()
         ret = p.returncode
-
-    # FIXME: mingle built with CMake on Windows crashes
-    if tool == "mingle" and is_cmake() and platform.system() == "Windows":
-        assert ret != 0, "mingle on Windows with CMake fixed?"
-        return
 
     assert ret == 0, f"`{tool} -?` failed. Output was: {output}"
 
