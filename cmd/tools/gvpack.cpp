@@ -86,7 +86,6 @@ typedef struct {
 static int verbose = 0;
 static char **myFiles = 0;
 static FILE *outfp;		/* output; stdout by default */
-static std::optional<Agdesc_t> kind; ///< type of graph
 static std::vector<attr_t> G_args; // Storage for -G arguments
 static bool doPack;              /* Do packing if true */
 static char* gname = const_cast<char*>("root");
@@ -551,7 +550,8 @@ static void cloneClusterTree(Agraph_t * g, Agraph_t * ng)
  * Create and return a new graph which is the logical union
  * of the graphs gs. 
  */
-static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
+static Agraph_t *cloneGraph(std::vector<Agraph_t *> &gs, GVC_t *gvc,
+                            Agdesc_t kind) {
     Agraph_t *root;
     Agraph_t *subg;
     Agnode_t *n;
@@ -561,8 +561,7 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 
     if (verbose)
 	std::cerr << "Creating clone graph\n";
-    assert(kind.has_value());
-    root = agopen(gname, *kind, &AgDefaultDisc);
+    root = agopen(gname, kind, &AgDefaultDisc);
     initAttrs(root, gs);
     G_bb = agfindgraphattr(root, const_cast<char*>("bb"));
     if (doPack) assert(G_bb);
@@ -637,8 +636,11 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
  * either directed or undirected. If all graphs are strict, the
  * combined graph will be strict; other, the combined graph will
  * be non-strict.
+ *
+ * @param kind [out] The type to use for the combined graph
  */
-static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
+static std::vector<Agraph_t *> readGraphs(GVC_t *gvc,
+                                          std::optional<Agdesc_t> &kind) {
     std::vector<Agraph_t*> gs;
     ingraph_state ig;
 
@@ -729,7 +731,8 @@ int main(int argc, char *argv[])
     lt_preloaded_symbols[0].address = &gvplugin_neato_layout_LTX_library;
 #endif
     gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
-    std::vector<Agraph_t*> gs = readGraphs(gvc);
+    std::optional<Agdesc_t> kind; // type of graph
+    std::vector<Agraph_t*> gs = readGraphs(gvc, kind);
     if (gs.empty())
 	graphviz_exit(0);
 
@@ -742,7 +745,8 @@ int main(int argc, char *argv[])
     }
 
     /* create union graph and copy attributes */
-    g = cloneGraph(gs, gvc);
+    assert(kind.has_value());
+    g = cloneGraph(gs, gvc, *kind);
 
     /* compute new top-level bb and set */
     if (doPack) {
