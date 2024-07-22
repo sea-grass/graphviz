@@ -77,7 +77,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "-Dwith_cxx_api=ON",
                 "-DENABLE_LTDL=ON",
                 "-DWITH_EXPAT=ON",
-                "-DWITH_GVEDIT=OFF",
+                "-DWITH_GVEDIT=ON",
                 "-DWITH_ZLIB=ON",
                 "--warn-uninitialized",
                 # "-Werror=dev",

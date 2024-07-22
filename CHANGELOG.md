@@ -72,6 +72,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was likely broken in the transition from 32-bit to 64-bit hardware. #2568
 - Ubuntu 24.04 binaries incorrectly are ASan enabled and produce memory leak
   errors. #2574
+- gvedit is not built for Windows (fixed for CMake builds only) #1816
 
 ## [12.0.0] – 2024-07-04
 

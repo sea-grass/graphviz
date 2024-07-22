@@ -107,9 +107,14 @@ def test_existence(binary: str):
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built on some Windows due to lacking libANN")
 
-    if binary == "gvedit" and platform.system() == "Windows" and not is_mingw():
+    if (
+        binary == "gvedit"
+        and platform.system() == "Windows"
+        and not is_mingw()
+        and not is_cmake()
+    ):
         check_that_tool_does_not_exist(binary, os_id)
-        pytest.skip(f"{binary} is not built on Windows due to lacking Qt")
+        pytest.skip(f"{binary} is not built with MSBuild on Windows")
 
     # FIXME: Smyrna dependencies are not avaiable in other jobs
     if binary == "smyrna" and is_cmake() and platform.system() != "Linux":
