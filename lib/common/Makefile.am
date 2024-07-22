@@ -61,7 +61,7 @@ DISTCLEANFILES = brewer_lib colortbl.h \
 
 EXTRA_DIST = README.imap \
 	htmlparse.c htmlparse.h \
-	entities.html entities.tcl \
+	entities.html entities.py \
 	brewer_colors brewer_lib svgcolor_names svgcolor_lib \
 	color_names colortbl.h \
 	make_brewer_lib.py make_colortbl.py make_svgcolor_lib.py

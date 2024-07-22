@@ -6,7 +6,7 @@
  * This file was generated from:
  *       http://www.w3.org/TR/REC-html40/sgml/entities.html
  * by means of the script:
- *       entities.tcl
+ *       entities.py
  */
 
 #ifdef __cplusplus
