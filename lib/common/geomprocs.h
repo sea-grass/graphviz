@@ -69,6 +69,15 @@ static inline pointf add_pointf(pointf p, pointf q)
     return r;
 }
 
+static inline point sub_point(point p, point q)
+{
+    point r;
+
+    r.x = p.x - q.x;
+    r.y = p.y - q.y;
+    return r;
+}
+
 static inline pointf sub_pointf(pointf p, pointf q)
 {
     pointf r;

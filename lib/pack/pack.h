@@ -87,15 +87,15 @@ typedef unsigned int packval_t;
 #define PACK_API /* nothing */
 #endif
 
-    PACK_API pointf *putRects(size_t ng, boxf *bbs, pack_info *pinfo);
+    PACK_API point *putRects(size_t ng, boxf *bbs, pack_info *pinfo);
     PACK_API int packRects(size_t ng, boxf* bbs, pack_info* pinfo);
 
-    PACK_API pointf *putGraphs(size_t, Agraph_t **, Agraph_t *, pack_info *);
+    PACK_API point *putGraphs(size_t, Agraph_t **, Agraph_t *, pack_info *);
     PACK_API int packGraphs(size_t, Agraph_t **, Agraph_t *, pack_info *);
     PACK_API int packSubgraphs(size_t, Agraph_t **, Agraph_t *, pack_info *);
     PACK_API int pack_graph(size_t ng, Agraph_t **gs, Agraph_t *root, bool *fixed);
 
-    PACK_API int shiftGraphs(size_t, Agraph_t **, pointf *, Agraph_t *, bool);
+    PACK_API int shiftGraphs(size_t, Agraph_t**, point*, Agraph_t*, bool);
 
     PACK_API pack_mode getPackMode(Agraph_t * g, pack_mode dflt);
     PACK_API int getPack(Agraph_t *, int not_def, int dflt);

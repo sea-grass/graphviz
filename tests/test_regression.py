@@ -5,6 +5,7 @@ The test cases in this file relate to previously observed bugs. A failure of one
 of these indicates that a past bug has been reintroduced.
 """
 
+import dataclasses
 import io
 import json
 import math
@@ -4069,7 +4070,7 @@ def test_2563():
     # try various `overlap=…` values
     results: Set[str] = set()
     for overlap in ("scale", "scalexy"):
-        # run this through sfdp
+        # run this through fdp
         fdp = which("fdp")
         p = subprocess.run(
             [fdp, f"-Goverlap={overlap}", input],
@@ -4119,6 +4120,69 @@ def test_2564():
         )
         assert start not in starts, "nodes overlap"
         starts += [start]
+
+
+@pytest.mark.skipif(which("sfdp") is None, reason="sfdp not available")
+def test_2572():
+    """
+    sfdp should be able to find non-overlapping layouts
+    https://gitlab.com/graphviz/graphviz/-/issues/2572
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2572.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # run this through SFDP and convert this to JSON
+    sfdp = which("sfdp")
+    layout = subprocess.check_output(
+        [sfdp, "-Kneato", "-Tjson", input], universal_newlines=True
+    )
+    parsed = json.loads(layout)
+
+    @dataclasses.dataclass
+    class Box:
+        """
+        a geometric rectangle, defined by two of its corners
+        """
+
+        llx: float  # lower left X coordinate
+        lly: float  # lower left Y coordinate
+        urx: float  # upper right X coordinate
+        ury: float  # upper right Y coordinate
+
+        def overlaps(self, other: "Box") -> bool:
+            """
+            do we intersect the given box?
+            """
+            if self.llx > other.urx:
+                return False
+            if self.lly > other.ury:
+                return False
+            if self.urx < other.llx:
+                return False
+            if self.ury < other.lly:
+                return False
+            return True
+
+    nodes: List[Box] = []
+    for obj in parsed["objects"]:
+
+        # extract the ellipse drawn for this node
+        ellipses = [e for e in obj["_draw_"] if e["op"] == "e"]
+        assert len(ellipses) == 1, "could not find ellipse for node"
+        center_x, center_y, width, height = ellipses[0]["rect"]
+
+        assert center_x >= width, "ellipse extends into negative X space"
+        assert center_y >= height, "ellipse extends into negative Y space"
+
+        node = Box(
+            center_x - width, center_y - height, center_x + width, center_y + height
+        )
+
+        assert not any(n.overlaps(node) for n in nodes), "nodes overlap"
+
+        nodes.append(node)
 
 
 def test_changelog_dates():
