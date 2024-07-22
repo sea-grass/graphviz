@@ -215,9 +215,8 @@ static double project_to_line(point_t pt, point_t left, point_t right, double an
   dnorm = dotPoint(a,a)/bnorm - ccord*ccord;
   if (alpha == M_PI/2){
     return ccord;
-  } else {
-    return ccord + sqrt(std::max(0.0, dnorm)) / tan(alpha);
   }
+  return ccord + sqrt(std::max(0.0, dnorm)) / tan(alpha);
 }
 
 /* ink:
