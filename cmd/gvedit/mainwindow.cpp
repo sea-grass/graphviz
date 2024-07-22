@@ -133,11 +133,10 @@ CMainWindow::CMainWindow(const QStringList &files) {
   this->resize(1024, 900);
   this->move(0, 0);
   setUnifiedTitleAndToolBarOnMac(true);
-  QComboBox *cb = (QComboBox *)frmSettings->findChild<QComboBox *>(
-      QStringLiteral("cbLayout"));
+  QComboBox *cb =
+      frmSettings->findChild<QComboBox *>(QStringLiteral("cbLayout"));
   dfltLayoutIdx = LoadPlugins(*cb, frmSettings->gvc, "layout", {}, "dot");
-  cb = (QComboBox *)frmSettings->findChild<QComboBox *>(
-      QStringLiteral("cbExtension"));
+  cb = frmSettings->findChild<QComboBox *>(QStringLiteral("cbExtension"));
   dfltRenderIdx = LoadPlugins(*cb, frmSettings->gvc, "device", xtra, "png");
   statusBar()->showMessage(tr("Ready"));
   setWindowIcon(QIcon(QStringLiteral(":/images/icon.png")));

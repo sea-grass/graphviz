@@ -40,7 +40,7 @@
 
 extern int errorPipe(char *errMsg);
 
-#define WIDGET(t, f) ((t *)findChild<t *>(QStringLiteral(#f)))
+#define WIDGET(t, f) (findChild<t *>(QStringLiteral(#f)))
 
 #ifndef _WIN32
 /// `readlink`-alike but dynamically allocates
