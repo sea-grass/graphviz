@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,9 +20,6 @@ extern "C" {
  *
  * expression library definitions
  */
-
-#ifndef _EXPR_H
-#define _EXPR_H
 
 #include <ast/ast.h>
 #include <inttypes.h>
@@ -293,8 +292,6 @@ static inline char *exprintf(Vmalloc_t *vm, const char *fmt, ...) {
 
   return s;
 }
-
-#endif
 
 #ifdef __cplusplus
 }
