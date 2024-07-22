@@ -490,8 +490,7 @@ cloneSubg(Agraph_t *g, Agraph_t *ng, Agsym_t *G_bb, used_t &gnames) {
 
     /* clone subgraphs */
     for (subg = agfstsubg (g); subg; subg = agnxtsubg (subg)) {
-	nsubg = agsubg(ng, const_cast<char*>(xName(gnames, agnameof(subg)).c_str()),
-	               1);
+	nsubg = agsubg(ng, xName(gnames, agnameof(subg)).data(), 1);
 	agbindrec (nsubg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(subg, nsubg, G_bb, gnames);
 	/* if subgraphs are clusters, point to the new 
@@ -595,16 +594,14 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t *> &gs, GVC_t *gvc,
 		          << "Some nodes will be renamed.\n";
 		doWarn = false;
 	    }
-	    np = agnode(root, const_cast<char*>(xName(nnames, agnameof(n)).c_str()),
-	                1);
+	    np = agnode(root, xName(nnames, agnameof(n)).data(), 1);
 	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	    ND_alg(n) = np;
 	    cloneNode(n, np);
 	}
 
 	/* wrap the clone of g in a subgraph of root */
-	subg = agsubg(root, const_cast<char*>(xName(gnames, agnameof(g)).c_str()),
-	              1);
+	subg = agsubg(root, xName(gnames, agnameof(g)).data(), 1);
 	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(g, subg, G_bb, gnames);
     }
