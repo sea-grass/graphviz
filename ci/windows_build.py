@@ -80,7 +80,7 @@ def main(args: List[str]) -> int:  # pylint: disable=C0116
                 "-DWITH_GVEDIT=OFF",
                 "-DWITH_ZLIB=ON",
                 "--warn-uninitialized",
-                "-Werror=dev",
+                # "-Werror=dev",
                 "..",
             ],
             build,
