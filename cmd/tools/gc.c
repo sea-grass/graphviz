@@ -27,7 +27,7 @@
 #include <cgraph/cghdr.h>
 #include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/stack.h>
+#include <cgraph/list.h>
 #include <common/render.h>
 #include <common/utils.h>
 
@@ -148,20 +148,21 @@ static void init(int argc, char *argv[])
     outfile = stdout;
 }
 
-static gv_stack_t Stk;
+DEFINE_LIST(node_stack, Agnode_t *)
+static node_stack_t Stk;
 
 static void push(Agnode_t * np)
 {
     ND_dfs_mark(np) = -1;
-    stack_push(&Stk, np);
+    node_stack_push_back(&Stk, np);
 }
 
 static Agnode_t *pop(void)
 {
-    if (stack_is_empty(&Stk)) {
+    if (node_stack_is_empty(&Stk)) {
 	return 0;
     }
-    return stack_pop(&Stk);
+    return node_stack_pop_back(&Stk);
 }
 
 static void cc_dfs(Agraph_t * g, Agnode_t * n)
@@ -316,7 +317,7 @@ int main(int argc, char *argv[])
     if (n_graphs > 1)
 	wcp(tot_nodes, tot_edges, tot_cc, tot_cl, "total", 0);
 
-    stack_reset(&Stk);
+    node_stack_free(&Stk);
 
     graphviz_exit(rv);
 }

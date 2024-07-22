@@ -19,7 +19,7 @@
 #include    <cgraph/alloc.h>
 #include    <cgraph/exit.h>
 #include    <cgraph/gv_ctype.h>
-#include    <cgraph/stack.h>
+#include    <cgraph/list.h>
 #include    <cgraph/startswith.h>
 #include    <cgraph/unreachable.h>
 #include    <stdbool.h>
@@ -71,7 +71,8 @@ static Agraph_t *G;		/* Current graph */
 static Agnode_t *N;		/* Set if Current_class == TAG_NODE */
 static Agedge_t *E;		/* Set if Current_class == TAG_EDGE */
 
-static gv_stack_t Gstack;
+DEFINE_LIST(graph_stack, Agraph_t *)
+static graph_stack_t Gstack;
 
 typedef struct {
     Dtlink_t link;
@@ -154,10 +155,10 @@ static int isAnonGraph(const char *name)
 static void push_subg(Agraph_t * g)
 {
   // insert the new graph
-  stack_push(&Gstack, g);
+  graph_stack_push_back(&Gstack, g);
 
   // save the root if this is the first graph
-  if (stack_size(&Gstack) == 1) {
+  if (graph_stack_size(&Gstack) == 1) {
     root = g;
   }
 
@@ -168,17 +169,17 @@ static void push_subg(Agraph_t * g)
 static Agraph_t *pop_subg(void)
 {
   // is the stack empty?
-  if (stack_is_empty(&Gstack)) {
+  if (graph_stack_is_empty(&Gstack)) {
     fprintf(stderr, "gxl2gv: Gstack underflow in graph parser\n");
     graphviz_exit(EXIT_FAILURE);
   }
 
   // pop the top graph
-  Agraph_t *g = stack_pop(&Gstack);
+  Agraph_t *g = graph_stack_pop_back(&Gstack);
 
   // update the top graph
-  if (!stack_is_empty(&Gstack))
-    G = stack_top(&Gstack);
+  if (!graph_stack_is_empty(&Gstack))
+    G = *graph_stack_back(&Gstack);
 
   return g;
 }
@@ -397,7 +398,7 @@ startElementHandler(void *userData, const char *name, const char **atts)
 	    edgeMode = atts[pos];
 	}
 
-	if (stack_is_empty(&Gstack)) {
+	if (graph_stack_is_empty(&Gstack)) {
 	    if (strcmp(edgeMode, "directed") == 0) {
 		g = agopen((char *) id, Agdirected, &AgDefaultDisc);
 	    } else if (strcmp(edgeMode, "undirected") == 0) {
@@ -657,7 +658,7 @@ Agraph_t *gxl_to_gv(FILE * gxlFile)
     } while (!done);
     XML_ParserFree(parser);
     freeUserdata(udata);
-    stack_reset(&Gstack);
+    graph_stack_free(&Gstack);
 
     return root;
 }

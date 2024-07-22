@@ -63,9 +63,6 @@
     <ClInclude Include="sort.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="stack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="startswith.h">
       <Filter>Header Files</Filter>
     </ClInclude>

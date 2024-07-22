@@ -27,8 +27,8 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
+#include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
-#include <cgraph/stack.h>
 #include <cgraph/unreachable.h>
 #include <cgraph/exit.h>
 #include <common/render.h>
@@ -228,20 +228,21 @@ static void init(int argc, char *argv[])
 	Inputs = argv;
 }
 
-static gv_stack_t Stk;
+DEFINE_LIST(node_stack, Agnode_t *)
+static node_stack_t Stk;
 
 static void push(Agnode_t * np)
 {
   Node_mark(np) = -1;
-  stack_push(&Stk, np);
+  node_stack_push_back(&Stk, np);
 }
 
 static Agnode_t *pop(void)
 {
-  if (stack_is_empty(&Stk)) {
+  if (node_stack_is_empty(&Stk)) {
     return NULL;
   }
-  return stack_pop(&Stk);
+  return node_stack_pop_back(&Stk);
 }
 
 static int dfs(Agraph_t * g, Agnode_t * n, Agraph_t * out)
@@ -818,7 +819,7 @@ int main(int argc, char *argv[])
 	agclose(g);
     }
 
-    stack_reset(&Stk);
+    node_stack_free(&Stk);
 
     graphviz_exit(r);
 }

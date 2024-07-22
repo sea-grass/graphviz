@@ -18,7 +18,7 @@
  */
 
 #include <cgraph/alloc.h>
-#include <cgraph/stack.h>
+#include <cgraph/list.h>
 #include <dotgen/dot.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -56,18 +56,20 @@ end_component(graph_t* g)
     GD_comp(g).list[i] = GD_nlist(g);
 }
 
-static void push(gv_stack_t *sp, node_t *np) {
+DEFINE_LIST(node_stack, node_t *)
+
+static void push(node_stack_t *sp, node_t *np) {
   ND_mark(np) = Cmark + 1;
-  stack_push(sp, np);
+  node_stack_push_back(sp, np);
 }
 
-static node_t *pop(gv_stack_t *sp) {
+static node_t *pop(node_stack_t *sp) {
 
-  if (stack_is_empty(sp)) {
+  if (node_stack_is_empty(sp)) {
     return NULL;
   }
 
-  return stack_pop(sp);
+  return node_stack_pop_back(sp);
 }
 
 /* search_component:
@@ -78,7 +80,7 @@ static node_t *pop(gv_stack_t *sp) {
  * in this call to decompose will have mark < Cmark; processed nodes will have mark=Cmark;
  * so we use mark = Cmark+1 to indicate nodes on the stack.
  */
-static void search_component(gv_stack_t *stk, graph_t *g, node_t *n) {
+static void search_component(node_stack_t *stk, graph_t *g, node_t *n) {
     int c;
     elist vec[4];
     node_t *other;
@@ -113,7 +115,7 @@ void decompose(graph_t * g, int pass)
 {
     graph_t *subg;
     node_t *n, *v;
-    gv_stack_t stk = {0};
+    node_stack_t stk = {0};
 
     if (++Cmark == 0)
 	Cmark = 1;
@@ -130,5 +132,5 @@ void decompose(graph_t * g, int pass)
 	    end_component(g);
 	}
     }
-    stack_reset(&stk);
+    node_stack_free(&stk);
 }
