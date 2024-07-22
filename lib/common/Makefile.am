@@ -14,7 +14,7 @@ if WITH_WIN32
 AM_CFLAGS = -DGVC_EXPORTS
 endif
 
-BUILT_SOURCES = colortbl.h htmlparse.h
+BUILT_SOURCES = colortbl.h entities.h htmlparse.h
 
 pkginclude_HEADERS = arith.h geom.h color.h types.h textspan.h usershape.h
 noinst_HEADERS = boxes.h render.h utils.h \
@@ -50,18 +50,24 @@ svgcolor_lib: $(top_srcdir)/lib/common/svgcolor_names \
 	python3 $(top_srcdir)/lib/common/make_svgcolor_lib.py \
 	  "$(top_srcdir)/lib/common/svgcolor_names" "$@"
 
+utils.o utils.lo: entities.h
+
+entities.h: $(top_srcdir)/lib/common/entities.html \
+            $(top_srcdir)/lib/common/entities.py
+	python3 $(top_srcdir)/lib/common/entities.py "$@"
+
 htmllex.o htmllex.lo: htmllex.c htmllex.h htmlparse.h
 htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
 
 htmlparse.c htmlparse.h: $(top_srcdir)/lib/common/htmlparse.y
 	$(YACC) -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
 
-DISTCLEANFILES = brewer_lib colortbl.h \
+DISTCLEANFILES = brewer_lib colortbl.h entities.h \
 	htmlparse.[ch] svgcolor_lib
 
 EXTRA_DIST = README.imap \
 	htmlparse.c htmlparse.h \
-	entities.html entities.py \
+	entities.h entities.html entities.py \
 	brewer_colors brewer_lib svgcolor_names svgcolor_lib \
 	color_names colortbl.h \
 	make_brewer_lib.py make_colortbl.py make_svgcolor_lib.py

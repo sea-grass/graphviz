@@ -3,6 +3,7 @@
 """entities.h generator"""
 
 import re
+import sys
 import textwrap
 from pathlib import Path
 from typing import Dict
@@ -21,7 +22,7 @@ with open(Path(__file__).parent / "entities.html", "rb") as f:
             entity[name] = val
             entity_name_length_max = max(entity_name_length_max, len(name))
 
-with open("entities.h", "wt", encoding="utf-8") as f:
+with open(sys.argv[1], "wt", encoding="utf-8") as f:
     f.write(
         textwrap.dedent(
             f"""\

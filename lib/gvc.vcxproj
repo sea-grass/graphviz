@@ -75,7 +75,8 @@
       <Command>win_bison -dy -Wno-yacc common\htmlparse.y -o common\htmlparse.c
 python common\make_svgcolor_lib.py common\svgcolor_names common\svgcolor_lib
 python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
-python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h</Command>
+python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h
+python common\entities.py common\entities.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\debug\bin\libexpatd.dll $(OutDir)libexpatd.dll
@@ -107,7 +108,8 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\de
       <Command>win_bison -dy -Wno-yacc common\htmlparse.y -o common\htmlparse.c
 python common\make_svgcolor_lib.py common\svgcolor_names common\svgcolor_lib
 python common\make_brewer_lib.py common\brewer_colors common\brewer_lib
-python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h</Command>
+python common\make_colortbl.py common\brewer_lib common\svgcolor_lib common\color_names common\colortbl.h
+python common\entities.py common\entities.h</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bin\libexpat.dll $(OutDir)libexpat.dll

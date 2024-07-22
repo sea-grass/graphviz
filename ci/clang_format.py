@@ -179,7 +179,6 @@ EXCLUDE = (
     "lib/common/const.h",
     "lib/common/ellipse.c",
     "lib/common/emit.c",
-    "lib/common/entities.h",
     "lib/common/geom.c",
     "lib/common/geom.h",
     "lib/common/geomprocs.h",
