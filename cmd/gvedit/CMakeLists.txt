@@ -86,6 +86,20 @@ if(WITH_GVEDIT)
     ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
   )
 
+  if(WIN32 AND NOT MINGW AND install_win_dependency_dlls)
+    set(TOOLS_QT6_BIN ${WINDOWS_DEPENDENCY_VCPKG_DIR}/tools/Qt6/bin)
+    set(QTPATHS_DEBUG_BAT ${TOOLS_QT6_BIN}/qtpaths.debug.bat)
+    qt_generate_deploy_app_script(
+      TARGET gvedit
+      OUTPUT_SCRIPT deploy_script
+      DEPLOY_TOOL_OPTIONS
+        # workaround for https://github.com/microsoft/vcpkg/issues/17840 or
+        # https://github.com/microsoft/vcpkg/issues/36250
+        $<$<CONFIG:DEBUG>:--qtpaths ${QTPATHS_DEBUG_BAT}>
+    )
+    install(SCRIPT ${deploy_script})
+  endif()
+
   install(
     FILES ../../doc/infosrc/attrs
     DESTINATION ${DATA_INSTALL_DIR}/graphviz/gvedit
