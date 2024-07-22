@@ -24,7 +24,7 @@
 
 #include <getopt.h>
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 #include <gvc/gvc.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
