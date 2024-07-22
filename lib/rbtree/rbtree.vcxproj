@@ -59,6 +59,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <EnablePREfast>true</EnablePREfast>
       <DisableSpecificWarnings>4223;4706;4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\include;%(AdditionalIncludeDirectories);$(SolutionDir)/lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib />
@@ -70,6 +71,7 @@
       <WarningLevel>Level4</WarningLevel>
       <EnablePREfast>true</EnablePREfast>
       <DisableSpecificWarnings>4223;4706;4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalIncludeDirectories>$(SolutionDir)windows\include;%(AdditionalIncludeDirectories);$(SolutionDir)/lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Lib />
