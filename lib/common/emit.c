@@ -30,12 +30,12 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
-#include <cgraph/streq.h>
 #include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
 #include <cdt/cdt.h>
 #include <pathplan/pathgeom.h>
+#include <util/streq.h>
 #include <xdot/xdot.h>
 
 #ifdef _WIN32

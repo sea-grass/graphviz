@@ -24,12 +24,12 @@
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
 #include <cgraph/queue.h>
-#include <cgraph/streq.h>
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/streq.h>
 
 struct adjmatrix_t {
   size_t nrows;

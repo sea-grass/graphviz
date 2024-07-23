@@ -22,12 +22,12 @@
 #include <cgraph/exit.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strcasecmp.h>
-#include <cgraph/streq.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
 #include <util/gv_fopen.h>
+#include <util/streq.h>
 
 static char *usageFmt =
     "Usage: %s [-Vv?] [-(GNE)name=val] [-(KTlso)<val>] <dot files>\n";

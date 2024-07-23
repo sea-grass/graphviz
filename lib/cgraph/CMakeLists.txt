@@ -32,7 +32,6 @@ add_library(cgraph
   sort.h
   startswith.h
   strcasecmp.h
-  streq.h
   strview.h
   tokenize.h
   unreachable.h

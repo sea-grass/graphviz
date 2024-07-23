@@ -31,9 +31,9 @@
 #include <common/render.h>
 #include <gvc/gvcproc.h>
 #include <cgraph/strcasecmp.h>
-#include <cgraph/streq.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <util/streq.h>
 
 extern bool mapbool(const char *s);
 

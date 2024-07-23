@@ -20,13 +20,13 @@
 #include <cgraph/overflow.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/queue.h>
-#include <cgraph/streq.h>
 #include <common/render.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <util/streq.h>
 
 static void dfs_cutval(node_t * v, edge_t * par);
 static int dfs_range_init(node_t * v, edge_t * par, int low);

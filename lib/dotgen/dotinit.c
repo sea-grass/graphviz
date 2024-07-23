@@ -11,7 +11,6 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
-#include <cgraph/streq.h>
 #include <limits.h>
 #include <time.h>
 #include <dotgen/dot.h>
@@ -20,6 +19,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/streq.h>
 
 static void
 dot_init_subg(graph_t * g, graph_t* droot)

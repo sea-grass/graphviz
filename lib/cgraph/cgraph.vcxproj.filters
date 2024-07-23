@@ -69,9 +69,6 @@
     <ClInclude Include="strcasecmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="streq.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="strview.h">
       <Filter>Header Files</Filter>
     </ClInclude>

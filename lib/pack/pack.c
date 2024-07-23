@@ -20,12 +20,12 @@
 #include <cgraph/prisize_t.h>
 #include <cgraph/sort.h>
 #include <cgraph/startswith.h>
-#include <cgraph/streq.h>
 #include <common/render.h>
 #include <pack/pack.h>
 #include <common/pointset.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/streq.h>
 
 #define C 100			/* Max. avg. polyomino size */
 
