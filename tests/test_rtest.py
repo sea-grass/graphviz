@@ -287,8 +287,7 @@ TESTS: List[Case] = [
     Case("nestedclust", Path("nestedclust"), "dot", "gv", []),
     Case("rd_rules", Path("rd_rules.gv"), "dot", "png", []),
     Case("sq_rules", Path("sq_rules.gv"), "dot", "png", []),
-    # FIXME: Re-enable when https://gitlab.com/graphviz/graphviz/-/issues/1690 is fixed
-    # Case("fdp_clus", Path("fdp.gv"), "fdp", "png", []),
+    Case("fdp_clus", Path("fdp.gv"), "fdp", "png", []),
     Case("japanese", Path("japanese.gv"), "dot", "png", []),
     Case("russian", Path("russian.gv"), "dot", "png", []),
     Case("AvantGarde", Path("AvantGarde.gv"), "dot", "png", []),
