@@ -32,6 +32,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     ROOT,
     dot,
     gvpr,
+    is_macos,
     is_mingw,
     is_rocky,
     is_rocky_8,
@@ -3994,6 +3995,9 @@ def test_2521(testcase: str):
     assert force_off == off, "-Gnewrank=false did not reset the default"
 
 
+@pytest.mark.xfail(
+    is_macos(), strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2538"
+)
 def test_2538():
     """
     `chanSearch` assertion on `cp` should not fail
