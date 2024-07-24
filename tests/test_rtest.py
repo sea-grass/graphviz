@@ -409,13 +409,6 @@ def test_graph(name: str, input: Path, algorithm: str, format: str, flags: List[
     OUTDIR.mkdir(exist_ok=True)
     OUTPATH = OUTDIR / OUTFILE
     testcmd = ["dot", f"-K{algorithm}", f"-T{format}"] + flags + ["-o", OUTPATH, INFILE]
-    # FIXME: Remove when https://gitlab.com/graphviz/graphviz/-/issues/1786 is
-    # fixed
-    if os.environ.get("build_system") == "cmake" and format == "png:gd":
-        pytest.skip(
-            f"Skipping test {name}: format {format} because "
-            "CMake builds does not support format png:gd (#1786)"
-        )
     # FIXME: Remove when https://gitlab.com/graphviz/graphviz/-/issues/1269 is
     # fixed
     if (
