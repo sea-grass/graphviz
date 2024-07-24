@@ -10,7 +10,8 @@
 
 #include    <assert.h>
 #include    <cgraph/list.h>
-#include    <cgraph/startswith.h>
+#include    <common/render.h>
+#include    <common/utils.h>
 #include    <patchwork/patchwork.h>
 #include    <limits.h>
 #include    <neatogen/adjust.h>
@@ -46,14 +47,8 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
         clist = pclist;
 
     for (subg = agfstsubg(g); subg; subg = agnxtsubg(subg)) {
-        if (startswith(agnameof(subg), "cluster")) {
+        if (is_a_cluster(subg)) {
 	    agbindrec(subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
-#ifdef FDP_GEN
-            GD_alg(subg) = gv_alloc(sizeof(gdata)); /* freed in cleanup_subgs */
-            GD_ndim(subg) = GD_ndim(parent);
-            LEVEL(subg) = LEVEL(parent) + 1;
-            GPARENT(subg) = parent;
-#endif
             clist_append(clist, subg);
             mkClusters(subg, NULL, subg);
         }
@@ -76,13 +71,11 @@ mkClusters (graph_t * g, clist_t* pclist, graph_t* parent)
 static void patchwork_init_node(node_t * n)
 {
     agset(n,"shape","box");
-    /* common_init_node_opt(n,FALSE); */
 }
 
 static void patchwork_init_edge(edge_t * e)
 {
     agbindrec(e, "Agedgeinfo_t", sizeof(Agnodeinfo_t), true);  // edge custom data
-    /* common_init_edge(e); */
 }
 
 static void patchwork_init_node_edge(graph_t * g)
@@ -109,7 +102,6 @@ static void patchwork_init_graph(graph_t * g)
 {
     N_shape = agattr(g, AGNODE, "shape","box");
     setEdgeType (g, EDGETYPE_LINE);
-    /* GD_ndim(g) = late_int(g,agfindattr(g,"dim"),2,2); */
     Ndim = GD_ndim(g) = 2;	/* The algorithm only makes sense in 2D */
     mkClusters(g, NULL, g);
     patchwork_init_node_edge(g);
