@@ -17,8 +17,7 @@
 
 //Menu Items 
 
-void save_as_graph_clicked(GtkWidget * widget, gpointer user_data)
-{
+void save_as_graph_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -42,8 +41,7 @@ void save_as_graph_clicked(GtkWidget * widget, gpointer user_data)
     gtk_widget_destroy(dialog);
 }
 
-void remove_graph_clicked(GtkWidget * widget, gpointer user_data)
-{
+void remove_graph_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -56,44 +54,38 @@ static void btn_clicked(GtkWidget * widget, gvk_layout layout)
     (void)layout;
 }
 
-void btn_dot_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btn_dot_clicked(GtkWidget *widget, void *user_data) {
     (void)user_data;
 
     btn_clicked(widget, GVK_DOT);
 }
 
-void btn_neato_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btn_neato_clicked(GtkWidget *widget, void *user_data) {
     (void)user_data;
 
     btn_clicked(widget, GVK_NEATO);
 }
 
-void btn_twopi_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btn_twopi_clicked(GtkWidget *widget, void *user_data) {
     (void)user_data;
 
     btn_clicked(widget, GVK_TWOPI);
 }
 
-void btn_circo_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btn_circo_clicked(GtkWidget *widget, void *user_data) {
     (void)user_data;
 
     btn_clicked(widget, GVK_CIRCO);
 }
 
-void btn_fdp_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btn_fdp_clicked(GtkWidget *widget, void *user_data) {
     (void)user_data;
 
     btn_clicked(widget, GVK_FDP);
 }
 
 /*console output widgets*/
-_BB void on_clearconsolebtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_clearconsolebtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -103,16 +95,14 @@ _BB void on_clearconsolebtn_clicked(GtkWidget * widget, gpointer user_data)
 			     "", 0);
 }
 
-_BB void on_hideconsolebtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_hideconsolebtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     gtk_widget_hide(glade_xml_get_widget(xml, "vbox13"));
 }
 
-_BB void on_consoledecbtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_consoledecbtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -128,8 +118,7 @@ _BB void on_consoledecbtn_clicked(GtkWidget * widget, gpointer user_data)
 				w, 0);
 }
 
-_BB void on_consoleincbtn_clicked(GtkWidget * widget, gpointer user_data)
-{
+_BB void on_consoleincbtn_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 

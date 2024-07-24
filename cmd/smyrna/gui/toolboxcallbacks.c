@@ -16,16 +16,14 @@
 #include "glmotion.h"
 #include <stdint.h>
 
-void btnToolZoomOut_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btnToolZoomOut_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     glmotion_zoom_inc(0);
 }
 
-void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btnToolZoomFit_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -55,8 +53,7 @@ void btnToolZoomFit_clicked(GtkWidget * widget, gpointer user_data)
     btnToolFit_clicked(NULL, NULL);
 }
 
-void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
-{
+void btnToolFit_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -83,8 +80,7 @@ void btnToolFit_clicked(GtkWidget * widget, gpointer user_data)
     glexpose();
 }
 
-void on_btnActivateGraph_clicked(GtkWidget * widget, gpointer user_data)
-{
+void on_btnActivateGraph_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 

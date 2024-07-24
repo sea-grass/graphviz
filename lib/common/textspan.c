@@ -112,11 +112,11 @@ static void *textfont_makef(void *obj, Dtdisc_t *disc) {
     (void)disc;
 
     textfont_t *f1 = obj;
-    textfont_t *f2 = calloc(1,sizeof(textfont_t));
+    textfont_t *f2 = gv_alloc(sizeof(textfont_t));
     
     /* key */
-    if (f1->name) f2->name = strdup(f1->name);
-    if (f1->color) f2->color = strdup(f1->color);
+    if (f1->name) f2->name = gv_strdup(f1->name);
+    if (f1->color) f2->color = gv_strdup(f1->color);
     f2->flags = f1->flags;
     f2->size = f1->size;
 

@@ -23,16 +23,14 @@
 #include <stdlib.h>
 #include  "frmobjectui.h"
 
-void mAttributesSlot(GtkWidget * widget, gpointer user_data)
-{
+void mAttributesSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     showAttrsWidget();
 }
 
-void mOpenSlot(GtkWidget * widget, gpointer user_data)
-{
+void mOpenSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -62,24 +60,21 @@ void mOpenSlot(GtkWidget * widget, gpointer user_data)
     gtk_widget_destroy(dialog);
 }
 
-void mSaveSlot(GtkWidget * widget, gpointer user_data)
-{
+void mSaveSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     save_graph();		//save without prompt
 }
 
-void mSaveAsSlot(GtkWidget * widget, gpointer user_data)
-{
+void mSaveAsSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     save_as_graph();		//save with prompt
 }
 
-void mCloseSlot(GtkWidget * widget, gpointer user_data)
-{
+void mCloseSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -87,14 +82,12 @@ void mCloseSlot(GtkWidget * widget, gpointer user_data)
 	close_graph(view);
 }
 
-void mOptionsSlot(GtkWidget * widget, gpointer user_data)
-{
+void mOptionsSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 }
 
-void mQuitSlot(GtkWidget * widget, gpointer user_data)
-{
+void mQuitSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -103,39 +96,33 @@ void mQuitSlot(GtkWidget * widget, gpointer user_data)
 }
 
 //edit
-void mCutSlot(GtkWidget * widget, gpointer user_data)
-{
+void mCutSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 }
 
-void mCopySlot(GtkWidget * widget, gpointer user_data)
-{
+void mCopySlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 }
 
-void mPasteSlot(GtkWidget * widget, gpointer user_data)
-{
+void mPasteSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 }
 
-void mDeleteSlot(GtkWidget * widget, gpointer user_data)
-{
+void mDeleteSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 }
-void mTopviewSettingsSlot(GtkWidget * widget, gpointer user_data)
-{
+void mTopviewSettingsSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
     show_settings_form();
 }
 
 //view
-void mShowToolBoxSlot(GtkWidget * widget, gpointer user_data)
-{
+void mShowToolBoxSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -145,8 +132,7 @@ void mShowToolBoxSlot(GtkWidget * widget, gpointer user_data)
 	printf("glwidget creation failed \n");
 }
 
-void mShowConsoleSlot(GtkWidget * widget, gpointer user_data)
-{
+void mShowConsoleSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -167,8 +153,7 @@ void mShowConsoleSlot(GtkWidget * widget, gpointer user_data)
 }
 
 //Graph
-void mNodeListSlot(GtkWidget * widget, gpointer user_data)
-{
+void mNodeListSlot(GtkWidget *widget, void *user_data) {
 	(void)widget;
 	(void)user_data;
 
@@ -176,26 +161,22 @@ void mNodeListSlot(GtkWidget * widget, gpointer user_data)
 	setup_tree (view->g[view->activeGraph]);
 }
 
-void mNewNodeSlot(GtkWidget * widget, gpointer user_data)
-{
+void mNewNodeSlot(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
 }
 
-void mNewEdgeSlot(GtkWidget * widget, gpointer user_data)
-{
+void mNewEdgeSlot(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
 }
 
-void mNewClusterSlot(GtkWidget * widget, gpointer user_data)
-{
+void mNewClusterSlot(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
 }
 
-void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data)
-{
+void mGraphPropertiesSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -216,8 +197,7 @@ void mGraphPropertiesSlot(GtkWidget * widget, gpointer user_data)
     }
 }
 
-void mNodeFindSlot(GtkWidget * widget, gpointer user_data)
-{
+void mNodeFindSlot(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
 }
@@ -228,38 +208,33 @@ static void mPropertiesSlot(void) {
     gtk_widget_show(glade_xml_get_widget(xml, "frmObject"));
 }
 
-void mClusterPropertiesSlot(GtkWidget * widget, gpointer user_data)
-{
+void mClusterPropertiesSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     mPropertiesSlot();
 }
 
-void mNodePropertiesSlot(GtkWidget * widget, gpointer user_data)
-{
+void mNodePropertiesSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     mPropertiesSlot();
 }
 
-void mEdgePropertiesSlot(GtkWidget * widget, gpointer user_data)
-{
+void mEdgePropertiesSlot(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
     mPropertiesSlot();
 }
 
-void mShowCodeSlot(GtkWidget * widget, gpointer user_data)
-{
+void mShowCodeSlot(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
 }
 
-void mAbout(GtkWidget * widget, gpointer user_data)
-{
+void mAbout(GtkWidget *widget, void *user_data) {
   (void)widget;
   (void)user_data;
 }
@@ -273,8 +248,7 @@ void change_cursor(GdkCursorType C)
     gdk_cursor_destroy(cursor);
 }
 
-void mTestgvpr(GtkWidget * widget, gpointer user_data)
-{
+void mTestgvpr(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -344,8 +318,7 @@ void mTestgvpr(GtkWidget * widget, gpointer user_data)
    opens a file open dialog and load a gvpr program to gvpr script text box
    if the current script is modified, user should be informed about it
 */
-void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
-{
+void on_gvprbuttonload_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 
@@ -385,8 +358,7 @@ void on_gvprbuttonload_clicked(GtkWidget * widget, gpointer user_data)
 	opens a file save dialog and save a gvpr program from gvpr script text box
 	if the current script is modified, user should be informed about it
 */
-void on_gvprbuttonsave_clicked(GtkWidget * widget, gpointer user_data)
-{
+void on_gvprbuttonsave_clicked(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
 

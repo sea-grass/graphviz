@@ -357,11 +357,10 @@ int main(int argc, char *argv[]) {
     smyrnaDir = find_share();
   }
 
-  gchar *package_locale_dir;
+  char *package_locale_dir;
 #ifdef G_OS_WIN32
-  gchar *package_prefix =
-      g_win32_get_package_installation_directory(NULL, NULL);
-  gchar *package_data_dir = g_build_filename(package_prefix, "share", NULL);
+  char *package_prefix = g_win32_get_package_installation_directory(NULL, NULL);
+  char *package_data_dir = g_build_filename(package_prefix, "share", NULL);
   package_locale_dir =
       g_build_filename(package_prefix, "share", "locale", NULL);
 #else

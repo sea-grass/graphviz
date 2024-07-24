@@ -50,8 +50,7 @@ static glMouseButtonType getGlCompMouseType(int n)
 	params:gtk opgn gl canvas and optional data pointer
 	return value:none
 */
-static void realize(GtkWidget * widget, gpointer data)
-{
+static void realize(GtkWidget *widget, void *data) {
     (void)data;
 
     GdkGLContext *glcontext = gtk_widget_get_gl_context(widget);
@@ -92,9 +91,8 @@ static void realize(GtkWidget * widget, gpointer data)
 	params:gtk opgn gl canvas , GdkEventConfigure object to retrieve window dimensions and custom data
 	return value:true or false, fails (false) if cannot init gl
 */
-static gboolean configure_event(GtkWidget * widget,
-				GdkEventConfigure * event, gpointer data)
-{
+static gboolean configure_event(GtkWidget *widget, GdkEventConfigure *event,
+                                void *data) {
     (void)event;
     (void)data;
 
@@ -144,9 +142,7 @@ static gboolean configure_event(GtkWidget * widget,
 	params:gtk opgn gl canvas , GdkEventExpose object and custom data
 	return value:true or false, fails (false) if cannot init gl
 */
-gboolean expose_event(GtkWidget * widget, GdkEventExpose * event,
-		      gpointer data)
-{
+gboolean expose_event(GtkWidget *widget, GdkEventExpose *event, void *data) {
     (void)event;
     (void)data;
 
@@ -180,9 +176,7 @@ gboolean expose_event(GtkWidget * widget, GdkEventExpose * event,
 	params:gtk opgn gl canvas , GdkEventButton object and custom data
 	return value:true or false, fails (false) if cannot init gl
 */
-static gboolean button_press_event(GtkWidget * widget,
-				   GdkEventButton * event, gpointer data)
-{
+static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event, void *data) {
     (void)widget;
     (void)data;
 
@@ -209,9 +203,8 @@ static gboolean button_press_event(GtkWidget * widget,
 	params:gtk opgn gl canvas , GdkEventButton object and custom data
 	return value:true or false, fails (false) if cannot init gl
 */
-static gboolean button_release_event(GtkWidget * widget,
-				     GdkEventButton * event, gpointer data)
-{
+static gboolean button_release_event(GtkWidget *widget, GdkEventButton *event,
+                                     void *data) {
     (void)widget;
     (void)data;
 
@@ -233,16 +226,18 @@ static gboolean button_release_event(GtkWidget * widget,
 
     return FALSE;
 }
-static gboolean key_press_event(GtkWidget * widget, GdkEventKey * event, gpointer data)
-{
+
+static gboolean key_press_event(GtkWidget *widget, GdkEventKey *event,
+                                void *data) {
     (void)widget;
     (void)data;
 
     appmouse_key_press(view,event->keyval);
     return FALSE;
 }
-static gboolean key_release_event(GtkWidget * widget, GdkEventKey * event, gpointer data)
-{
+
+static gboolean key_release_event(GtkWidget *widget, GdkEventKey *event,
+                                  void *data) {
     (void)widget;
     (void)event;
     (void)data;
@@ -251,10 +246,8 @@ static gboolean key_release_event(GtkWidget * widget, GdkEventKey * event, gpoin
     return FALSE;
 }
 
-
-static gboolean
-scroll_event(GtkWidget * widget, GdkEventScroll * event, gpointer data)
-{
+static gboolean scroll_event(GtkWidget *widget, GdkEventScroll *event,
+                             void *data) {
     (void)widget;
     (void)data;
 
@@ -280,9 +273,8 @@ scroll_event(GtkWidget * widget, GdkEventScroll * event, gpointer data)
 	params:gtk opgn gl canvas , GdkEventMotion object and custom data
 	return value:always TRUE !!!
 */
-static gboolean motion_notify_event(GtkWidget * widget,
-				    GdkEventMotion * event, gpointer data)
-{
+static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event,
+                                    void *data) {
     (void)data;
 
     float x = (float) event->x;
@@ -362,14 +354,6 @@ GdkGLConfig *configure_gl(void)
 */
 void create_window(GdkGLConfig * glconfig, GtkWidget * vbox)
 {
-    gint major, minor;
-
-    /*
-     * Query OpenGL extension version.
-     */
-
-    gdk_gl_query_version(&major, &minor);
-
     /* Try double-buffered visual */
 
     /* Drawing area for drawing OpenGL scene. */

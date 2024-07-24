@@ -34,22 +34,18 @@ static void pango_free_layout (void *layout)
 
 static char* pango_psfontResolve (PostscriptAlias* pa)
 {
-    static char buf[1024];
-    strcpy(buf, pa->family);
-    strcat(buf, ",");
+    agxbuf buf = {0};
+    agxbprint(&buf, "%s,", pa->family);
     if (pa->weight) {
-        strcat(buf, " ");
-        strcat(buf, pa->weight);
+        agxbprint(&buf, " %s", pa->weight);
     }
     if (pa->stretch) {
-        strcat(buf, " ");
-        strcat(buf, pa->stretch);
+        agxbprint(&buf, " %s", pa->stretch);
     }
     if (pa->style) {
-        strcat(buf, " ");
-        strcat(buf, pa->style);
+        agxbprint(&buf, " %s", pa->style);
     }
-    return buf;
+    return agxbdisown(&buf);
 }
 
 #define FONT_DPI 96.
@@ -66,7 +62,7 @@ static int agxbput_int(void *buffer, const char *s) {
 
 static bool pango_textlayout(textspan_t * span, char **fontpath)
 {
-    static char buf[1024];  /* returned in fontpath, only good until next call */
+    static agxbuf buf; // returned in fontpath, only good until next call
     static PangoFontMap *fontmap;
     static PangoContext *context;
     static PangoFontDescription *desc;
@@ -74,9 +70,6 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     static double fontsize;
     static gv_font_map* gv_fmap;
     char *fnt, *psfnt = NULL;
-    PangoLayout *layout;
-    PangoRectangle logical_rect;
-    cairo_font_options_t* options;
     PangoFont *font;
 #ifdef ENABLE_PANGO_MARKUP
     PangoAttrList *attrs;
@@ -84,14 +77,12 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     int flags;
 #endif
     char *text;
-    double textlayout_scale;
-    PostscriptAlias *pA;
 
     if (!context) {
 	fontmap = pango_cairo_font_map_new();
 	gv_fmap = get_font_mapping(fontmap);
 	context = pango_font_map_create_context (fontmap);
-	options=cairo_font_options_create();
+	cairo_font_options_t* options = cairo_font_options_create();
 	cairo_font_options_set_antialias(options,CAIRO_ANTIALIAS_GRAY);
 	cairo_font_options_set_hint_style(options,CAIRO_HINT_STYLE_FULL);
 	cairo_font_options_set_hint_metrics(options,CAIRO_HINT_METRICS_ON);
@@ -105,7 +96,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     if (!fontname || strcmp(fontname, span->font->name) != 0 || fontsize != span->font->size) {
 
 	/* check if the conversion to Pango units below will overflow */
-	if ((double)(G_MAXINT / PANGO_SCALE) < span->font->size) {
+	if (INT_MAX / PANGO_SCALE < span->font->size) {
 	    return false;
 	}
 
@@ -114,75 +105,62 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	fontsize = span->font->size;
 	pango_font_description_free (desc);
 
-	pA = span->font->postscript_alias;
+	PostscriptAlias *pA = span->font->postscript_alias;
+	bool psfnt_needs_free = false;
 	if (pA) {
 	    psfnt = fnt = gv_fmap[pA->xfig_code].gv_font;
-	    if(!psfnt)
+	    if(!psfnt) {
 		psfnt = fnt = pango_psfontResolve (pA);
+		psfnt_needs_free = true;
+	    }
 	}
 	else
 	    fnt = fontname;
 
 	desc = pango_font_description_from_string(fnt);
         /* all text layout is done at a scale of FONT_DPI (nominaly 96.) */
-        pango_font_description_set_size (desc, (gint)(fontsize * PANGO_SCALE));
+        pango_font_description_set_size (desc, (int)(fontsize * PANGO_SCALE));
 
         if (fontpath && (font = pango_font_map_load_font(fontmap, context, desc))) {  /* -v support */
-	    const char *fontclass;
+	    const char *fontclass = G_OBJECT_CLASS_NAME(G_OBJECT_GET_CLASS(font));
 
-	    fontclass = G_OBJECT_CLASS_NAME(G_OBJECT_GET_CLASS(font));
-
-	    buf[0] = '\0';
+	    agxbclear(&buf);
 	    if (psfnt) {
-		strcat(buf, "(ps:pango  ");
-		strcat(buf, psfnt);
-		strcat(buf, ") ");
+		agxbprint(&buf, "(ps:pango  %s) ", psfnt);
 	    }
-	    strcat(buf, "(");
-	    strcat(buf, fontclass);
-	    strcat(buf, ") ");
+	    agxbprint(&buf, "(%s) ", fontclass);
 #ifdef HAVE_PANGO_FC_FONT_LOCK_FACE
 	    if (strcmp(fontclass, "PangoCairoFcFont") == 0) {
-	        FT_Face face;
-	        PangoFcFont *fcfont;
-	        FT_Stream stream;
-	        FT_StreamDesc streamdesc;
-	        fcfont = PANGO_FC_FONT(font);
-	        face = pango_fc_font_lock_face(fcfont);
+	        PangoFcFont *fcfont = PANGO_FC_FONT(font);
+	        FT_Face face = pango_fc_font_lock_face(fcfont);
 	        if (face) {
-		    strcat(buf, "\"");
-		    strcat(buf, face->family_name);
-		    strcat(buf, ", ");
-		    strcat(buf, face->style_name);
-		    strcat(buf, "\" ");
+		    agxbprint(&buf, "\"%s, %s\" ", face->family_name, face->style_name);
 
-		    stream = face->stream;
+		    FT_Stream stream = face->stream;
 		    if (stream) {
-			streamdesc = stream->pathname;
+			FT_StreamDesc streamdesc = stream->pathname;
 			if (streamdesc.pointer)
-			    strcat(buf, (char*)streamdesc.pointer);
+			    agxbput(&buf, streamdesc.pointer);
 		        else
-			    strcat(buf, "*no pathname available*");
+			    agxbput(&buf, "*no pathname available*");
 		    }
 		    else
-			strcat(buf, "*no stream available*");
+			agxbput(&buf, "*no stream available*");
 		}
 	        pango_fc_font_unlock_face(fcfont);
 	    }
 	    else
 #endif
 	    {
-    		PangoFontDescription *tdesc;
-		char *tfont;
-
-	        tdesc = pango_font_describe(font);
-	        tfont = pango_font_description_to_string(tdesc);
-	        strcat(buf, "\"");
-	        strcat(buf, tfont);
-	        strcat(buf, "\" ");
+    		PangoFontDescription *tdesc = pango_font_describe(font);
+		char *tfont = pango_font_description_to_string(tdesc);
+	        agxbprint(&buf, "\"%s\" ", tfont);
 	        g_free(tfont);
 	    }
-            *fontpath = buf;
+            *fontpath = agxbuse(&buf);
+        }
+        if (psfnt_needs_free) {
+            free(psfnt);
         }
     }
 
@@ -231,7 +209,7 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
     text = span->str;
 #endif
 
-    layout = pango_layout_new (context);
+    PangoLayout *layout = pango_layout_new (context);
     span->layout = layout;    /* layout free with textspan - see labels.c */
     span->free_layout = pango_free_layout;    /* function for freeing pango layout */
 
@@ -242,13 +220,14 @@ static bool pango_textlayout(textspan_t * span, char **fontpath)
 	pango_layout_set_attributes (layout, attrs);
 #endif
 
+    PangoRectangle logical_rect;
     pango_layout_get_extents (layout, NULL, &logical_rect);
 
     /* if pango doesn't like the font then it sets width=0 but height = garbage */
     if (logical_rect.width == 0)
 	logical_rect.height = 0;
 
-    textlayout_scale = POINTS_PER_INCH / (FONT_DPI * PANGO_SCALE);
+    const double textlayout_scale = POINTS_PER_INCH / (FONT_DPI * PANGO_SCALE);
     span->size.x = logical_rect.width * textlayout_scale;
     span->size.y = logical_rect.height * textlayout_scale;
 
