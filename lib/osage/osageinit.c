@@ -65,7 +65,7 @@ layout (Agraph_t* g, int depth)
     int nvs = 0;       /* no. of nodes in subclusters */
     Agnode_t*  n;
     Agraph_t*  subg;
-    point* pts;
+    pointf* pts;
     boxf bb, rootbb;
     pointf p;
     pack_info pinfo;
@@ -147,7 +147,7 @@ layout (Agraph_t* g, int depth)
 
     /* reposition children relative to GD_bb(g) */
     for (j = 0; j < total; j++) {
-	P2PF(pts[j],p);
+	p = pts[j];
 	bb = gs[j];
 	bb.LL.x += p.x;
 	bb.UR.x += p.x;
