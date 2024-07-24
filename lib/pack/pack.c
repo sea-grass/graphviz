@@ -776,7 +776,6 @@ static pointf *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
     bool *fixed = pinfo->fixed;
     int fixed_cnt = 0;
     boxf fixed_bb = { {0, 0}, {0, 0} };
-    pointf center;
 
     if (ng == 0)
 	return 0;
@@ -820,11 +819,11 @@ static pointf *polyGraphs(size_t ng, Agraph_t **gs, Agraph_t *root,
     }
 
     /* generate polyomino cover for the graphs */
+    pointf center = {0};
     if (fixed) {
 	center.x = round((fixed_bb.LL.x + fixed_bb.UR.x) / 2);
 	center.y = round((fixed_bb.LL.y + fixed_bb.UR.y) / 2);
-    } else
-	center.x = center.y = 0;
+    }
     info = gv_calloc(ng, sizeof(ginfo));
     for (size_t i = 0; i < ng; i++) {
 	Agraph_t *g = gs[i];
