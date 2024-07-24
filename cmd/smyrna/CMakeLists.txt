@@ -9,7 +9,6 @@ if(WITH_SMYRNA)
   find_package(PkgConfig REQUIRED)
   find_package(Fontconfig REQUIRED)
   pkg_check_modules(GTKGLEXT REQUIRED gtkglext-1.0)
-  pkg_check_modules(GTS REQUIRED gts)
   pkg_check_modules(XRENDER REQUIRED xrender)
 
   add_executable(smyrna
@@ -90,7 +89,6 @@ if(WITH_SMYRNA)
     ${GLUT_INCLUDE_DIR}
     ${GTK2_INCLUDE_DIRS}
     ${GTKGLEXT_INCLUDE_DIRS}
-    ${GTS_INCLUDE_DIRS}
     ${XRENDER_INCLUDE_DIRS}
   )
 
@@ -111,7 +109,6 @@ if(WITH_SMYRNA)
     ${GLUT_LIBRARIES}
     ${GTK2_LIBRARIES}
     ${GTKGLEXT_LIBRARIES}
-    ${GTS_LINK_LIBRARIES}
     ${XRENDER_LIBRARIES}
   )
 

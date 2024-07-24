@@ -146,6 +146,8 @@ if(NOT WITH_EXPAT STREQUAL "OFF")
   endif()
 endif()
 
+find_package(GTS)
+
 if(NOT WITH_SMYRNA STREQUAL "OFF")
   find_package(Freetype)
   find_package(GLUT)
@@ -154,7 +156,6 @@ if(NOT WITH_SMYRNA STREQUAL "OFF")
   find_package(Fontconfig)
   if(PkgConfig_FOUND)
     pkg_check_modules(GTKGLEXT gtkglext-1.0)
-    pkg_check_modules(GTS gts)
     pkg_check_modules(XRENDER xrender)
   endif()
   if(Freetype_FOUND AND GLUT_FOUND AND GTK2_FOUND AND Fontconfig_FOUND AND
@@ -175,7 +176,6 @@ endif()
 
 find_package(GD)
 find_package(GS)
-find_package(GTS)
 
 if(NOT ENABLE_LTDL STREQUAL "OFF")
   find_package(LTDL)
