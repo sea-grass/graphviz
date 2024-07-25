@@ -117,39 +117,39 @@ static void init(int argc, char *argv[], opts_t &opts) {
 	while ((c = getopt(argc, argv, ":a:c:i:k:K:m:o:p:r:T:v:?")) != -1) {
 		switch (c) {
 		case 'a':
-			if ((sscanf(optarg,"%lf",&s) > 0) && (s >= 0))
+			if (sscanf(optarg, "%lf", &s) > 0 && s >= 0)
 				opts.angle =  M_PI * s / 180;
 			else
 				std::cerr << "-a arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'c':
-			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= COMPATIBILITY_FULL))
+			if (sscanf(optarg, "%d", &i) > 0 && 0 <= i && i <= COMPATIBILITY_FULL)
 				opts.compatibility_method =  i;
 			else
 				std::cerr << "-c arg " << optarg << " must be an integer in [0,"
 					<< COMPATIBILITY_FULL << "] - ignored\n";
 			break;
 		case 'i':
-			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
+			if (sscanf(optarg, "%d", &i) > 0 && i >= 0)
 				opts.outer_iter =  i;
 			else
 				std::cerr << "-i arg " << optarg << " must be a non-negative integer - "
 					"ignored\n";
 			break;
 		case 'k':
-			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 2))
+			if (sscanf(optarg, "%d", &i) > 0 && i >= 2)
 				opts.nneighbors =  i;
 			else
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
 			break;
 		case 'K':
-			if ((sscanf(optarg,"%lf",&s) > 0) && (s > 0))
+			if (sscanf(optarg, "%lf", &s) > 0 && s > 0)
 				opts.K =  s;
 			else
 				std::cerr << "-K arg " << optarg << " must be positive real - ignored\n";
 			break;
 		case 'm':
-			if ((sscanf(optarg,"%d",&i) > 0) && (0 <= i) && (i <= METHOD_INK))
+			if (sscanf(optarg, "%d", &i) > 0 && 0 <= i && i <= METHOD_INK)
 				opts.method =  i;
 			else
 				std::cerr << "-k arg " << optarg << " must be an integer >= 2 - ignored\n";
@@ -158,13 +158,13 @@ static void init(int argc, char *argv[], opts_t &opts) {
 			outfile = openFile(cmd, optarg, "w");
 			break;
 		case 'p':
-			if ((sscanf(optarg,"%lf",&s) > 0))
+			if (sscanf(optarg, "%lf", &s) > 0)
 				opts.angle_param =  s;
 			else
 				std::cerr << "-p arg " << optarg << " must be real - ignored\n";
 			break;
 		case 'r':
-			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
+			if (sscanf(optarg, "%d", &i) > 0 && i >= 0)
 				opts.max_recursion =  i;
 			else
 				std::cerr << "-r arg " << optarg << " must be a non-negative integer - "
@@ -181,7 +181,7 @@ static void init(int argc, char *argv[], opts_t &opts) {
 			break;
 		case 'v':
 			Verbose = 1;
-			if ((sscanf(optarg,"%d",&i) > 0) && (i >= 0))
+			if (sscanf(optarg, "%d", &i) > 0 && i >= 0)
 				Verbose = static_cast<unsigned char>(i);
 			else
 				optind--;

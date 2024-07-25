@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -18,9 +20,6 @@ extern "C" {
  *
  * expression library private definitions
  */
-
-#ifndef _EXLIB_H
-#define _EXLIB_H
 
 #include <ast/ast.h>
 #include <cgraph/agxbuf.h>
@@ -167,8 +166,6 @@ extern const char*	exversion;
 extern Exstate_t	expr;
 
 extern int		ex_parse(void);	/* yacc should do this		*/
-
-#endif
 
 #ifdef __cplusplus
 }

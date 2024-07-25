@@ -60,9 +60,8 @@ bool MdiChild::loadFile(const QString &fileName) {
 bool MdiChild::save() {
   if (isUntitled) {
     return saveAs();
-  } else {
-    return saveFile(curFile);
   }
+  return saveFile(curFile);
 }
 
 bool MdiChild::saveAs() {
@@ -120,7 +119,7 @@ bool MdiChild::maybeSave() {
                                    QMessageBox::Cancel);
     if (ret == QMessageBox::Save)
       return save();
-    else if (ret == QMessageBox::Cancel)
+    if (ret == QMessageBox::Cancel)
       return false;
   }
   return true;

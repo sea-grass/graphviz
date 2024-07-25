@@ -40,7 +40,7 @@
 
 extern int errorPipe(char *errMsg);
 
-#define WIDGET(t, f) ((t *)findChild<t *>(QStringLiteral(#f)))
+#define WIDGET(t, f) (findChild<t *>(QStringLiteral(#f)))
 
 #ifndef _WIN32
 /// `readlink`-alike but dynamically allocates
@@ -241,12 +241,10 @@ bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
 }
 
 QString stripFileExtension(const QString &fileName) {
-  int idx;
-  for (idx = fileName.length(); idx >= 0; idx--) {
-    if (fileName.mid(idx, 1) == u'.')
-      break;
-  }
-  return fileName.left(idx);
+  // `lastIndexOf` returns -1 if not found and `left` takes a negative number to
+  // mean “the entire string”, so this is a no-op if the filename has no
+  // extension
+  return fileName.left(fileName.lastIndexOf(u'.', fileName.size() - 1));
 }
 
 CFrmSettings::CFrmSettings() {
@@ -336,12 +334,11 @@ void CFrmSettings::addSlot() {
                            tr("Attribute is already defined!"), QMessageBox::Ok,
                            QMessageBox::Ok);
       return;
-    } else {
-      str = str + _value + QLatin1String("\"]");
-      WIDGET(QTextEdit, teAttributes)
-          ->setPlainText(WIDGET(QTextEdit, teAttributes)->toPlainText() + str +
-                         QLatin1Char('\n'));
     }
+    str = str + _value + QLatin1String("\"]");
+    WIDGET(QTextEdit, teAttributes)
+        ->setPlainText(WIDGET(QTextEdit, teAttributes)->toPlainText() + str +
+                       QLatin1Char('\n'));
   }
 }
 
@@ -402,7 +399,6 @@ void CFrmSettings::saveSlot() {
 
     QTextStream out(&file);
     out << WIDGET(QTextEdit, teAttributes)->toPlainText();
-    return;
   }
 }
 
@@ -560,12 +556,10 @@ int CFrmSettings::runSettings(MdiChild *m) {
   if (m && m == getActiveWindow()) {
     if (this->loadGraph(m))
       return drawGraph();
-    else
-      return QDialog::Rejected;
+    return QDialog::Rejected;
   }
 
-  else
-    return showSettings(m);
+  return showSettings(m);
 }
 
 int CFrmSettings::showSettings(MdiChild *m) {
@@ -573,8 +567,8 @@ int CFrmSettings::showSettings(MdiChild *m) {
   if (this->loadGraph(m)) {
     refreshContent();
     return this->exec();
-  } else
-    return QDialog::Rejected;
+  }
+  return QDialog::Rejected;
 }
 
 void CFrmSettings::setActiveWindow(MdiChild *m) { this->activeWindow = m; }

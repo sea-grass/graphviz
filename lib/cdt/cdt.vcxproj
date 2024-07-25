@@ -59,6 +59,7 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <EnablePREfast>true</EnablePREfast>
       <DisableSpecificWarnings>4223;4706;4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GVDLL;EXPORT_CDT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -75,6 +76,7 @@
       <WarningLevel>Level4</WarningLevel>
       <EnablePREfast>true</EnablePREfast>
       <DisableSpecificWarnings>4223;4706;4996</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GVDLL;EXPORT_CDT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>

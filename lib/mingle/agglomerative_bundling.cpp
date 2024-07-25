@@ -337,7 +337,8 @@ static void agglomerative_ink_bundling_internal(
   SparseMatrix R;
   double ink0, ink1;
   point_t meet1, meet2;
-  double TOL = 0.0001, wgt_all;
+  double wgt_all;
+  [[maybe_unused]] const double TOL = 0.0001;
   clock_t start;
 
   (*recurse_level)++;
@@ -387,7 +388,6 @@ static void agglomerative_ink_bundling_internal(
 	ink1 = ink(edges, ia[i+1]-ia[i], pick, &ink0, &meet1, &meet2, angle_param, angle);
 	if (MINGLE_DEBUG) if (Verbose) fprintf(stderr,"finish calling ink2...\n");
 	assert(fabs(ink1 - grid.back().inks[i]) <= std::max(TOL, TOL * ink1) && ink1 - ink0 <= TOL);
-	(void)TOL;
 	assert(ink1 < 1000 * ink0); /* assert that points were found */
 	wgt_all = 0.;
 	if (ia[i+1]-ia[i] > 1){

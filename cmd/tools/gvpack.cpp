@@ -24,7 +24,7 @@
 
 #include <getopt.h>
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 #include <gvc/gvc.h>
 #include <cgraph/alloc.h>
 #include <cgraph/exit.h>
@@ -36,6 +36,7 @@
 #include <iostream>
 #include <limits>
 #include <map>
+#include <optional>
 #include <pack/pack.h>
 #include <set>
 #include <stddef.h>
@@ -85,7 +86,6 @@ typedef struct {
 static int verbose = 0;
 static char **myFiles = 0;
 static FILE *outfp;		/* output; stdout by default */
-static Agdesc_t kind;		/* type of graph */
 static std::vector<attr_t> G_args; // Storage for -G arguments
 static bool doPack;              /* Do packing if true */
 static char* gname = const_cast<char*>("root");
@@ -490,8 +490,7 @@ cloneSubg(Agraph_t *g, Agraph_t *ng, Agsym_t *G_bb, used_t &gnames) {
 
     /* clone subgraphs */
     for (subg = agfstsubg (g); subg; subg = agnxtsubg (subg)) {
-	nsubg = agsubg(ng, const_cast<char*>(xName(gnames, agnameof(subg)).c_str()),
-	               1);
+	nsubg = agsubg(ng, xName(gnames, agnameof(subg)).data(), 1);
 	agbindrec (nsubg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(subg, nsubg, G_bb, gnames);
 	/* if subgraphs are clusters, point to the new 
@@ -550,7 +549,8 @@ static void cloneClusterTree(Agraph_t * g, Agraph_t * ng)
  * Create and return a new graph which is the logical union
  * of the graphs gs. 
  */
-static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
+static Agraph_t *cloneGraph(std::vector<Agraph_t *> &gs, GVC_t *gvc,
+                            Agdesc_t kind) {
     Agraph_t *root;
     Agraph_t *subg;
     Agnode_t *n;
@@ -594,16 +594,14 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
 		          << "Some nodes will be renamed.\n";
 		doWarn = false;
 	    }
-	    np = agnode(root, const_cast<char*>(xName(nnames, agnameof(n)).c_str()),
-	                1);
+	    np = agnode(root, xName(nnames, agnameof(n)).data(), 1);
 	    agbindrec (np, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
 	    ND_alg(n) = np;
 	    cloneNode(n, np);
 	}
 
 	/* wrap the clone of g in a subgraph of root */
-	subg = agsubg(root, const_cast<char*>(xName(gnames, agnameof(g)).c_str()),
-	              1);
+	subg = agsubg(root, xName(gnames, agnameof(g)).data(), 1);
 	agbindrec (subg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);
 	cloneSubg(g, subg, G_bb, gnames);
     }
@@ -635,11 +633,13 @@ static Agraph_t *cloneGraph(std::vector<Agraph_t*> &gs, GVC_t *gvc) {
  * either directed or undirected. If all graphs are strict, the
  * combined graph will be strict; other, the combined graph will
  * be non-strict.
+ *
+ * @param kind [out] The type to use for the combined graph
  */
-static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
+static std::vector<Agraph_t *> readGraphs(GVC_t *gvc,
+                                          std::optional<Agdesc_t> &kind) {
     std::vector<Agraph_t*> gs;
     ingraph_state ig;
-    int kindUnset = 1;
 
     /* set various state values */
     PSinputscale = POINTS_PER_INCH;
@@ -653,11 +653,10 @@ static std::vector<Agraph_t*> readGraphs(GVC_t *gvc) {
 	    std::cerr << "Graph " << agnameof(g) << " is empty - ignoring\n";
 	    continue;
 	}
-	if (kindUnset) {
-	    kindUnset = 0;
+	if (!kind.has_value()) {
 	    kind = g->desc;
 	}
-	else if (kind.directed != g->desc.directed) {
+	else if (kind->directed != g->desc.directed) {
 	    std::cerr << "Error: all graphs must be directed or undirected\n";
 	    graphviz_exit(1);
 	} else if (!agisstrict(g))
@@ -729,7 +728,8 @@ int main(int argc, char *argv[])
     lt_preloaded_symbols[0].address = &gvplugin_neato_layout_LTX_library;
 #endif
     gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
-    std::vector<Agraph_t*> gs = readGraphs(gvc);
+    std::optional<Agdesc_t> kind; // type of graph
+    std::vector<Agraph_t*> gs = readGraphs(gvc, kind);
     if (gs.empty())
 	graphviz_exit(0);
 
@@ -742,7 +742,8 @@ int main(int argc, char *argv[])
     }
 
     /* create union graph and copy attributes */
-    g = cloneGraph(gs, gvc);
+    assert(kind.has_value());
+    g = cloneGraph(gs, gvc, *kind);
 
     /* compute new top-level bb and set */
     if (doPack) {
