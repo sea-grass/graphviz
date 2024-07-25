@@ -9,10 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-#include <inttypes.h>
 #include <math.h>
 #include <stdarg.h>
-#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,7 +47,7 @@ static void tkgen_print_color(GVJ_t * job, gvcolor_t color)
 static void tkgen_print_tags(GVJ_t *job)
 {
     char *ObjType;
-    uint64_t ObjId;
+    void *ObjId;
     obj_state_t *obj = job->obj;
     int ObjFlag;
 
@@ -57,51 +55,51 @@ static void tkgen_print_tags(GVJ_t *job)
     case EMIT_NDRAW:
 	ObjType = "node";
 	ObjFlag = 1;
-        ObjId = AGID(obj->u.n);
+        ObjId = &AGTAG(obj->u.n);
 	break;
     case EMIT_NLABEL:
 	ObjType = "node";
 	ObjFlag = 0;
-        ObjId = AGID(obj->u.n);
+        ObjId = &AGTAG(obj->u.n);
 	break;
     case EMIT_EDRAW:
     case EMIT_TDRAW:
     case EMIT_HDRAW:
 	ObjType = "edge";
 	ObjFlag = 1;
-        ObjId = AGID(obj->u.e);
+        ObjId = &AGTAG(obj->u.e);
 	break;
     case EMIT_ELABEL:
     case EMIT_TLABEL:
     case EMIT_HLABEL:
 	ObjType = "edge";
 	ObjFlag = 0;
-        ObjId = AGID(obj->u.e);
+        ObjId = &AGTAG(obj->u.e);
 	break;
     case EMIT_GDRAW:
 	ObjType = "graph";
 	ObjFlag = 1;
-	ObjId = AGID(obj->u.g);
+	ObjId = &AGTAG(obj->u.g);
 	break;
     case EMIT_GLABEL:
 	ObjFlag = 0;
 	ObjType = "graph label";
-	ObjId = AGID(obj->u.g);
+	ObjId = &AGTAG(obj->u.g);
 	break;
     case EMIT_CDRAW:
 	ObjType = "graph";
 	ObjFlag = 1;
-	ObjId = AGID(obj->u.sg);
+	ObjId = &AGTAG(obj->u.sg);
 	break;
     case EMIT_CLABEL:
 	ObjType = "graph";
 	ObjFlag = 0;
-	ObjId = AGID(obj->u.sg);
+	ObjId = &AGTAG(obj->u.sg);
 	break;
     default:
 	UNREACHABLE();
     }
-    gvprintf(job, " -tags {%d%s0x%" PRIx64 "}", ObjFlag, ObjType, ObjId);
+    gvprintf(job, " -tags {%d%s%p}", ObjFlag, ObjType, ObjId);
 }
 
 static void tkgen_canvas(GVJ_t * job)

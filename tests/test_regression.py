@@ -4134,9 +4134,6 @@ def test_2564():
     reason="pexpect.spawn is not available on Windows "
     "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
 )
-@pytest.mark.xfail(
-    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2568"
-)
 def test_2568():
     """
     tags used in TCL output should be usable for later lookup
