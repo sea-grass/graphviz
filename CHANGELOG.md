@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `-Tvt-8up`, for drawing monochrome 4-, 6-, and 8-pixel-per-character
   visualizations, respectively.
 - The CMake build system now includes the WebP plugin also on Windows.
+- A Windows x64 `mingle` binary is now built with CMake.
 
 ### Changed
 
@@ -60,6 +61,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   once again operate on integer points (`point`) instead of floating-point
   points (`pointf`). This fixes a regression in Graphviz 12.0.0 that caused the
   sfdp layout engine to unnecessarily overlap nodes. #2572
+- The Windows x86 `mingle` binary built with CMake no longer fails to start
+  because of missing `ANN.dll`.
 
 ## [12.0.0] – 2024-07-04
 

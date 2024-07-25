@@ -23,17 +23,6 @@ from gvtest import (  # pylint: disable=wrong-import-position
 )
 
 
-def is_win64() -> bool:
-    """
-    is the Graphviz under test targeting the x64 Windows API?
-    """
-    if platform.system() != "Windows":
-        return False
-    if os.getenv("project_platform") != "x64":
-        return False
-    return True
-
-
 @pytest.mark.parametrize(
     "binary",
     [
@@ -114,7 +103,7 @@ def test_existence(binary: str):
             check_that_tool_does_not_exist(binary, os_id)
             pytest.skip(f"{binary} is not built with MSBuild (#1837)")
 
-    if binary == "mingle" and is_cmake() and (is_win64() or is_mingw()):
+    if binary == "mingle" and is_cmake() and is_mingw():
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip(f"{binary} is not built on some Windows due to lacking libANN")
 
