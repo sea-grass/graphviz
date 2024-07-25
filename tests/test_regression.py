@@ -12,6 +12,7 @@ import math
 import os
 import platform
 import re
+import shlex
 import shutil
 import signal
 import stat
@@ -25,6 +26,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from typing import Iterator, List, Set
 
+import pexpect
 import pytest
 
 sys.path.append(os.path.dirname(__file__))
@@ -4124,6 +4126,61 @@ def test_2564():
         )
         assert start not in starts, "nodes overlap"
         starts += [start]
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(
+    strict=True, reason="https://gitlab.com/graphviz/graphviz/-/issues/2568"
+)
+def test_2568():
+    """
+    tags used in TCL output should be usable for later lookup
+    https://gitlab.com/graphviz/graphviz/-/issues/2568
+    """
+
+    # locate the TCL input for this test
+    prelude = Path(__file__).parent / "2568.tcl"
+    assert prelude.exists(), "unexpectedly missing test collateral"
+
+    # startup TCL and load our graph setup code
+    proc = pexpect.spawn("tclsh", timeout=1)
+    proc.expect("% ")
+    proc.sendline(f'source "{shlex.quote(str(prelude))}"')
+
+    # look for tags to query
+    while True:
+        index = proc.expect(
+            [
+                "invalid command name",
+                re.compile(rb"-tags {\d(?P<tag>(edge|node)0x[\da-fA-F]+)}"),
+                pexpect.TIMEOUT,
+            ]
+        )
+
+        # stdout and stderr are multiplexed onto the same stream by `pexpect`, so if one
+        # of the commands we previously entered was not recognized, we will see an error
+        # at the end of the output stream
+        assert index != 0, "at least one tag was not recognized"
+
+        # if we got no output within 1s, assume we are done and try to neatly exit
+        if index == 2:
+            proc.sendeof()
+            proc.wait()
+            break
+
+        tag = proc.match.group("tag").decode("utf-8")
+
+        # …try to look up its corresponding entities
+        if tag.startswith("edge"):
+            cmd = "listnodes"
+        else:
+            cmd = "listedges"
+        proc.sendline(f"{tag} {cmd}")
 
 
 @pytest.mark.skipif(which("sfdp") is None, reason="sfdp not available")
