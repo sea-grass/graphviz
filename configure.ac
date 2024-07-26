@@ -509,12 +509,8 @@ else
       if test "$D" = ""; then
         use_d="No (D compiler not available)"
       else
-        D_INCLUDES=
-        D_LIBS=
 	if test "$D" != ""; then
 	  use_d="Yes"
-          AC_SUBST([D_INCLUDES])
-          AC_SUBST([D_LIBS])
         fi
       fi
     fi
