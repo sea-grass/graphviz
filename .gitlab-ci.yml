@@ -61,9 +61,7 @@ portable-source:
 .build_template: &rpm_build_definition
     stage: build
     script:
-        - logfile=`mktemp`
-        - ci/build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
+        - ci/linux-build-job-script.sh
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -82,9 +80,7 @@ portable-source:
     stage: build
     script:
         - source /opt/virtualenv/bin/activate
-        - logfile=`mktemp`
-        - ci/build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
+        - ci/linux-build-job-script.sh
     artifacts:
         when: on_success
         expire_in: 1 week
