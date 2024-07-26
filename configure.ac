@@ -509,9 +509,7 @@ else
       if test "$D" = ""; then
         use_d="No (D compiler not available)"
       else
-	if test "$D" != ""; then
-	  use_d="Yes"
-        fi
+	use_d="Yes"
       fi
     fi
   fi
