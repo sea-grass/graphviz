@@ -15,6 +15,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   visualizations, respectively.
 - The CMake build system now includes the WebP plugin also on Windows.
 - A Windows x64 `mingle` binary is now built with CMake.
+- Support for building the SWIG-generated D language bindings has been
+  integrated into the CMake build system. This is controllable by the
+  `-DENABLE_D={AUTO|ON|OFF}` option.
 
 ### Changed
 
