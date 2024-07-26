@@ -225,9 +225,7 @@ portable-source:
     stage: test
     script:
         - source /opt/virtualenv/bin/activate
-        - ci/install-packages.sh
-        - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
-        - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
+        - ci/linux-test-job-script.sh
     artifacts:
         reports:
             junit: report.xml
@@ -250,13 +248,11 @@ portable-source:
         - ctest --output-on-failure
         - unset GVBINDIR
         - popd
-        - ci/install-packages.sh
-        - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
         # Many of the tests run by pytest currently trigger ASan
         # memory leak detections. Disable those for now.
         - export ASAN_OPTIONS=detect_leaks=0
         - export UBSAN_OPTIONS=print_stacktrace=1
-        - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
+        - ci/linux-test-job-script.sh
         - ci/test_coverage.py --analyze
     # enable test coverage visualization in MR diff view
     coverage: '/  lines\.{6}: \d+\.\d+%/'
