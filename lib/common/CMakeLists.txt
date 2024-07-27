@@ -38,6 +38,18 @@ add_custom_command(
   COMMENT "generate color table"
 )
 
+# Generate entities.h from entities.html
+add_custom_command(
+  OUTPUT common/entities.h
+  MAIN_DEPENDENCY ${CMAKE_CURRENT_SOURCE_DIR}/entities.html
+  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/entities.py
+  COMMAND ${CMAKE_COMMAND} -E make_directory
+          "${CMAKE_CURRENT_BINARY_DIR}/common"
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/entities.py
+          ${CMAKE_CURRENT_BINARY_DIR}/common/entities.h
+  COMMENT "generate entities.h"
+)
+
 add_library(common_obj OBJECT
   # Header files
   arith.h
@@ -46,7 +58,7 @@ add_library(common_obj OBJECT
   colorprocs.h
   ${CMAKE_CURRENT_BINARY_DIR}/common/colortbl.h
   const.h
-  entities.h
+  ${CMAKE_CURRENT_BINARY_DIR}/common/entities.h
   geom.h
   geomprocs.h
   globals.h

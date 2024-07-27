@@ -32,7 +32,7 @@ EXTRA_DIST = graphviz.spec \
 	m4/README \
 	Doxyfile.in Doxyfile \
 	config/config_perl.pl \
-	config/config_ruby.rb config/config_tcl.tcl dot.demo plugin.demo \
+	config/config_ruby.rb dot.demo plugin.demo \
 	macosx windows debian redhat graphviz.sln
 
 .PHONY: rpm
