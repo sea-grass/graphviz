@@ -81,6 +81,7 @@ portable-source:
 .build_template: &deb_build_definition
     stage: build
     script:
+        - source /opt/virtualenv/bin/activate
         - logfile=`mktemp`
         - ci/build.sh |& tee $logfile
         - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
