@@ -18,6 +18,7 @@
  */
 #include <cassert>
 #include <memory>
+#include <ostream>
 #include <vpsc/pairingheap/PairingHeap.h>
 #include <vpsc/constraint.h>
 #include <vpsc/block.h>
