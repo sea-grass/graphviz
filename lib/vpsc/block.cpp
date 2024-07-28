@@ -16,10 +16,12 @@
  * appreciated if you could also contribute those changes back to the
  * Adaptagrams repository.
  */
+
+#include <algorithm>
 #include <cassert>
 #include <memory>
 #include <ostream>
-#include <vpsc/pairingheap/PairingHeap.h>
+#include <vector>
 #include <vpsc/constraint.h>
 #include <vpsc/block.h>
 #include <vpsc/blocks.h>
@@ -31,6 +33,46 @@ using std::vector;
 #ifndef RECTANGLE_OVERLAP_LOGGING
 	#define RECTANGLE_OVERLAP_LOGGING 0
 #endif
+
+/// `>` comparator for constraints
+static bool gt(const Constraint *const lhs, const Constraint *const rhs) {
+  return compareConstraints(rhs, lhs);
+}
+
+/// create a heap within a vector
+///
+/// The standard library’s heap functionality is all structured around creating
+/// a max-heap but we want a min-heap. So we flip the comparator we give it.
+static void make_heap(std::vector<Constraint *> &heap) {
+  std::make_heap(heap.begin(), heap.end(), gt);
+}
+
+/// add all elements from `heap2` into the heap `heap1`
+static void merge_heaps(std::vector<Constraint *> &heap1,
+                  const std::vector<Constraint *> &heap2) {
+  heap1.insert(heap1.end(), heap2.begin(), heap2.end());
+  make_heap(heap1);
+}
+
+/// get the minimum heap element
+static Constraint *findMin(std::vector<Constraint *> &heap) {
+  assert(std::is_heap(heap.begin(), heap.end(), gt));
+  return heap.front();
+}
+
+/// remove the minimum heap element
+static void deleteMin(std::vector<Constraint *> &heap) {
+  assert(std::is_heap(heap.begin(), heap.end(), gt));
+  std::pop_heap(heap.begin(), heap.end(), gt);
+  heap.pop_back();
+}
+
+/// add an item to a heap
+static void insert(std::vector<Constraint *> &heap, Constraint *c) {
+  assert(std::is_heap(heap.begin(), heap.end(), gt));
+  heap.push_back(c);
+  std::push_heap(heap.begin(), heap.end(), gt);
+}
 
 void Block::addVariable(Variable *v) {
 	v->block=this;
@@ -63,17 +105,18 @@ void Block::setUpOutConstraints() {
   out = setUpConstraintHeap(false);
 }
 
-std::unique_ptr<PairingHeap<Constraint *>> Block::setUpConstraintHeap(bool use_in) {
-	auto h = std::make_unique<PairingHeap<Constraint *>>(&compareConstraints);
+std::unique_ptr<std::vector<Constraint *>> Block::setUpConstraintHeap(bool use_in) {
+	auto h = std::make_unique<std::vector<Constraint *>>();
 	for (Variable *v : vars) {
 		vector<Constraint*> *cs= use_in ? &v->in : &v->out;
 		for (Constraint *c : *cs) {
 			c->timeStamp=blockTimeCtr;
 			if ((c->left->block != this && use_in) || (c->right->block != this && !use_in)) {
-				h->insert(c);
+				h->push_back(c);
 			}
 		}
 	}
+	make_heap(*h);
 	return h;
 }	
 void Block::merge(Block* b, Constraint* c) {
@@ -126,22 +169,18 @@ void Block::mergeIn(Block *b) {
 	// We check the top of the heaps to remove possible internal constraints
 	findMinInConstraint();
 	b->findMinInConstraint();
-	in->merge(b->in.get());
-	if (RECTANGLE_OVERLAP_LOGGING) {
-		ofstream f(LOGFILE,ios::app);
-		f<<"  merged heap: "<<*in<<"\n";
-	}
+	merge_heaps(*in, *b->in);
 }
 void Block::mergeOut(Block *b) {	
 	findMinOutConstraint();
 	b->findMinOutConstraint();
-	out->merge(b->out.get());
+	merge_heaps(*out, *b->out);
 }
 Constraint *Block::findMinInConstraint() {
 	Constraint *v = nullptr;
 	vector<Constraint*> outOfDate;
-	while (!in->isEmpty()) {
-		v = in->findMin();
+	while (!in->empty()) {
+		v = findMin(*in);
 		const Block *lb = v->left->block;
 		const Block *rb = v->right->block;
 		// rb may not be this if called between merge and mergeIn
@@ -158,14 +197,14 @@ Constraint *Block::findMinInConstraint() {
 				f<<"     lb="<<*lb<<"\n";
 				f<<"     rb="<<*rb<<"\n";
 			}
-			in->deleteMin();
+			deleteMin(*in);
 			if (RECTANGLE_OVERLAP_LOGGING) {
 				ofstream f(LOGFILE,ios::app);
 				f<<" ... skipping internal constraint\n";
 			}
 		} else if(v->timeStamp < lb->timeStamp) {
 			// block at other end of constraint has been moved since this
-			in->deleteMin();
+			deleteMin(*in);
 			outOfDate.push_back(v);
 			if (RECTANGLE_OVERLAP_LOGGING) {
 				ofstream f(LOGFILE,ios::app);
@@ -177,35 +216,30 @@ Constraint *Block::findMinInConstraint() {
 	}
 	for (Constraint *c : outOfDate) {
 		c->timeStamp=blockTimeCtr;
-		in->insert(c);
+		insert(*in, c);
 	}
-	if(in->isEmpty()) {
+	if(in->empty()) {
 		v=nullptr;
 	} else {
-		v=in->findMin();
+		v = findMin(*in);
 	}
 	return v;
 }
 Constraint *Block::findMinOutConstraint() {
-	if(out->isEmpty()) return nullptr;
-	Constraint *v = out->findMin();
+	if(out->empty()) return nullptr;
+	Constraint *v = findMin(*out);
 	while (v->left->block == v->right->block) {
-		out->deleteMin();
-		if(out->isEmpty()) return nullptr;
-		v = out->findMin();
+		deleteMin(*out);
+		if(out->empty()) return nullptr;
+		v = findMin(*out);
 	}
 	return v;
 }
 void Block::deleteMinInConstraint() {
-	in->deleteMin();
-	if (RECTANGLE_OVERLAP_LOGGING) {
-		ofstream f(LOGFILE,ios::app);
-		f<<"deleteMinInConstraint... \n";
-		f<<"  result: "<<*in<<"\n";
-	}
+	deleteMin(*in);
 }
 void Block::deleteMinOutConstraint() {
-	out->deleteMin();
+	deleteMin(*out);
 }
 inline bool Block::canFollowLeft(const Constraint *c, const Variable *last) {
 	return c->left->block==this && c->active && last!=c->left;

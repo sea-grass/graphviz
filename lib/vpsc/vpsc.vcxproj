@@ -82,8 +82,6 @@
     <ClInclude Include="constraint.h" />
     <ClInclude Include="csolve_VPSC.h" />
     <ClInclude Include="generate-constraints.h" />
-    <ClInclude Include="pairingheap\dsexceptions.h" />
-    <ClInclude Include="pairingheap\PairingHeap.h" />
     <ClInclude Include="solve_VPSC.h" />
     <ClInclude Include="variable.h" />
   </ItemGroup>
@@ -93,7 +91,6 @@
     <ClCompile Include="constraint.cpp" />
     <ClCompile Include="csolve_VPSC.cpp" />
     <ClCompile Include="generate-constraints.cpp" />
-    <ClCompile Include="pairingheap\PairingHeap.cpp" />
     <ClCompile Include="solve_VPSC.cpp" />
     <ClCompile Include="variable.cpp" />
   </ItemGroup>

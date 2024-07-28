@@ -27,13 +27,7 @@
     <ClInclude Include="csolve_VPSC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="pairingheap\dsexceptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="generate-constraints.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pairingheap\PairingHeap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="solve_VPSC.h">
@@ -57,9 +51,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="generate-constraints.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pairingheap\PairingHeap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="solve_VPSC.cpp">
