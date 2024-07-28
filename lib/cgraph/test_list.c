@@ -18,6 +18,21 @@ static void test_create_reset(void) {
   ints_free(&i);
 }
 
+// a list should start in a known initial state
+static void test_init(void) {
+  ints_t i = {0};
+  assert(ints_is_empty(&i));
+  assert(ints_size(&i) == 0);
+}
+
+// reset of an initialized list should be OK and idempotent
+static void test_init_reset(void) {
+  ints_t i = {0};
+  ints_free(&i);
+  ints_free(&i);
+  ints_free(&i);
+}
+
 // repeated append
 static void test_append(void) {
   ints_t xs = {0};
@@ -173,6 +188,59 @@ static void test_clear(void) {
   assert(ints_is_empty(&xs));
 
   ints_free(&xs);
+}
+
+// basic push then pop
+static void test_push_one(void) {
+  ints_t s = {0};
+  int arbitrary = 42;
+  ints_push_back(&s, arbitrary);
+  assert(ints_size(&s) == 1);
+  int top = ints_pop_back(&s);
+  assert(top == arbitrary);
+  assert(ints_is_empty(&s));
+  ints_free(&s);
+}
+
+static void push_then_pop(int count) {
+  ints_t s = {0};
+  for (int i = 0; i < count; ++i) {
+    ints_push_back(&s, i);
+    assert(ints_size(&s) == (size_t)i + 1);
+  }
+  for (int i = count - 1;; --i) {
+    assert(ints_size(&s) == (size_t)i + 1);
+    int p = ints_pop_back(&s);
+    assert(p == i);
+    if (i == 0) {
+      break;
+    }
+  }
+  ints_free(&s);
+}
+
+// push a series of items
+static void test_push_then_pop_ten(void) { push_then_pop(10); }
+
+// push enough to cause an expansion
+static void test_push_then_pop_many(void) { push_then_pop(4096); }
+
+// interleave some push and pop operations
+static void test_push_pop_interleaved(void) {
+  ints_t s = {0};
+  size_t size = 0;
+  for (int i = 0; i < 4096; ++i) {
+    if (i % 3 == 1) {
+      int p = ints_pop_back(&s);
+      assert(p == i - 1);
+      --size;
+    } else {
+      ints_push_back(&s, i);
+      ++size;
+    }
+    assert(ints_size(&s) == size);
+  }
+  ints_free(&s);
 }
 
 static void test_resize_empty_1(void) {
@@ -469,6 +537,8 @@ int main(void) {
   } while (0)
 
   RUN(create_reset);
+  RUN(init);
+  RUN(init_reset);
   RUN(append);
   RUN(get);
   RUN(set);
@@ -477,6 +547,10 @@ int main(void) {
   RUN(at);
   RUN(clear_empty);
   RUN(clear);
+  RUN(push_one);
+  RUN(push_then_pop_ten);
+  RUN(push_then_pop_many);
+  RUN(push_pop_interleaved);
   RUN(resize_empty_1);
   RUN(resize_empty_2);
   RUN(resize_down);

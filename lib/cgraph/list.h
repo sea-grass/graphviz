@@ -242,8 +242,8 @@
     assert(haystack != NULL);                                                  \
     assert(eq != NULL);                                                        \
                                                                                \
-    for (size_t i = 0; i < haystack->size; ++i) {                              \
-      if (eq(haystack->data[i], needle)) {                                     \
+    for (size_t i = 0; i < name##_size(haystack); ++i) {                       \
+      if (eq(name##_get(haystack, i), needle)) {                               \
         return true;                                                           \
       }                                                                        \
     }                                                                          \
