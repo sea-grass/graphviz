@@ -34,7 +34,6 @@ static void gvloadimage_poppler_free(usershape_t *us)
 static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 {
     PopplerDocument *document = NULL;
-    GError *error;
     int num_pages;
 
     assert(job);
@@ -67,17 +66,21 @@ static PopplerDocument* gvloadimage_poppler_load(GVJ_t * job, usershape_t *us)
 		    free (dir);
 		}
 
+		GError *error = NULL;
 		char *uri = g_filename_to_uri(absolute, NULL, &error);
 
 		g_free(absolute);
 		if (uri == NULL) {
 		    printf("%s\n", error->message);
+		    g_error_free(error);
 		    return NULL;
 		}
 
 		document = poppler_document_new_from_file (uri, NULL, &error);
+		g_free(uri);
 		if (document == NULL) {
 		    printf("%s\n", error->message);
+		    g_error_free(error);
 		    return NULL;
 		}
 
