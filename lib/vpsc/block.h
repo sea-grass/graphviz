@@ -67,5 +67,5 @@ private:
 	bool canFollowRight(const Constraint *c, const Variable *last);
 	void populateSplitBlock(Block *b, Variable *v, Variable *u);
 	void addVariable(Variable *v);
-	void setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h, bool use_in);
+	std::unique_ptr<PairingHeap<Constraint *>> setUpConstraintHeap(bool use_in);
 };

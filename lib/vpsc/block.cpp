@@ -56,14 +56,14 @@ double Block::desiredWeightedPosition() {
 	return wp;
 }
 void Block::setUpInConstraints() {
-	setUpConstraintHeap(in,true);
+  in = setUpConstraintHeap(true);
 }
 void Block::setUpOutConstraints() {
-	setUpConstraintHeap(out,false);
+  out = setUpConstraintHeap(false);
 }
-void Block::setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h,
-	  bool use_in) {
-	h = std::make_unique<PairingHeap<Constraint*>>(&compareConstraints);
+
+std::unique_ptr<PairingHeap<Constraint *>> Block::setUpConstraintHeap(bool use_in) {
+	auto h = std::make_unique<PairingHeap<Constraint *>>(&compareConstraints);
 	for (Variable *v : vars) {
 		vector<Constraint*> *cs= use_in ? &v->in : &v->out;
 		for (Constraint *c : *cs) {
@@ -73,6 +73,7 @@ void Block::setUpConstraintHeap(std::unique_ptr<PairingHeap<Constraint*>> &h,
 			}
 		}
 	}
+	return h;
 }	
 void Block::merge(Block* b, Constraint* c) {
 	if (RECTANGLE_OVERLAP_LOGGING) {
