@@ -76,17 +76,17 @@ typedef struct {
  * node's connected component.
  * Also, entire layout is translated to origin.
  */
-static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
+static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, pointf *pts,
                     graph_t *rg, layout_info* infop) {
     attrsym_t * G_width = infop->G_width;
     attrsym_t * G_height = infop->G_height;
     graph_t *cg;
     boxf bb;
     boxf bbf;
-    point pt;
+    pointf pt;
     int margin;
     graph_t **cp = cc;
-    point *pp = pts;
+    pointf *pp = pts;
     int isRoot = rg == infop->rootg;
     int isEmpty = 0;
 
@@ -147,7 +147,7 @@ static void finalCC(graph_t *g, size_t c_cnt, graph_t **cc, point *pts,
 	cp = cc;
 	pp = pts;
 	while ((cg = *cp++)) {
-	    point p;
+	    pointf p;
 	    node_t *n;
 	    pointf del;
 
@@ -810,7 +810,7 @@ setClustNodes(graph_t* root)
  */
 static int layout(graph_t * g, layout_info * infop)
 {
-    point *pts = NULL;
+    pointf *pts = NULL;
     graph_t *dg;
     node_t *dn;
     node_t *n;
