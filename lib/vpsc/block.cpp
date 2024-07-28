@@ -380,8 +380,8 @@ double Block::cost() {
 	}
 	return c;
 }
-ostream& operator <<(ostream &os, const Block &b)
-{
+
+std::ostream& operator <<(std::ostream &os, const Block &b) {
 	os<<"Block:";
 	for(const Variable *v : b.vars) {
 		os<<" "<<*v;
