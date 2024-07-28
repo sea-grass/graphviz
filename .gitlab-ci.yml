@@ -241,6 +241,7 @@ portable-source:
 .test_template_including_ctest: &test_definition_including_ctest
     stage: test
     script:
+        - source /opt/virtualenv/bin/activate
         - ci/test_coverage.py --init
         - pushd build
         # Use GVBINDIR to specify where to generate and load config6
@@ -259,7 +260,6 @@ portable-source:
         # memory leak detections. Disable those for now.
         - export ASAN_OPTIONS=detect_leaks=0
         - export UBSAN_OPTIONS=print_stacktrace=1
-        - source /opt/virtualenv/bin/activate
         - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
         - ci/test_coverage.py --analyze
     # enable test coverage visualization in MR diff view
