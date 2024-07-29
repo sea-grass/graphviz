@@ -73,17 +73,6 @@ def test_existence(binary: str):
     check that a given binary was built and is on $PATH
     """
 
-    tools_not_built_with_msbuild = [
-        "cluster",
-        "dot2gxl",
-        "dot_builtins",
-        "gv2gxl",
-        "gvedit",
-        "gvmap.sh",
-        "gxl2dot",
-        "vimdot",
-    ]
-
     os_id = freedesktop_os_release().get("ID")
 
     # FIXME: Remove skip when
@@ -95,13 +84,6 @@ def test_existence(binary: str):
     if os_id == "rocky" and binary == "mingle":
         check_that_tool_does_not_exist(binary, os_id)
         pytest.skip("mingle is not built for Rocky due to lacking libANN")
-
-    # FIXME: Remove skip when
-    # https://gitlab.com/graphviz/graphviz/-/issues/1837 is fixed
-    if os.getenv("build_system") == "msbuild":
-        if binary in tools_not_built_with_msbuild:
-            check_that_tool_does_not_exist(binary, os_id)
-            pytest.skip(f"{binary} is not built with MSBuild (#1837)")
 
     if binary == "mingle" and is_cmake() and is_mingw():
         check_that_tool_does_not_exist(binary, os_id)
