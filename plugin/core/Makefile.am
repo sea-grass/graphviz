@@ -43,4 +43,4 @@ libgvplugin_core_la_LDFLAGS += -no-undefined
 libgvplugin_core_la_LIBADD += $(top_builddir)/lib/cgraph/libcgraph.la
 endif
 
-EXTRA_DIST = ps.h gvplugin_core.vcxproj*
+EXTRA_DIST = ps.h

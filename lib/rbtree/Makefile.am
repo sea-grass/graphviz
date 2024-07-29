@@ -7,5 +7,4 @@ noinst_LTLIBRARIES = librbtree_C.la
 
 librbtree_C_la_SOURCES = red_black_tree.c
 
-EXTRA_DIST = LICENSE CHANGES makefile.txt test_red_black_tree.c \
-	rbtree.vcxproj*
+EXTRA_DIST = LICENSE CHANGES makefile.txt test_red_black_tree.c

@@ -8,5 +8,3 @@ noinst_LTLIBRARIES = libvmalloc_C.la
 libvmalloc_C_la_SOURCES = vmalloc.c vmclear.c vmclose.c \
 	vmopen.c \
 	vmstrdup.c
-
-EXTRA_DIST = vmalloc.vcxproj*

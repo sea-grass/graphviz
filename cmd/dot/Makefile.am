@@ -126,6 +126,4 @@ dot_static_LDADD += $(top_builddir)/plugin/lasi/.libs/libgvplugin_lasi_C.a $(LAS
 dot_builtins_LDADD += $(top_builddir)/plugin/lasi/libgvplugin_lasi.la $(LASI_LIBS)
 endif
 
-EXTRA_DIST = dot.vcxproj*
-
 DISTCLEANFILES = $(pdf_DATA)

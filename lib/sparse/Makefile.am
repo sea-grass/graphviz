@@ -13,5 +13,3 @@ noinst_LTLIBRARIES = libsparse_C.la
 
 libsparse_C_la_SOURCES = SparseMatrix.c general.c DotIO.c \
 	colorutil.c color_palette.c mq.c clustering.c QuadTree.c
-
-EXTRA_DIST = gvsparse.vcxproj*

@@ -39,4 +39,4 @@ libneatogen_C_la_SOURCES = adjust.c circuit.c edges.c geometry.c \
 	compute_hierarchy.c delaunay.c multispline.c $(WITH_IPSEPCOLA_SOURCES) \
 	sgd.c randomkit.c
 
-EXTRA_DIST = $(IPSEPCOLA_SOURCES) gvneatogen.vcxproj*
+EXTRA_DIST = $(IPSEPCOLA_SOURCES)

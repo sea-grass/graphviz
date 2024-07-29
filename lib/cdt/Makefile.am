@@ -33,6 +33,4 @@ libcdt_la_SOURCES = $(libcdt_C_la_SOURCES)
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = cdt.vcxproj*
-
 DISTCLEANFILES = $(pdf_DATA)

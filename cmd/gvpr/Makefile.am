@@ -45,6 +45,6 @@ gvpr_static_LDADD = \
 	$(top_builddir)/lib/vmalloc/libvmalloc_C.la \
 	$(MATH_LIBS)
 
-EXTRA_DIST = lib gvpr.vcxproj*
+EXTRA_DIST = lib
 
 DISTCLEANFILES = $(pdf_DATA)

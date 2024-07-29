@@ -57,6 +57,6 @@ if WITH_WIN32
 libgvpr_la_LDFLAGS += -export-symbols-regex gvpr
 endif
 
-EXTRA_DIST = trie.c gvprlib.vcxproj*
+EXTRA_DIST = trie.c
 
 DISTCLEANFILES = $(pdf_DATA)

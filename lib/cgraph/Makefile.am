@@ -46,7 +46,6 @@ grammar.c grammar.h: $(top_srcdir)/lib/cgraph/grammar.y
 SUFFIXES = .3 .3.pdf
 
 EXTRA_DIST = \
-	grammar.c grammar.h scan.c \
-	cgraph.vcxproj*
+	grammar.c grammar.h scan.c
 
 DISTCLEANFILES = grammar.[ch] scan.c $(pdf_DATA)
