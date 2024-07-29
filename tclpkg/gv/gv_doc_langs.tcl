@@ -36,7 +36,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -79,7 +78,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -146,7 +144,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -191,7 +188,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -236,7 +232,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -284,7 +279,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -353,7 +347,6 @@ array set LANGS {
 			{char* hname} head_name
 			{char* attr} attr_name
 			{char* val} attr_value
-			{const char* filename} filename
 			{char* engine} engine
 			{char* string} string
 			{char** outdata} outdata
@@ -398,7 +391,6 @@ array set LANGS {
 			{char* hname} <head_name>
 			{char* attr} <attr_name>
 			{char* val} <attr_value>
-			{const char* filename} <filename>
 			{char* engine} <engine>
 			{char* string} <string>
 			{char** outdata} <outdata>
