@@ -793,22 +793,6 @@ windows-cmake-x64-debug-static-build:
         - $Env:build_system = "cmake"
         - $Env:BUILD_SHARED_LIBS = "OFF"
 
-windows-msbuild-Win32-release-build:
-    <<: *windows_build_definition
-    before_script:
-        - $Env:project_platform = "Win32"
-        - $Env:configuration = "Release"
-        - $Env:build_system = "msbuild"
-        - $Env:BUILD_SHARED_LIBS = "ON"
-
-windows-msbuild-Win32-debug-build:
-    <<: *windows_build_definition
-    before_script:
-        - $Env:project_platform = "Win32"
-        - $Env:configuration = "Debug"
-        - $Env:build_system = "msbuild"
-        - $Env:BUILD_SHARED_LIBS = "ON"
-
 windows-mingw32-cmake-build:
     stage: build
     needs: []
