@@ -64,7 +64,7 @@ if(ENABLE_SWIG)
       COMMAND ${TCL_TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/gv_doc_writer.tcl"
         ${CMAKE_CURRENT_SOURCE_DIR}
       MAIN_DEPENDENCY gv_doc_writer.tcl
-      DEPENDS gv_doc_langs.tcl gv_doc_template.tcl
+      DEPENDS gv.i gv_doc_langs.tcl gv_doc_template.tcl
       COMMENT "generate man pages for language bindings"
     )
 
