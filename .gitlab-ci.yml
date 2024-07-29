@@ -190,7 +190,7 @@ portable-source:
         # Create artifacts to archive
         - $ID = "windows"
         - $VERSION_ID = "10"
-        - $DIR = "Packages\${ID}\${VERSION_ID}\$Env:build_system\$Env:configuration"
+        - $DIR = "Packages\${ID}\${VERSION_ID}\cmake\$Env:configuration"
         - mkdir -p $DIR
         - mv "build\*.exe" $DIR
         - mv "build\*.zip" $DIR
@@ -745,7 +745,6 @@ windows-cmake-Win32-release-build:
     before_script:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Release"
-        - $Env:build_system = "cmake"
         - $Env:BUILD_SHARED_LIBS = "ON"
 
 windows-cmake-Win32-debug-build:
@@ -753,7 +752,6 @@ windows-cmake-Win32-debug-build:
     before_script:
         - $Env:project_platform = "Win32"
         - $Env:configuration = "Debug"
-        - $Env:build_system = "cmake"
         - $Env:BUILD_SHARED_LIBS = "ON"
 
 windows-cmake-x64-release-build:
@@ -761,7 +759,6 @@ windows-cmake-x64-release-build:
     before_script:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Release"
-        - $Env:build_system = "cmake"
         - $Env:BUILD_SHARED_LIBS = "ON"
 
 windows-cmake-x64-debug-build:
@@ -769,7 +766,6 @@ windows-cmake-x64-debug-build:
     before_script:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Debug"
-        - $Env:build_system = "cmake"
         - $Env:BUILD_SHARED_LIBS = "ON"
 
 windows-cmake-x64-debug-static-build:
@@ -777,7 +773,6 @@ windows-cmake-x64-debug-static-build:
     before_script:
         - $Env:project_platform = "x64"
         - $Env:configuration = "Debug"
-        - $Env:build_system = "cmake"
         - $Env:BUILD_SHARED_LIBS = "OFF"
 
 windows-mingw32-cmake-build:
