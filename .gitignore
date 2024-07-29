@@ -212,9 +212,6 @@ lib/color_lib
 *.VC.opendb
 *.vcxproj.user
 
-# Do not ignore Windows MSI setup.exe until a new MSI can be generated.
-!windows/graphviz-msi/setup/Release/setup.exe
-
 # Don't ignore contents of windows/include
 !windows/include**
 
