@@ -13,6 +13,7 @@ import pytest
 
 sys.path.append(os.path.join(os.path.dirname(__file__), "../tests"))
 from gvtest import (  # pylint: disable=wrong-import-position
+    build_system,
     dot,
     freedesktop_os_release,
     is_cmake,
@@ -126,7 +127,7 @@ def check_that_tool_does_not_exist(tool, os_id):
     """
     assert which(tool) is None, (
         f"{tool} has been resurrected in the "
-        f'{os.getenv("build_system")} build on {os_id}. Please remove skip.'
+        f"{build_system()} build on {os_id}. Please remove skip."
     )
 
 
