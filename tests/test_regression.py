@@ -883,7 +883,6 @@ def test_1449():
         stderr=subprocess.PIPE,
         universal_newlines=True,
     ) as p:
-
         # pass it some input that uses the SVG color scheme
         _, stderr = p.communicate('graph g { colorscheme="svg"; }')
 
@@ -1677,7 +1676,6 @@ def test_1913():
 
     # Graphviz should accept all legal values for this attribute
     for align in ("left", "right", "center"):
-
         input = align
         ret, stderr = run(graph.format(input))
         assert ret == 0
@@ -1698,7 +1696,6 @@ def test_1913():
     # various invalid things that have the same prefix or suffix as a valid
     # alignment should be rejected
     for align in ("lamp", "deft", "round", "might", "circle", "venter"):
-
         input = align
         _, stderr = run(graph.format(input))
         assert f"Warning: Illegal value {input} for ALIGN - ignored" in stderr
@@ -2858,7 +2855,6 @@ def test_gvpr_usage():
 
     # create a temporary directory, under which we know no files will exist
     with tempfile.TemporaryDirectory() as tmp:
-
         # ask GVPR to process a non-existent file
         with subprocess.Popen(
             ["gvpr", "-f", "nofile"],
@@ -4225,7 +4221,6 @@ def test_2572():
 
     nodes: List[Box] = []
     for obj in parsed["objects"]:
-
         # extract the ellipse drawn for this node
         ellipses = [e for e in obj["_draw_"] if e["op"] == "e"]
         assert len(ellipses) == 1, "could not find ellipse for node"

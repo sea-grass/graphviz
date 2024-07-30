@@ -46,7 +46,6 @@ def get_version() -> Tuple[int, int, int, str]:
 
     with open(CHANGELOG, encoding="utf-8") as f:
         for line in f:
-
             # is this a version heading?
             m = re.match(r"## \[(?P<heading>[^\]]*)\]", line)
             if m is None:

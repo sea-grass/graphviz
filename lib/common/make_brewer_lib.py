@@ -25,7 +25,6 @@ def main(args: List[str]) -> int:
     name = None
 
     for line in options.input:
-
         # skip comments and empty lines
         if line.startswith("#") or line.strip() == "":
             continue

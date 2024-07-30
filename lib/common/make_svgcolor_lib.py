@@ -22,7 +22,6 @@ def main(args: List[str]) -> int:
     options = parser.parse_args(args[1:])
 
     for line in options.input:
-
         # skip comments and empty lines
         if line.startswith("#") or line.strip() == "":
             continue
