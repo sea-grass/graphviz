@@ -16,7 +16,7 @@ bison --version | head -1
 brew tap --repair
 brew update
 brew install pango || brew upgrade pango
-brew install qt5 || brew upgrade qt5
+brew install qt6 || brew upgrade qt6
 brew install devil || brew upgrade devil
 brew install gd || brew upgrade gd
 brew install gtk+ || brew upgrade gtk+
@@ -36,10 +36,10 @@ brew install gts || brew upgrade gts
 #
 #   For pkg-config to find qt@5 you may need to set:
 #     export PKG_CONFIG_PATH="/opt/homebrew/opt/qt@5/lib/pkgconfig"
-export PATH="/opt/homebrew/opt/qt@5/bin:$PATH"
-export LDFLAGS="-L/opt/homebrew/opt/qt@5/lib"
-export CPPFLAGS="-I/opt/homebrew/opt/qt@5/include"
-export PKG_CONFIG_PATH="/opt/homebrew/opt/qt@5/lib/pkgconfig"
+export PATH="/opt/homebrew/opt/qt@6/bin:$PATH"
+export LDFLAGS="-L/opt/homebrew/opt/qt@6/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/qt@6/include"
+export PKG_CONFIG_PATH="/opt/homebrew/opt/qt@6/lib/pkgconfig"
 
 brew install librsvg || brew upgrade librsvg
 brew install libxaw || brew upgrade libxaw
