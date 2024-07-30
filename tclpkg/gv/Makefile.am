@@ -308,8 +308,8 @@ man = gv.3sharp gv.3go gv.3guile gv.3java gv.3lua \
 $(man): gv_doc_writer.intermediate ;
 
 .INTERMEDIATE: gv_doc_writer.intermediate
-gv_doc_writer.intermediate: gv.i gv_doc_writer.tcl gv_doc_template.tcl gv_doc_langs.tcl
-	$(TCLSH) $(srcdir)/gv_doc_writer.tcl "$(srcdir)"
+gv_doc_writer.intermediate: gv.i gv_doc_writer.py
+	python3 $(srcdir)/gv_doc_writer.py
 
 .3sharp.3sharp.pdf:
 	rm -f $@; pdffile=$@; psfile=$${pdffile%pdf}ps; \
@@ -465,7 +465,7 @@ test_tcl: libgv_tcl.la
 		ln -fs ../$(srcdir)/*.gv ../$(srcdir)/*.tcl .; \
 		$(TCLSH) ./test.tcl)
 
-EXTRA_DIST = $(man) gv_doc_*.tcl
+EXTRA_DIST = $(man) gv_doc_writer.py
 
 CLEANFILES = test_*/* pkgIndex.tcl \
 	gv_sharp.cpp $(SHARP_data) \

@@ -52,22 +52,24 @@ if(ENABLE_SWIG)
       COMMENT "create gv_tcl package index"
     )
     add_dependencies(gv_tcl_pkgindex gv_tcl)
+  endif()
 
-    add_custom_target(man-bindings ALL
-      DEPENDS gv.3go gv.3guile gv.3java gv.3lua gv.3perl gv.3php gv.3python
-        gv.3r gv.3ruby gv.3sharp gv.3tcl
-      COMMENT "man pages for language bindings"
-    )
-    add_custom_command(
-      OUTPUT gv.3go gv.3guile gv.3java gv.3lua gv.3perl gv.3php gv.3python gv.3r
-        gv.3ruby gv.3sharp gv.3tcl
-      COMMAND ${TCL_TCLSH} "${CMAKE_CURRENT_SOURCE_DIR}/gv_doc_writer.tcl"
-        ${CMAKE_CURRENT_SOURCE_DIR}
-      MAIN_DEPENDENCY gv_doc_writer.tcl
-      DEPENDS gv_doc_langs.tcl gv_doc_template.tcl
-      COMMENT "generate man pages for language bindings"
-    )
+  add_custom_target(man-bindings ALL
+    DEPENDS gv.3go gv.3guile gv.3java gv.3lua gv.3perl gv.3php gv.3python
+      gv.3r gv.3ruby gv.3sharp gv.3tcl
+    COMMENT "man pages for language bindings"
+  )
+  add_custom_command(
+    OUTPUT gv.3go gv.3guile gv.3java gv.3lua gv.3perl gv.3php gv.3python gv.3r
+      gv.3ruby gv.3sharp gv.3tcl
+    COMMAND ${Python3_EXECUTABLE}
+      "${CMAKE_CURRENT_SOURCE_DIR}/gv_doc_writer.py"
+    MAIN_DEPENDENCY gv_doc_writer.py
+    DEPENDS gv.i
+    COMMENT "generate man pages for language bindings"
+  )
 
+  if(ENABLE_TCL)
     if(GZIP)
       add_custom_target(man-gv_tcl ALL DEPENDS gv.3tcl.gz
                         COMMENT "gv_tcl man page")
@@ -86,26 +88,26 @@ if(ENABLE_SWIG)
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
     endif()
+  endif()
 
-    if(ENABLE_SHARP)
-      if(GZIP)
-        add_custom_target(man-gv_sharp ALL DEPENDS gv.3sharp.gz
-                          COMMENT "gv_sharp man page")
-        add_custom_command(
-          OUTPUT gv.3sharp.gz
-          COMMAND ${GZIP} -9 --no-name --to-stdout gv.3sharp
-            >"${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp.gz"
-          MAIN_DEPENDENCY gv.3sharp
-          COMMENT "compress gv_sharp man page")
-        install(
-          FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp.gz
-          DESTINATION ${MAN_INSTALL_DIR}/man3)
-      else()
-        install(
-          FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp
-          DESTINATION ${MAN_INSTALL_DIR}/man3
-        )
-      endif()
+  if(ENABLE_SHARP)
+    if(GZIP)
+      add_custom_target(man-gv_sharp ALL DEPENDS gv.3sharp.gz
+                        COMMENT "gv_sharp man page")
+      add_custom_command(
+        OUTPUT gv.3sharp.gz
+        COMMAND ${GZIP} -9 --no-name --to-stdout gv.3sharp
+          >"${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp.gz"
+        MAIN_DEPENDENCY gv.3sharp
+        COMMENT "compress gv_sharp man page")
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp.gz
+        DESTINATION ${MAN_INSTALL_DIR}/man3)
+    else()
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp
+        DESTINATION ${MAN_INSTALL_DIR}/man3
+      )
     endif()
   endif()
 endif()
