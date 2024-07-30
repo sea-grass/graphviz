@@ -28,6 +28,21 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_D)
+    swig_add_library(gv_d
+      LANGUAGE d
+      SOURCES gv.i gv_dummy_init.c
+    )
+    swig_link_libraries(gv_d PRIVATE gvc)
+
+    install(
+      TARGETS gv_d
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/d
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
+
   if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl

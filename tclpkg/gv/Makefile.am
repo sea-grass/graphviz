@@ -33,9 +33,9 @@ pkgddir = $(pkglibdir)/d
 D_data =
 nodist_libgv_d_la_SOURCES = gv_d.cpp $(D_data)
 libgv_d_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-libgv_d_la_LIBADD = $(BASELIBS) $(D_LIBS)
+libgv_d_la_LIBADD = $(BASELIBS)
 libgv_d_la_LDFLAGS = -module -avoid-version
-libgv_d_la_CPPFLAGS = $(BASECPPFLAGS) $(D_INCLUDES)
+libgv_d_la_CPPFLAGS = $(BASECPPFLAGS)
 # $(D_data): gv_d.cpp
 gv_d.cpp: gv.i
 	$(SWIG) -c++ -d -o gv_d.cpp $(srcdir)/gv.i

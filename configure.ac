@@ -505,18 +505,7 @@ else
     if test `$SWIG -help 2>&1 | $EGREP -c '\-d* *- Generate'` = 0 ; then
       use_d="No (swig does not support -d option)"
     else
-      AC_CHECK_PROG(D,gdc,ldc)
-      if test "$D" = ""; then
-        use_d="No (D compiler not available)"
-      else
-        D_INCLUDES=
-        D_LIBS=
-	if test "$D" != ""; then
-	  use_d="Yes"
-          AC_SUBST([D_INCLUDES])
-          AC_SUBST([D_LIBS])
-        fi
-      fi
+      use_d="Yes"
     fi
   fi
 fi
