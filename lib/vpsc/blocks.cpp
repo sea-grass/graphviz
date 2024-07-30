@@ -98,7 +98,7 @@ void Blocks::mergeLeft(Block *r) {
 		}
 		r->deleteMinInConstraint();
 		Block *l = c->left->block;		
-		if (l->in==nullptr) l->setUpInConstraints();
+		if (l->in.empty()) l->setUpInConstraints();
 		double dist = c->right->offset - c->left->offset - c->gap;
 		if (r->vars.size() < l->vars.size()) {
 			dist=-dist;

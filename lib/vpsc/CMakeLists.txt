@@ -7,8 +7,6 @@ add_library(vpsc STATIC
   constraint.h
   csolve_VPSC.h
   generate-constraints.h
-  pairingheap/PairingHeap.h
-  pairingheap/dsexceptions.h
   solve_VPSC.h
   variable.h
 
@@ -18,7 +16,6 @@ add_library(vpsc STATIC
   constraint.cpp
   csolve_VPSC.cpp
   generate-constraints.cpp
-  pairingheap/PairingHeap.cpp
   solve_VPSC.cpp
   variable.cpp
 )

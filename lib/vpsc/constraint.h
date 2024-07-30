@@ -38,7 +38,8 @@ public:
 };
 #include <float.h>
 #include <vpsc/block.h>
-static inline bool compareConstraints(Constraint *const &l, Constraint *const &r) {
+static inline bool compareConstraints(const Constraint *const l,
+                                      const Constraint *const r) {
 	double const sl = 
 		l->left->block->timeStamp > l->timeStamp
 		||l->left->block==l->right->block
