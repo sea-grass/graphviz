@@ -3097,8 +3097,7 @@ def test_2283():
     n0_n6_dist = math.dist((n0_x, n0_y), (n6_x, n6_y))
     n1_n6_dist = math.dist((n1_x, n1_y), (n6_x, n6_y))
     angle = math.acos(
-        (n0_n1_dist**2 + n0_n6_dist**2 - n1_n6_dist**2)
-        / (2 * n0_n1_dist * n0_n6_dist)
+        (n0_n1_dist**2 + n0_n6_dist**2 - n1_n6_dist**2) / (2 * n0_n1_dist * n0_n6_dist)
     )
 
     number_of_radial_nodes = 6
