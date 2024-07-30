@@ -61,6 +61,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Windows x64 builds)
 - The Windows x86 `mingle` binary built with CMake no longer fails to start
   because of missing `ANN.dll`.
+- The node and edge tags printed by the TK output format (`-Ttk`) are once again
+  usable for later referencing those same nodes and edges in TCL scripting. This
+  was likely broken in the transition from 32-bit to 64-bit hardware. #2568
 
 ## [12.0.0] – 2024-07-04
 
