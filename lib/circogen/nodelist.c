@@ -16,19 +16,19 @@
 #include	<string.h>
 
 void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
-  assert(one < nodelist_size(list));
+  assert(one <= nodelist_size(list));
 
   // expand the list by one element
   nodelist_append(list, NULL);
 
   // shuffle everything past where we will insert
-  size_t to_move = sizeof(node_t*) * (nodelist_size(list) - one - 2);
+  size_t to_move = sizeof(node_t*) * (nodelist_size(list) - one - 1);
   if (to_move > 0) {
-    memmove(nodelist_at(list, one + 2), nodelist_at(list, one + 1), to_move);
+    memmove(nodelist_at(list, one + 1), nodelist_at(list, one), to_move);
   }
 
   // insert the new node
-  nodelist_set(list, one + 1, n);
+  nodelist_set(list, one, n);
 }
 
 void realignNodelist(nodelist_t *list, size_t np) {
@@ -61,7 +61,7 @@ insertNodelist(nodelist_t * list, Agnode_t * cn, Agnode_t * neighbor,
         }
         nodelist_set(list, i, cn);
       } else {
-        appendNodelist(list, i, cn);
+        appendNodelist(list, i + 1, cn);
       }
       break;
     }

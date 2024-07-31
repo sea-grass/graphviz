@@ -553,7 +553,7 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
 
 	    if (NEIGHBOR(nodelist_get(list, one)) &&
 	        NEIGHBOR(nodelist_get(list, two))) {
-		appendNodelist(list, one, n);
+		appendNodelist(list, one + 1, n);
 		placed = true;
 		break;
 	    }
@@ -564,7 +564,7 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
     if (!placed && !nodelist_is_empty(&neighbors)) {
 	for (size_t one = 0; one < nodelist_size(list); ++one) {
 	    if (NEIGHBOR(nodelist_get(list, one))) {
-		appendNodelist(list, one, n);
+		appendNodelist(list, one + 1, n);
 		placed = true;
 		break;
 	    }
