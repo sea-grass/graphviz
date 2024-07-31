@@ -545,11 +545,8 @@ static void place_node(Agraph_t * g, Agnode_t * n, nodelist_t * list)
 
     /* Look for 2 neighbors consecutive on list */
     if (nodelist_size(&neighbors) >= 2) {
-	for (size_t two, one = 0; one < nodelist_size(list); ++one) {
-	    if (one == nodelist_size(list) - 1)
-		two = 0;
-	    else
-		two = one + 1;
+	for (size_t one = 0; one < nodelist_size(list); ++one) {
+	    const size_t two = (one + 1) % nodelist_size(list);
 
 	    if (NEIGHBOR(nodelist_get(list, one)) &&
 	        NEIGHBOR(nodelist_get(list, two))) {
