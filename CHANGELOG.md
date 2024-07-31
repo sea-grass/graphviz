@@ -22,6 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   integrated into the CMake build system. This is controllable by the
   `-DENABLE_GO={AUTO|ON|OFF}` option. The target integer size can be set with
   `-DINTGOSIZE=…` if it is not auto-detected correctly.
+- Support for building the SWIG-generated JavaScript language bindings has been
+  integrated into the CMake build system. This is controllable by the
+  `-DENABLE_JAVASCRIPT={AUTO|ON|OFF}` option.
 
 ### Changed
 
