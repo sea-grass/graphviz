@@ -54,12 +54,7 @@ insertNodelist(nodelist_t * list, Agnode_t * cn, Agnode_t * neighbor,
     Agnode_t *here = nodelist_get(list, i);
     if (here == neighbor) {
       if (pos == 0) {
-        nodelist_append(list, NULL);
-        size_t to_move = sizeof(node_t*) * (nodelist_size(list) - i - 1);
-        if (to_move > 0) {
-          memmove(nodelist_at(list, i + 1), nodelist_at(list, i), to_move);
-        }
-        nodelist_set(list, i, cn);
+        appendNodelist(list, i, cn);
       } else {
         appendNodelist(list, i + 1, cn);
       }
