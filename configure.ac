@@ -691,11 +691,7 @@ else
       if test "$JAVASCRIPT" = ""; then
         use_javascript="No (JAVASCRIPT compiler not available)"
       else
-        JAVASCRIPT_INCLUDES=
-        JAVASCRIPT_LIBS=
         use_javascript="Yes"
-        AC_SUBST([JAVASCRIPT_INCLUDES])
-        AC_SUBST([JAVASCRIPT_LIBS])
         AC_SUBST([INTJAVASCRIPTSIZE])
       fi
     fi
