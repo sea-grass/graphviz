@@ -692,7 +692,6 @@ else
         use_javascript="No (JAVASCRIPT compiler not available)"
       else
         use_javascript="Yes"
-        AC_SUBST([INTJAVASCRIPTSIZE])
       fi
     fi
   fi
