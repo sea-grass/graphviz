@@ -4237,6 +4237,51 @@ def test_2572():
         nodes.append(node)
 
 
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2577", strict=True
+)
+def test_2577():
+    """
+    accessing an uninitialized string should not corrupt GVPR’s state
+    https://gitlab.com/graphviz/graphviz/-/issues/2577
+    """
+
+    # find our collocated test case
+    program = Path(__file__).parent / "2577.gvpr"
+    assert program.exists(), "unexpectedly missing test case"
+
+    # run it through GVPR
+    output = gvpr(program)
+
+    # it should have printed an empty string for the uninitialized attribute
+    assert (
+        "Before...\n<>\nAfter." in output
+    ), "incorrect handling of uninitialized attribute in GVPR"
+
+
+@pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2577", strict=True
+)
+def test_2577_1():
+    """
+    a variant of `test_2577` that does not involve attribute access
+    https://gitlab.com/graphviz/graphviz/-/issues/2577
+    """
+
+    # run GVPR on a simple program
+    gvprbin = which("gvpr")
+    output = subprocess.check_output(
+        [gvprbin, 'BEGIN { printf("hello%s world\\n", ""); }'],
+        stdin=subprocess.DEVNULL,
+        universal_newlines=True,
+    )
+
+    # it should have printed the expected text
+    assert output == "hello world\n", "gvpr cannot handle empty strings to printf"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
