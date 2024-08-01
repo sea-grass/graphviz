@@ -21,10 +21,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-bool in_poly(Ppoly_t poly, Ppoint_t q) {
-    Ppoint_t *P;
-
-    P = poly.ps;
+bool in_poly(const Ppoly_t poly, Ppoint_t q) {
+    const Ppoint_t *P = poly.ps;
     const size_t n = poly.pn;
     for (size_t i = 0; i < n; i++) {
 	const size_t i1 = (i + n - 1) % n; // point index; i1 = i-1 mod n
