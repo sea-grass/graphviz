@@ -72,6 +72,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was likely broken in the transition from 32-bit to 64-bit hardware. #2568
 - Ubuntu 24.04 binaries incorrectly are ASan enabled and produce memory leak
   errors. #2574
+- gvpr’s ability to handle empty string parameters to `printf` (e.g.
+  `printf("hello%s world", "")`) has been restored. This was a regression in
+  Graphviz 9.0.0. #2577
 
 ## [12.0.0] – 2024-07-04
 

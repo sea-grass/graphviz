@@ -4238,9 +4238,6 @@ def test_2572():
 
 
 @pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2577", strict=True
-)
 def test_2577():
     """
     accessing an uninitialized string should not corrupt GVPR’s state
@@ -4261,9 +4258,6 @@ def test_2577():
 
 
 @pytest.mark.skipif(which("gvpr") is None, reason="GVPR not available")
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2577", strict=True
-)
 def test_2577_1():
     """
     a variant of `test_2577` that does not involve attribute access
