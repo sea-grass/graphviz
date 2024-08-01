@@ -439,7 +439,6 @@ EXCLUDE = (
     "lib/patchwork/tree_map.c",
     "lib/patchwork/tree_map.h",
     "lib/pathplan/cvt.c",
-    "lib/pathplan/inpoly.c",
     "lib/pathplan/pathgeom.h",
     "lib/pathplan/pathplan.h",
     "lib/pathplan/pathutil.h",
