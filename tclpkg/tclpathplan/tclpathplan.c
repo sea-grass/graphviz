@@ -76,7 +76,7 @@ static int polyid = 0;		/* unique and unchanging id for each poly */
 static poly *allocpoly(vgpane_t * vgp, int id, int npts)
 {
     polys_append(&vgp->poly, (poly){.id = id});
-    poly *rv = polys_at(&vgp->poly, polys_size(&vgp->poly) - 1);
+    poly *rv = polys_back(&vgp->poly);
     rv->boundary.pn = 0;
     rv->boundary.ps = gv_calloc(npts, sizeof(point));
     return rv;
