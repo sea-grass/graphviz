@@ -640,15 +640,13 @@ monotonate_trapezoids(int nsegs, segment_t *seg, traps_t *tr,
     free (mon);
 }
 
-static bool
-rectIntersect (boxf *d, const boxf *r0, const boxf *r1)
-{
-    double t = fmax(r0->LL.x, r1->LL.x);
-    d->UR.x = fmin(r0->UR.x, r1->UR.x);
+static bool rectIntersect(boxf *d, const boxf r0, const boxf r1) {
+    double t = fmax(r0.LL.x, r1.LL.x);
+    d->UR.x = fmin(r0.UR.x, r1.UR.x);
     d->LL.x = t;
     
-    t = fmax(r0->LL.y, r1->LL.y);
-    d->UR.y = fmin(r0->UR.y, r1->UR.y);
+    t = fmax(r0.LL.y, r1.LL.y);
+    d->UR.y = fmin(r0.UR.y, r1.UR.y);
     d->LL.y = t;
 
     return !(d->LL.x >= d->UR.x || d->LL.y >= d->UR.y);
@@ -725,7 +723,8 @@ boxf *partition(cell *cells, int ncells, size_t *nrects, boxf bb) {
     for (size_t i = 0; i < boxes_size(&vert_decomp); ++i)
 	for (size_t j = 0; j < boxes_size(&hor_decomp); ++j) {
 	    boxf newbox = {0};
-	    if (rectIntersect(&newbox, boxes_at(&vert_decomp, i), boxes_at(&hor_decomp, j)))
+	    if (rectIntersect(&newbox, boxes_get(&vert_decomp, i),
+	                      boxes_get(&hor_decomp, j)))
 		boxes_append(&rs, newbox);
 	}
 
