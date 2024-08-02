@@ -18,6 +18,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for building the SWIG-generated D language bindings has been
   integrated into the CMake build system. This is controllable by the
   `-DENABLE_D={AUTO|ON|OFF}` option.
+- Support for building the SWIG-generated Go language bindings has been
+  integrated into the CMake build system. This is controllable by the
+  `-DENABLE_GO={AUTO|ON|OFF}` option. The target integer size can be set with
+  `-DINTGOSIZE=…` if it is not auto-detected correctly.
 
 ### Changed
 

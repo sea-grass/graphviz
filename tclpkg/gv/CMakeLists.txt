@@ -43,6 +43,50 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_GO)
+    swig_add_library(gv_go
+      LANGUAGE go
+      SOURCES gv.i gv_dummy_init.c
+    )
+    set_property(
+      TARGET gv_go PROPERTY SWIG_COMPILE_OPTIONS -intgosize ${INTGOSIZE}
+    )
+    if(HAVE_CXX_WUNUSED_FUNCTION)
+      set_property(
+        TARGET gv_go
+        PROPERTY SWIG_GENERATED_COMPILE_OPTIONS -Wno-unused-function
+      )
+    endif()
+    swig_link_libraries(gv_go PRIVATE gvc)
+
+    add_custom_target(gv.go
+      COMMAND echo "package gv" >gv.go
+      BYPRODUCTS gv.go
+      COMMENT "generating gv.go"
+    )
+    add_dependencies(gv_go gv.go)
+
+    add_custom_target(runtime.h
+      COMMAND ${SWIG_EXECUTABLE} -c++ -go -intgosize ${INTGOSIZE}
+        -external-runtime runtime.h
+      BYPRODUCTS runtime.h
+      COMMENT "generating runtime.h"
+    )
+    add_dependencies(gv_go runtime.h)
+
+    install(
+      TARGETS gv_go
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/go
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+    install(
+      FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.go
+            ${CMAKE_CURRENT_BINARY_DIR}/runtime.h
+      DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/go
+    )
+  endif()
+
   if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl
@@ -121,6 +165,27 @@ if(ENABLE_SWIG)
     else()
       install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3sharp
+        DESTINATION ${MAN_INSTALL_DIR}/man3
+      )
+    endif()
+  endif()
+
+  if(ENABLE_GO)
+    if(GZIP)
+      add_custom_target(man-gv_go ALL DEPENDS gv.3go.gz
+                        COMMENT "gv_go man page")
+      add_custom_command(
+        OUTPUT gv.3go.gz
+        COMMAND ${GZIP} -9 --no-name --to-stdout gv.3go
+          >"${CMAKE_CURRENT_BINARY_DIR}/gv.3go.gz"
+        MAIN_DEPENDENCY gv.3go
+        COMMENT "compress gv_go man page")
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3go.gz
+        DESTINATION ${MAN_INSTALL_DIR}/man3)
+    else()
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3go
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
     endif()
