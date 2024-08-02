@@ -68,6 +68,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The node and edge tags printed by the TK output format (`-Ttk`) are once again
   usable for later referencing those same nodes and edges in TCL scripting. This
   was likely broken in the transition from 32-bit to 64-bit hardware. #2568
+- Ubuntu 24.04 binaries incorrectly are ASan enabled and produce memory leak
+  errors. #2574
 
 ## [12.0.0] – 2024-07-04
 

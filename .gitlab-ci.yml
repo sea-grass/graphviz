@@ -61,9 +61,7 @@ portable-source:
 .build_template: &rpm_build_definition
     stage: build
     script:
-        - logfile=`mktemp`
-        - ci/build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
+        - ci/linux-build-job-script.sh
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -81,9 +79,8 @@ portable-source:
 .build_template: &deb_build_definition
     stage: build
     script:
-        - logfile=`mktemp`
-        - ci/build.sh |& tee $logfile
-        - echo "$CI_JOB_NAME-warnings `grep -c 'warning:' $logfile`" | tee metrics.txt
+        - source /opt/virtualenv/bin/activate
+        - ci/linux-build-job-script.sh
     artifacts:
         when: on_success
         expire_in: 1 week
@@ -227,60 +224,16 @@ portable-source:
 .test_template: &test_definition
     stage: test
     script:
-        - ci/install-packages.sh
-        - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
         - source /opt/virtualenv/bin/activate
-        - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
+        - ci/linux-test-job-script.sh
     artifacts:
         reports:
             junit: report.xml
     except:
         - tags
 
-.test_template_including_ctest: &test_definition_including_ctest
-    stage: test
-    script:
-        - ci/test_coverage.py --init
-        - pushd build
-        # Use GVBINDIR to specify where to generate and load config6
-        # since ctest sets LD_LIBRARY_PATH to point to all the
-        # locations where the libs reside before cpack copies them to
-        # the install directory. Without this Graphviz tries to use
-        # the directory lib/gvc/graphviz which does not exist.
-        - export GVBINDIR=$(pwd)/plugin/dot_layout
-        - cmd/dot/dot -v -c
-        - ctest --output-on-failure
-        - unset GVBINDIR
-        - popd
-        - ci/install-packages.sh
-        - export GV_VERSION=$( cat GRAPHVIZ_VERSION )
-        # Many of the tests run by pytest currently trigger ASan
-        # memory leak detections. Disable those for now.
-        - export ASAN_OPTIONS=detect_leaks=0
-        - export UBSAN_OPTIONS=print_stacktrace=1
-        - source /opt/virtualenv/bin/activate
-        - python3 -m pytest --strict-markers --verbose --junitxml=report.xml ci/tests.py tests
-        - ci/test_coverage.py --analyze
-    # enable test coverage visualization in MR diff view
-    coverage: '/  lines\.{6}: \d+\.\d+%/'
-    artifacts:
-        paths:
-            - coverage/**
-            - build/tests/test_artifacts/**
-        reports:
-            junit: [./report.xml, build/tests/test_*.xml]
-            coverage_report:
-              coverage_format: cobertura
-              path: coverage.xml
-    except:
-        - tags
-
 .linux_test_template: &linux_test_definition
     <<: *test_definition
-    image: "$CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA"
-
-.linux_test_template_including_ctest: &linux_test_definition_including_ctest
-    <<: *test_definition_including_ctest
     image: "$CI_REGISTRY_IMAGE/$IMAGE:$CI_COMMIT_SHA"
 
 rocky8-build:
@@ -664,12 +617,13 @@ ubuntu-22.04-cmake-minimal-build:
     variables:
       IMAGE: ubuntu-22.04
 
-ubuntu-24.04-cmake-ASan-build-for-ctest:
-    <<: *deb_build_definition
+ubuntu-24.04-cmake-ASan-build-and-test-including-ctest:
+    stage: build
     needs:
         - job: docker_build_ubuntu-24.04
           artifacts: false
-    before_script:
+    script:
+        - source /opt/virtualenv/bin/activate
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-error=deprecated-declarations"
@@ -682,39 +636,29 @@ ubuntu-24.04-cmake-ASan-build-for-ctest:
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_ZLIB=ON"
-    # override the deb_build_definition artifacts since we need more
-    # files from the build directory when running ctest in the test
-    # stage.
+        - ci/linux-build-job-script.sh
+        - echo 'leak:*libfontconfig*' > suppressions.txt
+        - export LSAN_OPTIONS=suppressions=$(pwd)/suppressions.txt
+        - python gen_version.py --output GRAPHVIZ_VERSION
+        - ci/linux-test-including-ctest-job-script.sh
+    # enable test coverage visualization in MR diff view
+    coverage: '/  lines\.{6}: \d+\.\d+%/'
     artifacts:
-        when: on_success
-        expire_in: 1 week
         paths:
-            # the C++ test programs
-            - build/tests/test_*
-            # the common C++ test library
-            - build/tests/libtest_common.so
-            # the ctest files
-            - build/**/CTestTestfile.cmake
-            # archive all shared libraries produced directly by "cmake
-            # --build" (but not those in the install directory that
-            # cpack has copied). In the test stage, the test
-            # executables load them from those directory locations
-            # since LD_LIBRARY_PATH is automatically set up to contain
-            # them.
-            - build/lib/**/lib*.so.*
-            - build/plugin/**/lib*.so.*
-            # the coverage analysis needs the .gcno files
-            - build/**/*.gcno
-            # the dot program is needed to configure the plugins before running pre-install tests
-            - build/cmd/dot/dot
-            # the packages need to be installed for the post-install tests
-            - Packages/*/*/*deb
+            - coverage/**
+            # Test artifacts for manual inspection in case the ctest suite fails
+            - build/tests/test_artifacts/**
         reports:
+            junit: [./report.xml, build/tests/test_*.xml]
+            coverage_report:
+                coverage_format: cobertura
+                path: coverage.xml
             metrics: metrics.txt
+    except:
+        - tags
     tags:
         - saas-linux-small-amd64
-    variables:
-      IMAGE: ubuntu-24.04
+    image: "$CI_REGISTRY_IMAGE/ubuntu-24.04:$CI_COMMIT_SHA"
 
 rocky8-cmake-build:
     <<: *rpm_build_definition
@@ -1110,25 +1054,6 @@ ubuntu-24.04-cmake-test:
         - python3 gen_version.py --output GRAPHVIZ_VERSION
     needs:
         - job: "ubuntu-24.04-cmake-build"
-          artifacts: true
-    tags:
-        - saas-linux-small-amd64
-    variables:
-      IMAGE: ubuntu-24.04
-
-ubuntu-24.04-cmake-ASan-test-including-ctest:
-    <<: *linux_test_definition_including_ctest
-    before_script:
-        - export build_system="cmake"
-        - export CFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
-        - export CXXFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
-        - export LDFLAGS="-g -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined"
-        - export UBSAN_OPTIONS=print_stacktrace=1
-        - echo 'leak:*libfontconfig*' > suppressions.txt
-        - export LSAN_OPTIONS=suppressions=$(pwd)/suppressions.txt
-        - python3 gen_version.py --output GRAPHVIZ_VERSION
-    needs:
-        - job: "ubuntu-24.04-cmake-ASan-build-for-ctest"
           artifacts: true
     tags:
         - saas-linux-small-amd64
