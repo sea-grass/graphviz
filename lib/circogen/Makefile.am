@@ -20,5 +20,3 @@ noinst_LTLIBRARIES = libcircogen_C.la
 libcircogen_C_la_SOURCES = circularinit.c nodelist.c block.c edgelist.c \
 	circular.c blocktree.c blockpath.c \
 	circpos.c
-
-EXTRA_DIST = gvcircogen.vcxproj*

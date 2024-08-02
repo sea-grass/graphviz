@@ -49,6 +49,6 @@ gvmap.sh :
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = gvmap.1 cluster.1 gvmap.sh.1 gvmap.vcxproj*
+EXTRA_DIST = gvmap.1 cluster.1 gvmap.sh.1
 
 DISTCLEANFILES = $(pdf_DATA)

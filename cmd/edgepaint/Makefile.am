@@ -36,6 +36,4 @@ nodist_EXTRA_edgepaint_SOURCES = fake.cxx
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = edgepaint.vcxproj*
-
 DISTCLEANFILES = $(pdf_DATA)

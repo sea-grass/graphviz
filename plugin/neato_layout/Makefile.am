@@ -50,5 +50,3 @@ endif
 if WITH_WIN32
 libgvplugin_neato_layout_la_LDFLAGS += -no-undefined
 endif
-
-EXTRA_DIST = gvplugin_neato_layout.vcxproj*

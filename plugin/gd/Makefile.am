@@ -42,5 +42,3 @@ libgvplugin_gd_la_LDFLAGS += -no-undefined
 libgvplugin_gd_la_LIBADD += $(top_builddir)/lib/pathplan/libpathplan.la
 endif
 endif
-
-EXTRA_DIST = gvplugin_gd.vcxproj*

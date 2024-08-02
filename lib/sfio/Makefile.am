@@ -15,4 +15,4 @@ libsfio_C_la_SOURCES = sfcvt.c \
 libsfio_C_la_DEPENDENCIES = \
 	Sfio_f/libsfiof_C.la
 
-EXTRA_DIST = README sfio.vcxproj*
+EXTRA_DIST = README

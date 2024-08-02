@@ -35,5 +35,3 @@ libgvplugin_dot_layout_la_LIBADD = $(libgvplugin_dot_layout_C_la_LIBADD) \
 if WITH_WIN32
 libgvplugin_dot_layout_la_LDFLAGS += -no-undefined
 endif
-
-EXTRA_DIST = gvplugin_dot_layout.vcxproj*

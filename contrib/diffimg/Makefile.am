@@ -34,5 +34,5 @@ test: diffimg
 	if `./diffimg hello1.png hello2.png >test2.png`;then echo same;else echo different;fi
 
 CLEANFILES = *.png
-EXTRA_DIST = diffimg.vcxproj* diffimg.1
+EXTRA_DIST = diffimg.1
 DISTCLEANFILES = $(pdf_DATA)

@@ -37,5 +37,3 @@ libgvplugin_gdiplus_la_LIBADD = -lgdi32 -lole32 -luuid $(top_builddir)/lib/gvc/l
 if WITH_WIN32
 libgvplugin_gdiplus_la_LDFLAGS += -no-undefined
 endif
-
-EXTRA_DIST = gvplugin_gdiplus.vcxproj*

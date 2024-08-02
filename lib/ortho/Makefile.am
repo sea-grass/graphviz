@@ -20,5 +20,3 @@ noinst_LTLIBRARIES = libortho_C.la
 endif
 
 libortho_C_la_SOURCES = fPQ.c maze.c ortho.c partition.c rawgraph.c sgraph.c trapezoid.c
-
-EXTRA_DIST = gvortho.vcxproj*

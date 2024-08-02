@@ -37,6 +37,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - To build from source, the required Python version has been upgraded from 3.6
   to 3.8. #2549
 - Build system discovery of GDK now looks for GDK 3.0 instead of GDK 2.0. #1848
+- Visual Studio build files are no longer distributed in the portable source
+  tarball. Builds on Windows must now use a repository clone.
 
 ### Fixed
 

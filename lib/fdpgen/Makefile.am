@@ -19,5 +19,3 @@ noinst_LTLIBRARIES = libfdpgen_C.la
 
 libfdpgen_C_la_SOURCES = comp.c dbg.c grid.c fdpinit.c layout.c \
 	tlayout.c xlayout.c clusteredges.c
-
-EXTRA_DIST = gvfdpgen.vcxproj*

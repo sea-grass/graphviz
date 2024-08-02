@@ -33,6 +33,6 @@ mingle_LDADD = \
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = mingle.1 mingle.vcxproj*
+EXTRA_DIST = mingle.1
 
 DISTCLEANFILES = $(pdf_DATA)

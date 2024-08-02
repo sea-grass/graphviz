@@ -38,6 +38,3 @@ libgvplugin_pango_la_LIBADD = \
 if WITH_WIN32
 libgvplugin_pango_la_LDFLAGS += -no-undefined
 endif
-
-EXTRA_DIST = gvplugin_pango.vcxproj*
-

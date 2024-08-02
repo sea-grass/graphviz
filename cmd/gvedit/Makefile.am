@@ -70,7 +70,7 @@ attrs.txt: $(top_srcdir)/doc/infosrc/attrs
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .1 .1.pdf
 
-EXTRA_DIST = gvedit.vcxproj* gvedit.pro.in mdi.qrc $(mans)
+EXTRA_DIST = gvedit.pro.in mdi.qrc $(mans)
 
 CLEANFILES = $(MOCABLES)
 DISTCLEANFILES = attrs.txt qMakefile $(pdf_DATA)

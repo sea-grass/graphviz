@@ -26,5 +26,3 @@ libsfdpgen_C_la_SOURCES = sfdpinit.c spring_electrical.c \
 	sparse_solve.c post_process.c \
 	stress_model.c \
 	Multilevel.c
-
-EXTRA_DIST = sfdp.vcxproj*

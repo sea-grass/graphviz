@@ -10,5 +10,3 @@ noinst_LTLIBRARIES = libtopfish_C.la
 endif
 
 libtopfish_C_la_SOURCES = hierarchy.c rescale_layout.c
-
-EXTRA_DIST = topfish.vcxproj*

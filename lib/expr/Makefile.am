@@ -37,6 +37,6 @@ exparse.c exparse.h: $(top_srcdir)/lib/expr/exparse.y
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = exparse.c exparse.h expr.vcxproj*
+EXTRA_DIST = exparse.c exparse.h
 
 DISTCLEANFILES = exparse.c exparse.h $(pdf_DATA)

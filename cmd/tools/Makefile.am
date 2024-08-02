@@ -215,12 +215,7 @@ gvgen_SOURCES = gvgen.c graph_generator.c
 gvgen_LDADD = \
 	$(top_builddir)/lib/cgraph/libcgraph.la $(MATH_LIBS)
 
-EXTRA_DIST = bcomps.vcxproj* \
-	acyclic.vcxproj* bcomps.vcxproj* ccomps.vcxproj* dijkstra.vcxproj* gc.vcxproj* \
-	gvcolor.vcxproj* gvgen.vcxproj* gvpack.vcxproj* gxl2gv.vcxproj* \
-	mm2gv.vcxproj* nop.vcxproj* sccmap.vcxproj* tred.vcxproj* unflatten.vcxproj* \
-	gmlscan.c gmlparse.c gmlparse.h gml2gv.vcxproj* \
-	graphml2gv.vcxproj* gv2gml.vcxproj*
+EXTRA_DIST = gmlscan.c gmlparse.c gmlparse.h
 
 CLEANFILES = stamp.h
 DISTCLEANFILES = $(pdf_DATA) gmlparse.[ch] gmlscan.c

@@ -25,6 +25,4 @@ libxdot_la_SOURCES = $(libxdot_C_la_SOURCES)
 	$(PS2PDF) $$psfile && rm -f $$psfile || { rm -f $$psfile; exit 1; }
 SUFFIXES = .3 .3.pdf
 
-EXTRA_DIST = xdot.vcxproj*
-
 DISTCLEANFILES = $(pdf_DATA)

@@ -33,7 +33,7 @@ EXTRA_DIST = graphviz.spec \
 	Doxyfile.in Doxyfile \
 	config/config_perl.pl \
 	config/config_ruby.rb dot.demo plugin.demo \
-	macosx windows debian redhat graphviz.sln
+	macosx windows debian redhat
 
 .PHONY: rpm
 rpm: dist
