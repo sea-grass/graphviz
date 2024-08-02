@@ -828,6 +828,13 @@ static item *mapEdge(Dt_t * map, edge_t * e)
     return dtmatch(map, &key);
 }
 
+static graph_t *mapc(Dt_t *cmap, node_t *n) {
+  if (startswith(agnameof(n), "cluster")) {
+    return findCluster(cmap, agnameof(n));
+  }
+  return NULL;
+}
+
 /** If endpoint names a cluster, mark for temporary deletion and create
  * special node and insert into cluster. Then clone the edge. Real edge
  * will be deleted when we delete the original node.
@@ -843,13 +850,6 @@ static item *mapEdge(Dt_t * map, edge_t * e)
  *
  * Return 1 if cluster edge is created.
  */
-static graph_t *mapc(Dt_t *cmap, node_t *n) {
-  if (startswith(agnameof(n), "cluster")) {
-    return findCluster(cmap, agnameof(n));
-  }
-  return NULL;
-}
-
 static int
 checkCompound(edge_t * e, graph_t * clg, agxbuf * xb, Dt_t * map, Dt_t* cmap)
 {
