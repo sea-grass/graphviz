@@ -652,7 +652,6 @@ sources = subprocess.check_output(
 )
 
 for source in sources.split("\x00")[:-1]:
-
     print(f"checking {source}...")
 
     original = Path(source).read_text(encoding="utf-8")

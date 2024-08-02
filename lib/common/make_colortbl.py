@@ -89,7 +89,6 @@ def main(args: List[str]) -> int:
     entries = sorted(entries, key=locale.strxfrm)
 
     for entry in entries:
-
         # ignore blank lines
         if entry.strip() == "":
             continue

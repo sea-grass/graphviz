@@ -111,7 +111,6 @@ def test_xml_escape():
     assert xml_c.exists(), "missing xml.c"
 
     with tempfile.TemporaryDirectory() as tmp:
-
         # write a dummy config.h to allow standalone compilation
         (Path(tmp) / "config.h").write_text("", encoding="utf-8")
 
@@ -161,7 +160,6 @@ def test_xml_escape():
             return decoded
 
         for dash, nbsp, raw, utf8 in itertools.product((False, True), repeat=4):
-
             # something basic with nothing escapable
             plain = "the quick brown fox"
             plain_escaped = escape(dash, nbsp, raw, utf8, plain)

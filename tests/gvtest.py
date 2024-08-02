@@ -241,7 +241,6 @@ def run_c(
 
     # create some temporary space to work in
     with tempfile.TemporaryDirectory() as tmp:
-
         # output filename to write our compiled code to
         exe = Path(tmp) / "a.exe"
 

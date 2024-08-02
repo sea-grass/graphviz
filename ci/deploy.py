@@ -114,7 +114,6 @@ def get_format(path: Path) -> str:
 
 
 def main() -> int:  # pylint: disable=missing-function-docstring
-
     # setup logging to print to stderr
     global log
     ch = logging.StreamHandler()
@@ -179,7 +178,6 @@ def main() -> int:  # pylint: disable=missing-function-docstring
         Path(f"graphviz-{version}.tar.gz"),
         Path(f"graphviz-{version}.tar.xz"),
     ):
-
         if not tarball.exists():
             log.error(f"source {tarball} not found")
             return -1
