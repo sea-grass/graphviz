@@ -68,7 +68,7 @@ int sfprint(FILE *f, Sffmt_t *format) {
     (n) = 0; \
 } while (0)
 #define SFwrite(f,s,n) do { \
-  if (fwrite((s), (n), 1, (f)) < 1) { \
+  if ((n) > 0 && fwrite((s), (size_t)(n), 1, (f)) < 1) { \
     goto done; \
   } \
 } while (0)
