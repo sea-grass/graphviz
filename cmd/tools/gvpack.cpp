@@ -71,7 +71,6 @@ lt_symlist_t lt_preloaded_symbols[] = {
  */
 
 typedef struct {
-    Dtlink_t link;
     char *name;
     char *value;
     size_t cnt;
@@ -118,7 +117,7 @@ static int setNameValue(char *arg)
 	*p++ = '\0';
 	rhs = p;
     }
-    G_args.push_back(attr_t{{0, {0}}, arg, rhs, 0});
+    G_args.push_back(attr_t{arg, rhs, 0});
 
     return 0;
 }
