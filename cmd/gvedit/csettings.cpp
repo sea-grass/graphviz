@@ -226,7 +226,7 @@ bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
             if (sl[id].contains(u'E'))
               cbNameE->addItem(attrName);
           }
-        };
+        }
       }
     }
     file.close();
