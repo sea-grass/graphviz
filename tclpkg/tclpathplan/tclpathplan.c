@@ -76,7 +76,7 @@ static int polyid = 0;		/* unique and unchanging id for each poly */
 static poly *allocpoly(vgpane_t * vgp, int id, int npts)
 {
     polys_append(&vgp->poly, (poly){.id = id});
-    poly *rv = polys_at(&vgp->poly, polys_size(&vgp->poly) - 1);
+    poly *rv = polys_back(&vgp->poly);
     rv->boundary.pn = 0;
     rv->boundary.ps = gv_calloc(npts, sizeof(point));
     return rv;
@@ -640,10 +640,10 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	int pp = POLYID_NONE;
 	int qp = POLYID_NONE;
 	for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
-	    poly *tpp = polys_at(&vgp->poly, i);
-	    if ((pp == POLYID_NONE) && in_poly(tpp->boundary, p))
+	    const poly tpp = polys_get(&vgp->poly, i);
+	    if (pp == POLYID_NONE && in_poly(tpp.boundary, p))
 		pp = (int)i;
-	    if ((qp == POLYID_NONE) && in_poly(tpp->boundary, q))
+	    if (qp == POLYID_NONE && in_poly(tpp.boundary, q))
 		qp = (int)i;
 	}
 
