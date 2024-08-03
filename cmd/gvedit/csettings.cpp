@@ -229,7 +229,6 @@ bool loadAttrs(const QString &fileName, QComboBox *cbNameG, QComboBox *cbNameN,
         }
       }
     }
-    file.close();
   } else {
     errout << "Could not open attribute name file \"" << fileName
            << "\" for reading\n";
@@ -451,7 +450,6 @@ static QString buildTempFile() {
   tempFile.setAutoRemove(false);
   tempFile.open();
   QString a = tempFile.fileName();
-  tempFile.close();
   return a;
 }
 
@@ -491,9 +489,7 @@ bool CFrmSettings::renderLayout() {
 #endif
     { // no directory info => can we create/write the file?
       QFile outf(fileName);
-      if (outf.open(QIODevice::WriteOnly))
-        outf.close();
-      else {
+      if (!outf.open(QIODevice::WriteOnly)) {
         QString pathName = QDir::homePath();
         pathName.append(u'/').append(fileName);
         fileName = QDir::toNativeSeparators(pathName);
