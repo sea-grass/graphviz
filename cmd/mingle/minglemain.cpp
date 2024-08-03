@@ -402,7 +402,7 @@ static int bundle(Agraph_t *g, const opts_t &opts) {
 		for (i = 0, n = agfstnode(g); n; n = agnxtnode(g,n)) {
 			setDotNodeID(n, i++);
 		}
-		for (i = 0, n = agfstnode(g); n; n = agnxtnode(g,n)) {
+		for (n = agfstnode(g); n; n = agnxtnode(g,n)) {
 			for (e = agfstout (g, n); e; e = agnxtout (g, e)) {
 				i = getDotNodeID (agtail(e));
 				int j = getDotNodeID (aghead(e));
