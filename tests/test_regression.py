@@ -945,7 +945,6 @@ def test_1554():
     ), "computation exceeded bounds"
 
 
-@pytest.mark.skipif(is_rocky_8(), reason="insufficient XPath support on this platform")
 def test_1585():
     """
     clustering nodes should not reverse their horizontal layout
