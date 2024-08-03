@@ -460,8 +460,8 @@ void CFrmSettings::doPreview(const QString &fileName) {
     getActiveWindow()->previewFrm = nullptr;
   }
 
-  if ((fileName.isNull()) ||
-      !(getActiveWindow()->loadPreview(fileName))) { // create preview
+  if (fileName.isNull() ||
+      !getActiveWindow()->loadPreview(fileName)) { // create preview
     QString prevFile(buildTempFile());
     gvRenderFilename(gvc, graph, "png", prevFile.toUtf8().constData());
     getActiveWindow()->loadPreview(prevFile);
