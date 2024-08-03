@@ -14,11 +14,12 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
-#include <common/pointset.h>
 #include <getopt.h>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <unordered_map>
+#include <utility>
 #include <vector>
 
 #include <sparse/DotIO.h>
@@ -351,6 +352,16 @@ static void export_dot(FILE *fp, int ne, const std::vector<pedge> &edges,
 	agwrite(g, fp);
 }
 
+/// a hash derivation function for int pairs
+struct PointHash {
+public:
+  size_t operator()(const std::pair<int, int> &x) const {
+    return std::hash<int>{}(x.first) ^ std::hash<int>{}(x.second);
+  }
+};
+
+using PointMap = std::unordered_map<std::pair<int, int>, int, PointHash>;
+
 static int bundle(Agraph_t *g, const opts_t &opts) {
 	double *x = nullptr;
 	int dim = 2;
@@ -374,7 +385,7 @@ static int bundle(Agraph_t *g, const opts_t &opts) {
 
 	A = SparseMatrix_symmetrize(A, true);
 	if (opts.fmt == FMT_GV) {
-		PointMap* pm = newPM();    /* map from node id pairs to edge index */
+		PointMap pm; // map from node id pairs to edge index
 		Agnode_t* n;
 		Agedge_t* e;
 		int idx = 0;
@@ -384,7 +395,7 @@ static int bundle(Agraph_t *g, const opts_t &opts) {
 		for (i = 0; i < A->m; i++){
 			for (int j = ia[i]; j < ia[i+1]; j++){
 				if (ja[j] > i){
-					insertPM (pm, i, ja[j], idx++);
+					pm[std::pair(i, ja[j])] = idx++;
 				}
 			}
 		}
@@ -398,13 +409,11 @@ static int bundle(Agraph_t *g, const opts_t &opts) {
 				if (j < i) {
 					std::swap(i, j);
 				}
-				int k = insertPM (pm, i, j, -1);
-				assert (k >= 0);
+				const int k = pm[std::pair(i, j)];
 				agbindrec (e, "info", sizeof(etoi_t), true);
 				ED_idx(e) = k;
 			}
 		}
-		freePM (pm);
 	}
 		
 	const int *ia = A->ia;
