@@ -77,12 +77,6 @@ typedef struct {
     size_t cnt;
 } attr_t;
 
-typedef struct {
-    Dtlink_t link;
-    char *name;
-    size_t cnt;
-} pair_t;
-
 static int verbose = 0;
 static char **myFiles = 0;
 static FILE *outfp;		/* output; stdout by default */
