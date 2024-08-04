@@ -242,6 +242,12 @@ if(NOT WITH_ZLIB STREQUAL "OFF")
 endif()
 
 if(NOT ENABLE_TCL STREQUAL "OFF")
+  if(WIN32 AND NOT MINGW)
+    # We have tcl version 9.0 from vcpkg in windows/dependencies/libraries. The
+    # latest version FindTCL in CMake 3.28 (provided by Visual Studio 2022) can
+    # find is 8.7. We therefore help it by explicitly finding the library.
+    FIND_LIBRARY(TCL_LIBRARY NAMES tcl90.lib)
+  endif()
   find_package(TCL)
   if(ENABLE_TCL STREQUAL "AUTO")
     if(TCL_FOUND)
