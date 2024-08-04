@@ -68,7 +68,7 @@ else()
   )
 endif()
 
-add_library(tcldot_builtin SHARED ${SOURCES} tcldot_builtins.c)
+add_library(tcldot_builtin SHARED ${SOURCES} tcldot_builtins.cpp)
 
 target_compile_definitions(tcldot_builtin PRIVATE -DDEMAND_LOADING=1)
 
