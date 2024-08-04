@@ -142,7 +142,6 @@ static int object_color(void* obj,glCompColor* c)
     int return_value = 1;
     int objType;
     float Alpha = 1;
-    char* bf;
     Agsym_t* vis;
 
     objType=AGTYPE(obj);
@@ -161,7 +160,7 @@ static int object_color(void* obj,glCompColor* c)
 
     char *previous_color_scheme = setColorScheme(agget (obj, "colorscheme"));
     /*get objects's color attribute */
-    bf = getAttrStr(g,obj,"color",NULL);
+    const char *const bf = getAttrStr(g,obj,"color",NULL);
     if(bf && (*bf)) {
 	colorxlate(bf, &cl, RGBA_DOUBLE);
 	c->R = cl.u.RGBA[0];
