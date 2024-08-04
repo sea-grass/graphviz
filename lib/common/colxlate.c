@@ -170,19 +170,17 @@ static char *fullColor(agxbuf *xb, const char *prefix, const char *str) {
 #define DFLT_SCHEME_LEN ((sizeof(DFLT_SCHEME)-1)/sizeof(char))
 #define ISNONDFLT(s) ((s) && *(s) && strncasecmp(DFLT_SCHEME, s, DFLT_SCHEME_LEN-1))
 
-static char* resolveColor (char* str)
-{
-    char* s;
-    char* ss;   /* second slash */
-    char* c2;   /* second char */
+static char *resolveColor(const char *str) {
+    const char *s;
 
     if (!strcmp(str, "black")) return strdup(str);
     if (!strcmp(str, "white")) return strdup(str);
     if (!strcmp(str, "lightgrey")) return strdup(str);
     agxbuf xb = {0};
     if (*str == '/') {   /* if begins with '/' */
-	c2 = str+1;
-        if ((ss = strchr(c2, '/'))) {  /* if has second '/' */
+	const char *const c2 = str + 1; // second char
+        const char *const ss = strchr(c2, '/'); // second slash
+        if (ss != NULL) { // if has second '/'
 	    if (*c2 == '/') {    /* if second '/' is second character */
 		    /* Do not compare against final '/' */
 		if (ISNONDFLT(colorscheme))
