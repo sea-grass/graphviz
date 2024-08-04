@@ -458,7 +458,7 @@ static double getSegLen(strview_t *s) {
  * Otherwise, psegs is left unchanged and the allocated memory is
  * freed before returning.
  */
-static int parseSegs(char *clrs, colorsegs_t *psegs) {
+static int parseSegs(const char *clrs, colorsegs_t *psegs) {
     colorsegs_t segs = {0};
     double v, left = 1;
     static int doWarn = 1;
