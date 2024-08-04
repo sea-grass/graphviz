@@ -787,7 +787,7 @@ char *canon(Expr_t *pgm, char *arg) {
 /* colorx:
  * RGB, RGBA, HSV, HSVA
  */
-char *colorx(Expr_t *ex, char *incolor, char *fmt) {
+char *colorx(Expr_t *ex, const char *incolor, char *fmt) {
   gvcolor_t color = {{{0}}, 0};
   color_type_t type;
   int rc;
