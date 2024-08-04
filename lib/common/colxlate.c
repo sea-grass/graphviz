@@ -200,10 +200,8 @@ static char *resolveColor(const char *str) {
     return on_heap;
 }
 
-int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
-{
+int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
     static hsvrgbacolor_t *last;
-    char *p;
     char c;
     double H, S, V, A, R, G, B;
     unsigned int r, g, b, a;
@@ -213,7 +211,7 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 
     rc = COLOR_OK;
     for (; *str == ' '; str++);	/* skip over any leading whitespace */
-    p = str;
+    const char *p = str;
 
     /* test for rgb value such as: "#ff0000"
        or rgba value such as "#ff000080" */
