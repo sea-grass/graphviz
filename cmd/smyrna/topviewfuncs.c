@@ -109,8 +109,8 @@ static float getEdgeLength(Agedge_t *edge) {
     rv=sqrtf(rv);
     return rv;
 }
-static void glCompColorxlate(glCompColor* c,char* str)
-{
+
+static void glCompColorxlate(glCompColor *c, const char *str) {
         gvcolor_t cl;
 	colorxlate(str, &cl, RGBA_DOUBLE);
 	c->R=cl.u.RGBA[0];
