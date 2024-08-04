@@ -1546,7 +1546,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
     /* except for "transparent" on truecolor, or default "white" on (assumed) white paper, paint background */
     if (!(   ((job->flags & GVDEVICE_DOES_TRUECOLOR) && streq(str, "transparent"))
           || ((job->flags & GVRENDER_NO_WHITE_BG) && dfltColor))) {
-	char* clrs[2];
+	char *clrs[2] = {0};
 	double frac;
 
 	if ((findStopColor (str, clrs, &frac))) {
@@ -1565,6 +1565,7 @@ static void emit_background(GVJ_t * job, graph_t *g)
 		filled = GRADIENT;
 	    gvrender_box(job, job->clip, filled);
 	    free (clrs[0]);
+	    free(clrs[1]);
 	}
 	else {
             gvrender_set_fillcolor(job, str);
@@ -3482,7 +3483,6 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
     textlabel_t *lab;
     int doAnchor;
     double penwidth;
-    char* clrs[2];
     
     for (c = 1; c <= GD_n_cluster(g); c++) {
 	sg = GD_clust(g)[c];
@@ -3548,7 +3548,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	}
 	if (!pencolor) pencolor = DEFAULT_COLOR;
 	if (!fillcolor) fillcolor = DEFAULT_FILL;
-	clrs[0] = NULL;
+	char *clrs[2] = {0};
 	if (filled != 0) {
 	    double frac;
 	    if (findStopColor (fillcolor, clrs, &frac)) {
@@ -3615,6 +3615,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	}
 
 	free (clrs[0]);
+	free(clrs[1]);
 	if ((lab = GD_label(sg)))
 	    emit_label(job, EMIT_CLABEL, lab);
 
@@ -4019,16 +4020,16 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  * If there is no non-trivial string before a first colon, set clrs[0] to
  * NULL and return FALSE.
  *
- * Note that memory is allocated as a single block stored in clrs[0] and
- * must be freed by calling function.
+ * Note that memory for clrs must be freed by calling function.
  */
 bool findStopColor(const char *colorlist, char *clrs[2], double *frac) {
     colorsegs_t segs = {0};
     int rv;
+    clrs[0] = NULL;
+    clrs[1] = NULL;
 
     rv = parseSegs(colorlist, &segs);
     if (rv || colorsegs_size(&segs) < 2 || colorsegs_front(&segs)->color == NULL) {
-	clrs[0] = NULL;
 	colorsegs_free(&segs);
 	return false;
     }
@@ -4036,14 +4037,10 @@ bool findStopColor(const char *colorlist, char *clrs[2], double *frac) {
     if (colorsegs_size(&segs) > 2)
 	agwarningf("More than 2 colors specified for a gradient - ignoring remaining\n");
 
-    clrs[0] = gv_calloc(strlen(colorlist) + 1, sizeof(char));
-    strcpy(clrs[0], colorsegs_front(&segs)->color);
+    clrs[0] = gv_strdup(colorsegs_front(&segs)->color);
     if (colorsegs_get(&segs, 1).color) {
-	clrs[1] = clrs[0] + (strlen(clrs[0])+1);
-	strcpy(clrs[1], colorsegs_get(&segs, 1).color);
+	clrs[1] = gv_strdup(colorsegs_get(&segs, 1).color);
     }
-    else
-	clrs[1] = NULL;
 
     if (colorsegs_front(&segs)->hasFraction)
 	*frac = colorsegs_front(&segs)->t;

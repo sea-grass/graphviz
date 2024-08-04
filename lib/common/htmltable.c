@@ -552,7 +552,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 
 	/* Fill first */
 	if (tbl->data.bgcolor) {
-	    char *clrs[2];
+	    char *clrs[2] = {0};
 	    int filled =
 		setFill(job, tbl->data.bgcolor, tbl->data.gradientangle,
 			tbl->data.style, clrs);
@@ -562,6 +562,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 	    } else
 		gvrender_box(job, pts, filled);
 	    free(clrs[0]);
+	    free(clrs[1]);
 	}
 
 	while (*cells) {

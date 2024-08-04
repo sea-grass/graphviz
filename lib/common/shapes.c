@@ -2924,7 +2924,6 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     int doMap = (obj->url || obj->explicit_tooltip);
     char* fillcolor=NULL;
     char* pencolor=NULL;
-    char* clrs[2];
 
     if (doMap && !(job->flags & EMIT_CLUSTERS_LAST))
 	gvrender_begin_anchor(job,
@@ -2944,8 +2943,8 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     ysize = ND_ht(n) / INCH2PS(ND_height(n));
 
     const graphviz_polygon_style_t style = stylenode(job, n);
-    clrs[0] = NULL;
 
+    char *clrs[2] = {0};
     if (ND_gui_state(n) & GUI_STATE_ACTIVE) {
 	pencolor = late_nnstring(n, N_activepencolor, DEFAULT_ACTIVEPENCOLOR);
 	gvrender_set_pencolor(job, pencolor);
@@ -3106,6 +3105,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 
     free(AF);
     free (clrs[0]);
+    free (clrs[1]);
 
     emit_label(job, EMIT_NLABEL, ND_label(n));
     if (doMap) {
@@ -3901,7 +3901,6 @@ static void record_gencode(GVJ_t * job, node_t * n)
     field_t *f;
     int doMap = obj->url || obj->explicit_tooltip;
     int filled;
-    char* clrs[2];
 
     f = ND_shape_info(n);
     BF = f->b;
@@ -3916,7 +3915,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
 			      obj->id);
     graphviz_polygon_style_t style = stylenode(job, n);
     penColor(job, n);
-    clrs[0] = NULL;
+    char *clrs[2] = {0};
     if (style.filled) {
 	char* fillcolor = findFill (n);
 	double frac;
@@ -3956,6 +3955,7 @@ static void record_gencode(GVJ_t * job, node_t * n)
     gen_fields(job, n, f);
 
     free (clrs[0]);
+    free(clrs[1]);
 
     if (doMap) {
 	if (job->flags & EMIT_CLUSTERS_LAST)
