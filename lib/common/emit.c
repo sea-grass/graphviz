@@ -452,7 +452,7 @@ static double getSegLen (char* s)
  * Otherwise, psegs is left unchanged and the allocated memory is
  * freed before returning.
  */
-static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
+static int parseSegs(char *clrs, colorsegs_t *psegs) {
     colorsegs_t segs = {0};
     char* colors = gv_strdup(clrs);
     char* color;
@@ -499,7 +499,7 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
     /* distribute remaining into slot with t == 0; if none, add to last */
     if (left > 0) {
 	/* count zero segments */
-	nseg = 0;
+	size_t nseg = 0;
 	for (size_t i = 0; i < colorsegs_size(&segs); ++i) {
 	    if (colorsegs_get(&segs, i).t <= 0) nseg++;
 	}
@@ -545,7 +545,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
     Ppolyline_t* pp;
     double angle0, angle1;
 
-    rv = parseSegs (clrs, 0, &segs);
+    rv = parseSegs(clrs, &segs);
     if (rv == 1 || rv == 2) return rv;
     const pointf ctr = mid_pointf(pf[0], pf[1]);
     const pointf semi = sub_pointf(pf[1], ctr);
@@ -594,7 +594,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     double lastx;
     double save_penwidth = job->obj->penwidth;
 
-    rv = parseSegs (clrs, 0, &segs);
+    rv = parseSegs(clrs, &segs);
     if (rv == 1 || rv == 2) return rv;
     if (rotate) {
 	pts[0] = AF[2];
@@ -2040,7 +2040,7 @@ static void splitBSpline(bezier *bz, double t, bezier *left, bezier *right) {
  * Return non-zero if color spec is incorrect
  */
 static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
-                      size_t num, double arrowsize, double penwidth) {
+                      double arrowsize, double penwidth) {
     bezier bz;
     bezier bz0, bz_l, bz_r;
     int rv;
@@ -2049,7 +2049,7 @@ static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
     double left;
     int first;  /* first segment with t > 0 */
 
-    rv = parseSegs (colors, num, &segs);
+    rv = parseSegs(colors, &segs);
     if (rv > 1) {
 	Agraph_t* g = agraphof(agtail(e));
 	agerr (AGPREV, "in edge %s%s%s\n", agnameof(agtail(e)), (agisdirected(g)?" -> ":" -- "), agnameof(aghead(e)));
@@ -2201,7 +2201,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	}
 
 	if (numsemi && numc) {
-	    if (multicolor (job, e, styles, color, numc+1, arrowsize, penwidth)) {
+	    if (multicolor(job, e, styles, color, arrowsize, penwidth)) {
 		color = DEFAULT_COLOR;
 	    }
 	    else
@@ -4027,7 +4027,7 @@ bool findStopColor(char *colorlist, char *clrs[2], double *frac) {
     colorsegs_t segs = {0};
     int rv;
 
-    rv = parseSegs (colorlist, 0, &segs);
+    rv = parseSegs(colorlist, &segs);
     if (rv || colorsegs_size(&segs) < 2 || colorsegs_front(&segs)->color == NULL) {
 	clrs[0] = NULL;
 	colorsegs_free(&segs);
