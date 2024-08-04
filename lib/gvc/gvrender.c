@@ -25,6 +25,7 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
+#include <cgraph/strcasecmp.h>
 #include <gvc/gvcint.h>
 #include <common/geom.h>
 #include <common/geomprocs.h>
@@ -176,29 +177,27 @@ pointf *gvrender_ptf_A(GVJ_t *job, pointf *af, pointf *AF, size_t n) {
 
 static int gvrender_comparestr(const void *s1, const void *s2)
 {
-  return strcmp(s1, *(char *const *) s2);
+  return strcasecmp(s1, *(char *const *)s2);
 }
 
 /* gvrender_resolve_color:
- * N.B. strcmp cannot be used in bsearch, as it will pass a pointer
+ * N.B. strcasecmp cannot be used in bsearch, as it will pass a pointer
  * to an element in the array features->knowncolors (i.e., a char**)
  * as an argument of the compare function, while the arguments to 
- * strcmp are both char*.
+ * strcasecmp are both char*.
  */
 static void gvrender_resolve_color(gvrender_features_t * features,
 				   char *name, gvcolor_t * color)
 {
-    char *tok;
     int rc;
 
     color->u.string = name;
     color->type = COLOR_STRING;
-    tok = canontoken(name);
     if (!features->knowncolors
 	||
-	(bsearch(tok, features->knowncolors, features->sz_knowncolors,
+	(bsearch(name, features->knowncolors, features->sz_knowncolors,
 	  sizeof(char *), gvrender_comparestr)) == NULL) {
-	/* if tok was not found in known_colors */
+	/* if name was not found in known_colors */
 	rc = colorxlate(name, color, features->color_type);
 	if (rc != COLOR_OK) {
 	    if (rc == COLOR_UNKNOWN) {
@@ -212,7 +211,6 @@ static void gvrender_resolve_color(gvrender_features_t * features,
 	    }
 	}
     }
-    free(tok);
 }
 
 void gvrender_begin_graph(GVJ_t *job) {
