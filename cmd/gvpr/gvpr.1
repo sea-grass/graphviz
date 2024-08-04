@@ -175,7 +175,7 @@ the associated node or edge is added to the target graph.
 The blocks are evaluated in the order in which they occur.
 Within a block, the \fBN\fP clauses 
 (\fBE\fP clauses, respectively) are evaluated in the
-order in which the occur. Note, though, that within a block, 
+order in which they occur. Note, though, that within a block, 
 \fBN\fP or \fBE\fP clauses may be interlaced, depending on the
 traversal order.
 .PP
@@ -921,7 +921,7 @@ depth\(hyfirst or breadth\(hyfirst traversal of the
 graph (cf. \fB$tvtype\fP below).
 The default value is \fBNULL\fP for each input graph.
 After the traversal at the given root, if the value of \fB$tvroot\fP has changed,
-a new traversal will begin with the new value of \fB$tvroot\fP. Also, set \fB$tvnext\fP below.
+a new traversal will begin with the new value of \fB$tvroot\fP. Also, see \fB$tvnext\fP below.
 .TP
 \fB$tvnext\fP : \fBnode_t\fP
 indicates the next starting node for a (directed or undirected)
