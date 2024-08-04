@@ -2038,7 +2038,7 @@ static void splitBSpline(bezier *bz, double t, bezier *left, bezier *right) {
  * implementation.
  * Return non-zero if color spec is incorrect
  */
-static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
+static int multicolor(GVJ_t *job, edge_t *e, char **styles, const char *colors,
                       double arrowsize, double penwidth) {
     bezier bz;
     bezier bz0, bz_l, bz_r;
