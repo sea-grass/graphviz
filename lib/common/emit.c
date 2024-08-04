@@ -406,7 +406,7 @@ typedef struct {
 typedef struct {
     int numc;     /* number of used segments in segs; may include segs with t == 0 */
     char* base;   /* storage of color names */
-    colorseg_t* segs;  /* array of segments; real segments always followed by a sentinel */
+    colorseg_t *segs; ///< array of segments
 } colorsegs_t;
  
 static void
@@ -453,8 +453,6 @@ static double getSegLen (char* s)
  *  1 => error without message 
  *  2 => error with message 
  *  3 => warning message
- * There is a last sentinel segment with color == NULL; it will always follow
- * the last segment with t > 0.
  *
  * Note that psegs is only assigned to if the return value is 0 or 3.
  * Otherwise, psegs is left unchanged and the allocated memory is
@@ -480,7 +478,7 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
     }
 
     segs.base = colors;
-    segs.segs = s = gv_calloc(nseg + 1, sizeof(colorseg_t));
+    segs.segs = s = gv_calloc(nseg, sizeof(colorseg_t));
     for (color = strtok(colors, ":"); color; color = strtok(0, ":")) {
 	if ((v = getSegLen (color)) >= 0) {
 	    double del = v - left;
@@ -532,11 +530,10 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
 	}
     }
     
-    /* Make sure last positive segment is followed by a sentinel. */
+    // terminate at the last positive segment
     for (i = cnum-1; i >= 0; i--) {
 	if (s[i].t > 0) break;
     }
-    s[i+1].color = NULL;
     segs.numc = i+1;
 
     *psegs = segs;
@@ -571,14 +568,15 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	gvrender_set_penwidth(job, THIN_LINE);
 	
     angle0 = 0;
-    for (colorseg_t *s = segs.segs; s->color; s++) {
-	if (s->t <= 0) continue;
-	gvrender_set_fillcolor(job, s->color);
+    for (int i = 0; i < segs.numc && segs.segs[i].color; ++i) {
+	const colorseg_t s = segs.segs[i];
+	if (s.t <= 0) continue;
+	gvrender_set_fillcolor(job, s.color);
 
-	if (s[1].color == NULL) 
+	if (i + 1 == segs.numc)
 	    angle1 = 2*M_PI;
 	else
-	    angle1 = angle0 + 2 * M_PI * s->t;
+	    angle1 = angle0 + 2 * M_PI * s.t;
 	pp = ellipticWedge (ctr, semi.x, semi.y, angle0, angle1);
 	gvrender_beziercurve(job, pp->ps, pp->pn, 1);
 	angle0 = angle1;
@@ -629,13 +627,14 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
-    for (colorseg_t *s = segs.segs; s->color; s++) {
-	if (s->t <= 0) continue;
-	gvrender_set_fillcolor(job, s->color);
-	if (s[1].color == NULL) 
+    for (int i = 0; i < segs.numc && segs.segs[i].color != NULL; ++i) {
+	const colorseg_t s = segs.segs[i];
+	if (s.t <= 0) continue;
+	gvrender_set_fillcolor(job, s.color);
+	if (i + 1 == segs.numc)
 	    pts[1].x = pts[2].x = lastx;
 	else
-	    pts[1].x = pts[2].x = pts[0].x + xdelta*(s->t);
+	    pts[1].x = pts[2].x = pts[0].x + xdelta * (s.t);
 	gvrender_polygon(job, pts, 4, FILL);
 	pts[0].x = pts[3].x = pts[1].x;
     }
@@ -2079,14 +2078,15 @@ static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
 	left = 1;
 	bz = ED_spl(e)->list[i];
 	first = 1;
-	for (colorseg_t *s = segs.segs; s->color; s++) {
-	    if (AEQ0(s->t)) continue;
-    	    gvrender_set_pencolor(job, s->color);
-	    left -= s->t;
-	    endcolor = s->color;
+	for (int j = 0; j < segs.numc && segs.segs[j].color != NULL; ++j) {
+	    const colorseg_t s = segs.segs[j];
+	    if (AEQ0(s.t)) continue;
+    	    gvrender_set_pencolor(job, s.color);
+	    left -= s.t;
+	    endcolor = s.color;
 	    if (first) {
 		first = 0;
-		splitBSpline (&bz, s->t, &bz_l, &bz_r);
+		splitBSpline(&bz, s.t, &bz_l, &bz_r);
 		gvrender_beziercurve(job, bz_l.list, bz_l.size, 0);
 		free (bz_l.list);
 		if (AEQ0(left)) {
@@ -2101,7 +2101,7 @@ static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
 	    }
 	    else {
 		bz0 = bz_r;
-		splitBSpline(&bz0, s->t / (left + s->t), &bz_l, &bz_r);
+		splitBSpline(&bz0, s.t / (left + s.t), &bz_l, &bz_r);
 		free (bz0.list);
 		gvrender_beziercurve(job, bz_l.list, bz_l.size, 0);
 		free (bz_l.list);
