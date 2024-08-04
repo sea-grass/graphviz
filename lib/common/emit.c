@@ -585,9 +585,7 @@ int wedgedEllipse(GVJ_t *job, pointf *pf, const char *clrs) {
  *  2 => error with message 
  *  3 => warning message
  */
-int
-stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
-{
+int stripedBox(GVJ_t *job, pointf *AF, const char *clrs, int rotate) {
     colorsegs_t segs;
     int rv;
     double xdelta;
