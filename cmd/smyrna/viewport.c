@@ -87,7 +87,6 @@ char *get_attribute_value(char *attr, ViewInfo *vi, Agraph_t *g) {
 
 void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
     gvcolor_t cl;
-    char *buf;
     colorxlate(get_attribute_value("bordercolor", vi, g), &cl,
 	       RGBA_DOUBLE);
     vi->borderColor.R = (float)cl.u.RGBA[0];
@@ -99,7 +98,7 @@ void set_viewport_settings_from_template(ViewInfo *vi, Agraph_t *g) {
 
     vi->bdVisible = atoi(get_attribute_value("bordervisible", vi, g));
 
-    buf = get_attribute_value("gridcolor", vi, g);
+    const char *buf = get_attribute_value("gridcolor", vi, g);
     colorxlate(buf, &cl, RGBA_DOUBLE);
     vi->gridColor.R = (float)cl.u.RGBA[0];
     vi->gridColor.G = (float)cl.u.RGBA[1];
