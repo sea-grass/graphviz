@@ -33,7 +33,14 @@ static Tcl_ObjType GdPtrType = {
 #define IMGPTR(O) (O->internalRep.otherValuePtr)
 
 /* The only two symbols exported */
-Tcl_AppInitProc Gdtclft_Init, Gdtclft_SafeInit;
+#ifdef GVDLL
+__declspec(dllexport)
+#endif
+Tcl_AppInitProc Gdtclft_Init;
+#ifdef GVDLL
+__declspec(dllexport)
+#endif
+Tcl_AppInitProc Gdtclft_SafeInit;
 
 typedef int (GdDataFunction)(Tcl_Interp *interp, int argc, Tcl_Obj *CONST objv[]);
 typedef int (GdImgFunction)(Tcl_Interp *interp, gdImagePtr gdImg, int argc, const int args[]);
@@ -1264,13 +1271,7 @@ tclGdTextCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 /* 
  * Initialize the package.
  */
-#ifdef GVDLL
-__declspec(dllexport) int Gdtclft_Init(Tcl_Interp *interp)
-#else
-int Gdtclft_Init(Tcl_Interp * interp)
-#endif
-
-{
+int Gdtclft_Init(Tcl_Interp * interp) {
 #ifdef USE_TCL_STUBS
     if (Tcl_InitStubs(interp, TCL_VERSION, 0) == NULL) {
 	return TCL_ERROR;
@@ -1296,12 +1297,7 @@ int Gdtclft_Init(Tcl_Interp * interp)
     return TCL_OK;
 }
 
-#ifdef GVDLL
-__declspec(dllexport) int Gdtclft_SafeInit(Tcl_Interp *interp)
-#else
-int Gdtclft_SafeInit(Tcl_Interp * interp)
-#endif
-{
+int Gdtclft_SafeInit(Tcl_Interp * interp) {
     Tcl_CmdInfo info;
     if (Gdtclft_Init(interp) != TCL_OK || Tcl_GetCommandInfo(interp, "gd", &info) != 1)
         return TCL_ERROR;
