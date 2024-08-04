@@ -539,9 +539,7 @@ static int parseSegs(const char *clrs, colorsegs_t *psegs) {
  *  2 => error with message 
  *  3 => warning message
  */
-int 
-wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
-{
+int wedgedEllipse(GVJ_t *job, pointf *pf, const char *clrs) {
     colorsegs_t segs;
     int rv;
     double save_penwidth = job->obj->penwidth;

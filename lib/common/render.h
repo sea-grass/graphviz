@@ -146,7 +146,7 @@ extern "C" {
     RENDER_API void textfont_dict_open(GVC_t *gvc);
     RENDER_API void textfont_dict_close(GVC_t *gvc);
     RENDER_API void translate_bb(Agraph_t *, int);
-    RENDER_API int wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs);
+    RENDER_API int wedgedEllipse(GVJ_t *job, pointf *pf, const char *clrs);
     RENDER_API void update_bb_bz(boxf *bb, pointf *cp);
     RENDER_API boxf xdotBB (graph_t* g);
 
