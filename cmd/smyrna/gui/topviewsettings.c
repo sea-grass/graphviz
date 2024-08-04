@@ -65,8 +65,7 @@ static void set_color_button_widget(char *attrib, char *widget_name) {
     GdkColor color;
     gvcolor_t cl;
 
-    char *buf;
-    buf = agget(view->g[view->activeGraph], attrib);
+    const char *buf = agget(view->g[view->activeGraph], attrib);
     if ((!buf) || (strcmp(buf, "") == 0))
     {
 	buf = agget(view->systemGraphs.def_attrs, attrib);
