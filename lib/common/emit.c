@@ -30,6 +30,8 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
+#include <cgraph/strview.h>
+#include <cgraph/tokenize.h>
 #include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
@@ -415,16 +417,20 @@ DEFINE_LIST_WITH_DTOR(colorsegs, colorseg_t, freeSeg)
  * Return 0 if no float given
  * Return -1 on failure
  */
-static double getSegLen (char* s)
-{
-    char* p = strchr (s, ';');
+static double getSegLen(strview_t *s) {
+    char *p = memchr(s->data, ';', s->size);
     char* endp;
     double v;
 
     if (!p) {
 	return 0;
     }
-    *p++ = '\0';
+    s->size = (size_t)(p - s->data);
+    ++p;
+    // Calling `strtod` on something that originated from a `strview_t` here
+    // looks dangerous. But we know `s` points to something obtained from `tok`
+    // with ':'. So `strtod` will run into either a ':' or a '\0' to safely stop
+    // it.
     v = strtod (p, &endp);
     if (endp != p) {  /* scanned something */
 	if (v >= 0)
@@ -454,14 +460,13 @@ static double getSegLen (char* s)
  */
 static int parseSegs(char *clrs, colorsegs_t *psegs) {
     colorsegs_t segs = {0};
-    char* colors = gv_strdup(clrs);
-    char* color;
     double v, left = 1;
     static int doWarn = 1;
     int rval = 0;
 
-    for (color = strtok(colors, ":"); color; color = strtok(0, ":")) {
-	if ((v = getSegLen (color)) >= 0) {
+    for (tok_t t = tok(clrs, ":"); !tok_end(&t); tok_next(&t)) {
+	strview_t color = tok_get(&t);
+	if ((v = getSegLen(&color)) >= 0) {
 	    double del = v - left;
 	    if (del > 0) {
 		if (doWarn && !AEQ0(del)) {
@@ -474,7 +479,7 @@ static int parseSegs(char *clrs, colorsegs_t *psegs) {
 	    left -= v;
 	    colorseg_t s = {.t = v};
 	    if (v > 0) s.hasFraction = true;
-	    if (*color) s.color = gv_strdup(color);
+	    if (color.size > 0) s.color = strview_str(color);
 	    colorsegs_append(&segs, s);
 	}
 	else {
@@ -485,7 +490,6 @@ static int parseSegs(char *clrs, colorsegs_t *psegs) {
 		rval = 2;
 	    }
 	    else rval = 1;
-	    free(colors);
 	    colorsegs_free(&segs);
 	    return rval;
 	}
@@ -494,7 +498,6 @@ static int parseSegs(char *clrs, colorsegs_t *psegs) {
 	    break;
 	}
     }
-    free(colors);
 
     /* distribute remaining into slot with t == 0; if none, add to last */
     if (left > 0) {
