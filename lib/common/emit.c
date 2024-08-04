@@ -4022,7 +4022,7 @@ int gvRenderJobs (GVC_t * gvc, graph_t * g)
  * Note that memory is allocated as a single block stored in clrs[0] and
  * must be freed by calling function.
  */
-bool findStopColor(char *colorlist, char *clrs[2], double *frac) {
+bool findStopColor(const char *colorlist, char *clrs[2], double *frac) {
     colorsegs_t segs = {0};
     int rv;
 
