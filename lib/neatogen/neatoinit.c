@@ -33,6 +33,7 @@
 #include <common/render.h>
 #include <common/utils.h>
 #include <neatogen/sgd.h>
+#include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
@@ -952,7 +953,6 @@ static void initRegular(graph_t * G, int nG)
 int
 setSeed (graph_t * G, int dflt, long* seedp)
 {
-    char smallbuf[32];
     char *p = agget(G, "start");
     int init = dflt;
 
@@ -983,8 +983,10 @@ setSeed (graph_t * G, int dflt, long* seedp)
 #else
 	    seed = (unsigned) getpid() ^ (unsigned) time(NULL);
 #endif
-	    snprintf(smallbuf, sizeof(smallbuf), "%ld", seed);
-	    agset(G, "start", smallbuf);
+	    agxbuf buf = {0};
+	    agxbprint(&buf, "%ld", seed);
+	    agset(G, "start", agxbuse(&buf));
+	    agxbfree(&buf);
 	}
 	*seedp = seed;
     }
