@@ -402,19 +402,13 @@ typedef struct {
     double t; ///< segment size >= 0
     bool hasFraction;  /* true if color explicitly specifies its fraction */
 } colorseg_t;
-/* Sum of segment sizes should add to 1 */
-typedef struct {
-    int numc;     /* number of used segments in segs; may include segs with t == 0 */
-    char* base;   /* storage of color names */
-    colorseg_t *segs; ///< array of segments
-} colorsegs_t;
- 
-static void
-freeSegs (colorsegs_t* segs)
-{
-    free (segs->base);
-    free (segs->segs);
+
+static void freeSeg(colorseg_t seg) {
+  free(seg.color);
 }
+
+/* Sum of segment sizes should add to 1 */
+DEFINE_LIST_WITH_DTOR(colorsegs, colorseg_t, freeSeg)
 
 /* Find semicolon in s, replace with '\0'.
  * Convert remainder to float v.
@@ -460,25 +454,12 @@ static double getSegLen (char* s)
  */
 static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
     colorsegs_t segs = {0};
-    colorseg_t* s;
     char* colors = gv_strdup(clrs);
     char* color;
-    int cnum = 0;
     double v, left = 1;
     static int doWarn = 1;
-    int i, rval = 0;
-    char* p;
+    int rval = 0;
 
-    if (nseg == 0) {
-	nseg = 1;
-	/* need to know how many colors separated by ':' */
-	for (p = colors; *p; p++) {
-	    if (*p == ':') nseg++;
-	}
-    }
-
-    segs.base = colors;
-    segs.segs = s = gv_calloc(nseg, sizeof(colorseg_t));
     for (color = strtok(colors, ":"); color; color = strtok(0, ":")) {
 	if ((v = getSegLen (color)) >= 0) {
 	    double del = v - left;
@@ -491,9 +472,10 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
 		v = left;
 	    }
 	    left -= v;
-	    if (v > 0) s[cnum].hasFraction = true;
-	    if (*color) s[cnum].color = color;
-	    s[cnum++].t = v;
+	    colorseg_t s = {.t = v};
+	    if (v > 0) s.hasFraction = true;
+	    if (*color) s.color = gv_strdup(color);
+	    colorsegs_append(&segs, s);
 	}
 	else {
 	    if (doWarn) {
@@ -503,7 +485,8 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
 		rval = 2;
 	    }
 	    else rval = 1;
-	    freeSegs(&segs);
+	    free(colors);
+	    colorsegs_free(&segs);
 	    return rval;
 	}
 	if (AEQ0(left)) {
@@ -511,30 +494,32 @@ static int parseSegs(char *clrs, size_t nseg, colorsegs_t *psegs) {
 	    break;
 	}
     }
+    free(colors);
 
     /* distribute remaining into slot with t == 0; if none, add to last */
     if (left > 0) {
 	/* count zero segments */
 	nseg = 0;
-	for (i = 0; i < cnum; i++) {
-	    if (s[i].t <= 0) nseg++;
+	for (size_t i = 0; i < colorsegs_size(&segs); ++i) {
+	    if (colorsegs_get(&segs, i).t <= 0) nseg++;
 	}
 	if (nseg > 0) {
 	    double delta = left / (double)nseg;
-	    for (i = 0; i < cnum; i++) {
-		if (s[i].t <= 0) s[i].t = delta;
+	    for (size_t i = 0; i < colorsegs_size(&segs); ++i) {
+		colorseg_t *s = colorsegs_at(&segs, i);
+		if (s->t <= 0) s->t = delta;
 	    }
 	}
 	else {
-	    s[cnum-1].t += left;
+	    colorsegs_back(&segs)->t += left;
 	}
     }
     
     // terminate at the last positive segment
-    for (i = cnum-1; i >= 0; i--) {
-	if (s[i].t > 0) break;
+    while (!colorsegs_is_empty(&segs)) {
+	if (colorsegs_back(&segs)->t > 0) break;
+	colorsegs_pop_back(&segs);
     }
-    segs.numc = i+1;
 
     *psegs = segs;
     return rval;
@@ -568,12 +553,13 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 	gvrender_set_penwidth(job, THIN_LINE);
 	
     angle0 = 0;
-    for (int i = 0; i < segs.numc && segs.segs[i].color; ++i) {
-	const colorseg_t s = segs.segs[i];
+    for (size_t i = 0; i < colorsegs_size(&segs); ++i) {
+	const colorseg_t s = colorsegs_get(&segs, i);
+	if (s.color == NULL) break;
 	if (s.t <= 0) continue;
 	gvrender_set_fillcolor(job, s.color);
 
-	if (i + 1 == segs.numc)
+	if (i + 1 == colorsegs_size(&segs))
 	    angle1 = 2*M_PI;
 	else
 	    angle1 = angle0 + 2 * M_PI * s.t;
@@ -585,7 +571,7 @@ wedgedEllipse (GVJ_t* job, pointf * pf, char* clrs)
 
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, save_penwidth);
-    freeSegs(&segs);
+    colorsegs_free(&segs);
     return rv;
 }
 
@@ -627,11 +613,12 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, THIN_LINE);
-    for (int i = 0; i < segs.numc && segs.segs[i].color != NULL; ++i) {
-	const colorseg_t s = segs.segs[i];
+    for (size_t i = 0; i < colorsegs_size(&segs); ++i) {
+	const colorseg_t s = colorsegs_get(&segs, i);
+	if (s.color == NULL) break;
 	if (s.t <= 0) continue;
 	gvrender_set_fillcolor(job, s.color);
-	if (i + 1 == segs.numc)
+	if (i + 1 == colorsegs_size(&segs))
 	    pts[1].x = pts[2].x = lastx;
 	else
 	    pts[1].x = pts[2].x = pts[0].x + xdelta * (s.t);
@@ -640,7 +627,7 @@ stripedBox (GVJ_t * job, pointf* AF, char* clrs, int rotate)
     }
     if (save_penwidth > THIN_LINE)
 	gvrender_set_penwidth(job, save_penwidth);
-    freeSegs(&segs);
+    colorsegs_free(&segs);
     return rv;
 }
 
@@ -2078,8 +2065,9 @@ static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
 	left = 1;
 	bz = ED_spl(e)->list[i];
 	first = 1;
-	for (int j = 0; j < segs.numc && segs.segs[j].color != NULL; ++j) {
-	    const colorseg_t s = segs.segs[j];
+	for (size_t j = 0; j < colorsegs_size(&segs); ++j) {
+	    const colorseg_t s = colorsegs_get(&segs, j);
+	    if (s.color == NULL) break;
 	    if (AEQ0(s.t)) continue;
     	    gvrender_set_pencolor(job, s.color);
 	    left -= s.t;
@@ -2113,8 +2101,8 @@ static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
                  * Use local copy of penwidth to work around reset.
                  */
 	if (bz.sflag) {
-    	    gvrender_set_pencolor(job, segs.segs->color);
-    	    gvrender_set_fillcolor(job, segs.segs->color);
+    	    gvrender_set_pencolor(job, colorsegs_front(&segs)->color);
+    	    gvrender_set_fillcolor(job, colorsegs_front(&segs)->color);
 	    arrow_gen(job, EMIT_TDRAW, bz.sp, bz.list[0], arrowsize, penwidth, bz.sflag);
 	}
 	if (bz.eflag) {
@@ -2125,7 +2113,7 @@ static int multicolor(GVJ_t *job, edge_t *e, char **styles, char *colors,
 	if (ED_spl(e)->size > 1 && (bz.sflag || bz.eflag) && styles)
 	    gvrender_set_style(job, styles);
     }
-    freeSegs(&segs);
+    colorsegs_free(&segs);
     return 0;
 }
 
@@ -4040,32 +4028,32 @@ bool findStopColor(char *colorlist, char *clrs[2], double *frac) {
     int rv;
 
     rv = parseSegs (colorlist, 0, &segs);
-    if (rv || segs.numc < 2 || segs.segs[0].color == NULL) {
+    if (rv || colorsegs_size(&segs) < 2 || colorsegs_front(&segs)->color == NULL) {
 	clrs[0] = NULL;
-	freeSegs(&segs);
+	colorsegs_free(&segs);
 	return false;
     }
 
-    if (segs.numc > 2)
+    if (colorsegs_size(&segs) > 2)
 	agwarningf("More than 2 colors specified for a gradient - ignoring remaining\n");
 
     clrs[0] = gv_calloc(strlen(colorlist) + 1, sizeof(char));
-    strcpy(clrs[0], segs.segs[0].color);
-    if (segs.segs[1].color) {
+    strcpy(clrs[0], colorsegs_front(&segs)->color);
+    if (colorsegs_get(&segs, 1).color) {
 	clrs[1] = clrs[0] + (strlen(clrs[0])+1);
-	strcpy(clrs[1], segs.segs[1].color);
+	strcpy(clrs[1], colorsegs_get(&segs, 1).color);
     }
     else
 	clrs[1] = NULL;
 
-    if (segs.segs[0].hasFraction)
-	*frac = segs.segs[0].t;
-    else if (segs.segs[1].hasFraction)
-	*frac = 1 - segs.segs[1].t;
+    if (colorsegs_front(&segs)->hasFraction)
+	*frac = colorsegs_front(&segs)->t;
+    else if (colorsegs_get(&segs, 1).hasFraction)
+	*frac = 1 - colorsegs_get(&segs, 1).t;
     else 
 	*frac = 0;
 
-    freeSegs(&segs);
+    colorsegs_free(&segs);
     return true;
 }
 
