@@ -126,18 +126,6 @@ static int colorcmpf(const void *p0, const void *p1)
   return strcasecmp(p0, ((const hsvrgbacolor_t *)p1)->name);
 }
 
-char *canontoken(char *str)
-{
-    agxbuf canon = {0};
-    char c, *p;
-
-    p = str;
-    while ((c = *p++)) {
-	agxbputc(&canon, gv_tolower(c));
-    }
-    return agxbdisown(&canon);
-}
-
 /* fullColor:
  * Return "/prefix/str"
  */

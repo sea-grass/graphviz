@@ -41,7 +41,6 @@ extern "C" {
 COLORPROCS_API char *setColorScheme(const char *s);
 
 COLORPROCS_API int colorxlate(char *str, gvcolor_t * color, color_type_t target_type);
-COLORPROCS_API char *canontoken(char *str);
 
 #undef COLORPROCS_API
 
