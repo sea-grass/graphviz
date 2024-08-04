@@ -70,7 +70,7 @@ libtcldot_builtin_la_SOURCES = \
 	tcldot-util.c \
 	tcldot-id.c \
 	tcldot-io.c \
-	tcldot_builtins.c $(GDTCLFT)
+	tcldot_builtins.cpp $(GDTCLFT)
 libtcldot_builtin_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 libtcldot_builtin_la_LDFLAGS = -no-undefined -module -avoid-version
 
@@ -96,10 +96,6 @@ libtcldot_builtin_la_LIBADD += $(GDLIB_LIBS)
 endif
 
 libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
-
-# add a non-existent C++ source to force the C++ compiler to be used for
-# linking, so the C++ standard library is included for our C++ dependencies
-nodist_EXTRA_libtcldot_builtin_la_SOURCES = fake.cxx
 
 if WITH_TCL
 all-local: pkgIndex.tcl

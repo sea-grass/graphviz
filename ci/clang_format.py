@@ -593,7 +593,7 @@ EXCLUDE = (
     "tclpkg/tcldot/tcldot-nodecmd.c",
     "tclpkg/tcldot/tcldot-util.c",
     "tclpkg/tcldot/tcldot.h",
-    "tclpkg/tcldot/tcldot_builtins.c",
+    "tclpkg/tcldot/tcldot_builtins.cpp",
     "tclpkg/tclpathplan/find_ints.c",
     "tclpkg/tclpathplan/intersect.c",
     "tclpkg/tclpathplan/makecw.c",
