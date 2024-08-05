@@ -306,3 +306,13 @@ def which(cmd: str) -> Optional[Path]:
         return None
 
     return abs_cmd
+
+
+def tclsh_name():
+    """
+    the name of the Tcl shell on the current platform
+    """
+    if platform.system() == "Windows" and not is_mingw():
+        return "tclsh90"
+
+    return "tclsh"

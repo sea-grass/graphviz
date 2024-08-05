@@ -41,6 +41,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     is_static_build,
     remove_xtype_warnings,
     run_c,
+    tclsh_name,
     which,
 )
 
@@ -3297,7 +3298,9 @@ def test_2368():
     dot("svg", input)
 
 
-@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    shutil.which(tclsh_name()) is None, reason=f"{tclsh_name()} not available"
+)
 def test_2370():
     """
     tcldot should have a version number TCL accepts
@@ -3306,7 +3309,7 @@ def test_2370():
 
     # ask TCL to import the Graphviz package
     response = subprocess.check_output(
-        ["tclsh"],
+        [tclsh_name()],
         stderr=subprocess.STDOUT,
         input="package require Tcldot;",
         universal_newlines=True,
@@ -4122,7 +4125,9 @@ def test_2564():
         starts += [start]
 
 
-@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    shutil.which(tclsh_name()) is None, reason=f"{tclsh_name()} not available"
+)
 @pytest.mark.skipif(
     platform.system() == "Windows",
     reason="pexpect.spawn is not available on Windows "
@@ -4139,7 +4144,7 @@ def test_2568():
     assert prelude.exists(), "unexpectedly missing test collateral"
 
     # startup TCL and load our graph setup code
-    proc = pexpect.spawn("tclsh", timeout=1)
+    proc = pexpect.spawn(tclsh_name(), timeout=1)
     proc.expect("% ")
     proc.sendline(f'source "{shlex.quote(str(prelude))}"')
 
