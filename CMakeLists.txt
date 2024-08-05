@@ -247,6 +247,8 @@ if(NOT ENABLE_TCL STREQUAL "OFF")
     # latest version FindTCL in CMake 3.28 (provided by Visual Studio 2022) can
     # find is 8.7. We therefore help it by explicitly finding the library.
     FIND_LIBRARY(TCL_LIBRARY NAMES tcl90.lib)
+    FIND_PROGRAM(TCL_RUNTIME_LIBRARY NAMES tcl90.dll)
+    set(TCL_RUNTIME_LIBRARIES ${TCL_RUNTIME_LIBRARY})
   endif()
   find_package(TCL)
   if(ENABLE_TCL STREQUAL "AUTO")
