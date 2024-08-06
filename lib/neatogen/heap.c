@@ -45,10 +45,10 @@ static bool gt(double a_y, double a_x, double b_y, double b_x) {
   if (a_y > b_y) {
     return true;
   }
-  if (a_y == b_y && a_x > b_x) {
-    return true;
+  if (a_y < b_y) {
+    return false;
   }
-  return false;
+  return a_x > b_x;
 }
 
 void PQinsert(pq_t *pq, Halfedge *he, Site *v, double offset) {
