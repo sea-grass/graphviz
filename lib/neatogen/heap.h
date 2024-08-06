@@ -17,13 +17,16 @@ extern "C" {
 #include <neatogen/hedges.h>
 #include <stdbool.h>
 
-    extern void PQinitialize(void);
-    extern void PQcleanup(void);
-    extern Halfedge *PQextractmin(void);
-    extern Point PQ_min(void);
-    extern bool PQempty(void);
-    extern void PQdelete(Halfedge *);
-    extern void PQinsert(Halfedge *, Site *, double);
+/// priority queue heap
+typedef struct pq pq_t;
+
+pq_t *PQinitialize(void);
+void PQcleanup(pq_t *pq);
+Halfedge *PQextractmin(pq_t *pq);
+Point PQ_min(pq_t *pq);
+bool PQempty(const pq_t *pq);
+void PQdelete(pq_t *pq, Halfedge *);
+void PQinsert(pq_t *pq, Halfedge *, Site *, double);
 
 #ifdef __cplusplus
 }

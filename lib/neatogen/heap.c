@@ -16,37 +16,36 @@
 #include <neatogen/hedges.h>
 #include <neatogen/heap.h>
 
+struct pq {
+  Halfedge *hash; ///< backing storage
+  int hashsize;   ///< total allocated backing storage elements
+  int count;      ///< occupancy
+  int min;        ///< index of minimum element
+};
 
-static Halfedge *PQhash;
-static int PQhashsize;
-static int PQcount;
-static int PQmin;
-
-static int PQbucket(Halfedge * he)
-{
+static int PQbucket(pq_t *pq, Halfedge *he) {
     int bucket;
     double b;
 
-    b = (he->ystar - ymin) / deltay * PQhashsize;
+    b = (he->ystar - ymin) / deltay * pq->hashsize;
     if (b < 0)
 	bucket = 0;
-    else if (b >= PQhashsize)
-	bucket = PQhashsize - 1;
+    else if (b >= pq->hashsize)
+	bucket = pq->hashsize - 1;
     else
 	bucket = b;
-    if (bucket < PQmin)
-	PQmin = bucket;
+    if (bucket < pq->min)
+	pq->min = bucket;
     return bucket;
 }
 
-void PQinsert(Halfedge * he, Site * v, double offset)
-{
+void PQinsert(pq_t *pq, Halfedge *he, Site *v, double offset) {
     Halfedge *last, *next;
 
     he->vertex = v;
     ref(v);
     he->ystar = v->coord.y + offset;
-    last = &PQhash[PQbucket(he)];
+    last = &pq->hash[PQbucket(pq, he)];
     while ((next = last->PQnext) != NULL &&
 	   (he->ystar > next->ystar ||
 	    (he->ystar == next->ystar
@@ -55,68 +54,55 @@ void PQinsert(Halfedge * he, Site * v, double offset)
     }
     he->PQnext = last->PQnext;
     last->PQnext = he;
-    ++PQcount;
+    ++pq->count;
 }
 
-void PQdelete(Halfedge * he)
-{
+void PQdelete(pq_t *pq, Halfedge *he) {
     Halfedge *last;
 
     if (he->vertex != NULL) {
-	last = &PQhash[PQbucket(he)];
+	last = &pq->hash[PQbucket(pq, he)];
 	while (last->PQnext != he)
 	    last = last->PQnext;
 	last->PQnext = he->PQnext;
-	--PQcount;
+	--pq->count;
 	deref(he->vertex);
 	he->vertex = NULL;
     }
 }
 
-
-bool PQempty(void)
-{
-    return PQcount == 0;
+bool PQempty(const pq_t *pq) {
+  return pq->count == 0;
 }
 
-
-Point PQ_min(void)
-{
+Point PQ_min(pq_t *pq) {
     Point answer;
 
-    while (PQhash[PQmin].PQnext == NULL) {
-	++PQmin;
+    while (pq->hash[pq->min].PQnext == NULL) {
+      ++pq->min;
     }
-    answer.x = PQhash[PQmin].PQnext->vertex->coord.x;
-    answer.y = PQhash[PQmin].PQnext->ystar;
+    answer.x = pq->hash[pq->min].PQnext->vertex->coord.x;
+    answer.y = pq->hash[pq->min].PQnext->ystar;
     return answer;
 }
 
-Halfedge *PQextractmin(void)
-{
-    Halfedge *curr;
-
-    curr = PQhash[PQmin].PQnext;
-    PQhash[PQmin].PQnext = curr->PQnext;
-    --PQcount;
+Halfedge *PQextractmin(pq_t *pq) {
+    Halfedge *curr = pq->hash[pq->min].PQnext;
+    pq->hash[pq->min].PQnext = curr->PQnext;
+    --pq->count;
     return curr;
 }
 
-void PQcleanup(void)
-{
-    free(PQhash);
-    PQhash = NULL;
+void PQcleanup(pq_t *pq) {
+  if (pq != NULL) {
+    free(pq->hash);
+  }
+  free(pq);
 }
 
-void PQinitialize(void)
-{
-    int i;
-
-    PQcount = 0;
-    PQmin = 0;
-    PQhashsize = 4 * sqrt_nsites;
-    if (PQhash == NULL)
-	PQhash = gv_calloc(PQhashsize, sizeof(Halfedge));
-    for (i = 0; i < PQhashsize; ++i)
-	PQhash[i].PQnext = NULL;
+pq_t *PQinitialize(void) {
+  pq_t *pq = gv_alloc(sizeof(pq_t));
+  pq->hashsize = 4 * sqrt_nsites;
+  pq->hash = gv_calloc(pq->hashsize, sizeof(Halfedge));
+  return pq;
 }

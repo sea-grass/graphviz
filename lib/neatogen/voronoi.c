@@ -25,17 +25,17 @@ void voronoi(Site *(*nextsite)(void *context), void *context) {
 
     edgeinit();
     siteinit();
-    PQinitialize();
+    pq_t *pq = PQinitialize();
     bottomsite = nextsite(context);
     ELinitialize();
 
     newsite = nextsite(context);
     while (1) {
-	if (!PQempty())
-	    newintstar = PQ_min();
+	if (!PQempty(pq))
+	    newintstar = PQ_min(pq);
 
 	if (newsite != NULL &&
-      (PQempty() || newsite->coord.y < newintstar.y ||
+      (PQempty(pq) || newsite->coord.y < newintstar.y ||
        (newsite->coord.y ==newintstar.y && newsite->coord.x < newintstar.x))) {
 	    /* new site is smallest */
 	    lbnd = ELleftbnd(&newsite->coord);
@@ -45,18 +45,18 @@ void voronoi(Site *(*nextsite)(void *context), void *context) {
 	    bisector = HEcreate(e, le);
 	    ELinsert(lbnd, bisector);
 	    if ((p = hintersect(lbnd, bisector)) != NULL) {
-		PQdelete(lbnd);
-		PQinsert(lbnd, p, dist(p, newsite));
+		PQdelete(pq, lbnd);
+		PQinsert(pq, lbnd, p, dist(p, newsite));
 	    }
 	    lbnd = bisector;
 	    bisector = HEcreate(e, re);
 	    ELinsert(lbnd, bisector);
 	    if ((p = hintersect(bisector, rbnd)) != NULL)
-		PQinsert(bisector, p, dist(p, newsite));
+		PQinsert(pq, bisector, p, dist(p, newsite));
 	    newsite = nextsite(context);
-	} else if (!PQempty()) {
+	} else if (!PQempty(pq)) {
 	    /* intersection is smallest */
-	    lbnd = PQextractmin();
+	    lbnd = PQextractmin(pq);
 	    llbnd = ELleft(lbnd);
 	    rbnd = ELright(lbnd);
 	    rrbnd = ELright(rbnd);
@@ -67,7 +67,7 @@ void voronoi(Site *(*nextsite)(void *context), void *context) {
 	    endpoint(lbnd->ELedge, lbnd->ELpm, v);
 	    endpoint(rbnd->ELedge, rbnd->ELpm, v);
 	    ELdelete(lbnd);
-	    PQdelete(rbnd);
+	    PQdelete(pq, rbnd);
 	    ELdelete(rbnd);
 	    pm = le;
 	    if (bot->coord.y > top->coord.y) {
@@ -82,11 +82,11 @@ void voronoi(Site *(*nextsite)(void *context), void *context) {
 	    endpoint(e, re - pm, v);
 	    deref(v);
 	    if ((p = hintersect(llbnd, bisector)) != NULL) {
-		PQdelete(llbnd);
-		PQinsert(llbnd, p, dist(p, bot));
+		PQdelete(pq, llbnd);
+		PQinsert(pq, llbnd, p, dist(p, bot));
 	    }
 	    if ((p = hintersect(bisector, rrbnd)) != NULL) {
-		PQinsert(bisector, p, dist(p, bot));
+		PQinsert(pq, bisector, p, dist(p, bot));
 	    }
 	} else
 	    break;
@@ -96,4 +96,8 @@ void voronoi(Site *(*nextsite)(void *context), void *context) {
 	e = lbnd->ELedge;
 	clip_line(e);
     }
+
+    // `PQcleanup` relies on the number of sites, so should be discarded and
+    // at least every time we use `vAdjust`. See note in adjust.c:cleanup().
+    PQcleanup(pq);
 }

@@ -26,7 +26,6 @@
 #include <neatogen/info.h>
 #include <neatogen/edges.h>
 #include <neatogen/site.h>
-#include <neatogen/heap.h>
 #include <neatogen/hedges.h>
 #include <neatogen/digcola.h>
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
@@ -416,14 +415,13 @@ static void newPos(const state_t *st, bool doAll) {
 }
 
 /* Cleanup voronoi memory.
- * Note that PQcleanup and ELcleanup rely on the number
+ * Note that ELcleanup relies on the number
  * of sites, so should at least be reset every time we use vAdjust.
  * This could be optimized, over multiple components or
  * even multiple graphs, but probably not worth it.
  */
 static void cleanup(void)
 {
-    PQcleanup();
     ELcleanup();
     siteinit();			/* free memory */
     edgeinit();			/* free memory */
