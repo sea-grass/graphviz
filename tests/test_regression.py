@@ -4677,3 +4677,76 @@ def test_gvpr_s2f():
 
     # confirm we got the expected output
     assert result == "1.5\n", "incorrect GVPR float cast behavior"
+
+
+def test_changelog():
+    """
+    sanity checks on ../CHANGELOG.md
+    """
+
+    changelog = Path(__file__).parent / "../CHANGELOG.md"
+    assert changelog.exists(), "CHANGELOG.md missing"
+
+    with open(changelog, "rt", encoding="utf-8") as f:
+        for lineno, line in enumerate(f, 1):
+
+            ignore_h2 = False
+
+            # an exception for an old heading
+            if line == "## [2.42.3] and earlier\n":
+                ignore_h2 = True
+
+            # an exception for unreleased versions
+            if line.startswith("## ") and "Unreleased" in line:
+                ignore_h2 = True
+
+            if (m := re.match("##(?P<remainder>[^#].*)$", line)) and not ignore_h2:
+
+                expected_format = r" \[\d+\.\d+\.\d+\] [\-–] \d{4}-\d{2}-\d{2}$"
+                assert re.match(expected_format, m.group("remainder")), (
+                    f"CHANGELOG.md:{lineno}: second-level heading did not match "
+                    f'regex r"{expected_format}": {line}'
+                )
+
+            if m := re.match("###(?P<remainder>.*)$", line):
+                assert m.group("remainder") in (
+                    " Added",
+                    " Changed",
+                    " Fixed",
+                    " Removed",
+                ), f"CHANGELOG.md:{lineno}: unexpected third-level heading: {line}"
+
+            if m := re.match(
+                r"\[(?P<version>\d+\.\d+\.\d+)\]:(?P<remainder>.*)$", line
+            ):
+                prefix = " https://gitlab.com/graphviz/graphviz/compare/"
+                assert m.group("remainder").startswith(
+                    prefix
+                ), f"CHANGELOG.md:{lineno}: unexpected finalized history link: {line}"
+                remainder = m.group("remainder")[len(prefix) :]
+
+                assert m.group("remainder").endswith(
+                    f'...{m.group("version")}'
+                ), f"CHANGELOG.md:{lineno}: history link is for wrong version: {line}"
+
+                version_range = re.match(
+                    r"(?P<start_major>\d+)\.(?P<start_minor>\d+)\.(?P<start_patch>\d+)"
+                    r"\.\.\."
+                    r"(?P<end_major>\d+)\.(?P<end_minor>\d+)\.(?P<end_patch>\d+)$",
+                    remainder,
+                )
+                assert (
+                    version_range
+                ), f"CHANGELOG.md:{lineno}: unexpected finalized history link: {line}"
+
+                start = tuple(
+                    int(version_range.group(v))
+                    for v in ("start_major", "start_minor", "start_patch")
+                )
+                end = tuple(
+                    int(version_range.group(v))
+                    for v in ("end_major", "end_minor", "end_patch")
+                )
+                assert (
+                    start < end
+                ), f"CHANGELOG.md:{lineno}: invalid version range: {line}"
