@@ -90,13 +90,6 @@ def test_tools(tool):
     environ_copy = os.environ.copy()
     environ_copy.pop("DISPLAY", None)
 
-    # FIXME: mingle triggers ODR violations
-    if tool == "mingle":
-        if "ASAN_OPTIONS" in environ_copy:
-            environ_copy["ASAN_OPTIONS"] += ":detect_odr_violation=0"
-        else:
-            environ_copy["ASAN_OPTIONS"] = "detect_odr_violation=0"
-
     # Test usage
     with subprocess.Popen(
         [tool, "-?"],

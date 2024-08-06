@@ -22,7 +22,6 @@ if(with_sfdp AND ANN_FOUND)
   target_link_libraries(mingle PRIVATE
     cdt
     cgraph
-    common
     libmingle
     neatogen
     rbtree
