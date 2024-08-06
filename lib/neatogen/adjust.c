@@ -480,8 +480,7 @@ static int vAdjust(state_t *st) {
     return 1;
 }
 
-static double rePos(void)
-{
+static void rePos(void) {
     double f = 1.0 + incr;
 
     for (size_t i = 0; i < nsites; i++) {
@@ -489,7 +488,6 @@ static double rePos(void)
 	ip->site.coord.x *= f;
 	ip->site.coord.y *= f;
     }
-    return f;
 }
 
 static int sAdjust(state_t *st) {
