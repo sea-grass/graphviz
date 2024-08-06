@@ -375,7 +375,6 @@ EXCLUDE = (
     "lib/neatogen/hedges.c",
     "lib/neatogen/hedges.h",
     "lib/neatogen/info.c",
-    "lib/neatogen/info.h",
     "lib/neatogen/kkutils.c",
     "lib/neatogen/kkutils.h",
     "lib/neatogen/legal.c",
