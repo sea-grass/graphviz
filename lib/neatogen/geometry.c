@@ -25,8 +25,6 @@ void geominit(void)
 
     sn = nsites + 4;
     sqrt_nsites = (int) sqrt(sn);
-    /* deltay = ymax - ymin; */
-    /* deltax = xmax - xmin; */
 }
 
 double dist_2(Point pp, Point qp) {
