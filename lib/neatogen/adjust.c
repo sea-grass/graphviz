@@ -273,9 +273,8 @@ static void rmEquality(state_t *st) {
 }
 
 /// Count number of node-node overlaps at iteration iter.
-static int countOverlap(int iter)
-{
-    int count = 0;
+static unsigned countOverlap(unsigned iter) {
+    unsigned count = 0;
 
     for (size_t i = 0; i < nsites; i++)
 	nodeInfo[i].overlaps = false;
@@ -293,7 +292,7 @@ static int countOverlap(int iter)
     }
 
     if (Verbose > 1)
-	fprintf(stderr, "overlap [%d] : %d\n", iter, count);
+	fprintf(stderr, "overlap [%u] : %u\n", iter, count);
     return count;
 }
 
@@ -431,11 +430,11 @@ static void cleanup(void)
 }
 
 static int vAdjust(state_t *st) {
-    int iterCnt = 0;
+    unsigned iterCnt = 0;
     int badLevel = 0;
     int increaseCnt = 0;
 
-    int overlapCnt = countOverlap(iterCnt);
+    unsigned overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -447,7 +446,7 @@ static int vAdjust(state_t *st) {
 	newPos(st, doAll);
 	iterCnt++;
 
-	const int cnt = countOverlap(iterCnt);
+	const unsigned cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
 	if (cnt >= overlapCnt)
@@ -472,7 +471,7 @@ static int vAdjust(state_t *st) {
     }
 
     if (Verbose) {
-	fprintf(stderr, "Number of iterations = %d\n", iterCnt);
+	fprintf(stderr, "Number of iterations = %u\n", iterCnt);
 	fprintf(stderr, "Number of increases = %d\n", increaseCnt);
     }
 
@@ -491,9 +490,9 @@ static void rePos(void) {
 }
 
 static int sAdjust(state_t *st) {
-    int iterCnt = 0;
+    unsigned iterCnt = 0;
 
-    int overlapCnt = countOverlap(iterCnt);
+    const unsigned overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -503,13 +502,13 @@ static int sAdjust(state_t *st) {
 	rePos();
 	iterCnt++;
 
-	const int cnt = countOverlap(iterCnt);
+	const unsigned cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
     }
 
     if (Verbose) {
-	fprintf(stderr, "Number of iterations = %d\n", iterCnt);
+	fprintf(stderr, "Number of iterations = %u\n", iterCnt);
     }
 
     return 1;
