@@ -213,7 +213,6 @@ static void geomUpdate(state_t *st, int doSort) {
     ymin = st->sites[0]->coord.y;
     ymax = st->sites[nsites - 1]->coord.y;
 
-    deltay = ymax - ymin;
     deltax = xmax - xmin;
 }
 

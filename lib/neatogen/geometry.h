@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
     extern double xmin, xmax, ymin, ymax;	/* extreme x,y values of sites */
-    extern double deltax, deltay;	/* xmax - xmin, ymax - ymin */
+    extern double deltax;	// xmax - xmin
 
     extern size_t nsites; // Number of sites
     extern int sqrt_nsites;

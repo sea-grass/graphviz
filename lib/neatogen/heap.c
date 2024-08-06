@@ -27,6 +27,7 @@ static int PQbucket(pq_t *pq, Halfedge *he) {
     int bucket;
     double b;
 
+    const double deltay = ymax - ymin;
     b = (he->ystar - ymin) / deltay * pq->hashsize;
     if (b < 0)
 	bucket = 0;

@@ -13,8 +13,7 @@
 #include <stddef.h>
 
 double xmin, xmax, ymin, ymax;	/* min and max x and y values of sites */
-double deltax,			/* xmax - xmin */
- deltay;			/* ymax - ymin */
+double deltax; // xmax - xmin
 
 size_t nsites;
 int sqrt_nsites;
