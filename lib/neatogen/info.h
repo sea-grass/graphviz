@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stddef.h>
 
 #ifdef __cplusplus
@@ -22,7 +23,7 @@ extern "C" {
     typedef struct {		/* Info concerning site */
 	Agnode_t *node;		/* libgraph node */
 	Site site;		/* site used by voronoi code */
-	int overlaps;		/* true if node overlaps other nodes */
+	bool overlaps; ///< true if node overlaps other nodes
 	Poly poly;		/* polygon at node */
 	Point *verts; ///< sorted list of vertices of voronoi polygon
 	size_t n_verts; ///< number of elements in `verts`

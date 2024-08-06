@@ -278,7 +278,7 @@ static int countOverlap(int iter)
     int count = 0;
 
     for (size_t i = 0; i < nsites; i++)
-	nodeInfo[i].overlaps = 0;
+	nodeInfo[i].overlaps = false;
 
     for (size_t i = 0; i < nsites - 1; i++) {
 	Info_t *ip = &nodeInfo[i];
@@ -286,8 +286,8 @@ static int countOverlap(int iter)
 	    Info_t *jp = &nodeInfo[j];
 	    if (polyOverlap(ip->site.coord, &ip->poly, jp->site.coord, &jp->poly)) {
 		count++;
-		ip->overlaps = 1;
-		jp->overlaps = 1;
+		ip->overlaps = true;
+		jp->overlaps = true;
 	    }
 	}
     }
