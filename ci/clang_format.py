@@ -371,7 +371,6 @@ EXCLUDE = (
     "lib/neatogen/geometry.c",
     "lib/neatogen/geometry.h",
     "lib/neatogen/heap.c",
-    "lib/neatogen/heap.h",
     "lib/neatogen/hedges.c",
     "lib/neatogen/hedges.h",
     "lib/neatogen/info.c",
