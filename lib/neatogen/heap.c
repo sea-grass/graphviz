@@ -40,6 +40,17 @@ static int PQbucket(pq_t *pq, Halfedge *he) {
     return bucket;
 }
 
+/// `a > b`?
+static bool gt(double a_y, double a_x, double b_y, double b_x) {
+  if (a_y > b_y) {
+    return true;
+  }
+  if (a_y == b_y && a_x > b_x) {
+    return true;
+  }
+  return false;
+}
+
 void PQinsert(pq_t *pq, Halfedge *he, Site *v, double offset) {
     Halfedge *last, *next;
 
@@ -48,9 +59,7 @@ void PQinsert(pq_t *pq, Halfedge *he, Site *v, double offset) {
     he->ystar = v->coord.y + offset;
     last = &pq->hash[PQbucket(pq, he)];
     while ((next = last->PQnext) != NULL &&
-	   (he->ystar > next->ystar ||
-	    (he->ystar == next->ystar
-	     && v->coord.x > next->vertex->coord.x))) {
+           gt(he->ystar, v->coord.x, next->ystar, next->vertex->coord.x)) {
 	last = next;
     }
     he->PQnext = last->PQnext;
