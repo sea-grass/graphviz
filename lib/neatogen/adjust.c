@@ -432,7 +432,7 @@ static void cleanup(void)
 static int vAdjust(state_t *st) {
     unsigned iterCnt = 0;
     int badLevel = 0;
-    int increaseCnt = 0;
+    unsigned increaseCnt = 0;
 
     unsigned overlapCnt = countOverlap(iterCnt);
 
@@ -472,7 +472,7 @@ static int vAdjust(state_t *st) {
 
     if (Verbose) {
 	fprintf(stderr, "Number of iterations = %u\n", iterCnt);
-	fprintf(stderr, "Number of increases = %d\n", increaseCnt);
+	fprintf(stderr, "Number of increases = %u\n", increaseCnt);
     }
 
     cleanup();
