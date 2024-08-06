@@ -431,7 +431,7 @@ static void cleanup(void)
 
 static int vAdjust(state_t *st) {
     unsigned iterCnt = 0;
-    int badLevel = 0;
+    unsigned badLevel = 0;
     unsigned increaseCnt = 0;
 
     unsigned overlapCnt = countOverlap(iterCnt);
