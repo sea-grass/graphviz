@@ -43,7 +43,7 @@ static int LoadPlugins(QComboBox &cb, GVC_t *gvc, const char *kind,
     cb.addItem(QString::fromUtf8(lp[id]));
     if (!idx.has_value() && prefer == lp[id])
       idx = id;
-  };
+  }
   freeList(lp, count);
 
   /* Add additional items if supplied */
