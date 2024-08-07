@@ -84,9 +84,9 @@ pkgjavascriptdir = $(pkglibdir)/javascript
 JAVASCRIPT_data =
 nodist_libgv_javascript_la_SOURCES = gv_javascript.cpp $(JAVASCRIPT_data)
 libgv_javascript_la_SOURCES = $(BASESOURCES) gv_dummy_init.c
-libgv_javascript_la_LIBADD = $(BASELIBS) $(JAVASCRIPT_LIBS)
+libgv_javascript_la_LIBADD = $(BASELIBS)
 libgv_javascript_la_LDFLAGS = -module -avoid-version
-libgv_javascript_la_CPPFLAGS = $(BASECPPFLAGS) $(JAVASCRIPT_INCLUDES)
+libgv_javascript_la_CPPFLAGS = $(BASECPPFLAGS)
 gv_javascript.cpp: gv.i
 	$(SWIG) -c++ -javascript -jsc -o $@ $(srcdir)/gv.i
 

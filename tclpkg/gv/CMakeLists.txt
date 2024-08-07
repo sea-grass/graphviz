@@ -87,6 +87,44 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_JAVASCRIPT)
+    swig_add_library(gv_javascript
+      LANGUAGE javascript
+      SOURCES gv.i gv_dummy_init.c
+    )
+    set_property(TARGET gv_javascript PROPERTY SWIG_COMPILE_OPTIONS -jsc)
+    set_property(
+      TARGET gv_javascript
+      PROPERTY SWIG_GENERATED_INCLUDE_DIRECTORIES
+        ${JAVASCRIPTCORE_INCLUDE_DIRS}
+    )
+    if(HAVE_CXX_WSIGN_COMPARE AND HAVE_CXX_WUNUSED_PARAMETER)
+      set_property(
+        TARGET gv_javascript
+        PROPERTY SWIG_GENERATED_COMPILE_OPTIONS
+          -Wno-sign-compare -Wno-unused-parameter
+      )
+    elseif(HAVE_CXX_WSIGN_COMPARE)
+      set_property(
+        TARGET gv_javascript
+        PROPERTY SWIG_GENERATED_COMPILE_OPTIONS -Wno-sign-compare
+      )
+    elseif(HAVE_CXX_WUNUSED_PARAMETER)
+      set_property(
+        TARGET gv_javascript
+        PROPERTY SWIG_GENERATED_COMPILE_OPTIONS -Wno-unused-parameter
+      )
+    endif()
+    swig_link_libraries(gv_javascript PRIVATE gvc ${JAVASCRIPTCORE_LIBRARIES})
+
+    install(
+      TARGETS gv_javascript
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/javascript
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
+
   if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl
