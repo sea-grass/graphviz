@@ -44,7 +44,10 @@ gvedit_LDADD = \
 	$(QTCORE_LIBS) \
 	$(EXPAT_LIBS) $(Z_LIBS)
 
-noinst_HEADERS = csettings.h imageviewer.h mainwindow.h mdichild.h ui_settings.h
+noinst_HEADERS = csettings.h imageviewer.h mainwindow.h mdichild.h
+if WITH_QT
+BUILT_SOURCES = ui_settings.h
+endif
 
 MOCABLES = moc_csettings.cpp moc_imageviewer.cpp moc_mainwindow.cpp moc_mdichild.cpp qrc_mdi.cpp
 
@@ -54,7 +57,7 @@ nodist_gvedit_SOURCES = $(MOCABLES)
 $(MOCABLES): mocables
 
 .PHONY: mocables
-mocables: qMakefile
+mocables ui_settings.h: qMakefile
 	$(MAKE) -f qMakefile prefix=${prefix} exec_prefix=${exec_prefix} mocables compiler_rcc_make_all
 
 # in case the user has both Qt4 and Qt5 installed, set QT_SELECT to force Qt5
@@ -72,7 +75,7 @@ SUFFIXES = .1 .1.pdf
 
 EXTRA_DIST = gvedit.pro.in mdi.qrc $(mans)
 
-CLEANFILES = $(MOCABLES)
+CLEANFILES = $(MOCABLES) ui_settings.h
 DISTCLEANFILES = attrs.txt qMakefile $(pdf_DATA)
 
 clean-local:

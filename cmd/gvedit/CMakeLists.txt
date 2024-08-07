@@ -36,7 +36,6 @@ if(WITH_GVEDIT)
     mdi.qrc
     mdichild.cpp
     mdichild.h
-    ui_settings.h
   )
 
   set_target_properties(gvedit PROPERTIES
