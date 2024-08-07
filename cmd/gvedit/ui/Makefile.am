@@ -2,4 +2,4 @@
 
 all:
 
-EXTRA_DIST = main.ui settings.ui
+EXTRA_DIST = settings.ui
