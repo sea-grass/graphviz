@@ -18,7 +18,7 @@ BUILT_SOURCES = colortbl.h entities.h htmlparse.h
 
 pkginclude_HEADERS = arith.h geom.h color.h types.h textspan.h usershape.h
 noinst_HEADERS = boxes.h render.h utils.h \
-	geomprocs.h colorprocs.h colortbl.h entities.h globals.h \
+	geomprocs.h colorprocs.h globals.h \
 	const.h macros.h htmllex.h htmltable.h pointset.h intset.h \
 	textspan_lut.h ps_font_equiv.h
 noinst_LTLIBRARIES = libcommon_C.la
