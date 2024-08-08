@@ -22,7 +22,6 @@ EXCLUDE = (
     "cmd/gvedit/imageviewer.cpp",
     "cmd/gvedit/imageviewer.h",
     "cmd/gvedit/mdichild.h",
-    "cmd/gvedit/ui_settings.h",
     "cmd/gvmap/cluster.c",
     "cmd/gvmap/country_graph_coloring.c",
     "cmd/gvmap/country_graph_coloring.h",

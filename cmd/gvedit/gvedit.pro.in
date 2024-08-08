@@ -1,3 +1,4 @@
+QT += core gui widgets
 
 LIBS += \
         -L$(top_builddir)/lib/gvc/.libs -lgvc \
@@ -17,6 +18,7 @@ CONFIG += qt
 win32-g++|win32-clang-g++ {
 	CONFIG -= debug_and_release
 }
-HEADERS = @top_srcdir@/cmd/gvedit/mainwindow.h @top_srcdir@/cmd/gvedit/mdichild.h @top_srcdir@/cmd/gvedit/csettings.h @top_srcdir@/cmd/gvedit/imageviewer.h @top_srcdir@/cmd/gvedit/ui_settings.h
+FORMS = @top_srcdir@/cmd/gvedit/ui/settings.ui
+HEADERS = @top_srcdir@/cmd/gvedit/mainwindow.h @top_srcdir@/cmd/gvedit/mdichild.h @top_srcdir@/cmd/gvedit/csettings.h @top_srcdir@/cmd/gvedit/imageviewer.h
 SOURCES = @top_srcdir@/cmd/gvedit/main.cpp @top_srcdir@/cmd/gvedit/mainwindow.cpp @top_srcdir@/cmd/gvedit/mdichild.cpp @top_srcdir@/cmd/gvedit/csettings.cpp @top_srcdir@/cmd/gvedit/imageviewer.cpp
 RESOURCES     = @top_srcdir@/cmd/gvedit/mdi.qrc
