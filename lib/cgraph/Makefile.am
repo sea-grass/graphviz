@@ -31,7 +31,7 @@ libcgraph_la_LIBADD = \
   $(top_builddir)/lib/cdt/libcdt.la \
   $(top_builddir)/lib/util/libutil_C.la
 
-scan.o scan.lo: scan.c grammar.h
+scan.$(OBJEXT) scan.lo: scan.c grammar.h
 
 scan.c: $(top_srcdir)/lib/cgraph/scan.l
 	$(LEX) --case-insensitive --outfile=$@ $(top_srcdir)/lib/cgraph/scan.l

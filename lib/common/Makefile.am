@@ -33,7 +33,7 @@ libcommon_C_la_CPPFLAGS = $(AM_CPPFLAGS) $(EXPAT_CFLAGS)
 libcommon_C_la_LIBADD = \
 	$(top_builddir)/lib/xdot/libxdot.la $(EXPAT_LIBS)
 
-colxlate.o colxlate.lo : colortbl.h
+colxlate.$(OBJEXT) colxlate.lo: colortbl.h
 
 colortbl.h: brewer_lib svgcolor_lib $(top_srcdir)/lib/common/color_names \
             $(top_srcdir)/lib/common/make_colortbl.py
@@ -50,14 +50,14 @@ svgcolor_lib: $(top_srcdir)/lib/common/svgcolor_names \
 	python3 $(top_srcdir)/lib/common/make_svgcolor_lib.py \
 	  "$(top_srcdir)/lib/common/svgcolor_names" "$@"
 
-utils.o utils.lo: entities.h
+utils.$(OBJEXT) utils.lo: entities.h
 
 entities.h: $(top_srcdir)/lib/common/entities.html \
             $(top_srcdir)/lib/common/entities.py
 	python3 $(top_srcdir)/lib/common/entities.py "$@"
 
-htmllex.o htmllex.lo: htmllex.c htmllex.h htmlparse.h
-htmlparse.o htmlparse.lo: htmlparse.c htmlparse.h
+htmllex.$(OBJEXT) htmllex.lo: htmllex.c htmllex.h htmlparse.h
+htmlparse.$(OBJEXT) htmlparse.lo: htmlparse.c htmlparse.h
 
 htmlparse.c htmlparse.h: $(top_srcdir)/lib/common/htmlparse.y
 	$(YACC) -Wno-yacc -dv $(top_srcdir)/lib/common/htmlparse.y -o htmlparse.c
