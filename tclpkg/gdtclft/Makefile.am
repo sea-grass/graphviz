@@ -39,7 +39,8 @@ if WITH_TCL
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl: libgdtclft.la
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgdtclft.la Gdtclft $(VERSION)
+	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgdtclft$(SHARED_LIBRARY_SUFFIX) \
+	  Gdtclft $(VERSION)
 
 test:
 	echo 'load .libs/libgdtclft$(TCL_SHLIB_SUFFIX) Gdtclft ; cd tests ; source all' | tclsh8.3

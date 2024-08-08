@@ -40,8 +40,8 @@ install(
 )
 
 add_custom_target(tcldot_pkgindex
-  COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh" libtcldot.so
-    Tcldot "${GRAPHVIZ_VERSION_STRING}"
+  COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh"
+    libtcldot${CMAKE_SHARED_LIBRARY_SUFFIX} Tcldot "${GRAPHVIZ_VERSION_STRING}"
   DEPENDS ../mkpkgindex.sh
   BYPRODUCTS pkgIndex.tcl
   COMMENT "create tcldot package index"

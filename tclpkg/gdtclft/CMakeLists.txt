@@ -19,8 +19,9 @@ if(GD_FOUND)
   )
 
   add_custom_target(gdtclft_pkgindex
-    COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh" libgdtclft.so
-      Gdtclft "${GRAPHVIZ_VERSION_STRING}"
+    COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh"
+      libgdtclft${CMAKE_SHARED_LIBRARY_SUFFIX} Gdtclft
+      "${GRAPHVIZ_VERSION_STRING}"
     DEPENDS ../mkpkgindex.sh
     BYPRODUCTS pkgIndex.tcl
     COMMENT "create gdtclft package index"
