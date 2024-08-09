@@ -4787,7 +4787,6 @@ def test_agxbuf_print_nul():
     run_c(c_src, cflags=cflags)
 
 
-@pytest.mark.xfail(strict=True)
 def test_agxbuf_use_implicit__nul():
     """
     `agxbuf` should be able to use its entire memory as an inline string

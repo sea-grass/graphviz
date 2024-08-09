@@ -304,7 +304,14 @@ static inline void agxbclear(agxbuf *xb) {
  * instead.
  */
 static inline char *agxbuse(agxbuf *xb) {
-  (void)agxbputc(xb, '\0');
+  if (!agxbuf_is_inline(xb) || agxblen(xb) != sizeof(xb->u.store)) {
+    (void)agxbputc(xb, '\0');
+  } else {
+    // we can skip explicitly null-terminating the buffer because `agxbclear`
+    // resets the `xb->located` byte such that it naturally forms a terminator
+    assert(AGXBUF_INLINE_SIZE_0 == '\0');
+  }
+
   agxbclear(xb);
   return agxbstart(xb);
 }
