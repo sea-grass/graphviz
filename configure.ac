@@ -117,27 +117,37 @@ case "${host_os}" in
 	UWIN=yes
 	BROWSER="xdg-open"
 	JSHEXT=so
+	SHARED_LIBRARY_SUFFIX=.so
 	;;
   *cygwin* )
 	CYGWIN=yes
 	BROWSER="xdg-open"
 	JSHEXT=so
+	SHARED_LIBRARY_SUFFIX=.dll
 	;;
   *mingw32* )
 	MINGW32=yes
 	BROWSER="xdg-open"
 	JSHEXT=so
+	SHARED_LIBRARY_SUFFIX=.so
 	;;
   *darwin* )
 	DARWIN=yes
 	AC_DEFINE_UNQUOTED(DARWIN,1,[Define for any Darwin-based OS.])
 	BROWSER="open"
 	JSHEXT=jnilib
+	SHARED_LIBRARY_SUFFIX=.dylib
 	AC_DEFINE_UNQUOTED(DARWIN_DYLIB,"$DARWIN_DYLIB",[Define for Darwin-style shared library names.])
+	;;
+  hpux* )
+	BROWSER="xdg-open"
+	JSHEXT=so
+	SHARED_LIBRARY_SUFFIX=.sl
 	;;
   * )
 	BROWSER="xdg-open"
 	JSHEXT=so
+	SHARED_LIBRARY_SUFFIX=.so
 	;;
 esac
 AC_SUBST([CYGWIN])
@@ -146,6 +156,7 @@ AC_SUBST([DARWIN])
 JNI_EXTRA_LDFLAGS="-shrext .$JSHEXT"
 AC_SUBST([JNI_EXTRA_LDFLAGS])
 AC_SUBST([JSHEXT])
+AC_SUBST([SHARED_LIBRARY_SUFFIX])
 AM_CONDITIONAL(WITH_WIN32, [test "$UWIN" = "yes" -o "$CYGWIN" = "yes" -o "$MINGW32" = "yes"])
 AM_CONDITIONAL(WITH_CYGWIN, [test "$CYGWIN" = "yes"])
 AM_CONDITIONAL(WITH_MINGW, [test "$MINGW32" = "yes"])

@@ -185,7 +185,8 @@ gml2gv_SOURCES = gml2gv.c gmlparse.y gmlscan.l
 gmlparse.c gmlparse.h: $(top_srcdir)/cmd/tools/gmlparse.y
 	$(YACC) -Wno-yacc -dv $(top_srcdir)/cmd/tools/gmlparse.y -o gmlparse.c
 
-gmlparse.o gmlparse.lo gmlscan.o gmlscan.lo : gmlscan.c gmlparse.h
+gmlparse.$(OBJEXT) gmlparse.lo gmlscan.$(OBJEXT) gmlscan.lo: \
+  gmlscan.c gmlparse.h
 
 gmlscan.c: $(top_srcdir)/cmd/tools/gmlscan.l
 	$(LEX) --case-insensitive --outfile=$@ $(top_srcdir)/cmd/tools/gmlscan.l

@@ -78,6 +78,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - gvpr’s ability to handle empty string parameters to `printf` (e.g.
   `printf("hello%s world", "")`) has been restored. This was a regression in
   Graphviz 9.0.0. #2577
+- pkgIndex.tcl for the TCL bindings is constructed based on target system
+  properties instead of host system properties. Previously, cross-compilation
+  would result in potentially incorrect library loading directives in this file.
 
 ## [12.0.0] – 2024-07-04
 

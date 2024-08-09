@@ -105,7 +105,8 @@ if WITH_TCL
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl: libtcldot.la
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtcldot.la Tcldot $(VERSION)
+	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtcldot$(SHARED_LIBRARY_SUFFIX) \
+	  Tcldot $(VERSION)
 endif
 
 .3tcl.3tcl.pdf:

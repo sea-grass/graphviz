@@ -1,25 +1,8 @@
 #!/bin/sh
 
-# $1 = .la or shared object file in build tree (doesn't need to be installed)
+# $1 = final shared object file to be loaded (doesn't need to be installed)
 # $2 = Name of extension
 # $3 = Version of extension
-
-lib=`sed -n "/dlname/s/^[^']*'\([^ ']*\).*$/\1/p" $1`
-if [ -z "$lib" ]
-then
-    libBaseName=$(basename $1 .la)
-    if [ "$libBaseName" != "$1" ]
-    then
-        case `uname` in
-            CYGWIN*) lib="${libBaseName}.dll"   ;;
-            Darwin*) lib="${libBaseName}.dylib" ;;
-            HP-UX*)  lib="${libBaseName}.sl"    ;;
-            *)       lib="${libBaseName}.so"    ;;
-        esac
-    else
-        lib="$1"
-    fi
-fi
 
 # for non-release versions, convert the '~dev.' portion into something compliant
 # with TCL’s version number rules
@@ -31,4 +14,4 @@ case "$1" in
     echo "	package require Tk 8.3" >>pkgIndex.tcl
     ;;
 esac
-echo "	load [file join \$dir $lib] $2\"" >>pkgIndex.tcl
+echo "	load [file join \$dir $1] $2\"" >>pkgIndex.tcl

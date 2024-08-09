@@ -142,8 +142,8 @@ if(ENABLE_SWIG)
     )
 
     add_custom_target(gv_tcl_pkgindex
-      COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh" libgv_tcl.so
-        gv 0
+      COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh"
+        libgv_tcl${CMAKE_SHARED_LIBRARY_SUFFIX} gv 0
       DEPENDS ../mkpkgindex.sh
       BYPRODUCTS pkgIndex.tcl
       COMMENT "create gv_tcl package index"

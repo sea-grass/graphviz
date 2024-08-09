@@ -296,7 +296,7 @@ DEVTSTS += test_tcl
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl: libgv_tcl.la
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgv_tcl.la gv 0
+	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgv_tcl$(SHARED_LIBRARY_SUFFIX) gv 0
 endif
 endif
 
