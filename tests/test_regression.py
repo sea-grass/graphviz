@@ -4766,3 +4766,23 @@ def test_changelog():
                 assert (
                     start < end
                 ), f"CHANGELOG.md:{lineno}: invalid version range: {line}"
+
+
+@pytest.mark.xfail(strict=True)
+def test_agxbuf_print_nul():
+    """
+    `agxbprint` should not account for nor append a NUL byte
+    """
+
+    # find co-located test source
+    c_src = (Path(__file__).parent / "agxbuf-print-nul.c").resolve()
+    assert c_src.exists(), "missing test case"
+
+    lib = Path(__file__).parents[1] / "lib"
+    if platform.system() == "Windows" and not is_mingw():
+        cflags = [f"/I{lib}"]
+    else:
+        # GNU99 needed for `strndup`
+        cflags = ["-std=gnu99", f"-I{lib}"]
+
+    run_c(c_src, cflags=cflags)
