@@ -101,8 +101,10 @@ if WITH_TCL
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtcldot$(SHARED_LIBRARY_SUFFIX) \
-	  Tcldot $(VERSION)
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libtcldot$(SHARED_LIBRARY_SUFFIX) \
+	  --name Tcldot \
+	  --version $(VERSION)
 endif
 
 .3tcl.3tcl.pdf:

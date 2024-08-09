@@ -296,7 +296,10 @@ DEVTSTS += test_tcl
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgv_tcl$(SHARED_LIBRARY_SUFFIX) gv 0
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libgv_tcl$(SHARED_LIBRARY_SUFFIX) \
+	  --name gv \
+	  --version 0
 endif
 endif
 
