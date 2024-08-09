@@ -36,6 +36,7 @@ libgdtclft_la_LIBADD = \
 	$(GDLIB_LIBS)
 
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
@@ -57,5 +58,4 @@ SUFFIXES = .3tcl .3tcl.pdf
 
 EXTRA_DIST = $(man)
 
-CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf_DATA)
+DISTCLEANFILES = $(pdf_DATA) pkgIndex.tcl

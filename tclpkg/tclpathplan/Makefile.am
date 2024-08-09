@@ -23,6 +23,7 @@ libtclplan_la_LIBADD = \
 	-lc $(TCL_STUB_LIB_SPEC)
 
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
@@ -32,6 +33,6 @@ pkgIndex.tcl:
 	  --version $(VERSION)
 endif
 
-CLEANFILES = pkgIndex.tcl
+DISTCLEANFILES = pkgIndex.tcl
 
 EXTRA_DIST = $(libtclplan_la_SOURCES)
