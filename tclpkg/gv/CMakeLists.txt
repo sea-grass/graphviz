@@ -142,9 +142,12 @@ if(ENABLE_SWIG)
     )
 
     add_custom_target(gv_tcl_pkgindex
-      COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh"
-        libgv_tcl${CMAKE_SHARED_LIBRARY_SUFFIX} gv 0
-      DEPENDS ../mkpkgindex.sh
+      COMMAND
+        ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.py"
+        --file libgv_tcl${CMAKE_SHARED_LIBRARY_SUFFIX}
+        --name gv
+        --version 0
+      DEPENDS ../mkpkgindex.py
       BYPRODUCTS pkgIndex.tcl
       COMMENT "create gv_tcl package index"
     )

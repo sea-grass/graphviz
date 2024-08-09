@@ -26,8 +26,10 @@ if WITH_TCL
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtclplan$(SHARED_LIBRARY_SUFFIX) \
-	  Tclpathplan $(VERSION)
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libtclplan$(SHARED_LIBRARY_SUFFIX) \
+	  --name Tclpathplan \
+	  --version $(VERSION)
 endif
 
 CLEANFILES = pkgIndex.tcl

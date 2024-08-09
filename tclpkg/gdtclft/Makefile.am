@@ -39,8 +39,10 @@ if WITH_TCL
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgdtclft$(SHARED_LIBRARY_SUFFIX) \
-	  Gdtclft $(VERSION)
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libgdtclft$(SHARED_LIBRARY_SUFFIX) \
+	  --name Gdtclft \
+	  --version $(VERSION)
 
 test:
 	echo 'load .libs/libgdtclft$(TCL_SHLIB_SUFFIX) Gdtclft ; cd tests ; source all' | tclsh8.3
