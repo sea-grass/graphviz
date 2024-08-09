@@ -98,6 +98,7 @@ endif
 libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 all-local: pkgIndex.tcl
 
 pkgIndex.tcl:
@@ -115,5 +116,4 @@ SUFFIXES = .3tcl .3tcl.pdf
 
 EXTRA_DIST = $(man) README README.Tkspline
 
-CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf_DATA)
+DISTCLEANFILES = $(pdf_DATA) pkgIndex.tcl

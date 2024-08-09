@@ -285,6 +285,7 @@ pkgruby_LTLIBRARIES = libgv_ruby.la
 DEVTSTS += test_ruby
 endif
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 pkgtcl_DATA = $(TCL_data)
 man_MANS += gv.3tcl
 if ENABLE_MAN_PDFS
@@ -470,7 +471,7 @@ test_tcl: libgv_tcl.la
 
 EXTRA_DIST = $(man) gv_doc_writer.py
 
-CLEANFILES = test_*/* pkgIndex.tcl \
+CLEANFILES = test_*/* \
 	gv_sharp.cpp $(SHARP_data) \
 	gv_go.cpp $(GO_data) \
 	gv_guile.cpp $(GUILE_data) \
@@ -483,5 +484,5 @@ CLEANFILES = test_*/* pkgIndex.tcl \
 	gv_python3.cpp $(PYTHON3_data) gv.pyc \
 	gv_R.cpp $(R_data) \
 	gv_ruby.cpp $(RUBY_data) \
-	gv_tcl.cpp $(TCL_data) pkgIndex.tcl
-DISTCLEANFILES = $(pdf_DATA)
+	gv_tcl.cpp $(TCL_data)
+DISTCLEANFILES = $(pdf_DATA) pkgIndex.tcl
