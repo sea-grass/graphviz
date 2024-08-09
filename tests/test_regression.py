@@ -4785,3 +4785,23 @@ def test_agxbuf_print_nul():
         cflags = ["-std=gnu99", f"-I{lib}"]
 
     run_c(c_src, cflags=cflags)
+
+
+@pytest.mark.xfail(strict=True)
+def test_agxbuf_use_implicit__nul():
+    """
+    `agxbuf` should be able to use its entire memory as an inline string
+    """
+
+    # find co-located test source
+    c_src = (Path(__file__).parent / "agxbuf-use-implicit-nul.c").resolve()
+    assert c_src.exists(), "missing test case"
+
+    lib = Path(__file__).parents[1] / "lib"
+    if platform.system() == "Windows" and not is_mingw():
+        cflags = [f"/I{lib}"]
+    else:
+        # GNU99 needed for `strndup`
+        cflags = ["-std=gnu99", f"-I{lib}"]
+
+    run_c(c_src, cflags=cflags)
