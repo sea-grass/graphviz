@@ -4768,7 +4768,6 @@ def test_changelog():
                 ), f"CHANGELOG.md:{lineno}: invalid version range: {line}"
 
 
-@pytest.mark.xfail(strict=True)
 def test_agxbuf_print_nul():
     """
     `agxbprint` should not account for nor append a NUL byte
