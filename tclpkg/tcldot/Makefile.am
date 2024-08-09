@@ -100,7 +100,7 @@ libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 if WITH_TCL
 all-local: pkgIndex.tcl
 
-pkgIndex.tcl: libtcldot.la
+pkgIndex.tcl:
 	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtcldot$(SHARED_LIBRARY_SUFFIX) \
 	  Tcldot $(VERSION)
 endif

@@ -38,7 +38,7 @@ libgdtclft_la_LIBADD = \
 if WITH_TCL
 all-local: pkgIndex.tcl
 
-pkgIndex.tcl: libgdtclft.la
+pkgIndex.tcl:
 	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgdtclft$(SHARED_LIBRARY_SUFFIX) \
 	  Gdtclft $(VERSION)
 
