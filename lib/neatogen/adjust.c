@@ -26,7 +26,6 @@
 #include <neatogen/info.h>
 #include <neatogen/edges.h>
 #include <neatogen/site.h>
-#include <neatogen/heap.h>
 #include <neatogen/hedges.h>
 #include <neatogen/digcola.h>
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
@@ -214,7 +213,6 @@ static void geomUpdate(state_t *st, int doSort) {
     ymin = st->sites[0]->coord.y;
     ymax = st->sites[nsites - 1]->coord.y;
 
-    deltay = ymax - ymin;
     deltax = xmax - xmin;
 }
 
@@ -273,12 +271,11 @@ static void rmEquality(state_t *st) {
 }
 
 /// Count number of node-node overlaps at iteration iter.
-static int countOverlap(int iter)
-{
-    int count = 0;
+static unsigned countOverlap(unsigned iter) {
+    unsigned count = 0;
 
     for (size_t i = 0; i < nsites; i++)
-	nodeInfo[i].overlaps = 0;
+	nodeInfo[i].overlaps = false;
 
     for (size_t i = 0; i < nsites - 1; i++) {
 	Info_t *ip = &nodeInfo[i];
@@ -286,14 +283,14 @@ static int countOverlap(int iter)
 	    Info_t *jp = &nodeInfo[j];
 	    if (polyOverlap(ip->site.coord, &ip->poly, jp->site.coord, &jp->poly)) {
 		count++;
-		ip->overlaps = 1;
-		jp->overlaps = 1;
+		ip->overlaps = true;
+		jp->overlaps = true;
 	    }
 	}
     }
 
     if (Verbose > 1)
-	fprintf(stderr, "overlap [%d] : %d\n", iter, count);
+	fprintf(stderr, "overlap [%u] : %u\n", iter, count);
     return count;
 }
 
@@ -417,25 +414,24 @@ static void newPos(const state_t *st, bool doAll) {
 }
 
 /* Cleanup voronoi memory.
- * Note that PQcleanup and ELcleanup rely on the number
+ * Note that ELcleanup relies on the number
  * of sites, so should at least be reset every time we use vAdjust.
  * This could be optimized, over multiple components or
  * even multiple graphs, but probably not worth it.
  */
 static void cleanup(void)
 {
-    PQcleanup();
     ELcleanup();
     siteinit();			/* free memory */
     edgeinit();			/* free memory */
 }
 
 static int vAdjust(state_t *st) {
-    int iterCnt = 0;
-    int badLevel = 0;
-    int increaseCnt = 0;
+    unsigned iterCnt = 0;
+    unsigned badLevel = 0;
+    unsigned increaseCnt = 0;
 
-    int overlapCnt = countOverlap(iterCnt);
+    unsigned overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -447,7 +443,7 @@ static int vAdjust(state_t *st) {
 	newPos(st, doAll);
 	iterCnt++;
 
-	const int cnt = countOverlap(iterCnt);
+	const unsigned cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
 	if (cnt >= overlapCnt)
@@ -472,16 +468,15 @@ static int vAdjust(state_t *st) {
     }
 
     if (Verbose) {
-	fprintf(stderr, "Number of iterations = %d\n", iterCnt);
-	fprintf(stderr, "Number of increases = %d\n", increaseCnt);
+	fprintf(stderr, "Number of iterations = %u\n", iterCnt);
+	fprintf(stderr, "Number of increases = %u\n", increaseCnt);
     }
 
     cleanup();
     return 1;
 }
 
-static double rePos(void)
-{
+static void rePos(void) {
     double f = 1.0 + incr;
 
     for (size_t i = 0; i < nsites; i++) {
@@ -489,13 +484,12 @@ static double rePos(void)
 	ip->site.coord.x *= f;
 	ip->site.coord.y *= f;
     }
-    return f;
 }
 
 static int sAdjust(state_t *st) {
-    int iterCnt = 0;
+    unsigned iterCnt = 0;
 
-    int overlapCnt = countOverlap(iterCnt);
+    const unsigned overlapCnt = countOverlap(iterCnt);
 
     if (overlapCnt == 0)
 	return 0;
@@ -505,13 +499,13 @@ static int sAdjust(state_t *st) {
 	rePos();
 	iterCnt++;
 
-	const int cnt = countOverlap(iterCnt);
+	const unsigned cnt = countOverlap(iterCnt);
 	if (cnt == 0)
 	    break;
     }
 
     if (Verbose) {
-	fprintf(stderr, "Number of iterations = %d\n", iterCnt);
+	fprintf(stderr, "Number of iterations = %u\n", iterCnt);
     }
 
     return 1;
