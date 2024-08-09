@@ -13,6 +13,10 @@
 /*    specifically just the change to Tcl_CmdProc */
 #define USE_NON_CONST
 #include <tcl.h>
+#ifdef EXTERN
+// tcl.h defines `EXTERN` which interferes with the `EXTERN` in globals.h
+#undef EXTERN
+#endif
 #include <common/render.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
