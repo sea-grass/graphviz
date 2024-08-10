@@ -939,11 +939,14 @@ static void get_polygons(int n, int nrandom, int dim, int *grouping, int nt,
   free(groups);
 }
 
-static void make_map_internal(bool include_OK_points,
-		      int n, int dim, double *x0, int *grouping0, SparseMatrix graph, double bounding_box_margin, int nrandom, int nedgep, 
-		      double shore_depth_tol, int *nverts, double **x_poly, 
-		      SparseMatrix *poly_lines, SparseMatrix *polys, int **polys_groups, SparseMatrix *poly_point_map,
-		      SparseMatrix *country_graph, int highlight_cluster){
+static int make_map_internal(bool include_OK_points, int n, int dim, double *x0,
+                             int *grouping0, SparseMatrix graph,
+                             double bounding_box_margin, int nrandom,
+                             int nedgep, double shore_depth_tol, int *nverts,
+                             double **x_poly, SparseMatrix *poly_lines,
+                             SparseMatrix *polys, int **polys_groups,
+                             SparseMatrix *poly_point_map,
+                             SparseMatrix *country_graph, int highlight_cluster) {
 
 
   double xmax[2], xmin[2], area, *x = x0;
@@ -1179,7 +1182,9 @@ static void make_map_internal(bool include_OK_points,
     }
   }
 
+  int rc = 0;
   if (get_tri(n + nrandom, dim2, xcombined, &nt, &Tp, &E) != 0) {
+    rc = -1;
     goto done;
   }
   get_polygons(n, nrandom, dim2, grouping, nt, Tp, E, nverts, x_poly,
@@ -1192,6 +1197,7 @@ done:
   free(xran);
   if (grouping != grouping0) free(grouping);
   if (x != x0) free(x);
+  return rc;
 }
 
 static void add_point(int *n, int igrp, double **x, int *nmax, double point[], int **groups){
@@ -1222,7 +1228,7 @@ static void get_boundingbox(int n, int dim, double *x, double *width, double *bb
   }
 }
 
-void make_map_from_rectangle_groups(bool include_OK_points,
+int make_map_from_rectangle_groups(bool include_OK_points,
 				   int n, int dim, double *x, double *sizes, 
 				   int *grouping, SparseMatrix graph, double bounding_box_margin, int nrandom, int *nart, int nedgep, 
 				   double shore_depth_tol,
@@ -1307,11 +1313,13 @@ void make_map_from_rectangle_groups(bool include_OK_points,
     fprintf(stderr, "max grouping - min grouping + 1 = %d\n",maxgp - mingp + 1); 
   }
 
+  int rc = 0;
   if (!sizes){
-    make_map_internal(include_OK_points, n, dim, x, grouping, graph, bounding_box_margin, nrandom, nedgep,
-			    shore_depth_tol, nverts, x_poly, 
-			     poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
-    return;
+    return make_map_internal(include_OK_points, n, dim, x, grouping, graph,
+                             bounding_box_margin, nrandom, nedgep,
+                             shore_depth_tol, nverts, x_poly, poly_lines, polys,
+                             polys_groups, poly_point_map, country_graph,
+                             highlight_cluster);
   } else {
 
     /* add artificial node due to node sizes */
@@ -1413,10 +1421,13 @@ void make_map_from_rectangle_groups(bool include_OK_points,
 
     }/* done adding artificial points due to node size*/
 
-    make_map_internal(include_OK_points, N, dim, X, groups, graph, bounding_box_margin, nrandom, nedgep,
-			    shore_depth_tol, nverts, x_poly, 
-			    poly_lines, polys, polys_groups, poly_point_map, country_graph, highlight_cluster);
+    rc = make_map_internal(include_OK_points, N, dim, X, groups, graph,
+                           bounding_box_margin, nrandom, nedgep, 
+                           shore_depth_tol, nverts, x_poly, poly_lines, polys,
+                           polys_groups, poly_point_map, country_graph,
+                           highlight_cluster);
     free(groups);
     free(X);
   }
+  return rc;
 }

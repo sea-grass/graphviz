@@ -2810,7 +2810,6 @@ def test_vcxproj_inclusive(vcxproj: Path):
         ), "mismatch between sources in {str(vcxproj)} and {str(filters)}"
 
 
-@pytest.mark.xfail()  # FIXME: fails on CentOS 7/8, macOS Autotools, MSBuild
 @pytest.mark.skipif(which("gvmap") is None, reason="gvmap not available")
 def test_gvmap_fclose():
     """
