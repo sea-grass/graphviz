@@ -910,13 +910,6 @@ else
           PHP_INSTALL_DIR="`$PHPCONFIG --extension-dir`"
           PHP_INSTALL_DATADIR="/usr/share/php"
           PHP_LIBS="`$PHPCONFIG --ldflags` `$PHPCONFIG --libs`"
-          save_CPPFLAGS=$CPPFLAGS
-          CPPFLAGS="$CPPFLAGS $PHP_INCLUDES"
-          AC_CHECK_HEADER(php.h,,[
-            use_php="No (missing header)"
-            PHP=
-          ])
-          CPPFLAGS=$save_CPPFLAGS
         fi
       fi
       if test "$PHP" != ""; then

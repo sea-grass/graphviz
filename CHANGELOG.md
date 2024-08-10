@@ -81,6 +81,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - pkgIndex.tcl for the TCL bindings is constructed based on target system
   properties instead of host system properties. Previously, cross-compilation
   would result in potentially incorrect library loading directives in this file.
+- The Autotools build system no longer checks for the presence of php.h, which
+  previously caused spurious failures when trying to build the PHP bindings with
+  PHP 8.3. #2589
 
 ## [12.0.0] – 2024-07-04
 
