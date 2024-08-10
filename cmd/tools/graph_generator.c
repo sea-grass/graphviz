@@ -586,8 +586,8 @@ static void genTree(unsigned NN, unsigned *T, int_stack_t *stack,
 		J = 0;
 		do {
 		    J++;
+		    if (M < D + 1) break;
 		    M -= D;
-		    if (M < 1) break;
 		    if (Z <= T[M] * TD) {
                       more = false;
                       break;

@@ -4277,7 +4277,6 @@ def test_2577_1():
 
 
 @pytest.mark.skipif(which("gvgen") is None, reason="gvgen not available")
-@pytest.mark.xfail(reason="https://gitlab.com/graphviz/graphviz/-/issues/2588")
 def test_2588():
     """
     `gvgen` should not crash when producing random graphs
