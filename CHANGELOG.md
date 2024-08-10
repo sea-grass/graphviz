@@ -84,6 +84,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The Autotools build system no longer checks for the presence of php.h, which
   previously caused spurious failures when trying to build the PHP bindings with
   PHP 8.3. #2589
+- A `gvmap` crash due to out-of-bounds memory writes has been fixed. This was a
+  regression in Graphviz 8.0.1.
 
 ## [12.0.0] – 2024-07-04
 
