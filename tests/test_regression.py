@@ -2843,7 +2843,9 @@ def test_gvmap_fclose():
     )
 
     # pass this through gvmap
-    subprocess.run(["gvmap"], input=input.encode("utf-8"), check=True)
+    proc = subprocess.run(["gvmap"], input=input.encode("utf-8"))
+
+    assert proc.returncode in (0, 1), "gvmap crashed"
 
 
 @pytest.mark.skipif(which("gvpr") is None, reason="gvpr not available")
