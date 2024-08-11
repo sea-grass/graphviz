@@ -87,7 +87,6 @@ typedef struct
 {
 	attrs_t attributes;
 	GtkLabel* fLabels[MAX_FILTERED_ATTR_COUNT];
-	bool with_widgets;
 }attr_list;
 
     typedef struct 
