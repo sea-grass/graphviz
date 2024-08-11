@@ -290,7 +290,7 @@ void *tclhandleFreeIndex(tblHeader_pt headerPtr, uint64_t entryIdx) {
  *   The contents of the entry, if success, or NULL if an error occurred.
  *----------------------------------------------------------------------------
  */
-void *tclhandleFree(tblHeader_pt tblHdrPtr, char *handle) {
+void *tclhandleFree(tblHeader_pt tblHdrPtr, const char *handle) {
   uint64_t entryIdx;
 
   if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)
