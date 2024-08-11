@@ -372,7 +372,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     p->common.color.A = 0;
     p->shadowwidth = 0;
 
-    i = glCompImageNew((glCompObj *) p, 0, 0);
+    i = glCompImageNew(p, 0, 0);
     {
       char *fisheye = smyrnaPath("mod_fisheye.png");
       glCompImageLoadPng(i, fisheye);
@@ -381,7 +381,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     imgFisheye = i;
     i->common.visible = 0;
 
-    i = glCompImageNew((glCompObj *) p, 0, 52);
+    i = glCompImageNew(p, 0, 52);
     {
       char *threed = smyrnaPath("mod_3D.png");
       glCompImageLoadPng(i, threed);

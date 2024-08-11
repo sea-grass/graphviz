@@ -68,7 +68,7 @@ int glCompButtonAddPngGlyph(glCompButton *b, const char *fileName) {
     if (b->image)
 	glCompImageDelete(b->image);
     /*image on left for now */
-    b->image = glCompImageNew((glCompObj *) b, 0, 0);
+    b->image = glCompImageNew(b, 0, 0);
 
     rv = glCompImageLoadPng(b->image, fileName);
     if (rv) {
