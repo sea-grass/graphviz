@@ -48,27 +48,9 @@ extern void *GDHandleTable;
 extern int Gdtclft_Init(Tcl_Interp *);
 #endif
 
-extern int graphcmd(ClientData clientData, Tcl_Interp * interp,
-#ifndef TCLOBJ
-		    int argc, char *argv[]
-#else
-		    int argc, Tcl_Obj * CONST objv[]
-#endif
-    );
-extern int nodecmd(ClientData clientData, Tcl_Interp * interp,
-#ifndef TCLOBJ
-		    int argc, char *argv[]
-#else
-		    int argc, Tcl_Obj * CONST objv[]
-#endif
-    );
-extern int edgecmd(ClientData clientData, Tcl_Interp * interp,
-#ifndef TCLOBJ
-		    int argc, char *argv[]
-#else
-		    int argc, Tcl_Obj * CONST objv[]
-#endif
-    );
+extern int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[]);
+extern int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[]);
+extern int edgecmd(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[]);
 
 extern int myiodisc_afread(void* channel, char *ubuf, int n);
 extern int myiodisc_memiofread(void *chan, char *buf, int bufsize);

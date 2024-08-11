@@ -11,13 +11,7 @@
 #include <string.h>
 #include "tcldot.h"
 
-int nodecmd(ClientData clientData, Tcl_Interp * interp,
-#ifndef TCLOBJ
-		   int argc, char *argv[]
-#else				/* TCLOBJ */
-		   int argc, Tcl_Obj * CONST objv[]
-#endif				/* TCLOBJ */
-    )
+int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
 {
     char **argv2;
     int i, j, argc2;

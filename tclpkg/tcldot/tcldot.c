@@ -13,13 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int dotnew(ClientData clientData, Tcl_Interp *interp,
-#ifndef TCLOBJ
-                  int argc, char *argv[]
-#else  /* TCLOBJ */
-                  int argc, Tcl_Obj *CONST objv[]
-#endif /* TCLOBJ */
-) {
+static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
+                  char *argv[]) {
   ictx_t *ictx = (ictx_t *)clientData;
   Agraph_t *g;
   int i;
@@ -63,13 +58,8 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 }
 
-static int dotread(ClientData clientData, Tcl_Interp *interp,
-#ifndef TCLOBJ
-                   int argc, char *argv[]
-#else  /* TCLOBJ */
-                   int argc, Tcl_Obj *CONST objv[]
-#endif /* TCLOBJ */
-) {
+static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
+                   char *argv[]) {
   Agraph_t *g;
   Tcl_Channel channel;
   int mode;
@@ -112,13 +102,8 @@ static int dotread(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 }
 
-static int dotstring(ClientData clientData, Tcl_Interp *interp,
-#ifndef TCLOBJ
-                     int argc, char *argv[]
-#else  /* TCLOBJ */
-                     int argc, Tcl_Obj *CONST objv[]
-#endif /* TCLOBJ */
-) {
+static int dotstring(ClientData clientData, Tcl_Interp *interp, int argc,
+                     char *argv[]) {
   Agraph_t *g;
   ictx_t *ictx = (ictx_t *)clientData;
   rdr_t rdr;
@@ -202,15 +187,9 @@ int Tcldot_Init(Tcl_Interp *interp) {
   /* create a GraphViz Context and pass a pointer to it in clientdata */
   ictx->gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
 
-#ifndef TCLOBJ
   Tcl_CreateCommand(interp, "dotnew", dotnew, ictx, free);
   Tcl_CreateCommand(interp, "dotread", dotread, ictx, NULL);
   Tcl_CreateCommand(interp, "dotstring", dotstring, ictx, NULL);
-#else  /* TCLOBJ */
-  Tcl_CreateObjCommand(interp, "dotnew", dotnew, ictx, free);
-  Tcl_CreateObjCommand(interp, "dotread", dotread, ictx, NULL);
-  Tcl_CreateObjCommand(interp, "dotstring", dotstring, ictx, NULL);
-#endif /* TCLOBJ */
 
   return TCL_OK;
 }
