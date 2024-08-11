@@ -232,7 +232,7 @@ static char *buildBindings(char *s1, const char *s2)
 
 
 /* convert x and y string args to point */
-static int scanpoint(Tcl_Interp * interp, char *argv[], point * p)
+static int scanpoint(Tcl_Interp * interp, CONST84 char *argv[], point * p)
 {
     if (sscanf(argv[0], "%lg", &(p->x)) != 1) {
 	Tcl_AppendResult(interp, "invalid x coordinate: \"", argv[0], "\"", NULL);
@@ -306,7 +306,7 @@ static bool remove_poly(vgpane_t *vgp, int id) {
 }
 
 static int
-insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, char *vargv[],
+insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, CONST84 char *vargv[],
 	    int vargc)
 {
     poly *np;
@@ -372,12 +372,13 @@ static void appendpoint(Tcl_Interp * interp, point p)
 /* process vgpane methods */
 static int
 vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
-	  char *argv[])
+	  CONST84 char *argv[])
 {
     (void)clientData;
 
     int vargc, result;
-    char *s, **vargv, vbuf[30];
+    char *s, vbuf[30];
+    CONST84 char **vargv;
     vgpane_t *vgp, **vgpp;
     point p, q, *ps;
     double alpha, gain;
