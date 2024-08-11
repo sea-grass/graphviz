@@ -12,9 +12,8 @@
 #include <string.h>
 #include "tcldot.h"
 
-int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[])
-{
-
+static int graphcmd_internal(ClientData clientData, Tcl_Interp * interp,
+                             int argc, char *argv[]) {
     Agraph_t *g, *sg;
     Agnode_t *n, *tail, *head;
     Agedge_t *e;
@@ -471,3 +470,11 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char 
 	return TCL_ERROR;
     }
 }				/* graphcmd */
+
+int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc,
+             CONST84 char *argv[]) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = graphcmd_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
+}
