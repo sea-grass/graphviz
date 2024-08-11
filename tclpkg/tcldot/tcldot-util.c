@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stddef.h>
 #include "tcldot.h"
+#include <cgraph/alloc.h>
 #include <gvc/gvc.h>
 #include <util/strcasecmp.h>
 #include <util/unreachable.h>
@@ -248,4 +249,19 @@ void tcldot_layout(GVC_t *gvc, Agraph_t * g, const char *engine)
 	}
     }
     gvLayout(gvc, g, engine);
+}
+
+char **tcldot_argv_dup(int argc, CONST84 char *argv[]) {
+  char **argv_ret = gv_calloc(argc, sizeof(char *));
+  for (int i = 0; i < argc; ++i) {
+    argv_ret[i] = gv_strdup(argv[i]);
+  }
+  return argv_ret;
+}
+
+void tcldot_argv_free(int argc, char *argv[]) {
+  for (int i = 0; i < argc; ++i) {
+    free(argv[i]);
+  }
+  free(argv);
 }
