@@ -8,6 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#pragma once
+
 #include <cairo/cairo.h>
 #include <pango/pangocairo.h>
 
