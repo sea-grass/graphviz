@@ -8,4 +8,5 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-unsigned char *glCompLoadPng (char *filename, int *imageWidth, int *imageHeight);
+unsigned char *glCompLoadPng(const char *filename, int *imageWidth,
+                             int *imageHeight);
