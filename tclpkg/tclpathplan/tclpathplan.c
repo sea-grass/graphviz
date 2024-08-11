@@ -232,7 +232,7 @@ static char *buildBindings(char *s1, const char *s2)
 
 
 /* convert x and y string args to point */
-static int scanpoint(Tcl_Interp * interp, char *argv[], point * p)
+static int scanpoint(Tcl_Interp * interp, const char *argv[], point * p)
 {
     if (sscanf(argv[0], "%lg", &(p->x)) != 1) {
 	Tcl_AppendResult(interp, "invalid x coordinate: \"", argv[0], "\"", NULL);
