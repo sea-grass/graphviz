@@ -17,10 +17,6 @@
 
 #include "config.h"
 
-/* avoid compiler warnings with template changes in Tcl8.4 */
-/*    specifically just the change to Tcl_CmdProc */
-#define USE_NON_CONST
-
 #include                <sys/types.h>
 #include                <stdbool.h>
 #include                <stdint.h>
