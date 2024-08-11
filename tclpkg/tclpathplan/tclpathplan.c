@@ -814,7 +814,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 }
 
 static int
-vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
+vgpane(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[])
 {
     (void)clientData;
     (void)argc;
