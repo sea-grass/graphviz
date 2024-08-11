@@ -18,7 +18,6 @@
 #include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
-#include <cgraph/exit.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/unreachable.h>
 #include <expr/exlib.h>
@@ -31,6 +30,7 @@
 #include <string.h>
 #include <assert.h>
 #include <time.h>
+#include <util/exit.h>
 #ifdef _WIN32
 #define srand48 srand
 #define drand48 rand

@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="exit.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="gv_fopen.h">
       <Filter>Header Files</Filter>
     </ClInclude>

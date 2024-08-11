@@ -9,11 +9,11 @@
  *************************************************************************/
 
 #include <cgraph/unreachable.h>
-#include <cgraph/exit.h>
 #include <math.h>
 #include <stdio.h>
 #include "simple.h"
 #include <stdlib.h>
+#include <util/exit.h>
 
 static int sign(double v) {
   if (v < 0)

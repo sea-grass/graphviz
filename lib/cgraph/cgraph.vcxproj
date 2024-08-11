@@ -104,7 +104,6 @@ win_flex --case-insensitive --outfile=scan.c scan.l</Command>
     <ClInclude Include="bitarray.h" />
     <ClInclude Include="cghdr.h" />
     <ClInclude Include="cgraph.h" />
-    <ClInclude Include="exit.h" />
     <ClInclude Include="gv_ctype.h" />
     <ClInclude Include="gv_math.h" />
     <ClInclude Include="ingraphs.h" />

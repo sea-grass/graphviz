@@ -16,11 +16,11 @@
  */
 
 #include <cgraph/agxbuf.h>
-#include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 
 typedef struct Excc_s Excc_t;
 typedef struct Exccdisc_s Exccdisc_t;

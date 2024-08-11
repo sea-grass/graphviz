@@ -19,7 +19,7 @@
 #include <common/arith.h>
 #include <label/rectangle.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
+#include <util/exit.h>
 
 #define Undefined(x) ((x)->boundary[0] > (x)->boundary[NUMDIMS])
 

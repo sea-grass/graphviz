@@ -14,11 +14,11 @@
 
 #include <ast/ast.h>
 #include <ast/error.h>
-#include <cgraph/exit.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <util/exit.h>
 
 Error_info_t error_info;
 

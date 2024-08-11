@@ -27,7 +27,6 @@
 #include <cassert>
 #include <gvc/gvc.h>
 #include <cgraph/alloc.h>
-#include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
@@ -42,6 +41,7 @@
 #include <stddef.h>
 #include <string>
 #include <utility>
+#include <util/exit.h>
 #include <vector>
 #include "openFile.h"
 

@@ -4,13 +4,13 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
-#include <cgraph/exit.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 
 #ifdef __GNUC__
 #define LIST_UNUSED __attribute__((unused))

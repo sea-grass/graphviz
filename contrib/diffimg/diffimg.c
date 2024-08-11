@@ -41,7 +41,7 @@
 #include <stdbool.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
-#include <cgraph/exit.h>
+#include <util/exit.h>
 
 static char *pstopng="gs -dNOPAUSE -sDEVICE=pngalpha -sOutputFile=- -q -";
 

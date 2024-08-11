@@ -17,7 +17,6 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
-#include <cgraph/exit.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <gvc/gvconfig.h>
@@ -25,6 +24,7 @@
 #include <stdlib.h>
 #include	<string.h>
 #include <unistd.h>
+#include <util/exit.h>
 #include <util/gv_fopen.h>
 
 #ifdef ENABLE_LTDL

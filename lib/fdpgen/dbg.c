@@ -18,11 +18,11 @@
 
 #define FDP_PRIVATE
 
-#include <cgraph/exit.h>
 #include <fdpgen/dbg.h>
 #include <neatogen/neatoprocs.h>
 #include <fdpgen/fdp.h>
 #include <math.h>
+#include <util/exit.h>
 
 static int indent = -1;
 

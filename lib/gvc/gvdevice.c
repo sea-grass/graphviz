@@ -48,7 +48,6 @@ static uint64_t crc;
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/startswith.h>
-#include <cgraph/exit.h>
 #include <common/const.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvcjob.h>
@@ -56,6 +55,7 @@ static uint64_t crc;
 #include <gvc/gvcproc.h>
 #include <common/utils.h>
 #include <gvc/gvio.h>
+#include <util/exit.h>
 
 static size_t gvwrite_no_z(GVJ_t * job, const void *s, size_t len) {
     if (job->gvc->write_fn)   /* externally provided write discipline */

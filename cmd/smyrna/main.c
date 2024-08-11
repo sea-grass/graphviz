@@ -23,7 +23,6 @@
 #include "support.h"
 #include "viewport.h"
 #include <cgraph/alloc.h>
-#include <cgraph/exit.h>
 #include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <gtk/gtkgl.h>
@@ -39,6 +38,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 
 #ifdef __APPLE__
 #include <mach-o/dyld.h>

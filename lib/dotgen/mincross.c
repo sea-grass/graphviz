@@ -20,7 +20,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
 #include <cgraph/queue.h>
@@ -29,6 +28,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 #include <util/streq.h>
 
 struct adjmatrix_t {

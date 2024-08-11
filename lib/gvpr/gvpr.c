@@ -24,7 +24,6 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/exit.h>
 #include <cgraph/list.h>
 #include <cgraph/queue.h>
 #include <cgraph/unreachable.h>
@@ -39,6 +38,7 @@
 #include <string.h>
 #include <setjmp.h>
 #include <getopt.h>
+#include <util/exit.h>
 
 #ifndef DFLT_GVPRPATH
 #define DFLT_GVPRPATH    "."

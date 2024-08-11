@@ -20,9 +20,9 @@
 #include "config.h"
 
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
+#include <util/exit.h>
 
 #include <common/globals.h>
 

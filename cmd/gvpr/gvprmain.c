@@ -22,8 +22,8 @@
 #include <stdio.h>
 
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <gvpr/gvpr.h>
+#include <util/exit.h>
 
 #ifdef DEBUG
 static ssize_t outfn (void* sp, const char *buf, size_t nbyte, void* dp)

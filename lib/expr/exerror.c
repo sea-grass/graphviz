@@ -16,12 +16,12 @@
  */
 
 #include <assert.h>
-#include <cgraph/exit.h>
 #include <expr/exlib.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 
 /*
  * library error handler

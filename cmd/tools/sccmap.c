@@ -30,13 +30,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
 #include <cgraph/unreachable.h>
 
 #include <getopt.h>
 #include "openFile.h"
+#include <util/exit.h>
 
 #define INF UINT_MAX
 

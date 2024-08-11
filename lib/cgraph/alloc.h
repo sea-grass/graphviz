@@ -15,13 +15,13 @@
 #pragma once
 
 #include <assert.h>
-#include <cgraph/exit.h>
 #include <cgraph/prisize_t.h>
 #include <limits.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 
 static inline void *gv_calloc(size_t nmemb, size_t size) {
 

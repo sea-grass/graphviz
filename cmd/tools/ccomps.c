@@ -30,9 +30,9 @@
 #include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
-#include <cgraph/exit.h>
 #include <common/render.h>
 #include <common/utils.h>
+#include <util/exit.h>
 
 typedef struct {
     Agrec_t h;

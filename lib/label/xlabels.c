@@ -10,7 +10,6 @@
 
 #include <assert.h>
 #include <cgraph/alloc.h>
-#include <cgraph/exit.h>
 #include <errno.h>
 #include <limits.h>
 #include <math.h>
@@ -20,6 +19,7 @@
 #include <string.h>
 #define XLABEL_INT
 #include <label/xlabels.h>
+#include <util/exit.h>
 
 static int icompare(void *, void *);
 

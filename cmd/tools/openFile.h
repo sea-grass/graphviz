@@ -1,9 +1,9 @@
 #pragma once
 
-#include <cgraph/exit.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/exit.h>
 
 static inline FILE *openFile(const char *argv0, const char *name,
                              const char *mode) {

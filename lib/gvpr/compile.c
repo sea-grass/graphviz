@@ -22,7 +22,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/startswith.h>
 #include <cgraph/unreachable.h>
@@ -35,6 +34,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include <util/exit.h>
 
 static int isedge(Agobj_t *obj) {
   return AGTYPE(obj) == AGOUTEDGE || AGTYPE(obj) == AGINEDGE;

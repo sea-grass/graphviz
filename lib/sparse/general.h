@@ -15,7 +15,7 @@
 #include <math.h>
 #include <string.h>
 #include <assert.h>
-#include <cgraph/exit.h>
+#include <util/exit.h>
 /* Applications that do not use the common library can define STANDALONE
  * to get definitions/definitions that are normally provided there.
  * In particular, note that Verbose is declared but undefined.
