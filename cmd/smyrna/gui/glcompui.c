@@ -230,7 +230,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     p->common.data = 0;
 
     /*pan */
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *pan = smyrnaPath("pan.png");
       glCompButtonAddPngGlyph(b, pan);
@@ -242,7 +242,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     y = y + off;
 
     /*switch to fisheye */
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *fisheye = smyrnaPath("fisheye.png");
       glCompButtonAddPngGlyph(b, fisheye);
@@ -253,7 +253,7 @@ glCompSet *glcreate_gl_topview_menu(void)
 
 
     /*switch to normal mode */
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *fisheye = smyrnaPath("no_fisheye.png");
       glCompButtonAddPngGlyph(b, fisheye);
@@ -264,7 +264,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     toNormal = b;
 
     y=y+off;
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *threed = smyrnaPath("3D.png");
       glCompButtonAddPngGlyph(b, threed);
@@ -273,8 +273,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     b->common.callbacks.click = switch2D3D;
     to3DBtn = b;
 
-
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *twod = smyrnaPath("2D.png");
       glCompButtonAddPngGlyph(b, twod);
@@ -285,13 +284,13 @@ glCompSet *glcreate_gl_topview_menu(void)
     to2DBtn = b;
 
     y=y+off;
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "N");
+    b = glCompButtonNew(p, 1, y, 42, 42, "N");
     b->common.callbacks.click = selectnodes;
     b->groupid=-1;
     b->status = true;
 
     y=y+off;
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "E");
+    b = glCompButtonNew(p, 1, y, 42, 42, "E");
     b->common.callbacks.click = selectedges;
     b->groupid=-1;
 
@@ -308,7 +307,7 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     y = 1;
 
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *details = smyrnaPath("details.png");
       glCompButtonAddPngGlyph(b, details);
@@ -319,7 +318,7 @@ glCompSet *glcreate_gl_topview_menu(void)
 	
     y = y + off;
 	
-	b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+	b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *zoomin = smyrnaPath("zoomin.png");
       glCompButtonAddPngGlyph(b, zoomin);
@@ -330,8 +329,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     b->common.color = c;
     y = y + off;
 
-
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *zoomout = smyrnaPath("zoomout.png");
       glCompButtonAddPngGlyph(b, zoomout);
@@ -342,8 +340,7 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     y = y + off;
 
-
-    b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
+    b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
       char *center = smyrnaPath("center.png");
       glCompButtonAddPngGlyph(b, center);

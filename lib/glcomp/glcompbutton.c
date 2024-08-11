@@ -21,8 +21,8 @@
 #include <GL/glut.h>
 
 
-glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
-                              float h, char *caption) {
+glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
+                              char *caption) {
     glCompButton *p = gv_alloc(sizeof(glCompButton));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glButtonObj;
