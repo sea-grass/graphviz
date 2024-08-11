@@ -35,8 +35,8 @@ glCompImage *glCompImageNew(void *par, float x, float y) {
 glCompImage *glCompImageNewFile(float x, float y, const char *imgfile) {
     int imageWidth, imageHeight;
     cairo_surface_t *surface = NULL;
-    unsigned char *data = glCompLoadPng(&surface, imgfile, &imageWidth,
-                                        &imageHeight);
+    const unsigned char *data = glCompLoadPng(&surface, imgfile, &imageWidth,
+                                              &imageHeight);
     glCompImage *p;
 
     if (!data) return NULL;
