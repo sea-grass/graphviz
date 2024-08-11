@@ -14,11 +14,11 @@
 #include <stdlib.h>
 #include <string.h>
 
-static int dotnew(ClientData clientData, Tcl_Interp *interp,
+static int dotnew_internal(ClientData clientData, Tcl_Interp *interp,
 #ifndef TCLOBJ
-                  int argc, char *argv[]
+                           int argc, char *argv[]
 #else  /* TCLOBJ */
-                  int argc, Tcl_Obj *CONST objv[]
+                           int argc, Tcl_Obj *CONST objv[]
 #endif /* TCLOBJ */
 ) {
   ictx_t *ictx = (ictx_t *)clientData;
@@ -64,6 +64,19 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp,
   Tcl_AppendResult(interp, obj2cmd(g), NULL);
 
   return TCL_OK;
+}
+
+static int dotnew(ClientData clientData, Tcl_Interp *interp,
+#ifndef TCLOBJ
+                  int argc, const char *argv[]
+#else  /* TCLOBJ */
+                  int argc, Tcl_Obj *CONST objv[]
+#endif /* TCLOBJ */
+) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = dotnew_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
 }
 
 static int dotread(ClientData clientData, Tcl_Interp *interp,
