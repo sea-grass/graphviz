@@ -57,8 +57,8 @@ void glCompImageDelete(glCompImage * p)
     free(p);
 }
 
-int glCompImageLoad(glCompImage *i, unsigned char *data, int width, int height,
-                    bool is2D) {
+int glCompImageLoad(glCompImage *i, const unsigned char *data, int width,
+                    int height, bool is2D) {
     if (data != NULL) {		/*valid image data */
 	glCompDeleteTexture(i->texture);
 	i->texture =

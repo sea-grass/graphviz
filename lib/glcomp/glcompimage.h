@@ -20,8 +20,8 @@ extern "C" {
 glCompImage *glCompImageNewFile(float x, float y, const char *imgfile);
 glCompImage *glCompImageNew(void *par, float x, float y);
     extern void glCompImageDelete(glCompImage * p);
-    extern int glCompImageLoad(glCompImage *i, unsigned char *data, int width,
-                               int height, bool is2D);
+int glCompImageLoad(glCompImage *i, const unsigned char *data, int width,
+                    int height, bool is2D);
 int glCompImageLoadPng(glCompImage *i, const char *pngFile);
     extern void glCompImageDraw(void *obj);
 
