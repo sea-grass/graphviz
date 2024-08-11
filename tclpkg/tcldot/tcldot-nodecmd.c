@@ -11,8 +11,8 @@
 #include <string.h>
 #include "tcldot.h"
 
-int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[])
-{
+static int nodecmd_internal(ClientData clientData, Tcl_Interp * interp,
+                            int argc, char *argv[]) {
     char **argv2;
     int i, j, argc2;
     Agraph_t *g;
@@ -171,4 +171,12 @@ int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *
 			 "\n\tsetattributes, showname.", NULL);
 	return TCL_ERROR;
     }
+}
+
+int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc,
+            CONST84 char *argv[]) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = nodecmd_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
 }
