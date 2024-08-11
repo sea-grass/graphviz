@@ -10,6 +10,7 @@
 
 #include "tcldot.h"
 #include <cgraph/rdr.h>
+#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -50,7 +51,9 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp,
     i = 3;
   } else {
     /* else use handle as name */
-    g = agopen(Tcl_GetStringResult(interp), kind, (Agdisc_t *)ictx);
+    char *name = strdup(Tcl_GetStringResult(interp));
+    g = agopen(name, kind, (Agdisc_t *)ictx);
+    free(name);
     i = 2;
   }
   if (!g) {
