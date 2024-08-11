@@ -83,7 +83,7 @@ static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
 }
 
 glCompTex *glCompSetAddNewTexImage(glCompSet *s, int width, int height,
-                                   unsigned char *data, bool is2D) {
+                                   const unsigned char *data, bool is2D) {
 
     glCompTex *t;
     if (!data)

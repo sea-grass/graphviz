@@ -27,7 +27,7 @@ extern "C" {
 #endif
 
 glCompTex *glCompSetAddNewTexImage(glCompSet *s, int width, int height,
-                                   unsigned char *data, bool is2D);
+                                   const unsigned char *data, bool is2D);
 glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
                                    bool is2D);
 
