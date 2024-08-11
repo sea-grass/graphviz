@@ -183,7 +183,7 @@ static gboolean gl_main_expose(void *data) {
 static void get_data_dir(void)
 {
     free(view->template_file);
-    view->template_file = gv_strdup(smyrnaPath("template.dot"));
+    view->template_file = smyrnaPath("template.dot");
 }
 
 void init_viewport(ViewInfo *vi) {
