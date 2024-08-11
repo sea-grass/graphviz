@@ -30,10 +30,6 @@
 extern "C" {
 #endif
 
-#define set_flag(a, flag) ((a)=((a)|(flag)))
-#define test_flag(a, flag) ((a)&(flag))
-#define clear_flag(a, flag) ((a) &=(~(flag)))
-
 #ifdef STANDALONE
 
 #define MAX(a,b) ((a)>(b)?(a):b)

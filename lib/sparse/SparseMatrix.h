@@ -22,7 +22,6 @@ extern "C" {
 #define SYMMETRY_EPSILON 0.0000001
 enum {FORMAT_CSR, FORMAT_COORD};
 enum {UNMASKED = -10, MASKED = 1};
-enum {MATRIX_PATTERN_SYMMETRIC = 1<<0, MATRIX_SYMMETRIC = 1<<1, MATRIX_UNDIRECTED = 1<<4};
 enum {BIPARTITE_RECT = 0, BIPARTITE_PATTERN_UNSYM, BIPARTITE_UNSYM, BIPARTITE_ALWAYS};
 
 
@@ -36,7 +35,9 @@ struct SparseMatrix_struct {
   int *ja; /* column indices. 0-based */
   void *a; /* entry values. If NULL, pattern matrix */
   int format;/* whether it is CSR, CSC, COORD. By default it is in CSR format */
-  int property; ///< pattern_symmetric/symmetric
+  bool is_pattern_symmetric :1;
+  bool is_symmetric :1;
+  bool is_undirected :1;
   size_t size;/* size of each entry. This allows for general matrix where each entry is, say, a matrix itself */
 };
 
@@ -105,15 +106,6 @@ SparseMatrix SparseMatrix_set_entries_to_real_one(SparseMatrix A);
 void SparseMatrix_distance_matrix(SparseMatrix A, double **dist_matrix);
 
 SparseMatrix SparseMatrix_from_dense(int m, int n, double *x);
-
-#define SparseMatrix_set_undirected(A) set_flag((A)->property, MATRIX_UNDIRECTED)
-#define SparseMatrix_set_symmetric(A) set_flag((A)->property, MATRIX_SYMMETRIC)
-#define SparseMatrix_set_pattern_symmetric(A) set_flag((A)->property, MATRIX_PATTERN_SYMMETRIC)
-
-
-#define SparseMatrix_known_undirected(A) test_flag((A)->property, MATRIX_UNDIRECTED)
-#define SparseMatrix_known_symmetric(A) test_flag((A)->property, MATRIX_SYMMETRIC)
-#define SparseMatrix_known_strucural_symmetric(A) test_flag((A)->property, MATRIX_PATTERN_SYMMETRIC)
 
 #ifdef __cplusplus
 }

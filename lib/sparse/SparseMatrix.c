@@ -57,7 +57,7 @@ SparseMatrix SparseMatrix_make_undirected(SparseMatrix A){
   /* make it strictly low diag only, and set flag to undirected */
   SparseMatrix B;
   B = SparseMatrix_symmetrize(A, false);
-  SparseMatrix_set_undirected(B);
+  B->is_undirected = true;
   return SparseMatrix_remove_upper(B);
 }
 SparseMatrix SparseMatrix_transpose(SparseMatrix A){
@@ -150,8 +150,8 @@ SparseMatrix SparseMatrix_symmetrize(SparseMatrix A,
   if (!B) return NULL;
   A = SparseMatrix_add(A, B);
   SparseMatrix_delete(B);
-  SparseMatrix_set_symmetric(A);
-  SparseMatrix_set_pattern_symmetric(A);
+  A->is_symmetric = true;
+  A->is_pattern_symmetric = true;
   return A;
 }
 
@@ -166,8 +166,8 @@ bool SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only) 
   int i, j;
   assert(A->format == FORMAT_CSR);/* only implemented for CSR right now */
 
-  if (SparseMatrix_known_symmetric(A)) return true;
-  if (test_pattern_symmetry_only && SparseMatrix_known_strucural_symmetric(A)) return true;
+  if (A->is_symmetric) return true;
+  if (test_pattern_symmetry_only && A->is_pattern_symmetric) return true;
 
   if (A->m != A->n) return false;
 
@@ -260,12 +260,10 @@ bool SparseMatrix_is_symmetric(SparseMatrix A, bool test_pattern_symmetry_only) 
     break;
   }
 
-  if (test_pattern_symmetry_only){
-    SparseMatrix_set_pattern_symmetric(A);
-  } else {
-    SparseMatrix_set_symmetric(A);
-    SparseMatrix_set_pattern_symmetric(A);
+  if (!test_pattern_symmetry_only) {
+    A->is_symmetric = true;
   }
+  A->is_pattern_symmetric = true;
  RETURN:
   free(mask);
 
@@ -292,7 +290,6 @@ static SparseMatrix SparseMatrix_init(int m, int n, int type, size_t sz, int for
   A->ja = NULL;
   A->a = NULL;
   A->format = format;
-  A->property = 0;
   return A;
 }
 
@@ -1453,8 +1450,8 @@ SparseMatrix SparseMatrix_remove_upper(SparseMatrix A){/* remove diag and upper 
     return NULL;
   }
 
-  clear_flag(A->property, MATRIX_PATTERN_SYMMETRIC);
-  clear_flag(A->property, MATRIX_SYMMETRIC);
+  A->is_pattern_symmetric = false;
+  A->is_symmetric = false;
   return A;
 }
 
@@ -1575,7 +1572,9 @@ SparseMatrix SparseMatrix_copy(SparseMatrix A){
     memcpy(B->ja, A->ja, sizeof(int)*((size_t)(A->ia[A->m])));
   }
   if (A->a) memcpy(B->a, A->a, A->size*((size_t)A->nz));
-  B->property = A->property;
+  B->is_pattern_symmetric = A->is_pattern_symmetric;
+  B->is_symmetric = A->is_symmetric;
+  B->is_undirected = A->is_undirected;
   B->nz = A->nz;
   return B;
 }
@@ -1805,8 +1804,8 @@ SparseMatrix SparseMatrix_get_augmented(SparseMatrix A){
   }
 
   B = SparseMatrix_from_coordinate_arrays(nz, m + n, m + n, irn, jcn, val, type, A->size);
-  SparseMatrix_set_symmetric(B);
-  SparseMatrix_set_pattern_symmetric(B);
+  B->is_symmetric = true;
+  B->is_pattern_symmetric = true;
   free(irn);
   free(jcn);
   free(val);

@@ -98,7 +98,7 @@ static Agraph_t *makeDotGraph(SparseMatrix A, char *name, int dim,
 	}
     }
 
-    if (SparseMatrix_known_undirected(A)) {
+    if (A->is_undirected) {
 	g = agopen("G", Agundirected, NULL);
     } else {
 	g = agopen("G", Agdirected, NULL);
