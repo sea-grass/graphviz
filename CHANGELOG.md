@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (12.1.1)]
 
+### Added
+
+- Support for building the SWIG-generated Guile language bindings has been
+  integrated into the CMake build system. This is controllable by the
+  `-DENABLE_GUILE={AUTO|ON|OFF}` option.
+
 ### Changed
 
 - Comparison against a plugin’s `knowncolors` array is now case-insensitive,
