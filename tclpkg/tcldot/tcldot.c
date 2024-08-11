@@ -9,9 +9,11 @@
  *************************************************************************/
 
 #include "tcldot.h"
+#include <cgraph/alloc.h>
 #include <cgraph/rdr.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tcl.h>
 
 static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
                   CONST84 char *argv[]) {
@@ -45,7 +47,13 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
     i = 3;
   } else {
     /* else use handle as name */
+#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION >= 4
+    char *name = gv_strdup(Tcl_GetStringResult(interp));
+    g = agopen(name, kind, (Agdisc_t *)ictx);
+    free(name);
+#else
     g = agopen(Tcl_GetStringResult(interp), kind, (Agdisc_t *)ictx);
+#endif
     i = 2;
   }
   if (!g) {
