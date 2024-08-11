@@ -280,7 +280,6 @@ EXCLUDE = (
     "lib/glcomp/glcompset.c",
     "lib/glcomp/glcompset.h",
     "lib/glcomp/glcomptextpng.c",
-    "lib/glcomp/glcomptextpng.h",
     "lib/glcomp/glcomptexture.c",
     "lib/glcomp/glcomptexture.h",
     "lib/glcomp/glpangofont.c",
