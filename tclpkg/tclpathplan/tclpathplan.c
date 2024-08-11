@@ -377,7 +377,8 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
     (void)clientData;
 
     int vargc, result;
-    char *s, **vargv, vbuf[30];
+    char *s, vbuf[30];
+    const char **vargv;
     vgpane_t *vgp, **vgpp;
     point p, q, *ps;
     double alpha, gain;
