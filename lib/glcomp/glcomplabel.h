@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-extern glCompLabel *glCompLabelNew(glCompObj *par, char *text);
+glCompLabel *glCompLabelNew(void *par, char *text);
 
 #ifdef __cplusplus
 }

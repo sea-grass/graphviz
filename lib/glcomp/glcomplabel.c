@@ -33,7 +33,7 @@ static void glCompLabelDraw(void *label) {
   glCompRenderText(p->common.font, (glCompObj *)p);
 }
 
-glCompLabel *glCompLabelNew(glCompObj *par, char *text) {
+glCompLabel *glCompLabelNew(void *par, char *text) {
     glCompLabel *p = gv_alloc(sizeof(glCompLabel));
     glCompInitCommon((glCompObj*)p, par, 0, 0);
     p->objType = glLabelObj;
