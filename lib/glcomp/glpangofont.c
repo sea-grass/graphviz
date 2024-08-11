@@ -56,12 +56,11 @@ static PangoLayout *get_pango_layout(char *markup_text,
 }
 
 unsigned char *glCompCreatePangoTexture(char *fontdescription, int fontsize,
-				    char *txt, cairo_surface_t * surface,
-				    int *w, int *h)
-{
-    cairo_t *cr;
+                                        char *txt, cairo_surface_t **surface,
+                                        int *w, int *h) {
     PangoLayout *layout;
     double width, height;
+    *surface = NULL;
 
     layout =
 	get_pango_layout(txt, fontdescription, fontsize, &width, &height);
@@ -69,11 +68,10 @@ unsigned char *glCompCreatePangoTexture(char *fontdescription, int fontsize,
         return NULL;
     }
     //create the right size canvas for character set
-    surface =
-	cairo_image_surface_create(CAIRO_FORMAT_ARGB32, (int) width,
-				   (int) height);
+    *surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, (int)width,
+                                          (int) height);
 
-    cr = cairo_create(surface);
+    cairo_t *cr = cairo_create(*surface);
     //set pen color to white
     cairo_set_source_rgba(cr, 1, 1, 1, 1);
     //draw the text
@@ -86,5 +84,5 @@ unsigned char *glCompCreatePangoTexture(char *fontdescription, int fontsize,
     g_object_unref(layout);
     cairo_destroy(cr);
 
-    return cairo_image_surface_get_data(surface);
+    return cairo_image_surface_get_data(*surface);
 }

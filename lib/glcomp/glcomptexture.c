@@ -122,7 +122,7 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
     }
 
 
-    data = glCompCreatePangoTexture(def, fs, text, surface, &width, &height);
+    data = glCompCreatePangoTexture(def, fs, text, &surface, &width, &height);
     if (!data)			/*pango error , */
 	return NULL;
     t = glCompSetAddNewTexture(s, width, height, data, is2D);
