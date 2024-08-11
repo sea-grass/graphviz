@@ -12,11 +12,15 @@
 #include <glcomp/glcomptextpng.h>
 #include <gtk/gtk.h>
 #include <png.h>
+#include <stddef.h>
 
 unsigned char *glCompLoadPng(const char *filename, int *imageWidth,
                              int *imageHeight) {
     cairo_surface_t *surface = cairo_image_surface_create_from_png(filename);
-    if (!surface) return 0;
+    if (surface == NULL ||
+        cairo_surface_status(surface) != CAIRO_STATUS_SUCCESS) {
+      return NULL;
+    }
     *imageWidth = cairo_image_surface_get_width(surface);
     *imageHeight = cairo_image_surface_get_height(surface);
     return cairo_image_surface_get_data(surface);
