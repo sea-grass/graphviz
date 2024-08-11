@@ -64,7 +64,7 @@ static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
     }
 
     if (Er) {
-	free(data);
+	free(t->data);
 	free(t);
 	return NULL;
     }
