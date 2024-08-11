@@ -77,8 +77,8 @@ int glCompImageLoad(glCompImage *i, const unsigned char *data, int width,
 int glCompImageLoadPng(glCompImage *i, const char *pngFile) {
     int imageWidth, imageHeight;
     cairo_surface_t *surface = NULL;
-    unsigned char *data = glCompLoadPng(&surface, pngFile, &imageWidth,
-                                        &imageHeight);
+    const unsigned char *data = glCompLoadPng(&surface, pngFile, &imageWidth,
+                                              &imageHeight);
     const int rc = glCompImageLoad(i, data, imageWidth, imageHeight, 1);
     cairo_surface_destroy(surface);
     return rc;
