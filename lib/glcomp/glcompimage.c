@@ -72,7 +72,7 @@ int glCompImageLoad(glCompImage *i, unsigned char *data, int width, int height,
     return 0;
 }
 
-int glCompImageLoadPng(glCompImage *i, char *pngFile) {
+int glCompImageLoadPng(glCompImage *i, const char *pngFile) {
     int imageWidth, imageHeight;
     unsigned char *data;
     data = glCompLoadPng (pngFile, &imageWidth, &imageHeight);
