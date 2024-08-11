@@ -306,7 +306,7 @@ static bool remove_poly(vgpane_t *vgp, int id) {
 }
 
 static int
-insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, char *vargv[],
+insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, const char *vargv[],
 	    int vargc)
 {
     poly *np;
