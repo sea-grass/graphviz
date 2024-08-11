@@ -284,7 +284,6 @@ EXCLUDE = (
     "lib/glcomp/glcomptexture.c",
     "lib/glcomp/glcomptexture.h",
     "lib/glcomp/glpangofont.c",
-    "lib/glcomp/glpangofont.h",
     "lib/glcomp/glutils.c",
     "lib/glcomp/glutils.h",
     "lib/gvc/gvc.c",
