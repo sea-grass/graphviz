@@ -74,4 +74,4 @@ extern void setnodeattributes(Agraph_t * g, Agnode_t * n, char *argv[], int argc
 extern size_t Tcldot_string_writer(GVJ_t *job, const char *s, size_t len);
 extern size_t Tcldot_channel_writer(GVJ_t *job, const char *s, size_t len);
 
-extern void tcldot_layout(GVC_t *gvc, Agraph_t * g, char *engine);
+extern void tcldot_layout(GVC_t *gvc, Agraph_t * g, const char *engine);
