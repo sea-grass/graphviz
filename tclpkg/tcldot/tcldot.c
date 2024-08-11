@@ -15,8 +15,8 @@
 #include <string.h>
 #include <tcl.h>
 
-static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
-                  CONST84 char *argv[]) {
+static int dotnew_internal(ClientData clientData, Tcl_Interp *interp, int argc,
+                           char *argv[]) {
   ictx_t *ictx = (ictx_t *)clientData;
   Agraph_t *g;
   int i;
@@ -64,6 +64,14 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
   Tcl_AppendResult(interp, obj2cmd(g), NULL);
 
   return TCL_OK;
+}
+
+static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
+                  CONST84 char *argv[]) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = dotnew_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
 }
 
 static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
