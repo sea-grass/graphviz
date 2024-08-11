@@ -16,10 +16,9 @@
 #include <stdbool.h>
 
 static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
-                                         unsigned char *data, bool is2D) {
+                                         const unsigned char *data, bool is2D) {
     int Er, offset, ind;
     unsigned char *tarData;
-    unsigned char *srcData;
 
     if (!data)
 	return NULL;
@@ -57,7 +56,7 @@ static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
 	offset = 4;		//RGBA  mod,TO DO implement other modes 
 	/*data upside down because of pango gl coord system */
 	for (ind = 0; ind < height; ind++) {
-	    srcData = data + (height - 1 - ind) * offset * width;
+	    const unsigned char *srcData = data + (height - 1 - ind) * offset * width;
 	    tarData = t->data + ind * offset * width;
 	    memcpy(tarData, srcData, 4 * (unsigned)width);
 	}
