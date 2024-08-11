@@ -19,7 +19,7 @@ extern "C" {
 glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
                               float h, char *caption);
     extern void glCompButtonDraw(glCompButton * p);
-    extern int glCompButtonAddPngGlyph(glCompButton * b, char *fileName);
+int glCompButtonAddPngGlyph(glCompButton *b, const char *fileName);
 void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t);
 void glCompButtonDoubleClick(glCompObj *o, float x, float y,
                              glMouseButtonType t);

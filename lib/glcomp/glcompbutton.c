@@ -62,8 +62,7 @@ glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
     return p;
 }
 
-int glCompButtonAddPngGlyph(glCompButton * b, char *fileName)
-{
+int glCompButtonAddPngGlyph(glCompButton *b, const char *fileName) {
     int rv;
     /*delete if there is an existing image */
     if (b->image)
