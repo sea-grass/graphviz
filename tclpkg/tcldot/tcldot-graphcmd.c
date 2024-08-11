@@ -28,7 +28,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
     ictx_t *ictx = gctx->ictx;
     Agsym_t *a;
     char buf[12], **argv2;
-    int i, j, argc2;
+    int j, argc2;
     GVC_t *gvc = ictx->gvc;
 
     if (argc < 2) {
@@ -76,6 +76,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("addnode", argv[1]) == 0) {
+	int i;
 	if (argc % 2) {
 	    /* if odd number of args then argv[2] is name */
 	    n = agnode(g, argv[2], 1);
@@ -89,6 +90,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("addsubgraph", argv[1]) == 0) {
+	int i;
 	if (argc < 2) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     "\" addsubgraph ?name? ?attributename attributevalue? ?...?",
@@ -205,6 +207,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryattributes", argv[1]) == 0) {
+	int i;
 	for (i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
@@ -223,7 +226,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryattributevalues", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
 		 (CONST84 char ***) &argv2) != TCL_OK)
@@ -242,7 +245,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryedgeattributes", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
 		 (CONST84 char ***) &argv2) != TCL_OK)
@@ -260,7 +263,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryedgeattributevalues", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
 		 (CONST84 char ***) &argv2) != TCL_OK)
@@ -280,7 +283,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("querynodeattributes", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
 		 (CONST84 char ***) &argv2) != TCL_OK)
@@ -299,7 +302,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("querynodeattributevalues", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
 		 (CONST84 char ***) &argv2) != TCL_OK)
