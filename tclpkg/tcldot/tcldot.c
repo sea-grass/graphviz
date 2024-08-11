@@ -117,7 +117,7 @@ static int dotread(ClientData clientData, Tcl_Interp *interp,
 
 static int dotstring(ClientData clientData, Tcl_Interp *interp,
 #ifndef TCLOBJ
-                     int argc, char *argv[]
+                     int argc, const char *argv[]
 #else  /* TCLOBJ */
                      int argc, Tcl_Obj *CONST objv[]
 #endif /* TCLOBJ */
