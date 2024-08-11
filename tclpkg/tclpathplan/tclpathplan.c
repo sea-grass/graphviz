@@ -372,7 +372,7 @@ static void appendpoint(Tcl_Interp * interp, point p)
 /* process vgpane methods */
 static int
 vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
-	  char *argv[])
+	  const char *argv[])
 {
     (void)clientData;
 
