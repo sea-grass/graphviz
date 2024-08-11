@@ -12,7 +12,7 @@
 #include <string.h>
 #include "tcldot.h"
 
-int graphcmd(ClientData clientData, Tcl_Interp * interp,
+static int graphcmd_internal(ClientData clientData, Tcl_Interp * interp,
 #ifndef TCLOBJ
 		    int argc, char *argv[]
 #else
@@ -478,3 +478,17 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 }				/* graphcmd */
+
+int graphcmd(ClientData clientData, Tcl_Interp * interp,
+#ifndef TCLOBJ
+		    int argc, const char *argv[]
+#else
+		    int argc, Tcl_Obj * CONST objv[]
+#endif
+    )
+{
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = graphcmd_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
+}
