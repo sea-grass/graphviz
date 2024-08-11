@@ -238,7 +238,7 @@ void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx) {
  *   A pointer to the entry, or NULL if an error occurred.
  *-----------------------------------------------------------------------------
  */
-void *tclhandleXlate(tblHeader_pt tblHdrPtr, char *handle) {
+void *tclhandleXlate(tblHeader_pt tblHdrPtr, const char *handle) {
   uint64_t entryIdx;
 
   if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)

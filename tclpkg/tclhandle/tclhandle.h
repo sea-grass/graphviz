@@ -74,7 +74,7 @@ void *tclhandleFree(tblHeader_pt headerPtr, char *handle);
 tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
                            uint64_t initEntries);
 void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx);
-void *tclhandleXlate(tblHeader_pt headerPtr, char *handle);
+void *tclhandleXlate(tblHeader_pt headerPtr, const char *handle);
 entryHeader_pt tclhandleAlloc(tblHeader_pt tblHdrPtr, char **handle,
                               uint64_t *entryIdxPtr);
 int tclhandleIndex(tblHeader_pt tblHdrPtr, const char *handle,
