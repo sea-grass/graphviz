@@ -192,7 +192,7 @@ tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
  *   TCL_ERROR if the handle was invalid.
  *-----------------------------------------------------------------------------
  */
-int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
+int tclhandleIndex(tblHeader_pt tblHdrPtr, const char *handle,
                    uint64_t *entryIdxPtr) {
   uint64_t entryIdx;
 
