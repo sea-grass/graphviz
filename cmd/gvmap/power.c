@@ -57,7 +57,7 @@ double *power_method(void *A, int n, int random_seed) {
 
   srand((unsigned)random_seed);
 
-  v = &eigv[n];
+  v = eigv;
   for (i = 0; i < n; i++) u[i] = drand();
   res = sqrt(vector_product(n, u, u));
   if (res > 0) res =  1/res;

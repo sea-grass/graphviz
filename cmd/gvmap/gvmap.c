@@ -313,10 +313,10 @@ validateCluster (int n, int* grouping, int clust_num)
   return 0;
 }
 
-static void 
-makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping, 
-  char** labels, float* fsz, float* rgb_r, float* rgb_g, float* rgb_b, params_t* pm, Agraph_t* g )
-{
+/// @return 0 on success
+static int makeMap(SparseMatrix graph, int n, double *x, double *width,
+                   int *grouping, char **labels, float *fsz, float *rgb_r,
+                   float *rgb_g, float *rgb_b, params_t *pm, Agraph_t *g) {
   int dim = pm->dim;
   int i;
   SparseMatrix poly_lines, polys, poly_point_map;
@@ -337,10 +337,15 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   if (pm->highlight_cluster) {
     pm->highlight_cluster = validateCluster (n, grouping, pm->highlight_cluster);
   }
-  make_map_from_rectangle_groups(pm->include_OK_points,
-				 n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
-				 pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
-				 &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
+  if (make_map_from_rectangle_groups(pm->include_OK_points, n, dim, x, width,
+                                     grouping, graph, pm->bbox_margin, nrandom,
+                                     &nart, pm->nedgep, pm->shore_depth_tol,
+                                     &nverts, &x_poly, &poly_lines, &polys,
+                                     &polys_groups, &poly_point_map,
+                                     &country_graph, pm->highlight_cluster)
+                                     != 0) {
+    return -1;
+  }
 
   if (Verbose) fprintf(stderr,"nart = %d\n",nart);
   /* compute a good color permutation */
@@ -362,7 +367,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
     for (i = 0; i < improve_contiguity_n; i++){
       improve_contiguity(n, dim, grouping, poly_point_map, x, graph);
       nart = nart0;
-      make_map_from_rectangle_groups(pm->include_OK_points,
+      (void)make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
@@ -374,7 +379,7 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
       SparseMatrix_delete(D);
       
       nart = nart0;
-      make_map_from_rectangle_groups(pm->include_OK_points,
+      (void)make_map_from_rectangle_groups(pm->include_OK_points,
 				     n, dim, x, width, grouping, graph, pm->bbox_margin, nrandom, &nart, pm->nedgep, 
 				     pm->shore_depth_tol, &nverts, &x_poly, &poly_lines, 
 				     &polys, &polys_groups, &poly_point_map, &country_graph, pm->highlight_cluster);
@@ -390,11 +395,11 @@ makeMap (SparseMatrix graph, int n, double* x, double* width, int* grouping,
   SparseMatrix_delete(poly_point_map);
   free(x_poly);
   free(polys_groups);
+  return 0;
 }
 
-
-static void mapFromGraph (Agraph_t* g, params_t* pm)
-{
+/// @return 0 on success
+static int mapFromGraph(Agraph_t *g, params_t *pm) {
     SparseMatrix graph;
   int n;
   double* width = NULL;
@@ -409,10 +414,12 @@ static void mapFromGraph (Agraph_t* g, params_t* pm)
   initDotIO(g);
   graph = Import_coord_clusters_from_dot(g, pm->maxcluster, pm->dim, &n, &width, &x, &grouping, 
 					   &rgb_r,  &rgb_g,  &rgb_b,  &fsz, &labels, pm->color_scheme, pm->clusterMethod, pm->useClusters);
-  makeMap (graph, n, x, width, grouping, labels, fsz, rgb_r, rgb_g, rgb_b, pm, g);
+  const int rc = makeMap(graph, n, x, width, grouping, labels, fsz, rgb_r,
+                         rgb_g, rgb_b, pm, g);
   free(rgb_r);
   free(rgb_g);
   free(rgb_b);
+  return rc;
 }
 
 int main(int argc, char *argv[])
@@ -427,7 +434,9 @@ int main(int argc, char *argv[])
   newIngraph(&ig, pm.infiles);
   while ((g = nextGraph (&ig)) != 0) {
     if (prevg) agclose (prevg);
-    mapFromGraph (g, &pm);
+    if (mapFromGraph(g, &pm) != 0) {
+      graphviz_exit(EXIT_FAILURE);
+    }
     prevg = g;
   }
 
