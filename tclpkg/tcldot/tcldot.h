@@ -61,7 +61,7 @@ extern int graphcmd(ClientData clientData, Tcl_Interp * interp,
     );
 extern int nodecmd(ClientData clientData, Tcl_Interp * interp,
 #ifndef TCLOBJ
-		    int argc, char *argv[]
+		    int argc, const char *argv[]
 #else
 		    int argc, Tcl_Obj * CONST objv[]
 #endif
