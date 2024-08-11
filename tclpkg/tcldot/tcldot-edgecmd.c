@@ -11,8 +11,8 @@
 #include <string.h>
 #include "tcldot.h"
 
-int edgecmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[])
-{
+static int edgecmd_internal(ClientData clientData, Tcl_Interp * interp,
+                            int argc, char *argv[]) {
     char *s, **argv2;
     int i, j, argc2;
     Agraph_t *g;
@@ -123,4 +123,12 @@ int edgecmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *
 			 "\n\tsetattributes, showname", NULL);
 	return TCL_ERROR;
     }
+}
+
+int edgecmd(ClientData clientData, Tcl_Interp * interp, int argc,
+            CONST84 char *argv[]) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = edgecmd_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
 }
