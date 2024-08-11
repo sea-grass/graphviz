@@ -44,7 +44,7 @@ Agraph_t *cmd2g(const char *cmd) {
         return NULL;
     return g;
 }
-Agnode_t *cmd2n(char *cmd) {
+Agnode_t *cmd2n(const char *cmd) {
     Agnode_t *n = NULL;
 
     if (sscanf(cmd, "node%p", &n) != 1 || !n)
