@@ -321,7 +321,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("render", argv[1]) == 0) {
-	char *canvas;
+	const char *canvas;
 
 	if (argc < 3) {
 	    canvas = "$c";
