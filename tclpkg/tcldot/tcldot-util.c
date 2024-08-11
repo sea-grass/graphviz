@@ -37,7 +37,7 @@ size_t Tcldot_channel_writer(GVJ_t *job, const char *s, size_t len)
 
 /* handles (tcl commands) to obj* */
 
-Agraph_t *cmd2g(char *cmd) {
+Agraph_t *cmd2g(const char *cmd) {
     Agraph_t *g = NULL;
 
     if (sscanf(cmd, "graph%p", &g) != 1 || !g)
