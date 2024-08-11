@@ -51,7 +51,7 @@ Agnode_t *cmd2n(const char *cmd) {
         return NULL;
     return n;
 }
-Agedge_t *cmd2e(char *cmd) {
+Agedge_t *cmd2e(const char *cmd) {
     Agedge_t *e = NULL;
 
     if (sscanf(cmd, "edge%p", &e) != 1 || !e)
