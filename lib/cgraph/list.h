@@ -112,7 +112,7 @@
     return 0;                                                                                                                                \
   }                                                                                                                                          \
                                                                                                                                              \
-  static inline LIST_UNUSED void name##_append(name##_t *list, type item) {                                                                  \
+  static inline void name##_append(name##_t *list, type item) {                                                                              \
     int rc = name##_try_append(list, item);                                                                                                  \
     if (rc != 0) {                                                                                                                           \
       fprintf(stderr, "realloc failed: %s\n", strerror(rc));                                                                                 \
