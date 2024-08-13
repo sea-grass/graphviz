@@ -12,7 +12,7 @@
 #include <string.h>
 #include "tcldot.h"
 
-int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
+int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[])
 {
 
     Agraph_t *g, *sg;

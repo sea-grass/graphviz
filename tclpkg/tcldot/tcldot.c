@@ -14,7 +14,7 @@
 #include <string.h>
 
 static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
-                  char *argv[]) {
+                  CONST84 char *argv[]) {
   ictx_t *ictx = (ictx_t *)clientData;
   Agraph_t *g;
   int i;
@@ -59,7 +59,7 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
-                   char *argv[]) {
+                   CONST84 char *argv[]) {
   Agraph_t *g;
   Tcl_Channel channel;
   int mode;
@@ -103,7 +103,7 @@ static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 static int dotstring(ClientData clientData, Tcl_Interp *interp, int argc,
-                     char *argv[]) {
+                     CONST84 char *argv[]) {
   Agraph_t *g;
   ictx_t *ictx = (ictx_t *)clientData;
   rdr_t rdr;
