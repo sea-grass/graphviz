@@ -99,7 +99,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp * interp,
 	for (i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindnodeattr(g, argv2[j]))) {
@@ -117,7 +117,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp * interp,
 	for (i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindnodeattr(g, argv2[j]))) {
@@ -137,7 +137,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp * interp,
 	if (argc == 3) {
 	    if (Tcl_SplitList
 		(interp, argv[2], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    if ((argc2 == 0) || (argc2 % 2)) {
 		Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
@@ -174,7 +174,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp * interp,
 }
 
 int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc,
-            CONST84 char *argv[]) {
+            const char *argv[]) {
   char **argv_copy = tcldot_argv_dup(argc, argv);
   int rc = nodecmd_internal(clientData, interp, argc, argv_copy);
   tcldot_argv_free(argc, argv_copy);

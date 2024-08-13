@@ -251,8 +251,9 @@ void tcldot_layout(GVC_t *gvc, Agraph_t * g, const char *engine)
     gvLayout(gvc, g, engine);
 }
 
-char **tcldot_argv_dup(int argc, CONST84 char *argv[]) {
-  char **argv_ret = gv_calloc(argc, sizeof(char *));
+char **tcldot_argv_dup(int argc, const char *argv[]) {
+  assert(argc > 0);
+  char **argv_ret = gv_calloc((size_t)argc, sizeof(char *));
   for (int i = 0; i < argc; ++i) {
     argv_ret[i] = gv_strdup(argv[i]);
   }

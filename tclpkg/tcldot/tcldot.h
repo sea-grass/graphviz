@@ -45,9 +45,9 @@ extern void *GDHandleTable;
 extern int Gdtclft_Init(Tcl_Interp *);
 #endif
 
-extern int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[]);
-extern int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[]);
-extern int edgecmd(ClientData clientData, Tcl_Interp * interp, int argc, CONST84 char *argv[]);
+extern int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[]);
+extern int nodecmd(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[]);
+extern int edgecmd(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[]);
 
 extern int myiodisc_afread(void* channel, char *ubuf, int n);
 extern int myiodisc_memiofread(void *chan, char *buf, int bufsize);
@@ -74,6 +74,6 @@ extern size_t Tcldot_channel_writer(GVJ_t *job, const char *s, size_t len);
 extern void tcldot_layout(GVC_t *gvc, Agraph_t * g, const char *engine);
 
 /// duplicate the strings pointed to by `argv` as non-const strings
-char **tcldot_argv_dup(int argc, CONST84 char *argv[]);
+char **tcldot_argv_dup(int argc, const char *argv[]);
 /// free the strings pointed to by `argv`
 void tcldot_argv_free(int argc, char *argv[]);

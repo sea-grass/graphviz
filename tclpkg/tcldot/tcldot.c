@@ -67,7 +67,7 @@ static int dotnew_internal(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
-                  CONST84 char *argv[]) {
+                  const char *argv[]) {
   char **argv_copy = tcldot_argv_dup(argc, argv);
   int rc = dotnew_internal(clientData, interp, argc, argv_copy);
   tcldot_argv_free(argc, argv_copy);
@@ -75,7 +75,7 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
-                   CONST84 char *argv[]) {
+                   const char *argv[]) {
   Agraph_t *g;
   Tcl_Channel channel;
   int mode;
@@ -119,7 +119,7 @@ static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 static int dotstring(ClientData clientData, Tcl_Interp *interp, int argc,
-                     CONST84 char *argv[]) {
+                     const char *argv[]) {
   Agraph_t *g;
   ictx_t *ictx = (ictx_t *)clientData;
   rdr_t rdr;
