@@ -238,8 +238,7 @@ static void DrawPolyline(sdot_op* o, int param)
     glEnd();
 }
 
-static glCompColor GetglCompColor(char *color)
-{
+static glCompColor GetglCompColor(const char *color) {
     gvcolor_t cl;
     glCompColor c;
     if (color != NULL) {

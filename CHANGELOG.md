@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (12.1.1)]
 
+### Changed
+
+- Comparison against a plugin’s `knowncolors` array is now case-insensitive,
+  rather than requiring all entries of the array to be lower-cased. The
+  requirement that the `knowncolors` array is lexically ordered remains.
+
+### Fixed
+
+- A reference to the non-existent `colxlate` function in an error message has
+  been corrected to `colorxlate`.
+
 ## [12.1.0] – 2024-08-12
 
 ### Added

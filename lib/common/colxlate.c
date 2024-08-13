@@ -126,18 +126,6 @@ static int colorcmpf(const void *p0, const void *p1)
   return strcasecmp(p0, ((const hsvrgbacolor_t *)p1)->name);
 }
 
-char *canontoken(char *str)
-{
-    agxbuf canon = {0};
-    char c, *p;
-
-    p = str;
-    while ((c = *p++)) {
-	agxbputc(&canon, gv_tolower(c));
-    }
-    return agxbdisown(&canon);
-}
-
 /* fullColor:
  * Return "/prefix/str"
  */
@@ -182,19 +170,17 @@ static char *fullColor(agxbuf *xb, const char *prefix, const char *str) {
 #define DFLT_SCHEME_LEN ((sizeof(DFLT_SCHEME)-1)/sizeof(char))
 #define ISNONDFLT(s) ((s) && *(s) && strncasecmp(DFLT_SCHEME, s, DFLT_SCHEME_LEN-1))
 
-static char* resolveColor (char* str)
-{
-    char* s;
-    char* ss;   /* second slash */
-    char* c2;   /* second char */
+static char *resolveColor(const char *str) {
+    const char *s;
 
     if (!strcmp(str, "black")) return strdup(str);
     if (!strcmp(str, "white")) return strdup(str);
     if (!strcmp(str, "lightgrey")) return strdup(str);
     agxbuf xb = {0};
     if (*str == '/') {   /* if begins with '/' */
-	c2 = str+1;
-        if ((ss = strchr(c2, '/'))) {  /* if has second '/' */
+	const char *const c2 = str + 1; // second char
+        const char *const ss = strchr(c2, '/'); // second slash
+        if (ss != NULL) { // if has second '/'
 	    if (*c2 == '/') {    /* if second '/' is second character */
 		    /* Do not compare against final '/' */
 		if (ISNONDFLT(colorscheme))
@@ -214,10 +200,8 @@ static char* resolveColor (char* str)
     return on_heap;
 }
 
-int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
-{
+int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
     static hsvrgbacolor_t *last;
-    char *p;
     char c;
     double H, S, V, A, R, G, B;
     unsigned int r, g, b, a;
@@ -227,7 +211,7 @@ int colorxlate(char *str, gvcolor_t * color, color_type_t target_type)
 
     rc = COLOR_OK;
     for (; *str == ' '; str++);	/* skip over any leading whitespace */
-    p = str;
+    const char *p = str;
 
     /* test for rgb value such as: "#ff0000"
        or rgba value such as "#ff000080" */
