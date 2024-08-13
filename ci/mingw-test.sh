@@ -10,7 +10,7 @@ python3 -m pip install --requirement requirements.txt
 
 export PATH=$PATH:/c/Git/cmd
 
-# we need the absolete path since pytest cd somewhere else
+# we need the absolute path since pytest cd somewhere else
 
 # we need the logical value of the directory for the PATH
 DIR_LABS="/c/Graphviz"
