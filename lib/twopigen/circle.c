@@ -12,7 +12,7 @@
 #include    <cgraph/alloc.h>
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/gv_math.h>
-#include    <cgraph/queue.h>
+#include    <cgraph/list.h>
 #include    <twopigen/circle.h>
 #include    <inttypes.h>
 #include    <limits.h>
@@ -113,15 +113,18 @@ static Agnode_t *findCenterNode(Agraph_t * g)
     return center;
 }
 
+DEFINE_LIST(node_queue, Agnode_t *)
+
 /* bfs to create tree structure */
 static void setNStepsToCenter(Agraph_t * g, Agnode_t * n)
 {
     Agnode_t *next;
     Agsym_t* wt = agfindedgeattr(g,"weight");
-    queue_t q = {0};
+    node_queue_t q = {0};
 
-    queue_push(&q,n);
-    while ((n = queue_pop(&q))) {
+    node_queue_push_back(&q, n);
+    while (!node_queue_is_empty(&q)) {
+	n = node_queue_pop_front(&q);
 	uint64_t nsteps = SCENTER(n) + 1;
 	for (Agedge_t *ep = agfstedge(g, n); ep; ep = agnxtedge(g, ep, n)) {
 	    if (wt && streq(ag_xget(ep,wt),"0")) continue;
@@ -131,11 +134,11 @@ static void setNStepsToCenter(Agraph_t * g, Agnode_t * n)
 		SCENTER(next) = nsteps;
 		SPARENT(next) = n;
 		NCHILD(n)++;
-		queue_push(&q, next);
+		node_queue_push_back(&q, next);
 	    }
 	}
     }
-    queue_free(&q);
+    node_queue_free(&q);
 }
 
 /*
