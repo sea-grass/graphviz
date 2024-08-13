@@ -406,6 +406,22 @@
     name##_append(list, value);                                                                                                              \
   }                                                                                                                                          \
                                                                                                                                              \
+  /** remove and return first element */                                                                                                     \
+  static inline LIST_UNUSED type name##_pop_front(name##_t *list) {                                                                          \
+    assert(list != NULL);                                                                                                                    \
+    assert(list->size > 0);                                                                                                                  \
+                                                                                                                                             \
+    type value = name##_get(list, 0);                                                                                                        \
+                                                                                                                                             \
+    /* do not call `dtor` because we are transferring ownership of the removed                                                               \
+     * element to the caller                                                                                                                 \
+     */                                                                                                                                      \
+    list->head = (list->head + 1) % list->capacity;                                                                                          \
+    --list->size;                                                                                                                            \
+                                                                                                                                             \
+    return value;                                                                                                                            \
+  }                                                                                                                                          \
+                                                                                                                                             \
   /** remove and return last element */                                                                                                      \
   static inline LIST_UNUSED type name##_pop_back(name##_t *list) {                                                                           \
     assert(list != NULL);                                                                                                                    \
