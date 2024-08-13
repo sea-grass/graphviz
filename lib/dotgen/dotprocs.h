@@ -15,11 +15,11 @@ extern "C" {
 #endif
 
 #include <cgraph/list.h>
-#include <cgraph/queue.h>
 #include <dotgen/aspect.h>
 #include <stdbool.h>
 
 DEFINE_LIST(ints, int)
+DEFINE_LIST(node_queue, Agnode_t *)
 
     extern void acyclic(Agraph_t *);
     extern void allocate_ranks(Agraph_t *);
@@ -36,7 +36,7 @@ DEFINE_LIST(ints, int)
     extern void dot_layout(Agraph_t * g);
     extern void dot_init_node_edge(graph_t * g);
     extern void dot_scan_ranks(graph_t * g);
-    extern void enqueue_neighbors(queue_t *q, node_t *n0, int pass);
+    extern void enqueue_neighbors(node_queue_t *q, node_t *n0, int pass);
     extern void expand_cluster(Agraph_t *);
     extern Agedge_t *fast_edge(Agedge_t *);
     extern void fast_node(Agraph_t *, Agnode_t *);
@@ -44,7 +44,7 @@ DEFINE_LIST(ints, int)
     extern Agedge_t *find_flat_edge(Agnode_t *, Agnode_t *);
     extern void flat_edge(Agraph_t *, Agedge_t *);
     extern int flat_edges(Agraph_t *);
-    extern void install_cluster(Agraph_t *, Agnode_t *, int, queue_t *);
+    extern void install_cluster(Agraph_t *, Agnode_t *, int, node_queue_t *);
     extern void install_in_rank(Agraph_t *, Agnode_t *);
     extern bool is_cluster(Agraph_t *);
     extern void dot_compoundEdges(Agraph_t *);
