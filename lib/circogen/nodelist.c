@@ -34,15 +34,10 @@ void appendNodelist(nodelist_t *list, size_t one, Agnode_t *n) {
 
 void realignNodelist(nodelist_t *list, size_t np) {
   assert(np < nodelist_size(list));
-  nodelist_sync(list);
   for (size_t i = np; i != 0; --i) {
     // rotate the list by 1
-    nodelist_append(list, nodelist_get(list, 0));
-    size_t to_move = sizeof(node_t*) * (nodelist_size(list) - 1);
-    if (to_move > 0) {
-      memmove(nodelist_front(list), nodelist_at(list, 1), to_move);
-    }
-    nodelist_resize(list, nodelist_size(list) - 1, NULL);
+    node_t *const head = nodelist_pop_front(list);
+    nodelist_push_back(list, head);
   }
 }
 
