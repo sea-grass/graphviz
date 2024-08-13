@@ -528,7 +528,7 @@ subtree_t *merge_trees(Agedge_t *e)   /* entering tree edge */
 
 /* Construct initial tight tree. Graph must be connected, feasible.
  * Adjust ND_rank(v) as needed.  add_tree_edge() on tight tree edges.
- * trees are basically lists of nodes stored in nodequeues.
+ * trees are basically lists of nodes stored in `node_queue_t`s.
  * Return 1 if input graph is not connected; 0 on success.
  */
 static
