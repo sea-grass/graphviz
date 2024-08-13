@@ -35,7 +35,7 @@ static Tcl_ObjType GdPtrType = {
 /* The only two symbols exported */
 Tcl_AppInitProc Gdtclft_Init, Gdtclft_SafeInit;
 
-typedef int (GdDataFunction)(Tcl_Interp *interp, int argc, Tcl_Obj *CONST objv[]);
+typedef int (GdDataFunction)(Tcl_Interp *interp, int argc, Tcl_Obj *const objv[]);
 typedef int (GdImgFunction)(Tcl_Interp *interp, gdImagePtr gdImg, int argc, const int args[]);
 
 static GdDataFunction tclGdCreateCmd, tclGdDestroyCmd, tclGdWriteCmd,
@@ -339,7 +339,7 @@ static int tclGd_GetColor(Tcl_Interp * interp, Tcl_Obj * obj, int *color)
  * 
  */
 static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
-                 Tcl_Obj *CONST objv[]) {
+                 Tcl_Obj *const objv[]) {
     unsigned int argi;
     size_t subi;
     /* Check for subcommand. */
@@ -395,7 +395,7 @@ static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
 }
 
 static int
-tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     int w, h;
     gdImagePtr im = NULL;
@@ -506,7 +506,7 @@ tclGdCreateCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdDestroyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdDestroyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)interp;
     (void)argc;
@@ -521,7 +521,7 @@ tclGdDestroyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr im;
     const char *cmd, *fname;
@@ -621,7 +621,7 @@ tclGdWriteCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdInterlaceCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdInterlaceCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr im;
     int on_off;
@@ -645,7 +645,7 @@ tclGdInterlaceCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdColorCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr im;
     int subi, nsub, i, args[3];
@@ -810,7 +810,7 @@ tclGdColorGetCmd(Tcl_Interp * interp, gdImagePtr im, int argc, const int args[])
 }
 
 static int
-tclGdBrushCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdBrushCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)interp;
     (void)argc;
@@ -828,7 +828,7 @@ tclGdBrushCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdTileCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdTileCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)interp;
     (void)argc;
@@ -847,7 +847,7 @@ tclGdTileCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 
 
 static int
-tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr im;
     int ncolor, *colors = NULL, i;
@@ -884,7 +884,7 @@ tclGdStyleCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdSetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdSetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
@@ -909,7 +909,7 @@ tclGdSetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdLineCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdLineCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
@@ -938,7 +938,7 @@ tclGdLineCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdRectCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdRectCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
@@ -972,7 +972,7 @@ tclGdRectCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdArcCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdArcCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
@@ -1027,7 +1027,7 @@ tclGdArcCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr im;
     int color, npoints, i;
@@ -1093,7 +1093,7 @@ tclGdPolygonCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdFillCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdFillCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr im;
     int color, x, y, border;
@@ -1122,7 +1122,7 @@ tclGdFillCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdCopyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdCopyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     gdImagePtr imdest, imsrc;
     int destx, desty, srcx, srcy, destw, desth, srcw, srch;
@@ -1161,7 +1161,7 @@ tclGdCopyCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdGetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdGetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
@@ -1184,7 +1184,7 @@ tclGdGetCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdSizeCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdSizeCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
@@ -1201,7 +1201,7 @@ tclGdSizeCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
 }
 
 static int
-tclGdTextCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdTextCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     /* gd gdhandle color fontname size angle x y string */
     gdImagePtr im;
@@ -1365,7 +1365,7 @@ static int BufferSinkFunc(void *context, const char *buffer, int len)
 }
 
 static int
-tclGdWriteBufCmd(Tcl_Interp * interp, int argc, Tcl_Obj * CONST objv[])
+tclGdWriteBufCmd(Tcl_Interp * interp, int argc, Tcl_Obj * const objv[])
 {
     (void)argc;
 
