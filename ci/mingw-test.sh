@@ -12,11 +12,6 @@ export PATH=$PATH:/c/Git/cmd
 
 # we need the absolete path since pytest cd somewhere else
 
-# we need the Win32 value of the physical directory since somehow the
-# symbolic one is not understood in the -L flag. In the -I flag the
-# path gets mysteriously translated and works anyway
-DIR_WABS="C:/Graphviz"
-
 # we need the logical value of the directory for the PATH
 DIR_LABS="/c/Graphviz"
 
