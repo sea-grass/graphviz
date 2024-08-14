@@ -4276,6 +4276,21 @@ def test_2577_1():
     assert output == "hello world\n", "gvpr cannot handle empty strings to printf"
 
 
+@pytest.mark.skipif(which("gvgen") is None, reason="gvgen not available")
+def test_2588():
+    """
+    `gvgen` should not crash when producing random graphs
+    https://gitlab.com/graphviz/graphviz/-/issues/2588
+    """
+
+    gvgen = which("gvgen")
+
+    # this execution depends on random numbers, so we need to run many times to
+    # have a chance of provoking the bug
+    for _ in range(200):
+        subprocess.check_call([gvgen, "-R", "20"], stdout=subprocess.DEVNULL)
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted

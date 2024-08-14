@@ -16,6 +16,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - A reference to the non-existent `colxlate` function in an error message has
   been corrected to `colorxlate`.
+- `gvgen` no longer crashes sometimes when running random graph generation. This
+  was a regression in Graphviz 12.0.0. #2588
 
 ## [12.1.0] – 2024-08-12
 

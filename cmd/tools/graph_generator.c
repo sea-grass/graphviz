@@ -575,7 +575,7 @@ static void genTree(unsigned NN, unsigned *T, int_stack_t *stack,
     while (1) {
 	while (N > 2) {
 	    v = (N-1)*T[N];
-	    double Z = v * drand();
+	    double Z = floor(v * drand());
 	    unsigned D = 0;
 	    bool more = true;
 	    unsigned M;
@@ -586,9 +586,9 @@ static void genTree(unsigned NN, unsigned *T, int_stack_t *stack,
 		J = 0;
 		do {
 		    J++;
+		    if (M < D + 1) break;
 		    M -= D;
-		    if (M < 1) break;
-		    if (Z <= T[M] * TD) {
+		    if (Z < T[M] * TD) {
                       more = false;
                       break;
                     }
