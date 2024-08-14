@@ -16,10 +16,6 @@
 #include "tclhandle.h"
 #include "../../plugin/core/tcl_context.h"
 
-#ifndef CONST84
-#define CONST84
-#endif
-
 /*
  * ictx - one per tcl interpreter, may support multiple graph namespaces
  */

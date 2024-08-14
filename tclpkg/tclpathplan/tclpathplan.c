@@ -38,10 +38,6 @@
 #include <tcl.h>
 #include "tclhandle.h"
 
-#ifndef CONST84
-#define CONST84
-#endif
-
 #if ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 6)) || ( TCL_MAJOR_VERSION > 8)
 #else
 #ifndef Tcl_GetStringResult
