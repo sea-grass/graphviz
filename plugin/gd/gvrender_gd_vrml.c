@@ -153,7 +153,7 @@ static int color_index(gdImagePtr im, gvcolor_t color)
 static int set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr brush)
 {
     obj_state_t *obj = job->obj;
-    int i, pen, pencolor, transparent, width, dashstyle[40];
+    int i, pen, pencolor, transparent, width, dashstyle[20];
 
     pen = pencolor = color_index(im, obj->pencolor);
     transparent = gdImageGetTransparent(im);
