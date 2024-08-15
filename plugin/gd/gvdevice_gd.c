@@ -33,7 +33,7 @@ int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len)
 void gvdevice_gd_putC (gdIOCtx *context, int C)
 {
     gd_context_t *gd_context = get_containing_context(context);
-    char c = C;
+    char c = (char)C;
 
     gvwrite(gd_context->job, &c, 1);
 }
