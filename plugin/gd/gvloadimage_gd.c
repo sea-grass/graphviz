@@ -132,6 +132,7 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 		        *data++ = (unsigned char)gdTrueColorGetBlue(px);
 		        *data++ = (unsigned char)gdTrueColorGetGreen(px);
 		        *data++ = (unsigned char)gdTrueColorGetRed(px);
+		        // gd’s alpha is 7-bit, so scale up ×2 to our 8-bit
 		        *data++ = (unsigned char)((0x7F - gdTrueColorGetAlpha(px)) << 1);
 		    }
 		}
