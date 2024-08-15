@@ -176,25 +176,45 @@ static inline int vagxbprint(agxbuf *xb, const char *fmt, va_list ap) {
     size = (size_t)rc + 1; // account for NUL terminator
   }
 
+  // should we use double buffering?
+  bool use_stage = false;
+
   // do we need to expand the buffer?
   {
     size_t unused_space = agxbsizeof(xb) - agxblen(xb);
     if (unused_space < size) {
       size_t extra = size - unused_space;
-      agxbmore(xb, extra);
+      if (agxbuf_is_inline(xb) && extra == 1) {
+        // The content is currently stored inline, but this print will push it
+        // over into being heap-allocated by a single byte. This last byte is a
+        // '\0' that `vsnprintf` unavoidably writes but we do not need. So lets
+        // avoid this by printing to an intermediate, larger buffer, and then
+        // copying the content minus the trailing '\0' to the final destination.
+        use_stage = true;
+      } else {
+        agxbmore(xb, extra);
+      }
     }
   }
 
+  // a buffer one byte larger than inline storage to fit the trailing '\0'
+  char stage[sizeof(xb->u.store) + 1] = {0};
+  assert(!use_stage || size <= sizeof(stage));
+
   // we can now safely print into the buffer
-  char *dst = agxbnext(xb);
+  char *dst = use_stage ? stage : agxbnext(xb);
   result = vsnprintf(dst, size, fmt, ap);
   assert(result == (int)(size - 1) || result < 0);
   if (result > 0) {
     if (agxbuf_is_inline(xb)) {
       assert(result <= (int)UCHAR_MAX);
+      if (use_stage) {
+        memcpy(agxbnext(xb), stage, (size_t)result);
+      }
       xb->u.s.located += (unsigned char)result;
       assert(agxblen(xb) <= sizeof(xb->u.store) && "agxbuf corruption");
     } else {
+      assert(!use_stage);
       xb->u.s.size += (size_t)result;
     }
   }
@@ -284,7 +304,14 @@ static inline void agxbclear(agxbuf *xb) {
  * instead.
  */
 static inline char *agxbuse(agxbuf *xb) {
-  (void)agxbputc(xb, '\0');
+  if (!agxbuf_is_inline(xb) || agxblen(xb) != sizeof(xb->u.store)) {
+    (void)agxbputc(xb, '\0');
+  } else {
+    // we can skip explicitly null-terminating the buffer because `agxbclear`
+    // resets the `xb->located` byte such that it naturally forms a terminator
+    assert(AGXBUF_INLINE_SIZE_0 == '\0');
+  }
+
   agxbclear(xb);
   return agxbstart(xb);
 }
