@@ -11,8 +11,10 @@
 #include "config.h"
 #include "gdioctx_wrapper.h"
 
+#include <assert.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
+#include <limits.h>
 
 #include <gd.h>
 #include <stdbool.h>
@@ -22,7 +24,10 @@
 int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len)
 {
     gd_context_t *gd_context = get_containing_context(context);
-    return gvwrite(gd_context->job, buffer, len);
+    assert(len >= 0);
+    const size_t result = gvwrite(gd_context->job, buffer, (size_t)len);
+    assert(result <= (size_t)len);
+    return (int)result;
 }
 
 void gvdevice_gd_putC (gdIOCtx *context, int C)
