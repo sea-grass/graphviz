@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <assert.h>
 #include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -118,7 +119,9 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 	height = im->sy;
         const int stride = cairo_format_stride_for_width(CAIRO_FORMAT_ARGB32,
                                                          width);
-	unsigned char *data = gv_calloc(stride, height);
+	assert(stride >= 0);
+	assert(height >= 0);
+	unsigned char *data = gv_calloc((size_t)stride, (size_t)height);
 	surface = cairo_image_surface_create_for_data (data, CAIRO_FORMAT_ARGB32,
 							width, height, stride);
 
