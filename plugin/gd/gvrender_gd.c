@@ -381,7 +381,7 @@ static int gdgen_set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr* brush)
 	width = PENWIDTH_NORMAL;  /* gd can't do thin lines */
     gdImageSetThickness(im, width);
     /* use brush instead of Thickness to improve end butts */
-    if (width != PENWIDTH_NORMAL) {
+    if (width != (int)PENWIDTH_NORMAL) {
 	if (im->trueColor) {
 	    *brush = gdImageCreateTrueColor(width,width);
 	}

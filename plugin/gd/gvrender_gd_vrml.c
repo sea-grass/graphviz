@@ -177,7 +177,7 @@ static int set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr brush)
         width = PENWIDTH_NORMAL;  /* gd can't do thin lines */
     gdImageSetThickness(im, width);
     /* use brush instead of Thickness to improve end butts */
-    if (width != PENWIDTH_NORMAL) {
+    if (width != (int)PENWIDTH_NORMAL) {
         brush = gdImageCreate(width, width);
         gdImagePaletteCopy(brush, im);
         gdImageFilledRectangle(brush, 0, 0, width - 1, width - 1, pencolor);
