@@ -167,6 +167,7 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
         cairo_restore(cr);
 
 	cairo_surface_destroy(surface);
+	free(data);
     }
 }
 #endif
