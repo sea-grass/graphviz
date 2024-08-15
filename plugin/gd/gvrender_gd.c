@@ -370,7 +370,7 @@ static int gdgen_set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr* brush)
     } else if (obj->pen == PEN_DOTTED) {
 	for (i = 0; i < 2; i++)
 	    dashstyle[i] = obj->pencolor.u.index;
-	for (; i < 14; i++)
+	for (; i < 12; i++)
 	    dashstyle[i] = gdTransparent;
 	gdImageSetStyle(im, dashstyle, 12);
 	pen = gdStyled;
