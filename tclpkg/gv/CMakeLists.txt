@@ -87,6 +87,31 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_GUILE)
+    swig_add_library(gv_guile
+      LANGUAGE guile
+      SOURCES gv.i gv_dummy_init.c
+    )
+    set_property(
+      TARGET gv_guile
+      PROPERTY SWIG_GENERATED_INCLUDE_DIRECTORIES ${GUILE_INCLUDE_DIRS}
+    )
+    if(HAVE_CXX_WUNUSED_PARAMETER)
+      set_property(
+        TARGET gv_guile
+        PROPERTY SWIG_GENERATED_COMPILE_OPTIONS -Wno-unused-parameter
+      )
+    endif()
+    swig_link_libraries(gv_guile PRIVATE gvc ${GUILE_LIBRARIES})
+
+    install(
+      TARGETS gv_guile
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/guile
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
+
   if(ENABLE_JAVASCRIPT)
     swig_add_library(gv_javascript
       LANGUAGE javascript
@@ -224,6 +249,27 @@ if(ENABLE_SWIG)
     else()
       install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3go
+        DESTINATION ${MAN_INSTALL_DIR}/man3
+      )
+    endif()
+  endif()
+
+  if(ENABLE_GUILE)
+    if(GZIP)
+      add_custom_target(man-gv_guile ALL DEPENDS gv.3guile.gz
+                        COMMENT "gv_guile man page")
+      add_custom_command(
+        OUTPUT gv.3guile.gz
+        COMMAND ${GZIP} -9 --no-name --to-stdout gv.3guile
+          >"${CMAKE_CURRENT_BINARY_DIR}/gv.3guile.gz"
+        MAIN_DEPENDENCY gv.3guile
+        COMMENT "compress gv_guile man page")
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3guile.gz
+        DESTINATION ${MAN_INSTALL_DIR}/man3)
+    else()
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3guile
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
     endif()

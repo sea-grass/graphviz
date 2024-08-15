@@ -71,8 +71,6 @@ add_simple_tool(acyclic)
 add_simple_tool(bcomps)
 add_simple_tool(ccomps)
 target_link_libraries(ccomps PRIVATE gvc)
-add_simple_tool(gc)
-target_link_libraries(gc PRIVATE gvc)
 add_simple_tool(nop)
 add_simple_tool(tred)
 target_link_libraries(tred PRIVATE gvc) # e.g. for start_timer
@@ -81,6 +79,61 @@ add_simple_tool(unflatten)
 # ================================ complex tools ===============================
 # These tools have multiple source files, different dependencies or other
 # differences from the simple tools above
+
+# ================================== gc ========================================
+add_executable(gc_bin gc.c)
+set_target_properties(gc_bin PROPERTIES OUTPUT_NAME "gc")
+
+target_include_directories(gc_bin PRIVATE
+  ../../lib
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ../../lib/cdt
+  ../../lib/cgraph
+  ../../lib/common
+  ../../lib/gvc
+  ../../lib/pack
+  ../../lib/pathplan
+)
+
+if(GETOPT_FOUND)
+  target_include_directories(gc_bin SYSTEM PRIVATE ${GETOPT_INCLUDE_DIRS})
+endif()
+if(NOT HAVE_GETOPT_H)
+  target_link_libraries(gc_bin PRIVATE ${GETOPT_LINK_LIBRARIES})
+endif()
+
+target_link_libraries(gc_bin PRIVATE
+  cgraph
+  gvc
+)
+
+install(
+  TARGETS gc_bin
+  RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+  LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}
+  ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+)
+
+if(GZIP)
+  add_custom_target(man-gc ALL DEPENDS gc.1.gz
+                    COMMENT "gc man page")
+  add_custom_command(
+    OUTPUT gc.1.gz
+    COMMAND ${GZIP} -9 --no-name --to-stdout gc.1
+      >"${CMAKE_CURRENT_BINARY_DIR}/gc.1.gz"
+    MAIN_DEPENDENCY gc.1
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    COMMENT "compress gc man page")
+  install(
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/gc.1.gz
+    DESTINATION ${MAN_INSTALL_DIR}/man1)
+else()
+  install(
+    FILES gc.1
+    DESTINATION ${MAN_INSTALL_DIR}/man1
+  )
+endif()
 
 # ================================== dijkstra ==================================
 add_executable(dijkstra
