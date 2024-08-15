@@ -110,7 +110,6 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 
     cairo_t *cr = job->context; /* target context */
     int x, y, width, height;
-    unsigned px;
     cairo_surface_t *surface;    /* source surface */
     gdImagePtr im;
 
@@ -129,21 +128,21 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 	    if (im->saveAlphaFlag) {
 	        for (y = 0; y < height; y++) {
 		    for (x = 0; x < width; x++) {
-		        px = gdImageTrueColorPixel(im, x, y);
-		        *data++ = gdTrueColorGetBlue(px);
-		        *data++ = gdTrueColorGetGreen(px);
-		        *data++ = gdTrueColorGetRed(px);
-		        *data++ = (0x7F-gdTrueColorGetAlpha(px)) << 1;
+		        const int px = gdImageTrueColorPixel(im, x, y);
+		        *data++ = (unsigned char)gdTrueColorGetBlue(px);
+		        *data++ = (unsigned char)gdTrueColorGetGreen(px);
+		        *data++ = (unsigned char)gdTrueColorGetRed(px);
+		        *data++ = (unsigned char)((0x7F - gdTrueColorGetAlpha(px)) << 1);
 		    }
 		}
 	    }
 	    else {
 	        for (y = 0; y < height; y++) {
 		    for (x = 0; x < width; x++) {
-		        px = gdImageTrueColorPixel(im, x, y);
-		        *data++ = gdTrueColorGetBlue(px);
-		        *data++ = gdTrueColorGetGreen(px);
-		        *data++ = gdTrueColorGetRed(px);
+		        const int px = gdImageTrueColorPixel(im, x, y);
+		        *data++ = (unsigned char)gdTrueColorGetBlue(px);
+		        *data++ = (unsigned char)gdTrueColorGetGreen(px);
+		        *data++ = (unsigned char)gdTrueColorGetRed(px);
 		        *data++ = 0xFF;
 		    }
 		}
@@ -152,10 +151,10 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 	else {
 	    for (y = 0; y < height; y++) {
 		for (x = 0; x < width; x++) {
-		    px = gdImagePalettePixel(im, x, y);
-		    *data++ = im->blue[px];
-		    *data++ = im->green[px];
-		    *data++ = im->red[px];
+		    const int px = gdImagePalettePixel(im, x, y);
+		    *data++ = (unsigned char)im->blue[px];
+		    *data++ = (unsigned char)im->green[px];
+		    *data++ = (unsigned char)im->red[px];
 		    *data++ = (px==im->transparent)?0x00:0xff;
 		}
 	    }
