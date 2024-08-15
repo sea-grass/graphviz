@@ -63,7 +63,9 @@ static void gd_format(GVJ_t * job)
     gd_context.ctx.putC = gvdevice_gd_putC;
     gd_context.job = job;
 
-    im = gdImageCreateTrueColor(width, height);
+    assert(width <= INT_MAX);
+    assert(height <= INT_MAX);
+    im = gdImageCreateTrueColor((int)width, (int)height);
     switch (job->device.id) {
 #ifdef HAVE_GD_PNG
     case FORMAT_PNG:
