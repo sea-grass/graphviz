@@ -107,6 +107,8 @@ static void gdgen_begin_page(GVJ_t * job)
 		"%s: graph is too large for gd-renderer bitmaps. Scaling by %g to fit\n",
 		job->common->cmdname, scale);
 	}
+	assert(job->width <= INT_MAX);
+	assert(job->height <= INT_MAX);
 	if (truecolor_p) {
 	    if (job->common->verbose)
 		fprintf(stderr,
@@ -114,7 +116,7 @@ static void gdgen_begin_page(GVJ_t * job)
 			job->common->cmdname,
 			round(job->width * job->height * 4 / 1024.),
 			job->width, job->height);
-	    im = gdImageCreateTrueColor(job->width, job->height);
+	    im = gdImageCreateTrueColor((int)job->width, (int)job->height);
 	} else {
 	    if (job->common->verbose)
 		fprintf(stderr,
@@ -122,7 +124,7 @@ static void gdgen_begin_page(GVJ_t * job)
 			job->common->cmdname,
 			round(job->width * job->height / 1024.),
 			job->width, job->height);
-	    im = gdImageCreate(job->width, job->height);
+	    im = gdImageCreate((int)job->width, (int)job->height);
 	}
         job->context = im;
     }
