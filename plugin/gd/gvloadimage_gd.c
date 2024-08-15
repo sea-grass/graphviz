@@ -156,14 +156,14 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 		    *data++ = (unsigned char)im->blue[px];
 		    *data++ = (unsigned char)im->green[px];
 		    *data++ = (unsigned char)im->red[px];
-		    *data++ = (px==im->transparent)?0x00:0xff;
+		    *data++ = px == im->transparent ? 0x00 : 0xff;
 		}
 	    }
 	}
 
         cairo_save(cr);
         cairo_translate(cr, b.LL.x, -b.UR.y);
-        cairo_scale(cr, (b.UR.x - b.LL.x)/(us->w), (b.UR.y - b.LL.y)/(us->h));
+        cairo_scale(cr, (b.UR.x - b.LL.x) / us->w, (b.UR.y - b.LL.y) / us->h);
         cairo_set_source_surface (cr, surface, 0, 0);
         cairo_paint (cr);
         cairo_restore(cr);
@@ -221,13 +221,13 @@ static void gd_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 
         /* this sets the position of the image */
         gvprintf(job, "%g %g translate\n",
-		(b.LL.x + (b.UR.x - b.LL.x) * (1. - (job->dpi.x) / 96.) / 2.),
-	        (b.LL.y + (b.UR.y - b.LL.y) * (1. - (job->dpi.y) / 96.) / 2.));
+		b.LL.x + (b.UR.x - b.LL.x) * (1. - (job->dpi.x) / 96.) / 2.,
+	        b.LL.y + (b.UR.y - b.LL.y) * (1. - (job->dpi.y) / 96.) / 2.);
 
         /* this sets the rendered size to fit the box */
         gvprintf(job,"%g %g scale\n",
-		((b.UR.x - b.LL.x) * (job->dpi.x) / 96.),
-		((b.UR.y - b.LL.y) * (job->dpi.y) / 96.));
+		(b.UR.x - b.LL.x) * (job->dpi.x) / 96.,
+		(b.UR.y - b.LL.y) * (job->dpi.y) / 96.);
     
         /* xsize ysize bits-per-sample [matrix] */
         gvprintf(job, "%d %d 8 [%d 0 0 %d 0 %d]\n", X, Y, X, -Y, Y);
