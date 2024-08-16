@@ -374,12 +374,12 @@ returns the number of nodes in \fIg\fP.
 returns the number of edges in \fIg\fP.
 .SS "Nodes"
 .TP
-\fBnode\fP(\fIsg\fP : \fBgraph_t\fP, \fIs\fP : \fBstring\fP) : \fBnode_t\fP
+\fBnode\fP(\fIg\fP : \fBgraph_t\fP, \fIs\fP : \fBstring\fP) : \fBnode_t\fP
 creates a node in graph \fIg\fP of name \fIs\fP. If such a node
 already exists, it is returned.
 .TP
 \fBsubnode\fP(\fIsg\fP : \fBgraph_t\fP, \fIn\fP : \fBnode_t\fP) : \fBnode_t\fP
-inserts the node \fIn\fP into the subgraph \fIg\fP. Returns the node.
+inserts the node \fIn\fP into the subgraph \fIsg\fP. Returns the node.
 .TP
 \fBfstnode\fP(\fIg\fP : \fBgraph_t\fP) : \fBnode_t\fP
 returns the first node in graph \fIg\fP, or \fBNULL\fP if none exists.
@@ -435,7 +435,7 @@ name \fIs\fP in (sub)graph \fIsg\fP. If the graph is undirected, the distinction
 head and tail nodes is unimportant.
 If such an edge exists, it is returned. Otherwise, \fBNULL\fP is returned.
 .TP
-\fBisSubedge\fP(\fIg\fP : \fBgraph_t\fP, \fIe\fP : \fBedge_t\fP) : \fBint\fP
+\fBisSubedge\fP(\fIsg\fP : \fBgraph_t\fP, \fIe\fP : \fBedge_t\fP) : \fBint\fP
 returns non-zero if edge \fIe\fP is in (sub)graph \fIsg\fP, or zero
 otherwise.
 .TP
