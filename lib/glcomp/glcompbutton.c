@@ -21,8 +21,8 @@
 #include <GL/glut.h>
 
 
-glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
-                              float h, char *caption) {
+glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
+                              char *caption) {
     glCompButton *p = gv_alloc(sizeof(glCompButton));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glButtonObj;
@@ -53,7 +53,7 @@ glCompButton *glCompButtonNew(glCompObj *par, float x, float y, float w,
 
     /*caption */
     p->common.font = glNewFontFromParent ((glCompObj *) p, NULL);
-    p->label = glCompLabelNew((glCompObj*) p, caption);
+    p->label = glCompLabelNew(p, caption);
     p->label->common.font->justify.VJustify = glFontVJustifyCenter;
     p->label->common.font->justify.HJustify = glFontHJustifyCenter;
     p->label->common.align = glAlignParent;
@@ -68,7 +68,7 @@ int glCompButtonAddPngGlyph(glCompButton *b, const char *fileName) {
     if (b->image)
 	glCompImageDelete(b->image);
     /*image on left for now */
-    b->image = glCompImageNew((glCompObj *) b, 0, 0);
+    b->image = glCompImageNew(b, 0, 0);
 
     rv = glCompImageLoadPng(b->image, fileName);
     if (rv) {

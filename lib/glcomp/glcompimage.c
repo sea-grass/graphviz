@@ -16,7 +16,7 @@
 #include <glcomp/glcomptexture.h>
 #include <stdbool.h>
 
-glCompImage *glCompImageNew(glCompObj *par, float x, float y) {
+glCompImage *glCompImageNew(void *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));
     glCompInitCommon((glCompObj *) p, par, x, y);
     p->objType = glImageObj;

@@ -138,8 +138,7 @@ static void DrawBeziers(sdot_op* o, int param)
     }
 }
 
-//Draws an ellpise made out of points.
-//void DrawEllipse(xdot_point* xpoint,GLfloat xradius, GLfloat yradius,int filled)
+//Draws an ellipse made out of points.
 static void DrawEllipse(sdot_op*  o, int param)
 {
     int i = 0;
