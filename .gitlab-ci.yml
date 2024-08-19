@@ -1341,6 +1341,21 @@ lint_clang_format:
   except:
     - tags
 
+lint_cpplint:
+  stage: test
+  needs: [] # no dependencies
+  script:
+    - env DEBIAN_FRONTEND=noninteractive apt-get update -y
+    - env DEBIAN_FRONTEND=noninteractive apt-get install --no-install-recommends -y cpplint
+    # output some info into the logs for debugging
+    - cpplint --version
+    - cat /etc/os-release
+    - uname -rms
+    # check file formatting
+    - git ls-files -z -- lib/cgraph++ lib/gvc++ | xargs -0 -- cpplint
+  except:
+    - tags
+
 lint_cmake_format:
   image: "$CI_REGISTRY_IMAGE/fedora40:$CI_COMMIT_SHA"
   stage: test

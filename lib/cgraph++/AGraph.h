@@ -42,7 +42,7 @@ public:
   }
 
   // get a non-owning pointer to the underlying C data structure
-  Agraph_t *c_struct() const { return m_g; };
+  Agraph_t *c_struct() const { return m_g; }
 
 private:
   // the underlying C data structure
