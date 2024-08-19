@@ -261,6 +261,7 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
     }
     SparseMatrix_delete(B);
   }
+  free(comps_ptr);
   free(ctmp);
   QuadTree_delete(qt);
 

@@ -22,6 +22,7 @@
 #include "selectionfuncs.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "frmobjectui.h"
 
 static glCompPanel *sel = NULL;
@@ -230,7 +231,11 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     /*pan */
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("pan.png"));
+    {
+      char *pan = smyrnaPath("pan.png");
+      glCompButtonAddPngGlyph(b, pan);
+      free(pan);
+    }
     b->common.callbacks.click = menu_click_pan;
     panBtn = b;
 
@@ -238,27 +243,43 @@ glCompSet *glcreate_gl_topview_menu(void)
 
     /*switch to fisheye */
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("fisheye.png"));
+    {
+      char *fisheye = smyrnaPath("fisheye.png");
+      glCompButtonAddPngGlyph(b, fisheye);
+      free(fisheye);
+    }
     b->common.callbacks.click = menu_switch_to_fisheye;
     toFisheye = b;
 
 
     /*switch to normal mode */
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("no_fisheye.png"));
+    {
+      char *fisheye = smyrnaPath("no_fisheye.png");
+      glCompButtonAddPngGlyph(b, fisheye);
+      free(fisheye);
+    }
     b->common.callbacks.click = menu_switch_to_fisheye;
     b->common.visible = 0;
     toNormal = b;
 
     y=y+off;
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("3D.png"));
+    {
+      char *threed = smyrnaPath("3D.png");
+      glCompButtonAddPngGlyph(b, threed);
+      free(threed);
+    }
     b->common.callbacks.click = switch2D3D;
     to3DBtn = b;
 
 
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("2D.png"));
+    {
+      char *twod = smyrnaPath("2D.png");
+      glCompButtonAddPngGlyph(b, twod);
+      free(twod);
+    }
     b->common.callbacks.click = switch2D3D;
     glCompButtonHide(b);
     to2DBtn = b;
@@ -288,14 +309,22 @@ glCompSet *glcreate_gl_topview_menu(void)
     y = 1;
 
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("details.png"));
+    {
+      char *details = smyrnaPath("details.png");
+      glCompButtonAddPngGlyph(b, details);
+      free(details);
+    }
     b->common.callbacks.click = attrList;
     b->common.color = c;
 	
     y = y + off;
 	
 	b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("zoomin.png"));
+    {
+      char *zoomin = smyrnaPath("zoomin.png");
+      glCompButtonAddPngGlyph(b, zoomin);
+      free(zoomin);
+    }
     b->groupid = 0;
     b->common.callbacks.click = menu_click_zoom_plus;
     b->common.color = c;
@@ -303,7 +332,11 @@ glCompSet *glcreate_gl_topview_menu(void)
 
 
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("zoomout.png"));
+    {
+      char *zoomout = smyrnaPath("zoomout.png");
+      glCompButtonAddPngGlyph(b, zoomout);
+      free(zoomout);
+    }
     b->common.callbacks.click = menu_click_zoom_minus;
     b->common.color = c;
 
@@ -311,7 +344,11 @@ glCompSet *glcreate_gl_topview_menu(void)
 
 
     b = glCompButtonNew((glCompObj *) p, 1, y, 42, 42, "");
-    glCompButtonAddPngGlyph(b, smyrnaPath("center.png"));
+    {
+      char *center = smyrnaPath("center.png");
+      glCompButtonAddPngGlyph(b, center);
+      free(center);
+    }
     b->common.callbacks.click = menu_click_center;
     b->common.color = c;
 
@@ -339,12 +376,20 @@ glCompSet *glcreate_gl_topview_menu(void)
     p->shadowwidth = 0;
 
     i = glCompImageNew((glCompObj *) p, 0, 0);
-    glCompImageLoadPng(i, smyrnaPath("mod_fisheye.png"));
+    {
+      char *fisheye = smyrnaPath("mod_fisheye.png");
+      glCompImageLoadPng(i, fisheye);
+      free(fisheye);
+    }
     imgFisheye = i;
     i->common.visible = 0;
 
     i = glCompImageNew((glCompObj *) p, 0, 52);
-    glCompImageLoadPng(i, smyrnaPath("mod_3D.png"));
+    {
+      char *threed = smyrnaPath("mod_3D.png");
+      glCompImageLoadPng(i, threed);
+      free(threed);
+    }
     img3D = i;
     i->common.visible = 0;
     

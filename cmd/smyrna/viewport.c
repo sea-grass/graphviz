@@ -19,8 +19,8 @@
 #include "gui.h"
 #include <limits.h>
 #include "menucallbacks.h"
-#include <stddef.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include "glcompui.h"
 #include "gltemplate.h"
@@ -183,7 +183,7 @@ static gboolean gl_main_expose(void *data) {
 static void get_data_dir(void)
 {
     free(view->template_file);
-    view->template_file = gv_strdup(smyrnaPath("template.dot"));
+    view->template_file = smyrnaPath("template.dot");
 }
 
 void init_viewport(ViewInfo *vi) {
@@ -211,14 +211,18 @@ void init_viewport(ViewInfo *vi) {
 	path = smyrnaPath("attr_widgets.dot");
     input_file2 = fopen(path, "rb");
     if (!input_file2) {
-	fprintf(stderr,	"default attributes template graph file \"%s\" not found\n",smyrnaPath("attr_widgets.dot"));
+	char *attrwidgets = smyrnaPath("attr_widgets.dot");
+	fprintf(stderr,	"default attributes template graph file \"%s\" not found\n", attrwidgets);
+	free(attrwidgets);
 	graphviz_exit(-1);
 
     }
     vi->systemGraphs.attrs_widgets = agread(input_file2, NULL);
     fclose (input_file2);
     if (!vi->systemGraphs.attrs_widgets) {
-	fprintf(stderr,"could not load default attribute widgets graph file \"%s\"\n",smyrnaPath("attr_widgets.dot"));
+	char *attrwidgets = smyrnaPath("attr_widgets.dot");
+	fprintf(stderr,"could not load default attribute widgets graph file \"%s\"\n", attrwidgets);
+	free(attrwidgets);
 	graphviz_exit(-1);
     }
     //init graphs
