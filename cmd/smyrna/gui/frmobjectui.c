@@ -107,7 +107,6 @@ static void reset_attr_list_widgets(attr_list * l)
 static attr_list *attr_list_new(bool with_widgets) {
     int id;
     attr_list *l = gv_alloc(sizeof(attr_list));
-    l->with_widgets = with_widgets;
     /*create filter widgets */
 
     if (with_widgets) {
