@@ -24,8 +24,8 @@
 #include <ctype.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/strcasecmp.h>
 #include <inttypes.h>
+#include <util/strcasecmp.h>
 
 #define EMPTY(s)		(((s) == 0) || (s)[0] == '\0')
 #define MAX(a,b)     ((a)>(b)?(a):(b))

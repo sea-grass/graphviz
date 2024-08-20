@@ -14,9 +14,9 @@
 #include <cgraph/alloc.h>
 #include <common/render.h>
 #include <gvc/gvio.h>
-#include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <util/strcasecmp.h>
 
 static int N_EPSF_files;
 static Dict_t *EPSF_contents;

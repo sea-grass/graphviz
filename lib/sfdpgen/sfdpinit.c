@@ -23,9 +23,9 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/strcasecmp.h>
 
 static void sfdp_init_edge(edge_t * e)
 {

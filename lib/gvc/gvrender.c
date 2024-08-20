@@ -25,15 +25,14 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/strcasecmp.h>
 #include <gvc/gvcint.h>
 #include <common/geom.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
 #include <gvc/gvcproc.h>
-#include <cgraph/strcasecmp.h>
 #include <limits.h>
 #include <stdlib.h>
+#include <util/strcasecmp.h>
 #include <util/streq.h>
 
 extern bool mapbool(const char *s);

@@ -16,8 +16,8 @@
 #include <ctype.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
+#include <util/strcasecmp.h>
 
 /* FIXME - the following declaration should be removed
  * when configure is coordinated with flags passed to the

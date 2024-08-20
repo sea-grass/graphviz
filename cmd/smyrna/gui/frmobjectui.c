@@ -23,11 +23,11 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
-#include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <cgraph/unreachable.h>
 #include <stdint.h>
 #include <string.h>
+#include <util/strcasecmp.h>
 
 static int sel_node;
 static int sel_edge;

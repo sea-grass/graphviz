@@ -40,10 +40,10 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/startswith.h>
-#include <cgraph/strcasecmp.h>
 #include <float.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/strcasecmp.h>
 #include <util/streq.h>
 
 #ifndef HAVE_SRAND48

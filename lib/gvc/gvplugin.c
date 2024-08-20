@@ -33,8 +33,8 @@
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <cgraph/startswith.h>
-#include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
+#include <util/strcasecmp.h>
 
 /*
  * Define an apis array of name strings using an enumerated api_t as index.

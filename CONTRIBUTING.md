@@ -76,7 +76,7 @@ on a standards-conformant compiler with the following exceptions:
   used. These are not implemented in MinGW’s runtime.
 
 POSIX and Linux-/Unix-specific extensions are generally not usable, with a few
-exceptions. E.g. lib/cgraph/strcasecmp.h provides a way to use `strcasecmp`
+exceptions. E.g. lib/util/strcasecmp.h provides a way to use `strcasecmp`
 portably.
 
 New code should be written to conform with LLVM style, enforceable with the

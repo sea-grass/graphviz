@@ -29,7 +29,6 @@ add_library(cgraph
   rdr.h
   sort.h
   startswith.h
-  strcasecmp.h
   strview.h
   tokenize.h
   unreachable.h

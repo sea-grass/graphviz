@@ -19,7 +19,6 @@
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
-#include <cgraph/strcasecmp.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
 #include <cgraph/unused.h>
@@ -27,6 +26,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/strcasecmp.h>
 
 #ifdef HAVE_EXPAT
 #ifdef _WIN32
