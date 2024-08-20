@@ -188,7 +188,6 @@ static void get_data_dir(void)
 void init_viewport(ViewInfo *vi) {
     FILE *input_file = NULL;
     FILE *input_file2 = NULL;
-    static char* path;
     get_data_dir();
     input_file = fopen(vi->template_file, "rb");
     if (!input_file) {
@@ -206,9 +205,11 @@ void init_viewport(ViewInfo *vi) {
 		vi->template_file);
 	graphviz_exit(-1);
     }
-    if (!path)
-	path = smyrnaPath("attr_widgets.dot");
-    input_file2 = fopen(path, "rb");
+    {
+	char *path = smyrnaPath("attr_widgets.dot");
+	input_file2 = fopen(path, "rb");
+	free(path);
+    }
     if (!input_file2) {
 	char *attrwidgets = smyrnaPath("attr_widgets.dot");
 	fprintf(stderr,	"default attributes template graph file \"%s\" not found\n", attrwidgets);
