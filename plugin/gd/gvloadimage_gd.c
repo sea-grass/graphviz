@@ -10,9 +10,9 @@
 
 #include "config.h"
 
+#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stddef.h>
 #include <string.h>
 
 #ifdef HAVE_PANGOCAIRO
@@ -110,7 +110,6 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
     cairo_t *cr = job->context; /* target context */
     int x, y, stride, width, height;
     unsigned px;
-    unsigned char *data;
     cairo_surface_t *surface;    /* source surface */
     gdImagePtr im;
 
@@ -120,7 +119,7 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
 // cairo_format_stride_for_width() not available prior to cairo-1.6.4 or so (fc9)
 //stride = cairo_format_stride_for_width (CAIRO_FORMAT_ARGB32, width);
 	stride = width*4;
-	data = malloc (stride * height);
+	unsigned char *data = gv_calloc(stride, height);
 	surface = cairo_image_surface_create_for_data (data, CAIRO_FORMAT_ARGB32,
 							width, height, stride);
 
@@ -168,6 +167,7 @@ static void gd_loadimage_cairo(GVJ_t * job, usershape_t *us, boxf b, bool filled
         cairo_restore(cr);
 
 	cairo_surface_destroy(surface);
+	free(data);
     }
 }
 #endif
