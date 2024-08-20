@@ -276,7 +276,6 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, zoomin);
       free(zoomin);
     }
-    b->groupid = 0;
     b->common.callbacks.click = menu_click_zoom_plus;
     b->common.color = c;
     y = y + off;

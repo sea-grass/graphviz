@@ -260,7 +260,6 @@ extern "C" {
 	glCompLabel *label;
 	bool status; ///< false not pressed, true pressed
 	bool refStatus; ///< false not pressed, true pressed
-	int groupid;
 	glCompImage *image;	/*glyph */
 	int data;
 
