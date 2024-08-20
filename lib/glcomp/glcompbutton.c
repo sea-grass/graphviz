@@ -136,7 +136,6 @@ void glCompButtonDraw(glCompButton * p)
 
 void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
     glCompButton *p = (glCompButton *) o;
-    ((glCompButton *) o)->status=((glCompButton *) o)->refStatus ;
     p->status = false;
     if (p->common.callbacks.click)
 	p->common.callbacks.click((glCompObj *) p, x, y, t);
@@ -153,10 +152,6 @@ void glCompButtonDoubleClick(glCompObj *obj, float x, float y,
 void glCompButtonMouseDown(glCompObj *obj, float x, float y,
 			   glMouseButtonType t)
 {
-    /*Put your internal code here */
-
-    
-    ((glCompButton *) obj)->refStatus = ((glCompButton *) obj)->status;
     ((glCompButton *) obj)->status = true;
     if (((glCompButton *) obj)->common.callbacks.mousedown)
 	((glCompButton *) obj)->common.callbacks.mousedown(obj, x, y, t);

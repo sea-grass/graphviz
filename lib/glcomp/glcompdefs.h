@@ -259,7 +259,6 @@ extern "C" {
 	float width, height;
 	glCompLabel *label;
 	bool status; ///< false not pressed, true pressed
-	bool refStatus; ///< false not pressed, true pressed
 	glCompImage *image;	/*glyph */
 	int data;
 
