@@ -16,7 +16,6 @@
 #endif
 #endif
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <xdot/xdot.h>
 #include <gtk/gtk.h>
@@ -228,7 +227,6 @@ typedef struct
 
     typedef struct _selection {
 	glCompPoly selPoly;
-	bool selectNodes;
     } selection;
 
     typedef struct {
