@@ -360,7 +360,6 @@ int main(int argc, char *argv[]) {
   char *package_locale_dir;
 #ifdef G_OS_WIN32
   char *package_prefix = g_win32_get_package_installation_directory(NULL, NULL);
-  char *package_data_dir = g_build_filename(package_prefix, "share", NULL);
   package_locale_dir =
       g_build_filename(package_prefix, "share", "locale", NULL);
 #else
@@ -383,7 +382,6 @@ int main(int argc, char *argv[]) {
     windowedMode(argc, argv);
 #ifdef G_OS_WIN32
   g_free(package_prefix);
-  g_free(package_data_dir);
 #endif
   g_free(package_locale_dir);
   graphviz_exit(0);
