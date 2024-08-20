@@ -22,7 +22,6 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
-#include <cgraph/queue.h>
 #include <dotgen/dot.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -1228,9 +1227,9 @@ void install_in_rank(graph_t * g, node_t * n)
  */
 void build_ranks(graph_t *g, int pass, ints_t *scratch) {
     int i, j;
-    node_t *n, *n0, *ns;
+    node_t *n, *ns;
     edge_t **otheredges;
-    queue_t q = {0};
+    node_queue_t q = {0};
     for (n = GD_nlist(g); n; n = ND_next(n))
 	MARK(n) = false;
 
@@ -1265,8 +1264,9 @@ void build_ranks(graph_t *g, int pass, ints_t *scratch) {
 	    continue;
 	if (!MARK(n)) {
 	    MARK(n) = true;
-	    queue_push(&q, n);
-	    while ((n0 = queue_pop(&q))) {
+	    node_queue_push_back(&q, n);
+	    while (!node_queue_is_empty(&q)) {
+		node_t *n0 = node_queue_pop_front(&q);
 		if (ND_ranktype(n0) != CLUSTER) {
 		    install_in_rank(g, n0);
 		    enqueue_neighbors(&q, n0, pass);
@@ -1276,7 +1276,7 @@ void build_ranks(graph_t *g, int pass, ints_t *scratch) {
 	    }
 	}
     }
-    assert(queue_pop(&q) == NULL);
+    assert(node_queue_is_empty(&q));
     for (i = GD_minrank(g); i <= GD_maxrank(g); i++) {
 	GD_rank(Root)[i].valid = false;
 	if (GD_flip(g) && GD_rank(g)[i].n > 0) {
@@ -1290,10 +1290,10 @@ void build_ranks(graph_t *g, int pass, ints_t *scratch) {
 
     if (g == dot_root(g) && ncross(scratch) > 0)
 	transpose(g, false);
-    queue_free(&q);
+    node_queue_free(&q);
 }
 
-void enqueue_neighbors(queue_t *q, node_t *n0, int pass) {
+void enqueue_neighbors(node_queue_t *q, node_t *n0, int pass) {
     edge_t *e;
 
     if (pass == 0) {
@@ -1301,7 +1301,7 @@ void enqueue_neighbors(queue_t *q, node_t *n0, int pass) {
 	    e = ND_out(n0).list[i];
 	    if (!MARK(aghead(e))) {
 		MARK(aghead(e)) = true;
-		queue_push(q, aghead(e));
+		node_queue_push_back(q, aghead(e));
 	    }
 	}
     } else {
@@ -1309,7 +1309,7 @@ void enqueue_neighbors(queue_t *q, node_t *n0, int pass) {
 	    e = ND_in(n0).list[i];
 	    if (!MARK(agtail(e))) {
 		MARK(agtail(e)) = true;
-		queue_push(q, agtail(e));
+		node_queue_push_back(q, agtail(e));
 	    }
 	}
     }

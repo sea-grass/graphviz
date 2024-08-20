@@ -223,6 +223,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 	    } else if (ED_count(e)) {
 		objlist_t objl = objectList(e, pm);
 		assert(objlist_size(&objl) <= INT_MAX);
+		objlist_sync(&objl);
 		if (Plegal_arrangement(objlist_front(&objl), (int)objlist_size(&objl))) {
 		    vconfig = Pobsopen(objlist_front(&objl), (int)objlist_size(&objl));
 		    if (!vconfig) {
@@ -255,6 +256,7 @@ int compoundEdges(graph_t * g, expand_t* pm, int edgetype)
 		for (e0 = e; e0; e0 = ED_to_virt(e0)) {
 		    ED_path(e0) = getPath(e0, vconfig, false);
 		    assert(objlist_size(&objl) <= INT_MAX);
+		    objlist_sync(&objl);
 		    makeSpline(e0, objlist_front(&objl), (int)objlist_size(&objl), false);
 		}
 		objlist_free(&objl);

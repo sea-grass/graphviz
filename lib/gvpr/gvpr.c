@@ -25,7 +25,6 @@
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
-#include <cgraph/queue.h>
 #include <cgraph/unreachable.h>
 #include <common/globals.h>
 #include <gvpr/compile.h>
@@ -533,10 +532,12 @@ static trav_fns DFSfns = { agfstedge, agnxtedge, 1, 0 };
 static trav_fns FWDfns = { agfstout, agnxtout_, 0, 0 };
 static trav_fns REVfns = { agfstin, agnxtin_, 0, 0 };
 
+DEFINE_LIST(node_queue, Agnode_t *)
+
 static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 {
     nodestream nodes;
-    queue_t q = {0};
+    node_queue_t q = {0};
     ndata *nd;
     Agnode_t *n;
     Agedge_t *cure;
@@ -550,8 +551,9 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 	if (MARKED(nd))
 	    continue;
 	PUSH(nd, 0);
-	queue_push(&q, n);
-	while ((n = queue_pop(&q))) {
+	node_queue_push_back(&q, n);
+	while (!node_queue_is_empty(&q)) {
+	    n = node_queue_pop_front(&q);
 	    nd = nData(n);
 	    MARK(nd);
 	    POP(nd);
@@ -564,14 +566,14 @@ static void travBFS(Gpr_t * state, Expr_t* prog, comp_block * xprog)
 		    continue;
 		if (!evalEdge(state, prog, xprog, cure)) continue;
 		if (!ONSTACK(nd)) {
-		    queue_push(&q, cure->node);
+		    node_queue_push_back(&q, cure->node);
 		    PUSH(nd,cure);
 		}
 	    }
 	}
     }
     state->tvedge = 0;
-    queue_free(&q);
+    node_queue_free(&q);
 }
 
 DEFINE_LIST(edge_stack, Agedge_t *)
