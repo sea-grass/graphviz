@@ -187,15 +187,6 @@ static void glCompMouseMove(glCompObj *obj, float x, float y) {
     }
 }
 
-static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
-    (void)obj;
-    (void)x;
-    (void)y;
-    (void)t;
-
-    view->Topview->sel.selectNodes = !view->Topview->sel.selectNodes;
-}
-
 glCompSet *glcreate_gl_topview_menu(void)
 {
     float y = 5;
@@ -265,13 +256,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     glCompButtonHide(b);
     to2DBtn = b;
 
-    y=y+off;
-    b = glCompButtonNew(p, 1, y, 42, 42, "N");
-    b->common.callbacks.click = selectnodes;
-    b->groupid=-1;
-    b->status = true;
-
-    y=y+off;
+    y += 2 * off;
     p = glCompPanelNew(p, 1, 325, 45, 180);
     p->common.align = glAlignTop;
     p->common.data = 0;
