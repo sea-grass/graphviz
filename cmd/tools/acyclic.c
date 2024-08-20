@@ -24,10 +24,10 @@
 
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/unreachable.h>
 #include "openFile.h"
+#include <util/exit.h>
 
 #define graphName(g) (agnameof(g))
 

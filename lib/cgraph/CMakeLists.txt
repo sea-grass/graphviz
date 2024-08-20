@@ -19,7 +19,6 @@ add_library(cgraph
   bitarray.h
   cghdr.h
   cgraph.h
-  exit.h
   gv_ctype.h
   gv_math.h
   ingraphs.h

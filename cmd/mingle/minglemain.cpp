@@ -12,7 +12,6 @@
 #include "../tools/openFile.h"
 #include <algorithm>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
 #include <getopt.h>
 #include <iomanip>
@@ -20,6 +19,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <utility>
+#include <util/exit.h>
 #include <vector>
 
 #include <sparse/DotIO.h>

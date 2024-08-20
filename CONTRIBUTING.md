@@ -67,8 +67,8 @@ on a standards-conformant compiler with the following exceptions:
 
 * The `printf` format specifier `"%zu"` cannot be used. See
   lib/cgraph/prisize_t.h for an explanation of why.
-* The `exit` function should not be called directly. See lib/cgraph/exit.h for
-  an explanation of why and what to do instead.
+* The `exit` function should not be called directly. See lib/util/exit.h for an
+  explanation of why and what to do instead.
 * Static array dimensions (`void f(int x[static 42])`) cannot be used because
   MSVC does not support this syntax. Use the equivalent decayed-to-pointer type
   instead (`void f(int *x)`).

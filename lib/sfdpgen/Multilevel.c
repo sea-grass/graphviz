@@ -60,7 +60,7 @@ static void maximal_independent_edge_set_heavest_edge_pernode_supernodes_first(S
   int  nsuper, *super = NULL, *superp = NULL;
 
   assert(A);
-  assert(SparseMatrix_known_strucural_symmetric(A));
+  assert(A->is_pattern_symmetric);
   ia = A->ia;
   ja = A->ja;
   m = A->m;
@@ -185,8 +185,8 @@ static void Multilevel_coarsen_internal(SparseMatrix A, SparseMatrix *cA,
   if (!*cA) goto RETURN;
 
   *R = SparseMatrix_divide_row_by_degree(*R);
-  SparseMatrix_set_symmetric(*cA);
-  SparseMatrix_set_pattern_symmetric(*cA);
+  (*cA)->is_symmetric = true;
+  (*cA)->is_pattern_symmetric = true;
   *cA = SparseMatrix_remove_diagonal(*cA);
 
  RETURN:

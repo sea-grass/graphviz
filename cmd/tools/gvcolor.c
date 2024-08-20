@@ -26,12 +26,13 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
 #include "colorxlate.h"
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/exit.h>
+
 typedef struct {
     Agrec_t h;
     double relrank;	/* coordinate of its rank, smaller means lower rank */

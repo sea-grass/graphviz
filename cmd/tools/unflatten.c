@@ -23,12 +23,12 @@
 #include    <stdio.h>
 #include    <stdlib.h>
 #include    <cgraph/cgraph.h>
-#include    <cgraph/exit.h>
 #include    <cgraph/ingraphs.h>
 #include    <cgraph/unreachable.h>
 
 #include <getopt.h>
 #include "openFile.h"
+#include <util/exit.h>
 
 typedef graphviz_unflatten_options_t opts_t;
 

@@ -14,11 +14,11 @@
  *************************************************************************/
 
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/ingraphs.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <util/exit.h>
 
 #include <getopt.h>
 

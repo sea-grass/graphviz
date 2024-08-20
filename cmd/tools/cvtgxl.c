@@ -26,9 +26,9 @@
 
 #include "convert.h"
 #include "openFile.h"
-#include <cgraph/exit.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
+#include <util/exit.h>
 
 typedef enum { Unset, ToGV, ToGXL } mode;
 

@@ -31,11 +31,11 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
 #include <cgraph/unreachable.h>
+#include <util/exit.h>
 
 typedef struct {
     Agrec_t h;

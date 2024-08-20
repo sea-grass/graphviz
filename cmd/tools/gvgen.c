@@ -27,7 +27,7 @@
 #include <getopt.h>
 #include "graph_generator.h"
 #include "openFile.h"
-#include <cgraph/exit.h>
+#include <util/exit.h>
 
 typedef enum { unknown, grid, circle, complete, completeb, 
     path, tree, torus, cylinder, mobius, randomg, randomt, ball,

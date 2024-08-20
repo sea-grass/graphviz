@@ -8,14 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/exit.h>
-
 #include "glutrender.h"
 #include "viewport.h"
 #include "arcball.h"
 #include "appmouse.h"
 #include "glexpose.h"
 #include "glcompui.h"
+#include <util/exit.h>
 
     /*call backs */
 

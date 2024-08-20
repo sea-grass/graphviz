@@ -25,7 +25,6 @@
 #include <getopt.h>
 
 #include <cgraph/cgraph.h>
-#include <cgraph/exit.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/strview.h>
@@ -33,6 +32,7 @@
 #include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
+#include <util/exit.h>
 #include <util/streq.h>
 #include "openFile.h"
 

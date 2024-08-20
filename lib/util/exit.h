@@ -12,7 +12,7 @@ extern "C" {
 #endif
 
 #ifdef __GNUC__
-// FIXME: use _Noreturn for all compilers when we move to C11
+// FIXME: use `[[noreturn]]` for all compilers when we move to C23
 #define NORETURN __attribute__((noreturn))
 #elif defined(_MSC_VER)
 #define NORETURN __declspec(noreturn)

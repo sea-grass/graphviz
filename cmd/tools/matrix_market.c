@@ -14,6 +14,7 @@
 #include <cgraph/alloc.h>
 #include <cgraph/unreachable.h>
 #include <assert.h>
+#include <stdbool.h>
 
 static int mm_get_type(MM_typecode typecode)
 {
@@ -238,8 +239,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     free(val);
 
     if (mm_is_symmetric(matcode)) {
-	SparseMatrix_set_symmetric(A);
-	SparseMatrix_set_pattern_symmetric(A);
+	A->is_symmetric = true;
+	A->is_pattern_symmetric = true;
     }
 
 

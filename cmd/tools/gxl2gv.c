@@ -17,13 +17,13 @@
 #include    "convert.h"
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/alloc.h>
-#include    <cgraph/exit.h>
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/list.h>
 #include    <cgraph/startswith.h>
 #include    <cgraph/unreachable.h>
 #include    <stdbool.h>
 #include    <stdio.h>
+#include    <util/exit.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <limits.h>

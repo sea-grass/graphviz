@@ -14,8 +14,8 @@
 #include "gui.h"
 #include "viewport.h"
 #include "gltemplate.h"
-#include <cgraph/exit.h>
 #include <glcomp/glutils.h>
+#include <util/exit.h>
 #include "glexpose.h"
 #include "glmotion.h"
 
