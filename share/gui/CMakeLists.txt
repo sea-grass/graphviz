@@ -9,7 +9,6 @@ if(WITH_SMYRNA)
       attrs.txt
       center.png
       cursor.png
-      details.png
       fisheye.png
       fisheye.raw
       fit_to_screen.png

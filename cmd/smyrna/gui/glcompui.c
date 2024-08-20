@@ -168,15 +168,6 @@ static void CBglCompMouseRightClick(glCompObj *obj, float x, float y,
     }
 }
 
-static void attrList(glCompObj *obj, float x, float y, glMouseButtonType t) {
-	(void)obj;
-	(void)x;
-	(void)y;
-	(void)t;
-
-	showAttrsWidget();
-}
-
 static void glCompMouseMove(glCompObj *obj, float x, float y) {
     (void)x;
     (void)y;
@@ -305,18 +296,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     c.B = 0.6f;
     c.A = 1.6f;
 
-    y = 1;
-
-    b = glCompButtonNew(p, 1, y, 42, 42, "");
-    {
-      char *details = smyrnaPath("details.png");
-      glCompButtonAddPngGlyph(b, details);
-      free(details);
-    }
-    b->common.callbacks.click = attrList;
-    b->common.color = c;
-	
-    y = y + off;
+    y = 1 + off;
 	
 	b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
