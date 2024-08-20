@@ -187,15 +187,6 @@ static void glCompMouseMove(glCompObj *obj, float x, float y) {
     }
 }
 
-static void selectedges(glCompObj *obj, float x, float y, glMouseButtonType t) {
-    (void)obj;
-    (void)x;
-    (void)y;
-    (void)t;
-
-    view->Topview->sel.selectEdges = !view->Topview->sel.selectEdges;
-}
-
 static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
     (void)obj;
     (void)x;
@@ -281,10 +272,6 @@ glCompSet *glcreate_gl_topview_menu(void)
     b->status = true;
 
     y=y+off;
-    b = glCompButtonNew(p, 1, y, 42, 42, "E");
-    b->common.callbacks.click = selectedges;
-    b->groupid=-1;
-
     p = glCompPanelNew(p, 1, 325, 45, 180);
     p->common.align = glAlignTop;
     p->common.data = 0;
