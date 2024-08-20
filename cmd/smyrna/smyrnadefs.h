@@ -229,7 +229,6 @@ typedef struct
     typedef struct _selection {
 	glCompPoly selPoly;
 	bool selectNodes;
-	bool selectEdges;
     } selection;
 
     typedef struct {

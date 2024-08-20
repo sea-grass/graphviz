@@ -74,9 +74,6 @@ static void select_edge(Agraph_t* g,Agedge_t*  obj,int reverse)
 static void pick_objects_in_rect(Agraph_t *g, float x1, float y1, float x2,
                                  float y2) {
     Agnode_t *v;
-    Agedge_t *e;
-    glCompPoint posT;
-    glCompPoint posH;
     glCompPoint posN;
      
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
@@ -87,16 +84,6 @@ static void pick_objects_in_rect(Agraph_t *g, float x1, float y1, float x2,
 		continue;
 	    if(is_point_in_rectangle(posN.x,posN.y,x1,y1,x2-x1,y2-y1) )
 		select_node(g,v,0);
-	}
-	if (view->Topview->sel.selectEdges) {
-	    for (e = agfstout(g, v); e; e = agnxtout(g, e)) 
-	    {
-		posT = ED_posTail(e);
-		posH = ED_posHead(e);
-    		if(is_point_in_rectangle(posT.x,posT.y,x1,y1,x2-x1,y2-y1))
-		    if(is_point_in_rectangle(posH.x,posH.y,x1,y1,x2-x1,y2-y1))
-			select_edge(g,e,0);
-	    }
 	}
     }
 }
