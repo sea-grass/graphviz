@@ -46,16 +46,15 @@ static glCompObj *glCompGetObjByMouse(glCompSet *s, glCompMouse *m) {
 }
 
 static void glCompMouseMove(void *obj, float x, float y) {
-    ((glCompSet *) obj)->mouse.pos.x = x;
-    ((glCompSet *) obj)->mouse.pos.y =
-	((glCompObj *) obj)->common.height - y;
-    ((glCompSet *) obj)->mouse.pos.z = 0;
-    ((glCompSet *) obj)->mouse.dragY =
-	((glCompSet *) obj)->mouse.pos.y - startY;
-    ((glCompSet *) obj)->mouse.dragX =
-	((glCompSet *) obj)->mouse.pos.x - startX;
-    if (((glCompSet *) obj)->common.callbacks.mouseover)
-	((glCompSet *) obj)->common.callbacks.mouseover(obj, x, y);
+  glCompSet *o = obj;
+  o->mouse.pos.x = x;
+  o->mouse.pos.y = o->common.height - y;
+  o->mouse.pos.z = 0;
+  o->mouse.dragY = o->mouse.pos.y - startY;
+  o->mouse.dragX = o->mouse.pos.x - startX;
+  if (o->common.callbacks.mouseover) {
+    o->common.callbacks.mouseover(obj, x, y);
+  }
 }
 
 static void glCompSetMouseClick(void *obj, float x, float y,
