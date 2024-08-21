@@ -359,7 +359,7 @@ typedef struct
 	GtkComboBox *graphComboBox;	/*pointer to graph combo box at top right */
 	ArcBall_t *arcball;
 	keymap_t keymap;
-	mouse_action_t* mouse_actions;	/*customizable moouse interraction list*/
+	mouse_action_t* mouse_actions; ///< customizable mouse interaction list
 	size_t mouse_action_count;
 	refresh_filter refresh;
 	float nodeScale;
