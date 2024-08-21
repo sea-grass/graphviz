@@ -80,8 +80,7 @@ extern "C" {
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
 
-    typedef enum { glFontVJustifyNone, glFontVJustifyTop,
-	    glFontVJustifyBottom, glFontVJustifyCenter } glCompVJustify;
+    typedef enum { glFontVJustifyNone, glFontVJustifyCenter } glCompVJustify;
     typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
 	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
 
