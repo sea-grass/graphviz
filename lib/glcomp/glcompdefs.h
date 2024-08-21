@@ -225,6 +225,12 @@ typedef struct glCompSet_ glCompSet;
 	glCompJustify justify;
     } glCompCommon;
 
+/// object prototype
+struct _glCompObj {
+  glObjType objType;
+  glCompCommon common;
+};
+
 /*generic image*/
     typedef struct {
 	glObjType objType;	/*always keep this here for each drawable object */
@@ -268,12 +274,6 @@ typedef struct glCompSet_ glCompSet;
     };
 
 /*texture based image*/
-
-/*object prototype*/
-    struct _glCompObj {
-	glObjType objType;
-	glCompCommon common;
-    };
 
     typedef struct {
 	glMouseButtonType t;
