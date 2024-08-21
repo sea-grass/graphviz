@@ -176,8 +176,8 @@ void glCompButtonMouseDown(glCompObj *obj, float x, float y,
     
     ((glCompButton *) obj)->refStatus = ((glCompButton *) obj)->status;
     ((glCompButton *) obj)->status = true;
-    if (((glCompButton *) obj)->common.callbacks.mousedown)
-	((glCompButton *) obj)->common.callbacks.mousedown(obj, x, y, t);
+    if (obj->common.callbacks.mousedown)
+	obj->common.callbacks.mousedown(obj, x, y, t);
 }
 
 void glCompButtonMouseIn(glCompObj *obj, float x, float y) {
