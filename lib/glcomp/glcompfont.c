@@ -52,7 +52,7 @@ glCompFont *glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
     font->color.G = c->G;
     font->color.B = c->B;
     font->color.A = c->A;
-    font->justify.VJustify = GL_FONTVJUSTIFY;
+    font->justify.VJustify = glFontVJustifyNone;
     font->justify.HJustify = GL_FONTHJUSTIFY;
     font->is2D=is2D;
 
