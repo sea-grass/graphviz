@@ -120,7 +120,7 @@ void glCompButtonDraw(glCompButton * p)
 
     glCompCommon ref;
     ref = p->common;
-    glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
+    glCompCalcWidget(p->common.parent, &p->common, &ref);
     if (!p->common.visible)
 	return;
     /*draw panel */
