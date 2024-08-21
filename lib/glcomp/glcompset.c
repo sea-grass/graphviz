@@ -90,24 +90,25 @@ static void glCompSetMouseDown(void *obj, float x, float y,
 
 static void glCompSetMouseUp(void *obj, float x, float y, glMouseButtonType t) {
     float tempX = x;
-    float tempY = ((glCompObj *) obj)->common.height - y;
+    glCompSet *ob = obj;
+    float tempY = ob->common.height - y;
 
-    ((glCompSet *) obj)->mouse.down = 0;
+    ob->mouse.down = 0;
     if (t == glMouseLeftButton) {
 	glCompObj *o = NULL;
-	glCompObj *o_clicked = ((glCompSet *) obj)->mouse.clickedObj;
-	((glCompSet *) obj)->mouse.pos.x = tempX;
-	((glCompSet *) obj)->mouse.pos.y = tempY;
-	((glCompSet *) obj)->mouse.pos.z = 0;
+	glCompObj *o_clicked = ob->mouse.clickedObj;
+	ob->mouse.pos.x = tempX;
+	ob->mouse.pos.y = tempY;
+	ob->mouse.pos.z = 0;
 	if (o_clicked)
-	    o = glCompGetObjByMouse(obj, &((glCompSet *) obj)->mouse);
+	    o = glCompGetObjByMouse(obj, &ob->mouse);
 	if (!o)
 	    return;
 	if (o == o_clicked)
 	    o->common.functions.click(o, x, y, t);
     }
-    if (((glCompSet *) obj)->common.callbacks.mouseup)
-	((glCompSet *) obj)->common.callbacks.mouseup(obj, x, y, t);
+    if (ob->common.callbacks.mouseup)
+	ob->common.callbacks.mouseup(obj, x, y, t);
     /*check if mouse is clicked or dragged */
     if (startX == (int)tempX && startY == tempY)
 	glCompSetMouseClick(obj, x, y, t);
