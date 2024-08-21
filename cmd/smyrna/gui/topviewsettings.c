@@ -19,8 +19,6 @@
 void color_change_request(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;
-
-    view->refresh.color=1;
 }
 
 void size_change_request(GtkWidget *widget, void *user_data) {

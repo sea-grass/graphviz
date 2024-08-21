@@ -313,9 +313,6 @@ void init_viewport(ViewInfo *vi) {
     vi->arcball = gv_alloc(sizeof(ArcBall_t));
     vi->keymap.down=0;
     load_mouse_actions(vi);
-    vi->refresh.color=1;
-    vi->refresh.pos=1;
-    vi->refresh.selection=1;
     if(vi->guiMode!=GUI_FULLSCREEN)
 	vi->guiMode=GUI_WINDOWED;
 
@@ -413,9 +410,6 @@ graphRecord (Agraph_t* g)
 void refreshViewport(void)
 {
     Agraph_t *graph = view->g[view->activeGraph];
-    view->refresh.color=1;
-    view->refresh.pos=1;
-    view->refresh.selection=1;
     load_settings_from_graph();
 
     if(view->guiMode!=GUI_FULLSCREEN)

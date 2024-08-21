@@ -128,13 +128,6 @@ typedef struct
 	unsigned edgelabel_id;
     }topviewcache;
 
-    typedef struct {
-	int color;
-	int pos;
-	int selection;
-    }refresh_filter;
-
-
     typedef struct 
     {
 	int index;
@@ -361,7 +354,6 @@ typedef struct
 	keymap_t keymap;
 	mouse_action_t* mouse_actions; ///< customizable mouse interaction list
 	size_t mouse_action_count;
-	refresh_filter refresh;
 	float nodeScale;
 	int guiMode;
 	char* optArg;
