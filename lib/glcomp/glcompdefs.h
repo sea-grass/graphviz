@@ -88,7 +88,7 @@ extern "C" {
 	    glImageObj } glObjType;
 
     typedef struct _glCompButton glCompButton;
-    typedef struct _glCompObj glCompObj;
+    typedef struct glCompObj_ glCompObj;
 
 /*call backs for widgets*/
     typedef void (*glcompdrawfunc_t) (void *obj);
@@ -220,7 +220,7 @@ typedef struct glCompSet_ glCompSet;
     } glCompCommon;
 
 /// object prototype
-struct _glCompObj {
+struct glCompObj_ {
   glObjType objType;
   glCompCommon common;
 };
