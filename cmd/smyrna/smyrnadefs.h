@@ -316,11 +316,7 @@ typedef struct
 	int activeGraph;
 
 	/*stores the info about status of mouse,pressed? what button ? where? */
-//	mouse_attr mouse;
 	glCompMouse mouse;
-
-	/*selection object,refer to smyrnadefs.h for more info */
-//	selection Selection;
 
 	viewport_camera **cameras;
 	size_t camera_count; /// <number of cameras
