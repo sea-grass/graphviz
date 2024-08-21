@@ -66,8 +66,6 @@ extern "C" {
 #define GLCOMPSET_FONT_DESC  "Times Italic"
 #define GL_FONTOPTIMIZE 1
 
-#define GL_FONTHJUSTIFY	0
-
 #define GLCOMPSET_BORDERWIDTH				2.0f
 #define GLCOMPSET_PANEL_BORDERWIDTH				3.0f
 #define GLCOMPSET_BUTTON_BEVEL				5.0f
