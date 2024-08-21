@@ -87,7 +87,6 @@ extern "C" {
     typedef enum { glPanelObj, glButtonObj, glLabelObj,
 	    glImageObj } glObjType;
 
-    typedef struct _glCompButton glCompButton;
     typedef struct glCompObj_ glCompObj;
 
 /*call backs for widgets*/
@@ -251,7 +250,7 @@ struct glCompObj_ {
     } glCompLabel;
 
 /*buttons*/
-    struct _glCompButton {
+    typedef struct {
 	glCompObj base;
 	float width, height;
 	glCompLabel *label;
@@ -260,8 +259,7 @@ struct glCompObj_ {
 	int groupid;
 	glCompImage *image;	/*glyph */
 	int data;
-
-    };
+    } glCompButton;
 
 /*texture based image*/
 
