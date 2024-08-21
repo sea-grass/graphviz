@@ -199,6 +199,7 @@ extern "C" {
 
     } glCompCallBacks;
 
+typedef struct glCompSet_ glCompSet;
 
 /*
 	common widget properties
@@ -212,7 +213,7 @@ extern "C" {
 	glCompColor color;
 	int enabled;
 	int visible;
-	void *compset;		// compset
+	glCompSet *compset; ///< compset
 	void *parent;		/*parent widget */
 	int data;
 	glCompFont *font;	//pointer to font to use
@@ -293,7 +294,7 @@ extern "C" {
 
 
 /*main widget set manager*/
-    typedef struct {
+    struct glCompSet_ {
 	glObjType objType;	/*always keep this here for each drawable object */
 	glCompCommon common;
 
@@ -302,7 +303,7 @@ extern "C" {
 	size_t textureCount;
 	glCompTex **textures;
 	glCompMouse mouse;
-    } glCompSet;
+    };
 
 #ifdef __cplusplus
 }

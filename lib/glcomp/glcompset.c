@@ -76,7 +76,7 @@ static void glCompSetMouseDown(void *obj, float x, float y,
 	o->mouse.pos.y = o->common.height - y;
 	o->mouse.pos.z = 0;
 	o->mouse.clickedObj = glCompGetObjByMouse(o->common.compset,
-	                                          &((glCompSet *)o->common.compset)->mouse);
+	                                          &o->common.compset->mouse);
 	if (o->mouse.clickedObj)
 	    if (o->mouse.clickedObj->common.functions.mousedown)
 		o->mouse.clickedObj->common.functions.mousedown(o->mouse.clickedObj, x, y, t);
