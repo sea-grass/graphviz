@@ -20,7 +20,6 @@ digraph smyrna_attr_widgets
     graph[check_box_nodesselectable="chkboxNodeSelect"];
     graph[combobox_labelglutfont="labelfont"];
     graph[combobox_defaultnodeshape="settingscombobox1"];
-    graph[combobox_colortheme="colorthemecb"];
     graph[color_button_nodelabelcolor="nodelabelcolor"];
     graph[color_button_edgelabelcolor="edgelabelcolor"];
     graph[text_box_nodelabelattribute="labelnodeattribute"];
