@@ -60,8 +60,10 @@ static void glCompMouseMove(void *obj, float x, float y) {
 static void glCompSetMouseClick(void *obj, float x, float y,
 				glMouseButtonType t)
 {
-    if (((glCompSet *) obj)->common.callbacks.click)
-	((glCompSet *) obj)->common.callbacks.click(obj, x, y, t);
+  glCompObj *o = obj;
+  if (o->common.callbacks.click) {
+    o->common.callbacks.click(obj, x, y, t);
+  }
 }
 
 static void glCompSetMouseDown(void *obj, float x, float y,
