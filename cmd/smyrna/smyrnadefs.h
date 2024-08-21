@@ -367,7 +367,6 @@ typedef struct
 	char* optArg;
 
     } ViewInfo;
-/*rotation steps*/
 
     extern ViewInfo *view;
     extern GtkMessageDialog *Dlg;
