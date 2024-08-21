@@ -181,9 +181,8 @@ void glCompButtonMouseDown(glCompObj *obj, float x, float y,
 }
 
 void glCompButtonMouseIn(glCompObj *obj, float x, float y) {
-    /*Put your internal code here */
-    if (((glCompButton *) obj)->common.callbacks.mousein)
-	((glCompButton *) obj)->common.callbacks.mousein(obj, x, y);
+    if (obj->common.callbacks.mousein)
+	obj->common.callbacks.mousein(obj, x, y);
 }
 
 void glCompButtonMouseOut(glCompObj *obj, float x, float y) {
