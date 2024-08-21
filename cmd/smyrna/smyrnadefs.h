@@ -322,7 +322,7 @@ typedef struct
 	size_t camera_count; /// <number of cameras
 	size_t active_camera;
 
-	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
+	/// open gl canvas
 	GtkWidget *drawing_area;
 
 	/*Topview data structure, refer topview.h for more info */
