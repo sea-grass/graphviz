@@ -21,7 +21,7 @@ static void glCompPanelDraw(void *o) {
   glCompCommon ref;
   glCompRect r;
   ref = p->common;
-  glCompCalcWidget((glCompCommon *)p->common.parent, &p->common, &ref);
+  glCompCalcWidget(p->common.parent, &p->common, &ref);
   p->objType = glPanelObj;
 
   if (!p->common.visible)
