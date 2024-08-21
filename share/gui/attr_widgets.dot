@@ -23,7 +23,6 @@ digraph smyrna_attr_widgets
     graph[color_button_nodelabelcolor="nodelabelcolor"];
     graph[color_button_edgelabelcolor="edgelabelcolor"];
     graph[text_box_nodelabelattribute="labelnodeattribute"];
-    graph[text_box_edgecolorattribute="edgecolortxt"];
     graph[text_box_edgelabelattribute="labeledgeattribute"];
     graph[spin_button_labelnumberofnodes="labelzoomfactor"];
     graph[check_box_labelshownodes="labelshownodes"];
