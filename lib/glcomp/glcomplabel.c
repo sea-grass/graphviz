@@ -18,7 +18,7 @@ static void glCompLabelDraw(void *label) {
   glCompLabel *p = label;
   glCompCommon ref;
   ref = p->common;
-  glCompCalcWidget((glCompCommon *)p->common.parent, &p->common, &ref);
+  glCompCalcWidget(p->common.parent, &p->common, &ref);
   /*draw background */
   if (!p->transparent) {
     glCompSetColor(&p->common.color);
