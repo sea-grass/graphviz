@@ -94,7 +94,7 @@ static void cb_mouseclick(int button, int state, int x, int y)
     begin_y = (float) y;
     if(state==GLUT_DOWN)
     {
-	view->widgets->base.common.functions.mousedown((glCompObj *)view->widgets,
+	view->widgets->base.common.functions.mousedown(&view->widgets->base,
 	                                               (float)x, (float)y,
 	                                               getGlCompMouseType(button));
 	if (button ==  GLUT_LEFT_BUTTON)
@@ -107,7 +107,7 @@ static void cb_mouseclick(int button, int state, int x, int y)
     else
     {
 	view->arcball->isDragging = 0;
-	view->widgets->base.common.functions.mouseup((glCompObj *)view->widgets,
+	view->widgets->base.common.functions.mouseup(&view->widgets->base,
 	                                             (float)x, (float)y,
 	                                             getGlCompMouseType(button));
 
@@ -132,8 +132,7 @@ static void cb_drag(int X, int Y)
     float y = (float) Y;
 
     if (view->widgets)
-	view->widgets->base.common.functions.mouseover((glCompObj *)view->widgets, x,
-	                                               y);
+	view->widgets->base.common.functions.mouseover(&view->widgets->base, x, y);
 
     dx = x - begin_x;
     dy = y - begin_y;

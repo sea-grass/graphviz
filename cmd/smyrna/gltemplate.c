@@ -184,7 +184,7 @@ static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event, voi
 
     begin_x = (float) event->x;
     begin_y = (float) event->y;
-    view->widgets->base.common.functions.mousedown((glCompObj *)view->widgets,
+    view->widgets->base.common.functions.mousedown(&view->widgets->base,
                                                    (float)event->x,
                                                    (float)event->y,
                                                    getGlCompMouseType(event->button));
@@ -213,7 +213,7 @@ static gboolean button_release_event(GtkWidget *widget, GdkEventButton *event,
 
     if (view->widgets == 0) return FALSE;
     view->arcball->isDragging = 0;
-    view->widgets->base.common.functions.mouseup((glCompObj *)view->widgets,
+    view->widgets->base.common.functions.mouseup(&view->widgets->base,
                                                  (float)event->x,
                                                  (float)event->y,
                                                  getGlCompMouseType(event->button));
@@ -287,8 +287,7 @@ static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event,
 
     bool redraw = false;
     if (view->widgets)
-	view->widgets->base.common.functions.mouseover((glCompObj *)view->widgets, x,
-	                                               y);
+	view->widgets->base.common.functions.mouseover(&view->widgets->base, x, y);
 
     dx = x - begin_x;
     dy = y - begin_y;

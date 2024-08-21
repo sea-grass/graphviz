@@ -24,7 +24,7 @@
 glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
                               char *caption) {
     glCompButton *p = gv_alloc(sizeof(glCompButton));
-    glCompInitCommon((glCompObj *) p, par, x, y);
+    glCompInitCommon(&p->base, par, x, y);
     p->base.objType = glButtonObj;
     /*customize button color */
     p->base.common.color.R = GLCOMPSET_BUTTON_COLOR_R;
@@ -52,7 +52,7 @@ glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
     p->base.common.functions.mouseup = glCompButtonMouseUp;
 
     /*caption */
-    p->base.common.font = glNewFontFromParent((glCompObj *)p, NULL);
+    p->base.common.font = glNewFontFromParent(&p->base, NULL);
     p->label = glCompLabelNew(p, caption);
     p->label->base.common.font->justify.VJustify = glFontVJustifyCenter;
     p->label->base.common.font->justify.HJustify = glFontHJustifyCenter;
@@ -156,7 +156,7 @@ void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
 	    p->status = false;
     }
     if (p->base.common.callbacks.click)
-	p->base.common.callbacks.click((glCompObj *)p, x, y, t);
+	p->base.common.callbacks.click(&p->base, x, y, t);
 }
 
 void glCompButtonDoubleClick(glCompObj *obj, float x, float y,

@@ -52,7 +52,7 @@ static void glCompPanelDraw(void *o) {
 glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
                             float h) {
     glCompPanel *p = gv_alloc(sizeof(glCompPanel));
-    glCompInitCommon((glCompObj *) p, parentObj, x, y);
+    glCompInitCommon(&p->base, parentObj, x, y);
 
     p->shadowcolor.R = GLCOMPSET_PANEL_SHADOW_COLOR_R;
     p->shadowcolor.G = GLCOMPSET_PANEL_SHADOW_COLOR_G;
@@ -64,7 +64,7 @@ glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
     p->base.common.width = w;
     p->base.common.height = h;
 
-    p->base.common.font = glNewFontFromParent((glCompObj *)p, NULL);
+    p->base.common.font = glNewFontFromParent(&p->base, NULL);
     p->text = NULL;
     p->base.common.functions.draw = glCompPanelDraw;
     p->image = NULL;

@@ -135,8 +135,7 @@ void switch2D3D(glCompObj *obj, float x, float y, glMouseButtonType t) {
 	    view->active_camera = SIZE_MAX; // set to camera
 	    glCompButtonShow(to3DBtn);
 	    glCompButtonHide(to2DBtn);
-	    panBtn->base.common.callbacks.click((glCompObj *)panBtn, 0.0f, 0.0f,
-					   (glMouseButtonType) 0);
+	    panBtn->base.common.callbacks.click(&panBtn->base, 0.0f, 0.0f, 0);
 	    img3D->base.common.visible = 0;
 
 

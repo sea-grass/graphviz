@@ -185,14 +185,14 @@ void glCompEmptyCommon(glCompCommon * c)
 glCompSet *glCompSetNew(int w, int h)
 {
     glCompSet *s = gv_alloc(sizeof(glCompSet));
-    glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
+    glCompInitCommon(&s->base, NULL, 0.0f, 0.0f);
     s->base.common.width = (float)w;
     s->base.common.height = (float)h;
     s->objcnt = 0;
     s->obj = NULL;
     s->textureCount = 0;
     s->textures = NULL;
-    s->base.common.font = glNewFontFromParent((glCompObj *) s, NULL);
+    s->base.common.font = glNewFontFromParent(&s->base, NULL);
     s->base.common.compset = s;
     s->base.common.functions.mouseover = (glcompmouseoverfunc_t)glCompMouseMove;
     s->base.common.functions.mousedown = (glcompmousedownfunc_t)glCompSetMouseDown;

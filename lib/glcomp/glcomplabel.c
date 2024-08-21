@@ -29,17 +29,17 @@ static void glCompLabelDraw(void *label) {
     glVertex3d(ref.refPos.x, ref.refPos.y + ref.height, ref.refPos.z);
     glEnd();
   }
-  glCompRenderText(p->base.common.font, (glCompObj *)p);
+  glCompRenderText(p->base.common.font, &p->base);
 }
 
 glCompLabel *glCompLabelNew(void *par, char *text) {
     glCompLabel *p = gv_alloc(sizeof(glCompLabel));
-    glCompInitCommon((glCompObj*)p, par, 0, 0);
+    glCompInitCommon(&p->base, par, 0, 0);
     p->base.objType = glLabelObj;
     p->transparent=1;
 
     p->text = gv_strdup(text);
-    p->base.common.font = glNewFontFromParent((glCompObj *)p, text);
+    p->base.common.font = glNewFontFromParent(&p->base, text);
     p->base.common.functions.draw = glCompLabelDraw;
 
     return p;
