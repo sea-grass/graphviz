@@ -83,7 +83,7 @@ void glCompImageDraw(void *obj)
     glCompCommon ref = p->common;
     float w,h,d;
 
-    glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
+    glCompCalcWidget(p->common.parent, &p->common, &ref);
     if (!p->common.visible)
 	return;
     if (!p->texture)
