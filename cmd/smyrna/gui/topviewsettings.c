@@ -16,11 +16,6 @@
 #include <stdint.h>
 #include "viewport.h"
 
-void color_change_request(GtkWidget *widget, void *user_data) {
-    (void)widget;
-    (void)user_data;
-}
-
 void size_change_request(GtkWidget *widget, void *user_data) {
     (void)widget;
     (void)user_data;

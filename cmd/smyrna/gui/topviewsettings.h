@@ -15,7 +15,6 @@
 _BB void on_settingsOKBtn_clicked(GtkWidget *widget, void *user_data);
 _BB void on_settingsCancelBtn_clicked(GtkWidget *widget, void *user_data);
 _BB void on_settingsApplyBtn_clicked(GtkWidget *widget, void *user_data);
-_BB void color_change_request(GtkWidget *widget, void *user_data);
 _BB void size_change_request(GtkWidget *widget, void *user_data);
 _BB void on_dlgSettings_close(GtkWidget *widget, void *user_data);
 extern void load_settings_from_graph(void);
