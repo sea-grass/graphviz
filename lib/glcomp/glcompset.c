@@ -48,12 +48,12 @@ static glCompObj *glCompGetObjByMouse(glCompSet *s, glCompMouse *m) {
 static void glCompMouseMove(void *obj, float x, float y) {
   glCompSet *o = obj;
   o->mouse.pos.x = x;
-  o->mouse.pos.y = o->common.height - y;
+  o->mouse.pos.y = o->base.common.height - y;
   o->mouse.pos.z = 0;
   o->mouse.dragY = o->mouse.pos.y - startY;
   o->mouse.dragX = o->mouse.pos.x - startX;
-  if (o->common.callbacks.mouseover) {
-    o->common.callbacks.mouseover(obj, x, y);
+  if (o->base.common.callbacks.mouseover) {
+    o->base.common.callbacks.mouseover(obj, x, y);
   }
 }
 
@@ -73,25 +73,25 @@ static void glCompSetMouseDown(void *obj, float x, float y,
     o->mouse.t = t;
     if (t == glMouseLeftButton) {
 	o->mouse.pos.x = x;
-	o->mouse.pos.y = o->common.height - y;
+	o->mouse.pos.y = o->base.common.height - y;
 	o->mouse.pos.z = 0;
-	o->mouse.clickedObj = glCompGetObjByMouse(o->common.compset,
-	                                          &o->common.compset->mouse);
+	o->mouse.clickedObj = glCompGetObjByMouse(o->base.common.compset,
+	                                          &o->base.common.compset->mouse);
 	if (o->mouse.clickedObj)
 	    if (o->mouse.clickedObj->common.functions.mousedown)
 		o->mouse.clickedObj->common.functions.mousedown(o->mouse.clickedObj, x, y, t);
     }
     o->mouse.down = 1;
     startX = x;
-    startY = o->common.height - y;
-    if (o->common.callbacks.mousedown)
-	o->common.callbacks.mousedown(obj, x, y, t);
+    startY = o->base.common.height - y;
+    if (o->base.common.callbacks.mousedown)
+	o->base.common.callbacks.mousedown(obj, x, y, t);
 }
 
 static void glCompSetMouseUp(void *obj, float x, float y, glMouseButtonType t) {
     float tempX = x;
     glCompSet *ob = obj;
-    float tempY = ob->common.height - y;
+    float tempY = ob->base.common.height - y;
 
     ob->mouse.down = 0;
     if (t == glMouseLeftButton) {
@@ -107,8 +107,8 @@ static void glCompSetMouseUp(void *obj, float x, float y, glMouseButtonType t) {
 	if (o == o_clicked)
 	    o->common.functions.click(o, x, y, t);
     }
-    if (ob->common.callbacks.mouseup)
-	ob->common.callbacks.mouseup(obj, x, y, t);
+    if (ob->base.common.callbacks.mouseup)
+	ob->base.common.callbacks.mouseup(obj, x, y, t);
     /*check if mouse is clicked or dragged */
     if (startX == (int)tempX && startY == tempY)
 	glCompSetMouseClick(obj, x, y, t);
@@ -186,17 +186,17 @@ glCompSet *glCompSetNew(int w, int h)
 {
     glCompSet *s = gv_alloc(sizeof(glCompSet));
     glCompInitCommon((glCompObj *) s, NULL, 0.0f, 0.0f);
-    s->common.width = (float)w;
-    s->common.height = (float)h;
+    s->base.common.width = (float)w;
+    s->base.common.height = (float)h;
     s->objcnt = 0;
     s->obj = NULL;
     s->textureCount = 0;
     s->textures = NULL;
-    s->common.font = glNewFontFromParent((glCompObj *) s, NULL);
-    s->common.compset = s;
-    s->common.functions.mouseover = (glcompmouseoverfunc_t)glCompMouseMove;
-    s->common.functions.mousedown = (glcompmousedownfunc_t)glCompSetMouseDown;
-    s->common.functions.mouseup = (glcompmouseupfunc_t)glCompSetMouseUp;
+    s->base.common.font = glNewFontFromParent((glCompObj *) s, NULL);
+    s->base.common.compset = s;
+    s->base.common.functions.mouseover = (glcompmouseoverfunc_t)glCompMouseMove;
+    s->base.common.functions.mousedown = (glcompmousedownfunc_t)glCompSetMouseDown;
+    s->base.common.functions.mouseup = (glcompmouseupfunc_t)glCompSetMouseUp;
     glCompMouseInit(&s->mouse);
     return s;
 }
@@ -249,7 +249,7 @@ void glCompSetDraw(glCompSet *s) {
 void glcompsetUpdateBorder(glCompSet * s, int w, int h)
 {
     if (w > 0 && h > 0) {
-	s->common.width = (float)w;
-	s->common.height = (float)h;
+	s->base.common.width = (float)w;
+	s->base.common.height = (float)h;
     }
 }

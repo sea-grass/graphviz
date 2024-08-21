@@ -303,7 +303,7 @@ static void InsertImage(sdot_op * o, int param)
 	}
 	i->width = o->op.u.image.pos.w;
 	i->height = o->op.u.image.pos.h;
-	i->common.functions.draw(i);
+	i->base.common.functions.draw(i);
     }
 }
 

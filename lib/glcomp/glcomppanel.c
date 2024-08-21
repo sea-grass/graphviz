@@ -18,13 +18,12 @@
 
 static void glCompPanelDraw(void *o) {
   glCompPanel *p = o;
-  glCompCommon ref;
   glCompRect r;
-  ref = p->common;
-  glCompCalcWidget(p->common.parent, &p->common, &ref);
-  p->objType = glPanelObj;
+  glCompCommon ref = p->base.common;
+  glCompCalcWidget(p->base.common.parent, &p->base.common, &ref);
+  p->base.objType = glPanelObj;
 
-  if (!p->common.visible)
+  if (!p->base.common.visible)
     return;
   /*draw shadow */
   glColor4f(p->shadowcolor.R, p->shadowcolor.G, p->shadowcolor.B,
@@ -42,11 +41,11 @@ static void glCompPanelDraw(void *o) {
   r.pos.z = -0.001f;
   glCompDrawRectangle(&r);
   /*draw panel */
-  glCompDrawRectPrism(&ref.pos, ref.width, ref.height, p->common.borderWidth,
-                      0.01f, &ref.color, true);
+  glCompDrawRectPrism(&ref.pos, ref.width, ref.height,
+                      p->base.common.borderWidth, 0.01f, &ref.color, true);
   /*draw image if there is */
   if (p->image) {
-    p->image->common.callbacks.draw(p->image);
+    p->image->base.common.callbacks.draw(p->image);
   }
 }
 
@@ -60,15 +59,14 @@ glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
     p->shadowcolor.B = GLCOMPSET_PANEL_SHADOW_COLOR_B;
     p->shadowcolor.A = GLCOMPSET_PANEL_SHADOW_COLOR_A;
     p->shadowwidth = GLCOMPSET_PANEL_SHADOW_WIDTH;
-    p->common.borderWidth = GLCOMPSET_PANEL_BORDERWIDTH;
+    p->base.common.borderWidth = GLCOMPSET_PANEL_BORDERWIDTH;
 
+    p->base.common.width = w;
+    p->base.common.height = h;
 
-    p->common.width = w;
-    p->common.height = h;
-
-    p->common.font = glNewFontFromParent((glCompObj *) p, NULL);
+    p->base.common.font = glNewFontFromParent((glCompObj *)p, NULL);
     p->text = NULL;
-    p->common.functions.draw = glCompPanelDraw;
+    p->base.common.functions.draw = glCompPanelDraw;
     p->image = NULL;
     return p;
 }

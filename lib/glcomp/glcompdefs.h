@@ -233,8 +233,7 @@ struct _glCompObj {
 
 /*generic image*/
     typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	glCompTex *texture;
 	float width, height;  /* width and height in world coords */
 	/* char *pngFile; */
@@ -243,8 +242,7 @@ struct _glCompObj {
 
 /*generic panel*/
     typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	float shadowwidth;
 	glCompColor shadowcolor;
 	char *text;
@@ -253,16 +251,14 @@ struct _glCompObj {
 
 /*label*/
     typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	char *text;
 	int transparent;
     } glCompLabel;
 
 /*buttons*/
     struct _glCompButton {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	float width, height;
 	glCompLabel *label;
 	bool status; ///< false not pressed, true pressed
@@ -295,9 +291,7 @@ struct _glCompObj {
 
 /*main widget set manager*/
     struct glCompSet_ {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
-
+	glCompObj base;
 	glCompObj **obj;
 	size_t objcnt;
 	size_t textureCount;

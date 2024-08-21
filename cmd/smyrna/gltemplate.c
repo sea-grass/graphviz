@@ -184,7 +184,10 @@ static gboolean button_press_event(GtkWidget *widget, GdkEventButton *event, voi
 
     begin_x = (float) event->x;
     begin_y = (float) event->y;
-    view->widgets->common.functions.mousedown((glCompObj*)view->widgets, (float)event->x, (float)event->y, getGlCompMouseType(event->button));
+    view->widgets->base.common.functions.mousedown((glCompObj *)view->widgets,
+                                                   (float)event->x,
+                                                   (float)event->y,
+                                                   getGlCompMouseType(event->button));
     if (event->button == 1)	//left click
 	appmouse_left_click_down(view,(int) event->x,(int) event->y);
 
@@ -210,8 +213,10 @@ static gboolean button_release_event(GtkWidget *widget, GdkEventButton *event,
 
     if (view->widgets == 0) return FALSE;
     view->arcball->isDragging = 0;
-    view->widgets->common.functions.mouseup((glCompObj*)view->widgets, (float)event->x, (float)event->y, getGlCompMouseType(event->button));
-
+    view->widgets->base.common.functions.mouseup((glCompObj *)view->widgets,
+                                                 (float)event->x,
+                                                 (float)event->y,
+                                                 getGlCompMouseType(event->button));
 
     if (event->button == 1)	//left click release
 	appmouse_left_click_up(view,(int) event->x,(int) event->y);
@@ -282,7 +287,8 @@ static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event,
 
     bool redraw = false;
     if (view->widgets)
-	view->widgets->common.functions.mouseover((glCompObj*)view->widgets, x, y);
+	view->widgets->base.common.functions.mouseover((glCompObj *)view->widgets, x,
+	                                               y);
 
     dx = x - begin_x;
     dy = y - begin_y;

@@ -25,38 +25,38 @@ glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
                               char *caption) {
     glCompButton *p = gv_alloc(sizeof(glCompButton));
     glCompInitCommon((glCompObj *) p, par, x, y);
-    p->objType = glButtonObj;
+    p->base.objType = glButtonObj;
     /*customize button color */
-    p->common.color.R = GLCOMPSET_BUTTON_COLOR_R;
-    p->common.color.G = GLCOMPSET_BUTTON_COLOR_G;
-    p->common.color.B = GLCOMPSET_BUTTON_COLOR_B;
-    p->common.color.A = GLCOMPSET_BUTTON_COLOR_ALPHA;
+    p->base.common.color.R = GLCOMPSET_BUTTON_COLOR_R;
+    p->base.common.color.G = GLCOMPSET_BUTTON_COLOR_G;
+    p->base.common.color.B = GLCOMPSET_BUTTON_COLOR_B;
+    p->base.common.color.A = GLCOMPSET_BUTTON_COLOR_ALPHA;
 
-    p->common.borderWidth = GLCOMPSET_BUTTON_BEVEL;
+    p->base.common.borderWidth = GLCOMPSET_BUTTON_BEVEL;
 
-    p->common.width = w;
-    p->common.height = h;
+    p->base.common.width = w;
+    p->base.common.height = h;
     p->status = false; // false not pressed, true pressed
     p->groupid = 0;
-    p->common.callbacks.click = NULL;
+    p->base.common.callbacks.click = NULL;
     /*set event functions */
 
-    p->common.functions.draw = (glcompdrawfunc_t)glCompButtonDraw;
+    p->base.common.functions.draw = (glcompdrawfunc_t)glCompButtonDraw;
 
-    p->common.functions.click = glCompButtonClick;
-    p->common.functions.doubleclick = glCompButtonDoubleClick;
-    p->common.functions.mousedown = glCompButtonMouseDown;
-    p->common.functions.mousein = glCompButtonMouseIn;
-    p->common.functions.mouseout = glCompButtonMouseOut;
-    p->common.functions.mouseover = glCompButtonMouseOver;
-    p->common.functions.mouseup = glCompButtonMouseUp;
+    p->base.common.functions.click = glCompButtonClick;
+    p->base.common.functions.doubleclick = glCompButtonDoubleClick;
+    p->base.common.functions.mousedown = glCompButtonMouseDown;
+    p->base.common.functions.mousein = glCompButtonMouseIn;
+    p->base.common.functions.mouseout = glCompButtonMouseOut;
+    p->base.common.functions.mouseover = glCompButtonMouseOver;
+    p->base.common.functions.mouseup = glCompButtonMouseUp;
 
     /*caption */
-    p->common.font = glNewFontFromParent ((glCompObj *) p, NULL);
+    p->base.common.font = glNewFontFromParent((glCompObj *)p, NULL);
     p->label = glCompLabelNew(p, caption);
-    p->label->common.font->justify.VJustify = glFontVJustifyCenter;
-    p->label->common.font->justify.HJustify = glFontHJustifyCenter;
-    p->label->common.align = glAlignParent;
+    p->label->base.common.font->justify.VJustify = glFontVJustifyCenter;
+    p->label->base.common.font->justify.HJustify = glFontHJustifyCenter;
+    p->label->base.common.align = glAlignParent;
     /*image */
     p->image = NULL;
     return p;
@@ -72,67 +72,65 @@ int glCompButtonAddPngGlyph(glCompButton *b, const char *fileName) {
 
     rv = glCompImageLoadPng(b->image, fileName);
     if (rv) {
-	b->image->common.anchor.leftAnchor = 1;
-	b->image->common.anchor.left = 0;
+	b->image->base.common.anchor.leftAnchor = 1;
+	b->image->base.common.anchor.left = 0;
 
-	b->image->common.anchor.topAnchor = 1;
-	b->image->common.anchor.top = 0;
+	b->image->base.common.anchor.topAnchor = 1;
+	b->image->base.common.anchor.top = 0;
 
-	b->image->common.anchor.bottomAnchor = 1;
-	b->image->common.anchor.bottom = 0;
+	b->image->base.common.anchor.bottomAnchor = 1;
+	b->image->base.common.anchor.bottom = 0;
 
-	b->label->common.anchor.leftAnchor = 1;
-	b->label->common.anchor.left = b->image->common.width;
-	b->label->common.anchor.rightAnchor = 1;
-	b->label->common.anchor.right = 0;
+	b->label->base.common.anchor.leftAnchor = 1;
+	b->label->base.common.anchor.left = b->image->base.common.width;
+	b->label->base.common.anchor.rightAnchor = 1;
+	b->label->base.common.anchor.right = 0;
 
-	b->label->common.anchor.topAnchor = 1;
-	b->label->common.anchor.top = 0;
+	b->label->base.common.anchor.topAnchor = 1;
+	b->label->base.common.anchor.top = 0;
 
-	b->label->common.anchor.bottomAnchor = 1;
-	b->label->common.anchor.bottom = 0;
+	b->label->base.common.anchor.bottomAnchor = 1;
+	b->label->base.common.anchor.bottom = 0;
 
-	b->label->common.align = glAlignNone;
+	b->label->base.common.align = glAlignNone;
     }
     return rv;
 }
 
 void glCompButtonHide(glCompButton * p)
 {
-    p->common.visible = 0;
+    p->base.common.visible = 0;
     if (p->label)
-	p->label->common.visible = 0;
+	p->label->base.common.visible = 0;
     if (p->image)
-	p->image->common.visible = 0;
+	p->image->base.common.visible = 0;
 }
 
 void glCompButtonShow(glCompButton * p)
 {
-    p->common.visible = 1;
+    p->base.common.visible = 1;
     if (p->label)
-	p->label->common.visible = 1;
+	p->label->base.common.visible = 1;
     if (p->image)
-	p->image->common.visible = 1;
+	p->image->base.common.visible = 1;
 }
 
 void glCompButtonDraw(glCompButton * p)
 {
-
-    glCompCommon ref;
-    ref = p->common;
-    glCompCalcWidget(p->common.parent, &p->common, &ref);
-    if (!p->common.visible)
+    glCompCommon ref = p->base.common;
+    glCompCalcWidget(p->base.common.parent, &p->base.common, &ref);
+    if (!p->base.common.visible)
 	return;
     /*draw panel */
     glCompDrawRectPrism(&(ref.pos), ref.width, ref.height,
-			p->common.borderWidth, 0.01f, &(ref.color),
+                        p->base.common.borderWidth, 0.01f, &ref.color,
 			!p->status);
     if (p->label)
-	p->label->common.functions.draw(p->label);
+	p->label->base.common.functions.draw(p->label);
     if (p->image)
-	p->image->common.functions.draw(p->image);
-    if (p->common.callbacks.draw)
-	p->common.callbacks.draw(p);	/*user defined drawing routines are called here. */
+	p->image->base.common.functions.draw(p->image);
+    if (p->base.common.callbacks.draw)
+	p->base.common.callbacks.draw(p); // user defined drawing routines are called here
 }
 
 void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
@@ -157,8 +155,8 @@ void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
 	} else
 	    p->status = false;
     }
-    if (p->common.callbacks.click)
-	p->common.callbacks.click((glCompObj *) p, x, y, t);
+    if (p->base.common.callbacks.click)
+	p->base.common.callbacks.click((glCompObj *)p, x, y, t);
 }
 
 void glCompButtonDoubleClick(glCompObj *obj, float x, float y,
