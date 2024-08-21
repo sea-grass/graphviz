@@ -79,8 +79,7 @@ extern "C" {
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
 
     typedef enum { glFontVJustifyNone, glFontVJustifyCenter } glCompVJustify;
-    typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
-	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
+    typedef enum { glFontHJustifyNone, glFontHJustifyCenter } glCompHJustify;
 
     typedef enum { glMouseDown, glMouseUp } glCompMouseStatus;
     typedef enum { glMouseLeftButton, glMouseRightButton,

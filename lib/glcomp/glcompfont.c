@@ -149,11 +149,7 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
     switch (f->justify.HJustify) 
     {
     case glFontHJustifyNone:
-    case glFontHJustifyLeft:
 	x = ref.refPos.x;
-	break;
-    case glFontHJustifyRight:
-	x = ref.refPos.x + (ref.width - f->tex->width);
 	break;
     case glFontHJustifyCenter:
 	x = ref.refPos.x + (ref.width - f->tex->width) / 2.0f;
