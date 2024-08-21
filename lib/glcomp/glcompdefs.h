@@ -52,7 +52,6 @@ extern "C" {
 #define	GLCOMPSET_FONT_COLOR_B		0.0f
 #define	GLCOMPSET_FONT_COLOR_ALPHA	1.0f
 #define GLCOMPSET_FONT_DESC  "Times Italic"
-#define GL_FONTOPTIMIZE 1
 
 #define GLCOMPSET_BORDERWIDTH				2.0f
 #define GLCOMPSET_PANEL_BORDERWIDTH				3.0f
@@ -164,7 +163,6 @@ extern "C" {
 	int reference;		/*if font has references to parent */
 	glCompJustify justify;
 	bool is2D;
-	int optimize;
     } glCompFont;
 
     typedef struct {

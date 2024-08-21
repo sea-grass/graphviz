@@ -61,7 +61,6 @@ glCompFont *glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
     font->fontdesc = gv_strdup(fontdesc);
     font->size = fs;
     font->transparent = 1;
-    font->optimize = GL_FONTOPTIMIZE;
     if (text)
 	font->tex =
 	    glCompSetAddNewTexLabel(s, font->fontdesc, font->size, text,
@@ -91,7 +90,6 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 	font->transparent = parent->font->transparent;
 	font->justify.VJustify = parent->font->justify.VJustify;
 	font->justify.HJustify = parent->font->justify.HJustify;
-	font->optimize = parent->font->optimize;
 	font->is2D=parent->font->is2D;
 	if (text) {
 	    if (strlen(text))
