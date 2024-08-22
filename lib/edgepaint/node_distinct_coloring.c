@@ -185,7 +185,7 @@ int node_distinct_coloring(const char *color_scheme, int *lightness,
      where weights are stored as entries of A0.
      accuracy is the threshold given so that when finding the coloring for each node, the optimal is
      with in "accuracy" of the true global optimal. 
-     color_scheme: rgb, gray, lab, or one of the color palettes in color_palettes.h, or a list of hex rgb colors separaterd by comma like "#ff0000,#00ff00"
+     color_scheme: rgb, gray, lab, or one of the color palettes in color_palettes.h, or a list of hex rgb colors separated by comma like "#ff0000,#00ff00"
      lightness: of the form 0,70, specifying the range of lightness of LAB color. Ignored if scheme is not COLOR_LAB.
      A: the graph of n nodes
      accuracy: how accurate to find the optimal
