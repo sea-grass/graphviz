@@ -139,7 +139,7 @@ static int splines_intersect(size_t dim,
   return 0;
 }
 
-Agraph_t *edge_distinct_coloring(char *color_scheme, int *lightness,
+Agraph_t *edge_distinct_coloring(const char *color_scheme, int *lightness,
                                  Agraph_t *g, double angle, double accuracy,
                                  int check_edges_with_same_endpoint, int seed) {
   /* color the edges of a graph so that conflicting edges are as dinstrinct in color as possibl.
