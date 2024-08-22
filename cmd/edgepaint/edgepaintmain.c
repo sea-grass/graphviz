@@ -240,7 +240,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy,
 
 static int clarify(Agraph_t *g, double angle, double accuracy,
                    int check_edges_with_same_endpoint, int seed,
-                   char *color_scheme, int *lightness) {
+                   const char *color_scheme, int *lightness) {
 
   if (checkG(g)) {
     agerrorf("Graph %s contains loops or multiedges\n", agnameof(g));
