@@ -4291,6 +4291,50 @@ def test_2588():
         subprocess.check_call([gvgen, "-R", "20"], stdout=subprocess.DEVNULL)
 
 
+@pytest.mark.skipif(which("edgepaint") is None, reason="edgepaint not available")
+@pytest.mark.skipif(which("gvgen") is None, reason="gvgen not available")
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2591", strict=True
+)
+def test_2591():
+    """
+    edgepaint color schemes should do something
+    https://gitlab.com/graphviz/graphviz/-/issues/2591
+    """
+
+    # make an input graph
+    gvgen = which("gvgen")
+    graph = subprocess.check_output([gvgen, "-k", "5"], universal_newlines=True)
+
+    # run it through neato
+    laidout = subprocess.check_output(
+        ["dot", "-Kneato", "-Goverlap=false"], input=graph, universal_newlines=True
+    )
+
+    # try two different edgepaint invocations
+    edgepaint = which("edgepaint")
+    gray = subprocess.check_output(
+        [edgepaint, "--angle=89.999", "--color_scheme=gray"],
+        input=laidout,
+        universal_newlines=True,
+    )
+    rgb = subprocess.check_output(
+        [edgepaint, "--angle=89.999", "--color_scheme=#00ff00,#0000ff"],
+        input=laidout,
+        universal_newlines=True,
+    )
+
+    # process these into an image
+    gray_svg = subprocess.check_output(
+        ["dot", "-Kneato", "-n2", "-Tsvg"], input=gray, universal_newlines=True
+    )
+    rgb_svg = subprocess.check_output(
+        ["dot", "-Kneato", "-n2", "-Tsvg"], input=rgb, universal_newlines=True
+    )
+
+    assert gray_svg != rgb_svg, "edgepaint --color_scheme had no effect"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
