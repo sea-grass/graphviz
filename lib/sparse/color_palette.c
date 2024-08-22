@@ -15,7 +15,7 @@
 
 enum { npalettes = 265 };
 
-static char *color_palettes[npalettes][2] = {
+static const char *const color_palettes[npalettes][2] = {
     {"accent3", "#7fc97f,#beaed4,#fdc086"},
     {"accent4", "#7fc97f,#beaed4,#fdc086,#ffff99"},
     {"accent5", "#7fc97f,#beaed4,#fdc086,#ffff99,#386cb0"},
