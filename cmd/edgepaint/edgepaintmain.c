@@ -198,6 +198,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy,
                 "--color_scheme option must be a known color scheme.\n");
         usage(cmd, EXIT_FAILURE);
       }
+      *color_scheme = arg;
       break;
 
     case OPT_LIGHTNESS: {

@@ -4293,9 +4293,6 @@ def test_2588():
 
 @pytest.mark.skipif(which("edgepaint") is None, reason="edgepaint not available")
 @pytest.mark.skipif(which("gvgen") is None, reason="gvgen not available")
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2591", strict=True
-)
 def test_2591():
     """
     edgepaint color schemes should do something

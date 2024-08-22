@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   corrected.
 - `mm2gv` no longer crashes when reading various types of malformed Matrix
   Market files.
+- The `edgepaint` `--color_scheme` command-line option is once again functional.
+  This was a regression in Graphviz 2.49.0. #2591
 
 ## [12.1.0] – 2024-08-12
 
