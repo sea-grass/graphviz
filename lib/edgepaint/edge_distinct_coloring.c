@@ -142,8 +142,8 @@ static int splines_intersect(size_t dim,
 Agraph_t *edge_distinct_coloring(const char *color_scheme, int *lightness,
                                  Agraph_t *g, double angle, double accuracy,
                                  int check_edges_with_same_endpoint, int seed) {
-  /* color the edges of a graph so that conflicting edges are as dinstrinct in color as possibl.
-     color_scheme: rgb, lab, gray, or a list of comma separaterd RGB colors in hex, like #ff0000,#00ff00
+  /* color the edges of a graph so that conflicting edges are as distinct in color as possible.
+     color_scheme: rgb, lab, gray, or a list of comma separated RGB colors in hex, like #ff0000,#00ff00
      lightness: of the form 0,70, specifying the range of lightness of LAB color. Ignored if scheme is not COLOR_LAB.
      g: the graph
      angle: if two edges cross at an angle < "angle", consider they as conflict
