@@ -24,7 +24,7 @@ int knownColorScheme(const char* name)
       || (sscanf(name,"#%02X%02X%02X", &r, &g, &b) == 3);
 }
 
-char *color_palettes_get(char *color_palette_name){
+char *color_palettes_get(const char *color_palette_name) {
   int i;
   for (i = 0; i < npalettes; i++){
     if (strcmp(color_palette_name, color_palettes[i][0]) == 0){
