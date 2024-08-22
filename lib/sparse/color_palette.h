@@ -20,7 +20,6 @@ enum {MAX_COLOR = 1001};
 
 enum {npalettes = 265};
 extern int knownColorScheme(const char*);
-extern char *color_palettes[npalettes][2];
   /* return a list of rgb in hex form: "#ff0000,#00ff00,..." */
 char *color_palettes_get(const char *color_palette_name);
 extern int color_palettes_Q(const char *color_palette_name);
