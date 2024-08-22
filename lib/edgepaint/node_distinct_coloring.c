@@ -176,7 +176,7 @@ static void node_distinct_coloring_internal(int scheme, QuadTree qt,
  
 }
 
-int node_distinct_coloring(char *color_scheme, int *lightness,
+int node_distinct_coloring(const char *color_scheme, int *lightness,
                            bool weightedQ, SparseMatrix A0, double accuracy,
                            int seed, int *cdim0, double **colors) {
   /* 
@@ -201,9 +201,7 @@ int node_distinct_coloring(char *color_scheme, int *lightness,
   int cdim;
   int scheme = COLOR_LAB;
   int maxcolors = 10000, max_qtree_level = 10, r, g, b;
-  char *color_list = NULL;
-
-  color_list = color_palettes_get(color_scheme);
+  const char *color_list = color_palettes_get(color_scheme);
   if (color_list) color_scheme = color_list;
 
   cdim = *cdim0 = 3;

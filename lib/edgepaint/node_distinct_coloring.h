@@ -14,6 +14,6 @@
 
 enum { COLOR_RGB, COLOR_GRAY, COLOR_LAB };
 enum { ERROR_BAD_COLOR_SCHEME = -9 };
-int node_distinct_coloring(char *color_scheme, int *lightness, bool weightedQ,
-                           SparseMatrix A, double accuracy, int seed, int *cdim,
-                           double **colors);
+int node_distinct_coloring(const char *color_scheme, int *lightness,
+                           bool weightedQ, SparseMatrix A, double accuracy,
+                           int seed, int *cdim, double **colors);
