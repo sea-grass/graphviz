@@ -13,6 +13,8 @@
 #include <common/macros.h>
 #include <util/streq.h>
 
+enum { npalettes = 265 };
+
 static char *color_palettes[npalettes][2] = {
     {"accent3", "#7fc97f,#beaed4,#fdc086"},
     {"accent4", "#7fc97f,#beaed4,#fdc086,#ffff99"},
