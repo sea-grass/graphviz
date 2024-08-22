@@ -179,20 +179,6 @@ static void node_distinct_coloring_internal(int scheme, QuadTree qt,
 int node_distinct_coloring(const char *color_scheme, int *lightness,
                            bool weightedQ, SparseMatrix A0, double accuracy,
                            int seed, int *cdim0, double **colors) {
-  /* 
-     for a graph A, get a distinctive color of its nodes so that the color distance among all neighboring nodes are maximized. Here
-     color distance on a node is defined as the minimum of color differences between a node and its neighbors (or the minimum of weighted color differences if weightedQ = true,
-     where weights are stored as entries of A0.
-     accuracy is the threshold given so that when finding the coloring for each node, the optimal is
-     with in "accuracy" of the true global optimal. 
-     color_scheme: rgb, gray, lab, or one of the color palettes in color_palettes.h, or a list of hex rgb colors separated by comma like "#ff0000,#00ff00"
-     lightness: of the form 0,70, specifying the range of lightness of LAB color. Ignored if scheme is not COLOR_LAB.
-     A: the graph of n nodes
-     accuracy: how accurate to find the optimal
-     seed: random_seed. If negative, consider -seed as the number of random start iterations
-     cdim: dimension of the color space
-     color: On input an array of size n*cdim, if NULL, will be allocated. On exit the final color assignment for node i is [cdim*i,cdim*(i+1)), in RGB (between 0 to 1)
-  */ 
   SparseMatrix B, A = A0;
   int ncomps, *comps = NULL;
   int nn, n;
