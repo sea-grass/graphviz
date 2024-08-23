@@ -55,12 +55,8 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     // second field describes whether this is a sparse matrix (in coordinate
     // storage) or a dense array
 
-
-    if (strcasecmp(crd, MM_SPARSE_STR) == 0)
-	mm_set_sparse(matcode);
-    else
+    if (strcasecmp(crd, MM_SPARSE_STR) != 0)
 	return MM_UNSUPPORTED_TYPE;
-
 
     /* third field */
 
