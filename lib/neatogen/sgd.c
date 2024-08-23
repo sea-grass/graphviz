@@ -185,10 +185,8 @@ void sgd(graph_t *G, /* input graph */
     float w_min = terms[0].w, w_max = terms[0].w;
     int ij;
     for (ij=1; ij<n_terms; ij++) {
-        if (terms[ij].w < w_min)
-            w_min = terms[ij].w;
-        if (terms[ij].w > w_max)
-            w_max = terms[ij].w;
+        w_min = fminf(w_min, terms[ij].w);
+        w_max = fmaxf(w_max, terms[ij].w);
     }
     // note: Epsilon is different from MODE_KK and MODE_MAJOR as it is a minimum step size rather than energy threshold
     //       MaxIter is also different as it is a fixed number of iterations rather than a maximum
