@@ -75,8 +75,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	    val = gv_calloc(nz, sizeof(double));
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
-		(void)num;
-		assert(num == 3);
+		if (num != 3) {
+		    goto done;
+		}
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
@@ -112,8 +113,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	    vali = gv_calloc(nz, sizeof(int));
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d %d\n", &I[i], &J[i], &vali[i]);
-		(void)num;
-		assert(num == 3);
+		if (num != 3) {
+		    goto done;
+		}
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
@@ -148,8 +150,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	case MATRIX_TYPE_PATTERN:
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d\n", &I[i], &J[i]);
-		(void)num;
-		assert(num == 2);
+		if (num != 2) {
+		    goto done;
+		}
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
@@ -172,8 +175,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	    v = val;
 	    for (i = 0; i < nz; i++) {
 		int num = fscanf(f, "%d %d %lg %lg\n", &I[i], &J[i], &v[0], &v[1]);
-		(void)num;
-		assert(num == 4);
+		if (num != 4) {
+		    goto done;
+		}
 		v += 2;
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
@@ -229,11 +233,12 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 
 	A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
 						    type, sizeof(double));
+done:
     free(I);
     free(J);
     free(val);
 
-    if (mm_is_symmetric(matcode)) {
+    if (A != NULL && mm_is_symmetric(matcode)) {
 	A->is_symmetric = true;
 	A->is_pattern_symmetric = true;
     }
