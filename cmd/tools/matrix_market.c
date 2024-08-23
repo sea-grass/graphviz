@@ -71,9 +71,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     I = gv_calloc(nz, sizeof(int));
     J = gv_calloc(nz, sizeof(int));
 
-	/* NOTE: when reading in doubles, ANSI C requires the use of the "l"  */
-	/*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
-	/*  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            */
 	type = mm_get_type(matcode);
 	switch (type) {
 	case MATRIX_TYPE_REAL:
