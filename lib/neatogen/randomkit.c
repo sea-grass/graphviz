@@ -71,10 +71,6 @@
 
 #include <neatogen/randomkit.h>
 
-#ifndef RK_DEV_URANDOM
-#define RK_DEV_URANDOM "/dev/urandom"
-#endif
-
 void
 rk_seed(unsigned long seed, rk_state *state)
 {
