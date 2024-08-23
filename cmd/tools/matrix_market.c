@@ -12,7 +12,6 @@
 #include "mmio.h"
 #include "matrix_market.h"
 #include <cgraph/alloc.h>
-#include <assert.h>
 #include <stdbool.h>
 
 static int mm_get_type(MM_typecode typecode)
@@ -106,8 +105,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    J[nz] = I[i];
 		    val[nz++] = -val[i];
 		}
-	    } else {
-		assert(!mm_is_hermitian(matcode));
+	    } else if (mm_is_hermitian(matcode)) {
+		goto done;
 	    }
 	    vp = val;
 	    break;
@@ -146,8 +145,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    J[nz] = I[i];
 		    vali[nz++] = -vali[i];
 		}
-	    } else {
-		assert(!mm_is_hermitian(matcode));
+	    } else if (mm_is_hermitian(matcode)) {
+		goto done;
 	    }
 	    vp = vali;
 	    break;
@@ -170,8 +169,8 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 			J[nz++] = I[i];
 		    }
 		}
-	    } else {
-		assert(!mm_is_hermitian(matcode));
+	    } else if (mm_is_hermitian(matcode)) {
+		goto done;
 	    }
 	    break;
 	case MATRIX_TYPE_COMPLEX:
