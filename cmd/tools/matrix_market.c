@@ -233,7 +233,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	    vp = val;
 	    break;
 	default:
-	    return 0;
+	    goto done;
 	}
 
 	A = SparseMatrix_from_coordinate_arrays(nz, m, n, I, J, vp,
