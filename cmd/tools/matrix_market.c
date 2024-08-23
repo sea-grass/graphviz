@@ -14,23 +14,9 @@
 #include <cgraph/alloc.h>
 #include <stdbool.h>
 
-static int mm_get_type(MM_typecode typecode)
-{
-    if (mm_is_complex(typecode)) {
-	return MATRIX_TYPE_COMPLEX;
-    } else if (mm_is_real(typecode)) {
-	return MATRIX_TYPE_REAL;
-    } else if (mm_is_integer(typecode)) {
-	return MATRIX_TYPE_INTEGER;
-    } else if (mm_is_pattern(typecode)) {
-	return MATRIX_TYPE_PATTERN;
-    }
-    return MATRIX_TYPE_UNKNOWN;
-}
-
 SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 {
-    int ret_code, type;
+    int ret_code;
     MM_typecode matcode;
     double *val = NULL, *v;
     int *vali = NULL, i, m, n, *I = NULL, *J = NULL, nz;
@@ -60,7 +46,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     I = gv_calloc(nz, sizeof(int));
     J = gv_calloc(nz, sizeof(int));
 
-	type = mm_get_type(matcode);
+	const int type = matcode.type;
 	switch (type) {
 	case MATRIX_TYPE_REAL:
 	    val = gv_calloc(nz, sizeof(double));
@@ -72,7 +58,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
-	    if (mm_is_symmetric(matcode)) {
+	    if (matcode.shape == MS_SYMMETRIC) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		val = gv_recalloc(val, nz, 2 * nz, sizeof(double));
@@ -84,7 +70,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 			val[nz++] = val[i];
 		    }
 		}
-	    } else if (mm_is_skew(matcode)) {
+	    } else if (matcode.shape == MS_SKEW) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		val = gv_recalloc(val, nz, 2 * nz, sizeof(double));
@@ -97,7 +83,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    J[nz] = I[i];
 		    val[nz++] = -val[i];
 		}
-	    } else if (mm_is_hermitian(matcode)) {
+	    } else if (matcode.shape == MS_HERMITIAN) {
 		goto done;
 	    }
 	    vp = val;
@@ -112,7 +98,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
-	    if (mm_is_symmetric(matcode)) {
+	    if (matcode.shape == MS_SYMMETRIC) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		vali = gv_recalloc(vali, nz, 2 * nz, sizeof(int));
@@ -124,7 +110,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 			vali[nz++] = vali[i];
 		    }
 		}
-	    } else if (mm_is_skew(matcode)) {
+	    } else if (matcode.shape == MS_SKEW) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		vali = gv_recalloc(vali, nz, 2 * nz, sizeof(int));
@@ -137,7 +123,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    J[nz] = I[i];
 		    vali[nz++] = -vali[i];
 		}
-	    } else if (mm_is_hermitian(matcode)) {
+	    } else if (matcode.shape == MS_HERMITIAN) {
 		goto done;
 	    }
 	    vp = vali;
@@ -151,7 +137,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
-	    if (mm_is_symmetric(matcode) || mm_is_skew(matcode)) {
+	    if (matcode.shape == MS_SYMMETRIC || matcode.shape == MS_SKEW) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		nzold = nz;
@@ -161,7 +147,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 			J[nz++] = I[i];
 		    }
 		}
-	    } else if (mm_is_hermitian(matcode)) {
+	    } else if (matcode.shape == MS_HERMITIAN) {
 		goto done;
 	    }
 	    break;
@@ -177,7 +163,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		I[i]--;		/* adjust from 1-based to 0-based */
 		J[i]--;
 	    }
-	    if (mm_is_symmetric(matcode)) {
+	    if (matcode.shape == MS_SYMMETRIC) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
@@ -191,7 +177,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 			nz++;
 		    }
 		}
-	    } else if (mm_is_skew(matcode)) {
+	    } else if (matcode.shape == MS_SKEW) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
@@ -207,7 +193,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		    nz++;
 
 		}
-	    } else if (mm_is_hermitian(matcode)) {
+	    } else if (matcode.shape == MS_HERMITIAN) {
 		I = gv_recalloc(I, nz, 2 * nz, sizeof(int));
 		J = gv_recalloc(J, nz, 2 * nz, sizeof(int));
 		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
@@ -235,7 +221,7 @@ done:
     free(J);
     free(val);
 
-    if (A != NULL && mm_is_symmetric(matcode)) {
+    if (A != NULL && matcode.shape == MS_SYMMETRIC) {
 	A->is_symmetric = true;
 	A->is_pattern_symmetric = true;
     }

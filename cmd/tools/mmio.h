@@ -26,39 +26,15 @@
 #define MatrixMarketBanner "%%MatrixMarket"
 #define MM_MAX_TOKEN_LENGTH 64
 
-typedef char MM_typecode[4];
+typedef enum { MS_GENERAL, MS_SYMMETRIC, MS_HERMITIAN, MS_SKEW } matrix_shape_t;
+
+typedef struct {
+  int type; ///< one of the `MATRIX_TYPE_*` values from lib/sparse
+  matrix_shape_t shape;
+} MM_typecode;
 
 int mm_read_banner(FILE * f, MM_typecode * matcode);
 int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
-
-/********************* MM_typecode query fucntions ***************************/
-
-#define mm_is_complex(typecode)	((typecode)[2]=='C')
-#define mm_is_real(typecode)		((typecode)[2]=='R')
-#define mm_is_pattern(typecode)	((typecode)[2]=='P')
-#define mm_is_integer(typecode) ((typecode)[2]=='I')
-
-#define mm_is_symmetric(typecode)((typecode)[3]=='S')
-#define mm_is_skew(typecode)	((typecode)[3]=='K')
-#define mm_is_hermitian(typecode)((typecode)[3]=='H')
-
-/********************* MM_typecode modify fucntions ***************************/
-
-#define mm_set_complex(typecode)((*typecode)[2]='C')
-#define mm_set_real(typecode)	((*typecode)[2]='R')
-#define mm_set_pattern(typecode)((*typecode)[2]='P')
-#define mm_set_integer(typecode)((*typecode)[2]='I')
-
-
-#define mm_set_symmetric(typecode)((*typecode)[3]='S')
-#define mm_set_general(typecode)((*typecode)[3]='G')
-#define mm_set_skew(typecode)	((*typecode)[3]='K')
-#define mm_set_hermitian(typecode)((*typecode)[3]='H')
-
-#define mm_clear_typecode(typecode) ((*typecode)[2]=' ',(*typecode)[3]='G')
-
-#define mm_initialize_typecode(typecode) mm_clear_typecode(typecode)
-
 
 /********************* Matrix Market error codes ***************************/
 
