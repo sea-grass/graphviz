@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support for building the SWIG-generated Guile language bindings has been
   integrated into the CMake build system. This is controllable by the
   `-DENABLE_GUILE={AUTO|ON|OFF}` option.
+- Support for building the SWIG-generated Java language bindings has been
+  integrated into the CMake build system. This is controllable by the
+  `-DENABLE_JAVA={AUTO|ON|OFF}` option.
 
 ### Changed
 
