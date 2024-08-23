@@ -36,7 +36,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 #define mm_is_matrix(typecode)	((typecode)[0]=='M')
 
 #define mm_is_sparse(typecode)	((typecode)[1]=='C')
-#define mm_is_coordinate(typecode)((typecode)[1]=='C')
 #define mm_is_dense(typecode)	((typecode)[1]=='A')
 #define mm_is_array(typecode)	((typecode)[1]=='A')
 
