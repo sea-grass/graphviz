@@ -99,7 +99,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		val = gv_recalloc(val, nz, 2 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
-		    assert(I[i] != J[i]);	/* skew symm has no diag */
+		    if (I[i] == J[i]) { // skew symm should have no diag
+		      goto done;
+		    }
 		    I[nz] = J[i];
 		    J[nz] = I[i];
 		    val[nz++] = -val[i];
@@ -137,7 +139,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		vali = gv_recalloc(vali, nz, 2 * nz, sizeof(int));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
-		    assert(I[i] != J[i]);	/* skew symm has no diag */
+		    if (I[i] == J[i]) { // skew symm should have no diag
+		      goto done;
+		    }
 		    I[nz] = J[i];
 		    J[nz] = I[i];
 		    vali[nz++] = -vali[i];
@@ -202,7 +206,9 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 		val = gv_recalloc(val, 2 * nz, 4 * nz, sizeof(double));
 		nzold = nz;
 		for (i = 0; i < nzold; i++) {
-		    assert(I[i] != J[i]);	/* skew symm has no diag */
+		    if (I[i] == J[i]) { // skew symm should have no diag
+		      goto done;
+		    }
 		    I[nz] = J[i];
 		    J[nz] = I[i];
 		    val[2 * nz] = -val[2 * i];
