@@ -62,7 +62,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 
     /* find out size of sparse matrix .... */
     if ((ret_code = mm_read_mtx_crd_size(f, &m, &n, &nz)) != 0) {
-	assert(0);
 	return NULL;
     }
     /* reseve memory for matrices */
