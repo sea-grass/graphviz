@@ -33,8 +33,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 
 /********************* MM_typecode query fucntions ***************************/
 
-#define mm_is_sparse(typecode)	((typecode)[1]=='C')
-
 #define mm_is_complex(typecode)	((typecode)[2]=='C')
 #define mm_is_real(typecode)		((typecode)[2]=='R')
 #define mm_is_pattern(typecode)	((typecode)[2]=='P')

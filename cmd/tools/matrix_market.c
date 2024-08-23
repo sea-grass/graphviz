@@ -51,14 +51,6 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 	return NULL;
     }
 
-
-    /*  This is how one can screen matrix types if their application */
-    /*  only supports a subset of the Matrix Market data types.      */
-
-    if (!mm_is_sparse(matcode)) {
-	return NULL;
-    }
-
     /* find out size of sparse matrix .... */
     if ((ret_code = mm_read_mtx_crd_size(f, &m, &n, &nz)) != 0) {
 	return NULL;
