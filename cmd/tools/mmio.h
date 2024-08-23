@@ -80,8 +80,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 #define MM_NO_HEADER			14
 #define MM_UNSUPPORTED_TYPE		15
 #define MM_LINE_TOO_LONG		16
-#define MM_COULD_NOT_WRITE_FILE	17
-
 
 /******************** Matrix Market internal definitions ********************
 
