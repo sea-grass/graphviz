@@ -33,8 +33,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 
 /********************* MM_typecode query fucntions ***************************/
 
-#define mm_is_matrix(typecode)	((typecode)[0]=='M')
-
 #define mm_is_sparse(typecode)	((typecode)[1]=='C')
 
 #define mm_is_complex(typecode)	((typecode)[2]=='C')
@@ -48,7 +46,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 
 /********************* MM_typecode modify fucntions ***************************/
 
-#define mm_set_matrix(typecode)	((*typecode)[0]='M')
 #define mm_set_coordinate(typecode)	((*typecode)[1]='C')
 #define mm_set_array(typecode)	((*typecode)[1]='A')
 #define mm_set_dense(typecode)	mm_set_array(typecode)
@@ -65,8 +62,7 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 #define mm_set_skew(typecode)	((*typecode)[3]='K')
 #define mm_set_hermitian(typecode)((*typecode)[3]='H')
 
-#define mm_clear_typecode(typecode) ((*typecode)[0]=(*typecode)[1]= \
-									(*typecode)[2]=' ',(*typecode)[3]='G')
+#define mm_clear_typecode(typecode) ((*typecode)[1]=(*typecode)[2]=' ',(*typecode)[3]='G')
 
 #define mm_initialize_typecode(typecode) mm_clear_typecode(typecode)
 

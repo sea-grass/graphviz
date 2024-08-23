@@ -55,7 +55,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     /*  This is how one can screen matrix types if their application */
     /*  only supports a subset of the Matrix Market data types.      */
 
-    if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode)) {
+    if (!mm_is_sparse(matcode)) {
 	return NULL;
     }
 
