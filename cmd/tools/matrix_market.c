@@ -12,7 +12,6 @@
 #include "mmio.h"
 #include "matrix_market.h"
 #include <cgraph/alloc.h>
-#include <cgraph/unreachable.h>
 #include <assert.h>
 #include <stdbool.h>
 
@@ -58,7 +57,7 @@ SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
     /*  only supports a subset of the Matrix Market data types.      */
 
     if (!mm_is_matrix(matcode) || !mm_is_sparse(matcode)) {
-	UNREACHABLE();
+	return NULL;
     }
 
     /* find out size of sparse matrix .... */
