@@ -75,10 +75,6 @@
 #define RK_DEV_URANDOM "/dev/urandom"
 #endif
 
-#ifndef RK_DEV_RANDOM
-#define RK_DEV_RANDOM "/dev/random"
-#endif
-
 void
 rk_seed(unsigned long seed, rk_state *state)
 {
