@@ -47,8 +47,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 /********************* MM_typecode modify fucntions ***************************/
 
 #define mm_set_coordinate(typecode)	((*typecode)[1]='C')
-#define mm_set_array(typecode)	((*typecode)[1]='A')
-#define mm_set_dense(typecode)	mm_set_array(typecode)
 #define mm_set_sparse(typecode)	mm_set_coordinate(typecode)
 
 #define mm_set_complex(typecode)((*typecode)[2]='C')
@@ -94,7 +92,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
  ***********************************************************************/
 
 #define MM_MTX_STR		"matrix"
-#define MM_DENSE_STR	"array"
 #define MM_COORDINATE_STR "coordinate"
 #define MM_SPARSE_STR	"coordinate"
 #define MM_COMPLEX_STR	"complex"

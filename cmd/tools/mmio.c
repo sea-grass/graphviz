@@ -58,8 +58,6 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
 
     if (strcasecmp(crd, MM_SPARSE_STR) == 0)
 	mm_set_sparse(matcode);
-    else if (strcasecmp(crd, MM_DENSE_STR) == 0)
-	mm_set_dense(matcode);
     else
 	return MM_UNSUPPORTED_TYPE;
 
