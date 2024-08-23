@@ -43,7 +43,6 @@ int mm_read_mtx_crd_size(FILE * f, int *M, int *N, int *nz);
 #define mm_is_integer(typecode) ((typecode)[2]=='I')
 
 #define mm_is_symmetric(typecode)((typecode)[3]=='S')
-#define mm_is_general(typecode)	((typecode)[3]=='G')
 #define mm_is_skew(typecode)	((typecode)[3]=='K')
 #define mm_is_hermitian(typecode)((typecode)[3]=='H')
 
