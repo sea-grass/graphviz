@@ -27,8 +27,6 @@ static rk_state rstate;
 static void fisheryates_shuffle(term_sgd *terms, int n_terms) {
     int i;
     for (i=n_terms-1; i>=1; i--) {
-        // srand48() is called in neatoinit.c, so no need to seed here
-        //int j = (int)(drand48() * (i+1));
         int j = rk_interval(i, &rstate);
 
         term_sgd temp = terms[i];
