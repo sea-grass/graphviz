@@ -54,8 +54,8 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     mm_set_matrix(matcode);
 
 
-    /* second field describes whether this is a sparse matrix (in coordinate
-       storgae) or a dense array */
+    // second field describes whether this is a sparse matrix (in coordinate
+    // storage) or a dense array
 
 
     if (strcasecmp(crd, MM_SPARSE_STR) == 0)
