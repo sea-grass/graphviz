@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include "gv_channel.h"
+#include <cgraph/agxbuf.h>
 #include <cstdlib>
 #include <cstring>
 #include <gvc/gvc.h>
@@ -122,13 +123,9 @@ static char *myagxget(void *obj, Agsym_t *a) {
   if (!val)
     return emptystring;
   if (strcmp(a->name, "label") == 0 && aghtmlstr(val)) {
-    size_t len = strlen(val);
-    auto hs = reinterpret_cast<char *>(malloc(len + 3));
-    hs[0] = '<';
-    strcpy(hs + 1, val);
-    hs[len + 1] = '>';
-    hs[len + 2] = '\0';
-    return hs;
+    agxbuf buf = {0};
+    agxbprint(&buf, "<%s>", val);
+    return agxbdisown(&buf);
   }
   return val;
 }
