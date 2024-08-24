@@ -382,7 +382,7 @@ const char *color_palettes_get(const char *color_palette_name) {
   return NULL;
 }
 
-int color_palettes_Q(const char *color_palette_name) {
+static int color_palettes_Q(const char *color_palette_name) {
   return color_palettes_get(color_palette_name) != NULL;
 }
 
