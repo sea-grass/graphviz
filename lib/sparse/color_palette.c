@@ -372,17 +372,6 @@ static const char *const color_palettes[npalettes][2] = {
     {"ylorrd9", "#ffffcc,#ffeda0,#fed976,#feb24c,#fd8d3c,#fc4e2a,#e31a1c,#"
                 "bd0026,#800026"}};
 
-int knownColorScheme(const char* name)
-{
-  int r, g, b;
-
-  return streq(name,"rgb") 
-      || streq(name,"lab") 
-      || streq(name,"gray") 
-      || color_palettes_Q(name) 
-      || (sscanf(name,"#%02X%02X%02X", &r, &g, &b) == 3);
-}
-
 const char *color_palettes_get(const char *color_palette_name) {
   int i;
   for (i = 0; i < npalettes; i++){
@@ -395,6 +384,14 @@ const char *color_palettes_get(const char *color_palette_name) {
 
 int color_palettes_Q(const char *color_palette_name) {
   return color_palettes_get(color_palette_name) != NULL;
+}
+
+int knownColorScheme(const char *name) {
+  int r, g, b;
+
+  return streq(name, "rgb") || streq(name, "lab") || streq(name, "gray") ||
+         color_palettes_Q(name) ||
+         sscanf(name, "#%02X%02X%02X", &r, &g, &b) == 3;
 }
 
 float palette_pastel[1001][3] = {{0.984313725490196f, 0.7058823529411764f, 0.6823529411764706f}, 
