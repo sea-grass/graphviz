@@ -174,6 +174,25 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_LUA)
+    swig_add_library(gv_lua
+      LANGUAGE lua
+      SOURCES gv.i gv_dummy_init.c
+    )
+    set_property(
+      TARGET gv_lua
+      PROPERTY SWIG_GENERATED_INCLUDE_DIRECTORIES ${LUA_INCLUDE_DIR}
+    )
+    swig_link_libraries(gv_lua PRIVATE gvc ${LUA_LIBRARIES})
+
+    install(
+      TARGETS gv_lua
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/lua
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
+
   if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl
@@ -315,6 +334,27 @@ if(ENABLE_SWIG)
     else()
       install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3java
+        DESTINATION ${MAN_INSTALL_DIR}/man3
+      )
+    endif()
+  endif()
+
+  if(ENABLE_LUA)
+    if(GZIP)
+      add_custom_target(man-gv_lua ALL DEPENDS gv.3lua.gz
+                        COMMENT "gv_lua man page")
+      add_custom_command(
+        OUTPUT gv.3lua.gz
+        COMMAND ${GZIP} -9 --no-name --to-stdout gv.3lua
+          >"${CMAKE_CURRENT_BINARY_DIR}/gv.3lua.gz"
+        MAIN_DEPENDENCY gv.3lua
+        COMMENT "compress gv_lua man page")
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3lua.gz
+        DESTINATION ${MAN_INSTALL_DIR}/man3)
+    else()
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3lua
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
     endif()
