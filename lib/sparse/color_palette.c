@@ -387,7 +387,7 @@ static bool color_palettes_Q(const char *color_palette_name) {
   return color_palettes_get(color_palette_name) != NULL;
 }
 
-int knownColorScheme(const char *name) {
+bool knownColorScheme(const char *name) {
   int r, g, b;
 
   return streq(name, "rgb") || streq(name, "lab") || streq(name, "gray") ||
