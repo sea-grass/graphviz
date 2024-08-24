@@ -158,7 +158,7 @@ void cat_libfile(GVJ_t * job, const char **arglib, const char **stdlib)
 	    if (!safepath) {
 		agwarningf("can't find library file %s\n", p);
 	    }
-            else if ((fp = fopen(safepath, "r"))) {
+            else if ((fp = gv_fopen(safepath, "r"))) {
                 while (true) {
                     char bp[BUFSIZ] = {0};
                     size_t r = fread(bp, 1, sizeof(bp), fp);
