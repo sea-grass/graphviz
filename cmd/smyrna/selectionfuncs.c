@@ -43,61 +43,33 @@ static void select_node(Agraph_t* g,Agnode_t*  obj,int reverse)
 
 
 }
-static void select_edge(Agraph_t* g,Agedge_t*  obj,int reverse)
-{
+
+static void select_edge(Agraph_t *g, Agedge_t *obj) {
     Agsym_t* sel_attr = GE_selected(g); 
 
     if (!sel_attr)
 	sel_attr = GE_selected(g) = agattr(g, AGEDGE,"selected","0");
-    if (!reverse)
-    {
+    if (ED_selected(obj) == 1) {
+	agxset(obj,sel_attr,"0");
+	ED_selected(obj) = 0;
+    } else {
 	agxset(obj,sel_attr,"1");
 	ED_selected(obj) = 1;
     }
-    else
-    {
-	if (ED_selected(obj) == 1)
-	{
-	    agxset(obj,sel_attr,"0");
-	    ED_selected(obj) = 0;
-	}
-	else
-	{
-	    agxset(obj,sel_attr,"1");
-	    ED_selected(obj) = 1;
-	}
-    }
-
-
 }
 
 static void pick_objects_in_rect(Agraph_t *g, float x1, float y1, float x2,
                                  float y2) {
     Agnode_t *v;
-    Agedge_t *e;
-    glCompPoint posT;
-    glCompPoint posH;
     glCompPoint posN;
      
     for (v = agfstnode(g); v; v = agnxtnode(g, v)) 
     {
-	if (view->Topview->sel.selectNodes) {
-	    posN = ND_A(v);
-	    if(!ND_visible(v))
-		continue;
-	    if(is_point_in_rectangle(posN.x,posN.y,x1,y1,x2-x1,y2-y1) )
-		select_node(g,v,0);
-	}
-	if (view->Topview->sel.selectEdges) {
-	    for (e = agfstout(g, v); e; e = agnxtout(g, e)) 
-	    {
-		posT = ED_posTail(e);
-		posH = ED_posHead(e);
-    		if(is_point_in_rectangle(posT.x,posT.y,x1,y1,x2-x1,y2-y1))
-		    if(is_point_in_rectangle(posH.x,posH.y,x1,y1,x2-x1,y2-y1))
-			select_edge(g,e,0);
-	    }
-	}
+	posN = ND_A(v);
+	if (!ND_visible(v))
+	    continue;
+	if (is_point_in_rectangle(posN.x, posN.y, x1, y1, x2 - x1, y2 - y1))
+	    select_node(g, v, 0);
     }
 }
 
@@ -166,7 +138,7 @@ void pick_object_xyz(Agraph_t *g, topview *t, float x, float y, float z) {
     }
     if(agobjkind(a)==AGEDGE)
     {
-	select_edge(g,a,1);	
+	select_edge(g, a);	
 	cacheSelectedEdges(g,t);
     }
 }

@@ -37,7 +37,6 @@ glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
     p->common.width = w;
     p->common.height = h;
     p->status = false; // false not pressed, true pressed
-    p->groupid = 0;
     p->common.callbacks.click = NULL;
     /*set event functions */
 
@@ -137,26 +136,7 @@ void glCompButtonDraw(glCompButton * p)
 
 void glCompButtonClick(glCompObj *o, float x, float y, glMouseButtonType t) {
     glCompButton *p = (glCompButton *) o;
-    glCompObj *obj;
-    glCompSet *s = o->common.compset;
-    ((glCompButton *) o)->status=((glCompButton *) o)->refStatus ;
-    if (p->groupid > 0) 
-    {
-	for (size_t ind = 0; ind < s->objcnt; ind++) {
-	    obj = s->obj[ind];
-	    if (obj->objType == glButtonObj && obj != o) {
-		if (((glCompButton *) obj)->groupid == p->groupid)
-		    ((glCompButton *) obj)->status = false;
-	    }
-	}
-	p->status = true;
-    }
-    else {
-	if (p->groupid == -1) {
-	    p->status = !p->status;
-	} else
-	    p->status = false;
-    }
+    p->status = false;
     if (p->common.callbacks.click)
 	p->common.callbacks.click((glCompObj *) p, x, y, t);
 }
@@ -172,10 +152,6 @@ void glCompButtonDoubleClick(glCompObj *obj, float x, float y,
 void glCompButtonMouseDown(glCompObj *obj, float x, float y,
 			   glMouseButtonType t)
 {
-    /*Put your internal code here */
-
-    
-    ((glCompButton *) obj)->refStatus = ((glCompButton *) obj)->status;
     ((glCompButton *) obj)->status = true;
     if (((glCompButton *) obj)->common.callbacks.mousedown)
 	((glCompButton *) obj)->common.callbacks.mousedown(obj, x, y, t);

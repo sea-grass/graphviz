@@ -168,15 +168,6 @@ static void CBglCompMouseRightClick(glCompObj *obj, float x, float y,
     }
 }
 
-static void attrList(glCompObj *obj, float x, float y, glMouseButtonType t) {
-	(void)obj;
-	(void)x;
-	(void)y;
-	(void)t;
-
-	showAttrsWidget();
-}
-
 static void glCompMouseMove(glCompObj *obj, float x, float y) {
     (void)x;
     (void)y;
@@ -194,24 +185,6 @@ static void glCompMouseMove(glCompObj *obj, float x, float y) {
 	sel->common.height = m->dragY;
 	glexpose();
     }
-}
-
-static void selectedges(glCompObj *obj, float x, float y, glMouseButtonType t) {
-    (void)obj;
-    (void)x;
-    (void)y;
-    (void)t;
-
-    view->Topview->sel.selectEdges = !view->Topview->sel.selectEdges;
-}
-
-static void selectnodes(glCompObj *obj, float x, float y, glMouseButtonType t) {
-    (void)obj;
-    (void)x;
-    (void)y;
-    (void)t;
-
-    view->Topview->sel.selectNodes = !view->Topview->sel.selectNodes;
 }
 
 glCompSet *glcreate_gl_topview_menu(void)
@@ -283,17 +256,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     glCompButtonHide(b);
     to2DBtn = b;
 
-    y=y+off;
-    b = glCompButtonNew(p, 1, y, 42, 42, "N");
-    b->common.callbacks.click = selectnodes;
-    b->groupid=-1;
-    b->status = true;
-
-    y=y+off;
-    b = glCompButtonNew(p, 1, y, 42, 42, "E");
-    b->common.callbacks.click = selectedges;
-    b->groupid=-1;
-
+    y += 2 * off;
     p = glCompPanelNew(p, 1, 325, 45, 180);
     p->common.align = glAlignTop;
     p->common.data = 0;
@@ -305,18 +268,7 @@ glCompSet *glcreate_gl_topview_menu(void)
     c.B = 0.6f;
     c.A = 1.6f;
 
-    y = 1;
-
-    b = glCompButtonNew(p, 1, y, 42, 42, "");
-    {
-      char *details = smyrnaPath("details.png");
-      glCompButtonAddPngGlyph(b, details);
-      free(details);
-    }
-    b->common.callbacks.click = attrList;
-    b->common.color = c;
-	
-    y = y + off;
+    y = 1 + off;
 	
 	b = glCompButtonNew(p, 1, y, 42, 42, "");
     {
@@ -324,7 +276,6 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, zoomin);
       free(zoomin);
     }
-    b->groupid = 0;
     b->common.callbacks.click = menu_click_zoom_plus;
     b->common.color = c;
     y = y + off;
