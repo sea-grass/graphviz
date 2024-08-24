@@ -21,7 +21,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include <assert.h>
+#include <sparse/SparseMatrix.h>
 
 #include "mmio.h"
 
@@ -34,7 +34,7 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     char data_type[MM_MAX_TOKEN_LENGTH] = {0};
     char storage_scheme[MM_MAX_TOKEN_LENGTH] = {0};
 
-    mm_clear_typecode(matcode);
+    *matcode = (MM_typecode){0};
 
     if (fgets(line, MM_MAX_LINE_LENGTH, f) == NULL)
 	return MM_PREMATURE_EOF;
@@ -51,31 +51,23 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     /* first field should be "mtx" */
     if (strcasecmp(mtx, MM_MTX_STR) != 0)
 	return MM_UNSUPPORTED_TYPE;
-    mm_set_matrix(matcode);
 
+    // second field describes whether this is a sparse matrix (in coordinate
+    // storage) or a dense array
 
-    /* second field describes whether this is a sparse matrix (in coordinate
-       storgae) or a dense array */
-
-
-    if (strcasecmp(crd, MM_SPARSE_STR) == 0)
-	mm_set_sparse(matcode);
-    else if (strcasecmp(crd, MM_DENSE_STR) == 0)
-	mm_set_dense(matcode);
-    else
+    if (strcasecmp(crd, MM_SPARSE_STR) != 0)
 	return MM_UNSUPPORTED_TYPE;
-
 
     /* third field */
 
     if (strcasecmp(data_type, MM_REAL_STR) == 0)
-	mm_set_real(matcode);
+	matcode->type = MATRIX_TYPE_REAL;
     else if (strcasecmp(data_type, MM_COMPLEX_STR) == 0)
-	mm_set_complex(matcode);
+	matcode->type = MATRIX_TYPE_COMPLEX;
     else if (strcasecmp(data_type, MM_PATTERN_STR) == 0)
-	mm_set_pattern(matcode);
+	matcode->type = MATRIX_TYPE_PATTERN;
     else if (strcasecmp(data_type, MM_INT_STR) == 0)
-	mm_set_integer(matcode);
+	matcode->type = MATRIX_TYPE_INTEGER;
     else
 	return MM_UNSUPPORTED_TYPE;
 
@@ -83,13 +75,13 @@ int mm_read_banner(FILE * f, MM_typecode * matcode)
     /* fourth field */
 
     if (strcasecmp(storage_scheme, MM_GENERAL_STR) == 0)
-	mm_set_general(matcode);
+	matcode->shape = MS_GENERAL;
     else if (strcasecmp(storage_scheme, MM_SYMM_STR) == 0)
-	mm_set_symmetric(matcode);
+	matcode->shape = MS_SYMMETRIC;
     else if (strcasecmp(storage_scheme, MM_HERM_STR) == 0)
-	mm_set_hermitian(matcode);
+	matcode->shape = MS_HERMITIAN;
     else if (strcasecmp(storage_scheme, MM_SKEW_STR) == 0)
-	mm_set_skew(matcode);
+	matcode->shape = MS_SKEW;
     else
 	return MM_UNSUPPORTED_TYPE;
 

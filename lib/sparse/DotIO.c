@@ -322,11 +322,9 @@ SparseMatrix Import_coord_clusters_from_dot(Agraph_t* g, int maxcluster, int dim
     pal = &(palette_pastel[0][0]);
     break;
   case COLOR_SCHEME_SEQUENTIAL_SINGLEHUE_RED:
-    fprintf(stderr," HERE!\n");
     pal = &(palette_sequential_singlehue_red[0][0]);
     break;
   case COLOR_SCHEME_SEQUENTIAL_SINGLEHUE_RED_LIGHTER:
-    fprintf(stderr," HERE!\n");
     pal = &(palette_sequential_singlehue_red_lighter[0][0]);
     break;
   case COLOR_SCHEME_PRIMARY:

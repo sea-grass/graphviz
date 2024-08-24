@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   was a regression in Graphviz 12.0.0. #2588
 - Dashed and dotted pen styles in VRML images loaded by the GD plugin have been
   corrected.
+- `mm2gv` no longer crashes when reading various types of malformed Matrix
+  Market files.
 
 ## [12.1.0] – 2024-08-12
 

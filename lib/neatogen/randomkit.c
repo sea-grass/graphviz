@@ -71,14 +71,6 @@
 
 #include <neatogen/randomkit.h>
 
-#ifndef RK_DEV_URANDOM
-#define RK_DEV_URANDOM "/dev/urandom"
-#endif
-
-#ifndef RK_DEV_RANDOM
-#define RK_DEV_RANDOM "/dev/random"
-#endif
-
 void
 rk_seed(unsigned long seed, rk_state *state)
 {
@@ -133,9 +125,8 @@ rk_random(rk_state *state)
     return y;
 }
 
-unsigned long
-rk_ulong(rk_state *state)
-{
+/// returns a random unsigned long between 0 and `ULONG_MAX` inclusive
+static unsigned long rk_ulong(rk_state *state) {
 #if ULONG_MAX <= 0xffffffffUL
     return rk_random(state);
 #else
