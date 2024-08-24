@@ -80,7 +80,7 @@ checkG (Agraph_t* g)
 
 static void init(int argc, char *argv[], double *angle, double *accuracy,
                  int *check_edges_with_same_endpoint, int *seed,
-                 char **color_scheme, int *lightness) {
+                 const char **color_scheme, int *lightness) {
 
   char* cmd = argv[0];
   outfile = NULL;
@@ -198,6 +198,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy,
                 "--color_scheme option must be a known color scheme.\n");
         usage(cmd, EXIT_FAILURE);
       }
+      *color_scheme = arg;
       break;
 
     case OPT_LIGHTNESS: {
@@ -240,7 +241,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy,
 
 static int clarify(Agraph_t *g, double angle, double accuracy,
                    int check_edges_with_same_endpoint, int seed,
-                   char *color_scheme, int *lightness) {
+                   const char *color_scheme, int *lightness) {
 
   if (checkG(g)) {
     agerrorf("Graph %s contains loops or multiedges\n", agnameof(g));
@@ -260,7 +261,7 @@ int main(int argc, char *argv[])
   double accuracy;
   double angle;
   int check_edges_with_same_endpoint, seed;
-  char *color_scheme = NULL;
+  const char *color_scheme = NULL;
   int lightness[] = {0, 70};
   Agraph_t *g;
   Agraph_t *prev = NULL;

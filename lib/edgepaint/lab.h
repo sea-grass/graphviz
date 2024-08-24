@@ -46,4 +46,4 @@ double *lab_gamut(const int *lightness,
  * \param maxpoints Maximum number of points to return
  * \return An array of size [maxpoints*3] of the form {{l,a,b},...}
  */
-double *color_blend_rgb2lab(char *color_list, const int maxpoints);
+double *color_blend_rgb2lab(const char *color_list, const int maxpoints);
