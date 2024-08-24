@@ -19,6 +19,7 @@
 #include <gvc/gvcint.h>
 #include <gvc/gvcproc.h>
 #include <common/utils.h>
+#include <util/gv_fopen.h>
 
 extern void emit_graph(GVJ_t * job, graph_t * g);
 extern int gvLayout(GVC_t *gvc, graph_t *g, const char *engine);
@@ -455,7 +456,7 @@ static void gvevent_read (GVJ_t * job, const char *filename, const char *layout)
 	g = agread(stdin,NULL);  // continue processing stdin
     }
     else {
-	f = fopen(filename, "r");
+	f = gv_fopen(filename, "r");
 	if (!f)
 	   return;   /* FIXME - need some error handling */
 	g = agread(f,NULL);
