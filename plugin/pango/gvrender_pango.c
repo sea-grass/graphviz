@@ -258,8 +258,6 @@ static void cairogen_begin_anchor(GVJ_t *job, char *url, char *tooltip, char *ta
     obj_state_t *obj = job->obj;
     cairo_t *cr = job->context;
     double p0x, p0y, p1x, p1y;
-    char *buf;
-    size_t buf_len;
 
     // suppress unused parameter warnings
     (void)tooltip;
@@ -273,19 +271,14 @@ static void cairogen_begin_anchor(GVJ_t *job, char *url, char *tooltip, char *ta
        p1x = obj->url_map_p[1].x;
        p1y = -obj->url_map_p[1].y;
        cairo_user_to_device (cr, &p1x, &p1y);
-       buf_len = strlen(url) + 200;
-       buf = malloc(buf_len);
-       snprintf(buf, buf_len, "rect=[%f %f %f %f] uri='%s'",
-                p0x,
-                p0y,
-                p1x - p0x,
-                p1y - p0y,
-                url);
+       agxbuf buf = {0};
+       agxbprint(&buf, "rect=[%f %f %f %f] uri='%s'", p0x, p0y, p1x - p0x,
+                 p1y - p0y, url);
 #if CAIRO_VERSION >= CAIRO_VERSION_ENCODE(1, 16, 0)
-       cairo_tag_begin (cr, CAIRO_TAG_LINK, buf);
+       cairo_tag_begin(cr, CAIRO_TAG_LINK, agxbuse(&buf));
        cairo_tag_end (cr, CAIRO_TAG_LINK);
 #endif
-       free(buf);
+       agxbfree(&buf);
     }
 }
 
