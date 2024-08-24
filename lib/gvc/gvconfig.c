@@ -595,7 +595,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
     	    goto done;
         }
         else {
-    	    f = fopen(gvc->config_path,"r");
+    	    f = gv_fopen(gvc->config_path, "r");
     	    if (!f) {
     	        agerrorf("failed to open %s for read.\n", gvc->config_path);
 		return;
