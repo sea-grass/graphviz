@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="exit.h" />
     <ClInclude Include="gv_fopen.h" />
+    <ClInclude Include="strcasecmp.h" />
     <ClInclude Include="streq.h" />
   </ItemGroup>
   <ItemGroup>

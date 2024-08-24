@@ -29,8 +29,8 @@
 #include "arcball.h"
 #include "hotkeymap.h"
 #include "topviewfuncs.h"
-#include <cgraph/strcasecmp.h>
 #include <util/exit.h>
+#include <util/strcasecmp.h>
 
 static colorschemaset *create_color_theme(int themeid);
 

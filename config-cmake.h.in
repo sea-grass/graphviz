@@ -17,6 +17,7 @@
 #cmakedefine HAVE_SETENV
 #cmakedefine HAVE_SETMODE
 #cmakedefine HAVE_SRAND48
+#cmakedefine HAVE_STRCASESTR
 
 // Typedefs for missing types
 #ifdef _MSC_VER

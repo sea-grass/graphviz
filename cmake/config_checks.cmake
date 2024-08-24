@@ -21,6 +21,7 @@ check_function_exists( memrchr          HAVE_MEMRCHR         )
 check_function_exists( setenv           HAVE_SETENV          )
 check_function_exists( setmode          HAVE_SETMODE         )
 check_function_exists( srand48          HAVE_SRAND48         )
+check_function_exists( strcasestr       HAVE_STRCASESTR      )
 
 # Library checks
 set( HAVE_ANN       ${ANN_FOUND}        )

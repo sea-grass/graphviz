@@ -16,12 +16,12 @@
 */
 
 #include <cgraph/startswith.h>
-#include <cgraph/strcasecmp.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <sparse/SparseMatrix.h>
+#include <util/strcasecmp.h>
 
 #include "mmio.h"
 

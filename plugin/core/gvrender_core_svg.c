@@ -37,7 +37,7 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
-#include <cgraph/strcasecmp.h>
+#include <util/strcasecmp.h>
 
 #define LOCALNAMEPREFIX		'%'
 

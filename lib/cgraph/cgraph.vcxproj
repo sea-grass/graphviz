@@ -114,7 +114,6 @@ win_flex --case-insensitive --outfile=scan.c scan.l</Command>
     <ClInclude Include="rdr.h" />
     <ClInclude Include="sort.h" />
     <ClInclude Include="startswith.h" />
-    <ClInclude Include="strcasecmp.h" />
     <ClInclude Include="strview.h" />
     <ClInclude Include="tokenize.h" />
     <ClInclude Include="unreachable.h" />

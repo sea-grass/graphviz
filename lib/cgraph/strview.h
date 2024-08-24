@@ -11,10 +11,10 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
-#include <cgraph/strcasecmp.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <util/strcasecmp.h>
 
 /// a non-owning string reference
 typedef struct {

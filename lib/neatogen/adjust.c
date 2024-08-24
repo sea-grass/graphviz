@@ -36,8 +36,8 @@
 #include <vpsc/csolve_VPSC.h>
 #include <neatogen/quad_prog_vpsc.h>
 #endif
-#include <cgraph/strcasecmp.h>
 #include <stddef.h>
+#include <util/strcasecmp.h>
 
 #define SEPFACT         0.8 // default esep/sep
 

@@ -21,7 +21,7 @@
 #include <common/render.h>
 #include <common/textspan_lut.h>
 #include <cgraph/alloc.h>
-#include <cgraph/strcasecmp.h>
+#include <util/strcasecmp.h>
 
 /* estimate_textspan_size:
  * Estimate size of textspan, for given face and size, in points.
