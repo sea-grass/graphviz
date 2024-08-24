@@ -11,7 +11,6 @@
 #include <sparse/color_palette.h>
 #include <stdbool.h>
 #include <string.h>
-#include <common/macros.h>
 #include <util/streq.h>
 
 enum { npalettes = 265 };
