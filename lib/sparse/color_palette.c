@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <sparse/color_palette.h>
+#include <stdbool.h>
 #include <string.h>
 #include <common/macros.h>
 #include <util/streq.h>
@@ -382,7 +383,7 @@ const char *color_palettes_get(const char *color_palette_name) {
   return NULL;
 }
 
-static int color_palettes_Q(const char *color_palette_name) {
+static bool color_palettes_Q(const char *color_palette_name) {
   return color_palettes_get(color_palette_name) != NULL;
 }
 
