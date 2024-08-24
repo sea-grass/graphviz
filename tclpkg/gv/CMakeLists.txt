@@ -112,6 +112,30 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_JAVA)
+    swig_add_library(gv_java
+      LANGUAGE java
+      SOURCES gv.i gv_java_init.c
+    )
+    set_property(
+      TARGET gv_java
+      PROPERTY SWIG_COMPILE_OPTIONS -package org.graphviz
+    )
+    set_property(
+      TARGET gv_java
+      PROPERTY SWIG_GENERATED_INCLUDE_DIRECTORIES
+        ${JNI_INCLUDE_DIRS}
+    )
+    swig_link_libraries(gv_java PRIVATE gvc ${JNI_LIBRARIES})
+
+    install(
+      TARGETS gv_java
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/java
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
+
   if(ENABLE_JAVASCRIPT)
     swig_add_library(gv_javascript
       LANGUAGE javascript
@@ -270,6 +294,27 @@ if(ENABLE_SWIG)
     else()
       install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3guile
+        DESTINATION ${MAN_INSTALL_DIR}/man3
+      )
+    endif()
+  endif()
+
+  if(ENABLE_JAVA)
+    if(GZIP)
+      add_custom_target(man-gv_java ALL DEPENDS gv.3java.gz
+                        COMMENT "gv_java man page")
+      add_custom_command(
+        OUTPUT gv.3java.gz
+        COMMAND ${GZIP} -9 --no-name --to-stdout gv.3java
+          >"${CMAKE_CURRENT_BINARY_DIR}/gv.3java.gz"
+        MAIN_DEPENDENCY gv.3java
+        COMMENT "compress gv_java man page")
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3java.gz
+        DESTINATION ${MAN_INSTALL_DIR}/man3)
+    else()
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3java
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
     endif()
