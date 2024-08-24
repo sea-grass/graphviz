@@ -163,7 +163,7 @@ double *lab_gamut(const int *lightness, int *n) {
   // compute the maximum number of doubles we will need to span the space
   size_t m = ((size_t)l2 - (size_t)l1 + 1) * 256 * 256 * 3;
 
-  x = calloc(m, sizeof(double));
+  x = gv_calloc(m, sizeof(double));
   xx = x;
   *n = 0;
   for (size_t i = 0; i < lab_gamut_data_size; i += 4){
