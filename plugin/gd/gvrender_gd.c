@@ -107,6 +107,8 @@ static void gdgen_begin_page(GVJ_t * job)
 		"%s: graph is too large for gd-renderer bitmaps. Scaling by %g to fit\n",
 		job->common->cmdname, scale);
 	}
+	assert(job->width <= INT_MAX);
+	assert(job->height <= INT_MAX);
 	if (truecolor_p) {
 	    if (job->common->verbose)
 		fprintf(stderr,
@@ -114,7 +116,7 @@ static void gdgen_begin_page(GVJ_t * job)
 			job->common->cmdname,
 			round(job->width * job->height * 4 / 1024.),
 			job->width, job->height);
-	    im = gdImageCreateTrueColor(job->width, job->height);
+	    im = gdImageCreateTrueColor((int)job->width, (int)job->height);
 	} else {
 	    if (job->common->verbose)
 		fprintf(stderr,
@@ -122,7 +124,7 @@ static void gdgen_begin_page(GVJ_t * job)
 			job->common->cmdname,
 			round(job->width * job->height / 1024.),
 			job->width, job->height);
-	    im = gdImageCreate(job->width, job->height);
+	    im = gdImageCreate((int)job->width, (int)job->height);
 	}
         job->context = im;
     }
@@ -356,7 +358,7 @@ static void gdgen_textspan(GVJ_t * job, pointf p, textspan_t * span)
 static int gdgen_set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr* brush)
 {
     obj_state_t *obj = job->obj;
-    int i, pen, width, dashstyle[40];
+    int i, pen, width, dashstyle[20];
 
     if (obj->pen == PEN_DASHED) {
 	for (i = 0; i < 10; i++)
@@ -368,7 +370,7 @@ static int gdgen_set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr* brush)
     } else if (obj->pen == PEN_DOTTED) {
 	for (i = 0; i < 2; i++)
 	    dashstyle[i] = obj->pencolor.u.index;
-	for (; i < 14; i++)
+	for (; i < 12; i++)
 	    dashstyle[i] = gdTransparent;
 	gdImageSetStyle(im, dashstyle, 12);
 	pen = gdStyled;
@@ -381,7 +383,7 @@ static int gdgen_set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr* brush)
 	width = PENWIDTH_NORMAL;  /* gd can't do thin lines */
     gdImageSetThickness(im, width);
     /* use brush instead of Thickness to improve end butts */
-    if (width != PENWIDTH_NORMAL) {
+    if (width != (int)PENWIDTH_NORMAL) {
 	if (im->trueColor) {
 	    *brush = gdImageCreateTrueColor(width,width);
 	}

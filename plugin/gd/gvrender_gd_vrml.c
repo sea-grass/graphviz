@@ -153,23 +153,23 @@ static int color_index(gdImagePtr im, gvcolor_t color)
 static int set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr brush)
 {
     obj_state_t *obj = job->obj;
-    int i, pen, pencolor, transparent, width, dashstyle[40];
+    int i, pen, pencolor, transparent, width, dashstyle[20];
 
     pen = pencolor = color_index(im, obj->pencolor);
     transparent = gdImageGetTransparent(im);
     if (obj->pen == PEN_DASHED) {
-        for (i = 0; i < 20; i++)
+        for (i = 0; i < 10; i++)
             dashstyle[i] = pencolor;
-        for (; i < 40; i++)
+        for (; i < 20; i++)
             dashstyle[i] = transparent;
         gdImageSetStyle(im, dashstyle, 20);
         pen = gdStyled;
     } else if (obj->pen == PEN_DOTTED) {
         for (i = 0; i < 2; i++)
             dashstyle[i] = pencolor;
-        for (; i < 24; i++)
+        for (; i < 12; i++)
             dashstyle[i] = transparent;
-        gdImageSetStyle(im, dashstyle, 24);
+        gdImageSetStyle(im, dashstyle, 12);
         pen = gdStyled;
     }
     width = obj->penwidth * job->scale.x;
@@ -177,7 +177,7 @@ static int set_penstyle(GVJ_t * job, gdImagePtr im, gdImagePtr brush)
         width = PENWIDTH_NORMAL;  /* gd can't do thin lines */
     gdImageSetThickness(im, width);
     /* use brush instead of Thickness to improve end butts */
-    if (width != PENWIDTH_NORMAL) {
+    if (width != (int)PENWIDTH_NORMAL) {
         brush = gdImageCreate(width, width);
         gdImagePaletteCopy(brush, im);
         gdImageFilledRectangle(brush, 0, 0, width - 1, width - 1, pencolor);

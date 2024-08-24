@@ -24,6 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   been corrected to `colorxlate`.
 - `gvgen` no longer crashes sometimes when running random graph generation. This
   was a regression in Graphviz 12.0.0. #2588
+- Dashed and dotted pen styles in VRML images loaded by the GD plugin have been
+  corrected.
 
 ## [12.1.0] – 2024-08-12
 

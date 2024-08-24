@@ -11,8 +11,10 @@
 #include "config.h"
 #include "gdioctx_wrapper.h"
 
+#include <assert.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
+#include <limits.h>
 
 #include <gd.h>
 #include <stdbool.h>
@@ -22,13 +24,16 @@
 int gvdevice_gd_putBuf (gdIOCtx *context, const void *buffer, int len)
 {
     gd_context_t *gd_context = get_containing_context(context);
-    return gvwrite(gd_context->job, buffer, len);
+    assert(len >= 0);
+    const size_t result = gvwrite(gd_context->job, buffer, (size_t)len);
+    assert(result <= (size_t)len);
+    return (int)result;
 }
 
 void gvdevice_gd_putC (gdIOCtx *context, int C)
 {
     gd_context_t *gd_context = get_containing_context(context);
-    char c = C;
+    char c = (char)C;
 
     gvwrite(gd_context->job, &c, 1);
 }
@@ -47,8 +52,8 @@ typedef enum {
 static void gd_format(GVJ_t * job)
 {
     gdImagePtr im;
-    unsigned int x, y, color, alpha;
-    unsigned int *data = (unsigned int*)job->imagedata;
+    unsigned int x, y;
+    const char *data = job->imagedata;
     unsigned int width = job->width;
     unsigned int height = job->height;
     gd_context_t gd_context;
@@ -58,17 +63,21 @@ static void gd_format(GVJ_t * job)
     gd_context.ctx.putC = gvdevice_gd_putC;
     gd_context.job = job;
 
-    im = gdImageCreateTrueColor(width, height);
+    assert(width <= INT_MAX);
+    assert(height <= INT_MAX);
+    im = gdImageCreateTrueColor((int)width, (int)height);
     switch (job->device.id) {
 #ifdef HAVE_GD_PNG
     case FORMAT_PNG:
         for (y = 0; y < height; y++) {
             for (x = 0; x < width; x++) {
-                color = *data++;
-	        /* gd's max alpha is 127 */
-	        /*   so right-shift 25 to lose lsb of alpha */
-	        alpha = (color >> 25) & 0x7f;
-	        im->tpixels[y][x] = (color & 0xffffff) | ((0x7f - alpha) << 24);
+                const int r = *data++;
+                const int g = *data++;
+                const int b = *data++;
+	        // gd’s alpha is 7-bit, so scale down ÷2 from our 8-bit
+                const int alpha = *data++ >> 1;
+                const int color = r | (g << 8) | (b << 16) | ((0x7f - alpha) << 24);
+	        im->tpixels[y][x] = color;
 	    }
         }
         break;
@@ -81,12 +90,15 @@ static void gd_format(GVJ_t * job)
         gdImageAlphaBlending(im, false);
         for (y = 0; y < height; y++) {
             for (x = 0; x < width; x++) {
-                color = *data++;
-	        /* gd's max alpha is 127 */
-	        /*   so right-shift 25 to lose lsb of alpha */
-	        if ((alpha = (color >> 25) & 0x7f) >= 0x20)
+                const int r = *data++;
+                const int g = *data++;
+                const int b = *data++;
+	        // gd’s alpha is 7-bit, so scale down ÷2 from our 8-bit
+                const int alpha = *data++ >> 1;
+                const int color = r | (g << 8) | (b << 16) | ((0x7f - alpha) << 24);
+	        if (alpha >= 0x20)
 		    /* if not > 75% transparent */
-		    im->tpixels[y][x] = (color & 0xffffff) | ((0x7f - alpha) << 24);
+		    im->tpixels[y][x] = color;
 	        else
 		    im->tpixels[y][x] = TRANSPARENT;
 	    }
