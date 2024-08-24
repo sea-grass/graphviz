@@ -394,13 +394,7 @@ const char *color_palettes_get(const char *color_palette_name) {
 }
 
 int color_palettes_Q(const char *color_palette_name) {
-  int i;
-  for (i = 0; i < npalettes; i++){
-    if (strcmp(color_palette_name, color_palettes[i][0]) == 0){
-      return 1;
-    }
-  }
-  return 0;
+  return color_palettes_get(color_palette_name) != NULL;
 }
 
 float palette_pastel[1001][3] = {{0.984313725490196f, 0.7058823529411764f, 0.6823529411764706f}, 
