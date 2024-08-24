@@ -12,9 +12,9 @@
 #include <math.h>
 #include <stddef.h>
 #include "tcldot.h"
-#include <cgraph/unreachable.h>
 #include <gvc/gvc.h>
 #include <util/strcasecmp.h>
+#include <util/unreachable.h>
 
 size_t Tcldot_string_writer(GVJ_t *job, const char *s, size_t len)
 {

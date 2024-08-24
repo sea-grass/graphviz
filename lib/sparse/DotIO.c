@@ -12,7 +12,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
-#include <cgraph/unreachable.h>
 #include <sparse/general.h>
 #include <sparse/DotIO.h>
 #include <sparse/clustering.h>
@@ -22,6 +21,7 @@
 #include <sparse/colorutil.h>
 #include <stdbool.h>
 #include <string.h>
+#include <util/unreachable.h>
 
 typedef struct {
     Agrec_t h;

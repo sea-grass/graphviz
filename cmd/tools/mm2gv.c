@@ -15,7 +15,6 @@
 
 #include "config.h"
 #include <cgraph/alloc.h>
-#include <cgraph/unreachable.h>
 
 #define STANDALONE
 #include <cgraph/cgraph.h>
@@ -28,6 +27,7 @@
 #include "mmio.h"
 #include <cgraph/agxbuf.h>
 #include <sparse/SparseMatrix.h>
+#include <util/unreachable.h>
 #include "matrix_market.h"
 #include <getopt.h>
 

@@ -13,8 +13,8 @@
  *************************************************************************/
 
 #include <cgraph/cghdr.h>
-#include <cgraph/unreachable.h>
 #include <stddef.h>
+#include <util/unreachable.h>
 
 int agdelete(Agraph_t * g, void *obj)
 {

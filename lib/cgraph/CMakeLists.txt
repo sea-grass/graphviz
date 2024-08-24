@@ -31,7 +31,6 @@ add_library(cgraph
   startswith.h
   strview.h
   tokenize.h
-  unreachable.h
   unused.h
 
   # Source files

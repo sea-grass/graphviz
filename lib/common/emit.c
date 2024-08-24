@@ -32,12 +32,12 @@
 #include <cgraph/list.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
-#include <cgraph/unreachable.h>
 #include <common/htmltable.h>
 #include <gvc/gvc.h>
 #include <cdt/cdt.h>
 #include <pathplan/pathgeom.h>
 #include <util/streq.h>
+#include <util/unreachable.h>
 #include <xdot/xdot.h>
 
 #ifdef _WIN32

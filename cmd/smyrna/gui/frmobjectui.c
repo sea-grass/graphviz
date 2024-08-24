@@ -24,10 +24,10 @@
 #include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strview.h>
-#include <cgraph/unreachable.h>
 #include <stdint.h>
 #include <string.h>
 #include <util/strcasecmp.h>
+#include <util/unreachable.h>
 
 static int sel_node;
 static int sel_edge;

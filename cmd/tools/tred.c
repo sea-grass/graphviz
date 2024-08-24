@@ -26,12 +26,12 @@
 
 #include <cgraph/cgraph.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/unreachable.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 static char **Files;
 static char *CmdName;

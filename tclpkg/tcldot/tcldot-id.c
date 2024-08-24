@@ -8,8 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/unreachable.h>
 #include <stdint.h>
+#include <util/unreachable.h>
 #include "tcldot.h"
 
 // Agiddisc functions

@@ -23,10 +23,10 @@
 #include <gvc/gvio.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
-#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <common/color.h>
 #include <util/streq.h>
+#include <util/unreachable.h>
 
 /* Number of points to split splines into */
 #define BEZIERSUBDIVISION 6

@@ -19,12 +19,12 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/unreachable.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <util/unreachable.h>
 
 static int lineno = 1;		/* current line number */
 static int col0 = 1;		/* true if char ptr is at column 0 */

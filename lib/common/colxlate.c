@@ -27,8 +27,8 @@
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
-#include <cgraph/unreachable.h>
 #include <util/strcasecmp.h>
+#include <util/unreachable.h>
 
 static char* colorscheme;
 

@@ -34,8 +34,8 @@
 #include <cgraph/gv_math.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
-#include <cgraph/unreachable.h>
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 typedef struct {
     Agrec_t h;

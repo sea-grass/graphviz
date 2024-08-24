@@ -8,12 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/unreachable.h>
 #include <math.h>
 #include <stdio.h>
 #include "simple.h"
 #include <stdlib.h>
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 static int sign(double v) {
   if (v < 0)

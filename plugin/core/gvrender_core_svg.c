@@ -32,12 +32,12 @@
 
 #include <gvc/gvplugin_render.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/unreachable.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
 #include <util/strcasecmp.h>
+#include <util/unreachable.h>
 
 #define LOCALNAMEPREFIX		'%'
 

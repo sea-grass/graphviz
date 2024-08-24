@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <cgraph/unreachable.h>
 #include <common/macros.h>
 #include <common/const.h>
 
@@ -22,6 +21,7 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
+#include <util/unreachable.h>
 #include "tcl_context.h"
 
 typedef enum { FORMAT_TK, } format_type;

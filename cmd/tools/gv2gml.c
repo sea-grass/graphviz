@@ -29,11 +29,11 @@
 #include <cgraph/ingraphs.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
-#include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <util/exit.h>
 #include <util/streq.h>
+#include <util/unreachable.h>
 #include "openFile.h"
 
 static FILE *outFile;

@@ -39,7 +39,6 @@
 #include <common/intset.h>
 #include <cdt/cdt.h>
 #include <cgraph/alloc.h>
-#include <cgraph/unreachable.h>
 #include <float.h>
 #include <inttypes.h>
 #include <limits.h>
@@ -50,6 +49,7 @@
 #include <stdio.h>
 #include <util/exit.h>
 #include <util/strcasecmp.h>
+#include <util/unreachable.h>
 
 #define DEFAULT_BORDER    1
 #define DEFAULT_CELLPADDING  2

@@ -13,11 +13,11 @@
 #include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/prisize_t.h>
-#include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <label/xlabels.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/unreachable.h>
 
 static int Rankdir;
 static bool Flip;
