@@ -16,6 +16,7 @@
 #include <gvc/gvio.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <util/gv_fopen.h>
 #include <util/strcasecmp.h>
 
 static int N_EPSF_files;
@@ -46,7 +47,7 @@ static usershape_t *user_init(const char *str)
     if (us)
 	return us;
 
-    if (!(fp = fopen(str, "r"))) {
+    if (!(fp = gv_fopen(str, "r"))) {
 	agwarningf("couldn't open epsf file %s\n", str);
 	return NULL;
     }
