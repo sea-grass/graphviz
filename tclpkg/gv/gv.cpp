@@ -10,6 +10,7 @@
 
 #include "gv_channel.h"
 #include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cstdlib>
 #include <cstring>
 #include <gvc/gvc.h>
@@ -680,7 +681,7 @@ char *renderresult(Agraph_t *g, const char *format) {
   BA ba;
   ba.sz = BUFSIZ;
   // must be freed by wrapper code
-  ba.data = reinterpret_cast<char *>(malloc(ba.sz * sizeof(char)));
+  ba.data = reinterpret_cast<char *>(gv_calloc(ba.sz, sizeof(char)));
   ba.len = 0;
   gv_string_writer_init(gvc);
   (void)gvRender(gvc, g, format, reinterpret_cast<FILE *>(&ba));
