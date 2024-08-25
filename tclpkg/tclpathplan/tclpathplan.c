@@ -97,8 +97,7 @@ static int vc_refresh(vgpane_t * vgp)
     return vgp->vc != NULL;
 }
 
-static void dgsprintxy(Tcl_DString * result, int npts, point p[])
-{
+static void dgsprintxy(Tcl_DString *result, int npts, const point p[]) {
     int i;
     char buf[20];
 
