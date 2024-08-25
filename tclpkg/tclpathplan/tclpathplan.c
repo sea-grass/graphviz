@@ -119,7 +119,6 @@ static void dgsprintxy(Tcl_DString *result, int npts, const point p[]) {
 /// @param ppos Coordinates to substitute for %t
 static void expandPercentsEval(Tcl_Interp *interp, char *before, char *r,
                                int npts, const point *ppos) {
-    char *string;
     Tcl_DString scripts;
 
     Tcl_DStringInit(&scripts);
@@ -129,10 +128,8 @@ static void expandPercentsEval(Tcl_Interp *interp, char *before, char *r,
 	 * result string.
 	 */
 
-	for (string = before; *string != '\0' && *string != '%'; string++) {
-	    /* Empty loop body. */
-	}
-	if (string != before) {
+	char *string = strchr(before, '%');
+	if (string != NULL) {
 	    Tcl_DStringAppend(&scripts, before, string - before);
 	    before = string;
 	}
