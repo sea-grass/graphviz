@@ -8,14 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <assert.h>
 #include <cgraph/list.h>
 #include <cgraph/prisize_t.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <limits.h>
 #include <math.h>
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
@@ -59,7 +57,7 @@ static triangles_t tris;
 static Ppoint_t *ops;
 static size_t opn;
 
-static int triangulate(pointnlink_t **, int);
+static int triangulate(pointnlink_t **, size_t);
 static int loadtriangle(pointnlink_t *, pointnlink_t *, pointnlink_t *);
 static void connecttris(size_t, size_t);
 static bool marktripath(size_t, size_t);
@@ -72,7 +70,7 @@ static int pointintri(size_t, Ppoint_t *);
 
 static int growops(size_t);
 
-static Ppoint_t point_indexer(void *base, int index) {
+static Ppoint_t point_indexer(void *base, size_t index) {
   pointnlink_t **b = base;
   return *b[index]->pp;
 }
@@ -157,8 +155,7 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 #endif
 
     /* generate list of triangles */
-    assert(pnll <= INT_MAX);
-    if (triangulate(pnlps, (int)pnll)) {
+    if (triangulate(pnlps, pnll)) {
 	free(dq.pnlps);
 	free(pnlps);
 	free(pnls);
@@ -318,15 +315,13 @@ int Pshortestpath(Ppoly_t * polyp, Ppoint_t eps[2], Ppolyline_t * output)
 }
 
 /* triangulate polygon */
-static int triangulate(pointnlink_t **points, int point_count) {
-    int pnli, pnlip1, pnlip2;
-
+static int triangulate(pointnlink_t **points, size_t point_count) {
 	if (point_count > 3)
 	{
-		for (pnli = 0; pnli < point_count; pnli++)
+		for (size_t pnli = 0; pnli < point_count; pnli++)
 		{
-			pnlip1 = (pnli + 1) % point_count;
-			pnlip2 = (pnli + 2) % point_count;
+			const size_t pnlip1 = (pnli + 1) % point_count;
+			const size_t pnlip2 = (pnli + 2) % point_count;
 			if (isdiagonal(pnli, pnlip2, points, point_count, point_indexer))
 			{
 				if (loadtriangle(points[pnli], points[pnlip1], points[pnlip2]) != 0)

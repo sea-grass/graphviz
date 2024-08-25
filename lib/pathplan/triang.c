@@ -8,9 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <assert.h>
 #include <cgraph/alloc.h>
-#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
@@ -18,7 +16,7 @@
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
 
-static int triangulate(Ppoint_t **pointp, int pointn,
+static int triangulate(Ppoint_t **pointp, size_t pointn,
                        void (*fn)(void *, const Ppoint_t *), void *vc);
 
 int ccw(Ppoint_t p1, Ppoint_t p2, Ppoint_t p3) {
@@ -26,7 +24,7 @@ int ccw(Ppoint_t p1, Ppoint_t p2, Ppoint_t p3) {
     return d > 0 ? ISCW : (d < 0 ? ISCCW : ISON);
 }
 
-static Ppoint_t point_indexer(void *base, int index) {
+static Ppoint_t point_indexer(void *base, size_t index) {
   Ppoint_t **b = base;
   return *b[index];
 }
@@ -45,8 +43,7 @@ int Ptriangulate(Ppoly_t *polygon, void (*fn)(void *, const Ppoint_t *),
     for (size_t i = 0; i < pointn; i++)
 	pointp[i] = &(polygon->ps[i]);
 
-    assert(pointn <= INT_MAX);
-    if (triangulate(pointp, (int)pointn, fn, vc) != 0) {
+    if (triangulate(pointp, pointn, fn, vc) != 0) {
 	free(pointp);
 	return 1;
     }
@@ -59,20 +56,19 @@ int Ptriangulate(Ppoly_t *polygon, void (*fn)(void *, const Ppoint_t *),
  * Triangulates the given polygon. 
  * Returns non-zero if no diagonal exists.
  */
-static int triangulate(Ppoint_t **pointp, int pointn,
+static int triangulate(Ppoint_t **pointp, size_t pointn,
                        void (*fn)(void *, const Ppoint_t *), void *vc) {
-    int i, ip1, ip2, j;
     Ppoint_t A[3];
     if (pointn > 3) {
-	for (i = 0; i < pointn; i++) {
-	    ip1 = (i + 1) % pointn;
-	    ip2 = (i + 2) % pointn;
+	for (size_t i = 0; i < pointn; i++) {
+	    const size_t ip1 = (i + 1) % pointn;
+	    const size_t ip2 = (i + 2) % pointn;
 	    if (isdiagonal(i, ip2, pointp, pointn, point_indexer)) {
 		A[0] = *pointp[i];
 		A[1] = *pointp[ip1];
 		A[2] = *pointp[ip2];
 		fn(vc, A);
-		j = 0;
+		size_t j = 0;
 		for (i = 0; i < pointn; i++)
 		    if (i != ip1)
 			pointp[j++] = pointp[i];
@@ -89,12 +85,13 @@ static int triangulate(Ppoint_t **pointp, int pointn,
     return 0;
 }
 
-bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer) {
-    int ip1, im1, j, jp1, res;
+bool isdiagonal(size_t i, size_t ip2, void *pointp, size_t pointn,
+                indexer_t indexer) {
+    int res;
 
     /* neighborhood test */
-    ip1 = (i + 1) % pointn;
-    im1 = (i + pointn - 1) % pointn;
+    const size_t ip1 = (i + 1) % pointn;
+    const size_t im1 = (i + pointn - 1) % pointn;
     /* If P[i] is a convex vertex [ i+1 left of (i-1,i) ]. */
     if (ccw(indexer(pointp, im1), indexer(pointp, i), indexer(pointp, ip1)) == ISCCW)
 	res = ccw(indexer(pointp, i), indexer(pointp, ip2), indexer(pointp, im1)) == ISCCW &&
@@ -107,8 +104,8 @@ bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer) {
     }
 
     /* check against all other edges */
-    for (j = 0; j < pointn; j++) {
-	jp1 = (j + 1) % pointn;
+    for (size_t j = 0; j < pointn; j++) {
+	const size_t jp1 = (j + 1) % pointn;
 	if (!(j == i || jp1 == i || j == ip2 || jp1 == ip2))
 	    if (intersects
 		(indexer(pointp, i), indexer(pointp, ip2), indexer(pointp, j), indexer(pointp, jp1))) {
