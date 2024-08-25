@@ -31,12 +31,12 @@
 #include <ortho/fPQ.h>
 #include <ortho/ortho.h>
 #include <cgraph/alloc.h>
-#include <cgraph/unused.h>
 #include <common/geomprocs.h>
 #include <common/globals.h>
 #include <common/render.h>
 #include <common/pointset.h>
 #include <util/exit.h>
+#include <util/unused.h>
 
 typedef struct {
     int d;

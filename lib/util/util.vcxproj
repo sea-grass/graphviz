@@ -142,6 +142,7 @@
     <ClInclude Include="strcasecmp.h" />
     <ClInclude Include="streq.h" />
     <ClInclude Include="unreachable.h" />
+    <ClInclude Include="unused.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gv_fopen.c" />

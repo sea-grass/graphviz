@@ -17,7 +17,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/unused.h>
 #include <gvpr/actions.h>
 #include <gvpr/compile.h>
 #include <limits.h>
@@ -29,6 +28,7 @@
 #include <unistd.h>
 #include <util/strcasecmp.h>
 #include <util/unreachable.h>
+#include <util/unused.h>
 
 #define KINDS(p)                                                               \
   ((AGTYPE(p) == AGRAPH) ? "graph" : (AGTYPE(p) == AGNODE) ? "node" : "edge")
