@@ -102,16 +102,15 @@ static void dgsprintxy(Tcl_DString * result, int npts, point p[])
     int i;
     char buf[20];
 
-    if (npts != 1)
-	Tcl_DStringStartSublist(result);
+    assert(npts > 1);
+    Tcl_DStringStartSublist(result);
     for (i = 0; i < npts; i++) {
 	snprintf(buf, sizeof(buf), "%g", p[i].x);
 	Tcl_DStringAppendElement(result, buf);
 	snprintf(buf, sizeof(buf), "%g", p[i].y);
 	Tcl_DStringAppendElement(result, buf);
     }
-    if (npts != 1)
-	Tcl_DStringEndSublist(result);
+    Tcl_DStringEndSublist(result);
 }
 
 static void expandPercentsEval(Tcl_Interp * interp,	/* interpreter context */
