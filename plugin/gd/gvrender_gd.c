@@ -21,7 +21,6 @@
 #include <string.h>
 #include <fcntl.h>
 #include <cgraph/alloc.h>
-#include <cgraph/unreachable.h>
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvcint.h>	/* for gvc->g for agget */
@@ -31,6 +30,7 @@
 #include <gdfontmb.h>
 #include <gdfontl.h>
 #include <gdfontg.h>
+#include <util/unreachable.h>
 
 typedef enum {
 	FORMAT_GIF,

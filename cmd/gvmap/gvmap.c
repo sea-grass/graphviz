@@ -15,7 +15,6 @@
 
 #include "config.h"
 #include "../tools/openFile.h"
-#include <cgraph/unreachable.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +35,7 @@
 #include <sparse/DotIO.h>
 #include <sparse/colorutil.h>
 #include <sparse/color_palette.h>
+#include <util/unreachable.h>
 
 typedef struct {
     char* cmd;

@@ -22,9 +22,9 @@
 #include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/unreachable.h>
 #include <getopt.h>
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 static char *CmdName;
 static char **Files;

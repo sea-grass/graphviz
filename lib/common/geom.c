@@ -16,11 +16,11 @@
 
 #include "config.h"
 #include <assert.h>
-#include <cgraph/unreachable.h>
 #include <common/geom.h>
 #include <common/geomprocs.h>
 #include <math.h>
 #include <stdbool.h>
+#include <util/unreachable.h>
 
 /*
  *--------------------------------------------------------------

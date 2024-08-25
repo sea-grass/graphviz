@@ -14,7 +14,6 @@ XDOT DRAWING FUNCTIONS, maybe need to move them somewhere else
 		for now keep them at the bottom
 */
 #include "draw.h"
-#include <cgraph/unreachable.h>
 #include <common/colorprocs.h>
 #include <common/types.h>
 #include <common/utils.h>
@@ -23,6 +22,7 @@ XDOT DRAWING FUNCTIONS, maybe need to move them somewhere else
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/unreachable.h>
 
 #include <xdot/xdot.h>
 #include "viewport.h"

@@ -10,7 +10,7 @@
 #include "svg_analyzer.h"
 #include "test_edge_node_overlap_utilities.h"
 #include "test_utilities.h"
-#include <cgraph/unreachable.h>
+#include <util/unreachable.h>
 
 /// return union of unordered sets of string views
 std::unordered_set<std::string_view>

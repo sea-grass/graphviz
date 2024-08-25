@@ -15,10 +15,10 @@
  *************************************************************************/
 
 #include	<cgraph/cghdr.h>
-#include	<cgraph/unreachable.h>
 #include	<stddef.h>
 #include	<stdbool.h>
 #include	<util/streq.h>
+#include	<util/unreachable.h>
 
 /*
  * dynamic attributes

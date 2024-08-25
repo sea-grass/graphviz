@@ -24,7 +24,6 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/prisize_t.h>
 #include <cgraph/startswith.h>
-#include <cgraph/unreachable.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
 #include <inttypes.h>
@@ -35,6 +34,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 static int isedge(Agobj_t *obj) {
   return AGTYPE(obj) == AGOUTEDGE || AGTYPE(obj) == AGINEDGE;

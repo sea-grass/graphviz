@@ -10,7 +10,6 @@
 
 #include "config.h"
 #include "../tools/openFile.h"
-#include <cgraph/unreachable.h>
 #include <stdio.h>
 #include <stdlib.h>
 #define STANDALONE
@@ -28,6 +27,7 @@
 #include <cgraph/ingraphs.h>
 #include <sparse/DotIO.h>
 #include <sparse/colorutil.h>
+#include <util/unreachable.h>
 
 typedef struct {
   FILE* outfp;

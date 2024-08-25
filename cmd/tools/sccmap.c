@@ -32,11 +32,11 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
-#include <cgraph/unreachable.h>
 
 #include <getopt.h>
 #include "openFile.h"
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 #define INF UINT_MAX
 

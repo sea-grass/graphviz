@@ -14,7 +14,6 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_math.h>
-#include <cgraph/unreachable.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <limits.h>
@@ -23,6 +22,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <util/streq.h>
+#include <util/unreachable.h>
 
 #define RBCONST 12
 #define RBCURVE .5

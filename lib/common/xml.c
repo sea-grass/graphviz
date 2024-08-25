@@ -5,7 +5,6 @@
  */
 
 #include <cgraph/gv_ctype.h>
-#include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <inttypes.h>
@@ -14,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 /* return true if *s points to &[A-Za-z]+;      (e.g. &Ccedil; )
  *                          or &#[0-9]*;        (e.g. &#38; )

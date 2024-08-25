@@ -20,10 +20,10 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <common/render.h>
-#include <cgraph/unreachable.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/unreachable.h>
 
 #ifdef DEBUG
 static int debugleveln(edge_t* e, int i)

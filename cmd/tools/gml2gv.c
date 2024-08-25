@@ -15,9 +15,9 @@
 #include <getopt.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
-#include <cgraph/unreachable.h>
 #include "openFile.h"
 #include <util/exit.h>
+#include <util/unreachable.h>
 
 static int Verbose;
 static char* gname = "";

@@ -20,10 +20,10 @@
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/list.h>
 #include    <cgraph/startswith.h>
-#include    <cgraph/unreachable.h>
 #include    <stdbool.h>
 #include    <stdio.h>
 #include    <util/exit.h>
+#include    <util/unreachable.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 #include    <limits.h>

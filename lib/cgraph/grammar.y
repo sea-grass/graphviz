@@ -27,9 +27,9 @@
 #include <cghdr.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
-#include <cgraph/unreachable.h>
 #include <stddef.h>
 #include <util/streq.h>
+#include <util/unreachable.h>
 
 extern void aagerror(const char*);
 

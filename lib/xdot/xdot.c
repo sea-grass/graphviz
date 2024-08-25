@@ -12,10 +12,10 @@
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/prisize_t.h>
-#include <cgraph/unreachable.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/unreachable.h>
 
 /* the parse functions should return NULL on error */
 static char *parseReal(char *s, double *fp)

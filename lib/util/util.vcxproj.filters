@@ -27,6 +27,9 @@
     <ClInclude Include="streq.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="unreachable.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gv_fopen.c">

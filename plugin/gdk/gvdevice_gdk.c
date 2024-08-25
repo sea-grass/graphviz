@@ -10,10 +10,10 @@
 
 #include "config.h"
 #include <assert.h>
-#include <cgraph/unreachable.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <limits.h>
+#include <util/unreachable.h>
 #ifdef HAVE_PANGOCAIRO
 #include <gdk-pixbuf/gdk-pixbuf.h>
 

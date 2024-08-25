@@ -20,7 +20,6 @@
 #include    <cgraph/alloc.h>
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/list.h>
-#include    <cgraph/unreachable.h>
 #include    <getopt.h>
 #include    <limits.h>
 #include    <stdbool.h>
@@ -29,6 +28,7 @@
 #include    <string.h>
 #include    "openFile.h"
 #include    <util/exit.h>
+#include    <util/unreachable.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>
 

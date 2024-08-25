@@ -12,12 +12,12 @@
 
 #include <stdlib.h>
 
-#include <cgraph/unreachable.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
+#include <util/unreachable.h>
 
 typedef enum { FORMAT_IMAP, FORMAT_ISMAP, FORMAT_CMAP, FORMAT_CMAPX, } format_type;
 

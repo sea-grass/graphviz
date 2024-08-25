@@ -7,7 +7,7 @@
 #include <fmt/format.h>
 
 #include "svg_element.h"
-#include <cgraph/unreachable.h>
+#include <util/unreachable.h>
 
 SVG::SVGElement::SVGElement(SVGElementType type) : type(type) {}
 
