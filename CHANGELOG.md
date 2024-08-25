@@ -22,6 +22,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   requirement that the `knowncolors` array is lexically ordered remains.
 - The Smyrna “Color Theme”, “Edge Attr. For Color”, and “Node Alpha” settings
   have been removed. The values of these settings had no effect.
+- Graphviz libraries set close-on-exec on job output files being written and
+  user shape files being read. This should only affect applications using
+  Graphviz libraries that rely on a fork-and-exec-ed child subprocess being able
+  to access these open files. Applications with this requirement can regain the
+  old behavior by unsetting the close-on-exec flag immediately after creating
+  these objects. Graphviz libraries themselves are not affected by whether or
+  not this flag is set.
 
 ### Fixed
 

@@ -17,6 +17,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <util/gv_fopen.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -636,7 +637,7 @@ bool gvusershape_file_access(usershape_t *us)
 	    agwarningf("Filename \"%s\" is unsafe\n", us->name);
 	    return false;
 	}
-	us->f = fopen(fn, "rb");
+	us->f = gv_fopen(fn, "rb");
 	if (us->f == NULL) {
 	    agwarningf("%s while opening %s\n", strerror(errno), fn);
 	    return false;

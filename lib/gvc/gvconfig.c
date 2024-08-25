@@ -351,7 +351,7 @@ char * gvconfig_libdir(GVC_t * gvc)
 	    dl_iterate_phdr(line_callback, line);
 	    libdir = line;
 #else
-	    FILE* f = fopen ("/proc/self/maps", "r");
+	    FILE* f = gv_fopen("/proc/self/maps", "r");
 	    if (f) {
 		while (!feof (f)) {
 		    if (!fgets (line, sizeof (line), f))
@@ -595,7 +595,7 @@ void gvconfig(GVC_t * gvc, bool rescan)
     	    goto done;
         }
         else {
-    	    f = fopen(gvc->config_path,"r");
+    	    f = gv_fopen(gvc->config_path, "r");
     	    if (!f) {
     	        agerrorf("failed to open %s for read.\n", gvc->config_path);
 		return;

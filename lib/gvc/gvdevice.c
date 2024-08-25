@@ -24,6 +24,7 @@
 #include <inttypes.h>
 #include <errno.h>
 #include <unistd.h>
+#include <util/gv_fopen.h>
 
 #ifdef _WIN32
 #include <fcntl.h>
@@ -127,7 +128,7 @@ int gvdevice_initialize(GVJ_t * job)
         if (gvc->common.auto_outfile_names)
             auto_output_filename(job);
         if (job->output_filename) {
-            job->output_file = fopen(job->output_filename, "w");
+            job->output_file = gv_fopen(job->output_filename, "w");
             if (job->output_file == NULL) {
 		job->common->errorfn("Could not open \"%s\" for writing : %s\n",
 		    job->output_filename, strerror(errno));
