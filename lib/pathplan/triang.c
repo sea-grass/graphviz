@@ -18,8 +18,8 @@
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
 
-static int triangulate(Ppoint_t ** pointp, int pointn,
-			void (*fn) (void *, Ppoint_t *), void *vc);
+static int triangulate(Ppoint_t **pointp, int pointn,
+                       void (*fn)(void *, const Ppoint_t *), void *vc);
 
 int ccw(Ppoint_t p1, Ppoint_t p2, Ppoint_t p3) {
     double d = (p1.y - p2.y) * (p3.x - p2.x) - (p3.y - p2.y) * (p1.x - p2.x);
@@ -34,9 +34,8 @@ static Ppoint_t point_indexer(void *base, int index) {
 /* Ptriangulate:
  * Return 0 on success; non-zero on error.
  */
-int Ptriangulate(Ppoly_t * polygon, void (*fn) (void *, Ppoint_t *),
-		  void *vc)
-{
+int Ptriangulate(Ppoly_t *polygon, void (*fn)(void *, const Ppoint_t *),
+                 void *vc) {
     Ppoint_t **pointp;
 
     const size_t pointn = polygon->pn;
@@ -60,10 +59,8 @@ int Ptriangulate(Ppoly_t * polygon, void (*fn) (void *, Ppoint_t *),
  * Triangulates the given polygon. 
  * Returns non-zero if no diagonal exists.
  */
-static int
-triangulate(Ppoint_t ** pointp, int pointn,
-	    void (*fn) (void *, Ppoint_t *), void *vc)
-{
+static int triangulate(Ppoint_t **pointp, int pointn,
+                       void (*fn)(void *, const Ppoint_t *), void *vc) {
     int i, ip1, ip2, j;
     Ppoint_t A[3];
     if (pointn > 3) {
