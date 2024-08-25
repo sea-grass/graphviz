@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdio.h>
 
 #ifdef __cplusplus
@@ -18,10 +19,9 @@ extern "C" {
 
 enum {MAX_COLOR = 1001};
 
-extern int knownColorScheme(const char*);
+extern bool knownColorScheme(const char *);
   /* return a list of rgb in hex form: "#ff0000,#00ff00,..." */
 const char *color_palettes_get(const char *color_palette_name);
-extern int color_palettes_Q(const char *color_palette_name);
 
 extern float palette_pastel[1001][3];
 extern float palette_blue_to_yellow[1001][3];
