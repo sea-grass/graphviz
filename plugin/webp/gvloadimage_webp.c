@@ -61,7 +61,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
     size_t data_size = (size_t)size;
     fseek(in, 0, SEEK_SET);
     data = malloc(data_size);
-    ok = fread(data, data_size, 1, in) == 1;
+    ok = data_size == 0 || (data != NULL && fread(data, data_size, 1, in) == 1);
     if (!ok) {
         fprintf(stderr, "Error: WebP could not read %" PRISIZE_T
                 " bytes of data from %s\n", data_size, in_file);

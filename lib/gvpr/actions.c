@@ -288,7 +288,7 @@ static void cloneGraph(Agraph_t *tgt, Agraph_t *src) {
   Agraph_t *sg;
   char *name;
   Dt_t *emap = dtopen(&edgepair, Dtoset);
-  edgepair_t *data = malloc(sizeof(edgepair_t) * agnedges(src));
+  edgepair_t *data = gv_calloc(agnedges(src), sizeof(edgepair_t));
   edgepair_t *ep = data;
 
   for (t = agfstnode(src); t; t = agnxtnode(src, t)) {

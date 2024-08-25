@@ -479,7 +479,7 @@ static void xlib_initialize(GVJ_t *firstjob)
     firstjob->screen = scr;
 
     keycodes = malloc(firstjob->numkeys * sizeof(KeyCode));
-    if (keycodes == NULL) {
+    if (firstjob->numkeys > 0 && keycodes == NULL) {
         fprintf(stderr, "Failed to malloc %" PRISIZE_T "*KeyCode\n",
                 firstjob->numkeys);
         return;

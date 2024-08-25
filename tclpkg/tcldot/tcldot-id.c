@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <cgraph/alloc.h>
 #include <stdint.h>
 #include <util/unreachable.h>
 #include "tcldot.h"
@@ -17,7 +18,7 @@ static void *myiddisc_open(Agraph_t *g, Agdisc_t *disc) {
     ictx_t *ictx = (ictx_t *)disc;
     gctx_t *gctx;
 
-    gctx = malloc(sizeof(gctx_t));
+    gctx = gv_alloc(sizeof(gctx_t));
     gctx->g = g;
     gctx->ictx = ictx;
     return gctx;

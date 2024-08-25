@@ -9,6 +9,8 @@
  *************************************************************************/
 
 #include "gv_channel.h"
+#include <cgraph/agxbuf.h>
+#include <cgraph/alloc.h>
 #include <cstdlib>
 #include <cstring>
 #include <gvc/gvc.h>
@@ -122,13 +124,9 @@ static char *myagxget(void *obj, Agsym_t *a) {
   if (!val)
     return emptystring;
   if (strcmp(a->name, "label") == 0 && aghtmlstr(val)) {
-    size_t len = strlen(val);
-    auto hs = reinterpret_cast<char *>(malloc(len + 3));
-    hs[0] = '<';
-    strcpy(hs + 1, val);
-    hs[len + 1] = '>';
-    hs[len + 2] = '\0';
-    return hs;
+    agxbuf buf = {0};
+    agxbprint(&buf, "<%s>", val);
+    return agxbdisown(&buf);
   }
   return val;
 }
@@ -683,7 +681,7 @@ char *renderresult(Agraph_t *g, const char *format) {
   BA ba;
   ba.sz = BUFSIZ;
   // must be freed by wrapper code
-  ba.data = reinterpret_cast<char *>(malloc(ba.sz * sizeof(char)));
+  ba.data = reinterpret_cast<char *>(gv_calloc(ba.sz, sizeof(char)));
   ba.len = 0;
   gv_string_writer_init(gvc);
   (void)gvRender(gvc, g, format, reinterpret_cast<FILE *>(&ba));
