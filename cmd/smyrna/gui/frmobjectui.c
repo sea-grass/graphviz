@@ -355,16 +355,6 @@ _BB void on_txtAttr_changed(GtkWidget *widget, void *user_data) {
   filter_attributes(gtk_entry_get_text((GtkEntry*)widget), view->Topview);
 }
 
-static void set_refresh_filters(ViewInfo * v, char *name)
-{
-    if (strcasecmp(name, "pos") == 0)
-	v->refresh.pos = 1;
-    if (strcasecmp(name, "color") == 0)
-	v->refresh.color = 1;
-    if (strcasecmp(name, "selected") == 0)
-	v->refresh.selection = 1;
-}
-
 static void doApply(void)
 {
     char *attr_name;
@@ -419,7 +409,6 @@ static void doApply(void)
 	fprintf(stderr,
 	    "on_attrApplyBtn_clicked: unknown object kind %d\n",
 	    objKind);
-    set_refresh_filters(view, attr_name);
 }
 
 _BB void on_attrApplyBtn_clicked(GtkWidget *widget, void *user_data) {

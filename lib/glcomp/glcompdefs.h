@@ -47,28 +47,11 @@ extern "C" {
 #define	GLCOMPSET_BUTTON_BEVEL_BRIGHTNESS		1.7f
 #define GLCOMPSET_FONT_SIZE				14.0f
 
-#define	GLCOMPSET_BUTTON_FONT_COLOR_R		0.0f
-#define	GLCOMPSET_BUTTON_FONT_COLOR_G		0.0f
-#define	GLCOMPSET_BUTTON_FONT_COLOR_B		0.0f
-#define	GLCOMPSET_BUTTON_FONT_COLOR_ALPHA	1.0f
-
-#define GLCOMPSET_FONT_SIZE_FACTOR			0.7f
-
-#define	GLCOMPSET_LABEL_COLOR_R		0.0f
-#define	GLCOMPSET_LABEL_COLOR_G		0.0f
-#define	GLCOMPSET_LABEL_COLOR_B		0.0f
-#define	GLCOMPSET_LABEL_COLOR_ALPHA	1.0f
-
 #define	GLCOMPSET_FONT_COLOR_R		0.0f
 #define	GLCOMPSET_FONT_COLOR_G		0.0f
 #define	GLCOMPSET_FONT_COLOR_B		0.0f
 #define	GLCOMPSET_FONT_COLOR_ALPHA	1.0f
 #define GLCOMPSET_FONT_DESC  "Times Italic"
-#define GL_FONTOPTIMIZE 1
-
-
-#define GL_FONTVJUSTIFY	0
-#define GL_FONTHJUSTIFY	0
 
 #define GLCOMPSET_BORDERWIDTH				2.0f
 #define GLCOMPSET_PANEL_BORDERWIDTH				3.0f
@@ -80,10 +63,8 @@ extern "C" {
     typedef enum { glAlignNone, glAlignLeft, glAlignTop, glAlignBottom,
 	    glAlignRight, glAlignParent, glAlignCenter } glCompAlignment;
 
-    typedef enum { glFontVJustifyNone, glFontVJustifyTop,
-	    glFontVJustifyBottom, glFontVJustifyCenter } glCompVJustify;
-    typedef enum { glFontHJustifyNone, glFontHJustifyLeft,
-	    glFontHJustifyRight, glFontHJustifyCenter } glCompHJustify;
+    typedef enum { glFontVJustifyNone, glFontVJustifyCenter } glCompVJustify;
+    typedef enum { glFontHJustifyNone, glFontHJustifyCenter } glCompHJustify;
 
     typedef enum { glMouseDown, glMouseUp } glCompMouseStatus;
     typedef enum { glMouseLeftButton, glMouseRightButton,
@@ -93,8 +74,7 @@ extern "C" {
     typedef enum { glPanelObj, glButtonObj, glLabelObj,
 	    glImageObj } glObjType;
 
-    typedef struct _glCompButton glCompButton;
-    typedef struct _glCompObj glCompObj;
+    typedef struct glCompObj_ glCompObj;
 
 /*call backs for widgets*/
     typedef void (*glcompdrawfunc_t) (void *obj);
@@ -183,7 +163,6 @@ extern "C" {
 	int reference;		/*if font has references to parent */
 	glCompJustify justify;
 	bool is2D;
-	int optimize;
     } glCompFont;
 
     typedef struct {
@@ -199,6 +178,7 @@ extern "C" {
 
     } glCompCallBacks;
 
+typedef struct glCompSet_ glCompSet;
 
 /*
 	common widget properties
@@ -212,7 +192,7 @@ extern "C" {
 	glCompColor color;
 	int enabled;
 	int visible;
-	void *compset;		// compset
+	glCompSet *compset; ///< compset
 	void *parent;		/*parent widget */
 	int data;
 	glCompFont *font;	//pointer to font to use
@@ -224,10 +204,15 @@ extern "C" {
 	glCompJustify justify;
     } glCompCommon;
 
+/// object prototype
+struct glCompObj_ {
+  glObjType objType;
+  glCompCommon common;
+};
+
 /*generic image*/
     typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	glCompTex *texture;
 	float width, height;  /* width and height in world coords */
 	/* char *pngFile; */
@@ -236,8 +221,7 @@ extern "C" {
 
 /*generic panel*/
     typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	float shadowwidth;
 	glCompColor shadowcolor;
 	char *text;
@@ -246,16 +230,14 @@ extern "C" {
 
 /*label*/
     typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+	glCompObj base;
 	char *text;
 	int transparent;
     } glCompLabel;
 
 /*buttons*/
-    struct _glCompButton {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
+    typedef struct {
+	glCompObj base;
 	float width, height;
 	glCompLabel *label;
 	bool status; ///< false not pressed, true pressed
@@ -263,16 +245,9 @@ extern "C" {
 	int groupid;
 	glCompImage *image;	/*glyph */
 	int data;
-
-    };
+    } glCompButton;
 
 /*texture based image*/
-
-/*object prototype*/
-    struct _glCompObj {
-	glObjType objType;
-	glCompCommon common;
-    };
 
     typedef struct {
 	glMouseButtonType t;
@@ -293,16 +268,14 @@ extern "C" {
 
 
 /*main widget set manager*/
-    typedef struct {
-	glObjType objType;	/*always keep this here for each drawable object */
-	glCompCommon common;
-
+    struct glCompSet_ {
+	glCompObj base;
 	glCompObj **obj;
 	size_t objcnt;
 	size_t textureCount;
 	glCompTex **textures;
 	glCompMouse mouse;
-    } glCompSet;
+    };
 
 #ifdef __cplusplus
 }

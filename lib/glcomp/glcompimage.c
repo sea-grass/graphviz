@@ -18,13 +18,11 @@
 
 glCompImage *glCompImageNew(void *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));
-    glCompInitCommon((glCompObj *) p, par, x, y);
-    p->objType = glImageObj;
-
-    p->objType = glImageObj;
+    glCompInitCommon(&p->base, par, x, y);
+    p->base.objType = glImageObj;
     p->stretch = 0;
     p->texture = NULL;
-    p->common.functions.draw = glCompImageDraw;
+    p->base.common.functions.draw = glCompImageDraw;
     return p;
 }
 
@@ -49,7 +47,7 @@ glCompImage *glCompImageNewFile(float x, float y, const char *imgfile) {
 
 void glCompImageDelete(glCompImage * p)
 {
-    glCompEmptyCommon(&p->common);
+    glCompEmptyCommon(&p->base.common);
     if (p->texture)
 	glCompDeleteTexture(p->texture);
     free(p);
@@ -60,11 +58,11 @@ int glCompImageLoad(glCompImage *i, unsigned char *data, int width, int height,
     if (data != NULL) {		/*valid image data */
 	glCompDeleteTexture(i->texture);
 	i->texture =
-	    glCompSetAddNewTexImage(i->common.compset, width, height, data,
+	    glCompSetAddNewTexImage(i->base.common.compset, width, height, data,
 				    is2D);
 	if (i->texture) {
-	    i->common.width = width;
-	    i->common.height = height;
+	    i->base.common.width = width;
+	    i->base.common.height = height;
 	    return 1;
 	}
 
@@ -82,11 +80,11 @@ int glCompImageLoadPng(glCompImage *i, const char *pngFile) {
 void glCompImageDraw(void *obj)
 {
     glCompImage *p = obj;
-    glCompCommon ref = p->common;
+    glCompCommon ref = p->base.common;
     float w,h,d;
 
-    glCompCalcWidget((glCompCommon *) p->common.parent, &p->common, &ref);
-    if (!p->common.visible)
+    glCompCalcWidget(p->base.common.parent, &p->base.common, &ref);
+    if (!p->base.common.visible)
 	return;
     if (!p->texture)
 	return;
@@ -100,7 +98,7 @@ void glCompImageDraw(void *obj)
     {
 	w = p->width;
 	h = p->height;
-	d = (float)p->common.layer * GLCOMPSET_BEVEL_DIFF;
+	d = (float)p->base.common.layer * GLCOMPSET_BEVEL_DIFF;
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
 	glTexEnvf (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);

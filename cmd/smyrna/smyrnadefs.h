@@ -128,13 +128,6 @@ typedef struct
 	unsigned edgelabel_id;
     }topviewcache;
 
-    typedef struct {
-	int color;
-	int pos;
-	int selection;
-    }refresh_filter;
-
-
     typedef struct 
     {
 	int index;
@@ -316,17 +309,13 @@ typedef struct
 	int activeGraph;
 
 	/*stores the info about status of mouse,pressed? what button ? where? */
-//	mouse_attr mouse;
 	glCompMouse mouse;
-
-	/*selection object,refer to smyrnadefs.h for more info */
-//	selection Selection;
 
 	viewport_camera **cameras;
 	size_t camera_count; /// <number of cameras
 	size_t active_camera;
 
-	/*open gl canvas, used to be a globa variable before looks better wrapped in viewinfo */
+	/// open gl canvas
 	GtkWidget *drawing_area;
 
 	/*Topview data structure, refer topview.h for more info */
@@ -363,15 +352,13 @@ typedef struct
 	GtkComboBox *graphComboBox;	/*pointer to graph combo box at top right */
 	ArcBall_t *arcball;
 	keymap_t keymap;
-	mouse_action_t* mouse_actions;	/*customizable moouse interraction list*/
+	mouse_action_t* mouse_actions; ///< customizable mouse interaction list
 	size_t mouse_action_count;
-	refresh_filter refresh;
 	float nodeScale;
 	int guiMode;
 	char* optArg;
 
     } ViewInfo;
-/*rotation steps*/
 
     extern ViewInfo *view;
     extern GtkMessageDialog *Dlg;

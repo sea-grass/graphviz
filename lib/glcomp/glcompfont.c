@@ -52,8 +52,8 @@ glCompFont *glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
     font->color.G = c->G;
     font->color.B = c->B;
     font->color.A = c->A;
-    font->justify.VJustify = GL_FONTVJUSTIFY;
-    font->justify.HJustify = GL_FONTHJUSTIFY;
+    font->justify.VJustify = glFontVJustifyNone;
+    font->justify.HJustify = glFontHJustifyNone;
     font->is2D=is2D;
 
     font->glutfont = NULL;
@@ -61,7 +61,6 @@ glCompFont *glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
     font->fontdesc = gv_strdup(fontdesc);
     font->size = fs;
     font->transparent = 1;
-    font->optimize = GL_FONTOPTIMIZE;
     if (text)
 	font->tex =
 	    glCompSetAddNewTexLabel(s, font->fontdesc, font->size, text,
@@ -91,7 +90,6 @@ glCompFont *glNewFontFromParent(glCompObj * o, char *text)
 	font->transparent = parent->font->transparent;
 	font->justify.VJustify = parent->font->justify.VJustify;
 	font->justify.HJustify = parent->font->justify.HJustify;
-	font->optimize = parent->font->optimize;
 	font->is2D=parent->font->is2D;
 	if (text) {
 	    if (strlen(text))
@@ -149,11 +147,7 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
     switch (f->justify.HJustify) 
     {
     case glFontHJustifyNone:
-    case glFontHJustifyLeft:
 	x = ref.refPos.x;
-	break;
-    case glFontHJustifyRight:
-	x = ref.refPos.x + (ref.width - f->tex->width);
 	break;
     case glFontHJustifyCenter:
 	x = ref.refPos.x + (ref.width - f->tex->width) / 2.0f;
@@ -161,11 +155,7 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
     }
     switch (f->justify.VJustify) {
     case glFontVJustifyNone:
-    case glFontVJustifyBottom:
 	y = ref.pos.y;
-	break;
-    case glFontVJustifyTop:
-	x = ref.refPos.y + (ref.height - f->tex->height);
 	break;
     case glFontVJustifyCenter:
 	y = ref.refPos.y + (ref.height - f->tex->height) / 2.0f;

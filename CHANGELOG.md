@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comparison against a plugin’s `knowncolors` array is now case-insensitive,
   rather than requiring all entries of the array to be lower-cased. The
   requirement that the `knowncolors` array is lexically ordered remains.
+- The Smyrna “Color Theme”, “Edge Attr. For Color”, and “Node Alpha” settings
+  have been removed. The values of these settings had no effect.
 
 ### Fixed
 

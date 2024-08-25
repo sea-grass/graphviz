@@ -82,7 +82,7 @@ static void menu_switch_to_fisheye(glCompObj *obj, float x, float y,
 	view->Topview->fisheyeParams.active = 1;
 	glCompButtonShow(toNormal);
 	glCompButtonHide(toFisheye);
-	imgFisheye->common.visible = 1;
+	imgFisheye->base.common.visible = 1;
 
 
     } else {
@@ -90,7 +90,7 @@ static void menu_switch_to_fisheye(glCompObj *obj, float x, float y,
 	g_timer_stop(view->timer);
 	glCompButtonHide(toNormal);
 	glCompButtonShow(toFisheye);
-	imgFisheye->common.visible = 0;
+	imgFisheye->base.common.visible = 0;
 
 
     }
@@ -129,15 +129,14 @@ void switch2D3D(glCompObj *obj, float x, float y, glMouseButtonType t) {
 	    }
 	    glCompButtonShow(to2DBtn);
 	    glCompButtonHide(to3DBtn);
-	    img3D->common.visible = 1;
+	    img3D->base.common.visible = 1;
 	} else {		/*switch to 2d */
 
 	    view->active_camera = SIZE_MAX; // set to camera
 	    glCompButtonShow(to3DBtn);
 	    glCompButtonHide(to2DBtn);
-	    panBtn->common.callbacks.click((glCompObj*)panBtn, 0.0f, 0.0f,
-					   (glMouseButtonType) 0);
-	    img3D->common.visible = 0;
+	    panBtn->base.common.callbacks.click(&panBtn->base, 0.0f, 0.0f, 0);
+	    img3D->base.common.visible = 0;
 
 
 	}
@@ -151,9 +150,8 @@ static void CBglCompMouseUp(glCompObj *obj, float x, float y, glMouseButtonType 
     (void)y;
     (void)t;
 
-    sel->common.visible = 0;
-    sel->common.pos.x = -5000;
-
+    sel->base.common.visible = 0;
+    sel->base.common.pos.x = -5000;
 }
 
 static void CBglCompMouseRightClick(glCompObj *obj, float x, float y,
@@ -183,15 +181,14 @@ static void glCompMouseMove(glCompObj *obj, float x, float y) {
 
     glCompMouse *m = &((glCompSet *) obj)->mouse;
 
-    sel->common.visible = 1;
-
+    sel->base.common.visible = 1;
 
     if ((m->down) && (m->t == glMouseRightButton)) 
     {
-	sel->common.pos.x = m->pos.x - m->dragX;
-	sel->common.pos.y = m->pos.y - m->dragY;
-	sel->common.width = m->dragX;
-	sel->common.height = m->dragY;
+	sel->base.common.pos.x = m->pos.x - m->dragX;
+	sel->base.common.pos.y = m->pos.y - m->dragY;
+	sel->base.common.width = m->dragX;
+	sel->base.common.height = m->dragY;
 	glexpose();
     }
 }
@@ -223,11 +220,11 @@ glCompSet *glcreate_gl_topview_menu(void)
     glCompButton *b = NULL;
     glCompImage *i = NULL;
     glCompColor c;
-    s->common.callbacks.click = CBglCompMouseRightClick;
+    s->base.common.callbacks.click = CBglCompMouseRightClick;
 
     p = glCompPanelNew(s, 25, 25, 45, 47);
-    p->common.align = glAlignLeft;
-    p->common.data = 0;
+    p->base.common.align = glAlignLeft;
+    p->base.common.data = 0;
 
     /*pan */
     b = glCompButtonNew(p, 1, y, 42, 42, "");
@@ -236,7 +233,7 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, pan);
       free(pan);
     }
-    b->common.callbacks.click = menu_click_pan;
+    b->base.common.callbacks.click = menu_click_pan;
     panBtn = b;
 
     y = y + off;
@@ -248,7 +245,7 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, fisheye);
       free(fisheye);
     }
-    b->common.callbacks.click = menu_switch_to_fisheye;
+    b->base.common.callbacks.click = menu_switch_to_fisheye;
     toFisheye = b;
 
 
@@ -259,8 +256,8 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, fisheye);
       free(fisheye);
     }
-    b->common.callbacks.click = menu_switch_to_fisheye;
-    b->common.visible = 0;
+    b->base.common.callbacks.click = menu_switch_to_fisheye;
+    b->base.common.visible = 0;
     toNormal = b;
 
     y=y+off;
@@ -270,7 +267,7 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, threed);
       free(threed);
     }
-    b->common.callbacks.click = switch2D3D;
+    b->base.common.callbacks.click = switch2D3D;
     to3DBtn = b;
 
     b = glCompButtonNew(p, 1, y, 42, 42, "");
@@ -279,25 +276,25 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, twod);
       free(twod);
     }
-    b->common.callbacks.click = switch2D3D;
+    b->base.common.callbacks.click = switch2D3D;
     glCompButtonHide(b);
     to2DBtn = b;
 
     y=y+off;
     b = glCompButtonNew(p, 1, y, 42, 42, "N");
-    b->common.callbacks.click = selectnodes;
+    b->base.common.callbacks.click = selectnodes;
     b->groupid=-1;
     b->status = true;
 
     y=y+off;
     b = glCompButtonNew(p, 1, y, 42, 42, "E");
-    b->common.callbacks.click = selectedges;
+    b->base.common.callbacks.click = selectedges;
     b->groupid=-1;
 
     p = glCompPanelNew(p, 1, 325, 45, 180);
-    p->common.align = glAlignTop;
-    p->common.data = 0;
-    p->common.borderWidth = 1;
+    p->base.common.align = glAlignTop;
+    p->base.common.data = 0;
+    p->base.common.borderWidth = 1;
     p->shadowwidth = 0;
 
     c.R = 0.80f;
@@ -313,8 +310,8 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, details);
       free(details);
     }
-    b->common.callbacks.click = attrList;
-    b->common.color = c;
+    b->base.common.callbacks.click = attrList;
+    b->base.common.color = c;
 	
     y = y + off;
 	
@@ -325,8 +322,8 @@ glCompSet *glcreate_gl_topview_menu(void)
       free(zoomin);
     }
     b->groupid = 0;
-    b->common.callbacks.click = menu_click_zoom_plus;
-    b->common.color = c;
+    b->base.common.callbacks.click = menu_click_zoom_plus;
+    b->base.common.color = c;
     y = y + off;
 
     b = glCompButtonNew(p, 1, y, 42, 42, "");
@@ -335,8 +332,8 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, zoomout);
       free(zoomout);
     }
-    b->common.callbacks.click = menu_click_zoom_minus;
-    b->common.color = c;
+    b->base.common.callbacks.click = menu_click_zoom_minus;
+    b->base.common.color = c;
 
     y = y + off;
 
@@ -346,30 +343,30 @@ glCompSet *glcreate_gl_topview_menu(void)
       glCompButtonAddPngGlyph(b, center);
       free(center);
     }
-    b->common.callbacks.click = menu_click_center;
-    b->common.color = c;
+    b->base.common.callbacks.click = menu_click_center;
+    b->base.common.color = c;
 
     p = glCompPanelNew(s, -250, 550, 150, 175);
-    p->common.borderWidth = 0;
+    p->base.common.borderWidth = 0;
     p->shadowwidth = 0;
-    p->common.color.R = 0;
-    p->common.color.G = 0;
-    p->common.color.B = 1;
-    p->common.color.A = 0.2f;
-    p->common.visible = 0;
+    p->base.common.color.R = 0;
+    p->base.common.color.G = 0;
+    p->base.common.color.B = 1;
+    p->base.common.color.A = 0.2f;
+    p->base.common.visible = 0;
     sel = p;
-    s->common.callbacks.mouseover = glCompMouseMove;
-    s->common.callbacks.mouseup = CBglCompMouseUp;
+    s->base.common.callbacks.mouseover = glCompMouseMove;
+    s->base.common.callbacks.mouseup = CBglCompMouseUp;
 
     p = glCompPanelNew(s, 25, 25, 52, 47);
-    p->common.align = glAlignRight;
-    p->common.data = 0;
-    p->common.color.A = 0;
+    p->base.common.align = glAlignRight;
+    p->base.common.data = 0;
+    p->base.common.color.A = 0;
 
     p = glCompPanelNew(p, 25, 0, 52, 110);
-    p->common.align = glAlignTop;
-    p->common.data = 0;
-    p->common.color.A = 0;
+    p->base.common.align = glAlignTop;
+    p->base.common.data = 0;
+    p->base.common.color.A = 0;
     p->shadowwidth = 0;
 
     i = glCompImageNew(p, 0, 0);
@@ -379,7 +376,7 @@ glCompSet *glcreate_gl_topview_menu(void)
       free(fisheye);
     }
     imgFisheye = i;
-    i->common.visible = 0;
+    i->base.common.visible = 0;
 
     i = glCompImageNew(p, 0, 52);
     {
@@ -388,8 +385,7 @@ glCompSet *glcreate_gl_topview_menu(void)
       free(threed);
     }
     img3D = i;
-    i->common.visible = 0;
-    
+    i->base.common.visible = 0;
 
     return s;
 

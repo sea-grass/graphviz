@@ -20,11 +20,9 @@ digraph smyrna_attr_widgets
     graph[check_box_nodesselectable="chkboxNodeSelect"];
     graph[combobox_labelglutfont="labelfont"];
     graph[combobox_defaultnodeshape="settingscombobox1"];
-    graph[combobox_colortheme="colorthemecb"];
     graph[color_button_nodelabelcolor="nodelabelcolor"];
     graph[color_button_edgelabelcolor="edgelabelcolor"];
     graph[text_box_nodelabelattribute="labelnodeattribute"];
-    graph[text_box_edgecolorattribute="edgecolortxt"];
     graph[text_box_edgelabelattribute="labeledgeattribute"];
     graph[spin_button_labelnumberofnodes="labelzoomfactor"];
     graph[check_box_labelshownodes="labelshownodes"];
@@ -42,7 +40,6 @@ digraph smyrna_attr_widgets
     graph[spin_button_topologicalfisheyefinenodes="settingsspinbutton6"];
     graph[spin_button_topologicalfisheyecoarseningfactor="settingsspinbutton7"];
     graph[spin_button_topologicalfisheyedistortionfactor="settingsspinbutton8"];
-    graph[scale_button_defaultnodealpha="settingsscale1"];
     graph[scale_button_defaultedgealpha="settingsscale2"];
     graph[scale_button_nodesize="nodesizescale"];
     graph[combobox_edgerender="edgerendercb"];
