@@ -97,19 +97,20 @@ static int vc_refresh(vgpane_t * vgp)
     return vgp->vc != NULL;
 }
 
-static void dgsprintxy(Tcl_DString *result, int npts, const point p[]) {
+static void dgsprintxy(agxbuf *result, int npts, const point p[]) {
     int i;
-    char buf[20];
 
     assert(npts > 1);
-    Tcl_DStringStartSublist(result);
-    for (i = 0; i < npts; i++) {
-	snprintf(buf, sizeof(buf), "%g", p[i].x);
-	Tcl_DStringAppendElement(result, buf);
-	snprintf(buf, sizeof(buf), "%g", p[i].y);
-	Tcl_DStringAppendElement(result, buf);
+    if (agxblen(result) > 0) {
+	agxbputc(result, ' ');
     }
-    Tcl_DStringEndSublist(result);
+    agxbputc(result, '{');
+    const char *separator = "";
+    for (i = 0; i < npts; i++) {
+	agxbprint(result, "%s%g %g", separator, p[i].x, p[i].y);
+	separator = " ";
+    }
+    agxbputc(result, '}');
 }
 
 /// @param interp Interpreter context
@@ -119,9 +120,8 @@ static void dgsprintxy(Tcl_DString *result, int npts, const point p[]) {
 /// @param ppos Coordinates to substitute for %t
 static void expandPercentsEval(Tcl_Interp *interp, char *before, char *r,
                                int npts, const point *ppos) {
-    Tcl_DString scripts;
+    agxbuf scripts = {0};
 
-    Tcl_DStringInit(&scripts);
     while (1) {
 	/*
 	 * Find everything up to the next % character and append it to the
@@ -130,7 +130,7 @@ static void expandPercentsEval(Tcl_Interp *interp, char *before, char *r,
 
 	char *string = strchr(before, '%');
 	if (string != NULL) {
-	    Tcl_DStringAppend(&scripts, before, string - before);
+	    agxbput_n(&scripts, before, (size_t)(string - before));
 	    before = string;
 	}
 	if (*before == 0) {
@@ -142,21 +142,22 @@ static void expandPercentsEval(Tcl_Interp *interp, char *before, char *r,
 
 	switch (before[1]) {
 	case 'r':
-	    Tcl_DStringAppend(&scripts, r, strlen(r));	/* vgcanvasHandle */
+	    agxbput(&scripts, r); // vgcanvasHandle
 	    break;
 	case 't':
 	    dgsprintxy(&scripts, npts, ppos);
 	    break;
 	default:
-	    Tcl_DStringAppend(&scripts, before + 1, 1);
+	    agxbputc(&scripts, before[1]);
 	    break;
 	}
 	before += 2;
     }
-    if (Tcl_GlobalEval(interp, Tcl_DStringValue(&scripts)) != TCL_OK)
+    const char *script_value = agxbuse(&scripts);
+    if (Tcl_GlobalEval(interp, script_value) != TCL_OK)
 	fprintf(stderr, "%s while in binding: %s\n\n",
-		Tcl_GetStringResult(interp), Tcl_DStringValue(&scripts));
-    Tcl_DStringFree(&scripts);
+		Tcl_GetStringResult(interp), script_value);
+    agxbfree(&scripts);
 }
 
 static void triangle_callback(void *vgparg, const point pqr[]) {
