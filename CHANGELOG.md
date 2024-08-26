@@ -48,6 +48,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - An incorrect deallocation call during OpenGL texture construction failure has
   been corrected. This could previously have caused crashes or heap corruption.
   This was a regression in Graphviz 2.26.0.
+- The CMake build on Windows no longer fails if TCL is detected. This was
+  technically a regression in 12.0.0 since building the Graphviz TCL bindings
+  was integrated into the CMake build system in that release. #2581
 
 ## [12.1.0] – 2024-08-12
 
