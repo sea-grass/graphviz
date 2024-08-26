@@ -15,6 +15,7 @@
 #include <glcomp/glutils.h>
 #include <glcomp/glcomptexture.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 glCompImage *glCompImageNew(void *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));
@@ -33,15 +34,18 @@ glCompImage *glCompImageNew(void *par, float x, float y) {
  */
 glCompImage *glCompImageNewFile(float x, float y, const char *imgfile) {
     int imageWidth, imageHeight;
-    unsigned char *data = glCompLoadPng (imgfile, &imageWidth, &imageHeight);
+    cairo_surface_t *surface = NULL;
+    const unsigned char *data = glCompLoadPng(&surface, imgfile, &imageWidth,
+                                              &imageHeight);
     glCompImage *p;
 
     if (!data) return NULL;
     p = glCompImageNew(NULL, x, y);
     if (!glCompImageLoad(p, data, imageWidth, imageHeight, 0)) {
 	glCompImageDelete (p);
-	return NULL;
+	p = NULL;
     }
+    cairo_surface_destroy(surface);
     return p;
 }
 
@@ -53,8 +57,8 @@ void glCompImageDelete(glCompImage * p)
     free(p);
 }
 
-int glCompImageLoad(glCompImage *i, unsigned char *data, int width, int height,
-                    bool is2D) {
+int glCompImageLoad(glCompImage *i, const unsigned char *data, int width,
+                    int height, bool is2D) {
     if (data != NULL) {		/*valid image data */
 	glCompDeleteTexture(i->texture);
 	i->texture =
@@ -72,9 +76,12 @@ int glCompImageLoad(glCompImage *i, unsigned char *data, int width, int height,
 
 int glCompImageLoadPng(glCompImage *i, const char *pngFile) {
     int imageWidth, imageHeight;
-    unsigned char *data;
-    data = glCompLoadPng (pngFile, &imageWidth, &imageHeight);
-    return glCompImageLoad(i, data, imageWidth, imageHeight, 1);
+    cairo_surface_t *surface = NULL;
+    const unsigned char *data = glCompLoadPng(&surface, pngFile, &imageWidth,
+                                              &imageHeight);
+    const int rc = glCompImageLoad(i, data, imageWidth, imageHeight, 1);
+    cairo_surface_destroy(surface);
+    return rc;
 }
 
 void glCompImageDraw(void *obj)

@@ -45,6 +45,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   Market files.
 - The `edgepaint` `--color_scheme` command-line option is once again functional.
   This was a regression in Graphviz 2.49.0. #2591
+- An incorrect deallocation call during OpenGL texture construction failure has
+  been corrected. This could previously have caused crashes or heap corruption.
+  This was a regression in Graphviz 2.26.0.
 
 ## [12.1.0] – 2024-08-12
 
