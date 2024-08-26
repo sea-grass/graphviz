@@ -12,15 +12,8 @@
 #include <string.h>
 #include "tcldot.h"
 
-int graphcmd(ClientData clientData, Tcl_Interp * interp,
-#ifndef TCLOBJ
-		    int argc, char *argv[]
-#else
-		    int argc, Tcl_Obj * CONST objv[]
-#endif
-    )
-{
-
+static int graphcmd_internal(ClientData clientData, Tcl_Interp * interp,
+                             int argc, char *argv[]) {
     Agraph_t *g, *sg;
     Agnode_t *n, *tail, *head;
     Agedge_t *e;
@@ -28,7 +21,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
     ictx_t *ictx = gctx->ictx;
     Agsym_t *a;
     char buf[12], **argv2;
-    int i, j, argc2;
+    int j, argc2;
     GVC_t *gvc = ictx->gvc;
 
     if (argc < 2) {
@@ -76,6 +69,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("addnode", argv[1]) == 0) {
+	int i;
 	if (argc % 2) {
 	    /* if odd number of args then argv[2] is name */
 	    n = agnode(g, argv[2], 1);
@@ -89,6 +83,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("addsubgraph", argv[1]) == 0) {
+	int i;
 	if (argc < 2) {
 	    Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
 			     "\" addsubgraph ?name? ?attributename attributevalue? ?...?",
@@ -205,10 +200,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryattributes", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindgraphattr(g, argv2[j]))) {
@@ -223,10 +218,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryattributevalues", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindgraphattr(g, argv2[j]))) {
@@ -242,10 +237,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryedgeattributes", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindedgeattr(g, argv2[j]))) {
@@ -260,10 +255,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("queryedgeattributevalues", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindedgeattr(g, argv2[j]))) {
@@ -280,10 +275,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("querynodeattributes", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindnodeattr(g, argv2[j]))) {
@@ -299,10 +294,10 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("querynodeattributevalues", argv[1]) == 0) {
-	for (i = 2; i < argc; i++) {
+	for (int i = 2; i < argc; i++) {
 	    if (Tcl_SplitList
 		(interp, argv[i], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    for (j = 0; j < argc2; j++) {
 		if ((a = agfindnodeattr(g, argv2[j]))) {
@@ -318,7 +313,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_OK;
 
     } else if (strcmp("render", argv[1]) == 0) {
-	char *canvas;
+	const char *canvas;
 
 	if (argc < 3) {
 	    canvas = "$c";
@@ -346,7 +341,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	if (argc == 3) {
 	    if (Tcl_SplitList
 		(interp, argv[2], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    if ((argc2 == 0) || (argc2 % 2)) {
 		Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
@@ -376,7 +371,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	if (argc == 3) {
 	    if (Tcl_SplitList
 		(interp, argv[2], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    if ((argc2 == 0) || (argc2 % 2)) {
 		Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
@@ -401,7 +396,7 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	if (argc == 3) {
 	    if (Tcl_SplitList
 		(interp, argv[2], &argc2,
-		 (CONST84 char ***) &argv2) != TCL_OK)
+		 (const char ***) &argv2) != TCL_OK)
 		return TCL_ERROR;
 	    if ((argc2 == 0) || (argc2 % 2)) {
 		Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
@@ -475,3 +470,11 @@ int graphcmd(ClientData clientData, Tcl_Interp * interp,
 	return TCL_ERROR;
     }
 }				/* graphcmd */
+
+int graphcmd(ClientData clientData, Tcl_Interp * interp, int argc,
+             const char *argv[]) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = graphcmd_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
+}

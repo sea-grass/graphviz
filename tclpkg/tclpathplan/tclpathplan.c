@@ -17,10 +17,6 @@
 
 #include "config.h"
 
-/* avoid compiler warnings with template changes in Tcl8.4 */
-/*    specifically just the change to Tcl_CmdProc */
-#define USE_NON_CONST
-
 #include                <sys/types.h>
 #include                <stdbool.h>
 #include                <stdint.h>
@@ -41,10 +37,6 @@
 #include "Plegal_arrangement.h"
 #include <tcl.h>
 #include "tclhandle.h"
-
-#ifndef CONST84
-#define CONST84
-#endif
 
 #if ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 6)) || ( TCL_MAJOR_VERSION > 8)
 #else
@@ -232,7 +224,7 @@ static char *buildBindings(char *s1, const char *s2)
 
 
 /* convert x and y string args to point */
-static int scanpoint(Tcl_Interp * interp, char *argv[], point * p)
+static int scanpoint(Tcl_Interp * interp, const char *argv[], point * p)
 {
     if (sscanf(argv[0], "%lg", &(p->x)) != 1) {
 	Tcl_AppendResult(interp, "invalid x coordinate: \"", argv[0], "\"", NULL);
@@ -306,7 +298,7 @@ static bool remove_poly(vgpane_t *vgp, int id) {
 }
 
 static int
-insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, char *vargv[],
+insert_poly(Tcl_Interp * interp, vgpane_t * vgp, int id, const char *vargv[],
 	    int vargc)
 {
     poly *np;
@@ -372,12 +364,13 @@ static void appendpoint(Tcl_Interp * interp, point p)
 /* process vgpane methods */
 static int
 vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
-	  char *argv[])
+	  const char *argv[])
 {
     (void)clientData;
 
     int vargc, result;
-    char *s, **vargv, vbuf[30];
+    char *s, vbuf[30];
+    const char **vargv;
     vgpane_t *vgp, **vgpp;
     point p, q, *ps;
     double alpha, gain;
@@ -424,7 +417,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (argc == 4) {
 	    result =
 		Tcl_SplitList(interp, argv[3], &vargc,
-			      (CONST84 char ***) &vargv);
+			      (const char ***) &vargv);
 	    if (result != TCL_OK) {
 		return result;
 	    }
@@ -473,7 +466,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (argc == 3) {
 	    result =
 		Tcl_SplitList(interp, argv[2], &vargc,
-			      (CONST84 char ***) &vargv);
+			      (const char ***) &vargv);
 	    if (result != TCL_OK) {
 		return result;
 	    }
@@ -506,7 +499,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (argc == 3) {
 	    result =
 		Tcl_SplitList(interp, argv[2], &vargc,
-			      (CONST84 char ***) &vargv);
+			      (const char ***) &vargv);
 	    if (result != TCL_OK) {
 		return result;
 	    }
@@ -550,7 +543,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (argc == 3) {
 	    result =
 		Tcl_SplitList(interp, argv[2], &vargc,
-			      (CONST84 char ***) &vargv);
+			      (const char ***) &vargv);
 	    if (result != TCL_OK) {
 		return result;
 	    }
@@ -615,7 +608,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (argc == 3) {
 	    result =
 		Tcl_SplitList(interp, argv[2], &vargc,
-			      (CONST84 char ***) &vargv);
+			      (const char ***) &vargv);
 	    if (result != TCL_OK) {
 		return result;
 	    }
@@ -813,7 +806,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 }
 
 static int
-vgpane(ClientData clientData, Tcl_Interp * interp, int argc, char *argv[])
+vgpane(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[])
 {
     (void)clientData;
     (void)argc;

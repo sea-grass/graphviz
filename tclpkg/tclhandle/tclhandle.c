@@ -192,7 +192,7 @@ tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
  *   TCL_ERROR if the handle was invalid.
  *-----------------------------------------------------------------------------
  */
-int tclhandleIndex(tblHeader_pt tblHdrPtr, char *handle,
+int tclhandleIndex(tblHeader_pt tblHdrPtr, const char *handle,
                    uint64_t *entryIdxPtr) {
   uint64_t entryIdx;
 
@@ -238,7 +238,7 @@ void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx) {
  *   A pointer to the entry, or NULL if an error occurred.
  *-----------------------------------------------------------------------------
  */
-void *tclhandleXlate(tblHeader_pt tblHdrPtr, char *handle) {
+void *tclhandleXlate(tblHeader_pt tblHdrPtr, const char *handle) {
   uint64_t entryIdx;
 
   if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)
@@ -290,7 +290,7 @@ void *tclhandleFreeIndex(tblHeader_pt headerPtr, uint64_t entryIdx) {
  *   The contents of the entry, if success, or NULL if an error occurred.
  *----------------------------------------------------------------------------
  */
-void *tclhandleFree(tblHeader_pt tblHdrPtr, char *handle) {
+void *tclhandleFree(tblHeader_pt tblHdrPtr, const char *handle) {
   uint64_t entryIdx;
 
   if (tclhandleIndex(tblHdrPtr, handle, &entryIdx) != TCL_OK)

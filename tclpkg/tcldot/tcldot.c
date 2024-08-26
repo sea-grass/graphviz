@@ -9,17 +9,14 @@
  *************************************************************************/
 
 #include "tcldot.h"
+#include <cgraph/alloc.h>
 #include <cgraph/rdr.h>
 #include <stdlib.h>
 #include <string.h>
+#include <tcl.h>
 
-static int dotnew(ClientData clientData, Tcl_Interp *interp,
-#ifndef TCLOBJ
-                  int argc, char *argv[]
-#else  /* TCLOBJ */
-                  int argc, Tcl_Obj *CONST objv[]
-#endif /* TCLOBJ */
-) {
+static int dotnew_internal(ClientData clientData, Tcl_Interp *interp, int argc,
+                           char *argv[]) {
   ictx_t *ictx = (ictx_t *)clientData;
   Agraph_t *g;
   int i;
@@ -50,7 +47,13 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp,
     i = 3;
   } else {
     /* else use handle as name */
+#if TCL_MAJOR_VERSION == 8 && TCL_MINOR_VERSION >= 4
+    char *name = gv_strdup(Tcl_GetStringResult(interp));
+    g = agopen(name, kind, (Agdisc_t *)ictx);
+    free(name);
+#else
     g = agopen(Tcl_GetStringResult(interp), kind, (Agdisc_t *)ictx);
+#endif
     i = 2;
   }
   if (!g) {
@@ -63,13 +66,16 @@ static int dotnew(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 }
 
-static int dotread(ClientData clientData, Tcl_Interp *interp,
-#ifndef TCLOBJ
-                   int argc, char *argv[]
-#else  /* TCLOBJ */
-                   int argc, Tcl_Obj *CONST objv[]
-#endif /* TCLOBJ */
-) {
+static int dotnew(ClientData clientData, Tcl_Interp *interp, int argc,
+                  const char *argv[]) {
+  char **argv_copy = tcldot_argv_dup(argc, argv);
+  int rc = dotnew_internal(clientData, interp, argc, argv_copy);
+  tcldot_argv_free(argc, argv_copy);
+  return rc;
+}
+
+static int dotread(ClientData clientData, Tcl_Interp *interp, int argc,
+                   const char *argv[]) {
   Agraph_t *g;
   Tcl_Channel channel;
   int mode;
@@ -112,13 +118,8 @@ static int dotread(ClientData clientData, Tcl_Interp *interp,
   return TCL_OK;
 }
 
-static int dotstring(ClientData clientData, Tcl_Interp *interp,
-#ifndef TCLOBJ
-                     int argc, char *argv[]
-#else  /* TCLOBJ */
-                     int argc, Tcl_Obj *CONST objv[]
-#endif /* TCLOBJ */
-) {
+static int dotstring(ClientData clientData, Tcl_Interp *interp, int argc,
+                     const char *argv[]) {
   Agraph_t *g;
   ictx_t *ictx = (ictx_t *)clientData;
   rdr_t rdr;
@@ -202,15 +203,9 @@ int Tcldot_Init(Tcl_Interp *interp) {
   /* create a GraphViz Context and pass a pointer to it in clientdata */
   ictx->gvc = gvContextPlugins(lt_preloaded_symbols, DEMAND_LOADING);
 
-#ifndef TCLOBJ
   Tcl_CreateCommand(interp, "dotnew", dotnew, ictx, free);
   Tcl_CreateCommand(interp, "dotread", dotread, ictx, NULL);
   Tcl_CreateCommand(interp, "dotstring", dotstring, ictx, NULL);
-#else  /* TCLOBJ */
-  Tcl_CreateObjCommand(interp, "dotnew", dotnew, ictx, free);
-  Tcl_CreateObjCommand(interp, "dotread", dotread, ictx, NULL);
-  Tcl_CreateObjCommand(interp, "dotstring", dotstring, ictx, NULL);
-#endif /* TCLOBJ */
 
   return TCL_OK;
 }

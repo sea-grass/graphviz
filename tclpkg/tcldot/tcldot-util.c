@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stddef.h>
 #include "tcldot.h"
+#include <cgraph/alloc.h>
 #include <gvc/gvc.h>
 #include <util/strcasecmp.h>
 #include <util/unreachable.h>
@@ -37,21 +38,21 @@ size_t Tcldot_channel_writer(GVJ_t *job, const char *s, size_t len)
 
 /* handles (tcl commands) to obj* */
 
-Agraph_t *cmd2g(char *cmd) {
+Agraph_t *cmd2g(const char *cmd) {
     Agraph_t *g = NULL;
 
     if (sscanf(cmd, "graph%p", &g) != 1 || !g)
         return NULL;
     return g;
 }
-Agnode_t *cmd2n(char *cmd) {
+Agnode_t *cmd2n(const char *cmd) {
     Agnode_t *n = NULL;
 
     if (sscanf(cmd, "node%p", &n) != 1 || !n)
         return NULL;
     return n;
 }
-Agedge_t *cmd2e(char *cmd) {
+Agedge_t *cmd2e(const char *cmd) {
     Agedge_t *e = NULL;
 
     if (sscanf(cmd, "edge%p", &e) != 1 || !e)
@@ -229,7 +230,7 @@ void listEdgeAttrs (Tcl_Interp * interp, Agraph_t* g)
     }
 }
 
-void tcldot_layout(GVC_t *gvc, Agraph_t * g, char *engine)
+void tcldot_layout(GVC_t *gvc, Agraph_t * g, const char *engine)
 {
     gvFreeLayout(gvc, g);               /* in case previously drawn */
 
@@ -248,4 +249,20 @@ void tcldot_layout(GVC_t *gvc, Agraph_t * g, char *engine)
 	}
     }
     gvLayout(gvc, g, engine);
+}
+
+char **tcldot_argv_dup(int argc, const char *argv[]) {
+  assert(argc > 0);
+  char **argv_ret = gv_calloc((size_t)argc, sizeof(char *));
+  for (int i = 0; i < argc; ++i) {
+    argv_ret[i] = gv_strdup(argv[i]);
+  }
+  return argv_ret;
+}
+
+void tcldot_argv_free(int argc, char *argv[]) {
+  for (int i = 0; i < argc; ++i) {
+    free(argv[i]);
+  }
+  free(argv);
 }
