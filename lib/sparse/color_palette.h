@@ -23,16 +23,16 @@ extern bool knownColorScheme(const char *);
   /* return a list of rgb in hex form: "#ff0000,#00ff00,..." */
 const char *color_palettes_get(const char *color_palette_name);
 
-extern float palette_pastel[1001][3];
-extern float palette_blue_to_yellow[1001][3];
-extern float palette_grey_to_red[1001][3];
-extern float palette_white_to_red[1001][3];
-extern float palette_grey[1001][3];
-extern float palette_primary[1001][3];
-extern float palette_sequential_singlehue_red[1001][3];
-extern float palette_sequential_singlehue_red_lighter[1001][3];
-extern float palette_adam_blend[1001][3];
-extern float palette_adam[11][3];
+extern const float palette_pastel[1001][3];
+extern const float palette_blue_to_yellow[1001][3];
+extern const float palette_grey_to_red[1001][3];
+extern const float palette_white_to_red[1001][3];
+extern const float palette_grey[1001][3];
+extern const float palette_primary[1001][3];
+extern const float palette_sequential_singlehue_red[1001][3];
+extern const float palette_sequential_singlehue_red_lighter[1001][3];
+extern const float palette_adam_blend[1001][3];
+extern const float palette_adam[11][3];
 
 #ifdef __cplusplus
 }
