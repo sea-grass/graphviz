@@ -21,12 +21,12 @@
 #include <cgraph/startswith.h>
 #include <cgraph/strview.h>
 #include <cgraph/tokenize.h>
-#include <cgraph/unused.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <util/strcasecmp.h>
+#include <util/unused.h>
 
 #ifdef HAVE_EXPAT
 #ifdef _WIN32

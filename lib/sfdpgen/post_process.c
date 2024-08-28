@@ -16,7 +16,6 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <cgraph/alloc.h>
-#include <cgraph/unused.h>
 #include <common/types.h>
 #include <common/globals.h>
 
@@ -27,6 +26,7 @@
 #include <neatogen/call_tri.h>
 #include <sfdpgen/sfdp.h>
 #include <util/exit.h>
+#include <util/unused.h>
 
 #define node_degree(i) (ia[(i)+1] - ia[(i)])
 

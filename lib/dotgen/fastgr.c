@@ -9,10 +9,10 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
-#include <cgraph/unused.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/unused.h>
 
 /*
  * operations on the fast internal graph.
