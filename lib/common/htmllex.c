@@ -55,6 +55,7 @@ typedef struct {
     char mode;         // for handling artificial <HTML>..</HTML>
     strview_t currtok; // for error reporting
     strview_t prevtok; // for error reporting
+    GVC_t *gvc;        // current GraphViz context
 } lexstate_t;
 static lexstate_t state;
 
@@ -620,7 +621,8 @@ static htmltbl_t *mkTbl(char **atts)
 
 static void startElement(void *user, const char *name, char **atts)
 {
-    GVC_t *gvc = user;
+    htmllexstate_t *ctx = user;
+    GVC_t *gvc = ctx->gvc;
 
     if (strcasecmp(name, "TABLE") == 0) {
 	htmllval.tbl = mkTbl(atts);
@@ -769,7 +771,8 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
     state.prevtok = (strview_t){0};
     state.inCell = 1;
     state.parser = XML_ParserCreate(charsetToStr(GD_charset(env->g)));
-    XML_SetUserData(state.parser, GD_gvc(env->g));
+    state.gvc = GD_gvc(env->g);
+    XML_SetUserData(state.parser, &state);
     XML_SetElementHandler(state.parser,
 			  (XML_StartElementHandler) startElement,
 			  endElement);
