@@ -17,7 +17,7 @@
 #endif
 #endif
 
-#include <cgraph/overflow.h>
+#include <util/overflow.h>
 
 /// a test case
 typedef struct {
