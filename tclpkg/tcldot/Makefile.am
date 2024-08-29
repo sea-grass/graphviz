@@ -70,7 +70,7 @@ libtcldot_builtin_la_SOURCES = \
 	tcldot-util.c \
 	tcldot-id.c \
 	tcldot-io.c \
-	tcldot_builtins.c $(GDTCLFT)
+	tcldot_builtins.cpp $(GDTCLFT)
 libtcldot_builtin_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 libtcldot_builtin_la_LDFLAGS = -no-undefined -module -avoid-version
 
@@ -97,16 +97,15 @@ endif
 
 libtcldot_builtin_la_LIBADD += $(EXPAT_LIBS) $(IPSEPCOLA_LIBS) $(MATH_LIBS)
 
-# add a non-existent C++ source to force the C++ compiler to be used for
-# linking, so the C++ standard library is included for our C++ dependencies
-nodist_EXTRA_libtcldot_builtin_la_SOURCES = fake.cxx
-
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 all-local: pkgIndex.tcl
 
-pkgIndex.tcl: libtcldot.la
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtcldot$(SHARED_LIBRARY_SUFFIX) \
-	  Tcldot $(VERSION)
+pkgIndex.tcl:
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libtcldot$(SHARED_LIBRARY_SUFFIX) \
+	  --name Tcldot \
+	  --version $(VERSION)
 endif
 
 .3tcl.3tcl.pdf:
@@ -117,5 +116,4 @@ SUFFIXES = .3tcl .3tcl.pdf
 
 EXTRA_DIST = $(man) README README.Tkspline
 
-CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf_DATA)
+DISTCLEANFILES = $(pdf_DATA) pkgIndex.tcl

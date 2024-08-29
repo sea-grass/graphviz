@@ -39,10 +39,22 @@ install(
   ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
 )
 
+# Include DLLs with this library on Windows
+if(WIN32 AND NOT MINGW AND install_win_dependency_dlls)
+  install(
+    FILES
+      ${TCL_RUNTIME_LIBRARIES}
+    DESTINATION ${BINARY_INSTALL_DIR}
+  )
+endif()
+
 add_custom_target(tcldot_pkgindex
-  COMMAND sh "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.sh"
-    libtcldot${CMAKE_SHARED_LIBRARY_SUFFIX} Tcldot "${GRAPHVIZ_VERSION_STRING}"
-  DEPENDS ../mkpkgindex.sh
+  COMMAND
+    ${Python3_EXECUTABLE} "${CMAKE_CURRENT_SOURCE_DIR}/../mkpkgindex.py"
+    --file libtcldot${CMAKE_SHARED_LIBRARY_SUFFIX}
+    --name Tcldot
+    --version "${GRAPHVIZ_VERSION_STRING}"
+  DEPENDS ../mkpkgindex.py
   BYPRODUCTS pkgIndex.tcl
   COMMENT "create tcldot package index"
 )
@@ -68,7 +80,7 @@ else()
   )
 endif()
 
-add_library(tcldot_builtin SHARED ${SOURCES} tcldot_builtins.c)
+add_library(tcldot_builtin SHARED ${SOURCES} tcldot_builtins.cpp)
 
 target_compile_definitions(tcldot_builtin PRIVATE -DDEMAND_LOADING=1)
 

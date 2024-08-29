@@ -23,13 +23,16 @@ libtclplan_la_LIBADD = \
 	-lc $(TCL_STUB_LIB_SPEC)
 
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 all-local: pkgIndex.tcl
 
-pkgIndex.tcl: libtclplan.la
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libtclplan$(SHARED_LIBRARY_SUFFIX) \
-	  Tclpathplan $(VERSION)
+pkgIndex.tcl:
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libtclplan$(SHARED_LIBRARY_SUFFIX) \
+	  --name Tclpathplan \
+	  --version $(VERSION)
 endif
 
-CLEANFILES = pkgIndex.tcl
+DISTCLEANFILES = pkgIndex.tcl
 
 EXTRA_DIST = $(libtclplan_la_SOURCES)

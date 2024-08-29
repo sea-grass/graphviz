@@ -12,11 +12,13 @@
 
 #include <gvc/gvplugin.h>
 
-#if defined(GVDLL) && !defined(ENABLE_LTDL)
+#if defined(GVDLL)
 #define IMPORT	__declspec(dllimport)
 #else
 #define IMPORT /* nothing */
 #endif
+
+extern "C" {
 
 IMPORT extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
 IMPORT extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
@@ -41,3 +43,5 @@ lt_symlist_t lt_preloaded_symbols[] = {
 	{ "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
 	{ 0, 0 }
 };
+
+}

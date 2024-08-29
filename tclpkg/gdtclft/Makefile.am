@@ -36,11 +36,14 @@ libgdtclft_la_LIBADD = \
 	$(GDLIB_LIBS)
 
 if WITH_TCL
+BUILT_SOURCES = pkgIndex.tcl
 all-local: pkgIndex.tcl
 
-pkgIndex.tcl: libgdtclft.la
-	sh $(top_srcdir)/tclpkg/mkpkgindex.sh libgdtclft$(SHARED_LIBRARY_SUFFIX) \
-	  Gdtclft $(VERSION)
+pkgIndex.tcl:
+	python3 $(top_srcdir)/tclpkg/mkpkgindex.py \
+	  --file libgdtclft$(SHARED_LIBRARY_SUFFIX) \
+	  --name Gdtclft \
+	  --version $(VERSION)
 
 test:
 	echo 'load .libs/libgdtclft$(TCL_SHLIB_SUFFIX) Gdtclft ; cd tests ; source all' | tclsh8.3
@@ -55,5 +58,4 @@ SUFFIXES = .3tcl .3tcl.pdf
 
 EXTRA_DIST = $(man)
 
-CLEANFILES = pkgIndex.tcl
-DISTCLEANFILES = $(pdf_DATA)
+DISTCLEANFILES = $(pdf_DATA) pkgIndex.tcl
