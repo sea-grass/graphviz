@@ -116,7 +116,7 @@ static void dgsprintxy(Tcl_DString *result, int npts, const point p[]) {
 /// @param before Command with percent expressions
 /// @param vgpaneHandle string to substitute for "%r"
 /// @param npts Number of coordinates
-/// @param ppos Cordinates to substitute for %t
+/// @param ppos Coordinates to substitute for %t
 static void expandPercentsEval(Tcl_Interp *interp, char *before, char *r,
                                int npts, const point *ppos) {
     char *string;
