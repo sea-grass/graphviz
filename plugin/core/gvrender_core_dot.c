@@ -10,6 +10,7 @@
 
 #include "config.h"
 
+#include <assert.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -102,7 +103,8 @@ static void xdot_fmt_num(agxbuf *buf, double v) {
 static void xdot_point(agxbuf *xb, pointf p)
 {
   xdot_fmt_num(xb, p.x);
-  xdot_fmt_num(xb, yDir(p.y));
+  assert(xd != NULL);
+  xdot_fmt_num(xb, yDir(p.y, xd->yOff));
 }
 
 static void xdot_num(agxbuf *xb, double v)
