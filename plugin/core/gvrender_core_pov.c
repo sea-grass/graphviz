@@ -17,13 +17,13 @@
 #include "config.h"
 #include <assert.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/prisize_t.h>
 #include <math.h>
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <errno.h>
+#include <util/prisize_t.h>
 
 #include <common/macros.h>
 #include <common/const.h>

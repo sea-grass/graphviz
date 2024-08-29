@@ -24,13 +24,13 @@
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/prisize_t.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/comp.h>
 #include <pack/pack.h>
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/prisize_t.h>
 
 static void dfs(Agraph_t *g, Agnode_t *n, Agraph_t *out, bitarray_t *marks) {
     Agedge_t *e;

@@ -4,6 +4,7 @@ noinst_HEADERS = \
   exit.h \
   gv_fopen.h \
   overflow.h \
+  prisize_t.h \
   strcasecmp.h \
   streq.h \
   unreachable.h \

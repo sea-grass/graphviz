@@ -20,13 +20,13 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
-#include <cgraph/prisize_t.h>
 #include <cgraph/cgraph.h>
 #include "make_map.h"
 #include <sfdpgen/stress_model.h>
 #include "country_graph_coloring.h"
 #include <sparse/colorutil.h>
 #include <neatogen/delaunay.h>
+#include <util/prisize_t.h>
 
 #include <edgepaint/lab.h>
 #include <edgepaint/node_distinct_coloring.h>

@@ -24,7 +24,6 @@ add_library(cgraph
   ingraphs.h
   list.h
   node_set.h
-  prisize_t.h
   rdr.h
   sort.h
   startswith.h

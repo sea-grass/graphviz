@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <cgraph/alloc.h>
-#include <cgraph/prisize_t.h>
 #include <sparse/general.h>
 #include <sparse/QuadTree.h>
 #include <edgepaint/lab.h>
@@ -19,6 +18,7 @@
 #include <string.h>
 #include <sparse/color_palette.h>
 #include <edgepaint/lab_gamut.h>
+#include <util/prisize_t.h>
 
 color_rgb color_rgb_init(double r, double g, double b){
   color_rgb rgb;

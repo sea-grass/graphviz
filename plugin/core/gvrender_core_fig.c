@@ -22,9 +22,9 @@
 #include <gvc/gvplugin_device.h>
 #include <gvc/gvio.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/prisize_t.h>
 #include <common/utils.h>
 #include <common/color.h>
+#include <util/prisize_t.h>
 #include <util/streq.h>
 #include <util/unreachable.h>
 

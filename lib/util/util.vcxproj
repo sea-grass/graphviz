@@ -140,6 +140,7 @@
     <ClInclude Include="exit.h" />
     <ClInclude Include="gv_fopen.h" />
     <ClInclude Include="overflow.h" />
+    <ClInclude Include="prisize_t.h" />
     <ClInclude Include="strcasecmp.h" />
     <ClInclude Include="streq.h" />
     <ClInclude Include="unreachable.h" />

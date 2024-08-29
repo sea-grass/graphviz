@@ -21,8 +21,8 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/prisize_t.h>
 #include <common/utils.h>
+#include <util/prisize_t.h>
 #include "ps.h"
 
 /* for CHAR_LATIN1  */

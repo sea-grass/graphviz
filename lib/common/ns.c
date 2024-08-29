@@ -17,7 +17,6 @@
 #include <assert.h>
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
-#include <cgraph/prisize_t.h>
 #include <common/render.h>
 #include <limits.h>
 #include <stdbool.h>
@@ -26,6 +25,7 @@
 #include <stdio.h>
 #include <util/exit.h>
 #include <util/overflow.h>
+#include <util/prisize_t.h>
 #include <util/streq.h>
 
 static void dfs_cutval(node_t * v, edge_t * par);

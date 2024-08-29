@@ -66,7 +66,7 @@ Graphviz is written predominantly in C and C++. C code is compiled under
 on a standards-conformant compiler with the following exceptions:
 
 * The `printf` format specifier `"%zu"` cannot be used. See
-  lib/cgraph/prisize_t.h for an explanation of why.
+  lib/util/prisize_t.h for an explanation of why.
 * The `exit` function should not be called directly. See lib/util/exit.h for an
   explanation of why and what to do instead.
 * Static array dimensions (`void f(int x[static 42])`) cannot be used because
