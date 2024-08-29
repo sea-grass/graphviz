@@ -139,7 +139,7 @@ appendFLineList (int v);
 static htmltxt_t*
 mkText(htmlparserstate_t *html_state);
 
-static row_t *lastRow(void);
+static row_t *lastRow(htmlparserstate_t *html_state);
 
 /// Add new cell row to current table.
 static void addRow(htmlparserstate_t *html_state);
@@ -334,7 +334,7 @@ rows : row { $$ = $1; }
      | rows HR row { $1->ruled = true; $$ = $3; }
      ;
 
-row : T_row { addRow (&scanner->parser); } cells T_end_row { $$ = lastRow(); }
+row : T_row { addRow (&scanner->parser); } cells T_end_row { $$ = lastRow(&scanner->parser); }
       ;
 
 cells : cell { $$ = $1; }
@@ -427,8 +427,8 @@ mkText(htmlparserstate_t *html_state)
     return hft;
 }
 
-static row_t *lastRow(void) {
-  htmltbl_t* tbl = HTMLstate.tblstack;
+static row_t *lastRow(htmlparserstate_t *html_state) {
+  htmltbl_t* tbl = html_state->tblstack;
   row_t *sp = *rows_back(&tbl->u.p.rows);
   return sp;
 }
