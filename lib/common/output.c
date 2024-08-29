@@ -20,14 +20,18 @@
 #include <util/prisize_t.h>
 
 static double Y_off;        /* ymin + ymax */
-static double YF_off;       /* Y_off in inches */
+
+/// state for offset calculations
+typedef struct {
+  double YF; ///< Y_off in inches
+} offsets_t;
 
 static double YDIR(double y) {
   return Y_invert ? Y_off - y : y;
 }
 
-static double YFDIR(double y) {
-  return Y_invert ? YF_off - y : y;
+static double YFDIR(offsets_t offsets, double y) {
+  return Y_invert ? offsets.YF - y : y;
 }
 
 double yDir (double y)
@@ -85,12 +89,13 @@ static void printpoint(int (*putstr)(void *chan, const char *str), FILE *f,
  * set for * all graphs during current run, so each will 
  * reinitialize the values for its bbox.
  */
-static void setYInvert(graph_t * g)
-{
+static offsets_t setYInvert(graph_t *g) {
+    offsets_t rv = {0};
     if (Y_invert) {
 	Y_off = GD_bb(g).UR.y + GD_bb(g).LL.y;
-	YF_off = PS2INCH(Y_off);
+	rv.YF = PS2INCH(Y_off);
     }
+    return rv;
 }
 
 /* canon:
@@ -126,7 +131,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     char* fillcolor;
 
     int (*putstr)(void *chan, const char *str) = g->clos->disc.io->putstr;
-    setYInvert(g);
+    (void)setYInvert(g);
     pt = GD_bb(g).UR;
     printdouble(putstr, f, "graph ", job->zoom);
     printdouble(putstr, f, " ", PS2INCH(pt.x));
@@ -244,7 +249,7 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
     gv_fixLocale (1);
     bool e_arrows = false; // graph has edges with end arrows
     bool s_arrows = false; // graph has edges with start arrows
-    setYInvert(g);
+    const offsets_t offsets = setYInvert(g);
     agxbuf xb = {0};
     safe_dcl(g, AGNODE, "pos", "");
     safe_dcl(g, AGNODE, "rects", "");
@@ -313,11 +318,12 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 		    if (poly->sides >= 3)
 			agxbprint(&xb, "%.5g %.5g",
 				PS2INCH(poly->vertices[i].x),
-				YFDIR(PS2INCH(poly->vertices[i].y)));
+				YFDIR(offsets, PS2INCH(poly->vertices[i].y)));
 		    else
 			agxbprint(&xb, "%.5g %.5g",
 				ND_width(n) / 2.0 * cos((double)i / (double)sides * M_PI * 2.0),
-				YFDIR(ND_height(n) / 2.0 * sin((double)i / (double)sides * M_PI * 2.0)));
+				YFDIR(offsets,
+				      ND_height(n) / 2.0 * sin((double)i / (double)sides * M_PI * 2.0)));
 		}
 		agxset(n, N_vertices, agxbuse(&xb));
 	    }
