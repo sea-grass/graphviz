@@ -394,7 +394,6 @@ double attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 
 void attach_attrs(graph_t * g)
 {
-    bool e, s;
-    (void)attach_attrs_and_arrows(g, &s, &e);
+  (void)attach_attrs_and_arrows(g, NULL, NULL);
 }
 
