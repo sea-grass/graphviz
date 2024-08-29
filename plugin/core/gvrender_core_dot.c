@@ -392,7 +392,7 @@ static void dot_begin_graph(GVJ_t *job)
 	case FORMAT_XDOT14: {
 	    bool e_arrows; // graph has edges with end arrows
 	    bool s_arrows; // graph has edges with start arrows
-	    attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
+	    (void)attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
 	    xdot_begin_graph(g, s_arrows, e_arrows, job->render.id);
 	    break;
 	}

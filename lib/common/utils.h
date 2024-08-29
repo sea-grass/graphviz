@@ -47,7 +47,9 @@ typedef struct {
 } xml_flags_t;
 
 UTILS_API pointf Bezier(pointf *, double, pointf *, pointf *);
-UTILS_API void attach_attrs_and_arrows(graph_t *, bool *, bool *);
+
+/// @return Computed ymin + ymax
+UTILS_API double attach_attrs_and_arrows(graph_t *, bool *, bool *);
 
 /** XML-escape a string
  *
