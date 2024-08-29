@@ -20,6 +20,7 @@
 
 %{
 
+#include <cgraph/list.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <common/htmllex.h>
@@ -32,10 +33,16 @@ typedef struct sfont_t {
     struct sfont_t *pfont;
 } sfont_t;
 
+static void free_ti(textspan_t item) {
+  free(item.str);
+}
+
+DEFINE_LIST_WITH_DTOR(textspans, textspan_t, free_ti)
+
 static struct {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
-  Dt_t*        fitemList; /* Dictionary for font text items */
+  textspans_t  fitemList;
   Dt_t*        fspanList;
   agxbuf*      str;       /* Buffer for text */
   sfont_t*     fontstack;
@@ -98,20 +105,9 @@ static Dtdisc_t cellDisc = {
 };
 
 typedef struct {
-    Dtlink_t    link;
-    textspan_t  ti;
-} fitem;
-
-typedef struct {
     Dtlink_t     link;
     htextspan_t  lp;
 } fspan;
-
-static void free_fitem(void *item) {
-    fitem *p = item;
-    free (p->ti.str);
-    free (p);
-}
 
 static void free_fspan(void *span) {
     fspan *p = span;
@@ -128,27 +124,20 @@ static void free_fspan(void *span) {
     free (p);
 }
 
-static Dtdisc_t fstrDisc = {
-    .link = offsetof(fitem, link),
-    .freef = free_fitem,
-};
-
 static Dtdisc_t fspanDisc = {
     .link = offsetof(fspan, link),
     .freef = free_fspan,
 };
 
 /* appendFItemList:
- * Append a new fitem to the list.
+ * Append a new text span to the list.
  */
 static void
 appendFItemList (agxbuf *ag)
 {
-    fitem *fi = gv_alloc(sizeof(fitem));
-
-    fi->ti.str = agxbdisown(ag);
-    fi->ti.font = HTMLstate.fontstack->cfont;
-    dtinsert(HTMLstate.fitemList, fi);
+    const textspan_t ti = {.str = agxbdisown(ag),
+                           .font = HTMLstate.fontstack->cfont};
+    textspans_append(&HTMLstate.fitemList, ti);
 }	
 
 /* appendFLineList:
@@ -157,22 +146,19 @@ static void
 appendFLineList (int v)
 {
     fspan *ln = gv_alloc(sizeof(fspan));
-    fitem *fi;
-    Dt_t *ilist = HTMLstate.fitemList;
+    textspans_t *ilist = &HTMLstate.fitemList;
 
-    size_t cnt = (size_t)dtsize(ilist);
+    size_t cnt = textspans_size(ilist);
     ln->lp.just = v;
     if (cnt) {
-        int i = 0;
 	ln->lp.nitems = cnt;
 	ln->lp.items = gv_calloc(cnt, sizeof(textspan_t));
 
-	fi = (fitem*)dtflatten(ilist);
-	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
+	for (size_t i = 0; i < textspans_size(ilist); ++i) {
 	    // move this text span into the new list
-	    ln->lp.items[i] = fi->ti;
-	    fi->ti = (textspan_t){0};
-	    i++;
+	    textspan_t *ti = textspans_at(ilist, i);
+	    ln->lp.items[i] = *ti;
+	    *ti = (textspan_t){0};
 	}
     }
     else {
@@ -182,7 +168,7 @@ appendFLineList (int v)
 	ln->lp.items[0].font = HTMLstate.fontstack->cfont;
     }
 
-    dtclear(ilist);
+    textspans_clear(ilist);
 
     dtinsert(HTMLstate.fspanList, ln);
 }
@@ -194,7 +180,7 @@ mkText(void)
     fspan *fl ;
     htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
 
-    if (dtsize (HTMLstate.fitemList))
+    if (!textspans_is_empty(&HTMLstate.fitemList))
 	appendFLineList (UNSET_ALIGN);
 
     size_t cnt = (size_t)dtsize(ispan);
@@ -312,7 +298,7 @@ static void cleanup (void)
   }
   cellDisc.freef = free;
 
-  dtclear (HTMLstate.fitemList);
+  textspans_clear(&HTMLstate.fitemList);
   dtclear (HTMLstate.fspanList);
 
   freeFontstack();
@@ -568,7 +554,7 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   HTMLstate.tblstack = 0;
   HTMLstate.lbl = 0;
   HTMLstate.gvc = GD_gvc(env->g);
-  HTMLstate.fitemList = dtopen(&fstrDisc, Dtqueue);
+  HTMLstate.fitemList = (textspans_t){0};
   HTMLstate.fspanList = dtopen(&fspanDisc, Dtqueue);
 
   HTMLstate.str = &str;
@@ -583,10 +569,9 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
     l = HTMLstate.lbl;
   }
 
-  dtclose (HTMLstate.fitemList);
+  textspans_free(&HTMLstate.fitemList);
   dtclose (HTMLstate.fspanList);
 
-  HTMLstate.fitemList = NULL;
   HTMLstate.fspanList = NULL;
   HTMLstate.fontstack = NULL;
 
