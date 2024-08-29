@@ -19,6 +19,7 @@ extern "C" {
 #include <agxbuf.h>
 
     typedef struct htmlparserstate_s htmlparserstate_t;
+    typedef struct htmlscan_s htmlscan_t;
 
     extern int initHTMLlexer(char *, agxbuf *, htmlenv_t *);
     extern int htmllex(void);
