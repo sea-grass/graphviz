@@ -99,8 +99,6 @@ extern htmlscan_t *scanner;
 #include <util/alloc.h>
 
 extern int htmlparse(void);
-#define HTMLstate scanner->parser
-
 
 /// Clean up cell if error in parsing.
 static void cleanCell(htmlcell_t *cp);
@@ -131,7 +129,7 @@ cleanCell (htmlcell_t* cp)
 
 /// Append a new text span to the list.
 static void
-appendFItemList (agxbuf *ag);
+appendFItemList (htmlparserstate_t *html_state, agxbuf *ag);
 
 static void
 appendFLineList (htmlparserstate_t *html_state, int v);
@@ -216,8 +214,8 @@ popFont (htmlparserstate_t *html_state);
 
 %%
 
-html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
-      | T_html fonttable T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TBL); }
+html  : T_html fonttext T_end_html { scanner->parser.lbl = mkLabel($2,HTML_TEXT); }
+      | T_html fonttable T_end_html { scanner->parser.lbl = mkLabel($2,HTML_TBL); }
       | error { cleanup(&scanner->parser); YYABORT; }
       ;
 
@@ -228,7 +226,7 @@ text : text textitem
      | textitem
      ;
 
-textitem : string { appendFItemList(HTMLstate.str);}
+textitem : string { appendFItemList(&scanner->parser,scanner->parser.str);}
          | br {appendFLineList(&scanner->parser,$1);}
          | font text n_font
          | italic text n_italic
@@ -297,23 +295,23 @@ string : T_string
        ;
 
 table : opt_space T_table {
-          if (nonSpace(agxbuse(HTMLstate.str))) {
+          if (nonSpace(agxbuse(scanner->parser.str))) {
             htmlerror ("Syntax error: non-space string used before <TABLE>");
             cleanup(&scanner->parser); YYABORT;
           }
-          $2->u.p.prev = HTMLstate.tblstack;
+          $2->u.p.prev = scanner->parser.tblstack;
           $2->u.p.rows = (rows_t){0};
-          HTMLstate.tblstack = $2;
-          $2->font = *sfont_back(&HTMLstate.fontstack);
+          scanner->parser.tblstack = $2;
+          $2->font = *sfont_back(&scanner->parser.fontstack);
           $<tbl>$ = $2;
         }
         rows T_end_table opt_space {
-          if (nonSpace(agxbuse(HTMLstate.str))) {
+          if (nonSpace(agxbuse(scanner->parser.str))) {
             htmlerror ("Syntax error: non-space string used after </TABLE>");
             cleanup(&scanner->parser); YYABORT;
           }
-          $$ = HTMLstate.tblstack;
-          HTMLstate.tblstack = HTMLstate.tblstack->u.p.prev;
+          $$ = scanner->parser.tblstack;
+          scanner->parser.tblstack = scanner->parser.tblstack->u.p.prev;
         }
       ;
 
@@ -364,11 +362,11 @@ VR  : T_vr T_end_vr
 %%
 
 static void
-appendFItemList (agxbuf *ag)
+appendFItemList (htmlparserstate_t *html_state, agxbuf *ag)
 {
     const textspan_t ti = {.str = agxbdisown(ag),
-                           .font = *sfont_back(&HTMLstate.fontstack)};
-    textspans_append(&HTMLstate.fitemList, ti);
+                           .font = *sfont_back(&html_state->fontstack)};
+    textspans_append(&html_state->fitemList, ti);
 }
 
 static void
@@ -507,6 +505,8 @@ popFont (htmlparserstate_t *html_state)
 {
     (void)sfont_pop_back(&html_state->fontstack);
 }
+
+#define HTMLstate scanner->parser
 
 /* Return parsed label or NULL if failure.
  * Set warn to 0 on success; 1 for warning message; 2 if no expat; 3 for error
