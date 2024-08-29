@@ -130,7 +130,7 @@ static void free_fspan(void *span) {
 
 static Dtdisc_t fstrDisc = {
     .link = offsetof(fitem, link),
-    .freef = free,
+    .freef = free_fitem,
 };
 
 static Dtdisc_t fspanDisc = {
@@ -169,10 +169,9 @@ appendFLineList (int v)
 
 	fi = (fitem*)dtflatten(ilist);
 	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
-		/* NOTE: When fitemList is closed, it uses free, which only frees the container,
-		 * not the contents, so this copy is safe.
-		 */
+	    // move this text span into the new list
 	    ln->lp.items[i] = fi->ti;  
+	    fi->ti = (textspan_t){0};
 	    i++;
 	}
     }
@@ -311,9 +310,7 @@ static void cleanup (void)
   }
   cellDisc.freef = free;
 
-  fstrDisc.freef = free_fitem;
   dtclear (HTMLstate.fitemList);
-  fstrDisc.freef = free;
 
   fspanDisc.freef = free_fspan;
   dtclear (HTMLstate.fspanList);
