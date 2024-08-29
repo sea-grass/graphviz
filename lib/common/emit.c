@@ -2778,7 +2778,7 @@ static void emit_edge(GVJ_t * job, edge_t * e)
     }
 }
 
-static char adjust[] = {'l', 'n', 'r'};
+static const char adjust[] = {'l', 'n', 'r'};
 
 static void
 expandBB (boxf* bb, pointf p)
