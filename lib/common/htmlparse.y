@@ -135,7 +135,7 @@ static Dtdisc_t fstrDisc = {
 
 static Dtdisc_t fspanDisc = {
     .link = offsetof(fspan, link),
-    .freef = free,
+    .freef = free_fspan,
 };
 
 /* appendFItemList:
@@ -204,7 +204,9 @@ mkText(void)
 	int i = 0;
 	hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
     	for(fl=dtfirst(ispan); fl; fl=dtnext(ispan,fl)) {
+    	    // move this HTML text span into the new list
     	    hft->spans[i] = fl->lp;
+    	    fl->lp = (htextspan_t){0};
     	    i++;
     	}
     }
@@ -311,10 +313,7 @@ static void cleanup (void)
   cellDisc.freef = free;
 
   dtclear (HTMLstate.fitemList);
-
-  fspanDisc.freef = free_fspan;
   dtclear (HTMLstate.fspanList);
-  fspanDisc.freef = free;
 
   freeFontstack();
 }
