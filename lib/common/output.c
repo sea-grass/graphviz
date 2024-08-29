@@ -382,8 +382,12 @@ double attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
     if (HAS_CLUST_EDGE(g))
 	undoClusterEdges(g);
     
-    *sp = s_arrows;
-    *ep = e_arrows;
+    if (sp != NULL) {
+	*sp = s_arrows;
+    }
+    if (ep != NULL) {
+	*ep = e_arrows;
+    }
     gv_fixLocale (0);
     return offsets.Y;
 }
