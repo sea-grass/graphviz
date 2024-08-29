@@ -74,6 +74,7 @@ typedef struct {
     attrsym_t *tl_draw;
     unsigned short version;
     char* version_s;
+    double yOff; ///< ymin + ymax
 } xdot_state_t;
 static xdot_state_t* xd;
 
@@ -308,9 +309,11 @@ static unsigned short versionStr2Version(const char *str) {
  * and "t" (for tooltip) and "x" (for position). We use  those letters in 
  * our drawing spec (and also "<" and ">"), so if you  start generating 
  * output with them, it could break what we have. 
+ *
+ * @param yOff ymax - ymin
  */
 static void xdot_begin_graph(graph_t *g, bool s_arrows, bool e_arrows,
-                             format_type id) {
+                             format_type id, double yOff) {
     int i;
     unsigned short us;
     char* s;
@@ -370,6 +373,8 @@ static void xdot_begin_graph(graph_t *g, bool s_arrows, bool e_arrows,
 
     for (i = 0; i < NUMXBUFS; i++)
 	xbuf[i] = (agxbuf){0};
+
+    xd->yOff = yOff;
 }
 
 static void dot_begin_graph(GVJ_t *job)
@@ -392,8 +397,8 @@ static void dot_begin_graph(GVJ_t *job)
 	case FORMAT_XDOT14: {
 	    bool e_arrows; // graph has edges with end arrows
 	    bool s_arrows; // graph has edges with start arrows
-	    (void)attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
-	    xdot_begin_graph(g, s_arrows, e_arrows, job->render.id);
+	    const double yOff = attach_attrs_and_arrows(g, &s_arrows, &e_arrows);
+	    xdot_begin_graph(g, s_arrows, e_arrows, job->render.id, yOff);
 	    break;
 	}
 	default:
