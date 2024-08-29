@@ -134,7 +134,7 @@ static void
 appendFItemList (agxbuf *ag);
 
 static void
-appendFLineList (int v);
+appendFLineList (htmlparserstate_t *html_state, int v);
 
 static htmltxt_t*
 mkText(htmlparserstate_t *html_state);
@@ -229,7 +229,7 @@ text : text textitem
      ;
 
 textitem : string { appendFItemList(HTMLstate.str);}
-         | br {appendFLineList($1);}
+         | br {appendFLineList(&scanner->parser,$1);}
          | font text n_font
          | italic text n_italic
          | underline text n_underline
@@ -372,10 +372,10 @@ appendFItemList (agxbuf *ag)
 }
 
 static void
-appendFLineList (int v)
+appendFLineList (htmlparserstate_t *html_state, int v)
 {
     htextspan_t lp = {0};
-    textspans_t *ilist = &HTMLstate.fitemList;
+    textspans_t *ilist = &html_state->fitemList;
 
     size_t cnt = textspans_size(ilist);
     lp.just = v;
@@ -394,12 +394,12 @@ appendFLineList (int v)
 	lp.items = gv_alloc(sizeof(textspan_t));
 	lp.nitems = 1;
 	lp.items[0].str = gv_strdup("");
-	lp.items[0].font = *sfont_back(&HTMLstate.fontstack);
+	lp.items[0].font = *sfont_back(&html_state->fontstack);
     }
 
     textspans_clear(ilist);
 
-    htextspans_append(&HTMLstate.fspanList, lp);
+    htextspans_append(&html_state->fspanList, lp);
 }
 
 static htmltxt_t*
@@ -409,7 +409,7 @@ mkText(htmlparserstate_t *html_state)
     htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
 
     if (!textspans_is_empty(&html_state->fitemList))
-	appendFLineList (UNSET_ALIGN);
+	appendFLineList (html_state, UNSET_ALIGN);
 
     size_t cnt = htextspans_size(ispan);
     hft->nspans = cnt;
