@@ -56,8 +56,8 @@ typedef struct {
     strview_t currtok; // for error reporting
     strview_t prevtok; // for error reporting
     GVC_t *gvc;        // current GraphViz context
-} lexstate_t;
-static lexstate_t state;
+} htmllexstate_t;
+static htmllexstate_t state;
 
 /* error_context:
  * Print the last 2 "token"s seen.
