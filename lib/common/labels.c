@@ -24,7 +24,6 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line,
                       char terminator) {
     pointf size;
     textspan_t *span;
-    static textfont_t tf;
     size_t oldsz = lp->u.txt.nspans + 1;
 
     lp->u.txt.span = gv_recalloc(lp->u.txt.span, oldsz, oldsz + 1,
@@ -33,6 +32,7 @@ static void storeline(GVC_t *gvc, textlabel_t *lp, char *line,
     span->str = line;
     span->just = terminator;
     if (line && line[0]) {
+	textfont_t tf = {0};
 	tf.name = lp->fontname;
 	tf.size = lp->fontsize;
 	span->font = dtinsert(gvc->textfont_dt, &tf);
