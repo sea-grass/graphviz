@@ -177,7 +177,7 @@ static bool nonSpace(const char *s) {
 
 /// Fonts are allocated in the lexer.
 static void
-pushFont (textfont_t *fp);
+pushFont (htmlparserstate_t *html_state, textfont_t *fp);
 
 static void
 popFont (void);
@@ -240,49 +240,49 @@ textitem : string { appendFItemList(HTMLstate.str);}
          | strike text n_strike
          ;
 
-font : T_font { pushFont ($1); }
+font : T_font { pushFont (&scanner->parser,$1); }
       ;
 
 n_font : T_end_font { popFont (); }
       ;
 
-italic : T_italic {pushFont($1);}
+italic : T_italic {pushFont(&scanner->parser,$1);}
           ;
 
 n_italic : T_n_italic {popFont();}
             ;
 
-bold : T_bold {pushFont($1);}
+bold : T_bold {pushFont(&scanner->parser,$1);}
           ;
 
 n_bold : T_n_bold {popFont();}
             ;
 
-strike : T_s {pushFont($1);}
+strike : T_s {pushFont(&scanner->parser,$1);}
           ;
 
 n_strike : T_n_s {popFont();}
             ;
 
-underline : T_underline {pushFont($1);}
+underline : T_underline {pushFont(&scanner->parser,$1);}
           ;
 
 n_underline : T_n_underline {popFont();}
             ;
 
-overline : T_overline {pushFont($1);}
+overline : T_overline {pushFont(&scanner->parser,$1);}
           ;
 
 n_overline : T_n_overline {popFont();}
             ;
 
-sup : T_sup {pushFont($1);}
+sup : T_sup {pushFont(&scanner->parser,$1);}
           ;
 
 n_sup : T_n_sup {popFont();}
             ;
 
-sub : T_sub {pushFont($1);}
+sub : T_sub {pushFont(&scanner->parser,$1);}
           ;
 
 n_sub : T_n_sub {popFont();}
@@ -482,9 +482,9 @@ static void cleanup (htmlparserstate_t *html_state)
 }
 
 static void
-pushFont (textfont_t *fp)
+pushFont (htmlparserstate_t *html_state, textfont_t *fp)
 {
-    textfont_t* curfont = *sfont_back(&HTMLstate.fontstack);
+    textfont_t* curfont = *sfont_back(&html_state->fontstack);
     textfont_t  f = *fp;
 
     if (curfont) {
@@ -498,8 +498,8 @@ pushFont (textfont_t *fp)
 	    f.flags |= curfont->flags;
     }
 
-    textfont_t *const ft = dtinsert(HTMLstate.gvc->textfont_dt, &f);
-    sfont_push_back(&HTMLstate.fontstack, ft);
+    textfont_t *const ft = dtinsert(html_state->gvc->textfont_dt, &f);
+    sfont_push_back(&html_state->fontstack, ft);
 }
 
 static void
