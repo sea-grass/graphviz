@@ -169,14 +169,12 @@ mkText(void)
     size_t cnt = htextspans_size(ispan);
     hft->nspans = cnt;
     	
-    if (cnt) {
-	hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
-    	for (size_t i = 0; i < htextspans_size(ispan); ++i) {
-    	    // move this HTML text span into the new list
-    	    htextspan_t *hi = htextspans_at(ispan, i);
-    	    hft->spans[i] = *hi;
-    	    *hi = (htextspan_t){0};
-    	}
+    hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
+    for (size_t i = 0; i < htextspans_size(ispan); ++i) {
+    	// move this HTML text span into the new list
+    	htextspan_t *hi = htextspans_at(ispan, i);
+    	hft->spans[i] = *hi;
+    	*hi = (htextspan_t){0};
     }
 
     htextspans_clear(ispan);
