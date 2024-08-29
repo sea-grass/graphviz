@@ -142,7 +142,7 @@ mkText(htmlparserstate_t *html_state);
 static row_t *lastRow(void);
 
 /// Add new cell row to current table.
-static void addRow(void);
+static void addRow(htmlparserstate_t *html_state);
 
 /// Set cell body and type and attach to row
 static void setCell(htmlcell_t *cp, void *obj, label_type_t kind);
@@ -334,7 +334,7 @@ rows : row { $$ = $1; }
      | rows HR row { $1->ruled = true; $$ = $3; }
      ;
 
-row : T_row { addRow (); } cells T_end_row { $$ = lastRow(); }
+row : T_row { addRow (&scanner->parser); } cells T_end_row { $$ = lastRow(); }
       ;
 
 cells : cell { $$ = $1; }
@@ -433,8 +433,8 @@ static row_t *lastRow(void) {
   return sp;
 }
 
-static void addRow(void) {
-  htmltbl_t* tbl = HTMLstate.tblstack;
+static void addRow(htmlparserstate_t *html_state) {
+  htmltbl_t* tbl = html_state->tblstack;
   row_t *sp = gv_alloc(sizeof(row_t));
   if (tbl->hrule)
     sp->ruled = true;
