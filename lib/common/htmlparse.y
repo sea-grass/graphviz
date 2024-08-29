@@ -180,7 +180,7 @@ static void
 pushFont (htmlparserstate_t *html_state, textfont_t *fp);
 
 static void
-popFont (void);
+popFont (htmlparserstate_t *html_state);
 
 %}
 
@@ -243,49 +243,49 @@ textitem : string { appendFItemList(HTMLstate.str);}
 font : T_font { pushFont (&scanner->parser,$1); }
       ;
 
-n_font : T_end_font { popFont (); }
+n_font : T_end_font { popFont (&scanner->parser); }
       ;
 
 italic : T_italic {pushFont(&scanner->parser,$1);}
           ;
 
-n_italic : T_n_italic {popFont();}
+n_italic : T_n_italic {popFont(&scanner->parser);}
             ;
 
 bold : T_bold {pushFont(&scanner->parser,$1);}
           ;
 
-n_bold : T_n_bold {popFont();}
+n_bold : T_n_bold {popFont(&scanner->parser);}
             ;
 
 strike : T_s {pushFont(&scanner->parser,$1);}
           ;
 
-n_strike : T_n_s {popFont();}
+n_strike : T_n_s {popFont(&scanner->parser);}
             ;
 
 underline : T_underline {pushFont(&scanner->parser,$1);}
           ;
 
-n_underline : T_n_underline {popFont();}
+n_underline : T_n_underline {popFont(&scanner->parser);}
             ;
 
 overline : T_overline {pushFont(&scanner->parser,$1);}
           ;
 
-n_overline : T_n_overline {popFont();}
+n_overline : T_n_overline {popFont(&scanner->parser);}
             ;
 
 sup : T_sup {pushFont(&scanner->parser,$1);}
           ;
 
-n_sup : T_n_sup {popFont();}
+n_sup : T_n_sup {popFont(&scanner->parser);}
             ;
 
 sub : T_sub {pushFont(&scanner->parser,$1);}
           ;
 
-n_sub : T_n_sub {popFont();}
+n_sub : T_n_sub {popFont(&scanner->parser);}
             ;
 
 br     : T_br T_end_br { $$ = $1; }
@@ -503,9 +503,9 @@ pushFont (htmlparserstate_t *html_state, textfont_t *fp)
 }
 
 static void
-popFont (void)
+popFont (htmlparserstate_t *html_state)
 {
-    (void)sfont_pop_back(&HTMLstate.fontstack);
+    (void)sfont_pop_back(&html_state->fontstack);
 }
 
 /* Return parsed label or NULL if failure.
