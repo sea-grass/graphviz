@@ -18,6 +18,11 @@
    */
 %define api.prefix {html}
 
+%code requires {
+#include <common/htmltable.h>
+#include <common/textspan.h>
+}
+
 %{
 
 #include <cgraph/list.h>
