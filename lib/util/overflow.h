@@ -1,6 +1,6 @@
-/// \file
-/// \brief arithmetic overflow helpers
-/// \ingroup cgraph_utils
+/// @file
+/// @brief arithmetic overflow helpers
+/// @ingroup cgraph_utils
 ///
 /// Replace this with stdckdint.h when moving to C23.
 
@@ -13,10 +13,10 @@
 
 /** add two integers, checking for overflow
  *
- * \param a Operand 1
- * \param b Operand 2
- * \param res [out] Result on success
- * \return True if overflow would occur
+ * @param a Operand 1
+ * @param b Operand 2
+ * @param res [out] Result on success
+ * @return True if overflow would occur
  */
 static inline bool sadd_overflow(int a, int b, int *res) {
   assert(res != NULL);

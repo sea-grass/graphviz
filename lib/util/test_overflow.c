@@ -1,5 +1,5 @@
-/// \file
-/// \brief unit test for overflow.h
+/// @file
+/// @brief unit test for overflow.h
 
 #include <assert.h>
 #include <limits.h>
