@@ -1,7 +1,7 @@
 /// @file
 /// @ingroup common_utils
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,7 +36,7 @@ static struct {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
   Dt_t*        fitemList; /* Dictionary for font text items */
-  Dt_t*        fspanList; 
+  Dt_t*        fspanList;
   agxbuf*      str;       /* Buffer for text */
   sfont_t*     fontstack;
   GVC_t*       gvc;
@@ -153,7 +153,7 @@ appendFItemList (agxbuf *ag)
 
 /* appendFLineList:
  */
-static void 
+static void
 appendFLineList (int v)
 {
     fspan *ln = gv_alloc(sizeof(fspan));
@@ -170,7 +170,7 @@ appendFLineList (int v)
 	fi = (fitem*)dtflatten(ilist);
 	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
 	    // move this text span into the new list
-	    ln->lp.items[i] = fi->ti;  
+	    ln->lp.items[i] = fi->ti;
 	    fi->ti = (textspan_t){0};
 	    i++;
 	}
@@ -193,8 +193,8 @@ mkText(void)
     Dt_t * ispan = HTMLstate.fspanList;
     fspan *fl ;
     htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
-    
-    if (dtsize (HTMLstate.fitemList)) 
+
+    if (dtsize (HTMLstate.fitemList))
 	appendFLineList (UNSET_ALIGN);
 
     size_t cnt = (size_t)dtsize(ispan);
@@ -210,7 +210,7 @@ mkText(void)
     	    i++;
     	}
     }
-    
+
     dtclear(ispan);
 
     return hft;
@@ -251,7 +251,7 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
   cp->child.kind = kind;
   if (tbl->vrule)
     cp->ruled = HTML_VRULE;
-  
+
   if(kind == HTML_TEXT)
   	cp->child.u.txt = obj;
   else if (kind == HTML_IMAGE)
@@ -359,7 +359,7 @@ pushFont (textfont_t *fp)
 
 /* popFont:
  */
-static void 
+static void
 popFont (void)
 {
     sfont_t* curfont = HTMLstate.fontstack;
@@ -394,13 +394,13 @@ popFont (void)
 
 %type <txt> fonttext
 %type <cell> cell cells
-%type <i> br  
+%type <i> br
 %type <tbl> table fonttable
 %type <img> image
 %type <p> row rows
 
 %start html
-             
+
 %%
 
 html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
@@ -411,8 +411,8 @@ html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
 fonttext : text { $$ = mkText(); }
       ;
 
-text : text textitem  
-     | textitem 
+text : text textitem
+     | textitem
      ;
 
 textitem : string { appendFItemList(HTMLstate.str);}
@@ -483,7 +483,7 @@ string : T_string
        | string T_string
        ;
 
-table : opt_space T_table { 
+table : opt_space T_table {
           if (nonSpace(agxbuse(HTMLstate.str))) {
             htmlerror ("Syntax error: non-space string used before <TABLE>");
             cleanup(); YYABORT;
@@ -512,7 +512,7 @@ fonttable : table { $$ = $1; }
           | bold table n_bold { $$=$2; }
           ;
 
-opt_space : string 
+opt_space : string
           | /* empty*/
           ;
 
@@ -572,7 +572,7 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   HTMLstate.fspanList = dtopen(&fspanDisc, Dtqueue);
 
   HTMLstate.str = &str;
-  
+
   if (initHTMLlexer (txt, &str, env)) {/* failed: no libexpat - give up */
     *warn = 2;
     l = NULL;
@@ -585,11 +585,11 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
 
   dtclose (HTMLstate.fitemList);
   dtclose (HTMLstate.fspanList);
-  
+
   HTMLstate.fitemList = NULL;
   HTMLstate.fspanList = NULL;
   HTMLstate.fontstack = NULL;
-  
+
   agxbfree (&str);
 
   return l;
