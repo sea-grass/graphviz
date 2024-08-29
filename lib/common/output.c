@@ -40,8 +40,7 @@ static void agputs(int (*putstr)(void *chan, const char *str), const char* s,
 
 static void agputc(int (*putstr)(void *chan, const char *str), char c,
                    FILE *fp) {
-    static char buf[2] = {'\0','\0'};
-    buf[0] = c;
+    char buf[] = {c, '\0'};
     putstr(fp, buf);
 }
 
