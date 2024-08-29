@@ -26,17 +26,13 @@ typedef struct {
   double YF; ///< Y_off in inches
 } offsets_t;
 
-static double YDIR(double y) {
-  return Y_invert ? Y_off - y : y;
-}
-
 static double YFDIR(offsets_t offsets, double y) {
   return Y_invert ? offsets.YF - y : y;
 }
 
 double yDir (double y)
 {
-    return YDIR(y);
+  return Y_invert ? Y_off - y : y;
 }
 
 static void agputs(int (*putstr)(void *chan, const char *str), const char* s,
@@ -80,7 +76,7 @@ static void printdouble(int (*putstr)(void *chan, const char *str), FILE *f,
 static void printpoint(int (*putstr)(void *chan, const char *str), FILE *f,
                        pointf p) {
   printdouble(putstr, f, " ", PS2INCH(p.x));
-  printdouble(putstr, f, " ", PS2INCH(YDIR(p.y)));
+  printdouble(putstr, f, " ", PS2INCH(yDir(p.y)));
 }
 
 /* setYInvert:
@@ -204,9 +200,9 @@ static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
     if (f->n_flds == 0) {
 	agxbprint(xb, "%.5g,%.5g,%.5g,%.5g ",
 		f->b.LL.x + ND_coord(n).x,
-		YDIR(f->b.LL.y + ND_coord(n).y),
+		yDir(f->b.LL.y + ND_coord(n).y),
 		f->b.UR.x + ND_coord(n).x,
-		YDIR(f->b.UR.y + ND_coord(n).y));
+		yDir(f->b.UR.y + ND_coord(n).y));
     }
     for (i = 0; i < f->n_flds; i++)
 	set_record_rects(n, f->fld[i], xb);
@@ -218,12 +214,12 @@ static void rec_attach_bb(graph_t * g, Agsym_t* bbsym, Agsym_t* lpsym, Agsym_t* 
     agxbuf buf = {0};
     pointf pt;
 
-    agxbprint(&buf, "%.5g,%.5g,%.5g,%.5g", GD_bb(g).LL.x, YDIR(GD_bb(g).LL.y),
-              GD_bb(g).UR.x, YDIR(GD_bb(g).UR.y));
+    agxbprint(&buf, "%.5g,%.5g,%.5g,%.5g", GD_bb(g).LL.x, yDir(GD_bb(g).LL.y),
+              GD_bb(g).UR.x, yDir(GD_bb(g).UR.y));
     agxset(g, bbsym, agxbuse(&buf));
     if (GD_label(g) && GD_label(g)->text[0]) {
 	pt = GD_label(g)->pos;
-	agxbprint(&buf, "%.5g,%.5g", pt.x, YDIR(pt.y));
+	agxbprint(&buf, "%.5g,%.5g", pt.x, yDir(pt.y));
 	agxset(g, lpsym, agxbuse(&buf));
 	pt = GD_label(g)->dimen;
 	agxbprint(&buf, "%.2f", PS2INCH(pt.x));
@@ -276,13 +272,13 @@ double attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 	if (dim3) {
 	    int k;
 
-	    agxbprint(&xb, "%.5g,%.5g,%.5g", ND_coord(n).x, YDIR(ND_coord(n).y), POINTS_PER_INCH*(ND_pos(n)[2]));
+	    agxbprint(&xb, "%.5g,%.5g,%.5g", ND_coord(n).x, yDir(ND_coord(n).y), POINTS_PER_INCH*(ND_pos(n)[2]));
 	    for (k = 3; k < GD_odim(g); k++) {
 		agxbprint(&xb, ",%.5g", POINTS_PER_INCH*(ND_pos(n)[k]));
 	    }
 	    agset(n, "pos", agxbuse(&xb));
 	} else {
-	    agxbprint(&xb, "%.5g,%.5g", ND_coord(n).x, YDIR(ND_coord(n).y));
+	    agxbprint(&xb, "%.5g,%.5g", ND_coord(n).x, yDir(ND_coord(n).y));
 	    agset(n, "pos", agxbuse(&xb));
 	}
 	agxbprint(&xb, "%.5g", PS2INCH(ND_ht(n)));
@@ -291,7 +287,7 @@ double attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 	agxset(n, N_width, agxbuse(&xb));
 	if (ND_xlabel(n) && ND_xlabel(n)->set) {
 	    ptf = ND_xlabel(n)->pos;
-	    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+	    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y));
 	    agset(n, "xlp", agxbuse(&xb));
 	}
 	if (strcmp(ND_shape(n)->name, "record") == 0) {
@@ -341,40 +337,40 @@ double attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 			s_arrows = true;
 			agxbprint(&xb, "s,%.5g,%.5g ",
 				ED_spl(e)->list[i].sp.x,
-				YDIR(ED_spl(e)->list[i].sp.y));
+				yDir(ED_spl(e)->list[i].sp.y));
 		    }
 		    if (ED_spl(e)->list[i].eflag) {
 			e_arrows = true;
 			agxbprint(&xb, "e,%.5g,%.5g ",
 				ED_spl(e)->list[i].ep.x,
-				YDIR(ED_spl(e)->list[i].ep.y));
+				yDir(ED_spl(e)->list[i].ep.y));
 		    }
 		    for (size_t j = 0; j < ED_spl(e)->list[i].size; j++) {
 			if (j > 0)
 			    agxbputc(&xb, ' ');
 			ptf = ED_spl(e)->list[i].list[j];
-			agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+			agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y));
 		    }
 		}
 		agset(e, "pos", agxbuse(&xb));
 		if (ED_label(e)) {
 		    ptf = ED_label(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y));
 		    agset(e, "lp", agxbuse(&xb));
 		}
 		if (ED_xlabel(e) && ED_xlabel(e)->set) {
 		    ptf = ED_xlabel(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y));
 		    agset(e, "xlp", agxbuse(&xb));
 		}
 		if (ED_head_label(e)) {
 		    ptf = ED_head_label(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y));
 		    agset(e, "head_lp", agxbuse(&xb));
 		}
 		if (ED_tail_label(e)) {
 		    ptf = ED_tail_label(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y));
 		    agset(e, "tail_lp", agxbuse(&xb));
 		}
 	    }
