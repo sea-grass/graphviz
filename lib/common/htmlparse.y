@@ -137,7 +137,7 @@ static void
 appendFLineList (int v);
 
 static htmltxt_t*
-mkText(void);
+mkText(htmlparserstate_t *html_state);
 
 static row_t *lastRow(void);
 
@@ -221,7 +221,7 @@ html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
       | error { cleanup(&scanner->parser); YYABORT; }
       ;
 
-fonttext : text { $$ = mkText(); }
+fonttext : text { $$ = mkText(&scanner->parser); }
       ;
 
 text : text textitem
@@ -345,7 +345,7 @@ cells : cell { $$ = $1; }
 cell : T_cell fonttable { setCell($1,$2,HTML_TBL); } T_end_cell { $$ = $1; }
      | T_cell fonttext { setCell($1,$2,HTML_TEXT); } T_end_cell { $$ = $1; }
      | T_cell image { setCell($1,$2,HTML_IMAGE); } T_end_cell { $$ = $1; }
-     | T_cell { setCell($1,mkText(),HTML_TEXT); } T_end_cell { $$ = $1; }
+     | T_cell { setCell($1,mkText(&scanner->parser),HTML_TEXT); } T_end_cell { $$ = $1; }
      ;
 
 image  : T_img T_end_img { $$ = $1; }
@@ -403,12 +403,12 @@ appendFLineList (int v)
 }
 
 static htmltxt_t*
-mkText(void)
+mkText(htmlparserstate_t *html_state)
 {
-    htextspans_t *ispan = &HTMLstate.fspanList;
+    htextspans_t *ispan = &html_state->fspanList;
     htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
 
-    if (!textspans_is_empty(&HTMLstate.fitemList))
+    if (!textspans_is_empty(&html_state->fitemList))
 	appendFLineList (UNSET_ALIGN);
 
     size_t cnt = htextspans_size(ispan);
