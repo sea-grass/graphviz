@@ -39,11 +39,20 @@ static void free_ti(textspan_t item) {
 
 DEFINE_LIST_WITH_DTOR(textspans, textspan_t, free_ti)
 
+static void free_hi(htextspan_t item) {
+  for (size_t i = 0; i < item.nitems; i++) {
+    free(item.items[i].str);
+  }
+  free(item.items);
+}
+
+DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
+
 static struct {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
   textspans_t  fitemList;
-  Dt_t*        fspanList;
+  htextspans_t fspanList;
   agxbuf*      str;       /* Buffer for text */
   sfont_t*     fontstack;
   GVC_t*       gvc;
@@ -104,31 +113,6 @@ static Dtdisc_t cellDisc = {
     .freef = free,
 };
 
-typedef struct {
-    Dtlink_t     link;
-    htextspan_t  lp;
-} fspan;
-
-static void free_fspan(void *span) {
-    fspan *p = span;
-    textspan_t* ti;
-
-    if (p->lp.nitems) {
-	ti = p->lp.items;
-	for (size_t i = 0; i < p->lp.nitems; i++) {
-	    free (ti->str);
-	    ti++;
-	}
-	free (p->lp.items);
-    }
-    free (p);
-}
-
-static Dtdisc_t fspanDisc = {
-    .link = offsetof(fspan, link),
-    .freef = free_fspan,
-};
-
 /* appendFItemList:
  * Append a new text span to the list.
  */
@@ -145,59 +129,57 @@ appendFItemList (agxbuf *ag)
 static void
 appendFLineList (int v)
 {
-    fspan *ln = gv_alloc(sizeof(fspan));
+    htextspan_t lp = {0};
     textspans_t *ilist = &HTMLstate.fitemList;
 
     size_t cnt = textspans_size(ilist);
-    ln->lp.just = v;
+    lp.just = v;
     if (cnt) {
-	ln->lp.nitems = cnt;
-	ln->lp.items = gv_calloc(cnt, sizeof(textspan_t));
+	lp.nitems = cnt;
+	lp.items = gv_calloc(cnt, sizeof(textspan_t));
 
 	for (size_t i = 0; i < textspans_size(ilist); ++i) {
 	    // move this text span into the new list
 	    textspan_t *ti = textspans_at(ilist, i);
-	    ln->lp.items[i] = *ti;
+	    lp.items[i] = *ti;
 	    *ti = (textspan_t){0};
 	}
     }
     else {
-	ln->lp.items = gv_alloc(sizeof(textspan_t));
-	ln->lp.nitems = 1;
-	ln->lp.items[0].str = gv_strdup("");
-	ln->lp.items[0].font = HTMLstate.fontstack->cfont;
+	lp.items = gv_alloc(sizeof(textspan_t));
+	lp.nitems = 1;
+	lp.items[0].str = gv_strdup("");
+	lp.items[0].font = HTMLstate.fontstack->cfont;
     }
 
     textspans_clear(ilist);
 
-    dtinsert(HTMLstate.fspanList, ln);
+    htextspans_append(&HTMLstate.fspanList, lp);
 }
 
 static htmltxt_t*
 mkText(void)
 {
-    Dt_t * ispan = HTMLstate.fspanList;
-    fspan *fl ;
+    htextspans_t *ispan = &HTMLstate.fspanList;
     htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
 
     if (!textspans_is_empty(&HTMLstate.fitemList))
 	appendFLineList (UNSET_ALIGN);
 
-    size_t cnt = (size_t)dtsize(ispan);
+    size_t cnt = htextspans_size(ispan);
     hft->nspans = cnt;
     	
     if (cnt) {
-	int i = 0;
 	hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
-    	for(fl=dtfirst(ispan); fl; fl=dtnext(ispan,fl)) {
+    	for (size_t i = 0; i < htextspans_size(ispan); ++i) {
     	    // move this HTML text span into the new list
-    	    hft->spans[i] = fl->lp;
-    	    fl->lp = (htextspan_t){0};
-    	    i++;
+    	    htextspan_t *hi = htextspans_at(ispan, i);
+    	    hft->spans[i] = *hi;
+    	    *hi = (htextspan_t){0};
     	}
     }
 
-    dtclear(ispan);
+    htextspans_clear(ispan);
 
     return hft;
 }
@@ -299,7 +281,7 @@ static void cleanup (void)
   cellDisc.freef = free;
 
   textspans_clear(&HTMLstate.fitemList);
-  dtclear (HTMLstate.fspanList);
+  htextspans_clear(&HTMLstate.fspanList);
 
   freeFontstack();
 }
@@ -555,7 +537,7 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   HTMLstate.lbl = 0;
   HTMLstate.gvc = GD_gvc(env->g);
   HTMLstate.fitemList = (textspans_t){0};
-  HTMLstate.fspanList = dtopen(&fspanDisc, Dtqueue);
+  HTMLstate.fspanList = (htextspans_t){0};
 
   HTMLstate.str = &str;
 
@@ -570,9 +552,8 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   }
 
   textspans_free(&HTMLstate.fitemList);
-  dtclose (HTMLstate.fspanList);
+  htextspans_free(&HTMLstate.fspanList);
 
-  HTMLstate.fspanList = NULL;
   HTMLstate.fontstack = NULL;
 
   agxbfree (&str);
