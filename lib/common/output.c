@@ -19,11 +19,14 @@
 #include <string.h>
 #include <util/prisize_t.h>
 
-#define YDIR(y) (Y_invert ? (Y_off - (y)) : (y))
 #define YFDIR(y) (Y_invert ? (YF_off - (y)) : (y))
 
 static double Y_off;        /* ymin + ymax */
 static double YF_off;       /* Y_off in inches */
+
+static double YDIR(double y) {
+  return Y_invert ? Y_off - y : y;
+}
 
 double yDir (double y)
 {
