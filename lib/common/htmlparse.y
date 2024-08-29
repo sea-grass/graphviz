@@ -86,7 +86,7 @@ struct htmlscan_s {
   htmlparserstate_t parser;
 };
 
-extern htmlparserstate_t HTMLstate;
+extern htmlscan_t *scanner;
 
 }
 
@@ -99,6 +99,7 @@ extern htmlparserstate_t HTMLstate;
 #include <util/alloc.h>
 
 extern int htmlparse(void);
+#define HTMLstate scanner->parser
 
 
 /// Clean up cell if error in parsing.
@@ -546,4 +547,5 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   return l;
 }
 
-htmlparserstate_t HTMLstate;
+static htmlscan_t global_scanner;
+htmlscan_t *scanner = &global_scanner;
