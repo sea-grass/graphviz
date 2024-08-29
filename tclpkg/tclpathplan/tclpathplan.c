@@ -97,45 +97,41 @@ static int vc_refresh(vgpane_t * vgp)
     return vgp->vc != NULL;
 }
 
-static void dgsprintxy(Tcl_DString * result, int npts, point p[])
-{
+static void dgsprintxy(agxbuf *result, int npts, const point p[]) {
     int i;
-    char buf[20];
 
-    if (npts != 1)
-	Tcl_DStringStartSublist(result);
-    for (i = 0; i < npts; i++) {
-	snprintf(buf, sizeof(buf), "%g", p[i].x);
-	Tcl_DStringAppendElement(result, buf);
-	snprintf(buf, sizeof(buf), "%g", p[i].y);
-	Tcl_DStringAppendElement(result, buf);
+    assert(npts > 1);
+    if (agxblen(result) > 0) {
+	agxbputc(result, ' ');
     }
-    if (npts != 1)
-	Tcl_DStringEndSublist(result);
+    agxbputc(result, '{');
+    const char *separator = "";
+    for (i = 0; i < npts; i++) {
+	agxbprint(result, "%s%g %g", separator, p[i].x, p[i].y);
+	separator = " ";
+    }
+    agxbputc(result, '}');
 }
 
-static void expandPercentsEval(Tcl_Interp * interp,	/* interpreter context */
-			       char *before,	/* Command with percent expressions */
-			       char *r,	/* vgpaneHandle string to substitute for "%r" */
-			       int npts,	/* number of coordinates */
-			       point * ppos	/* Cordinates to substitute for %t */
-    )
-{
-    char *string;
-    Tcl_DString scripts;
+/// @param interp Interpreter context
+/// @param before Command with percent expressions
+/// @param vgcanvasHandle Index to use in "%r" substitution
+/// @param npts Number of coordinates
+/// @param ppos Coordinates to substitute for %t
+static void expandPercentsEval(Tcl_Interp *interp, char *before,
+                               uint64_t vgcanvasHandle, int npts,
+                               const point *ppos) {
+    agxbuf scripts = {0};
 
-    Tcl_DStringInit(&scripts);
     while (1) {
 	/*
 	 * Find everything up to the next % character and append it to the
 	 * result string.
 	 */
 
-	for (string = before; *string != '\0' && *string != '%'; string++) {
-	    /* Empty loop body. */
-	}
-	if (string != before) {
-	    Tcl_DStringAppend(&scripts, before, string - before);
+	char *string = strchr(before, '%');
+	if (string != NULL) {
+	    agxbput_n(&scripts, before, (size_t)(string - before));
 	    before = string;
 	}
 	if (*before == 0) {
@@ -147,35 +143,34 @@ static void expandPercentsEval(Tcl_Interp * interp,	/* interpreter context */
 
 	switch (before[1]) {
 	case 'r':
-	    Tcl_DStringAppend(&scripts, r, strlen(r));	/* vgcanvasHandle */
+	    agxbprint(&scripts, "vgpane%" PRIu64, vgcanvasHandle);
 	    break;
 	case 't':
 	    dgsprintxy(&scripts, npts, ppos);
 	    break;
 	default:
-	    Tcl_DStringAppend(&scripts, before + 1, 1);
+	    agxbputc(&scripts, before[1]);
 	    break;
 	}
 	before += 2;
     }
-    if (Tcl_GlobalEval(interp, Tcl_DStringValue(&scripts)) != TCL_OK)
+    const char *script_value = agxbuse(&scripts);
+    if (Tcl_GlobalEval(interp, script_value) != TCL_OK)
 	fprintf(stderr, "%s while in binding: %s\n\n",
-		Tcl_GetStringResult(interp), Tcl_DStringValue(&scripts));
-    Tcl_DStringFree(&scripts);
+		Tcl_GetStringResult(interp), script_value);
+    agxbfree(&scripts);
 }
 
-static void triangle_callback(void *vgparg, point pqr[])
-{
-    char vbuf[20];
+static void triangle_callback(void *vgparg, const point pqr[]) {
     vgpane_t *vgp;
 
     vgp = vgparg;
 
     if (vgp->triangle_cmd) {
-	snprintf(vbuf, sizeof(vbuf), "vgpane%" PRIu64,
+	const uint64_t vgcanvasHandle =
 		((uint64_t)((uintptr_t)vgp - (uintptr_t)vgpaneTable->bodyPtr))
-				 / vgpaneTable->entrySize);
-	expandPercentsEval(vgp->interp, vgp->triangle_cmd, vbuf, 3, pqr);
+				 / vgpaneTable->entrySize;
+	expandPercentsEval(vgp->interp, vgp->triangle_cmd, vgcanvasHandle, 3, pqr);
     }
 }
 

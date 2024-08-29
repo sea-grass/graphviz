@@ -9,6 +9,7 @@
  *************************************************************************/
 
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,7 +31,8 @@ extern "C" {
 
 /* Points in polygon must be in CCW order */
 TRI_API int Ptriangulate(Ppoly_t *polygon,
-                         void (*fn)(void *closure, Ppoint_t tri[]), void *vc);
+                         void (*fn)(void *closure, const Ppoint_t tri[]),
+                         void *vc);
 
 #undef TRI_API
 
@@ -50,10 +52,11 @@ bool between(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc);
 /// line to line intersection
 bool intersects(Ppoint_t pa, Ppoint_t pb, Ppoint_t pc, Ppoint_t pd);
 
-typedef Ppoint_t (*indexer_t)(void *base, int index);
+typedef Ppoint_t (*indexer_t)(void *base, size_t index);
 
 /// is (i, i + 2) a diagonal?
-bool isdiagonal(int i, int ip2, void *pointp, int pointn, indexer_t indexer);
+bool isdiagonal(size_t i, size_t ip2, void *pointp, size_t pointn,
+                indexer_t indexer);
 
 #ifdef __cplusplus
 }
