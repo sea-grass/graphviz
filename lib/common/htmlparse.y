@@ -145,7 +145,7 @@ static row_t *lastRow(void);
 static void addRow(htmlparserstate_t *html_state);
 
 /// Set cell body and type and attach to row
-static void setCell(htmlcell_t *cp, void *obj, label_type_t kind);
+static void setCell(htmlparserstate_t *html_state, htmlcell_t *cp, void *obj, label_type_t kind);
 
 /// Create label, given body and type.
 static htmllabel_t *mkLabel(void *obj, label_type_t kind) {
@@ -342,10 +342,10 @@ cells : cell { $$ = $1; }
       | cells VR cell { $1->vruled = true; $$ = $3; }
       ;
 
-cell : T_cell fonttable { setCell($1,$2,HTML_TBL); } T_end_cell { $$ = $1; }
-     | T_cell fonttext { setCell($1,$2,HTML_TEXT); } T_end_cell { $$ = $1; }
-     | T_cell image { setCell($1,$2,HTML_IMAGE); } T_end_cell { $$ = $1; }
-     | T_cell { setCell($1,mkText(&scanner->parser),HTML_TEXT); } T_end_cell { $$ = $1; }
+cell : T_cell fonttable { setCell(&scanner->parser,$1,$2,HTML_TBL); } T_end_cell { $$ = $1; }
+     | T_cell fonttext { setCell(&scanner->parser,$1,$2,HTML_TEXT); } T_end_cell { $$ = $1; }
+     | T_cell image { setCell(&scanner->parser,$1,$2,HTML_IMAGE); } T_end_cell { $$ = $1; }
+     | T_cell { setCell(&scanner->parser,$1,mkText(&scanner->parser),HTML_TEXT); } T_end_cell { $$ = $1; }
      ;
 
 image  : T_img T_end_img { $$ = $1; }
@@ -441,8 +441,8 @@ static void addRow(htmlparserstate_t *html_state) {
   rows_append(&tbl->u.p.rows, sp);
 }
 
-static void setCell(htmlcell_t *cp, void *obj, label_type_t kind) {
-  htmltbl_t* tbl = HTMLstate.tblstack;
+static void setCell(htmlparserstate_t *html_state, htmlcell_t *cp, void *obj, label_type_t kind) {
+  htmltbl_t* tbl = html_state->tblstack;
   row_t *rp = *rows_back(&tbl->u.p.rows);
   cells_t *row = &rp->rp;
   cells_append(row, cp);
