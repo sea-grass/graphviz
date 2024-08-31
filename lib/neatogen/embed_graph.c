@@ -24,7 +24,6 @@
 #include <stdio.h>
 #include <time.h>
 #include <util/alloc.h>
-/* #include <math.h> */
 
 void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
 		 int reweight_graph)
