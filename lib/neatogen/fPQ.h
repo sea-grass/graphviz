@@ -8,8 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <stdio.h>
+#include <util/alloc.h>
 
 /* Priority queue:
  * To work, the following have to be defined before this file is

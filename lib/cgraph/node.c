@@ -12,11 +12,11 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/node_set.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 #include <util/unreachable.h>
 
 Agnode_t *agfindnode_by_id(Agraph_t * g, IDTYPE id)

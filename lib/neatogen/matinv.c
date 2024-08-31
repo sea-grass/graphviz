@@ -31,10 +31,10 @@
  *	n    - the order of the matrices A and Ainv
  */
 
-#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <common/render.h>
 #include <neatogen/neato.h>
+#include <util/alloc.h>
 
 int matinv(double **A, double **Ainv, int n)
 {

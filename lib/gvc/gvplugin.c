@@ -30,10 +30,10 @@
 #include        <gvc/gvio.h>
 
 #include	<common/const.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strview.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 
 /*

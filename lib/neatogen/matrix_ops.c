@@ -8,12 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#include <util/alloc.h>
 
 static double p_iteration_threshold = 1e-3;
 

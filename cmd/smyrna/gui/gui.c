@@ -16,8 +16,8 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdk.h>
 #include "viewport.h"
-#include <cgraph/alloc.h>
 #include <cgraph/strview.h>
+#include <util/alloc.h>
 
 GladeXML *xml;			//global libglade vars
 GtkWidget *gladewidget;

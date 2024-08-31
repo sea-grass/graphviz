@@ -11,11 +11,11 @@
 #include <assert.h>
 #include <float.h>
 #include <math.h>
-#include <cgraph/alloc.h>
 #include <limits.h>
 #include <neatogen/neato.h>
 #include <pathplan/pathutil.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 
 #define SLOPE(p,q) ( ( ( p.y ) - ( q.y ) ) / ( ( p.x ) - ( q.x ) ) )

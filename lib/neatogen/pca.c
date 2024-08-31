@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
 #include <neatogen/pca.h>
 #include <neatogen/closest.h>
@@ -16,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <util/alloc.h>
 
 static int num_pairs = 4;
 

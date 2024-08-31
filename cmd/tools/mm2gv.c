@@ -14,7 +14,7 @@
  *************************************************************************/
 
 #include "config.h"
-#include <cgraph/alloc.h>
+#include <util/alloc.h>
 
 #define STANDALONE
 #include <cgraph/cgraph.h>

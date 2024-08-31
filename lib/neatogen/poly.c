@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <assert.h>
 #include <string.h>
@@ -17,6 +16,7 @@
 #include <common/geom.h>
 #include <neatogen/mem.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 #include <util/streq.h>
 
 static const int BOX = 1;

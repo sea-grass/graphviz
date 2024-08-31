@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <float.h>
 #include <neatogen/neato.h>
 #include <neatogen/dijkstra.h>
@@ -23,6 +22,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include <util/alloc.h>
 
 // the terms in the stress energy are normalized by dᵢⱼ¯²
 

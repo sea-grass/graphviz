@@ -22,11 +22,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <types.h>
-#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/list.h>
 #include <common/render.h>
 #include <common/utils.h>
+#include <util/alloc.h>
 #include <util/prisize_t.h>
 
   /* sample point size; should be dynamic based on dpi or under user control */

@@ -15,7 +15,6 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <common/render.h>
 #include <limits.h>
@@ -23,6 +22,7 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/overflow.h>
 #include <util/prisize_t.h>

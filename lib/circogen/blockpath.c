@@ -10,12 +10,12 @@
 
 #include	<cgraph/list.h>
 #include	<cgraph/agxbuf.h>
-#include	<cgraph/alloc.h>
 #include	<circogen/blockpath.h>
 #include	<circogen/circular.h>
 #include	<circogen/edgelist.h>
 #include	<stddef.h>
 #include	<stdbool.h>
+#include	<util/alloc.h>
 
 /* The code below lays out a single block on a circle.
  */

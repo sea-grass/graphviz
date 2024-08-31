@@ -8,9 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include "hotkeymap.h"
 #include <stdint.h>
+#include <util/alloc.h>
 
 static int get_mouse_mode(const char *s)
 {

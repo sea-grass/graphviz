@@ -11,8 +11,8 @@
 /* Priority Queue Code for shortest path in graph */
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <assert.h>
+#include <util/alloc.h>
 
 #include <ortho/fPQ.h>
 

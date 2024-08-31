@@ -21,12 +21,12 @@
 /* uses PRIVATE interface for NOTUSED */
 #define FDP_PRIVATE 1
 
-#include <cgraph/alloc.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/grid.h>
 #include <common/macros.h>
 #include <stddef.h>
 #include <string.h>
+#include <util/alloc.h>
 
   /* structure for maintaining a free list of cells */
 typedef struct _block {

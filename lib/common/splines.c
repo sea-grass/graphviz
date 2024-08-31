@@ -18,11 +18,11 @@
 
 #include <math.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/alloc.h>
 #include <util/unreachable.h>
 
 #ifdef DEBUG

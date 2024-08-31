@@ -37,7 +37,6 @@
 #include <common/pointset.h>
 #include <common/intset.h>
 #include <cdt/cdt.h>
-#include <cgraph/alloc.h>
 #include <float.h>
 #include <inttypes.h>
 #include <limits.h>
@@ -46,6 +45,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/prisize_t.h>
 #include <util/strcasecmp.h>

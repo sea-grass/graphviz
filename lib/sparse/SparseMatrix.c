@@ -12,12 +12,12 @@
 #include <string.h>
 #include <math.h>
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <common/arith.h>
 #include <limits.h>
 #include <sparse/SparseMatrix.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 static size_t size_of_matrix_type(int type){
   size_t size = 0;

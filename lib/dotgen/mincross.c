@@ -18,7 +18,6 @@
 
 #include <assert.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
@@ -27,6 +26,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/streq.h>
 

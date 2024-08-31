@@ -10,7 +10,6 @@
 
 #include "config.h"
 
-#include	<cgraph/alloc.h>
 #include	<common/types.h>
 #include        <gvc/gvplugin.h>
 #include        <gvc/gvcjob.h>
@@ -18,6 +17,7 @@
 #include        <gvc/gvcproc.h>
 #include        <stdbool.h>
 #include        <stddef.h>
+#include        <util/alloc.h>
 
 static GVJ_t *output_filename_job;
 static GVJ_t *output_langname_job;

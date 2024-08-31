@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <sparse/general.h>
 #include <sparse/QuadTree.h>
@@ -16,6 +15,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <util/alloc.h>
 #include <util/prisize_t.h>
 
 static double dist(int dim, double *x, double *y){

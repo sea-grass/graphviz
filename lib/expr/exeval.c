@@ -15,7 +15,6 @@
  * expression library evaluator
  */
 
-#include <cgraph/alloc.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/strview.h>
 #include <cgraph/gv_ctype.h>
@@ -29,6 +28,7 @@
 #include <string.h>
 #include <assert.h>
 #include <time.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/unreachable.h>
 #ifdef _WIN32

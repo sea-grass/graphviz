@@ -11,10 +11,10 @@
 #include "config.h"
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/alloc.h>
 
 #ifdef HAVE_PANGOCAIRO
 #include <cairo.h>

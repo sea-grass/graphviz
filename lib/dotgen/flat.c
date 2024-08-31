@@ -8,10 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include	<cgraph/alloc.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
 #include	<stddef.h>
+#include	<util/alloc.h>
 
 static node_t *make_vn_slot(graph_t * g, int r, int pos)
 {

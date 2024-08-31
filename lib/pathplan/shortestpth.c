@@ -8,8 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <pathplan/vis.h>
+#include <util/alloc.h>
 
 static COORD unseen = (double) INT_MAX;
 

@@ -10,7 +10,6 @@
 
 
 #include "config.h"
-#include <cgraph/alloc.h>
 /* TODO:
  * If cut point is in exactly 2 blocks, expand block circles to overlap
  * especially in the case where one block is the sole child of the other.
@@ -21,6 +20,7 @@
 #include	<circogen/nodelist.h>
 #include	<math.h>
 #include	<stddef.h>
+#include	<util/alloc.h>
 
 /* The function determines how much the block should be rotated
  * for best positioning with parent, assuming its center is at x and y

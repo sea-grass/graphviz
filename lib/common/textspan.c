@@ -20,7 +20,7 @@
 #include <cdt/cdt.h>
 #include <common/render.h>
 #include <common/textspan_lut.h>
-#include <cgraph/alloc.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 
 /* estimate_textspan_size:

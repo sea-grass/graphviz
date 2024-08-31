@@ -42,9 +42,9 @@
  *	written 3/2/79, revised and enhanced 8/9/83.
  */
 
-#include <cgraph/alloc.h>
 #include <math.h>
 #include <neatogen/neato.h>
+#include <util/alloc.h>
 
 static double *scales;
 static double **lu;

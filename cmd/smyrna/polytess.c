@@ -9,8 +9,8 @@
  *************************************************************************/
 
 #include "polytess.h"
-#include <cgraph/alloc.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <xdot/xdot.h>
 tessPoly TP;
 

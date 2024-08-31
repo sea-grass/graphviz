@@ -30,10 +30,10 @@
 #include <common/color.h>
 
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/strview.h>
 #include <common/render.h>
+#include <util/alloc.h>
 
 /* for wind() */
 #include <pathplan/pathutil.h>

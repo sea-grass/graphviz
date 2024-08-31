@@ -15,10 +15,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <cgraph/alloc.h>
 #include <common/types.h>
 #include <gvc/gvio.h>
 #include <gvc/gvplugin_device.h>
+#include <util/alloc.h>
 
 #ifdef HAVE_LIBZ
 #include <zlib.h>

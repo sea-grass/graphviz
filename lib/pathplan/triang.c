@@ -8,13 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
+#include <util/alloc.h>
 
 static int triangulate(Ppoint_t **pointp, size_t pointn,
                        void (*fn)(void *, const Ppoint_t *), void *vc);

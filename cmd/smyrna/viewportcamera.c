@@ -8,14 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include "viewportcamera.h"
 #include "gui.h"
 #include <math.h>
 #include <glcomp/glcompbutton.h>
 #include <glcomp/glcomplabel.h>
 #include <glcomp/glcomppanel.h>
-
+#include <util/alloc.h>
 
 static viewport_camera *new_viewport_camera(void) {
     return gv_alloc(sizeof(viewport_camera));

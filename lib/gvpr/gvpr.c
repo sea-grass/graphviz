@@ -20,7 +20,6 @@
 #include "builddate.h"
 #include <gvpr/gprstate.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
@@ -36,6 +35,7 @@
 #include <string.h>
 #include <setjmp.h>
 #include <getopt.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/unreachable.h>
 

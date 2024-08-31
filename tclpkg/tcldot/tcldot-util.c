@@ -12,8 +12,8 @@
 #include <math.h>
 #include <stddef.h>
 #include "tcldot.h"
-#include <cgraph/alloc.h>
 #include <gvc/gvc.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 #include <util/unreachable.h>
 

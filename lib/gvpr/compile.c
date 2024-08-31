@@ -20,7 +20,6 @@
 #include <gvpr/compile.h>
 #include <assert.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/startswith.h>
 #include <ast/error.h>
@@ -32,6 +31,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <math.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/prisize_t.h>
 #include <util/unreachable.h>

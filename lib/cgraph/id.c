@@ -15,11 +15,11 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 /* a default ID allocator that works off the shared string lib */
 

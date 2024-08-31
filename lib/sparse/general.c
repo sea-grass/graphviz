@@ -8,12 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <sparse/general.h>
 #include <errno.h>
+#include <util/alloc.h>
 
 #ifdef DEBUG
 double _statistics[10];

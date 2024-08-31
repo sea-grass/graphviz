@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -18,6 +17,7 @@
 #include <math.h>
 #include <time.h>
 #include <graph_generator.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 
 void makePath(unsigned n, edgefn ef){

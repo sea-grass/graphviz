@@ -1,10 +1,10 @@
-#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
 #include <sfdpgen/post_process.h>
 #include <sfdpgen/stress_model.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 void stress_model(int dim, SparseMatrix B, double **x, int maxit_sm, int *flag) {
   int m;

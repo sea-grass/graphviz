@@ -8,9 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/geometry.h>
 #include <common/render.h>
+#include <util/alloc.h>
 
 typedef struct freenode {
     struct freenode *nextfree;

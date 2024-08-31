@@ -11,11 +11,11 @@
  *************************************************************************/
 
 #include <sys/stat.h>
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <gvc/gvio.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <util/alloc.h>
 #include <util/gv_fopen.h>
 #include <util/strcasecmp.h>
 

@@ -26,7 +26,6 @@
 #include <common/geomprocs.h>
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
@@ -36,6 +35,7 @@
 #include <gvc/gvc.h>
 #include <cdt/cdt.h>
 #include <pathplan/pathgeom.h>
+#include <util/alloc.h>
 #include <util/streq.h>
 #include <util/unreachable.h>
 #include <xdot/xdot.h>

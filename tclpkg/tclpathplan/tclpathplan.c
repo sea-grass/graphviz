@@ -26,7 +26,6 @@
 #include <inttypes.h>
 #include <assert.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <limits.h>
 #include "makecw.h"
@@ -37,6 +36,7 @@
 #include "Plegal_arrangement.h"
 #include <tcl.h>
 #include "tclhandle.h"
+#include <util/alloc.h>
 
 #if ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 6)) || ( TCL_MAJOR_VERSION > 8)
 #else

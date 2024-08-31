@@ -9,11 +9,11 @@
  *************************************************************************/
 
 #include "tcldot.h"
-#include <cgraph/alloc.h>
 #include <cgraph/rdr.h>
 #include <stdlib.h>
 #include <string.h>
 #include <tcl.h>
+#include <util/alloc.h>
 
 static int dotnew_internal(ClientData clientData, Tcl_Interp *interp, int argc,
                            char *argv[]) {

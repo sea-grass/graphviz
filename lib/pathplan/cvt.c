@@ -11,9 +11,9 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <cgraph/alloc.h>
 #include <limits.h>
 #include <pathplan/vis.h>
+#include <util/alloc.h>
 
 typedef Ppoint_t ilcoord_t;
 

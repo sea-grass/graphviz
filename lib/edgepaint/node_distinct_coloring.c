@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <sparse/QuadTree.h>
@@ -18,6 +17,7 @@
 #include <sparse/color_palette.h>
 #include <stdbool.h>
 #include <string.h>
+#include <util/alloc.h>
 
 static void node_distinct_coloring_internal2(int scheme, QuadTree qt,
                                              bool weightedQ, SparseMatrix A,

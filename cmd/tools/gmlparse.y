@@ -23,8 +23,8 @@
 #include <gml2gv.h>
 #include <agxbuf.h>
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 
 static gmlgraph* G;

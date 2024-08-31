@@ -20,7 +20,6 @@
  * Contributors: Details at https://graphviz.org
  */
 
-#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/list.h>
 #include <stdbool.h>
@@ -28,6 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <util/alloc.h>
 
 typedef struct {
   bool on_stack : 1;

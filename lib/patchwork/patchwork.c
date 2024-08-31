@@ -8,12 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <patchwork/patchwork.h>
 #include <patchwork/tree_map.h>
 #include <common/render.h>
+#include <util/alloc.h>
 
 typedef struct treenode_t treenode_t;
 struct treenode_t {

@@ -11,12 +11,12 @@
  /* Implements graph.h  */
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <ortho/rawgraph.h>
 #include <common/intset.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 #define UNSCANNED 0
 #define SCANNING  1

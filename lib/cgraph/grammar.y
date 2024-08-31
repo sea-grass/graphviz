@@ -26,8 +26,8 @@
 #include <stdio.h>
 #include <cghdr.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/streq.h>
 #include <util/unreachable.h>
 

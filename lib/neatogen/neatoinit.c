@@ -34,7 +34,6 @@
 #include <common/utils.h>
 #include <neatogen/sgd.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
@@ -42,6 +41,7 @@
 #include <float.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/prisize_t.h>
 #include <util/strcasecmp.h>
 #include <util/streq.h>

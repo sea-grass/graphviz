@@ -11,11 +11,11 @@
 
 %{
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <gml2gv.h>
 #include <gmlparse.h>
+#include <util/alloc.h>
 #include "config.h"
 
 #define GRAPH_EOF_TOKEN     '@'     /* lex class must be defined below */

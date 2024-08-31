@@ -8,11 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/neato.h>
 #include <stdio.h>
 #include <neatogen/info.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 Info_t *nodeInfo;		/* Array of node info */
 

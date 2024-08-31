@@ -8,11 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/mem.h>
 #include <neatogen/hedges.h>
 #include <common/render.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 #define DELETED -2
 

@@ -23,13 +23,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
 #include <common/render.h>
 #include <common/utils.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/prisize_t.h>
 #include <util/unreachable.h>

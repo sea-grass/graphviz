@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glcomppanel.h>
 #include <glcomp/glcomplabel.h>
@@ -17,6 +16,7 @@
 
 #include <glcomp/glutils.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 static float startX, startY;
 

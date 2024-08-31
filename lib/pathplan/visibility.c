@@ -9,10 +9,10 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <pathplan/vis.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 /* allocArray:
  * Allocate a VxV array of COORD values.

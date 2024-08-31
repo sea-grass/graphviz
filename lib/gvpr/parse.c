@@ -17,13 +17,13 @@
 #include <ast/ast.h>
 #include <ast/error.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <gvpr/parse.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 #include <util/unreachable.h>
 
 static int lineno = 1;		/* current line number */

@@ -8,10 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/unused.h>
 
 /*

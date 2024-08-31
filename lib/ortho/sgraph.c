@@ -10,10 +10,10 @@
 
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <limits.h>
 #include <ortho/sgraph.h>
 #include <ortho/fPQ.h>
+#include <util/alloc.h>
 
 void
 gsave (sgraph* G)

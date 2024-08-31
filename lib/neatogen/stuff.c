@@ -10,12 +10,12 @@
 
 
 #include "config.h"
-#include	<cgraph/alloc.h>
 #include	<math.h>
 #include	<neatogen/neato.h>
 #include	<neatogen/stress.h>
 #include	<stdlib.h>
 #include	<time.h>
+#include	<util/alloc.h>
 #ifndef _WIN32
 #include	<unistd.h>
 #endif

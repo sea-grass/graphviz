@@ -13,7 +13,6 @@
 
 #define DEBUG
 
-#include <cgraph/alloc.h>
 #include <float.h>
 #include <math.h>
 #include <stdbool.h>
@@ -22,6 +21,7 @@
 #include <ortho/partition.h>
 #include <ortho/trap.h>
 #include <common/arith.h>
+#include <util/alloc.h>
 
 #define MARGIN 36;
 

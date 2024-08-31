@@ -9,11 +9,11 @@
  *************************************************************************/
 
 #include "gv_channel.h"
-#include <cgraph/alloc.h>
 #include <cstdlib>
 #include <cstring>
 #include <gvc/gvc.h>
 #include <string>
+#include <util/alloc.h>
 
 #define agfindattr(x, s) agattrsym(x, s)
 #define agraphattr(g, n, s) agattr(g, AGRAPH, n, s)

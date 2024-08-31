@@ -18,7 +18,6 @@
 
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <string.h>
 #include <assert.h>
 #include <stdbool.h>
@@ -27,6 +26,7 @@
 #include <common/geom.h>
 #include <common/types.h>
 #include <ortho/trap.h>
+#include <util/alloc.h>
 
 /* Node types */
 

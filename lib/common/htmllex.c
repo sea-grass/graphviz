@@ -16,7 +16,6 @@
 #include "htmlparse.h"
 #include <common/htmllex.h>
 #include <cdt/cdt.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strview.h>
@@ -25,6 +24,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 #include <util/unused.h>
 
