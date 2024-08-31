@@ -115,7 +115,7 @@ libgv_perl_la_CPPFLAGS = $(BASECPPFLAGS) $(PERL_INCLUDES) $(PERL_CC)
 libgv_perl_la_CXXFLAGS = $(AM_CXXFLAGS) -Wno-unused-parameter
 $(PERL_data): gv_perl.cpp
 gv_perl.cpp: gv.i
-	$(SWIG) -c++ $(SWIG_PERL_OPT) -o $@ $(srcdir)/gv.i
+	$(SWIG) -c++ -perl5 -o $@ $(srcdir)/gv.i
 
 pkgphpdir = $(pkglibdir)/php
 PHP_data = $(SWIG_PHP_DATA)

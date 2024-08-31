@@ -32,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   old behavior by unsetting the close-on-exec flag immediately after creating
   these objects. Graphviz libraries themselves are not affected by whether or
   not this flag is set.
+- The Autotools build system no longer detects or uses the `-perl` option to
+  SWIG to build Perl language bindings. Only `-perl5` is used.
 
 ### Fixed
 

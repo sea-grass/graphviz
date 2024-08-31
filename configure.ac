@@ -843,12 +843,7 @@ else
     use_perl="No (swig not available)"
   else
     if test `$SWIG -perl5 2>&1 | $EGREP -c '(Unable|No target)'` -eq 1; then
-      SWIG_PERL_OPT='-perl'
-    else
-      SWIG_PERL_OPT='-perl5'
-    fi
-    if test `$SWIG -help 2>&1 | $EGREP -c "(-perl|-perl5) *- Generate"` = 0; then
-      use_perl="No (swig does not support -perl or -perl5 option)"
+      use_perl="No (swig does not support -perl5 option)"
     else
       AC_CHECK_PROG(PERL,perl,perl)
       if test "$PERL" = ""; then
@@ -869,7 +864,6 @@ else
 	  AC_SUBST([PERL_INCLUDES])
           AC_SUBST([PERL_LIBS])
 	  AC_SUBST([PERL_INSTALL_DIR])
-	  AC_SUBST([SWIG_PERL_OPT])
         fi
       fi
     fi
