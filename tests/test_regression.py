@@ -4848,7 +4848,6 @@ def test_agxbuf_use_implicit_nul():
 
 
 @pytest.mark.skipif(which("edgepaint") is None, reason="edgepaint not available")
-@pytest.mark.xfail(strict=True)
 def test_edgepaint_error_message():
     """
     when failing to open its output, edgepaint should not dereference a null

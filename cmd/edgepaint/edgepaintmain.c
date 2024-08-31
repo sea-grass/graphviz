@@ -170,7 +170,7 @@ static void init(int argc, char *argv[], double *angle, double *accuracy,
       if (outfile != NULL) {
         fclose(outfile);
       }
-      outfile = openFile(CmdName, arg, "w");
+      outfile = openFile(cmd, arg, "w");
       break;
 
     case 'v':
