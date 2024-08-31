@@ -34,7 +34,6 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/prisize_t.h>
 #include <common/pointset.h>
 #include <common/intset.h>
 #include <cdt/cdt.h>
@@ -48,6 +47,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <util/exit.h>
+#include <util/prisize_t.h>
 #include <util/strcasecmp.h>
 #include <util/unreachable.h>
 

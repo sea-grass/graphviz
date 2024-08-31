@@ -10,10 +10,10 @@
 
 #include "config.h"
 
-#include <cgraph/prisize_t.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/prisize_t.h>
 
 #include <gvc/gvplugin_loadimage.h>
 #include <gvc/gvio.h>

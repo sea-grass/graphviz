@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <cgraph/list.h>
-#include <cgraph/prisize_t.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -17,6 +16,7 @@
 #include <math.h>
 #include <pathplan/pathutil.h>
 #include <pathplan/tri.h>
+#include <util/prisize_t.h>
 
 #define DQ_FRONT 1
 #define DQ_BACK  2

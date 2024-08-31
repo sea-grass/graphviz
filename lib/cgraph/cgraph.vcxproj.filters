@@ -45,12 +45,6 @@
     <ClInclude Include="node_set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="overflow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="prisize_t.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="rdr.h">
       <Filter>Header Files</Filter>
     </ClInclude>

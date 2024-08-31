@@ -16,7 +16,6 @@
 #include <cgraph/alloc.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/list.h>
-#include <cgraph/prisize_t.h>
 #include <common/geomprocs.h>
 #include <common/render.h>
 #include <float.h>
@@ -27,6 +26,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/prisize_t.h>
 
 static int nedges; ///< total no. of edges used in routing
 static size_t nboxes; ///< total no. of boxes used in routing

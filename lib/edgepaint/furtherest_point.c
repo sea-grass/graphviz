@@ -10,13 +10,13 @@
 
 #include <cgraph/alloc.h>
 #include <cgraph/list.h>
-#include <cgraph/prisize_t.h>
 #include <sparse/general.h>
 #include <sparse/QuadTree.h>
 #include <edgepaint/furtherest_point.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <util/prisize_t.h>
 
 static double dist(int dim, double *x, double *y){
   int k;

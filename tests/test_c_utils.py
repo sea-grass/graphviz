@@ -32,10 +32,10 @@ def test_utility(utility: str):
 
 @pytest.mark.parametrize("builtins", (False, True))
 def test_overflow_h(builtins: bool):
-    """test ../lib/cgraph/overflow.h"""
+    """test ../lib/util/overflow.h"""
 
     # locate the unit test
-    src = Path(__file__).parent.resolve() / "../lib/cgraph/test_overflow.c"
+    src = Path(__file__).parent.resolve() / "../lib/util/test_overflow.c"
     assert src.exists()
 
     # locate lib directory that needs to be in the include path

@@ -24,9 +24,9 @@
 
 #include <stdlib.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/prisize_t.h>
 #include "openFile.h"
 #include <util/exit.h>
+#include <util/prisize_t.h>
 #include <util/unreachable.h>
 
 #define graphName(g) (agnameof(g))

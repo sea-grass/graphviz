@@ -11,10 +11,10 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/prisize_t.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/prisize_t.h>
 #include <util/unreachable.h>
 
 /* the parse functions should return NULL on error */

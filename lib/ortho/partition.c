@@ -12,13 +12,13 @@
 #include <common/boxes.h>
 #include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
-#include <cgraph/prisize_t.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <util/prisize_t.h>
 
 #ifndef DEBUG
   #define DEBUG 0

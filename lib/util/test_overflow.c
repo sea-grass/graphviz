@@ -1,5 +1,5 @@
-/// \file
-/// \brief unit test for overflow.h
+/// @file
+/// @brief unit test for overflow.h
 
 #include <assert.h>
 #include <limits.h>
@@ -17,7 +17,7 @@
 #endif
 #endif
 
-#include <cgraph/overflow.h>
+#include <util/overflow.h>
 
 /// a test case
 typedef struct {

@@ -42,9 +42,9 @@
 
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_math.h>
-#include <cgraph/prisize_t.h>
 #include <gvc/gvplugin_device.h>
 #include <util/exit.h>
+#include <util/prisize_t.h>
 
 #include <cairo.h>
 #ifdef CAIRO_HAS_XLIB_SURFACE

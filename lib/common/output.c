@@ -12,12 +12,12 @@
 
 #include <common/render.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/prisize_t.h>
 #include <gvc/gvc.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <util/prisize_t.h>
 
 #define YDIR(y) (Y_invert ? (Y_off - (y)) : (y))
 #define YFDIR(y) (Y_invert ? (YF_off - (y)) : (y))
