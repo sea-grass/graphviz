@@ -4828,7 +4828,7 @@ def test_agxbuf_print_nul():
     run_c(c_src, cflags=cflags)
 
 
-def test_agxbuf_use_implicit__nul():
+def test_agxbuf_use_implicit_nul():
     """
     `agxbuf` should be able to use its entire memory as an inline string
     """
