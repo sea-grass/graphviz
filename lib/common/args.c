@@ -47,7 +47,7 @@ static int neato_extra_args(int argc, char** argv) {
           Nop = atoi(arg+2);
           if (Nop <= 0) {
             agerrorf("Invalid parameter \"%s\" for -n flag\n", arg+2);
-            dotneato_usage (1);
+            dotneato_usage(argv[0], 1);
 	    return -1;
           }
         }
@@ -200,7 +200,7 @@ static int fdp_extra_args(int argc, char** argv) {
     assert(arg != NULL);
     if (arg[0] == '-' && arg[1] == 'L') {
       if (setFDPAttr (arg+2)) {
-	dotneato_usage(1);
+	dotneato_usage(argv[0], 1);
 	return -1;
       }
     }
