@@ -252,7 +252,6 @@ int dotneato_args_initialize(GVC_t * gvc, int argc, char **argv)
     Verbose = gvc->common.verbose > UCHAR_MAX
       ? UCHAR_MAX
       : (unsigned char)gvc->common.verbose;
-    CmdName = gvc->common.cmdname;
 
     size_t nfiles = 0;
     for (i = 1; i < argc; i++)
