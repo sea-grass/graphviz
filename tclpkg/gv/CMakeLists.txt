@@ -193,6 +193,31 @@ if(ENABLE_SWIG)
     )
   endif()
 
+  if(ENABLE_PERL)
+    swig_add_library(gv_perl
+      LANGUAGE perl5
+      SOURCES gv.i gv_dummy_init.c
+    )
+    set_property(
+      TARGET gv_perl
+      PROPERTY SWIG_GENERATED_INCLUDE_DIRECTORIES ${PERL_INCLUDE_PATH}
+    )
+    if(HAVE_CXX_WUNUSED_PARAMETER)
+      set_property(
+        TARGET gv_perl
+        PROPERTY SWIG_GENERATED_COMPILE_OPTIONS -Wno-unused-parameter
+      )
+    endif()
+    swig_link_libraries(gv_perl PRIVATE gvc ${PERL_LIBRARY})
+
+    install(
+      TARGETS gv_perl
+      RUNTIME DESTINATION ${BINARY_INSTALL_DIR}
+      LIBRARY DESTINATION ${LIBRARY_INSTALL_DIR}/graphviz/perl
+      ARCHIVE DESTINATION ${LIBRARY_INSTALL_DIR}
+    )
+  endif()
+
   if(ENABLE_TCL)
     swig_add_library(gv_tcl
       LANGUAGE tcl
@@ -337,6 +362,27 @@ if(ENABLE_SWIG)
     else()
       install(
         FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3java
+        DESTINATION ${MAN_INSTALL_DIR}/man3
+      )
+    endif()
+  endif()
+
+  if(ENABLE_PERL)
+    if(GZIP)
+      add_custom_target(man-gv_perl ALL DEPENDS gv.3perl.gz
+                        COMMENT "gv_perl man page")
+      add_custom_command(
+        OUTPUT gv.3perl.gz
+        COMMAND ${GZIP} -9 --no-name --to-stdout gv.3perl
+          >"${CMAKE_CURRENT_BINARY_DIR}/gv.3perl.gz"
+        MAIN_DEPENDENCY gv.3perl
+        COMMENT "compress gv_perl man page")
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3perl.gz
+        DESTINATION ${MAN_INSTALL_DIR}/man3)
+    else()
+      install(
+        FILES ${CMAKE_CURRENT_BINARY_DIR}/gv.3perl
         DESTINATION ${MAN_INSTALL_DIR}/man3
       )
     endif()
