@@ -19,15 +19,18 @@
 #include <string.h>
 #include <util/prisize_t.h>
 
-#define YDIR(y) (Y_invert ? (Y_off - (y)) : (y))
-#define YFDIR(y) (Y_invert ? (YF_off - (y)) : (y))
+/// state for offset calculations
+typedef struct {
+  double Y;  ///< ymin + ymax
+  double YF; ///< `Y` in inches
+} offsets_t;
 
-static double Y_off;        /* ymin + ymax */
-static double YF_off;       /* Y_off in inches */
+static double YFDIR(offsets_t offsets, double y) {
+  return Y_invert ? offsets.YF - y : y;
+}
 
-double yDir (double y)
-{
-    return YDIR(y);
+double yDir(double y, double Y_off) {
+  return Y_invert ? Y_off - y : y;
 }
 
 static void agputs(int (*putstr)(void *chan, const char *str), const char* s,
@@ -37,8 +40,7 @@ static void agputs(int (*putstr)(void *chan, const char *str), const char* s,
 
 static void agputc(int (*putstr)(void *chan, const char *str), char c,
                    FILE *fp) {
-    static char buf[2] = {'\0','\0'};
-    buf[0] = c;
+    char buf[] = {c, '\0'};
     putstr(fp, buf);
 }
 
@@ -69,9 +71,9 @@ static void printdouble(int (*putstr)(void *chan, const char *str), FILE *f,
 }
 
 static void printpoint(int (*putstr)(void *chan, const char *str), FILE *f,
-                       pointf p) {
+                       pointf p, double yOff) {
   printdouble(putstr, f, " ", PS2INCH(p.x));
-  printdouble(putstr, f, " ", PS2INCH(YDIR(p.y)));
+  printdouble(putstr, f, " ", PS2INCH(yDir(p.y, yOff)));
 }
 
 /* setYInvert:
@@ -80,12 +82,13 @@ static void printpoint(int (*putstr)(void *chan, const char *str), FILE *f,
  * set for * all graphs during current run, so each will 
  * reinitialize the values for its bbox.
  */
-static void setYInvert(graph_t * g)
-{
+static offsets_t setYInvert(graph_t *g) {
+    offsets_t rv = {0};
     if (Y_invert) {
-	Y_off = GD_bb(g).UR.y + GD_bb(g).LL.y;
-	YF_off = PS2INCH(Y_off);
+	rv.Y = GD_bb(g).UR.y + GD_bb(g).LL.y;
+	rv.YF = PS2INCH(rv.Y);
     }
+    return rv;
 }
 
 /* canon:
@@ -121,7 +124,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     char* fillcolor;
 
     int (*putstr)(void *chan, const char *str) = g->clos->disc.io->putstr;
-    setYInvert(g);
+    const offsets_t offsets = setYInvert(g);
     pt = GD_bb(g).UR;
     printdouble(putstr, f, "graph ", job->zoom);
     printdouble(putstr, f, " ", PS2INCH(pt.x));
@@ -131,7 +134,7 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 	if (IS_CLUST_NODE(n))
 	    continue;
 	printstring(putstr, f, "node ", agcanonStr(agnameof(n)));
-	printpoint(putstr, f, ND_coord(n));
+	printpoint(putstr, f, ND_coord(n), offsets.Y);
 	if (ND_label(n)->html)   /* if html, get original text */
 	    lbl = agcanonStr (agxget(n, N_label));
 	else
@@ -172,12 +175,12 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
 		for (size_t i = 0; i < ED_spl(e)->size; i++) {
 		    bz = ED_spl(e)->list[i];
 		    for (size_t j = 0; j < bz.size; j++)
-			printpoint(putstr, f, bz.list[j]);
+			printpoint(putstr, f, bz.list[j], offsets.Y);
 		}
 	    }
 	    if (ED_label(e)) {
 		printstring(putstr, f, " ", canon(agraphof(agtail(e)),ED_label(e)->text));
-		printpoint(putstr, f, ED_label(e)->pos);
+		printpoint(putstr, f, ED_label(e)->pos, offsets.Y);
 	    }
 	    printstring(putstr, f, " ", late_nnstring(e, E_style, "solid"));
 	    printstring(putstr, f, " ", late_nnstring(e, E_color, DEFAULT_COLOR));
@@ -187,33 +190,33 @@ void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend) {
     agputs(putstr, "stop\n", f);
 }
 
-static void set_record_rects(node_t * n, field_t * f, agxbuf * xb)
-{
+static void set_record_rects(node_t *n, field_t *f, agxbuf *xb, double yOff) {
     int i;
 
     if (f->n_flds == 0) {
 	agxbprint(xb, "%.5g,%.5g,%.5g,%.5g ",
 		f->b.LL.x + ND_coord(n).x,
-		YDIR(f->b.LL.y + ND_coord(n).y),
+		yDir(f->b.LL.y + ND_coord(n).y, yOff),
 		f->b.UR.x + ND_coord(n).x,
-		YDIR(f->b.UR.y + ND_coord(n).y));
+		yDir(f->b.UR.y + ND_coord(n).y, yOff));
     }
     for (i = 0; i < f->n_flds; i++)
-	set_record_rects(n, f->fld[i], xb);
+	set_record_rects(n, f->fld[i], xb, yOff);
 }
 
-static void rec_attach_bb(graph_t * g, Agsym_t* bbsym, Agsym_t* lpsym, Agsym_t* lwsym, Agsym_t* lhsym)
-{
+static void rec_attach_bb(graph_t *g, Agsym_t *bbsym, Agsym_t *lpsym,
+                          Agsym_t *lwsym, Agsym_t *lhsym, double yOff) {
     int c;
     agxbuf buf = {0};
     pointf pt;
 
-    agxbprint(&buf, "%.5g,%.5g,%.5g,%.5g", GD_bb(g).LL.x, YDIR(GD_bb(g).LL.y),
-              GD_bb(g).UR.x, YDIR(GD_bb(g).UR.y));
+    agxbprint(&buf, "%.5g,%.5g,%.5g,%.5g", GD_bb(g).LL.x,
+              yDir(GD_bb(g).LL.y, yOff), GD_bb(g).UR.x,
+              yDir(GD_bb(g).UR.y, yOff));
     agxset(g, bbsym, agxbuse(&buf));
     if (GD_label(g) && GD_label(g)->text[0]) {
 	pt = GD_label(g)->pos;
-	agxbprint(&buf, "%.5g,%.5g", pt.x, YDIR(pt.y));
+	agxbprint(&buf, "%.5g,%.5g", pt.x, yDir(pt.y, yOff));
 	agxset(g, lpsym, agxbuse(&buf));
 	pt = GD_label(g)->dimen;
 	agxbprint(&buf, "%.2f", PS2INCH(pt.x));
@@ -222,11 +225,11 @@ static void rec_attach_bb(graph_t * g, Agsym_t* bbsym, Agsym_t* lpsym, Agsym_t* 
 	agxset(g, lhsym, agxbuse(&buf));
     }
     for (c = 1; c <= GD_n_cluster(g); c++)
-	rec_attach_bb(GD_clust(g)[c], bbsym, lpsym, lwsym, lhsym);
+	rec_attach_bb(GD_clust(g)[c], bbsym, lpsym, lwsym, lhsym, yOff);
     agxbfree(&buf);
 }
 
-void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
+double attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
     node_t *n;
     edge_t *e;
     pointf ptf;
@@ -239,7 +242,7 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
     gv_fixLocale (1);
     bool e_arrows = false; // graph has edges with end arrows
     bool s_arrows = false; // graph has edges with start arrows
-    setYInvert(g);
+    const offsets_t offsets = setYInvert(g);
     agxbuf xb = {0};
     safe_dcl(g, AGNODE, "pos", "");
     safe_dcl(g, AGNODE, "rects", "");
@@ -266,13 +269,15 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 	if (dim3) {
 	    int k;
 
-	    agxbprint(&xb, "%.5g,%.5g,%.5g", ND_coord(n).x, YDIR(ND_coord(n).y), POINTS_PER_INCH*(ND_pos(n)[2]));
+	    agxbprint(&xb, "%.5g,%.5g,%.5g", ND_coord(n).x,
+	              yDir(ND_coord(n).y, offsets.Y),
+	              POINTS_PER_INCH * ND_pos(n)[2]);
 	    for (k = 3; k < GD_odim(g); k++) {
 		agxbprint(&xb, ",%.5g", POINTS_PER_INCH*(ND_pos(n)[k]));
 	    }
 	    agset(n, "pos", agxbuse(&xb));
 	} else {
-	    agxbprint(&xb, "%.5g,%.5g", ND_coord(n).x, YDIR(ND_coord(n).y));
+	    agxbprint(&xb, "%.5g,%.5g", ND_coord(n).x, yDir(ND_coord(n).y, offsets.Y));
 	    agset(n, "pos", agxbuse(&xb));
 	}
 	agxbprint(&xb, "%.5g", PS2INCH(ND_ht(n)));
@@ -281,11 +286,11 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 	agxset(n, N_width, agxbuse(&xb));
 	if (ND_xlabel(n) && ND_xlabel(n)->set) {
 	    ptf = ND_xlabel(n)->pos;
-	    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+	    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y, offsets.Y));
 	    agset(n, "xlp", agxbuse(&xb));
 	}
 	if (strcmp(ND_shape(n)->name, "record") == 0) {
-	    set_record_rects(n, ND_shape_info(n), &xb);
+	    set_record_rects(n, ND_shape_info(n), &xb, offsets.Y);
 	    agxbpop(&xb);	/* get rid of last space */
 	    agset(n, "rects", agxbuse(&xb));
 	} else {
@@ -308,11 +313,12 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 		    if (poly->sides >= 3)
 			agxbprint(&xb, "%.5g %.5g",
 				PS2INCH(poly->vertices[i].x),
-				YFDIR(PS2INCH(poly->vertices[i].y)));
+				YFDIR(offsets, PS2INCH(poly->vertices[i].y)));
 		    else
 			agxbprint(&xb, "%.5g %.5g",
 				ND_width(n) / 2.0 * cos((double)i / (double)sides * M_PI * 2.0),
-				YFDIR(ND_height(n) / 2.0 * sin((double)i / (double)sides * M_PI * 2.0)));
+				YFDIR(offsets,
+				      ND_height(n) / 2.0 * sin((double)i / (double)sides * M_PI * 2.0)));
 		}
 		agxset(n, N_vertices, agxbuse(&xb));
 	    }
@@ -330,59 +336,63 @@ void attach_attrs_and_arrows(graph_t *g, bool *sp, bool *ep) {
 			s_arrows = true;
 			agxbprint(&xb, "s,%.5g,%.5g ",
 				ED_spl(e)->list[i].sp.x,
-				YDIR(ED_spl(e)->list[i].sp.y));
+				yDir(ED_spl(e)->list[i].sp.y, offsets.Y));
 		    }
 		    if (ED_spl(e)->list[i].eflag) {
 			e_arrows = true;
 			agxbprint(&xb, "e,%.5g,%.5g ",
 				ED_spl(e)->list[i].ep.x,
-				YDIR(ED_spl(e)->list[i].ep.y));
+				yDir(ED_spl(e)->list[i].ep.y, offsets.Y));
 		    }
 		    for (size_t j = 0; j < ED_spl(e)->list[i].size; j++) {
 			if (j > 0)
 			    agxbputc(&xb, ' ');
 			ptf = ED_spl(e)->list[i].list[j];
-			agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+			agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y, offsets.Y));
 		    }
 		}
 		agset(e, "pos", agxbuse(&xb));
 		if (ED_label(e)) {
 		    ptf = ED_label(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y, offsets.Y));
 		    agset(e, "lp", agxbuse(&xb));
 		}
 		if (ED_xlabel(e) && ED_xlabel(e)->set) {
 		    ptf = ED_xlabel(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y, offsets.Y));
 		    agset(e, "xlp", agxbuse(&xb));
 		}
 		if (ED_head_label(e)) {
 		    ptf = ED_head_label(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y, offsets.Y));
 		    agset(e, "head_lp", agxbuse(&xb));
 		}
 		if (ED_tail_label(e)) {
 		    ptf = ED_tail_label(e)->pos;
-		    agxbprint(&xb, "%.5g,%.5g", ptf.x, YDIR(ptf.y));
+		    agxbprint(&xb, "%.5g,%.5g", ptf.x, yDir(ptf.y, offsets.Y));
 		    agset(e, "tail_lp", agxbuse(&xb));
 		}
 	    }
 	}
     }
-    rec_attach_bb(g, bbsym, lpsym, lwsym, lhsym);
+    rec_attach_bb(g, bbsym, lpsym, lwsym, lhsym, offsets.Y);
     agxbfree(&xb);
 
     if (HAS_CLUST_EDGE(g))
 	undoClusterEdges(g);
     
-    *sp = s_arrows;
-    *ep = e_arrows;
+    if (sp != NULL) {
+	*sp = s_arrows;
+    }
+    if (ep != NULL) {
+	*ep = e_arrows;
+    }
     gv_fixLocale (0);
+    return offsets.Y;
 }
 
 void attach_attrs(graph_t * g)
 {
-    bool e, s;
-    attach_attrs_and_arrows (g, &s, &e);
+  (void)attach_attrs_and_arrows(g, NULL, NULL);
 }
 

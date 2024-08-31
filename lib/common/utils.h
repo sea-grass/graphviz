@@ -47,7 +47,9 @@ typedef struct {
 } xml_flags_t;
 
 UTILS_API pointf Bezier(pointf *, double, pointf *, pointf *);
-UTILS_API void attach_attrs_and_arrows(graph_t *, bool *, bool *);
+
+/// @return Computed ymin + ymax
+UTILS_API double attach_attrs_and_arrows(graph_t *, bool *, bool *);
 
 /** XML-escape a string
  *
@@ -62,7 +64,9 @@ UTILS_API int xml_escape(const char *s, xml_flags_t flags,
                          int (*cb)(void *state, const char *s), void *state);
 
 UTILS_API void write_plain(GVJ_t *job, graph_t *g, FILE *f, bool extend);
-UTILS_API double yDir(double y);
+
+/// @param yOff Displacement to apply to `y`
+UTILS_API double yDir(double y, double yOff);
 UTILS_API char *ps_string(char *s, int);
 UTILS_API char *strdup_and_subst_obj(char *str, void *obj);
 UTILS_API void epsf_emit_body(GVJ_t *job, usershape_t *us);
