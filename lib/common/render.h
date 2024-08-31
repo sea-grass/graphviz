@@ -14,10 +14,6 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include "config.h"
 
 #ifdef HAVE_SYS_TYPES_H
@@ -42,6 +38,10 @@ extern "C" {
 #include "gvcjob.h"		/* must follow gvcext.h (in types.h) */
 #include "gvcint.h"		/* must follow gvcext.h (in types.h) */
 #include "gvcproc.h"		/* must follow gvcext.h (in types.h) */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
     typedef struct epsf_s {
 	int macro_id;
