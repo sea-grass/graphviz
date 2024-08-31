@@ -108,6 +108,9 @@ static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx) {
   free(oldbodyPtr);
 }
 
+/// printf format for TCL handles
+#define HANDLE_FORMAT ("vgpane%" PRIu64)
+
 /*=============================================================================
  * tclhandleAlloc --
  *   Allocate a table entry, expanding if necessary.
@@ -136,7 +139,7 @@ entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char **handle,
 
   if (handle) {
     agxbuf buf = {0};
-    agxbprint(&buf, tblHdrPtr->handleFormat, entryIdx);
+    agxbprint(&buf, HANDLE_FORMAT, entryIdx);
     *handle = agxbdisown(&buf);
   }
   if (entryIdxPtr)
@@ -148,15 +151,13 @@ entryHeader_pt tclhandleAlloc(tblHeader_pt headerPtr, char **handle,
  * tclhandleInit --
  *   Create and initialize a Tcl dynamic handle table.
  * Parameters:
- *   o prefix (I) - The character string prefix to be used.
  *   o entrySize (I) - The size of an entry, in bytes.
  *   o initEntries (I) - Initial size of the table, in entries.
  * Returns:
  *   A pointer to the table header.
  *-----------------------------------------------------------------------------
  */
-tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
-                           uint64_t initEntries) {
+tblHeader_pt tclhandleInit(uint64_t entrySize, uint64_t initEntries) {
   tblHeader_pt tblHdrPtr;
 
   /*
@@ -170,9 +171,6 @@ tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
   tblHdrPtr->entrySize = ENTRY_HEADER_SIZE + ROUND_ENTRY_SIZE(entrySize);
   tblHdrPtr->freeHeadIdx = NULL_IDX;
   tblHdrPtr->tableSize = initEntries;
-  tblHdrPtr->handleFormat = malloc(strlen(prefix) + strlen("%" PRIu64) + 1);
-  strcpy(tblHdrPtr->handleFormat, prefix);
-  strcat(tblHdrPtr->handleFormat, "%" PRIu64);
   tblHdrPtr->bodyPtr = malloc(initEntries * tblHdrPtr->entrySize);
   tclhandleLinkInNewEntries(tblHdrPtr, 0, initEntries);
 
@@ -196,7 +194,7 @@ int tclhandleIndex(tblHeader_pt tblHdrPtr, const char *handle,
                    uint64_t *entryIdxPtr) {
   uint64_t entryIdx;
 
-  if (sscanf(handle, tblHdrPtr->handleFormat, &entryIdx) != 1)
+  if (sscanf(handle, HANDLE_FORMAT, &entryIdx) != 1)
     return TCL_ERROR;
   if (entryIdxPtr)
     *entryIdxPtr = entryIdx;

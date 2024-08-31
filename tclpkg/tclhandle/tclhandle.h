@@ -43,7 +43,6 @@ typedef struct {
   uint64_t entrySize;   /* Entry size in bytes, including overhead */
   uint64_t tableSize;   /* Current number of entries in the table  */
   uint64_t freeHeadIdx; /* Index of first free entry in the table  */
-  char *handleFormat;   /* Malloc'ed copy of prefix string + "%lu" */
   ubyte_pt bodyPtr;     /* Pointer to table body                   */
 } tblHeader_t;
 typedef tblHeader_t *tblHeader_pt;
@@ -71,8 +70,7 @@ typedef entryHeader_t *entryHeader_pt;
 
 void *tclhandleFreeIndex(tblHeader_pt headerPtr, uint64_t entryIdx);
 void *tclhandleFree(tblHeader_pt headerPtr, const char *handle);
-tblHeader_pt tclhandleInit(char *prefix, uint64_t entrySize,
-                           uint64_t initEntries);
+tblHeader_pt tclhandleInit(uint64_t entrySize, uint64_t initEntries);
 void *tclhandleXlateIndex(tblHeader_pt headerPtr, uint64_t entryIdx);
 void *tclhandleXlate(tblHeader_pt headerPtr, const char *handle);
 entryHeader_pt tclhandleAlloc(tblHeader_pt tblHdrPtr, char **handle,
