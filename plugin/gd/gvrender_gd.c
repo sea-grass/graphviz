@@ -100,8 +100,9 @@ static void gdgen_begin_page(GVJ_t * job)
     } else {
         if (job->width * job->height >= GD_XYMAX) {
 	    double scale = sqrt(GD_XYMAX / (job->width * job->height));
-	    job->width *= scale;
-	    job->height *= scale;
+	    assert(scale > 0 && scale <= 1);
+	    job->width = (unsigned)(job->width * scale);
+	    job->height = (unsigned)(job->height * scale);
 	    job->zoom *= scale;
 	    fprintf(stderr,
 		"%s: graph is too large for gd-renderer bitmaps. Scaling by %g to fit\n",

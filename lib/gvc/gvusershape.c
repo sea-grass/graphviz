@@ -783,7 +783,7 @@ point gvusershape_size(graph_t * g, char *name)
     if ((dpi.y = GD_drawing(g)->dpi) >= 1.0)
 	dpi.x = dpi.y;
     else
-	dpi.x = dpi.y = (double)DEFAULT_DPI;
+	dpi.x = dpi.y = DEFAULT_DPI;
 
     us = gvusershape_open (name);
     rv = gvusershape_size_dpi (us, dpi);
