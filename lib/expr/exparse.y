@@ -1199,17 +1199,13 @@ assign		:	/* empty */
 
 initialize	:	assign
 		|	'(' {
-				Dtdisc_t*	disc;
-
 				if (expr.procedure)
 					exerror("%s: nested function definitions not supported", expr.id->name);
 				expr.procedure = exnewnode(expr.program, PROCEDURE, true, expr.declare, NULL, NULL);
-				if (!(disc = calloc(1, sizeof(Dtdisc_t))))
-					exnospace();
-				disc->key = offsetof(Exid_t, name);
 				if (!streq(expr.id->name, "begin"))
 				{
-					if (!(expr.procedure->data.procedure.frame = dtopen(disc, Dtset)) || !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
+					static Dtdisc_t disc = {.key = offsetof(Exid_t, name)};
+					if (!(expr.procedure->data.procedure.frame = dtopen(&disc, Dtset)) || !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
 						exnospace();
 					expr.program->symbols = expr.program->frame = expr.procedure->data.procedure.frame;
 				}
