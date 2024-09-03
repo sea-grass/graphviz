@@ -431,6 +431,7 @@ static void test_push_back(void) {
     }
   }
 
+  ints_free(&ys);
   ints_free(&xs);
 }
 
