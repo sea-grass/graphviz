@@ -1216,13 +1216,11 @@ initialize	:	assign
 					if (!(expr.procedure->data.procedure.frame = dtopen(disc, Dtset)) || !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
 						exnospace();
 					expr.program->symbols = expr.program->frame = expr.procedure->data.procedure.frame;
-					expr.program->formals = 1;
 				}
 				expr.declare = 0;
 			} formals {
 				expr.id->lex = PROCEDURE;
 				expr.id->type = expr.procedure->type;
-				expr.program->formals = 0;
 				expr.declare = 0;
 			} ')' '{' statement_list '}'
 		{

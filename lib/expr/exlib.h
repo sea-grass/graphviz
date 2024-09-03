@@ -110,7 +110,6 @@ typedef struct Print_s			/* compiled printf arg node	*/
 	char*		linep;		/* line[] pointer		*/ \
 	int		eof;		/* lex hit eof			*/ \
 	int		errors;		/* fatal error count		*/ \
-	int		formals;	/* parsing formal args		*/ \
 	int		linewrap;	/* linep wrapped around line[]	*/ \
 	long long loopcount; /* break|continue|return count	*/ \
 	long loopop; /* break|continue|return op	*/ \
