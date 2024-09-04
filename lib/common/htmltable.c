@@ -1203,7 +1203,6 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	cdict = rp->u.rp;
 	cp = (pitem *) dtflatten(cdict);
 	while (cp) {
-	    cellp = cp->u.cp;
 	    cnt++;
 	    cp = (pitem *)dtlink(cdict, cp);
 	}
