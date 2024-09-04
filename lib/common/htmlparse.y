@@ -76,15 +76,6 @@ static struct {
   GVC_t*       gvc;
 } HTMLstate;
 
-/* Free row. This closes and frees row's list, then
- * the item itself is freed.
- */
-static void free_ritem(void *item) {
-  row_t *p = item;
-  cells_free(&p->rp);
-  free (p);
-}
-
 /// Clean up cell if error in parsing.
 static void
 cleanCell (htmlcell_t* cp)

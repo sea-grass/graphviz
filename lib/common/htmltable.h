@@ -14,8 +14,8 @@
 
 #include <cgraph/list.h>
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -118,6 +118,13 @@ typedef struct {
   cells_t rp;
   bool ruled;
 } row_t;
+
+/// Free row. This closes and frees row’s list, then the item itself is freed.
+static inline void free_ritem(void *item) {
+  row_t *p = item;
+  cells_free(&p->rp);
+  free (p);
+}
 
     struct htmltbl_t {
 	htmldata_t data;
