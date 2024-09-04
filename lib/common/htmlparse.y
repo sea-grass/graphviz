@@ -267,7 +267,7 @@ static void cleanup (void)
 }
 
 /// Return 1 if s contains a non-space character.
-static bool nonSpace(char *s) {
+static bool nonSpace(const char *s) {
   char   c;
 
   while ((c = *s++)) {
