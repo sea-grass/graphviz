@@ -850,7 +850,7 @@ int Tclpathplan_Init(Tcl_Interp * interp)
 
     Tcl_CreateCommand(interp, "vgpane", vgpane, (ClientData)NULL, NULL);
 
-    vgpaneTable = tclhandleInit("vgpane", sizeof(vgpane_t), 10);
+    vgpaneTable = tclhandleInit(sizeof(vgpane_t), 10);
 
     return TCL_OK;
 }
