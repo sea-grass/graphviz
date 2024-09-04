@@ -159,7 +159,7 @@ extern "C" {
 	    Dt_t *rp;
 	    htmlcell_t *cp;
 	} u;
-	unsigned char ruled;
+	bool ruled;
     } pitem;
 	
     typedef struct {

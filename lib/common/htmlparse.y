@@ -185,7 +185,7 @@ static pitem* addRow (void)
   pitem*     sp = gv_alloc(sizeof(pitem));
   sp->u.rp = dp;
   if (tbl->hrule)
-    sp->ruled = 1;
+    sp->ruled = true;
   dtinsert (tbl->u.p.rows, sp);
   return sp;
 }
@@ -459,7 +459,7 @@ opt_space : string
 
 rows : row { $$ = $1; }
      | rows row { $$ = $2; }
-     | rows HR row { $1->ruled = 1; $$ = $3; }
+     | rows HR row { $1->ruled = true; $$ = $3; }
      ;
 
 row : T_row { addRow (); } cells T_end_row { $$ = lastRow(); }
