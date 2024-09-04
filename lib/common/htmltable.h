@@ -106,6 +106,19 @@ extern "C" {
     typedef struct htmlcell_t htmlcell_t;
     typedef struct htmltbl_t htmltbl_t;
 	
+/* During parsing, table contents are stored as rows of cells.
+ * A row is a list of cells
+ * Rows is a list of rows.
+ */
+
+DEFINE_LIST(cells, htmlcell_t *)
+
+typedef struct {
+  Dtlink_t link;
+  cells_t rp;
+  bool ruled;
+} row_t;
+
     struct htmltbl_t {
 	htmldata_t data;
 	union {
@@ -148,19 +161,6 @@ extern "C" {
 	bool vruled: 1; ///< vertically ruled?
 	bool hruled: 1; ///< horizontally ruled?
     };
-
-/* During parsing, table contents are stored as rows of cells.
- * A row is a list of cells
- * Rows is a list of rows.
- */
-
-DEFINE_LIST(cells, htmlcell_t *)
-
-typedef struct {
-  Dtlink_t link;
-  cells_t rp;
-  bool ruled;
-} row_t;
 
     typedef struct {
         pointf pos;
