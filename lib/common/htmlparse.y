@@ -24,6 +24,7 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <common/htmllex.h>
+#include <stdbool.h>
 #include <util/alloc.h>
 
 extern int htmlparse(void);
@@ -266,14 +267,13 @@ static void cleanup (void)
 }
 
 /// Return 1 if s contains a non-space character.
-static int nonSpace (char* s)
-{
+static bool nonSpace(char *s) {
   char   c;
 
   while ((c = *s++)) {
-    if (c != ' ') return 1;
+    if (c != ' ') return true;
   }
-  return 0;
+  return false;
 }
 
 /// Fonts are allocated in the lexer.
