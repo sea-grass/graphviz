@@ -1184,8 +1184,6 @@ static uint16_t findCol(PointSet *ps, int row, int col, htmlcell_t *cellp) {
  */
 static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 {
-    pitem *rp;
-    pitem *cp;
     Dt_t *cdict;
     htmlcell_t *cellp;
     htmlcell_t **cells;
@@ -1196,32 +1194,32 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     PointSet *ps = newPS();
     Dt_t *is = openIntSet();
 
-    rp = (pitem *) dtflatten(rows);
+    row_t *rp = (row_t *)dtflatten(rows);
     size_t cnt = 0;
     uint16_t r = 0;
     while (rp) {
-	cdict = rp->u.rp;
-	cp = (pitem *) dtflatten(cdict);
+	cdict = rp->rp;
+	cell_t *cp = (cell_t *)dtflatten(cdict);
 	while (cp) {
 	    cnt++;
-	    cp = (pitem *)dtlink(cdict, cp);
+	    cp = (cell_t *)dtlink(cdict, cp);
 	}
 	if (rp->ruled) {
 	    addIntSet(is, r + 1);
 	}
-	rp = (pitem *)dtlink(rows, rp);
+	rp = (row_t *)dtlink(rows, rp);
 	r++;
     }
 
     cells = tbl->u.n.cells = gv_calloc(cnt + 1, sizeof(htmlcell_t *));
-    rp = (pitem *) dtflatten(rows);
+    rp = (row_t *)dtflatten(rows);
     r = 0;
     while (rp) {
-	cdict = rp->u.rp;
-	cp = (pitem *) dtflatten(cdict);
+	cdict = rp->rp;
+	cell_t *cp = (cell_t *)dtflatten(cdict);
 	uint16_t c = 0;
 	while (cp) {
-	    cellp = cp->u.cp;
+	    cellp = cp->cp;
 	    *cells++ = cellp;
 	    rv |= size_html_cell(g, cellp, tbl, env);
 	    c = findCol(ps, r, c, cellp);
@@ -1232,9 +1230,9 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    n_rows = MAX(r + cellp->rowspan, n_rows);
 	    if (inIntSet(is, r + cellp->rowspan))
 		cellp->hruled = true;
-	    cp = (pitem *)dtlink(cdict, cp);
+	    cp = (cell_t *)dtlink(cdict, cp);
 	}
-	rp = (pitem *)dtlink(rows, rp);
+	rp = (row_t *)dtlink(rows, rp);
 	r++;
     }
     tbl->row_count = n_rows;

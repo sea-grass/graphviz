@@ -151,17 +151,19 @@ extern "C" {
 /* During parsing, table contents are stored as rows of cells.
  * A row is a list of cells
  * Rows is a list of rows.
- * pitems are used for both lists.
  */
-    typedef struct {
-	Dtlink_t link;
-	union {
-	    Dt_t *rp;
-	    htmlcell_t *cp;
-	} u;
-	bool ruled;
-    } pitem;
-	
+
+typedef struct {
+  Dtlink_t link;
+  Dt_t *rp;
+  bool ruled;
+} row_t;
+
+typedef struct {
+  Dtlink_t link;
+  htmlcell_t *cp;
+} cell_t;
+
     typedef struct {
         pointf pos;
         textfont_t finfo;

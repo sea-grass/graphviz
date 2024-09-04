@@ -67,11 +67,11 @@ static struct {
 } HTMLstate;
 
 /* Free row. This closes and frees row's list, then
- * the pitem itself is freed.
+ * the item itself is freed.
  */
 static void free_ritem(void *item) {
-  pitem *p = item;
-  dtclose (p->u.rp);
+  row_t *p = item;
+  dtclose(p->rp);
   free (p);
 }
 
@@ -85,23 +85,23 @@ cleanCell (htmlcell_t* cp)
   free (cp);
 }
 
-/// Free cell item during parsing. This frees cell and pitem.
+/// Free cell item during parsing. This frees cell and item.
 static void free_citem(void *item) {
-  pitem *p = item;
-  cleanCell (p->u.cp);
+  cell_t *p = item;
+  cleanCell(p->cp);
   free (p);
 }
 
 static Dtdisc_t rowDisc = {
-    .key = offsetof(pitem, u),
-    .size = sizeof(void *),
-    .link = offsetof(pitem, link),
+    .key = offsetof(row_t, rp),
+    .size = sizeof(Dt_t *),
+    .link = offsetof(row_t, link),
     .freef = free_ritem,
 };
 static Dtdisc_t cellDisc = {
-    .key = offsetof(pitem, u),
-    .size = sizeof(void *),
-    .link = offsetof(pitem, link),
+    .key = offsetof(cell_t, cp),
+    .size = sizeof(htmlcell_t *),
+    .link = offsetof(cell_t, link),
     .freef = free,
 };
 
@@ -170,20 +170,18 @@ mkText(void)
     return hft;
 }
 
-static pitem* lastRow (void)
-{
+static row_t *lastRow(void) {
   htmltbl_t* tbl = HTMLstate.tblstack;
-  pitem*     sp = dtlast (tbl->u.p.rows);
+  row_t *sp = dtlast(tbl->u.p.rows);
   return sp;
 }
 
 /// Add new cell row to current table.
-static pitem* addRow (void)
-{
+static row_t *addRow(void) {
   Dt_t*      dp = dtopen(&cellDisc, Dtqueue);
   htmltbl_t* tbl = HTMLstate.tblstack;
-  pitem*     sp = gv_alloc(sizeof(pitem));
-  sp->u.rp = dp;
+  row_t *sp = gv_alloc(sizeof(row_t));
+  sp->rp = dp;
   if (tbl->hrule)
     sp->ruled = true;
   dtinsert (tbl->u.p.rows, sp);
@@ -192,11 +190,11 @@ static pitem* addRow (void)
 
 /// Set cell body and type and attach to row
 static void setCell(htmlcell_t *cp, void *obj, char kind) {
-  pitem*     sp = gv_alloc(sizeof(pitem));
+  cell_t *sp = gv_alloc(sizeof(cell_t));
   htmltbl_t* tbl = HTMLstate.tblstack;
-  pitem*     rp = dtlast (tbl->u.p.rows);
-  Dt_t*      row = rp->u.rp;
-  sp->u.cp = cp;
+  row_t *rp = dtlast(tbl->u.p.rows);
+  Dt_t *row = rp->rp;
+  sp->cp = cp;
   dtinsert (row, sp);
   cp->child.kind = kind;
   if (tbl->vrule) {
@@ -319,7 +317,7 @@ popFont (void)
   htmltbl_t*   tbl;
   textfont_t*  font;
   htmlimg_t*   img;
-  pitem*       p;
+  row_t *p;
 }
 
 %token T_end_br T_end_img T_row T_end_row T_html T_end_html
