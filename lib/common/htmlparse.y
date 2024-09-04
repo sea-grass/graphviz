@@ -49,9 +49,20 @@ static void free_hi(htextspan_t item) {
 
 DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
 
+/// Clean up cell if error in parsing.
+static void cleanCell(htmlcell_t *cp);
+
 /// Clean up table if error in parsing.
 static void cleanTbl(htmltbl_t *tp) {
-  dtclose(tp->u.p.rows);
+  Dt_t *rows = tp->u.p.rows;
+  for (row_t *r = (row_t *)dtflatten(rows); r != NULL;
+       r = (row_t *)dtlink(rows, r)) {
+    for (cell_t *c = (cell_t *)dtflatten(r->rp); c != NULL;
+         c = (cell_t *)dtlink(r->rp, c)) {
+      cleanCell(c->cp);
+    }
+  }
+  dtclose(rows);
   free_html_data(&tp->data);
   free(tp);
 }
@@ -83,13 +94,6 @@ cleanCell (htmlcell_t* cp)
   else if (cp->child.kind == HTML_TEXT) free_html_text (cp->child.u.txt);
   free_html_data (&cp->data);
   free (cp);
-}
-
-/// Free cell item during parsing. This frees cell and item.
-static void free_citem(void *item) {
-  cell_t *p = item;
-  cleanCell(p->cp);
-  free (p);
 }
 
 static Dtdisc_t rowDisc = {
@@ -238,8 +242,7 @@ freeFontstack(void)
 
 /* Called on error. Frees resources allocated during parsing.
  * This includes a label, plus a walk down the stack of
- * tables. Note that we use the free_citem function to actually
- * free cells.
+ * tables. Note that `cleanTbl` frees the contained cells.
  */
 static void cleanup (void)
 {
@@ -250,13 +253,11 @@ static void cleanup (void)
     free_html_label (HTMLstate.lbl,1);
     HTMLstate.lbl = NULL;
   }
-  cellDisc.freef = free_citem;
   while (tp) {
     next = tp->u.p.prev;
     cleanTbl (tp);
     tp = next;
   }
-  cellDisc.freef = free;
 
   textspans_clear(&HTMLstate.fitemList);
   htextspans_clear(&HTMLstate.fspanList);
