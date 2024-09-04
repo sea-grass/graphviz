@@ -19,10 +19,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/ingraphs.h>
 #include <getopt.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/unreachable.h>
 

@@ -11,9 +11,9 @@
  *************************************************************************/
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <stddef.h>
 #include <common/intset.h>
+#include <util/alloc.h>
 
 static void *mkIntItem(void *p, Dtdisc_t *disc) {
     (void)disc;

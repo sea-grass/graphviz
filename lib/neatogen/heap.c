@@ -8,13 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <stdbool.h>
 
 #include <neatogen/mem.h>
 #include <neatogen/hedges.h>
 #include <neatogen/heap.h>
+#include <util/alloc.h>
 
 struct pq {
   Halfedge *hash; ///< backing storage

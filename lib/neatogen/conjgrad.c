@@ -8,12 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/matrix_ops.h>
 #include <neatogen/conjgrad.h>
 #include <stdbool.h>
 #include <stdlib.h>
-
+#include <util/alloc.h>
 
 /*************************
 ** C.G. method - SPARSE  *

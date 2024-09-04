@@ -34,7 +34,6 @@
 #include <limits.h>
 #include <inttypes.h>
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
@@ -49,6 +48,7 @@
 #include <fdpgen/dbg.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 typedef struct {
     graph_t*  rootg;  /* logical root; graph passed in to fdp_layout */

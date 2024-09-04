@@ -23,12 +23,12 @@
 #pragma once
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/alloc.h>
 
 /// a compressed array of boolean values
 ///

@@ -11,7 +11,7 @@
 #include "simple.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <cgraph/alloc.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 
 static int gt(const void *a, const void *b);

@@ -11,10 +11,10 @@
 
 /* classify edges for mincross/nodepos/splines, using given ranks */
 
-#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 static node_t*
 label_vnode(graph_t * g, edge_t * orig)

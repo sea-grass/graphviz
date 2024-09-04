@@ -18,13 +18,13 @@
  */
 
 #include <common/geomprocs.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_math.h>
 #include <dotgen/dot.h>
 #include <dotgen/aspect.h>
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 static int nsiter2(graph_t * g);
 static void create_aux_edges(graph_t * g);

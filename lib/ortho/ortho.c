@@ -30,11 +30,11 @@
 #include <ortho/maze.h>
 #include <ortho/fPQ.h>
 #include <ortho/ortho.h>
-#include <cgraph/alloc.h>
 #include <common/geomprocs.h>
 #include <common/globals.h>
 #include <common/render.h>
 #include <common/pointset.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/unused.h>
 

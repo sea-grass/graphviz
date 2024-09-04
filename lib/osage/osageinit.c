@@ -15,7 +15,6 @@
  */
 
 #include    <assert.h>
-#include    <cgraph/alloc.h>
 #include    <cgraph/list.h>
 #include    <cgraph/startswith.h>
 #include    <limits.h>
@@ -24,6 +23,7 @@
 #include    <pack/pack.h>
 #include    <stdbool.h>
 #include    <stddef.h>
+#include    <util/alloc.h>
 
 #define DFLT_SZ  18
 #define PARENT(n) ((Agraph_t*)ND_alg(n))

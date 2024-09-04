@@ -10,10 +10,10 @@
 
 #include <sfdpgen/Multilevel.h>
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <common/arith.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 static const int minsize = 4;
 static const double min_coarsen_factor = 0.75;

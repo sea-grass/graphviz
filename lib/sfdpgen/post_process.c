@@ -15,7 +15,6 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <cgraph/alloc.h>
 #include <common/types.h>
 #include <common/globals.h>
 
@@ -25,6 +24,7 @@
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/call_tri.h>
 #include <sfdpgen/sfdp.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/unused.h>
 

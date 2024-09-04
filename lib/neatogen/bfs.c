@@ -17,10 +17,10 @@
 
 ******************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/bfs.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 void bfs(int vertex, vtx_data *graph, int n, DistType *dist)
  /* compute vector 'dist' of distances of all nodes from 'vertex' */

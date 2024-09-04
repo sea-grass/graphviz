@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <glcomp/glcompimage.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
@@ -16,6 +15,7 @@
 #include <glcomp/glcomptexture.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 glCompImage *glCompImageNew(void *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));

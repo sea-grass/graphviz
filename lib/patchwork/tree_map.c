@@ -8,10 +8,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <math.h>
 #include <patchwork/tree_map.h>
+#include <util/alloc.h>
 #include <util/prisize_t.h>
 
 static void squarify(size_t n, double *area, rectangle *recs, size_t nadded, double maxarea, double minarea, double totalarea,

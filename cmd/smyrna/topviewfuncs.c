@@ -10,7 +10,6 @@
 
 #include <assert.h>
 #include "topviewfuncs.h"
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/cgraph.h>
 #include "smyrna_utils.h"
@@ -27,6 +26,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 static xdot *parseXdotwithattrs(void *e)
 {

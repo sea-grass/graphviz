@@ -22,7 +22,6 @@
 #include "menucallbacks.h"
 #include "support.h"
 #include "viewport.h"
-#include <cgraph/alloc.h>
 #include <glade/glade.h>
 #include <gtk/gtk.h>
 #include <gtk/gtkgl.h>
@@ -38,6 +37,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 
 #ifdef __APPLE__

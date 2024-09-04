@@ -29,11 +29,11 @@
 
 #include <stdlib.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_math.h>
 #include <cgraph/ingraphs.h>
 #include <cgraph/list.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/unreachable.h>
 

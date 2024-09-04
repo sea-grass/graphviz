@@ -23,11 +23,11 @@
 /* uses PRIVATE interface */
 #define FDP_PRIVATE 1
 
-#include    <cgraph/alloc.h>
 #include    <fdpgen/tlayout.h>
 #include    <neatogen/neatoprocs.h>
 #include    <cgraph/agxbuf.h>
 #include    <stdbool.h>
+#include    <util/alloc.h>
 
 static void initialPositions(graph_t * g)
 {

@@ -14,9 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/strview.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 
 /* FIXME - the following declaration should be removed

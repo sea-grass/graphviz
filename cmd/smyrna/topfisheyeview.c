@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 #include "topfisheyeview.h"
-#include <cgraph/alloc.h>
 #include <math.h>
 #include "viewport.h"
 #include "viewportcamera.h"
@@ -21,6 +20,7 @@
 #include <string.h>
 #include <common/color.h>
 #include <common/colorprocs.h>
+#include <util/alloc.h>
 
 static int get_temp_coords(topview * t, int level, int v, double *coord_x,
 			   double *coord_y);

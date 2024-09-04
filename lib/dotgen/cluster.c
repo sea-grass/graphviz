@@ -9,10 +9,10 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <dotgen/dot.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 static node_t*
 map_interclust_node(node_t * n)

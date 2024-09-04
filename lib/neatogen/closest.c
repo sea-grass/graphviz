@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <cgraph/sort.h>
 #include <limits.h>
@@ -18,6 +17,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 /*****************************************
 ** This module contains functions that  **

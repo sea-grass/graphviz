@@ -10,9 +10,9 @@
 
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <circogen/circular.h>
 #include <circogen/block.h>
+#include <util/alloc.h>
 
 void initBlocklist(blocklist_t * bl)
 {

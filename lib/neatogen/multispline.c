@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <float.h>
 #include <limits.h>
 #include <neatogen/multispline.h>
@@ -18,6 +17,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 static bool spline_merge(node_t * n)
 {

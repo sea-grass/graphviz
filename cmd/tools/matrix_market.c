@@ -11,8 +11,8 @@
 #include <sparse/SparseMatrix.h>
 #include "mmio.h"
 #include "matrix_market.h"
-#include <cgraph/alloc.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 SparseMatrix SparseMatrix_import_matrix_market(FILE * f)
 {

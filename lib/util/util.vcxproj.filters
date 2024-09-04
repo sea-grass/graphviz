@@ -15,6 +15,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>

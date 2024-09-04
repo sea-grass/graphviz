@@ -14,7 +14,6 @@
  * Derived from Graham Wills' algorithm described in GD'97.
  */
 
-#include    <cgraph/alloc.h>
 #include    <cgraph/cgraph.h>
 #include    <twopigen/circle.h>
 #include    <neatogen/adjust.h>
@@ -22,6 +21,7 @@
 #include    <neatogen/neatoprocs.h>
 #include    <stdbool.h>
 #include    <stddef.h>
+#include    <util/alloc.h>
 
 static void twopi_init_edge(edge_t * e)
 {

@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <common/geom.h>
 #include <common/arith.h>
@@ -16,6 +15,7 @@
 #include <sparse/QuadTree.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 extern double distance_cropped(double *x, int dim, int i, int j);
 

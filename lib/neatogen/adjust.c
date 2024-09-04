@@ -14,7 +14,6 @@
  */
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
@@ -37,6 +36,7 @@
 #include <neatogen/quad_prog_vpsc.h>
 #endif
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 
 #define SEPFACT         0.8 // default esep/sep

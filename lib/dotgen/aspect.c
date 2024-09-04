@@ -9,10 +9,10 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/bitarray.h>
 #include <dotgen/dot.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 /*
  * Author: Mohammad T. Irfan

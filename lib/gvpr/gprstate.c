@@ -16,10 +16,10 @@
 
 #include <gvpr/gprstate.h>
 #include <ast/error.h>
-#include <cgraph/alloc.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/alloc.h>
 
 static int name_used;
 

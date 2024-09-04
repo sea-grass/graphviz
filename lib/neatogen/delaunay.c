@@ -15,10 +15,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>     /* for agerr() and friends */
 #include <cgraph/sort.h>
 #include <neatogen/delaunay.h>
+#include <util/alloc.h>
 
 #ifdef HAVE_GTS
 #include <gts.h>

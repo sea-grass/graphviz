@@ -24,13 +24,13 @@
 
 #include <assert.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/ingraphs.h>
 #include "colorxlate.h"
 #include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 #include <util/exit.h>
 
 typedef struct {

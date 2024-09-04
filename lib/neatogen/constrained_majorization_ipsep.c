@@ -31,9 +31,9 @@
  * Tim Dwyer, 2006
  **********************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/digcola.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 #ifdef IPSEPCOLA
 #include <math.h>
 #include <stdlib.h>

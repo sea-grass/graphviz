@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <stdlib.h>
 #include <inttypes.h>
 #include <label/index.h>
@@ -18,6 +17,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <label/node.h>
+#include <util/alloc.h>
 
 /* Make a new node and initialize to have all branch cells empty.
 */

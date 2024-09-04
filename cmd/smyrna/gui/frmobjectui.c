@@ -21,11 +21,11 @@
 #include <assert.h>
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/startswith.h>
 #include <cgraph/strview.h>
 #include <stdint.h>
 #include <string.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 #include <util/unreachable.h>
 

@@ -10,10 +10,10 @@
 
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <pathplan/pathutil.h>
+#include <util/alloc.h>
 
 void freePath(Ppolyline_t* p)
 {

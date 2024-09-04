@@ -14,7 +14,6 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/startswith.h>
 #include <common/types.h>
@@ -23,6 +22,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 #define EMPTY(s)	((s == 0) || (*s == '\0'))
 #define SLEN(s)     (sizeof(s)-1)

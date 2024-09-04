@@ -8,13 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <glcomp/glcomppanel.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glutils.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 static void glCompPanelDraw(void *o) {
   glCompPanel *p = o;

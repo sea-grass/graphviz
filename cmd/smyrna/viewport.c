@@ -13,7 +13,6 @@
 #include <assert.h>
 #include "viewport.h"
 #include "draw.h"
-#include <cgraph/alloc.h>
 #include <common/color.h>
 #include <glade/glade.h>
 #include "gui.h"
@@ -29,6 +28,7 @@
 #include "arcball.h"
 #include "hotkeymap.h"
 #include "topviewfuncs.h"
+#include <util/alloc.h>
 #include <util/exit.h>
 #include <util/strcasecmp.h>
 

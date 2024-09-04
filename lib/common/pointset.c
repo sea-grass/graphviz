@@ -10,10 +10,10 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/pointset.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 typedef struct {
     Dtlink_t link;

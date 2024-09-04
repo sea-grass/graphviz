@@ -8,13 +8,13 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <cgraph/sort.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
 #include <neatogen/kkutils.h>
 #include <stdlib.h>
 #include <math.h>
+#include <util/alloc.h>
 
 size_t common_neighbors(vtx_data *graph, int u, int *v_vector) {
     // count number of common neighbors of 'v_vector' and 'u'

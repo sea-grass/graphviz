@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <string.h>
 #include <sfdpgen/sparse_solve.h>
 #include <sfdpgen/sfdp.h>
@@ -17,6 +16,7 @@
 #include <common/arith.h>
 #include <common/types.h>
 #include <common/globals.h>
+#include <util/alloc.h>
 
 /* #define DEBUG_PRINT */
 

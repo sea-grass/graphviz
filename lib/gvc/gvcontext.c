@@ -21,7 +21,6 @@
 #include <stdlib.h>
 
 #include "builddate.h"
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/types.h>
 #include <gvc/gvplugin.h>
@@ -29,6 +28,7 @@
 #include <gvc/gvcint.h>
 #include <gvc/gvcproc.h>
 #include <gvc/gvc.h>
+#include <util/alloc.h>
 
 /* from common/textspan.c */
 extern void textfont_dict_close(GVC_t *gvc);

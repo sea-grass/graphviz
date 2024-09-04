@@ -9,11 +9,11 @@
  *************************************************************************/
 
 #include <cgraph/agxbuf.h>
-#include <cgraph/alloc.h>
 #include <cgraph/gv_ctype.h>
 #include <xdot/xdot.h>
 #include <stdlib.h>
 #include <string.h>
+#include <util/alloc.h>
 #include <util/prisize_t.h>
 #include <util/unreachable.h>
 

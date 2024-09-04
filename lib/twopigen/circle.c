@@ -9,7 +9,6 @@
  *************************************************************************/
 
 #include    <assert.h>
-#include    <cgraph/alloc.h>
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/gv_math.h>
 #include    <cgraph/list.h>
@@ -21,6 +20,7 @@
 #include    <stdint.h>
 #include    <stdlib.h>
 #include    <string.h>
+#include    <util/alloc.h>
 #include    <util/streq.h>
 #define DEF_RANKSEP 1.00
 #define UNSET 10.00

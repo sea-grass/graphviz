@@ -20,7 +20,6 @@
 
 #include "config.h"
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/list.h>
 #include <fdpgen/clusteredges.h>
 #include <fdpgen/fdp.h>
@@ -29,6 +28,7 @@
 #include <pathplan/vispath.h>
 #include <pack/pack.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 DEFINE_LIST(objlist, Ppoly_t*)
 

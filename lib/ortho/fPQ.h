@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include <cgraph/alloc.h>
 #include <ortho/sgraph.h>
+#include <util/alloc.h>
 
 #define N_VAL(n) (n)->n_val
 #define N_IDX(n) (n)->n_idx

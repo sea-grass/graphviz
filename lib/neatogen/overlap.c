@@ -9,8 +9,8 @@
  *************************************************************************/
 
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <neatogen/overlap.h>
+#include <util/alloc.h>
 
 #if ((defined(HAVE_GTS) || defined(HAVE_TRIANGLE)) && defined(SFDP))
 

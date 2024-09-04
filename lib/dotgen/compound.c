@@ -13,11 +13,11 @@
  */
 
 #include	<cgraph/agxbuf.h>
-#include	<cgraph/alloc.h>
 #include	<cgraph/gv_math.h>
 #include	<dotgen/dot.h>
 #include	<stdbool.h>
 #include	<stddef.h>
+#include	<util/alloc.h>
 
 /* Return point where line segment [pp,cp] intersects
  * the box bp. Assume cp is outside the box, and pp is

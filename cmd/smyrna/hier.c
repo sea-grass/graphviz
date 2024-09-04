@@ -8,12 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include "smyrnadefs.h"
 #include "hier.h"
 #include <math.h>
 #include <neatogen/delaunay.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 void positionAllItems(Hierarchy * hp, focus_t * fs, reposition_t * parms)
 {

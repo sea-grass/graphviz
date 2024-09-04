@@ -10,12 +10,12 @@
 
 /* solves the system ab=c using gauss reduction */
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <math.h>
 #include <neatogen/neatoprocs.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 static void swap(double *x, double *y) {
   const double temp = *x;

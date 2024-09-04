@@ -15,7 +15,6 @@
 #pragma once
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <limits.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -23,6 +22,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <util/alloc.h>
 
 /// a description of where a buffer is located
 typedef enum {

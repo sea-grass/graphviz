@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <sparse/general.h>
 #include <math.h>
 #include <stdbool.h>
@@ -20,6 +19,7 @@
 #include <sparse/DotIO.h>
 #include <edgepaint/intersection.h>
 #include <sparse/QuadTree.h>
+#include <util/alloc.h>
 
 static int splines_intersect(size_t dim,
 			     double cos_critical, int check_edges_with_same_endpoint, 

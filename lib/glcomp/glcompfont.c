@@ -8,7 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glpangofont.h>
@@ -17,6 +16,7 @@
 #include <GL/glut.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 
 static void print_bitmap_string(void *font, char *s)
 {

@@ -14,12 +14,12 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cghdr.h>
 #include <cgraph/node_set.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <util/alloc.h>
 
 Agraph_t *Ag_G_global;
 

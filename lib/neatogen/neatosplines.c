@@ -10,7 +10,6 @@
 
 #include <assert.h>
 #include "config.h"
-#include <cgraph/alloc.h>
 #include <limits.h>
 #include <math.h>
 #include <neatogen/neato.h>
@@ -20,6 +19,7 @@
 #include <neatogen/multispline.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/unreachable.h>
 
 #ifdef ORTHO

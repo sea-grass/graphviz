@@ -8,11 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <glcomp/glcomplabel.h>
 #include <glcomp/glcompfont.h>
 #include <glcomp/glcompset.h>
 #include <glcomp/glutils.h>
+#include <util/alloc.h>
 
 static void glCompLabelDraw(void *label) {
   glCompLabel *p = label;

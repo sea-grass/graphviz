@@ -8,9 +8,9 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include	<cgraph/alloc.h>
 #include	<circogen/edgelist.h>
 #include	<assert.h>
+#include	<util/alloc.h>
 
 static void *mkItem(void *p, Dtdisc_t *disc) {
     (void)disc;

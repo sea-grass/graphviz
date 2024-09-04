@@ -20,10 +20,10 @@
 
 %{
 
-#include <cgraph/alloc.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <common/htmllex.h>
+#include <util/alloc.h>
 
 extern int htmlparse(void);
 

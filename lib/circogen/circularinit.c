@@ -13,7 +13,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include    <cgraph/alloc.h>
 #include    <circogen/circular.h>
 #include    <neatogen/adjust.h>
 #include    <pack/pack.h>
@@ -21,6 +20,7 @@
 #include    <stddef.h>
 #include    <stdbool.h>
 #include    <string.h>
+#include    <util/alloc.h>
 
 static void circular_init_edge(edge_t * e)
 {

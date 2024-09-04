@@ -8,8 +8,8 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include <cgraph/alloc.h>
 #include <stdint.h>
+#include <util/alloc.h>
 #include <util/unreachable.h>
 #include "tcldot.h"
 

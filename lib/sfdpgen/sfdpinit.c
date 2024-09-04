@@ -20,11 +20,11 @@
 #include <sfdpgen/spring_electrical.h>
 #include <neatogen/overlap.h>
 #include <sfdpgen/stress_model.h>
-#include <cgraph/alloc.h>
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <util/alloc.h>
 #include <util/strcasecmp.h>
 
 static void sfdp_init_edge(edge_t * e)

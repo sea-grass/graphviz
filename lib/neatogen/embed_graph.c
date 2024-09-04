@@ -16,7 +16,6 @@
 
 ************************************************/
 
-#include <cgraph/alloc.h>
 #include <neatogen/dijkstra.h>
 #include <neatogen/bfs.h>
 #include <neatogen/kkutils.h>
@@ -24,7 +23,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-/* #include <math.h> */
+#include <util/alloc.h>
 
 void embed_graph(vtx_data * graph, int n, int dim, DistType *** Coords,
 		 int reweight_graph)

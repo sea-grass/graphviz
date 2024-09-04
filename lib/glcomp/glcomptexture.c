@@ -9,11 +9,11 @@
  *************************************************************************/
 
 #include <assert.h>
-#include <cgraph/alloc.h>
 #include <glcomp/glcomptexture.h>
 #include <glcomp/glpangofont.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <util/alloc.h>
 
 static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
                                          const unsigned char *data, bool is2D) {

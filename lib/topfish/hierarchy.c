@@ -16,7 +16,6 @@
 //                                   // 
 ///////////////////////////////////////
 
-#include <cgraph/alloc.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,6 +24,7 @@
 #include <assert.h>
 #include <common/arith.h>
 #include <topfish/hierarchy.h>
+#include <util/alloc.h>
 
 /////////////////////////
 // Some utilities for  //
