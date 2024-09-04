@@ -102,9 +102,6 @@ extern "C" {
 #define HTML_TEXT 2
 #define HTML_IMAGE 3
 
-#define HTML_VRULE 1
-#define HTML_HRULE 2
-
     typedef struct htmlcell_t htmlcell_t;
     typedef struct htmltbl_t htmltbl_t;
 	
@@ -147,7 +144,8 @@ extern "C" {
 	uint16_t row;
 	htmllabel_t child;
 	htmltbl_t *parent;
-	unsigned char ruled;
+	bool vruled: 1; ///< vertically ruled?
+	bool hruled: 1; ///< horizontally ruled?
     };
 
 /* During parsing, table contents are stored as rows of cells.

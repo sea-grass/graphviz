@@ -468,7 +468,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
     pts.UR.y += pos.y;
 
     //Determine vertical line coordinate and length
-    if ((cp->ruled & HTML_VRULE) && cp->col + cp->colspan < cp->parent->column_count) {
+    if (cp->vruled && cp->col + cp->colspan < cp->parent->column_count) {
 	if (cp->row == 0) {	// first row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -486,7 +486,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	doSide(job, rule_pt, 0, rule_length);
     }
     //Determine the horizontal coordinate and length
-    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rowspan < cp->parent->row_count) {
+    if (cp->hruled && cp->row + cp->rowspan < cp->parent->row_count) {
 	if (cp->col == 0) {	// first column 
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -570,7 +570,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 	cells = tbl->u.n.cells;
 	gvrender_set_penwidth(job, 1.0);
 	while ((cp = *cells++)) {
-	    if (cp->ruled)
+	    if (cp->hruled || cp->vruled)
 		emit_html_rules(job, cp, env, tbl->data.pencolor, *cells);
 	}
 
@@ -1231,7 +1231,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    n_cols = MAX(c, n_cols);
 	    n_rows = MAX(r + cellp->rowspan, n_rows);
 	    if (inIntSet(is, r + cellp->rowspan))
-		cellp->ruled |= HTML_HRULE;
+		cellp->hruled = true;
 	    cp = (pitem *)dtlink(cdict, cp);
 	}
 	rp = (pitem *)dtlink(rows, rp);

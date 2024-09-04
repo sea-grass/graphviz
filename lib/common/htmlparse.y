@@ -199,8 +199,10 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
   sp->u.cp = cp;
   dtinsert (row, sp);
   cp->child.kind = kind;
-  if (tbl->vrule)
-    cp->ruled = HTML_VRULE;
+  if (tbl->vrule) {
+    cp->vruled = true;
+    cp->hruled = false;
+  }
 
   if(kind == HTML_TEXT)
   	cp->child.u.txt = obj;
@@ -465,7 +467,7 @@ row : T_row { addRow (); } cells T_end_row { $$ = lastRow(); }
 
 cells : cell { $$ = $1; }
       | cells cell { $$ = $2; }
-      | cells VR cell { $1->ruled |= HTML_VRULE; $$ = $3; }
+      | cells VR cell { $1->vruled = true; $$ = $3; }
       ;
 
 cell : T_cell fonttable { setCell($1,$2,HTML_TBL); } T_end_cell { $$ = $1; }
