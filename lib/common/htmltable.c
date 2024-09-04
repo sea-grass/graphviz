@@ -49,6 +49,7 @@
 #include <util/exit.h>
 #include <util/prisize_t.h>
 #include <util/strcasecmp.h>
+#include <util/streq.h>
 #include <util/unreachable.h>
 
 #define DEFAULT_BORDER    1
@@ -912,11 +913,11 @@ static htmldata_t *portToTbl(htmltbl_t * tp, char *id)
 }
 
 /* See if edge port corresponds to part of the html node.
- * Assume pname != "".
  * If successful, return pointer to port's box.
  * Else return NULL.
  */
 boxf *html_port(node_t *n, char *pname, unsigned char *sides){
+    assert(pname != NULL && !streq(pname, ""));
     htmldata_t *tp;
     htmllabel_t *lbl = ND_label(n)->u.html;
     boxf *rv = NULL;
