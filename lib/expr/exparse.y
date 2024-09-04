@@ -508,17 +508,13 @@ dcl_item	:	dcl_name {checkName ($1); expr.id=$1;} array initialize
 				$1->value = exnewnode(expr.program, 0, false, 0, NULL, NULL);
 				if ($3 && $1->local == NULL)
 				{
-					Dtdisc_t*	disc;
-
-					if (!(disc = calloc(1, sizeof(Dtdisc_t))))
-						exnospace();
-					if ($3 == INTEGER) {
-						disc->key = offsetof(Exassoc_t, key);
-						disc->size = sizeof(Extype_t);
-						disc->comparf = cmpKey;
-					}
-					else
-						disc->key = offsetof(Exassoc_t, name);
+					static Dtdisc_t disc_key = {
+						.key = offsetof(Exassoc_t, key),
+						.size = sizeof(Extype_t),
+						.comparf = cmpKey,
+					};
+					static Dtdisc_t disc_name = {.key = offsetof(Exassoc_t, name)};
+					Dtdisc_t *const disc = $3 == INTEGER ? &disc_key : &disc_name;
 					if (!($1->local = dtopen(disc, Dtoset)))
 						exerror("%s: cannot initialize associative array", $1->name);
 					$1->index_type = $3; /* -1 indicates no typechecking */
@@ -1203,17 +1199,13 @@ assign		:	/* empty */
 
 initialize	:	assign
 		|	'(' {
-				Dtdisc_t*	disc;
-
 				if (expr.procedure)
 					exerror("%s: nested function definitions not supported", expr.id->name);
 				expr.procedure = exnewnode(expr.program, PROCEDURE, true, expr.declare, NULL, NULL);
-				if (!(disc = calloc(1, sizeof(Dtdisc_t))))
-					exnospace();
-				disc->key = offsetof(Exid_t, name);
 				if (!streq(expr.id->name, "begin"))
 				{
-					if (!(expr.procedure->data.procedure.frame = dtopen(disc, Dtset)) || !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
+					static Dtdisc_t disc = {.key = offsetof(Exid_t, name)};
+					if (!(expr.procedure->data.procedure.frame = dtopen(&disc, Dtset)) || !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
 						exnospace();
 					expr.program->symbols = expr.program->frame = expr.procedure->data.procedure.frame;
 				}
