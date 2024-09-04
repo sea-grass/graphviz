@@ -114,17 +114,17 @@ extern "C" {
 DEFINE_LIST(cells, htmlcell_t *)
 
 typedef struct {
-  Dtlink_t link;
   cells_t rp;
   bool ruled;
 } row_t;
 
 /// Free row. This closes and frees row’s list, then the item itself is freed.
-static inline void free_ritem(void *item) {
-  row_t *p = item;
+static inline void free_ritem(row_t *p) {
   cells_free(&p->rp);
   free (p);
 }
+
+DEFINE_LIST_WITH_DTOR(rows, row_t *, free_ritem)
 
     struct htmltbl_t {
 	htmldata_t data;
@@ -135,7 +135,7 @@ static inline void free_ritem(void *item) {
 	    } n;
 	    struct {
 		htmltbl_t *prev;	/* stack */
-		Dt_t *rows;	/* cells */
+		rows_t rows; ///< cells
 	    } p;
 	} u;
 	int8_t cellborder;

@@ -845,7 +845,7 @@ static void free_html_tbl(htmltbl_t * tbl)
     htmlcell_t **cells;
 
     if (tbl->row_count == SIZE_MAX) { // raw, parsed table
-	dtclose(tbl->u.p.rows);
+	rows_free(&tbl->u.p.rows);
     } else {
 	cells = tbl->u.n.cells;
 
@@ -1185,29 +1185,25 @@ static uint16_t findCol(PointSet *ps, int row, int col, htmlcell_t *cellp) {
 static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 {
     htmlcell_t **cells;
-    Dt_t *rows = tbl->u.p.rows;
+    rows_t rows = tbl->u.p.rows;
     int rv = 0;
     size_t n_rows = 0;
     size_t n_cols = 0;
     PointSet *ps = newPS();
     Dt_t *is = openIntSet();
 
-    row_t *rp = (row_t *)dtflatten(rows);
     size_t cnt = 0;
-    uint16_t r = 0;
-    while (rp) {
+    for (uint16_t r = 0; r < rows_size(&rows); ++r) {
+	row_t *rp = rows_get(&rows, r);
 	cnt += cells_size(&rp->rp);
 	if (rp->ruled) {
 	    addIntSet(is, r + 1);
 	}
-	rp = (row_t *)dtlink(rows, rp);
-	r++;
     }
 
     cells = tbl->u.n.cells = gv_calloc(cnt + 1, sizeof(htmlcell_t *));
-    rp = (row_t *)dtflatten(rows);
-    r = 0;
-    while (rp) {
+    for (uint16_t r = 0; r < rows_size(&rows); ++r) {
+	row_t *rp = rows_get(&rows, r);
 	uint16_t c = 0;
 	for (size_t i = 0; i < cells_size(&rp->rp); ++i) {
 	    htmlcell_t *cellp = cells_get(&rp->rp, i);
@@ -1222,12 +1218,10 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    if (inIntSet(is, r + cellp->rowspan))
 		cellp->hruled = true;
 	}
-	rp = (row_t *)dtlink(rows, rp);
-	r++;
     }
     tbl->row_count = n_rows;
     tbl->column_count = n_cols;
-    dtclose(rows);
+    rows_free(&rows);
     dtclose(is);
     freePS(ps);
     return rv;

@@ -54,14 +54,14 @@ static void cleanCell(htmlcell_t *cp);
 
 /// Clean up table if error in parsing.
 static void cleanTbl(htmltbl_t *tp) {
-  Dt_t *rows = tp->u.p.rows;
-  for (row_t *r = (row_t *)dtflatten(rows); r != NULL;
-       r = (row_t *)dtlink(rows, r)) {
-    for (size_t c = 0; c < cells_size(&r->rp); ++c) {
-      cleanCell(cells_get(&r->rp, c));
+  rows_t *rows = &tp->u.p.rows;
+  for (size_t r = 0; r < rows_size(rows); ++r) {
+    row_t *rp = rows_get(rows, r);
+    for (size_t c = 0; c < cells_size(&rp->rp); ++c) {
+      cleanCell(cells_get(&rp->rp, c));
     }
   }
-  dtclose(rows);
+  rows_free(rows);
   free_html_data(&tp->data);
   free(tp);
 }
@@ -85,13 +85,6 @@ cleanCell (htmlcell_t* cp)
   free_html_data (&cp->data);
   free (cp);
 }
-
-static Dtdisc_t rowDisc = {
-    .key = offsetof(row_t, rp),
-    .size = sizeof(cells_t),
-    .link = offsetof(row_t, link),
-    .freef = free_ritem,
-};
 
 /// Append a new text span to the list.
 static void
@@ -160,7 +153,7 @@ mkText(void)
 
 static row_t *lastRow(void) {
   htmltbl_t* tbl = HTMLstate.tblstack;
-  row_t *sp = dtlast(tbl->u.p.rows);
+  row_t *sp = *rows_back(&tbl->u.p.rows);
   return sp;
 }
 
@@ -170,14 +163,14 @@ static row_t *addRow(void) {
   row_t *sp = gv_alloc(sizeof(row_t));
   if (tbl->hrule)
     sp->ruled = true;
-  dtinsert (tbl->u.p.rows, sp);
+  rows_append(&tbl->u.p.rows, sp);
   return sp;
 }
 
 /// Set cell body and type and attach to row
 static void setCell(htmlcell_t *cp, void *obj, char kind) {
   htmltbl_t* tbl = HTMLstate.tblstack;
-  row_t *rp = dtlast(tbl->u.p.rows);
+  row_t *rp = *rows_back(&tbl->u.p.rows);
   cells_t *row = &rp->rp;
   cells_append(row, cp);
   cp->child.kind = kind;
@@ -409,7 +402,7 @@ table : opt_space T_table {
             cleanup(); YYABORT;
           }
           $2->u.p.prev = HTMLstate.tblstack;
-          $2->u.p.rows = dtopen(&rowDisc, Dtqueue);
+          $2->u.p.rows = (rows_t){0};
           HTMLstate.tblstack = $2;
           $2->font = HTMLstate.fontstack->cfont;
           $<tbl>$ = $2;
