@@ -12,6 +12,7 @@
 
 #pragma once
 
+#include <cgraph/list.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -153,16 +154,13 @@ extern "C" {
  * Rows is a list of rows.
  */
 
-typedef struct {
-  Dtlink_t link;
-  Dt_t *rp;
-  bool ruled;
-} row_t;
+DEFINE_LIST(cells, htmlcell_t *)
 
 typedef struct {
   Dtlink_t link;
-  htmlcell_t *cp;
-} cell_t;
+  cells_t rp;
+  bool ruled;
+} row_t;
 
     typedef struct {
         pointf pos;

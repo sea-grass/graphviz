@@ -1184,8 +1184,6 @@ static uint16_t findCol(PointSet *ps, int row, int col, htmlcell_t *cellp) {
  */
 static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 {
-    Dt_t *cdict;
-    htmlcell_t *cellp;
     htmlcell_t **cells;
     Dt_t *rows = tbl->u.p.rows;
     int rv = 0;
@@ -1198,12 +1196,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     size_t cnt = 0;
     uint16_t r = 0;
     while (rp) {
-	cdict = rp->rp;
-	cell_t *cp = (cell_t *)dtflatten(cdict);
-	while (cp) {
-	    cnt++;
-	    cp = (cell_t *)dtlink(cdict, cp);
-	}
+	cnt += cells_size(&rp->rp);
 	if (rp->ruled) {
 	    addIntSet(is, r + 1);
 	}
@@ -1215,11 +1208,9 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     rp = (row_t *)dtflatten(rows);
     r = 0;
     while (rp) {
-	cdict = rp->rp;
-	cell_t *cp = (cell_t *)dtflatten(cdict);
 	uint16_t c = 0;
-	while (cp) {
-	    cellp = cp->cp;
+	for (size_t i = 0; i < cells_size(&rp->rp); ++i) {
+	    htmlcell_t *cellp = cells_get(&rp->rp, i);
 	    *cells++ = cellp;
 	    rv |= size_html_cell(g, cellp, tbl, env);
 	    c = findCol(ps, r, c, cellp);
@@ -1230,7 +1221,6 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    n_rows = MAX(r + cellp->rowspan, n_rows);
 	    if (inIntSet(is, r + cellp->rowspan))
 		cellp->hruled = true;
-	    cp = (cell_t *)dtlink(cdict, cp);
 	}
 	rp = (row_t *)dtlink(rows, rp);
 	r++;

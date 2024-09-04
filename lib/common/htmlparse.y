@@ -57,9 +57,8 @@ static void cleanTbl(htmltbl_t *tp) {
   Dt_t *rows = tp->u.p.rows;
   for (row_t *r = (row_t *)dtflatten(rows); r != NULL;
        r = (row_t *)dtlink(rows, r)) {
-    for (cell_t *c = (cell_t *)dtflatten(r->rp); c != NULL;
-         c = (cell_t *)dtlink(r->rp, c)) {
-      cleanCell(c->cp);
+    for (size_t c = 0; c < cells_size(&r->rp); ++c) {
+      cleanCell(cells_get(&r->rp, c));
     }
   }
   dtclose(rows);
@@ -82,7 +81,7 @@ static struct {
  */
 static void free_ritem(void *item) {
   row_t *p = item;
-  dtclose(p->rp);
+  cells_free(&p->rp);
   free (p);
 }
 
@@ -98,15 +97,9 @@ cleanCell (htmlcell_t* cp)
 
 static Dtdisc_t rowDisc = {
     .key = offsetof(row_t, rp),
-    .size = sizeof(Dt_t *),
+    .size = sizeof(cells_t),
     .link = offsetof(row_t, link),
     .freef = free_ritem,
-};
-static Dtdisc_t cellDisc = {
-    .key = offsetof(cell_t, cp),
-    .size = sizeof(htmlcell_t *),
-    .link = offsetof(cell_t, link),
-    .freef = free,
 };
 
 /// Append a new text span to the list.
@@ -182,10 +175,8 @@ static row_t *lastRow(void) {
 
 /// Add new cell row to current table.
 static row_t *addRow(void) {
-  Dt_t*      dp = dtopen(&cellDisc, Dtqueue);
   htmltbl_t* tbl = HTMLstate.tblstack;
   row_t *sp = gv_alloc(sizeof(row_t));
-  sp->rp = dp;
   if (tbl->hrule)
     sp->ruled = true;
   dtinsert (tbl->u.p.rows, sp);
@@ -194,12 +185,10 @@ static row_t *addRow(void) {
 
 /// Set cell body and type and attach to row
 static void setCell(htmlcell_t *cp, void *obj, char kind) {
-  cell_t *sp = gv_alloc(sizeof(cell_t));
   htmltbl_t* tbl = HTMLstate.tblstack;
   row_t *rp = dtlast(tbl->u.p.rows);
-  Dt_t *row = rp->rp;
-  sp->cp = cp;
-  dtinsert (row, sp);
+  cells_t *row = &rp->rp;
+  cells_append(row, cp);
   cp->child.kind = kind;
   if (tbl->vrule) {
     cp->vruled = true;
