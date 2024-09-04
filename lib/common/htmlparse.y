@@ -1,7 +1,7 @@
 /// @file
 /// @ingroup common_utils
 /*************************************************************************
- * Copyright (c) 2011 AT&T Intellectual Property 
+ * Copyright (c) 2011 AT&T Intellectual Property
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,6 +20,7 @@
 
 %{
 
+#include <cgraph/list.h>
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <common/htmllex.h>
@@ -32,11 +33,26 @@ typedef struct sfont_t {
     struct sfont_t *pfont;
 } sfont_t;
 
+static void free_ti(textspan_t item) {
+  free(item.str);
+}
+
+DEFINE_LIST_WITH_DTOR(textspans, textspan_t, free_ti)
+
+static void free_hi(htextspan_t item) {
+  for (size_t i = 0; i < item.nitems; i++) {
+    free(item.items[i].str);
+  }
+  free(item.items);
+}
+
+DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
+
 static struct {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
-  Dt_t*        fitemList; /* Dictionary for font text items */
-  Dt_t*        fspanList; 
+  textspans_t  fitemList;
+  htextspans_t fspanList;
   agxbuf*      str;       /* Buffer for text */
   sfont_t*     fontstack;
   GVC_t*       gvc;
@@ -97,120 +113,71 @@ static Dtdisc_t cellDisc = {
     .freef = free,
 };
 
-typedef struct {
-    Dtlink_t    link;
-    textspan_t  ti;
-} fitem;
-
-typedef struct {
-    Dtlink_t     link;
-    htextspan_t  lp;
-} fspan;
-
-static void free_fitem(void *item) {
-    fitem *p = item;
-    free (p->ti.str);
-    free (p);
-}
-
-static void free_fspan(void *span) {
-    fspan *p = span;
-    textspan_t* ti;
-
-    if (p->lp.nitems) {
-	ti = p->lp.items;
-	for (size_t i = 0; i < p->lp.nitems; i++) {
-	    free (ti->str);
-	    ti++;
-	}
-	free (p->lp.items);
-    }
-    free (p);
-}
-
-static Dtdisc_t fstrDisc = {
-    .link = offsetof(fitem, link),
-    .freef = free,
-};
-
-static Dtdisc_t fspanDisc = {
-    .link = offsetof(fspan, link),
-    .freef = free,
-};
-
 /* appendFItemList:
- * Append a new fitem to the list.
+ * Append a new text span to the list.
  */
 static void
 appendFItemList (agxbuf *ag)
 {
-    fitem *fi = gv_alloc(sizeof(fitem));
-
-    fi->ti.str = agxbdisown(ag);
-    fi->ti.font = HTMLstate.fontstack->cfont;
-    dtinsert(HTMLstate.fitemList, fi);
+    const textspan_t ti = {.str = agxbdisown(ag),
+                           .font = HTMLstate.fontstack->cfont};
+    textspans_append(&HTMLstate.fitemList, ti);
 }	
 
 /* appendFLineList:
  */
-static void 
+static void
 appendFLineList (int v)
 {
-    fspan *ln = gv_alloc(sizeof(fspan));
-    fitem *fi;
-    Dt_t *ilist = HTMLstate.fitemList;
+    htextspan_t lp = {0};
+    textspans_t *ilist = &HTMLstate.fitemList;
 
-    size_t cnt = (size_t)dtsize(ilist);
-    ln->lp.just = v;
+    size_t cnt = textspans_size(ilist);
+    lp.just = v;
     if (cnt) {
-        int i = 0;
-	ln->lp.nitems = cnt;
-	ln->lp.items = gv_calloc(cnt, sizeof(textspan_t));
+	lp.nitems = cnt;
+	lp.items = gv_calloc(cnt, sizeof(textspan_t));
 
-	fi = (fitem*)dtflatten(ilist);
-	for (; fi; fi = (fitem*)dtlink(fitemList, fi)) {
-		/* NOTE: When fitemList is closed, it uses free, which only frees the container,
-		 * not the contents, so this copy is safe.
-		 */
-	    ln->lp.items[i] = fi->ti;  
-	    i++;
+	for (size_t i = 0; i < textspans_size(ilist); ++i) {
+	    // move this text span into the new list
+	    textspan_t *ti = textspans_at(ilist, i);
+	    lp.items[i] = *ti;
+	    *ti = (textspan_t){0};
 	}
     }
     else {
-	ln->lp.items = gv_alloc(sizeof(textspan_t));
-	ln->lp.nitems = 1;
-	ln->lp.items[0].str = gv_strdup("");
-	ln->lp.items[0].font = HTMLstate.fontstack->cfont;
+	lp.items = gv_alloc(sizeof(textspan_t));
+	lp.nitems = 1;
+	lp.items[0].str = gv_strdup("");
+	lp.items[0].font = HTMLstate.fontstack->cfont;
     }
 
-    dtclear(ilist);
+    textspans_clear(ilist);
 
-    dtinsert(HTMLstate.fspanList, ln);
+    htextspans_append(&HTMLstate.fspanList, lp);
 }
 
 static htmltxt_t*
 mkText(void)
 {
-    Dt_t * ispan = HTMLstate.fspanList;
-    fspan *fl ;
+    htextspans_t *ispan = &HTMLstate.fspanList;
     htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
-    
-    if (dtsize (HTMLstate.fitemList)) 
+
+    if (!textspans_is_empty(&HTMLstate.fitemList))
 	appendFLineList (UNSET_ALIGN);
 
-    size_t cnt = (size_t)dtsize(ispan);
+    size_t cnt = htextspans_size(ispan);
     hft->nspans = cnt;
     	
-    if (cnt) {
-	int i = 0;
-	hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
-    	for(fl=dtfirst(ispan); fl; fl=dtnext(ispan,fl)) {
-    	    hft->spans[i] = fl->lp;
-    	    i++;
-    	}
+    hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
+    for (size_t i = 0; i < htextspans_size(ispan); ++i) {
+    	// move this HTML text span into the new list
+    	htextspan_t *hi = htextspans_at(ispan, i);
+    	hft->spans[i] = *hi;
+    	*hi = (htextspan_t){0};
     }
-    
-    dtclear(ispan);
+
+    htextspans_clear(ispan);
 
     return hft;
 }
@@ -250,7 +217,7 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
   cp->child.kind = kind;
   if (tbl->vrule)
     cp->ruled = HTML_VRULE;
-  
+
   if(kind == HTML_TEXT)
   	cp->child.u.txt = obj;
   else if (kind == HTML_IMAGE)
@@ -311,13 +278,8 @@ static void cleanup (void)
   }
   cellDisc.freef = free;
 
-  fstrDisc.freef = free_fitem;
-  dtclear (HTMLstate.fitemList);
-  fstrDisc.freef = free;
-
-  fspanDisc.freef = free_fspan;
-  dtclear (HTMLstate.fspanList);
-  fspanDisc.freef = free;
+  textspans_clear(&HTMLstate.fitemList);
+  htextspans_clear(&HTMLstate.fspanList);
 
   freeFontstack();
 }
@@ -363,7 +325,7 @@ pushFont (textfont_t *fp)
 
 /* popFont:
  */
-static void 
+static void
 popFont (void)
 {
     sfont_t* curfont = HTMLstate.fontstack;
@@ -398,13 +360,13 @@ popFont (void)
 
 %type <txt> fonttext
 %type <cell> cell cells
-%type <i> br  
+%type <i> br
 %type <tbl> table fonttable
 %type <img> image
 %type <p> row rows
 
 %start html
-             
+
 %%
 
 html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
@@ -415,8 +377,8 @@ html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
 fonttext : text { $$ = mkText(); }
       ;
 
-text : text textitem  
-     | textitem 
+text : text textitem
+     | textitem
      ;
 
 textitem : string { appendFItemList(HTMLstate.str);}
@@ -487,7 +449,7 @@ string : T_string
        | string T_string
        ;
 
-table : opt_space T_table { 
+table : opt_space T_table {
           if (nonSpace(agxbuse(HTMLstate.str))) {
             htmlerror ("Syntax error: non-space string used before <TABLE>");
             cleanup(); YYABORT;
@@ -516,7 +478,7 @@ fonttable : table { $$ = $1; }
           | bold table n_bold { $$=$2; }
           ;
 
-opt_space : string 
+opt_space : string
           | /* empty*/
           ;
 
@@ -572,11 +534,11 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   HTMLstate.tblstack = 0;
   HTMLstate.lbl = 0;
   HTMLstate.gvc = GD_gvc(env->g);
-  HTMLstate.fitemList = dtopen(&fstrDisc, Dtqueue);
-  HTMLstate.fspanList = dtopen(&fspanDisc, Dtqueue);
+  HTMLstate.fitemList = (textspans_t){0};
+  HTMLstate.fspanList = (htextspans_t){0};
 
   HTMLstate.str = &str;
-  
+
   if (initHTMLlexer (txt, &str, env)) {/* failed: no libexpat - give up */
     *warn = 2;
     l = NULL;
@@ -587,13 +549,11 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
     l = HTMLstate.lbl;
   }
 
-  dtclose (HTMLstate.fitemList);
-  dtclose (HTMLstate.fspanList);
-  
-  HTMLstate.fitemList = NULL;
-  HTMLstate.fspanList = NULL;
+  textspans_free(&HTMLstate.fitemList);
+  htextspans_free(&HTMLstate.fspanList);
+
   HTMLstate.fontstack = NULL;
-  
+
   agxbfree (&str);
 
   return l;
