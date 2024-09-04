@@ -49,6 +49,13 @@ static void free_hi(htextspan_t item) {
 
 DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
 
+/// Clean up table if error in parsing.
+static void cleanTbl(htmltbl_t *tp) {
+  dtclose(tp->u.p.rows);
+  free_html_data(&tp->data);
+  free(tp);
+}
+
 static struct {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
@@ -66,15 +73,6 @@ static void free_ritem(void *item) {
   pitem *p = item;
   dtclose (p->u.rp);
   free (p);
-}
-
-/// Clean up table if error in parsing.
-static void
-cleanTbl (htmltbl_t* tp)
-{
-  dtclose (tp->u.p.rows);
-  free_html_data (&tp->data);
-  free (tp);
 }
 
 /// Clean up cell if error in parsing.
