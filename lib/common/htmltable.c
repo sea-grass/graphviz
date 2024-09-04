@@ -69,8 +69,7 @@ typedef struct {
 static void printCell(htmlcell_t * cp, int ind);
 #endif
 
-/* pushFontInfo:
- * Replace current font attributes in env with ones from fp,
+/* Replace current font attributes in env with ones from fp,
  * storing old attributes in savp. We only deal with attributes
  * set in env. The attributes are restored via popFontInfo.
  */
@@ -100,8 +99,7 @@ pushFontInfo(htmlenv_t * env, textfont_t * fp, textfont_t * savp)
     }
 }
 
-/* popFontInfo:
- * Restore saved font attributes.
+/* Restore saved font attributes.
  * Copy only set values.
  */
 static void popFontInfo(htmlenv_t * env, textfont_t * savp)
@@ -221,8 +219,7 @@ static void doSide(GVJ_t * job, pointf p, double wd, double ht)
     gvrender_box(job, BF, 1);
 }
 
-/* mkPts:
- * Convert boxf into four corner points
+/* Convert boxf into four corner points
  * If border is > 1, inset the points by half the border.
  * It is assumed AF is pointf[4], so the data is store there
  * and AF is returned.
@@ -246,8 +243,7 @@ static pointf *mkPts(pointf * AF, boxf b, int border)
     return AF;
 }
 
-/* doBorder:
- * Draw a rectangular border for the box b.
+/* Draw a rectangular border for the box b.
  * Handles dashed and dotted styles, rounded corners.
  * Also handles thick lines.
  * Assume dp->border > 0
@@ -344,8 +340,7 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
     }
 }
 
-/* setFill:
- * Set up fill values from given color; make pen transparent.
+/* Set up fill values from given color; make pen transparent.
  * Return type of fill required.
  */
 static int setFill(GVJ_t *job, char *color, int angle, htmlstyle_t style,
@@ -370,8 +365,7 @@ static int setFill(GVJ_t *job, char *color, int angle, htmlstyle_t style,
     return filled;
 }
 
-/* initAnchor:
- * Save current map values.
+/* Save current map values.
  * Initialize fields in job->obj pertaining to anchors.
  * In particular, this also sets the output rectangle.
  * If there is something to do, 
@@ -424,8 +418,7 @@ initAnchor(GVJ_t * job, htmlenv_t * env, htmldata_t * data, boxf b,
 #define RESET(fld) \
   if(obj->fld != save->fld) {free(obj->fld); obj->fld = save->fld;}
 
-/* endAnchor:
- * Pop context pushed by initAnchor.
+/* Pop context pushed by initAnchor.
  * This is done by ending current anchor, restoring old values and
  * freeing new.
  *
@@ -448,11 +441,9 @@ static void endAnchor(GVJ_t * job, htmlmap_data_t * save)
     obj->explicit_tooltip = save->explicit_tooltip;
 }
 
-/* forward declaration */
 static void emit_html_cell(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env);
 
-/* emit_html_rules:
- * place vertical and horizontal lines between adjacent cells and
+/* place vertical and horizontal lines between adjacent cells and
  * extend the lines to intersect the rounded table boundary 
  */
 static void
@@ -599,8 +590,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 	popFontInfo(env, &savef);
 }
 
-/* emit_html_img:
- * The image will be centered in the given box.
+/* The image will be centered in the given box.
  * Scaling is determined by either the image's scale attribute,
  * or the imagescale attribute of the graph object being drawn.
  */
@@ -683,8 +673,7 @@ static void emit_html_cell(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env)
     }
 }
 
-/* allocObj:
- * Push new obj on stack to be used in common by all 
+/* Push new obj on stack to be used in common by all 
  * html elements with anchors.
  * This inherits the type, emit_state, and object of the
  * parent, as well as the url, explicit, target and tooltip.
@@ -752,8 +741,6 @@ heightOfLbl (htmllabel_t * lp)
     return sz;
 }
 
-/* emit_html_label:
- */
 void emit_html_label(GVJ_t * job, htmllabel_t * lp, textlabel_t * tp)
 {
     htmlenv_t env;
@@ -848,8 +835,7 @@ static void free_html_cell(htmlcell_t * cp)
     free(cp);
 }
 
-/* free_html_tbl:
- * If tbl->row_count is `SIZE_MAX`, table is in initial state from
+/* If tbl->row_count is `SIZE_MAX`, table is in initial state from
  * HTML parse, with data stored in u.p. Once run through processTbl,
  * data is stored in u.n and tbl->row_count is < `SIZE_MAX`.
  */
@@ -886,7 +872,7 @@ void free_html_label(htmllabel_t * lp, int root)
 	free(lp);
 }
 
-static htmldata_t *portToTbl(htmltbl_t *, char *);	/* forward declaration */
+static htmldata_t *portToTbl(htmltbl_t *, char *);
 
 static htmldata_t *portToCell(htmlcell_t * cp, char *id)
 {
@@ -902,8 +888,7 @@ static htmldata_t *portToCell(htmlcell_t * cp, char *id)
     return rv;
 }
 
-/* portToTbl:
- * See if tp or any of its child cells has the given port id.
+/* See if tp or any of its child cells has the given port id.
  * If true, return corresponding box.
  */
 static htmldata_t *portToTbl(htmltbl_t * tp, char *id)
@@ -926,8 +911,7 @@ static htmldata_t *portToTbl(htmltbl_t * tp, char *id)
     return rv;
 }
 
-/* html_port:
- * See if edge port corresponds to part of the html node.
+/* See if edge port corresponds to part of the html node.
  * Assume pname != "".
  * If successful, return pointer to port's box.
  * Else return NULL.
@@ -1085,12 +1069,9 @@ static int size_html_txt(GVC_t *gvc, htmltxt_t * ftxt, htmlenv_t * env)
     return 0;
 }
 
-/* forward declarion for recursive usage */
 static int size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 			 htmlenv_t * env);
 
-/* size_html_img:
- */
 static int size_html_img(htmlimg_t * img, htmlenv_t * env)
 {
     box b;
@@ -1111,8 +1092,6 @@ static int size_html_img(htmlimg_t * img, htmlenv_t * env)
     return rv;
 }
 
-/* size_html_cell:
- */
 static int
 size_html_cell(graph_t * g, htmlcell_t * cp, htmltbl_t * parent,
 	       htmlenv_t * env)
@@ -1197,8 +1176,7 @@ static uint16_t findCol(PointSet *ps, int row, int col, htmlcell_t *cellp) {
     return (uint16_t)col;
 }
 
-/* processTbl:
- * Convert parser representation of cells into final form.
+/* Convert parser representation of cells into final form.
  * Find column and row positions of cells.
  * Recursively size cells.
  * Return 1 if problem sizing a cell.
@@ -1273,8 +1251,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
  */
 #define SPLIT(x,n,s) (((x) - ((s)-1)*((n)-1)) / (n))
 
-/* sizeLinearArray:
- * Determine sizes of rows and columns. The size of a column is the
+/* Determine sizes of rows and columns. The size of a column is the
  * maximum width of any cell in it. Similarly for rows.
  * A cell spanning columns contributes proportionately to each column
  * it is in.
@@ -1313,9 +1290,7 @@ static void sizeLinearArray(htmltbl_t * tbl)
     }
 }
 
-/* closeGraphs:
- * Clean up graphs made for setting column and row widths.
- */
+/// Clean up graphs made for setting column and row widths.
 static void closeGraphs(graph_t * rowg, graph_t * colg)
 {
     node_t *n;
@@ -1328,8 +1303,7 @@ static void closeGraphs(graph_t * rowg, graph_t * colg)
     agclose(colg);
 }
 
-/* checkChain:
- * For each pair of nodes in the node list, add an edge if none exists.
+/* For each pair of nodes in the node list, add an edge if none exists.
  * Assumes node list has nodes ordered correctly.
  */
 static void checkChain(graph_t * g)
@@ -1350,8 +1324,7 @@ static void checkChain(graph_t * g)
     }
 }
 
-/* checkEdge:
- * Check for edge in g. If it exists, set its minlen to max of sz and
+/* Check for edge in g. If it exists, set its minlen to max of sz and
  * current minlen. Else, create it and set minlen to sz.
  */
 static void checkEdge(graph_t *g, node_t *t, node_t *h, double sz) {
@@ -1372,8 +1345,7 @@ static void checkEdge(graph_t *g, node_t *t, node_t *h, double sz) {
     }
 }
 
-/* makeGraphs:
- * Generate dags modeling the row and column constraints.
+/* Generate dags modeling the row and column constraints.
  * If the table has column_count columns, we create the graph
  *  0 -> 1 -> 2 -> ... -> column_count
  * and if a cell starts in column c with span colspan, with
@@ -1441,8 +1413,7 @@ static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
     checkChain(rowg);
 }
 
-/* setSizes:
- * Use rankings to determine cell dimensions. The rank values
+/* Use rankings to determine cell dimensions. The rank values
  * give the coordinate, so to get the width/height, we have
  * to subtract the previous value.
  */
@@ -1467,8 +1438,7 @@ static void setSizes(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
 
 }
 
-/* sizeArray:
- * Set column and row sizes. Optimize for minimum width and
+/* Set column and row sizes. Optimize for minimum width and
  * height. Where there is slack, try to distribute evenly.
  * We do this by encoding cells as edges with min length is
  * a dag on a chain. We then run network simplex, using
@@ -1503,8 +1473,7 @@ static void sizeArray(htmltbl_t * tbl)
 
 static void pos_html_tbl(htmltbl_t *, boxf, unsigned char);
 
-/* pos_html_img:
- * Place image in cell
+/* Place image in cell
  * storing allowed space handed by parent cell.
  * How this space is used is handled in emit_html_img.
  */
@@ -1513,9 +1482,7 @@ static void pos_html_img(htmlimg_t * cp, boxf pos)
     cp->box = pos;
 }
 
-/* pos_html_txt:
- * Set default alignment.
- */
+/// Set default alignment.
 static void pos_html_txt(htmltxt_t * ftxt, char c)
 {
     for (size_t i = 0; i < ftxt->nspans; i++) {
@@ -1524,8 +1491,6 @@ static void pos_html_txt(htmltxt_t * ftxt, char c)
     }
 }
 
-/* pos_html_cell:
- */
 static void pos_html_cell(htmlcell_t *cp, boxf pos, unsigned char sides) {
     double delx, dely;
     pointf oldsz;
@@ -1670,8 +1635,7 @@ static void pos_html_cell(htmlcell_t *cp, boxf pos, unsigned char sides) {
     }
 }
 
-/* pos_html_tbl:
- * Position table given its box, then calculate
+/* Position table given its box, then calculate
  * the position of each cell. In addition, set the sides
  * attribute indicating which external sides of the node
  * are accessible to the table.
@@ -1770,8 +1734,7 @@ static void pos_html_tbl(htmltbl_t *tbl, boxf pos, unsigned char sides) {
     tbl->data.box = pos;
 }
 
-/* size_html_tbl:
- * Determine the size of a table by first determining the
+/* Determine the size of a table by first determining the
  * size of each cell.
  */
 static int
@@ -1982,9 +1945,7 @@ static char *getPenColor(void *obj)
 	return NULL;
 }
 
-/* make_html_label:
- * Return non-zero if problem parsing HTML. In this case, use object name.
- */
+/// Return non-zero if problem parsing HTML. In this case, use object name.
 int make_html_label(void *obj, textlabel_t * lp)
 {
     int rv;
