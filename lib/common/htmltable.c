@@ -849,9 +849,9 @@ static void free_html_cell(htmlcell_t * cp)
 }
 
 /* free_html_tbl:
- * If tbl->row_count is negative, table is in initial state from
+ * If tbl->row_count is `SIZE_MAX`, table is in initial state from
  * HTML parse, with data stored in u.p. Once run through processTbl,
- * data is stored in u.n and tbl->row_count is > 0.
+ * data is stored in u.n and tbl->row_count is < `SIZE_MAX`.
  */
 static void free_html_tbl(htmltbl_t * tbl)
 {
