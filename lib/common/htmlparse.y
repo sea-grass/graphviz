@@ -158,13 +158,12 @@ static row_t *lastRow(void) {
 }
 
 /// Add new cell row to current table.
-static row_t *addRow(void) {
+static void addRow(void) {
   htmltbl_t* tbl = HTMLstate.tblstack;
   row_t *sp = gv_alloc(sizeof(row_t));
   if (tbl->hrule)
     sp->ruled = true;
   rows_append(&tbl->u.p.rows, sp);
-  return sp;
 }
 
 /// Set cell body and type and attach to row
