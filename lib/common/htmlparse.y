@@ -29,10 +29,7 @@
 
 extern int htmlparse(void);
 
-typedef struct sfont_t {
-    textfont_t *cfont;	
-    struct sfont_t *pfont;
-} sfont_t;
+DEFINE_LIST(sfont, textfont_t *)
 
 static void free_ti(textspan_t item) {
   free(item.str);
@@ -72,7 +69,7 @@ static struct {
   textspans_t  fitemList;
   htextspans_t fspanList;
   agxbuf*      str;       /* Buffer for text */
-  sfont_t*     fontstack;
+  sfont_t      fontstack;
   GVC_t*       gvc;
 } HTMLstate;
 
@@ -91,7 +88,7 @@ static void
 appendFItemList (agxbuf *ag)
 {
     const textspan_t ti = {.str = agxbdisown(ag),
-                           .font = HTMLstate.fontstack->cfont};
+                           .font = *sfont_back(&HTMLstate.fontstack)};
     textspans_append(&HTMLstate.fitemList, ti);
 }	
 
@@ -118,7 +115,7 @@ appendFLineList (int v)
 	lp.items = gv_alloc(sizeof(textspan_t));
 	lp.nitems = 1;
 	lp.items[0].str = gv_strdup("");
-	lp.items[0].font = HTMLstate.fontstack->cfont;
+	lp.items[0].font = *sfont_back(&HTMLstate.fontstack);
     }
 
     textspans_clear(ilist);
@@ -198,20 +195,6 @@ static htmllabel_t *mkLabel(void *obj, char kind) {
   return lp;
 }
 
-/* Free all stack items but the last, which is
- * put on artificially during in parseHTML.
- */
-static void
-freeFontstack(void)
-{
-    sfont_t* s;
-    sfont_t* next;
-
-    for (s = HTMLstate.fontstack; (next = s->pfont); s = next) {
-	free(s);
-    }
-}
-
 /* Called on error. Frees resources allocated during parsing.
  * This includes a label, plus a walk down the stack of
  * tables. Note that `cleanTbl` frees the contained cells.
@@ -234,7 +217,7 @@ static void cleanup (void)
   textspans_clear(&HTMLstate.fitemList);
   htextspans_clear(&HTMLstate.fspanList);
 
-  freeFontstack();
+  sfont_free(&HTMLstate.fontstack);
 }
 
 /// Return 1 if s contains a non-space character.
@@ -251,8 +234,7 @@ static bool nonSpace(const char *s) {
 static void
 pushFont (textfont_t *fp)
 {
-    sfont_t *ft = gv_alloc(sizeof(sfont_t));
-    textfont_t* curfont = HTMLstate.fontstack->cfont;
+    textfont_t* curfont = *sfont_back(&HTMLstate.fontstack);
     textfont_t  f = *fp;
 
     if (curfont) {
@@ -266,19 +248,14 @@ pushFont (textfont_t *fp)
 	    f.flags |= curfont->flags;
     }
 
-    ft->cfont = dtinsert(HTMLstate.gvc->textfont_dt, &f);
-    ft->pfont = HTMLstate.fontstack;
-    HTMLstate.fontstack = ft;
+    textfont_t *const ft = dtinsert(HTMLstate.gvc->textfont_dt, &f);
+    sfont_push_back(&HTMLstate.fontstack, ft);
 }
 
 static void
 popFont (void)
 {
-    sfont_t* curfont = HTMLstate.fontstack;
-    sfont_t* prevfont = curfont->pfont;
-
-    free (curfont);
-    HTMLstate.fontstack = prevfont;
+    (void)sfont_pop_back(&HTMLstate.fontstack);
 }
 
 %}
@@ -403,7 +380,7 @@ table : opt_space T_table {
           $2->u.p.prev = HTMLstate.tblstack;
           $2->u.p.rows = (rows_t){0};
           HTMLstate.tblstack = $2;
-          $2->font = HTMLstate.fontstack->cfont;
+          $2->font = *sfont_back(&HTMLstate.fontstack);
           $<tbl>$ = $2;
         }
         rows T_end_table opt_space {
@@ -471,11 +448,8 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
 {
   agxbuf        str = {0};
   htmllabel_t*  l;
-  sfont_t       dfltf;
 
-  dfltf.cfont = NULL;
-  dfltf.pfont = NULL;
-  HTMLstate.fontstack = &dfltf;
+  sfont_push_back(&HTMLstate.fontstack, NULL);
   HTMLstate.tblstack = 0;
   HTMLstate.lbl = 0;
   HTMLstate.gvc = GD_gvc(env->g);
@@ -497,7 +471,7 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   textspans_free(&HTMLstate.fitemList);
   htextspans_free(&HTMLstate.fspanList);
 
-  HTMLstate.fontstack = NULL;
+  sfont_free(&HTMLstate.fontstack);
 
   agxbfree (&str);
 
