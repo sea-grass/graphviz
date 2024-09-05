@@ -51,6 +51,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The CMake build on Windows no longer fails if TCL is detected. This was
   technically a regression in 12.0.0 since building the Graphviz TCL bindings
   was integrated into the CMake build system in that release. #2581
+- When its output file cannot be opened, `edgepaint` no longer dereferences a
+  null pointer when printing its error message.
 
 ## [12.1.0] – 2024-08-12
 

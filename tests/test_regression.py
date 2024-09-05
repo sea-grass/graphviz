@@ -4828,7 +4828,7 @@ def test_agxbuf_print_nul():
     run_c(c_src, cflags=cflags)
 
 
-def test_agxbuf_use_implicit__nul():
+def test_agxbuf_use_implicit_nul():
     """
     `agxbuf` should be able to use its entire memory as an inline string
     """
@@ -4845,3 +4845,25 @@ def test_agxbuf_use_implicit__nul():
         cflags = ["-std=gnu99", f"-I{lib}"]
 
     run_c(c_src, cflags=cflags)
+
+
+@pytest.mark.skipif(which("edgepaint") is None, reason="edgepaint not available")
+def test_edgepaint_error_message():
+    """
+    when failing to open its output, edgepaint should not dereference a null
+    pointer
+    """
+
+    # try to open a non-existent file
+    edgepaint = which("edgepaint")
+    proc = subprocess.run(
+        [edgepaint, "-o", "/a/nonexistent/path"],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE,
+        universal_newlines=True,
+    )
+
+    # edgepaint should name itself in the error message, not “(null)”
+    assert re.search(
+        r"\bedgepaint\b", proc.stderr
+    ), "edgepaint does not know its own name"

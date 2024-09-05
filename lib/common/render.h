@@ -87,7 +87,7 @@ extern "C" {
     RENDER_API void graph_init(graph_t * g, bool use_rankdir);
     RENDER_API void graph_cleanup(graph_t * g);
     RENDER_API int dotneato_args_initialize(GVC_t * gvc, int, char **);
-    RENDER_API int dotneato_usage(int);
+    RENDER_API int dotneato_usage(const char *, int);
     RENDER_API void dotneato_postprocess(Agraph_t *);
     RENDER_API void gv_postprocess(Agraph_t *, int);
     RENDER_API Ppolyline_t* ellipticWedge (pointf ctr, double major, double minor, double angle0, double angle1);
