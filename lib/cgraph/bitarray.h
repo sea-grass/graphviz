@@ -27,7 +27,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include <string.h>
 #include <util/alloc.h>
 
 /// a compressed array of boolean values
@@ -103,5 +102,5 @@ static inline void bitarray_reset(bitarray_t *self) {
   if (self->size_bits > sizeof(self->u.block) * 8)
     free(self->u.base);
 
-  memset(self, 0, sizeof(*self));
+  *self = (bitarray_t){0};
 }
