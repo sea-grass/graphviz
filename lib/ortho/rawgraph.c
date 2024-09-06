@@ -8,8 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
- /* Implements graph.h  */
-
 #include <cgraph/list.h>
 #include <ortho/rawgraph.h>
 #include <stdbool.h>
