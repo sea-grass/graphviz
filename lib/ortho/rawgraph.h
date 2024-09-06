@@ -17,7 +17,7 @@
 typedef struct {
   int color;
   int topsort_order;
-  Dt_t* adj_list;  /* adj_list */
+  Dt_t* adj_list; ///< adjacency list
 } vertex;
 
 typedef struct {
