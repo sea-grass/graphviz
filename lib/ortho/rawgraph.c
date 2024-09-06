@@ -10,7 +10,6 @@
 
  /* Implements graph.h  */
 
-#include "config.h"
 #include <cgraph/list.h>
 #include <ortho/rawgraph.h>
 #include <stdbool.h>
