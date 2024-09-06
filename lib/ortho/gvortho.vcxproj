@@ -78,7 +78,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="fPQ.h" />
-    <ClInclude Include="intset.h" />
     <ClInclude Include="maze.h" />
     <ClInclude Include="ortho.h" />
     <ClInclude Include="partition.h" />

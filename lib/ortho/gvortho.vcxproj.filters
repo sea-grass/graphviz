@@ -18,9 +18,6 @@
     <ClInclude Include="fPQ.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="intset.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="maze.h">
       <Filter>Header Files</Filter>
     </ClInclude>

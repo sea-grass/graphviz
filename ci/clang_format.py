@@ -188,8 +188,6 @@ EXCLUDE = (
     "lib/common/htmltable.c",
     "lib/common/htmltable.h",
     "lib/common/input.c",
-    "lib/common/intset.c",
-    "lib/common/intset.h",
     "lib/common/labels.c",
     "lib/common/macros.h",
     "lib/common/ns.c",
