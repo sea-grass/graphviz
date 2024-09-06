@@ -489,7 +489,6 @@ addNodeEdges (sgraph* sg, cell* cp, snode* np)
 #endif
 }
 
-#include <common/intset.h>
 static char* bendToStr (bend b)
 {
   char* s = NULL;
