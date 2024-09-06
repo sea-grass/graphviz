@@ -524,19 +524,16 @@ static void putSeg (FILE* fp, segment* seg)
 }
 
 static DEBUG_FN void dumpChanG(channel *cp, double v) {
-  intitem* ip;
-  Dt_t* adj;
-
   if (seg_list_size(&cp->seg_list) < 2) return;
   fprintf (stderr, "channel %.0f (%f,%f)\n", v, cp->p.p1, cp->p.p2);
   for (size_t k = 0; k < seg_list_size(&cp->seg_list); ++k) {
-    adj = cp->G->vertices[k].adj_list;
-    if (dtsize(adj) == 0) continue;
+    const adj_list_t adj = cp->G->vertices[k].adj_list;
+    if (adj_list_is_empty(&adj)) continue;
     putSeg(stderr, seg_list_get(&cp->seg_list, k));
     fputs (" ->\n", stderr);
-    for (ip = dtfirst(adj); ip; ip = dtnext(adj, ip)) {
+    for (size_t i = 0; i < adj_list_size(&adj); ++i) {
       fputs ("     ", stderr);
-      putSeg(stderr, seg_list_get(&cp->seg_list, ip->id));
+      putSeg(stderr, seg_list_get(&cp->seg_list, adj_list_get(&adj, i)));
       fputs ("\n", stderr);
     }
   }

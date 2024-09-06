@@ -13,7 +13,6 @@
 #include "config.h"
 #include <cgraph/list.h>
 #include <ortho/rawgraph.h>
-#include <common/intset.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <util/alloc.h>
@@ -27,7 +26,6 @@ rawgraph *make_graph(size_t n) {
     g->nvs = n;
     g->vertices = gv_calloc(n, sizeof(vertex));
     for(size_t i = 0; i < n; ++i) {
-        g->vertices[i].adj_list = openIntSet ();
         g->vertices[i].color = UNSCANNED;
     }
     return g;
@@ -37,41 +35,42 @@ void
 free_graph(rawgraph* g)
 {
     for(size_t i = 0; i < g->nvs; ++i)
-        dtclose(g->vertices[i].adj_list);
+        adj_list_free(&g->vertices[i].adj_list);
     free (g->vertices);
     free (g);
 }
  
 void insert_edge(rawgraph *g, size_t v1, size_t v2) {
-    intitem obj = {.id = v2};
-    dtinsert(g->vertices[v1].adj_list,&obj);
+    if (!edge_exists(g, v1, v2)) {
+      adj_list_append(&g->vertices[v1].adj_list, v2);
+    }
 }
 
 void remove_redge(rawgraph *g, size_t v1, size_t v2) {
-    intitem obj = {.id = v2};
-    dtdelete (g->vertices[v1].adj_list, &obj);
-    obj.id = v1;
-    dtdelete (g->vertices[v2].adj_list, &obj);
+    adj_list_remove(&g->vertices[v1].adj_list, v2);
+    adj_list_remove(&g->vertices[v2].adj_list, v1);
+}
+
+static bool zeq(size_t a, size_t b) {
+  return a == b;
 }
 
 bool edge_exists(rawgraph *g, size_t v1, size_t v2) {
-  return dtmatch(g->vertices[v1].adj_list, &v2) != 0;
+  return adj_list_contains(&g->vertices[v1].adj_list, v2, zeq);
 }
 
 DEFINE_LIST(int_stack, size_t)
 
 static int DFS_visit(rawgraph *g, size_t v, int time, int_stack_t *sp) {
-    Dt_t* adj;
-    Dtlink_t* link;
     vertex* vp;
 
     vp = g->vertices + v;
     vp->color = SCANNING;
-    adj = vp->adj_list;
+    const adj_list_t adj = vp->adj_list;
     time = time + 1;
 
-    for(link = dtflatten (adj); link; link = dtlink(adj,link)) {
-        const size_t id = ((intitem *)dtobj(adj,link))->id;
+    for (size_t i = 0; i < adj_list_size(&adj); ++i) {
+        const size_t id = adj_list_get(&adj, i);
         if(g->vertices[id].color == UNSCANNED)
             time = DFS_visit(g, id, time, sp);
     }
