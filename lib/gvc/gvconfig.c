@@ -17,6 +17,7 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
+#include <cgraph/list.h>
 #include <cgraph/startswith.h>
 #include <gvc/gvconfig.h>
 #include <stdbool.h>
@@ -633,6 +634,8 @@ done:
 
 /* Emulating windows glob */
 
+DEFINE_LIST_WITH_DTOR(strs, char *, free)
+
 /* glob:
  * Assumes only GLOB_NOSORT flag given. That is, there is no offset,
  * and no previous call to glob.
@@ -644,9 +647,7 @@ glob (GVC_t* gvc, char* pattern, int flags, int (*errfunc)(const char *, int), g
     char* libdir;
     WIN32_FIND_DATA wfd;
     HANDLE h;
-    char** str=0;
-    int arrsize=0;
-    int cnt = 0;
+    strs_t strs = {0};
     
     pglob->gl_pathc = 0;
     pglob->gl_pathv = NULL;
@@ -655,30 +656,29 @@ glob (GVC_t* gvc, char* pattern, int flags, int (*errfunc)(const char *, int), g
     if (h == INVALID_HANDLE_VALUE) return GLOB_NOMATCH;
     libdir = gvconfig_libdir(gvc);
     do {
-      if (cnt >= arrsize-1) {
-        arrsize += 512;
-        char **new_str = realloc(str, arrsize * sizeof(char*));
-        if (!new_str) goto oom;
-        str = new_str;
-      }
       const size_t size =
         strlen(libdir) + strlen(DIRSEP) + strlen(wfd.cFileName) + 1;
-      str[cnt] = malloc(size);
-      if (!str[cnt]) goto oom;
-      snprintf(str[cnt], size, "%s%s%s", libdir, DIRSEP, wfd.cFileName);
-      cnt++;
+      char *const entry = malloc(size);
+      if (!entry) {
+        goto oom;
+      }
+      snprintf(entry, size, "%s%s%s", libdir, DIRSEP, wfd.cFileName);
+      if (strs_try_append(&strs, entry) != 0) {
+        free(entry);
+        goto oom;
+      }
     } while (FindNextFile (h, &wfd));
-    str[cnt] = 0;
+    if (strs_try_append(&strs, NULL) != 0) {
+      goto oom;
+    }
 
-    pglob->gl_pathc = cnt;
-    pglob->gl_pathv = realloc(str, (cnt+1)*sizeof(char*));
+    pglob->gl_pathc = strs_size(&strs);
+    pglob->gl_pathv = strs_detach(&strs);
     
     return 0;
 
 oom:
-    for (int i = 0; i < cnt; ++i)
-      free(str[i]);
-    free(str);
+    strs_free(&strs);
     return GLOB_NOSPACE;
 }
 
