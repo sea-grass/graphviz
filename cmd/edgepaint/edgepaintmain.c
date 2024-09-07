@@ -36,6 +36,7 @@
 
 static char *fname;
 static FILE *outfile;
+static char **Files;
 
 static void usage (char* cmd, int eval){
   fprintf(stderr, "Usage: %s <options> gv file with 2D coordinates.\n", cmd);

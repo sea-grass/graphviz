@@ -52,6 +52,7 @@ typedef struct {
 
 static char *fname;
 static FILE *outfile;
+static char **Files;
 
 static const char use_msg[] =
 "Usage: mingle <options> <file>\n\
