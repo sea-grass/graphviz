@@ -20,6 +20,7 @@
 #include <cgraph/startswith.h>
 #include <gvc/gvconfig.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include	<string.h>
 #include <unistd.h>
@@ -660,11 +661,10 @@ glob (GVC_t* gvc, char* pattern, int flags, int (*errfunc)(const char *, int), g
         if (!new_str) goto oom;
         str = new_str;
       }
-      str[cnt] = malloc (strlen(libdir)+1+strlen(wfd.cFileName)+1);
+      const size_t size = strlen(libdir) + 1 + strlen(wfd.cFileName) + 1;
+      str[cnt] = malloc(size);
       if (!str[cnt]) goto oom;
-      strcpy(str[cnt],libdir);
-      strcat(str[cnt],DIRSEP);
-      strcat(str[cnt],wfd.cFileName);
+      snprintf(str[cnt], size, "%s%s%s", libdir, DIRSEP, wfd.cFileName);
       cnt++;
     } while (FindNextFile (h, &wfd));
     str[cnt] = 0;
