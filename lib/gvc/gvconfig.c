@@ -661,7 +661,8 @@ glob (GVC_t* gvc, char* pattern, int flags, int (*errfunc)(const char *, int), g
         if (!new_str) goto oom;
         str = new_str;
       }
-      const size_t size = strlen(libdir) + 1 + strlen(wfd.cFileName) + 1;
+      const size_t size =
+        strlen(libdir) + strlen(DIRSEP) + strlen(wfd.cFileName) + 1;
       str[cnt] = malloc(size);
       if (!str[cnt]) goto oom;
       snprintf(str[cnt], size, "%s%s%s", libdir, DIRSEP, wfd.cFileName);
