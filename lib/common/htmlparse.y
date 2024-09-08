@@ -24,6 +24,7 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <common/htmllex.h>
+#include <stdbool.h>
 #include <util/alloc.h>
 
 extern int htmlparse(void);
@@ -58,8 +59,7 @@ static struct {
   GVC_t*       gvc;
 } HTMLstate;
 
-/* free_ritem:
- * Free row. This closes and frees row's list, then
+/* Free row. This closes and frees row's list, then
  * the pitem itself is freed.
  */
 static void free_ritem(void *item) {
@@ -68,9 +68,7 @@ static void free_ritem(void *item) {
   free (p);
 }
 
-/* cleanTbl:
- * Clean up table if error in parsing.
- */
+/// Clean up table if error in parsing.
 static void
 cleanTbl (htmltbl_t* tp)
 {
@@ -79,9 +77,7 @@ cleanTbl (htmltbl_t* tp)
   free (tp);
 }
 
-/* cleanCell:
- * Clean up cell if error in parsing.
- */
+/// Clean up cell if error in parsing.
 static void
 cleanCell (htmlcell_t* cp)
 {
@@ -91,9 +87,7 @@ cleanCell (htmlcell_t* cp)
   free (cp);
 }
 
-/* free_citem:
- * Free cell item during parsing. This frees cell and pitem.
- */
+/// Free cell item during parsing. This frees cell and pitem.
 static void free_citem(void *item) {
   pitem *p = item;
   cleanCell (p->u.cp);
@@ -113,9 +107,7 @@ static Dtdisc_t cellDisc = {
     .freef = free,
 };
 
-/* appendFItemList:
- * Append a new text span to the list.
- */
+/// Append a new text span to the list.
 static void
 appendFItemList (agxbuf *ag)
 {
@@ -124,8 +116,6 @@ appendFItemList (agxbuf *ag)
     textspans_append(&HTMLstate.fitemList, ti);
 }	
 
-/* appendFLineList:
- */
 static void
 appendFLineList (int v)
 {
@@ -189,9 +179,7 @@ static pitem* lastRow (void)
   return sp;
 }
 
-/* addRow:
- * Add new cell row to current table.
- */
+/// Add new cell row to current table.
 static pitem* addRow (void)
 {
   Dt_t*      dp = dtopen(&cellDisc, Dtqueue);
@@ -204,9 +192,7 @@ static pitem* addRow (void)
   return sp;
 }
 
-/* setCell:
- * Set cell body and type and attach to row
- */
+/// Set cell body and type and attach to row
 static void setCell(htmlcell_t *cp, void *obj, char kind) {
   pitem*     sp = gv_alloc(sizeof(pitem));
   htmltbl_t* tbl = HTMLstate.tblstack;
@@ -226,9 +212,7 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
     cp->child.u.tbl = obj;
 }
 
-/* mkLabel:
- * Create label, given body and type.
- */
+/// Create label, given body and type.
 static htmllabel_t *mkLabel(void *obj, char kind) {
   htmllabel_t* lp = gv_alloc(sizeof(htmllabel_t));
 
@@ -240,8 +224,7 @@ static htmllabel_t *mkLabel(void *obj, char kind) {
   return lp;
 }
 
-/* freeFontstack:
- * Free all stack items but the last, which is
+/* Free all stack items but the last, which is
  * put on artificially during in parseHTML.
  */
 static void
@@ -255,8 +238,7 @@ freeFontstack(void)
     }
 }
 
-/* cleanup:
- * Called on error. Frees resources allocated during parsing.
+/* Called on error. Frees resources allocated during parsing.
  * This includes a label, plus a walk down the stack of
  * tables. Note that we use the free_citem function to actually
  * free cells.
@@ -284,22 +266,17 @@ static void cleanup (void)
   freeFontstack();
 }
 
-/* nonSpace:
- * Return 1 if s contains a non-space character.
- */
-static int nonSpace (char* s)
-{
+/// Return 1 if s contains a non-space character.
+static bool nonSpace(const char *s) {
   char   c;
 
   while ((c = *s++)) {
-    if (c != ' ') return 1;
+    if (c != ' ') return true;
   }
-  return 0;
+  return false;
 }
 
-/* pushFont:
- * Fonts are allocated in the lexer.
- */
+/// Fonts are allocated in the lexer.
 static void
 pushFont (textfont_t *fp)
 {
@@ -323,8 +300,6 @@ pushFont (textfont_t *fp)
     HTMLstate.fontstack = ft;
 }
 
-/* popFont:
- */
 static void
 popFont (void)
 {
@@ -516,8 +491,7 @@ VR  : T_vr T_end_vr
 
 %%
 
-/* parseHTML:
- * Return parsed label or NULL if failure.
+/* Return parsed label or NULL if failure.
  * Set warn to 0 on success; 1 for warning message; 2 if no expat; 3 for error
  * message.
  */
