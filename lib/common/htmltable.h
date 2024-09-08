@@ -12,9 +12,10 @@
 
 #pragma once
 
+#include <cgraph/list.h>
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -102,12 +103,29 @@ extern "C" {
 #define HTML_TEXT 2
 #define HTML_IMAGE 3
 
-#define HTML_VRULE 1
-#define HTML_HRULE 2
-
     typedef struct htmlcell_t htmlcell_t;
     typedef struct htmltbl_t htmltbl_t;
 	
+/* During parsing, table contents are stored as rows of cells.
+ * A row is a list of cells
+ * Rows is a list of rows.
+ */
+
+DEFINE_LIST(cells, htmlcell_t *)
+
+typedef struct {
+  cells_t rp;
+  bool ruled;
+} row_t;
+
+/// Free row. This closes and frees row’s list, then the item itself is freed.
+static inline void free_ritem(row_t *p) {
+  cells_free(&p->rp);
+  free (p);
+}
+
+DEFINE_LIST_WITH_DTOR(rows, row_t *, free_ritem)
+
     struct htmltbl_t {
 	htmldata_t data;
 	union {
@@ -117,7 +135,7 @@ extern "C" {
 	    } n;
 	    struct {
 		htmltbl_t *prev;	/* stack */
-		Dt_t *rows;	/* cells */
+		rows_t rows; ///< cells
 	    } p;
 	} u;
 	int8_t cellborder;
@@ -147,23 +165,10 @@ extern "C" {
 	uint16_t row;
 	htmllabel_t child;
 	htmltbl_t *parent;
-	unsigned char ruled;
+	bool vruled: 1; ///< vertically ruled?
+	bool hruled: 1; ///< horizontally ruled?
     };
 
-/* During parsing, table contents are stored as rows of cells.
- * A row is a list of cells
- * Rows is a list of rows.
- * pitems are used for both lists.
- */
-    typedef struct {
-	Dtlink_t link;
-	union {
-	    Dt_t *rp;
-	    htmlcell_t *cp;
-	} u;
-	unsigned char ruled;
-    } pitem;
-	
     typedef struct {
         pointf pos;
         textfont_t finfo;

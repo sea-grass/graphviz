@@ -468,7 +468,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
     pts.UR.y += pos.y;
 
     //Determine vertical line coordinate and length
-    if ((cp->ruled & HTML_VRULE) && cp->col + cp->colspan < cp->parent->column_count) {
+    if (cp->vruled && cp->col + cp->colspan < cp->parent->column_count) {
 	if (cp->row == 0) {	// first row
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -486,7 +486,7 @@ emit_html_rules(GVJ_t * job, htmlcell_t * cp, htmlenv_t * env, char *color, html
 	doSide(job, rule_pt, 0, rule_length);
     }
     //Determine the horizontal coordinate and length
-    if ((cp->ruled & HTML_HRULE) && cp->row + cp->rowspan < cp->parent->row_count) {
+    if (cp->hruled && cp->row + cp->rowspan < cp->parent->row_count) {
 	if (cp->col == 0) {	// first column 
 	    // extend to center of table border and add half cell spacing
 	    base = cp->parent->data.border + cp->parent->data.space / 2;
@@ -570,7 +570,7 @@ static void emit_html_tbl(GVJ_t * job, htmltbl_t * tbl, htmlenv_t * env)
 	cells = tbl->u.n.cells;
 	gvrender_set_penwidth(job, 1.0);
 	while ((cp = *cells++)) {
-	    if (cp->ruled)
+	    if (cp->hruled || cp->vruled)
 		emit_html_rules(job, cp, env, tbl->data.pencolor, *cells);
 	}
 
@@ -845,7 +845,7 @@ static void free_html_tbl(htmltbl_t * tbl)
     htmlcell_t **cells;
 
     if (tbl->row_count == SIZE_MAX) { // raw, parsed table
-	dtclose(tbl->u.p.rows);
+	rows_free(&tbl->u.p.rows);
     } else {
 	cells = tbl->u.n.cells;
 
@@ -1184,44 +1184,29 @@ static uint16_t findCol(PointSet *ps, int row, int col, htmlcell_t *cellp) {
  */
 static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 {
-    pitem *rp;
-    pitem *cp;
-    Dt_t *cdict;
-    htmlcell_t *cellp;
     htmlcell_t **cells;
-    Dt_t *rows = tbl->u.p.rows;
+    rows_t rows = tbl->u.p.rows;
     int rv = 0;
     size_t n_rows = 0;
     size_t n_cols = 0;
     PointSet *ps = newPS();
     Dt_t *is = openIntSet();
 
-    rp = (pitem *) dtflatten(rows);
     size_t cnt = 0;
-    uint16_t r = 0;
-    while (rp) {
-	cdict = rp->u.rp;
-	cp = (pitem *) dtflatten(cdict);
-	while (cp) {
-	    cnt++;
-	    cp = (pitem *)dtlink(cdict, cp);
-	}
+    for (uint16_t r = 0; r < rows_size(&rows); ++r) {
+	row_t *rp = rows_get(&rows, r);
+	cnt += cells_size(&rp->rp);
 	if (rp->ruled) {
 	    addIntSet(is, r + 1);
 	}
-	rp = (pitem *)dtlink(rows, rp);
-	r++;
     }
 
     cells = tbl->u.n.cells = gv_calloc(cnt + 1, sizeof(htmlcell_t *));
-    rp = (pitem *) dtflatten(rows);
-    r = 0;
-    while (rp) {
-	cdict = rp->u.rp;
-	cp = (pitem *) dtflatten(cdict);
+    for (uint16_t r = 0; r < rows_size(&rows); ++r) {
+	row_t *rp = rows_get(&rows, r);
 	uint16_t c = 0;
-	while (cp) {
-	    cellp = cp->u.cp;
+	for (size_t i = 0; i < cells_size(&rp->rp); ++i) {
+	    htmlcell_t *cellp = cells_get(&rp->rp, i);
 	    *cells++ = cellp;
 	    rv |= size_html_cell(g, cellp, tbl, env);
 	    c = findCol(ps, r, c, cellp);
@@ -1231,15 +1216,12 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    n_cols = MAX(c, n_cols);
 	    n_rows = MAX(r + cellp->rowspan, n_rows);
 	    if (inIntSet(is, r + cellp->rowspan))
-		cellp->ruled |= HTML_HRULE;
-	    cp = (pitem *)dtlink(cdict, cp);
+		cellp->hruled = true;
 	}
-	rp = (pitem *)dtlink(rows, rp);
-	r++;
     }
     tbl->row_count = n_rows;
     tbl->column_count = n_cols;
-    dtclose(rows);
+    rows_free(&rows);
     dtclose(is);
     freePS(ps);
     return rv;

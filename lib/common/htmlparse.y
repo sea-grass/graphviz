@@ -29,10 +29,7 @@
 
 extern int htmlparse(void);
 
-typedef struct sfont_t {
-    textfont_t *cfont;	
-    struct sfont_t *pfont;
-} sfont_t;
+DEFINE_LIST(sfont, textfont_t *)
 
 static void free_ti(textspan_t item) {
   free(item.str);
@@ -49,33 +46,32 @@ static void free_hi(htextspan_t item) {
 
 DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
 
+/// Clean up cell if error in parsing.
+static void cleanCell(htmlcell_t *cp);
+
+/// Clean up table if error in parsing.
+static void cleanTbl(htmltbl_t *tp) {
+  rows_t *rows = &tp->u.p.rows;
+  for (size_t r = 0; r < rows_size(rows); ++r) {
+    row_t *rp = rows_get(rows, r);
+    for (size_t c = 0; c < cells_size(&rp->rp); ++c) {
+      cleanCell(cells_get(&rp->rp, c));
+    }
+  }
+  rows_free(rows);
+  free_html_data(&tp->data);
+  free(tp);
+}
+
 static struct {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
   textspans_t  fitemList;
   htextspans_t fspanList;
   agxbuf*      str;       /* Buffer for text */
-  sfont_t*     fontstack;
+  sfont_t      fontstack;
   GVC_t*       gvc;
 } HTMLstate;
-
-/* Free row. This closes and frees row's list, then
- * the pitem itself is freed.
- */
-static void free_ritem(void *item) {
-  pitem *p = item;
-  dtclose (p->u.rp);
-  free (p);
-}
-
-/// Clean up table if error in parsing.
-static void
-cleanTbl (htmltbl_t* tp)
-{
-  dtclose (tp->u.p.rows);
-  free_html_data (&tp->data);
-  free (tp);
-}
 
 /// Clean up cell if error in parsing.
 static void
@@ -87,32 +83,12 @@ cleanCell (htmlcell_t* cp)
   free (cp);
 }
 
-/// Free cell item during parsing. This frees cell and pitem.
-static void free_citem(void *item) {
-  pitem *p = item;
-  cleanCell (p->u.cp);
-  free (p);
-}
-
-static Dtdisc_t rowDisc = {
-    .key = offsetof(pitem, u),
-    .size = sizeof(void *),
-    .link = offsetof(pitem, link),
-    .freef = free_ritem,
-};
-static Dtdisc_t cellDisc = {
-    .key = offsetof(pitem, u),
-    .size = sizeof(void *),
-    .link = offsetof(pitem, link),
-    .freef = free,
-};
-
 /// Append a new text span to the list.
 static void
 appendFItemList (agxbuf *ag)
 {
     const textspan_t ti = {.str = agxbdisown(ag),
-                           .font = HTMLstate.fontstack->cfont};
+                           .font = *sfont_back(&HTMLstate.fontstack)};
     textspans_append(&HTMLstate.fitemList, ti);
 }	
 
@@ -139,7 +115,7 @@ appendFLineList (int v)
 	lp.items = gv_alloc(sizeof(textspan_t));
 	lp.nitems = 1;
 	lp.items[0].str = gv_strdup("");
-	lp.items[0].font = HTMLstate.fontstack->cfont;
+	lp.items[0].font = *sfont_back(&HTMLstate.fontstack);
     }
 
     textspans_clear(ilist);
@@ -172,37 +148,32 @@ mkText(void)
     return hft;
 }
 
-static pitem* lastRow (void)
-{
+static row_t *lastRow(void) {
   htmltbl_t* tbl = HTMLstate.tblstack;
-  pitem*     sp = dtlast (tbl->u.p.rows);
+  row_t *sp = *rows_back(&tbl->u.p.rows);
   return sp;
 }
 
 /// Add new cell row to current table.
-static pitem* addRow (void)
-{
-  Dt_t*      dp = dtopen(&cellDisc, Dtqueue);
+static void addRow(void) {
   htmltbl_t* tbl = HTMLstate.tblstack;
-  pitem*     sp = gv_alloc(sizeof(pitem));
-  sp->u.rp = dp;
+  row_t *sp = gv_alloc(sizeof(row_t));
   if (tbl->hrule)
-    sp->ruled = 1;
-  dtinsert (tbl->u.p.rows, sp);
-  return sp;
+    sp->ruled = true;
+  rows_append(&tbl->u.p.rows, sp);
 }
 
 /// Set cell body and type and attach to row
 static void setCell(htmlcell_t *cp, void *obj, char kind) {
-  pitem*     sp = gv_alloc(sizeof(pitem));
   htmltbl_t* tbl = HTMLstate.tblstack;
-  pitem*     rp = dtlast (tbl->u.p.rows);
-  Dt_t*      row = rp->u.rp;
-  sp->u.cp = cp;
-  dtinsert (row, sp);
+  row_t *rp = *rows_back(&tbl->u.p.rows);
+  cells_t *row = &rp->rp;
+  cells_append(row, cp);
   cp->child.kind = kind;
-  if (tbl->vrule)
-    cp->ruled = HTML_VRULE;
+  if (tbl->vrule) {
+    cp->vruled = true;
+    cp->hruled = false;
+  }
 
   if(kind == HTML_TEXT)
   	cp->child.u.txt = obj;
@@ -224,24 +195,9 @@ static htmllabel_t *mkLabel(void *obj, char kind) {
   return lp;
 }
 
-/* Free all stack items but the last, which is
- * put on artificially during in parseHTML.
- */
-static void
-freeFontstack(void)
-{
-    sfont_t* s;
-    sfont_t* next;
-
-    for (s = HTMLstate.fontstack; (next = s->pfont); s = next) {
-	free(s);
-    }
-}
-
 /* Called on error. Frees resources allocated during parsing.
  * This includes a label, plus a walk down the stack of
- * tables. Note that we use the free_citem function to actually
- * free cells.
+ * tables. Note that `cleanTbl` frees the contained cells.
  */
 static void cleanup (void)
 {
@@ -252,18 +208,16 @@ static void cleanup (void)
     free_html_label (HTMLstate.lbl,1);
     HTMLstate.lbl = NULL;
   }
-  cellDisc.freef = free_citem;
   while (tp) {
     next = tp->u.p.prev;
     cleanTbl (tp);
     tp = next;
   }
-  cellDisc.freef = free;
 
   textspans_clear(&HTMLstate.fitemList);
   htextspans_clear(&HTMLstate.fspanList);
 
-  freeFontstack();
+  sfont_free(&HTMLstate.fontstack);
 }
 
 /// Return 1 if s contains a non-space character.
@@ -280,8 +234,7 @@ static bool nonSpace(const char *s) {
 static void
 pushFont (textfont_t *fp)
 {
-    sfont_t *ft = gv_alloc(sizeof(sfont_t));
-    textfont_t* curfont = HTMLstate.fontstack->cfont;
+    textfont_t* curfont = *sfont_back(&HTMLstate.fontstack);
     textfont_t  f = *fp;
 
     if (curfont) {
@@ -295,19 +248,14 @@ pushFont (textfont_t *fp)
 	    f.flags |= curfont->flags;
     }
 
-    ft->cfont = dtinsert(HTMLstate.gvc->textfont_dt, &f);
-    ft->pfont = HTMLstate.fontstack;
-    HTMLstate.fontstack = ft;
+    textfont_t *const ft = dtinsert(HTMLstate.gvc->textfont_dt, &f);
+    sfont_push_back(&HTMLstate.fontstack, ft);
 }
 
 static void
 popFont (void)
 {
-    sfont_t* curfont = HTMLstate.fontstack;
-    sfont_t* prevfont = curfont->pfont;
-
-    free (curfont);
-    HTMLstate.fontstack = prevfont;
+    (void)sfont_pop_back(&HTMLstate.fontstack);
 }
 
 %}
@@ -319,7 +267,7 @@ popFont (void)
   htmltbl_t*   tbl;
   textfont_t*  font;
   htmlimg_t*   img;
-  pitem*       p;
+  row_t *p;
 }
 
 %token T_end_br T_end_img T_row T_end_row T_html T_end_html
@@ -430,9 +378,9 @@ table : opt_space T_table {
             cleanup(); YYABORT;
           }
           $2->u.p.prev = HTMLstate.tblstack;
-          $2->u.p.rows = dtopen(&rowDisc, Dtqueue);
+          $2->u.p.rows = (rows_t){0};
           HTMLstate.tblstack = $2;
-          $2->font = HTMLstate.fontstack->cfont;
+          $2->font = *sfont_back(&HTMLstate.fontstack);
           $<tbl>$ = $2;
         }
         rows T_end_table opt_space {
@@ -459,7 +407,7 @@ opt_space : string
 
 rows : row { $$ = $1; }
      | rows row { $$ = $2; }
-     | rows HR row { $1->ruled = 1; $$ = $3; }
+     | rows HR row { $1->ruled = true; $$ = $3; }
      ;
 
 row : T_row { addRow (); } cells T_end_row { $$ = lastRow(); }
@@ -467,7 +415,7 @@ row : T_row { addRow (); } cells T_end_row { $$ = lastRow(); }
 
 cells : cell { $$ = $1; }
       | cells cell { $$ = $2; }
-      | cells VR cell { $1->ruled |= HTML_VRULE; $$ = $3; }
+      | cells VR cell { $1->vruled = true; $$ = $3; }
       ;
 
 cell : T_cell fonttable { setCell($1,$2,HTML_TBL); } T_end_cell { $$ = $1; }
@@ -500,11 +448,8 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
 {
   agxbuf        str = {0};
   htmllabel_t*  l;
-  sfont_t       dfltf;
 
-  dfltf.cfont = NULL;
-  dfltf.pfont = NULL;
-  HTMLstate.fontstack = &dfltf;
+  sfont_push_back(&HTMLstate.fontstack, NULL);
   HTMLstate.tblstack = 0;
   HTMLstate.lbl = 0;
   HTMLstate.gvc = GD_gvc(env->g);
@@ -526,7 +471,7 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
   textspans_free(&HTMLstate.fitemList);
   htextspans_free(&HTMLstate.fspanList);
 
-  HTMLstate.fontstack = NULL;
+  sfont_free(&HTMLstate.fontstack);
 
   agxbfree (&str);
 
