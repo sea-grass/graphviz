@@ -16,9 +16,9 @@
 #include <string.h>
 #include <math.h>
 #include <cgraph/cgraph.h>     /* for agerr() and friends */
-#include <cgraph/sort.h>
 #include <neatogen/delaunay.h>
 #include <util/alloc.h>
+#include <util/sort.h>
 
 #ifdef HAVE_GTS
 #include <gts.h>

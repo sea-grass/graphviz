@@ -10,7 +10,6 @@
 
 #include <assert.h>
 #include <cgraph/list.h>
-#include <cgraph/sort.h>
 #include <limits.h>
 #include <neatogen/kkutils.h>
 #include <neatogen/closest.h>
@@ -18,6 +17,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <util/alloc.h>
+#include <util/sort.h>
 
 /*****************************************
 ** This module contains functions that  **

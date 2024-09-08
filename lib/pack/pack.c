@@ -16,7 +16,6 @@
 
 #include <math.h>
 #include <assert.h>
-#include <cgraph/sort.h>
 #include <cgraph/startswith.h>
 #include <common/render.h>
 #include <pack/pack.h>
@@ -25,6 +24,7 @@
 #include <stddef.h>
 #include <util/alloc.h>
 #include <util/prisize_t.h>
+#include <util/sort.h>
 #include <util/streq.h>
 
 #define C 100			/* Max. avg. polyomino size */

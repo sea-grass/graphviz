@@ -30,6 +30,9 @@
     <ClInclude Include="prisize_t.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="sort.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="strcasecmp.h">
       <Filter>Header Files</Filter>
     </ClInclude>

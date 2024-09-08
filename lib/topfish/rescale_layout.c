@@ -22,7 +22,6 @@
 ///////////////////////////////////////
 
 #include <assert.h>
-#include <cgraph/sort.h>
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -34,6 +33,7 @@
 #include <common/arith.h>
 #include <topfish/hierarchy.h>
 #include <util/alloc.h>
+#include <util/sort.h>
 
 static double *compute_densities(v_data *graph, size_t n, double *x, double *y)
 {
