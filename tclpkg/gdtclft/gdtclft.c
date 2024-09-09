@@ -11,7 +11,10 @@
 #include "config.h"
 
 #include "gd.h"
+#include <assert.h>
+#include <cgraph/agxbuf.h>
 #include <errno.h>
+#include <limits.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -70,11 +73,6 @@ typedef struct {
   unsigned int minargs, maxargs;
   const char *usage;
 } cmdImgOptions;
-
-typedef struct {
-  char *buf;
-  int buflen;
-} BuffSinkContext;
 
 static cmdDataOptions subcmdVec[] = {
     {"create", tclGdCreateCmd, 2, 3, 0, 0, 0, "width heighti ?true?"},
@@ -1323,19 +1321,9 @@ BOOL APIENTRY DllEntryPoint(HINSTANCE hInst, DWORD reason, LPVOID reserved) {
 
 #ifdef HAVE_GD_PNG
 static int BufferSinkFunc(void *context, const char *buffer, int len) {
-  BuffSinkContext *p = context;
-  char *bufend;
-  if (p->buflen == 0) {
-    p->buf = Tcl_Alloc(len + 1);
-    memcpy(p->buf, buffer, len);
-    p->buf[len] = '\0';
-    p->buflen = len;
-  } else {
-    p->buf = Tcl_Realloc(p->buf, len + p->buflen + 1);
-    bufend = p->buf + p->buflen;
-    memmove(bufend, buffer, len);
-    p->buf[len + p->buflen] = '\0';
-    p->buflen += len;
+  agxbuf *p = context;
+  if (len > 0) {
+    agxbput_n(p, buffer, (size_t)len);
   }
   return len;
 }
@@ -1346,24 +1334,23 @@ static int tclGdWriteBufCmd(Tcl_Interp *interp, int argc,
 
   gdImagePtr im;
   Tcl_Obj *output;
-  char *result = NULL;
 
-  BuffSinkContext bsc = {NULL, 0};
-  BuffSinkContext *res;
+  agxbuf buffer = {0};
   gdSink buffsink;
 
   buffsink.sink = BufferSinkFunc;
-  buffsink.context = (void *)&bsc;
+  buffsink.context = &buffer;
   /* Get the image pointer. */
   im = IMGPTR(objv[2]);
 
   gdImagePngToSink(im, &buffsink);
 
-  res = buffsink.context;
-  result = res->buf;
+  const size_t buffer_length = agxblen(&buffer);
+  void *const result = agxbuse(&buffer);
 
-  output = Tcl_NewByteArrayObj((unsigned char *)result, res->buflen);
-  Tcl_Free(result);
+  assert(buffer_length <= INT_MAX);
+  output = Tcl_NewByteArrayObj(result, (int)buffer_length);
+  agxbfree(&buffer);
   if (output == NULL)
     return TCL_ERROR;
   else
