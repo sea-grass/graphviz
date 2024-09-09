@@ -51,6 +51,17 @@ static void free_hi(htextspan_t item) {
 
 DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
 
+static struct {
+  htmllabel_t* lbl;       /* Generated label */
+  htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
+  textspans_t  fitemList;
+  htextspans_t fspanList;
+  agxbuf*      str;       /* Buffer for text */
+  sfont_t      fontstack;
+  GVC_t*       gvc;
+} HTMLstate;
+
+
 /// Clean up cell if error in parsing.
 static void cleanCell(htmlcell_t *cp);
 
@@ -68,16 +79,6 @@ static void cleanTbl(htmltbl_t *tp) {
   free(tp);
 }
 
-static struct {
-  htmllabel_t* lbl;       /* Generated label */
-  htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
-  textspans_t  fitemList;
-  htextspans_t fspanList;
-  agxbuf*      str;       /* Buffer for text */
-  sfont_t      fontstack;
-  GVC_t*       gvc;
-} HTMLstate;
-
 /// Clean up cell if error in parsing.
 static void
 cleanCell (htmlcell_t* cp)
@@ -90,103 +91,21 @@ cleanCell (htmlcell_t* cp)
 
 /// Append a new text span to the list.
 static void
-appendFItemList (agxbuf *ag)
-{
-    const textspan_t ti = {.str = agxbdisown(ag),
-                           .font = *sfont_back(&HTMLstate.fontstack)};
-    textspans_append(&HTMLstate.fitemList, ti);
-}	
+appendFItemList (agxbuf *ag);
 
 static void
-appendFLineList (int v)
-{
-    htextspan_t lp = {0};
-    textspans_t *ilist = &HTMLstate.fitemList;
-
-    size_t cnt = textspans_size(ilist);
-    lp.just = v;
-    if (cnt) {
-	lp.nitems = cnt;
-	lp.items = gv_calloc(cnt, sizeof(textspan_t));
-
-	for (size_t i = 0; i < textspans_size(ilist); ++i) {
-	    // move this text span into the new list
-	    textspan_t *ti = textspans_at(ilist, i);
-	    lp.items[i] = *ti;
-	    *ti = (textspan_t){0};
-	}
-    }
-    else {
-	lp.items = gv_alloc(sizeof(textspan_t));
-	lp.nitems = 1;
-	lp.items[0].str = gv_strdup("");
-	lp.items[0].font = *sfont_back(&HTMLstate.fontstack);
-    }
-
-    textspans_clear(ilist);
-
-    htextspans_append(&HTMLstate.fspanList, lp);
-}
+appendFLineList (int v);
 
 static htmltxt_t*
-mkText(void)
-{
-    htextspans_t *ispan = &HTMLstate.fspanList;
-    htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
+mkText(void);
 
-    if (!textspans_is_empty(&HTMLstate.fitemList))
-	appendFLineList (UNSET_ALIGN);
-
-    size_t cnt = htextspans_size(ispan);
-    hft->nspans = cnt;
-    	
-    hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
-    for (size_t i = 0; i < htextspans_size(ispan); ++i) {
-    	// move this HTML text span into the new list
-    	htextspan_t *hi = htextspans_at(ispan, i);
-    	hft->spans[i] = *hi;
-    	*hi = (htextspan_t){0};
-    }
-
-    htextspans_clear(ispan);
-
-    return hft;
-}
-
-static row_t *lastRow(void) {
-  htmltbl_t* tbl = HTMLstate.tblstack;
-  row_t *sp = *rows_back(&tbl->u.p.rows);
-  return sp;
-}
+static row_t *lastRow(void);
 
 /// Add new cell row to current table.
-static void addRow(void) {
-  htmltbl_t* tbl = HTMLstate.tblstack;
-  row_t *sp = gv_alloc(sizeof(row_t));
-  if (tbl->hrule)
-    sp->ruled = true;
-  rows_append(&tbl->u.p.rows, sp);
-}
+static void addRow(void);
 
 /// Set cell body and type and attach to row
-static void setCell(htmlcell_t *cp, void *obj, label_type_t kind) {
-  htmltbl_t* tbl = HTMLstate.tblstack;
-  row_t *rp = *rows_back(&tbl->u.p.rows);
-  cells_t *row = &rp->rp;
-  cells_append(row, cp);
-  cp->child.kind = kind;
-  if (tbl->vrule) {
-    cp->vruled = true;
-    cp->hruled = false;
-  }
-
-  if(kind == HTML_TEXT)
-  	cp->child.u.txt = obj;
-  else if (kind == HTML_IMAGE)
-    cp->child.u.img = obj;
-  else
-    cp->child.u.tbl = obj;
-}
+static void setCell(htmlcell_t *cp, void *obj, label_type_t kind);
 
 /// Create label, given body and type.
 static htmllabel_t *mkLabel(void *obj, label_type_t kind) {
@@ -204,26 +123,7 @@ static htmllabel_t *mkLabel(void *obj, label_type_t kind) {
  * This includes a label, plus a walk down the stack of
  * tables. Note that `cleanTbl` frees the contained cells.
  */
-static void cleanup (void)
-{
-  htmltbl_t* tp = HTMLstate.tblstack;
-  htmltbl_t* next;
-
-  if (HTMLstate.lbl) {
-    free_html_label (HTMLstate.lbl,1);
-    HTMLstate.lbl = NULL;
-  }
-  while (tp) {
-    next = tp->u.p.prev;
-    cleanTbl (tp);
-    tp = next;
-  }
-
-  textspans_clear(&HTMLstate.fitemList);
-  htextspans_clear(&HTMLstate.fspanList);
-
-  sfont_free(&HTMLstate.fontstack);
-}
+static void cleanup (void);
 
 /// Return 1 if s contains a non-space character.
 static bool nonSpace(const char *s) {
@@ -237,31 +137,10 @@ static bool nonSpace(const char *s) {
 
 /// Fonts are allocated in the lexer.
 static void
-pushFont (textfont_t *fp)
-{
-    textfont_t* curfont = *sfont_back(&HTMLstate.fontstack);
-    textfont_t  f = *fp;
-
-    if (curfont) {
-	if (!f.color && curfont->color)
-	    f.color = curfont->color;
-	if ((f.size < 0.0) && (curfont->size >= 0.0))
-	    f.size = curfont->size;
-	if (!f.name && curfont->name)
-	    f.name = curfont->name;
-	if (curfont->flags)
-	    f.flags |= curfont->flags;
-    }
-
-    textfont_t *const ft = dtinsert(HTMLstate.gvc->textfont_dt, &f);
-    sfont_push_back(&HTMLstate.fontstack, ft);
-}
+pushFont (textfont_t *fp);
 
 static void
-popFont (void)
-{
-    (void)sfont_pop_back(&HTMLstate.fontstack);
-}
+popFont (void);
 
 %}
 
@@ -444,6 +323,151 @@ VR  : T_vr T_end_vr
 
 %%
 
+static void
+appendFItemList (agxbuf *ag)
+{
+    const textspan_t ti = {.str = agxbdisown(ag),
+                           .font = *sfont_back(&HTMLstate.fontstack)};
+    textspans_append(&HTMLstate.fitemList, ti);
+}
+
+static void
+appendFLineList (int v)
+{
+    htextspan_t lp = {0};
+    textspans_t *ilist = &HTMLstate.fitemList;
+
+    size_t cnt = textspans_size(ilist);
+    lp.just = v;
+    if (cnt) {
+	lp.nitems = cnt;
+	lp.items = gv_calloc(cnt, sizeof(textspan_t));
+
+	for (size_t i = 0; i < textspans_size(ilist); ++i) {
+	    // move this text span into the new list
+	    textspan_t *ti = textspans_at(ilist, i);
+	    lp.items[i] = *ti;
+	    *ti = (textspan_t){0};
+	}
+    }
+    else {
+	lp.items = gv_alloc(sizeof(textspan_t));
+	lp.nitems = 1;
+	lp.items[0].str = gv_strdup("");
+	lp.items[0].font = *sfont_back(&HTMLstate.fontstack);
+    }
+
+    textspans_clear(ilist);
+
+    htextspans_append(&HTMLstate.fspanList, lp);
+}
+
+static htmltxt_t*
+mkText(void)
+{
+    htextspans_t *ispan = &HTMLstate.fspanList;
+    htmltxt_t *hft = gv_alloc(sizeof(htmltxt_t));
+
+    if (!textspans_is_empty(&HTMLstate.fitemList))
+	appendFLineList (UNSET_ALIGN);
+
+    size_t cnt = htextspans_size(ispan);
+    hft->nspans = cnt;
+
+    hft->spans = gv_calloc(cnt, sizeof(htextspan_t));
+    for (size_t i = 0; i < htextspans_size(ispan); ++i) {
+    	// move this HTML text span into the new list
+    	htextspan_t *hi = htextspans_at(ispan, i);
+    	hft->spans[i] = *hi;
+    	*hi = (htextspan_t){0};
+    }
+
+    htextspans_clear(ispan);
+
+    return hft;
+}
+
+static row_t *lastRow(void) {
+  htmltbl_t* tbl = HTMLstate.tblstack;
+  row_t *sp = *rows_back(&tbl->u.p.rows);
+  return sp;
+}
+
+static void addRow(void) {
+  htmltbl_t* tbl = HTMLstate.tblstack;
+  row_t *sp = gv_alloc(sizeof(row_t));
+  if (tbl->hrule)
+    sp->ruled = true;
+  rows_append(&tbl->u.p.rows, sp);
+}
+
+static void setCell(htmlcell_t *cp, void *obj, label_type_t kind) {
+  htmltbl_t* tbl = HTMLstate.tblstack;
+  row_t *rp = *rows_back(&tbl->u.p.rows);
+  cells_t *row = &rp->rp;
+  cells_append(row, cp);
+  cp->child.kind = kind;
+  if (tbl->vrule) {
+    cp->vruled = true;
+    cp->hruled = false;
+  }
+
+  if(kind == HTML_TEXT)
+  	cp->child.u.txt = obj;
+  else if (kind == HTML_IMAGE)
+    cp->child.u.img = obj;
+  else
+    cp->child.u.tbl = obj;
+}
+
+static void cleanup (void)
+{
+  htmltbl_t* tp = HTMLstate.tblstack;
+  htmltbl_t* next;
+
+  if (HTMLstate.lbl) {
+    free_html_label (HTMLstate.lbl,1);
+    HTMLstate.lbl = NULL;
+  }
+  while (tp) {
+    next = tp->u.p.prev;
+    cleanTbl (tp);
+    tp = next;
+  }
+
+  textspans_clear(&HTMLstate.fitemList);
+  htextspans_clear(&HTMLstate.fspanList);
+
+  sfont_free(&HTMLstate.fontstack);
+}
+
+static void
+pushFont (textfont_t *fp)
+{
+    textfont_t* curfont = *sfont_back(&HTMLstate.fontstack);
+    textfont_t  f = *fp;
+
+    if (curfont) {
+	if (!f.color && curfont->color)
+	    f.color = curfont->color;
+	if ((f.size < 0.0) && (curfont->size >= 0.0))
+	    f.size = curfont->size;
+	if (!f.name && curfont->name)
+	    f.name = curfont->name;
+	if (curfont->flags)
+	    f.flags |= curfont->flags;
+    }
+
+    textfont_t *const ft = dtinsert(HTMLstate.gvc->textfont_dt, &f);
+    sfont_push_back(&HTMLstate.fontstack, ft);
+}
+
+static void
+popFont (void)
+{
+    (void)sfont_pop_back(&HTMLstate.fontstack);
+}
+
 /* Return parsed label or NULL if failure.
  * Set warn to 0 on success; 1 for warning message; 2 if no expat; 3 for error
  * message.
@@ -482,4 +506,3 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
 
   return l;
 }
-
