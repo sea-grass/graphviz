@@ -13,7 +13,7 @@
 
 static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
                             char *argv[]) {
-  char *s, **argv2;
+  char **argv2;
   int i, j, argc2;
   Agraph_t *g;
   Agedge_t *e;
@@ -110,10 +110,7 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     return TCL_OK;
 
   } else if (strcmp("showname", argv[1]) == 0) {
-    if (agisdirected(g))
-      s = "->";
-    else
-      s = "--";
+    const char *const s = agisdirected(g) ? "->" : "--";
     Tcl_AppendResult(interp, agnameof(agtail(e)), s, agnameof(aghead(e)), NULL);
     return TCL_OK;
 
