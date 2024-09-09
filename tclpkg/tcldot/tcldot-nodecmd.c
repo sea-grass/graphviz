@@ -10,6 +10,7 @@
 
 #include "tcldot.h"
 #include <string.h>
+#include <util/streq.h>
 
 static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
                             char *argv[]) {
@@ -33,7 +34,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
   }
   g = agraphof(n);
 
-  if (strcmp("addedge", argv[1]) == 0) {
+  if (streq("addedge", argv[1])) {
     if ((argc < 3) || (!(argc % 2))) {
       Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
                        " addedge head ?attributename attributevalue? ?...?\"",
@@ -58,11 +59,11 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     setedgeattributes(agroot(g), e, &argv[3], argc - 3);
     return TCL_OK;
 
-  } else if (strcmp("delete", argv[1]) == 0) {
+  } else if (streq("delete", argv[1])) {
     deleteNode(gctx, g, n);
     return TCL_OK;
 
-  } else if (strcmp("findedge", argv[1]) == 0) {
+  } else if (streq("findedge", argv[1])) {
     if (argc < 3) {
       Tcl_AppendResult(interp, "wrong # args: should be \"", argv[0],
                        " findedge headnodename\"", NULL);
@@ -80,29 +81,29 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     Tcl_AppendElement(interp, obj2cmd(head));
     return TCL_OK;
 
-  } else if (strcmp("listattributes", argv[1]) == 0) {
+  } else if (streq("listattributes", argv[1])) {
     listNodeAttrs(interp, g);
     return TCL_OK;
 
-  } else if (strcmp("listedges", argv[1]) == 0) {
+  } else if (streq("listedges", argv[1])) {
     for (e = agfstedge(g, n); e; e = agnxtedge(g, e, n)) {
       Tcl_AppendElement(interp, obj2cmd(e));
     }
     return TCL_OK;
 
-  } else if (strcmp("listinedges", argv[1]) == 0) {
+  } else if (streq("listinedges", argv[1])) {
     for (e = agfstin(g, n); e; e = agnxtin(g, e)) {
       Tcl_AppendElement(interp, obj2cmd(e));
     }
     return TCL_OK;
 
-  } else if (strcmp("listoutedges", argv[1]) == 0) {
+  } else if (streq("listoutedges", argv[1])) {
     for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
       Tcl_AppendElement(interp, obj2cmd(e));
     }
     return TCL_OK;
 
-  } else if (strcmp("queryattributes", argv[1]) == 0) {
+  } else if (streq("queryattributes", argv[1])) {
     for (i = 2; i < argc; i++) {
       if (Tcl_SplitList(interp, argv[i], &argc2, (const char ***)&argv2) !=
           TCL_OK)
@@ -121,7 +122,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     return TCL_OK;
 
-  } else if (strcmp("queryattributevalues", argv[1]) == 0) {
+  } else if (streq("queryattributevalues", argv[1])) {
     for (i = 2; i < argc; i++) {
       if (Tcl_SplitList(interp, argv[i], &argc2, (const char ***)&argv2) !=
           TCL_OK)
@@ -141,7 +142,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     return TCL_OK;
 
-  } else if (strcmp("setattributes", argv[1]) == 0) {
+  } else if (streq("setattributes", argv[1])) {
     g = agroot(g);
     if (argc == 3) {
       if (Tcl_SplitList(interp, argv[2], &argc2, (const char ***)&argv2) !=
@@ -169,7 +170,7 @@ static int nodecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     return TCL_OK;
 
-  } else if (strcmp("showname", argv[1]) == 0) {
+  } else if (streq("showname", argv[1])) {
     Tcl_SetResult(interp, agnameof(n), TCL_STATIC);
     return TCL_OK;
 
