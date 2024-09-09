@@ -216,6 +216,7 @@ static int graphcmd_internal(ClientData clientData, Tcl_Interp *interp,
         } else {
           Tcl_AppendResult(interp, " No attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
@@ -235,6 +236,7 @@ static int graphcmd_internal(ClientData clientData, Tcl_Interp *interp,
         } else {
           Tcl_AppendResult(interp, " No attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
@@ -253,6 +255,7 @@ static int graphcmd_internal(ClientData clientData, Tcl_Interp *interp,
         } else {
           Tcl_AppendResult(interp, " No attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
@@ -272,6 +275,7 @@ static int graphcmd_internal(ClientData clientData, Tcl_Interp *interp,
         } else {
           Tcl_AppendResult(interp, " No attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
@@ -290,6 +294,7 @@ static int graphcmd_internal(ClientData clientData, Tcl_Interp *interp,
         } else {
           Tcl_AppendResult(interp, " No attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
@@ -309,6 +314,7 @@ static int graphcmd_internal(ClientData clientData, Tcl_Interp *interp,
         } else {
           Tcl_AppendResult(interp, " No attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
