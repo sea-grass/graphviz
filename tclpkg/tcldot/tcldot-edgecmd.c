@@ -10,6 +10,7 @@
 
 #include "tcldot.h"
 #include <string.h>
+#include <util/streq.h>
 
 static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
                             char *argv[]) {
@@ -32,20 +33,20 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
   }
   g = agraphof(agtail(e));
 
-  if (strcmp("delete", argv[1]) == 0) {
+  if (streq("delete", argv[1])) {
     deleteEdge(gctx, g, e);
     return TCL_OK;
 
-  } else if (strcmp("listattributes", argv[1]) == 0) {
+  } else if (streq("listattributes", argv[1])) {
     listEdgeAttrs(interp, g);
     return TCL_OK;
 
-  } else if (strcmp("listnodes", argv[1]) == 0) {
+  } else if (streq("listnodes", argv[1])) {
     Tcl_AppendElement(interp, obj2cmd(agtail(e)));
     Tcl_AppendElement(interp, obj2cmd(aghead(e)));
     return TCL_OK;
 
-  } else if (strcmp("queryattributes", argv[1]) == 0) {
+  } else if (streq("queryattributes", argv[1])) {
     for (i = 2; i < argc; i++) {
       if (Tcl_SplitList(interp, argv[i], &argc2, (const char ***)&argv2) !=
           TCL_OK)
@@ -64,7 +65,7 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     return TCL_OK;
 
-  } else if (strcmp("queryattributevalues", argv[1]) == 0) {
+  } else if (streq("queryattributevalues", argv[1])) {
     for (i = 2; i < argc; i++) {
       if (Tcl_SplitList(interp, argv[i], &argc2, (const char ***)&argv2) !=
           TCL_OK)
@@ -84,7 +85,7 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     return TCL_OK;
 
-  } else if (strcmp("setattributes", argv[1]) == 0) {
+  } else if (streq("setattributes", argv[1])) {
     if (argc == 3) {
       if (Tcl_SplitList(interp, argv[2], &argc2, (const char ***)&argv2) !=
           TCL_OK)
@@ -111,7 +112,7 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
     }
     return TCL_OK;
 
-  } else if (strcmp("showname", argv[1]) == 0) {
+  } else if (streq("showname", argv[1])) {
     const char *const s = agisdirected(g) ? "->" : "--";
     Tcl_AppendResult(interp, agnameof(agtail(e)), s, agnameof(aghead(e)), NULL);
     return TCL_OK;
