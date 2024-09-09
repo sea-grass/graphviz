@@ -1346,7 +1346,6 @@ static int tclGdWriteBufCmd(Tcl_Interp *interp, int argc,
 
   gdImagePtr im;
   Tcl_Obj *output;
-  /* char *cmd; */
   char *result = NULL;
 
   BuffSinkContext bsc = {NULL, 0};
