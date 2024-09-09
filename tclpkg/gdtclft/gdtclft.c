@@ -394,7 +394,7 @@ static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
         const char *fname = Tcl_GetString(objv[subcmdVec[subi].unsafearg]);
         if (!Tcl_IsChannelExisting(fname)) {
           Tcl_AppendResult(interp, "Access to ", fname,
-                           " not allowed in safe interpreter", TCL_STATIC);
+                           " not allowed in safe interpreter", NULL);
           return TCL_ERROR;
         }
       }
