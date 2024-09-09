@@ -618,11 +618,12 @@ extoken_fn(Expr_t* ex)
 					dtview(ex->symbols, v);
 				if (!ex_lval.id)
 				{
-					if (!(ex_lval.id = calloc(1, sizeof(Exid_t) + strlen(s) - EX_NAMELEN + 1)))
-					{
+					const size_t size = sizeof(Exid_t) + strlen(s) - EX_NAMELEN + 1;
+					if (!(ex_lval.id = vmalloc(ex->vm, size))) {
 						exnospace();
 						goto eof;
 					}
+					memset(ex_lval.id, 0, size);
 					strcpy(ex_lval.id->name, s);
 					ex_lval.id->lex = NAME;
 
