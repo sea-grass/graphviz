@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tcl.h>
+#include <util/startswith.h>
 #include <util/streq.h>
 
 #ifdef _WIN32
@@ -1365,7 +1366,7 @@ static void GdPtrTypeUpdate(struct Tcl_Obj *O) {
 
 static int GdPtrTypeSet(Tcl_Interp *I, struct Tcl_Obj *O) {
   if (O->bytes == NULL || O->bytes[0] == '\0' ||
-      strncmp(GdPtrType.name, O->bytes, strlen(GdPtrType.name)) != 0 ||
+      !startswith(O->bytes, GdPtrType.name) ||
       sscanf(O->bytes + strlen(GdPtrType.name), "%p", &IMGPTR(O)) != 1) {
     if (I != NULL)
       Tcl_AppendResult(I, O->bytes, " is not a ", GdPtrType.name, "-handle",
