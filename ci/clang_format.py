@@ -583,7 +583,6 @@ EXCLUDE = (
     "tclpkg/tcldot/no_builtins.c",
     "tclpkg/tcldot/tcldot-id.c",
     "tclpkg/tcldot/tcldot-io.c",
-    "tclpkg/tcldot/tcldot-nodecmd.c",
     "tclpkg/tcldot/tcldot-util.c",
     "tclpkg/tcldot/tcldot.h",
     "tclpkg/tcldot/tcldot_builtins.cpp",
