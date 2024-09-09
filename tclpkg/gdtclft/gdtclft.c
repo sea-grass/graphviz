@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <tcl.h>
+#include <util/streq.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -358,7 +359,7 @@ static int gdCmd(ClientData clientData, Tcl_Interp *interp, int argc,
 
   /* Find the subcommand. */
   for (subi = 0; subi < sizeof(subcmdVec) / sizeof(subcmdVec[0]); subi++) {
-    if (strcmp(subcmdVec[subi].cmd, Tcl_GetString(objv[1])) == 0) {
+    if (streq(subcmdVec[subi].cmd, Tcl_GetString(objv[1]))) {
 
       /* Check arg count. */
       if ((unsigned)argc - 2 < subcmdVec[subi].minargs ||
@@ -417,7 +418,7 @@ static int tclGdCreateCmd(Tcl_Interp *interp, int argc, Tcl_Obj *const objv[]) {
   int fileByName;
 
   cmd = Tcl_GetString(objv[1]);
-  if (strcmp(cmd, "create") == 0) {
+  if (streq(cmd, "create")) {
     int trueColor = 0;
     if (Tcl_GetIntFromObj(interp, objv[2], &w) != TCL_OK)
       return TCL_ERROR;
@@ -437,7 +438,7 @@ static int tclGdCreateCmd(Tcl_Interp *interp, int argc, Tcl_Obj *const objv[]) {
       Tcl_SetResult(interp, buf, TCL_VOLATILE);
       return TCL_ERROR;
     }
-  } else if (strcmp(cmd, "createTrueColor") == 0) {
+  } else if (streq(cmd, "createTrueColor")) {
     if (Tcl_GetIntFromObj(interp, objv[2], &w) != TCL_OK)
       return TCL_ERROR;
     if (Tcl_GetIntFromObj(interp, objv[3], &h) != TCL_OK)
@@ -471,28 +472,28 @@ static int tclGdCreateCmd(Tcl_Interp *interp, int argc, Tcl_Obj *const objv[]) {
     }
 
     /* Read file */
-    if (strcmp(&cmd[10], "GD") == 0) {
+    if (streq(&cmd[10], "GD")) {
       im = gdImageCreateFromGd(filePtr);
 #ifdef HAVE_LIBZ
-    } else if (strcmp(&cmd[10], "GD2") == 0) {
+    } else if (streq(&cmd[10], "GD2")) {
       im = gdImageCreateFromGd2(filePtr);
 #endif
 #ifdef HAVE_GD_GIF
-    } else if (strcmp(&cmd[10], "GIF") == 0) {
+    } else if (streq(&cmd[10], "GIF")) {
       im = gdImageCreateFromGif(filePtr);
 #endif
 #ifdef HAVE_GD_JPEG
-    } else if (strcmp(&cmd[10], "JPEG") == 0) {
+    } else if (streq(&cmd[10], "JPEG")) {
       im = gdImageCreateFromJpeg(filePtr);
 #endif
 #ifdef HAVE_GD_PNG
-    } else if (strcmp(&cmd[10], "PNG") == 0) {
+    } else if (streq(&cmd[10], "PNG")) {
       im = gdImageCreateFromPng(filePtr);
 #endif
-    } else if (strcmp(&cmd[10], "WBMP") == 0) {
+    } else if (streq(&cmd[10], "WBMP")) {
       im = gdImageCreateFromWBMP(filePtr);
 #ifdef HAVE_GD_XPM
-    } else if (strcmp(&cmd[10], "XBM") == 0) {
+    } else if (streq(&cmd[10], "XBM")) {
       im = gdImageCreateFromXbm(filePtr);
 #endif
     } else {
@@ -600,28 +601,28 @@ static int tclGdWriteCmd(Tcl_Interp *interp, int argc, Tcl_Obj *const objv[]) {
    * library documentation for more details.  */
 
   /* Do it. */
-  if (strcmp(&cmd[5], "GD") == 0) {
+  if (streq(&cmd[5], "GD")) {
     gdImageGd(im, filePtr);
-  } else if (strcmp(&cmd[5], "GD2") == 0) {
+  } else if (streq(&cmd[5], "GD2")) {
 #ifdef HAVE_LIBZ
 #define GD2_CHUNKSIZE 128
 #define GD2_COMPRESSED 2
     gdImageGd2(im, filePtr, GD2_CHUNKSIZE, GD2_COMPRESSED);
 #endif
 #ifdef HAVE_GD_GIF
-  } else if (strcmp(&cmd[5], "GIF") == 0) {
+  } else if (streq(&cmd[5], "GIF")) {
     gdImageGif(im, filePtr);
 #endif
 #ifdef HAVE_GD_JPEG
-  } else if (strcmp(&cmd[5], "JPEG") == 0) {
+  } else if (streq(&cmd[5], "JPEG")) {
 #define JPEG_QUALITY -1
     gdImageJpeg(im, filePtr, JPEG_QUALITY);
 #endif
 #ifdef HAVE_GD_PNG
-  } else if (strcmp(&cmd[5], "PNG") == 0) {
+  } else if (streq(&cmd[5], "PNG")) {
     gdImagePng(im, filePtr);
 #endif
-  } else if (strcmp(&cmd[5], "WBMP") == 0) {
+  } else if (streq(&cmd[5], "WBMP")) {
     /* Assume the color closest to black is the foreground
        color for the B&W wbmp image. */
     int foreground = gdImageColorClosest(im, 0, 0, 0);
@@ -668,7 +669,7 @@ static int tclGdColorCmd(Tcl_Interp *interp, int argc, Tcl_Obj *const objv[]) {
   if (argc >= 3) {
     /* Find the subcommand. */
     for (subi = 0; subi < nsub; subi++) {
-      if (strcmp(colorCmdVec[subi].cmd, Tcl_GetString(objv[2])) == 0) {
+      if (streq(colorCmdVec[subi].cmd, Tcl_GetString(objv[2]))) {
         /* Check arg count. */
         if ((unsigned)argc - 2 < colorCmdVec[subi].minargs ||
             (unsigned)argc - 2 > colorCmdVec[subi].maxargs) {
