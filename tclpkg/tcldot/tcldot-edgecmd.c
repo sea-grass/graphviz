@@ -56,6 +56,7 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
         } else {
           Tcl_AppendResult(interp, "no attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
@@ -75,6 +76,7 @@ static int edgecmd_internal(ClientData clientData, Tcl_Interp *interp, int argc,
         } else {
           Tcl_AppendResult(interp, "no attribute named \"", argv2[j], "\"",
                            NULL);
+          Tcl_Free((char *)argv2);
           return TCL_ERROR;
         }
       }
