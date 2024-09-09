@@ -1360,8 +1360,6 @@ static int tclGdWriteBufCmd(Tcl_Interp *interp, int argc,
 
   gdImagePngToSink(im, &buffsink);
 
-  /* I'm not so hot with lots of pointer indirection, so this
-     makes things easier. - davidw */
   res = buffsink.context;
   result = res->buf;
 
