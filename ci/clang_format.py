@@ -575,7 +575,6 @@ EXCLUDE = (
     "plugin/webp/gvloadimage_webp.c",
     "plugin/webp/gvplugin_webp.c",
     "plugin/xlib/gvdevice_xlib.c",
-    "tclpkg/gdtclft/gdtclft.c",
     "tclpkg/gv/gv_builtins.c",
     "tclpkg/gv/gv_dummy_init.c",
     "tclpkg/gv/gv_java_init.c",
