@@ -19,6 +19,7 @@
 %define api.prefix {html}
 
 %code requires {
+#include <common/htmllex.h>
 #include <common/htmltable.h>
 #include <common/textspan.h>
 }
@@ -51,7 +52,7 @@ static void free_hi(htextspan_t item) {
 
 DEFINE_LIST_WITH_DTOR(htextspans, htextspan_t, free_hi)
 
-static struct {
+struct htmlparserstate_s {
   htmllabel_t* lbl;       /* Generated label */
   htmltbl_t*   tblstack;  /* Stack of tables maintained during parsing */
   textspans_t  fitemList;
@@ -59,7 +60,8 @@ static struct {
   agxbuf*      str;       /* Buffer for text */
   sfont_t      fontstack;
   GVC_t*       gvc;
-} HTMLstate;
+};
+static htmlparserstate_t HTMLstate;
 
 
 /// Clean up cell if error in parsing.

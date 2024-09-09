@@ -18,6 +18,8 @@ extern "C" {
 
 #include <agxbuf.h>
 
+    typedef struct htmlparserstate_s htmlparserstate_t;
+
     extern int initHTMLlexer(char *, agxbuf *, htmlenv_t *);
     extern int htmllex(void);
     extern unsigned long htmllineno(void);
