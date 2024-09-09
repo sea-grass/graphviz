@@ -163,7 +163,7 @@ static htmllabel_t *mkLabel(void *obj, label_type_t kind) {
  * This includes a label, plus a walk down the stack of
  * tables. Note that `cleanTbl` frees the contained cells.
  */
-static void cleanup (void);
+static void cleanup (htmlparserstate_t *html_state);
 
 /// Return 1 if s contains a non-space character.
 static bool nonSpace(const char *s) {
@@ -218,7 +218,7 @@ popFont (void);
 
 html  : T_html fonttext T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TEXT); }
       | T_html fonttable T_end_html { HTMLstate.lbl = mkLabel($2,HTML_TBL); }
-      | error { cleanup(); YYABORT; }
+      | error { cleanup(&scanner->parser); YYABORT; }
       ;
 
 fonttext : text { $$ = mkText(); }
@@ -299,7 +299,7 @@ string : T_string
 table : opt_space T_table {
           if (nonSpace(agxbuse(HTMLstate.str))) {
             htmlerror ("Syntax error: non-space string used before <TABLE>");
-            cleanup(); YYABORT;
+            cleanup(&scanner->parser); YYABORT;
           }
           $2->u.p.prev = HTMLstate.tblstack;
           $2->u.p.rows = (rows_t){0};
@@ -310,7 +310,7 @@ table : opt_space T_table {
         rows T_end_table opt_space {
           if (nonSpace(agxbuse(HTMLstate.str))) {
             htmlerror ("Syntax error: non-space string used after </TABLE>");
-            cleanup(); YYABORT;
+            cleanup(&scanner->parser); YYABORT;
           }
           $$ = HTMLstate.tblstack;
           HTMLstate.tblstack = HTMLstate.tblstack->u.p.prev;
@@ -460,14 +460,14 @@ static void setCell(htmlcell_t *cp, void *obj, label_type_t kind) {
     cp->child.u.tbl = obj;
 }
 
-static void cleanup (void)
+static void cleanup (htmlparserstate_t *html_state)
 {
-  htmltbl_t* tp = HTMLstate.tblstack;
+  htmltbl_t* tp = html_state->tblstack;
   htmltbl_t* next;
 
-  if (HTMLstate.lbl) {
-    free_html_label (HTMLstate.lbl,1);
-    HTMLstate.lbl = NULL;
+  if (html_state->lbl) {
+    free_html_label (html_state->lbl,1);
+    html_state->lbl = NULL;
   }
   while (tp) {
     next = tp->u.p.prev;
@@ -475,10 +475,10 @@ static void cleanup (void)
     tp = next;
   }
 
-  textspans_clear(&HTMLstate.fitemList);
-  htextspans_clear(&HTMLstate.fspanList);
+  textspans_clear(&html_state->fitemList);
+  htextspans_clear(&html_state->fspanList);
 
-  sfont_free(&HTMLstate.fontstack);
+  sfont_free(&html_state->fontstack);
 }
 
 static void
