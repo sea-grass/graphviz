@@ -581,7 +581,6 @@ EXCLUDE = (
     "tclpkg/gv/gv_php_init.c",
     "tclpkg/gv/gv_tcl_init.c",
     "tclpkg/tcldot/no_builtins.c",
-    "tclpkg/tcldot/tcldot-graphcmd.c",
     "tclpkg/tcldot/tcldot-id.c",
     "tclpkg/tcldot/tcldot-io.c",
     "tclpkg/tcldot/tcldot-nodecmd.c",
