@@ -21,29 +21,21 @@
 %code requires {
 #include <common/htmllex.h>
 #include <common/htmltable.h>
+#include <cgraph/list.h>
 #include <common/textspan.h>
 }
 
-%{
-
-#include <cgraph/list.h>
-#include <common/render.h>
-#include <common/htmltable.h>
-#include <common/htmllex.h>
-#include <stdbool.h>
-#include <util/alloc.h>
-
-extern int htmlparse(void);
+%code provides {
 
 DEFINE_LIST(sfont, textfont_t *)
 
-static void free_ti(textspan_t item) {
+static inline void free_ti(textspan_t item) {
   free(item.str);
 }
 
 DEFINE_LIST_WITH_DTOR(textspans, textspan_t, free_ti)
 
-static void free_hi(htextspan_t item) {
+static inline void free_hi(htextspan_t item) {
   for (size_t i = 0; i < item.nitems; i++) {
     free(item.items[i].str);
   }
@@ -61,7 +53,19 @@ struct htmlparserstate_s {
   sfont_t      fontstack;
   GVC_t*       gvc;
 };
-static htmlparserstate_t HTMLstate;
+extern htmlparserstate_t HTMLstate;
+
+}
+
+%{
+
+#include <common/render.h>
+#include <common/htmltable.h>
+#include <common/htmllex.h>
+#include <stdbool.h>
+#include <util/alloc.h>
+
+extern int htmlparse(void);
 
 
 /// Clean up cell if error in parsing.
@@ -508,3 +512,5 @@ parseHTML (char* txt, int* warn, htmlenv_t *env)
 
   return l;
 }
+
+htmlparserstate_t HTMLstate;
