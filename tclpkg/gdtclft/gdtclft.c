@@ -1332,16 +1332,10 @@ static int tclGdWriteBufCmd(Tcl_Interp *interp, int argc,
                             Tcl_Obj *const objv[]) {
   (void)argc;
 
-  gdImagePtr im;
-  Tcl_Obj *output;
-
   agxbuf buffer = {0};
-  gdSink buffsink;
-
-  buffsink.sink = BufferSinkFunc;
-  buffsink.context = &buffer;
+  gdSink buffsink = {.sink = BufferSinkFunc, .context = &buffer};
   /* Get the image pointer. */
-  im = IMGPTR(objv[2]);
+  gdImagePtr im = IMGPTR(objv[2]);
 
   gdImagePngToSink(im, &buffsink);
 
@@ -1349,7 +1343,7 @@ static int tclGdWriteBufCmd(Tcl_Interp *interp, int argc,
   void *const result = agxbuse(&buffer);
 
   assert(buffer_length <= INT_MAX);
-  output = Tcl_NewByteArrayObj(result, (int)buffer_length);
+  Tcl_Obj *output = Tcl_NewByteArrayObj(result, (int)buffer_length);
   agxbfree(&buffer);
   if (output == NULL)
     return TCL_ERROR;
