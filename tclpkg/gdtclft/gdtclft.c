@@ -1364,6 +1364,7 @@ static int tclGdWriteBufCmd(Tcl_Interp *interp, int argc,
   result = res->buf;
 
   output = Tcl_NewByteArrayObj((unsigned char *)result, res->buflen);
+  Tcl_Free(result);
   if (output == NULL)
     return TCL_ERROR;
   else
