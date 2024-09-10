@@ -98,10 +98,7 @@ extern "C" {
 	boxf box;		/* its geometric placement in points */
     } htmldata_t;
 
-#define HTML_UNSET 0
-#define HTML_TBL 1
-#define HTML_TEXT 2
-#define HTML_IMAGE 3
+typedef enum { HTML_UNSET = 0, HTML_TBL, HTML_TEXT, HTML_IMAGE } label_type_t;
 
     typedef struct htmlcell_t htmlcell_t;
     typedef struct htmltbl_t htmltbl_t;
@@ -154,7 +151,7 @@ DEFINE_LIST_WITH_DTOR(rows, row_t *, free_ritem)
 	    htmltxt_t *txt;
 	    htmlimg_t *img;
 	} u;
-	char kind;
+	label_type_t kind;
     };
 
     struct htmlcell_t {

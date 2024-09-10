@@ -164,7 +164,7 @@ static void addRow(void) {
 }
 
 /// Set cell body and type and attach to row
-static void setCell(htmlcell_t *cp, void *obj, char kind) {
+static void setCell(htmlcell_t *cp, void *obj, label_type_t kind) {
   htmltbl_t* tbl = HTMLstate.tblstack;
   row_t *rp = *rows_back(&tbl->u.p.rows);
   cells_t *row = &rp->rp;
@@ -184,7 +184,7 @@ static void setCell(htmlcell_t *cp, void *obj, char kind) {
 }
 
 /// Create label, given body and type.
-static htmllabel_t *mkLabel(void *obj, char kind) {
+static htmllabel_t *mkLabel(void *obj, label_type_t kind) {
   htmllabel_t* lp = gv_alloc(sizeof(htmllabel_t));
 
   lp->kind = kind;
