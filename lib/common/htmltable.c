@@ -1225,9 +1225,10 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     return rv;
 }
 
-/* Split size x over n pieces with spacing s.
- */
-#define SPLIT(x,n,s) (((x) - ((s)-1)*((n)-1)) / (n))
+/// split size `x` over `n` pieces with spacing `s`
+static double split(double x, double n, double s) {
+  return (x - (s - 1) * (n - 1)) / n;
+}
 
 /* Determine sizes of rows and columns. The size of a column is the
  * maximum width of any cell in it. Similarly for rows.
@@ -1249,14 +1250,14 @@ static void sizeLinearArray(htmltbl_t * tbl)
 	if (cp->rowspan == 1)
 	    ht = cp->data.box.UR.y;
 	else {
-	    ht = SPLIT(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
+	    ht = split(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
 	    ht = fmax(ht, 1);
 	}
 	double wd;
 	if (cp->colspan == 1)
 	    wd = cp->data.box.UR.x;
 	else {
-	    wd = SPLIT(cp->data.box.UR.x, cp->colspan, tbl->data.space);
+	    wd = split(cp->data.box.UR.x, cp->colspan, tbl->data.space);
 	    wd = fmax(wd, 1);
 	}
 	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
