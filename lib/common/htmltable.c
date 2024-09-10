@@ -10,25 +10,23 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
-/* Implementation of HTML-like tables.
- * 
- * The (now purged) CodeGen graphics model, especially with integral coodinates, is
- * not adequate to handle this as we would like. In particular, it is
- * difficult to handle notions of adjacency and correct rounding to pixels.
- * For example, if 2 adjacent boxes bb1.UR.x == bb2.LL.x, the rectangles
- * may be drawn overlapping. However, if we use bb1.UR.x+1 == bb2.LL.x
- * there may or may not be a gap between them, even in the same device
- * depending on their positions. When CELLSPACING > 1, this isn't as much
- * of a problem.
- *
- * We allow negative spacing as a hack to allow overlapping cell boundaries.
- * For the reasons discussed above, this is difficult to get correct.
- * This is an important enough case we should extend the table model to
- * support it correctly. This could be done by allowing a table attribute,
- * e.g., CELLGRID=n, which sets CELLBORDER=0 and has the border drawing
- * handled correctly by the table.
- */
+// Implementation of HTML-like tables.
+//
+// The (now purged) CodeGen graphics model, especially with integral
+// coordinates, is not adequate to handle this as we would like. In particular,
+// it is difficult to handle notions of adjacency and correct rounding to
+// pixels. For example, if 2 adjacent boxes bb1.UR.x == bb2.LL.x, the rectangles
+// may be drawn overlapping. However, if we use bb1.UR.x+1 == bb2.LL.x
+// there may or may not be a gap between them, even in the same device
+// depending on their positions. When CELLSPACING > 1, this isn't as much
+// of a problem.
+//
+// We allow negative spacing as a hack to allow overlapping cell boundaries.
+// For the reasons discussed above, this is difficult to get correct.
+// This is an important enough case we should extend the table model to
+// support it correctly. This could be done by allowing a table attribute,
+// e.g., CELLGRID=n, which sets CELLBORDER=0 and has the border drawing
+// handled correctly by the table.
 
 #include <assert.h>
 #include <common/render.h>
@@ -230,7 +228,7 @@ static pointf *mkPts(pointf * AF, boxf b, int border)
     AF[0] = b.LL;
     AF[2] = b.UR;
     if (border > 1) {
-	double delta = (double)border / 2.0;
+	const double delta = border / 2.0;
 	AF[0].x += delta;
 	AF[0].y += delta;
 	AF[2].x -= delta;
@@ -331,7 +329,7 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 	}
     } else {
 	if (dp->border > 1) {
-	    double delta = (double)dp->border / 2.0;
+	    const double delta = dp->border / 2.0;
 	    b.LL.x += delta;
 	    b.LL.y += delta;
 	    b.UR.x -= delta;
@@ -1227,11 +1225,11 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     return rv;
 }
 
-/* Split size x over n pieces with spacing s.
- * We subtract s*(n-1) from x, divide by n and 
- * take the ceiling.
- */
-#define SPLIT(x,n,s) (((x) - ((s)-1)*((n)-1)) / (n))
+/// split size `x` over `n` pieces with spacing `s`
+static double split(double x, double n, double s) {
+  assert(x >= 1);
+  return (x - (s - 1) * (n - 1)) / n;
+}
 
 /* Determine sizes of rows and columns. The size of a column is the
  * maximum width of any cell in it. Similarly for rows.
@@ -1249,20 +1247,10 @@ static void sizeLinearArray(htmltbl_t * tbl)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	double ht;
-	if (cp->rowspan == 1)
-	    ht = cp->data.box.UR.y;
-	else {
-	    ht = SPLIT(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
-	    ht = fmax(ht, 1);
-	}
-	double wd;
-	if (cp->colspan == 1)
-	    wd = cp->data.box.UR.x;
-	else {
-	    wd = SPLIT(cp->data.box.UR.x, cp->colspan, tbl->data.space);
-	    wd = fmax(wd, 1);
-	}
+	double ht = split(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
+	ht = fmax(ht, 1);
+	double wd = split(cp->data.box.UR.x, cp->colspan, tbl->data.space);
+	wd = fmax(wd, 1);
 	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
 	    tbl->heights[i] = fmax(tbl->heights[i], ht);
 	}

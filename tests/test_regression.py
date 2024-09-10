@@ -2091,6 +2091,71 @@ def test_2138(examine: str):
         ), "token 012 not found or has trailing garbage"
 
 
+@pytest.mark.xfail(
+    reason="https://gitlab.com/graphviz/graphviz/-/issues/2159", strict=True
+)
+def test_2159():
+    """
+    space for HTML TDs should be allocated equally when expanding to fill a TR
+    https://gitlab.com/graphviz/graphviz/-/issues/2159
+    """
+
+    # locate our associated test case in this directory
+    input = Path(__file__).parent / "2159.dot"
+    assert input.exists(), "unexpectedly missing test case"
+
+    # translate this to SVG
+    svg = dot("svg", input)
+
+    # load it as XML
+    root = ET.fromstring(svg)
+
+    # the first node is expected to contain:
+    #   • 1 polygon for the top column-spanning cell
+    #   • 5 polygons for the bottom row’s cells
+    #   • 1 polygon for the outer table border
+    polygons = root.findall(
+        ".//{http://www.w3.org/2000/svg}title[.='node1']/../{http://www.w3.org/2000/svg}polygon"
+    )
+    assert len(polygons) == 7
+
+    # extract the points delimiting the top row
+    top_row = polygons[0]
+    points = [
+        [float(n) for n in p.split(",")] for p in top_row.get("points").split(" ")
+    ]
+    assert len(points) == 5, "polygon not rectangular"
+    (ul_x, _), (ll_x, _), (lr_x, _), (ur_x, _), (orig_x, _) = points
+    assert ul_x == ll_x, "polygon left edge is not vertical"
+    assert lr_x == ur_x, "polygon right edge is not vertical"
+    assert orig_x == ul_x, "polygon is not closed"
+    left = ul_x
+    right = ur_x
+
+    # extract the points for each cell in the bottom row
+    bottom_row = []
+    for cell in polygons[1:-1]:
+        bottom_row += [
+            [[float(n) for n in p.split(",")] for p in cell.get("points").split(" ")]
+        ]
+        assert len(bottom_row[-1]) == 5, "polygon not rectangular"
+
+    # extract the widths of each cell in the bottom row
+    widths = []
+    for cell in bottom_row:
+        (ul_x, _), _, _, (ur_x, _), _ = cell
+        widths += [ur_x - ul_x]
+
+    # these should approximately sum to the width of the top row
+    assert math.isclose(
+        sum(widths), right - left, abs_tol=10
+    ), "bottom row not expanded to fill the space"
+
+    # the width of each cell should be approximately equal
+    for width in widths[1:]:
+        assert math.isclose(width, widths[0], abs_tol=5), "cells not evenly expanded"
+
+
 def test_2168():
     """
     using spline routing should not cause fdp/neato to infinite loop
