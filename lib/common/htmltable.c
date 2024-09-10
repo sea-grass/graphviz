@@ -10,25 +10,23 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-
-/* Implementation of HTML-like tables.
- * 
- * The (now purged) CodeGen graphics model, especially with integral coodinates, is
- * not adequate to handle this as we would like. In particular, it is
- * difficult to handle notions of adjacency and correct rounding to pixels.
- * For example, if 2 adjacent boxes bb1.UR.x == bb2.LL.x, the rectangles
- * may be drawn overlapping. However, if we use bb1.UR.x+1 == bb2.LL.x
- * there may or may not be a gap between them, even in the same device
- * depending on their positions. When CELLSPACING > 1, this isn't as much
- * of a problem.
- *
- * We allow negative spacing as a hack to allow overlapping cell boundaries.
- * For the reasons discussed above, this is difficult to get correct.
- * This is an important enough case we should extend the table model to
- * support it correctly. This could be done by allowing a table attribute,
- * e.g., CELLGRID=n, which sets CELLBORDER=0 and has the border drawing
- * handled correctly by the table.
- */
+// Implementation of HTML-like tables.
+//
+// The (now purged) CodeGen graphics model, especially with integral
+// coordinates, is not adequate to handle this as we would like. In particular,
+// it is difficult to handle notions of adjacency and correct rounding to
+// pixels. For example, if 2 adjacent boxes bb1.UR.x == bb2.LL.x, the rectangles
+// may be drawn overlapping. However, if we use bb1.UR.x+1 == bb2.LL.x
+// there may or may not be a gap between them, even in the same device
+// depending on their positions. When CELLSPACING > 1, this isn't as much
+// of a problem.
+//
+// We allow negative spacing as a hack to allow overlapping cell boundaries.
+// For the reasons discussed above, this is difficult to get correct.
+// This is an important enough case we should extend the table model to
+// support it correctly. This could be done by allowing a table attribute,
+// e.g., CELLGRID=n, which sets CELLBORDER=0 and has the border drawing
+// handled correctly by the table.
 
 #include <assert.h>
 #include <common/render.h>
