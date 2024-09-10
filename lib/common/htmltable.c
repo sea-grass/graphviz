@@ -228,7 +228,7 @@ static pointf *mkPts(pointf * AF, boxf b, int border)
     AF[0] = b.LL;
     AF[2] = b.UR;
     if (border > 1) {
-	double delta = (double)border / 2.0;
+	const double delta = border / 2.0;
 	AF[0].x += delta;
 	AF[0].y += delta;
 	AF[2].x -= delta;
