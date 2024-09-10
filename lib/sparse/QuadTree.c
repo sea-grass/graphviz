@@ -127,9 +127,9 @@ static double *get_or_alloc_force_qt(QuadTree qt, int dim){
 }
 
 static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double *x, double *force, double bh, double p, double KP, double *counts){
-  /* calculate the all to all reopulsive force and accumulate on each node of the quadtree if an interaction is possible.
-     force[i*dim+j], j=1,...,dim is the force on node i 
-   */
+  // calculate the all to all repulsive force and accumulate on each node of the
+  // quadtree if an interaction is possible.
+  //   force[i × dim + j], j=1,..., dim is the force on node i
   double *x1, *x2, dist, wgt1, wgt2, f, *f1, *f2, w1, w2;
   int dim, i, j, i1, i2, k;
   QuadTree qt11, qt12; 
@@ -233,7 +233,8 @@ static void QuadTree_repulsive_force_interact(QuadTree qt1, QuadTree qt2, double
 	QuadTree_repulsive_force_interact(qt11, qt1, x, force, bh, p, KP, counts);
       }
     } else {
-      assert(0); /* can be both at the leaf level since that should be catched at the beginning of this func. */
+      assert(0); // can be both at the leaf level since that should be caught at
+                 // the beginning of this func
     }
   }
 }
@@ -278,22 +279,22 @@ static void QuadTree_repulsive_force_accumulate(QuadTree qt, double *force, doub
 }
 
 void QuadTree_get_repulsive_force(QuadTree qt, double *force, double *x, double bh, double p, double KP, double *counts){
-  /* get repulsice force by a more efficient algortihm: we consider two cells, if they are well separated, we
-     calculate the overall repulsive force on the cell level, if not well separated, we divide one of the cell.
-     If both cells are at the leaf level, we calcuaulate repulsicve force among individual nodes. Finally
-     we accumulate forces at the cell levels to the node level
-     qt: the quadtree
-     x: current coordinates for node i is x[i*dim+j], j = 0, ..., dim-1
-     force: the repulsice force, an array of length dim*nnodes, the force for node i is at force[i*dim+j], j = 0, ..., dim - 1
-     bh: Barnes-Hut coefficient. If width_cell1+width_cell2 < bh*dist_between_cells, we treat each cell as a supernode.
-     p: the repulsive force power
-     KP: pow(K, 1 - p)
-     counts: array of size 4. 
-     .  counts[0]: number of cell-cell interaction
-     .  counts[1]: number of cell-node interaction
-     .  counts[2]: number of total cells in the quadtree
-     . Al normalized by dividing by number of nodes
-  */
+  // get repulsive force by a more efficient algorithm: we consider two cells,
+  // if they are well separated, we calculate the overall repulsive force on the
+  // cell level, if not well separated, we divide one of the cell. If both cells
+  // are at the leaf level, we calculate repulsive force among individual nodes.
+  // Finally we accumulate forces at the cell levels to the node level
+  //   qt: the quadtree
+  //   x: current coordinates for node i is x[i*dim+j], j = 0, ..., dim-1
+  //   force: the repulsive force, an array of length dim*nnodes, the force for node i is at force[i*dim+j], j = 0, ..., dim - 1
+  //   bh: Barnes-Hut coefficient. If width_cell1+width_cell2 < bh*dist_between_cells, we treat each cell as a supernode.
+  //   p: the repulsive force power
+  //   KP: pow(K, 1 - p)
+  //   counts: array of size 4. 
+  //   .  counts[0]: number of cell-cell interaction
+  //   .  counts[1]: number of cell-node interaction
+  //   .  counts[2]: number of total cells in the quadtree
+  //   . Al normalized by dividing by number of nodes
   int n = qt->n, dim = qt->dim, i;
 
   for (i = 0; i < 4; i++) counts[i] = 0;
@@ -518,7 +519,7 @@ QuadTree QuadTree_add(QuadTree q, double *coord, double weight, int id){
 }
 
 static void draw_polygon(FILE *fp, int dim, double *center, double width){
-  /* pliot the enclosing square */
+  // plot the enclosing square
   if (dim < 2 || dim > 3) return;
   fprintf(fp,"(*in c*){Line[{");
 
