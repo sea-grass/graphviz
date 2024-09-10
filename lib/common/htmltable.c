@@ -1226,8 +1226,6 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 }
 
 /* Split size x over n pieces with spacing s.
- * We subtract s*(n-1) from x, divide by n and 
- * take the ceiling.
  */
 #define SPLIT(x,n,s) (((x) - ((s)-1)*((n)-1)) / (n))
 
