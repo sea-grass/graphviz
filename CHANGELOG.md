@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (12.1.2)]
 
+### Fixed
+
+- In the Autotools build system, fallback discovery of libANN when `pkg-config`
+  support is unavailable has been corrected to properly enable use of libANN.
+  This primarily affects `mingle` users on Debian-based operating systems or
+  macOS.
+
 ## [12.1.1] – 2024-09-09
 
 ### Added
