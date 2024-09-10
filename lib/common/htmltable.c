@@ -1227,6 +1227,7 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 
 /// split size `x` over `n` pieces with spacing `s`
 static double split(double x, double n, double s) {
+  assert(x >= 1);
   return (x - (s - 1) * (n - 1)) / n;
 }
 
@@ -1246,20 +1247,10 @@ static void sizeLinearArray(htmltbl_t * tbl)
 
     for (cells = tbl->u.n.cells; *cells; cells++) {
 	cp = *cells;
-	double ht;
-	if (cp->rowspan == 1)
-	    ht = cp->data.box.UR.y;
-	else {
-	    ht = split(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
-	    ht = fmax(ht, 1);
-	}
-	double wd;
-	if (cp->colspan == 1)
-	    wd = cp->data.box.UR.x;
-	else {
-	    wd = split(cp->data.box.UR.x, cp->colspan, tbl->data.space);
-	    wd = fmax(wd, 1);
-	}
+	double ht = split(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
+	ht = fmax(ht, 1);
+	double wd = split(cp->data.box.UR.x, cp->colspan, tbl->data.space);
+	wd = fmax(wd, 1);
 	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
 	    tbl->heights[i] = fmax(tbl->heights[i], ht);
 	}
