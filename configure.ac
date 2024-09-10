@@ -1598,8 +1598,6 @@ if test "$with_ann" != "yes"; then
 else
   PKG_CHECK_MODULES(ANN, [ann],[
     use_ann="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_ANN,1,
-      [Define if you have the ann library])
     AC_SUBST([ANN_CFLAGS])
     AC_SUBST([ANN_LIBS])
   ],[
@@ -1608,7 +1606,6 @@ else
       ANN_CFLAGS= # nothing required
       AC_CHECK_LIB(ann, ann_visit_pts, [
         ANN_LIBS=-lann
-        AC_DEFINE_UNQUOTED(HAVE_ANN,1,[Define if you have the ann library])
         use_ann="Yes"
       ], [
         use_ann="No (no ann.pc or libANN found)"
@@ -1619,7 +1616,6 @@ else
         use_ann="Yes"
         ANN_CFLAGS="-I/opt/local/include"
         ANN_LIBS="-L/opt/local/lib -lann"
-        AC_DEFINE_UNQUOTED(HAVE_ANN,1,[Define if you have the ann library])
       ], [
         use_ann="No (no ann.pc or ANN.h found)"
       ])

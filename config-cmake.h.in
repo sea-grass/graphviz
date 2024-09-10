@@ -26,7 +26,6 @@ typedef SSIZE_T ssize_t;
 #endif
 
 // Libraries
-#cmakedefine HAVE_ANN
 #cmakedefine HAVE_DEVIL
 #cmakedefine HAVE_EXPAT
 #cmakedefine HAVE_FREETYPE
