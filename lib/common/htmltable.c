@@ -329,7 +329,7 @@ static void doBorder(GVJ_t * job, htmldata_t * dp, boxf b)
 	}
     } else {
 	if (dp->border > 1) {
-	    double delta = (double)dp->border / 2.0;
+	    const double delta = dp->border / 2.0;
 	    b.LL.x += delta;
 	    b.LL.y += delta;
 	    b.UR.x -= delta;
