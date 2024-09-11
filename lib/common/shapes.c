@@ -2968,8 +2968,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     } else if (ND_gui_state(n) & GUI_STATE_VISITED) {
 	pencolor = DEFAULT_VISITEDPENCOLOR;
 	gvrender_set_pencolor(job, pencolor);
-	color =
-	    late_nnstring(n, N_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	color = DEFAULT_VISITEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else {
@@ -3300,8 +3299,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
     } else if (ND_gui_state(n) & GUI_STATE_VISITED) {
 	color = DEFAULT_VISITEDPENCOLOR;
 	gvrender_set_pencolor(job, color);
-	color =
-	    late_nnstring(n, N_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	color = DEFAULT_VISITEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
     } else {
 	color = findFillDflt(n, "black");
