@@ -2223,8 +2223,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	    fillcolor = late_nnstring(e, E_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
 	}
 	else if (ED_gui_state(e) & GUI_STATE_VISITED) {
-	    pencolor = late_nnstring(e, E_visitedpencolor,
-			default_pencolor(&buf, pencolor, DEFAULT_VISITEDPENCOLOR));
+	    pencolor = default_pencolor(&buf, pencolor, DEFAULT_VISITEDPENCOLOR);
 	    fillcolor = late_nnstring(e, E_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
 	}
 	else

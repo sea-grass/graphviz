@@ -80,7 +80,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 	*N_penwidth, *N_gradientangle;
     GLOBALS_API EXTERN Agsym_t
 	*E_weight, *E_minlen, *E_color, *E_fillcolor,
-	*E_visitedpencolor, *E_visitedfillcolor,
+	*E_visitedfillcolor,
 	*E_deletedpencolor, *E_deletedfillcolor,
 	*E_fontsize, *E_fontname, *E_fontcolor,
 	*E_label, *E_xlabel, *E_dir, *E_style, *E_decorate,
