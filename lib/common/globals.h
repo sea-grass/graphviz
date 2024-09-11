@@ -67,7 +67,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
     GLOBALS_API EXTERN bool Y_invert; ///< invert y in dot & plain output
     GLOBALS_API EXTERN int GvExitOnUsage;   /* gvParseArgs() should exit on usage or error */
 
-    GLOBALS_API EXTERN Agsym_t *G_deletedfillcolor,
+    GLOBALS_API EXTERN Agsym_t
 	*G_ordering, *G_peripheries, *G_penwidth,
 	*G_gradientangle, *G_margin;
     GLOBALS_API EXTERN Agsym_t
