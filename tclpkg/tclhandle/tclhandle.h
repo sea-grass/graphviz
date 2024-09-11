@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <inttypes.h>
 #include <stdint.h>
 #include <tcl.h>
 
@@ -77,6 +78,9 @@ entryHeader_pt tclhandleAlloc(tblHeader_pt tblHdrPtr, char **handle,
                               uint64_t *entryIdxPtr);
 int tclhandleIndex(tblHeader_pt tblHdrPtr, const char *handle,
                    uint64_t *entryIdxPtr);
+
+/// printf format for TCL handles
+#define HANDLE_FORMAT ("vgpane%" PRIu64)
 
 #ifdef __cplusplus
 }

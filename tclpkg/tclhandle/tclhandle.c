@@ -36,7 +36,6 @@
 
 #include "tclhandle.h"
 #include <cgraph/agxbuf.h>
-#include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -107,9 +106,6 @@ static void tclhandleExpandTable(tblHeader_pt tblHdrPtr, uint64_t neededIdx) {
   tblHdrPtr->tableSize += numNewEntries;
   free(oldbodyPtr);
 }
-
-/// printf format for TCL handles
-#define HANDLE_FORMAT ("vgpane%" PRIu64)
 
 /*=============================================================================
  * tclhandleAlloc --

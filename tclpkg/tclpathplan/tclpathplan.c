@@ -23,7 +23,6 @@
 #include                <stdlib.h>
 #include                <string.h>
 
-#include <inttypes.h>
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/list.h>
@@ -144,7 +143,7 @@ static void expandPercentsEval(Tcl_Interp *interp, char *before,
 
 	switch (before[1]) {
 	case 'r':
-	    agxbprint(&scripts, "vgpane%" PRIu64, vgcanvasHandle);
+	    agxbprint(&scripts, HANDLE_FORMAT, vgcanvasHandle);
 	    break;
 	case 't':
 	    dgsprintxy(&scripts, npts, ppos);
