@@ -3520,7 +3520,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_DELETED) {
-	    pencolor = late_nnstring(sg, G_deletedpencolor, DEFAULT_DELETEDPENCOLOR);
+	    pencolor = DEFAULT_DELETEDPENCOLOR;
 	    fillcolor = late_nnstring(sg, G_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
 	    filled = FILL;
 	}
