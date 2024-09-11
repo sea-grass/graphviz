@@ -72,7 +72,6 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 	*G_gradientangle, *G_margin;
     GLOBALS_API EXTERN Agsym_t
 	*N_height, *N_width, *N_shape, *N_color, *N_fillcolor,
-	*N_deletedfillcolor,
 	*N_fontsize, *N_fontname, *N_fontcolor, *N_margin,
 	*N_label, *N_xlabel, *N_nojustify, *N_style, *N_showboxes,
 	*N_sides, *N_peripheries, *N_ordering, *N_orientation,
