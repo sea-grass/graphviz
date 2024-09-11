@@ -166,7 +166,6 @@ copy $(SolutionDir)windows\dependencies\libraries\vcpkg\installed\x86-windows\bi
     <ClCompile Include="common\htmlparse.c" />
     <ClCompile Include="common\htmltable.c" />
     <ClCompile Include="common\input.c" />
-    <ClCompile Include="common\intset.c" />
     <ClCompile Include="common\labels.c" />
     <ClCompile Include="common\ns.c" />
     <ClCompile Include="common\output.c" />

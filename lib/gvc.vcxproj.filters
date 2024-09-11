@@ -209,9 +209,6 @@
     <ClCompile Include="common\input.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="common\intset.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="common\labels.c">
       <Filter>Source Files</Filter>
     </ClCompile>

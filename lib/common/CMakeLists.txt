@@ -62,7 +62,6 @@ add_library(common_obj OBJECT
   geom.h
   geomprocs.h
   globals.h
-  intset.h
   htmllex.h
   htmltable.h
   macros.h
@@ -86,7 +85,6 @@ add_library(common_obj OBJECT
   htmllex.c
   htmltable.c
   input.c
-  intset.c
   labels.c
   ns.c
   output.c

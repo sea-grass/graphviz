@@ -10,14 +10,16 @@
 
 #pragma once
 
-#include <cdt.h>
+#include <cgraph/list.h>
 #include <stdbool.h>
 #include <stddef.h>
+
+DEFINE_LIST(adj_list, size_t)
 
 typedef struct {
   int color;
   int topsort_order;
-  Dt_t* adj_list;  /* adj_list */
+  adj_list_t adj_list; ///< adjacency list
 } vertex;
 
 typedef struct {

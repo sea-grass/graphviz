@@ -32,8 +32,8 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/bitarray.h>
 #include <common/pointset.h>
-#include <common/intset.h>
 #include <cdt/cdt.h>
 #include <float.h>
 #include <inttypes.h>
@@ -1188,14 +1188,14 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     size_t n_rows = 0;
     size_t n_cols = 0;
     PointSet *ps = newPS();
-    Dt_t *is = openIntSet();
+    bitarray_t is = bitarray_new((size_t)UINT16_MAX + 1);
 
     size_t cnt = 0;
     for (uint16_t r = 0; r < rows_size(&rows); ++r) {
 	row_t *rp = rows_get(&rows, r);
 	cnt += cells_size(&rp->rp);
 	if (rp->ruled) {
-	    addIntSet(is, r + 1);
+	    bitarray_set(&is, r + 1, true);
 	}
     }
 
@@ -1213,14 +1213,14 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
 	    c += cellp->colspan;
 	    n_cols = MAX(c, n_cols);
 	    n_rows = MAX(r + cellp->rowspan, n_rows);
-	    if (inIntSet(is, r + cellp->rowspan))
+	    if (bitarray_get(is, r + cellp->rowspan))
 		cellp->hruled = true;
 	}
     }
     tbl->row_count = n_rows;
     tbl->column_count = n_cols;
     rows_free(&rows);
-    dtclose(is);
+    bitarray_reset(&is);
     freePS(ps);
     return rv;
 }
