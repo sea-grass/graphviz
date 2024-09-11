@@ -582,7 +582,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	if (strcmp(argv[2], "triangle") == 0) {
 	    s = vgp->triangle_cmd;
 	    if (argc == 4)
-		vgp->triangle_cmd = s = buildBindings(s, argv[3]);
+		vgp->triangle_cmd = buildBindings(s, argv[3]);
 	} else {
 	    Tcl_AppendResult(interp, "unknown event \"", argv[2],
 			     "\": must be one of:\n\ttriangle.", NULL);
