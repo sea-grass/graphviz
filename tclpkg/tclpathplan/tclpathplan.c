@@ -61,7 +61,7 @@ typedef struct vgpane_s {
     char *triangle_cmd;		/* why is this here any more */
 } vgpane_t;
 
-tblHeader_pt vgpaneTable;
+static tblHeader_pt vgpaneTable;
 
 static int polyid = 0;		/* unique and unchanging id for each poly */
 
