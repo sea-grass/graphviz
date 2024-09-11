@@ -34,8 +34,8 @@
 #include <pathplan/tri.h>
 #include "Plegal_arrangement.h"
 #include <tcl.h>
-#include "tclhandle.h"
 #include <util/alloc.h>
+#include <util/prisize_t.h>
 
 #if ((TCL_MAJOR_VERSION == 8) && (TCL_MINOR_VERSION >= 6)) || ( TCL_MAJOR_VERSION > 8)
 #else
@@ -53,15 +53,21 @@ typedef struct poly_s {
 
 DEFINE_LIST(polys, poly)
 
+/// printf format for TCL handles
+#define HANDLE_FORMAT ("vgpane%" PRISIZE_T)
+
 typedef struct {
     polys_t poly; // set of polygons
     vconfig_t *vc;		/* visibility graph handle */
     Tcl_Interp *interp;		/* interpreter that owns the binding */
     char *triangle_cmd;		/* why is this here any more */
-    uint64_t index; ///< position within allocated handles list
+    size_t index; ///< position within allocated handles list
+    bool valid; ///< is this pane currently allocated?
 } vgpane_t;
 
-static tblHeader_pt vgpaneTable;
+DEFINE_LIST(vgpanes, vgpane_t)
+
+static vgpanes_t vgpaneTable;
 
 static int polyid = 0;		/* unique and unchanging id for each poly */
 
@@ -119,7 +125,7 @@ static void dgsprintxy(agxbuf *result, int npts, const point p[]) {
 /// @param npts Number of coordinates
 /// @param ppos Coordinates to substitute for %t
 static void expandPercentsEval(Tcl_Interp *interp, char *before,
-                               uint64_t vgcanvasHandle, int npts,
+                               size_t vgcanvasHandle, int npts,
                                const point *ppos) {
     agxbuf scripts = {0};
 
@@ -167,7 +173,7 @@ static void triangle_callback(void *vgparg, const point pqr[]) {
     vgp = vgparg;
 
     if (vgp->triangle_cmd) {
-	const uint64_t vgcanvasHandle = vgp->index;
+	const size_t vgcanvasHandle = vgp->index;
 	expandPercentsEval(vgp->interp, vgp->triangle_cmd, vgcanvasHandle, 3, pqr);
     }
 }
@@ -354,6 +360,58 @@ static void appendpoint(Tcl_Interp * interp, point p)
     Tcl_AppendElement(interp, buf);
 }
 
+/// lookup an existing pane
+///
+/// @param panes Collection to search
+/// @param handle Text descriptor of the pane
+/// @return A pointer to the pane or `NULL` if there is no such pane
+static vgpane_t *find_vgpane(vgpanes_t *panes, const char *handle) {
+  assert(panes != NULL);
+  assert(handle != NULL);
+
+  size_t index;
+  if (sscanf(handle, HANDLE_FORMAT, &index) != 1) {
+    return NULL;
+  }
+  if (index >= vgpanes_size(panes)) {
+    return NULL;
+  }
+  vgpane_t *const pane = vgpanes_at(panes, index);
+  if (!pane->valid) {
+    return NULL;
+  }
+
+  return pane;
+}
+
+/// cleanup unused panes where possible
+///
+/// Panes need to have a stable identifier (index) for their lifetime. Thus they
+/// cannot be removed from a `vgpanes_t` when deallocated because removing them
+/// would alter the index of any still-live panes that comes after them.
+/// Instead, panes are marked `->valid = false` when deallocated and then later
+/// removed here.
+///
+/// It is only safe to remove deallocated panes that have no live panes
+/// following them, which is exactly what this function does.
+///
+/// @param panes Collection to sweep
+static void garbage_collect_vgpanes(vgpanes_t *panes) {
+  assert(panes != NULL);
+
+  // shrink list, discarding previously deallocated entries
+  while (!vgpanes_is_empty(panes)) {
+    if (!vgpanes_back(panes)->valid) {
+      (void)vgpanes_pop_back(panes);
+    }
+  }
+
+  // if this left us with none, fully deallocate to make leak checkers happy
+  if (vgpanes_is_empty(panes)) {
+    vgpanes_free(panes);
+  }
+}
+
 /* process vgpane methods */
 static int
 vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
@@ -364,7 +422,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
     int vargc, result;
     char vbuf[30];
     const char **vargv;
-    vgpane_t *vgp, **vgpp;
+    vgpane_t *vgp;
     point p, q, *ps;
     double alpha, gain;
     Pvector_t slopes[2];
@@ -376,11 +434,10 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 			 " ", argv[0], " method ?arg arg ...?\"", NULL);
 	return TCL_ERROR;
     }
-    if (!(vgpp = (vgpane_t **) tclhandleXlate(vgpaneTable, argv[0]))) {
+    if (!(vgp = find_vgpane(&vgpaneTable, argv[0]))) {
 	Tcl_AppendResult(interp, "Invalid handle: \"", argv[0], "\"", NULL);
 	return TCL_ERROR;
     }
-    vgp = *vgpp;
 
     if (strcmp(argv[1], "coords") == 0) {
 	if (argc < 3) {
@@ -446,7 +503,8 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    Pobsclose(vgp->vc);
 	polys_free(&vgp->poly);
 	Tcl_DeleteCommand(interp, argv[0]);
-	free(tclhandleFree(vgpaneTable, argv[0]));
+	vgp->valid = false;
+	garbage_collect_vgpanes(&vgpaneTable);
 	return TCL_OK;
 
     } else if (strcmp(argv[1], "find") == 0) {
@@ -807,21 +865,18 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[])
     (void)argc;
     (void)argv;
 
-    char *vbuf = NULL;
-    vgpane_t *vgp = gv_alloc(sizeof(vgpane_t));
-    uint64_t index;
-    *(vgpane_t **)tclhandleAlloc(vgpaneTable, &vbuf, &index) = vgp;
-    assert(vbuf != NULL);
+    const vgpane_t vg = {.interp = interp};
+    vgpanes_append(&vgpaneTable, vg);
+    vgpane_t *const vgp = vgpanes_back(&vgpaneTable);
+    vgp->index = vgpanes_size(&vgpaneTable) - 1;
 
-    vgp->vc = NULL;
-    vgp->poly = (polys_t){0};
-    vgp->interp = interp;
-    vgp->triangle_cmd = NULL;
-    vgp->index = index;
+    agxbuf buffer = {0};
+    agxbprint(&buffer, HANDLE_FORMAT, vgp->index);
+    const char *const vbuf = agxbuse(&buffer);
 
     Tcl_CreateCommand(interp, vbuf, vgpanecmd, NULL, NULL);
     Tcl_AppendResult(interp, vbuf, NULL);
-    free(vbuf);
+    agxbfree(&buffer);
     return TCL_OK;
 }
 
@@ -851,8 +906,6 @@ int Tclpathplan_Init(Tcl_Interp * interp)
     }
 
     Tcl_CreateCommand(interp, "vgpane", vgpane, NULL, NULL);
-
-    vgpaneTable = tclhandleInit(sizeof(vgpane_t), 10);
 
     return TCL_OK;
 }
