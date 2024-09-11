@@ -54,7 +54,7 @@ typedef struct poly_s {
 
 DEFINE_LIST(polys, poly)
 
-typedef struct vgpane_s {
+typedef struct {
     polys_t poly; // set of polygons
     vconfig_t *vc;		/* visibility graph handle */
     Tcl_Interp *interp;		/* interpreter that owns the binding */
