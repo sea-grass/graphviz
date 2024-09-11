@@ -364,7 +364,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
     (void)clientData;
 
     int vargc, result;
-    char *s, vbuf[30];
+    char vbuf[30];
     const char **vargv;
     vgpane_t *vgp, **vgpp;
     point p, q, *ps;
@@ -579,6 +579,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 	    Tcl_AppendElement(interp, "triangle");
 	    return TCL_OK;
 	}
+	char *s = NULL;
 	if (strcmp(argv[2], "triangle") == 0) {
 	    s = vgp->triangle_cmd;
 	    if (argc == 4)
