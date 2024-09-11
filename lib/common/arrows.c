@@ -234,7 +234,6 @@ void arrow_flags(Agedge_t *e, uint32_t *sflag, uint32_t *eflag) {
 		arrow_match_name(attr, eflag);
     }
     if (*sflag == ARR_TYPE_NORM) {
-	/* similar to above, we cannot use E_arrowtail here */
 	Agsym_t *arrowtail = agfindedgeattr(agraphof(e), "arrowtail");
 	if (arrowtail != NULL && ((attr = agxget(e, arrowtail)))[0])
 		arrow_match_name(attr, sflag);

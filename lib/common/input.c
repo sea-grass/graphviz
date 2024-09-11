@@ -765,7 +765,6 @@ void graph_init(graph_t * g, bool use_rankdir)
     E_xlabel = agfindedgeattr(g, "xlabel");
     E_label_float = agfindedgeattr(g, "labelfloat");
     E_dir = agfindedgeattr(g, "dir");
-    E_arrowtail = agfindedgeattr(g, "arrowtail");
     E_headlabel = agfindedgeattr(g, "headlabel");
     E_taillabel = agfindedgeattr(g, "taillabel");
     E_labelfontsize = agfindedgeattr(g, "labelfontsize");
