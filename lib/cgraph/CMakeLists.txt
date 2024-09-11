@@ -24,7 +24,6 @@ add_library(cgraph
   list.h
   node_set.h
   rdr.h
-  sort.h
   startswith.h
   strview.h
   tokenize.h
