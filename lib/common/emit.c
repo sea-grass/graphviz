@@ -3526,7 +3526,7 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_VISITED) {
 	    pencolor = DEFAULT_VISITEDPENCOLOR;
-	    fillcolor = late_nnstring(sg, G_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	    fillcolor = DEFAULT_VISITEDFILLCOLOR;
 	    filled = FILL;
 	}
 	else {
