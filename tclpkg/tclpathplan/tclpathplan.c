@@ -168,10 +168,7 @@ static void expandPercentsEval(Tcl_Interp *interp, char *before,
 }
 
 static void triangle_callback(void *vgparg, const point pqr[]) {
-    vgpane_t *vgp;
-
-    vgp = vgparg;
-
+    vgpane_t *vgp = vgparg;
     if (vgp->triangle_cmd) {
 	const size_t vgcanvasHandle = vgp->index;
 	expandPercentsEval(vgp->interp, vgp->triangle_cmd, vgcanvasHandle, 3, pqr);
