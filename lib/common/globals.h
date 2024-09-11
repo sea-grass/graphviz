@@ -85,7 +85,7 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 	*E_showboxes, *E_arrowsz, *E_constr, *E_layer,
 	*E_comment, *E_label_float,
 	*E_samehead, *E_sametail,
-	*E_arrowhead, *E_arrowtail,
+	*E_arrowtail,
 	*E_headlabel, *E_taillabel,
 	*E_labelfontsize, *E_labelfontname, *E_labelfontcolor,
 	*E_labeldistance, *E_labelangle,

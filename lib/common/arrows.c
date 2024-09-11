@@ -229,10 +229,6 @@ void arrow_flags(Agedge_t *e, uint32_t *sflag, uint32_t *eflag) {
 	}
     }
     if (*eflag == ARR_TYPE_NORM) {
-	/* we cannot use the pre-constructed E_arrowhead here because the order in
-	 * which edge attributes appear and are thus parsed into a dictionary mean
-	 * E_arrowhead->id potentially points at a stale attribute value entry
-	 */
 	Agsym_t *arrowhead = agfindedgeattr(agraphof(e), "arrowhead");
 	if (arrowhead != NULL && ((attr = agxget(e, arrowhead)))[0])
 		arrow_match_name(attr, eflag);
