@@ -443,6 +443,7 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 
     } else if (strcmp(argv[1], "delete") == 0) {
 	/* delete a vgpane and all memory associated with it */
+	free(vgp->triangle_cmd);
 	if (vgp->vc)
 	    Pobsclose(vgp->vc);
 	polys_free(&vgp->poly);
