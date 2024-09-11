@@ -59,6 +59,7 @@ typedef struct {
     vconfig_t *vc;		/* visibility graph handle */
     Tcl_Interp *interp;		/* interpreter that owns the binding */
     char *triangle_cmd;		/* why is this here any more */
+    uint64_t index; ///< position within allocated handles list
 } vgpane_t;
 
 static tblHeader_pt vgpaneTable;
@@ -167,9 +168,7 @@ static void triangle_callback(void *vgparg, const point pqr[]) {
     vgp = vgparg;
 
     if (vgp->triangle_cmd) {
-	const uint64_t vgcanvasHandle =
-		((uint64_t)((uintptr_t)vgp - (uintptr_t)vgpaneTable->bodyPtr))
-				 / vgpaneTable->entrySize;
+	const uint64_t vgcanvasHandle = vgp->index;
 	expandPercentsEval(vgp->interp, vgp->triangle_cmd, vgcanvasHandle, 3, pqr);
     }
 }
@@ -811,13 +810,15 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[])
 
     char *vbuf = NULL;
     vgpane_t *vgp = gv_alloc(sizeof(vgpane_t));
-    *(vgpane_t **) tclhandleAlloc(vgpaneTable, &vbuf, NULL) = vgp;
+    uint64_t index;
+    *(vgpane_t **)tclhandleAlloc(vgpaneTable, &vbuf, &index) = vgp;
     assert(vbuf != NULL);
 
     vgp->vc = NULL;
     vgp->poly = (polys_t){0};
     vgp->interp = interp;
     vgp->triangle_cmd = NULL;
+    vgp->index = index;
 
     Tcl_CreateCommand(interp, vbuf, vgpanecmd, NULL, NULL);
     Tcl_AppendResult(interp, vbuf, NULL);
