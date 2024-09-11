@@ -817,7 +817,7 @@ vgpane(ClientData clientData, Tcl_Interp * interp, int argc, const char *argv[])
     vgp->interp = interp;
     vgp->triangle_cmd = NULL;
 
-    Tcl_CreateCommand(interp, vbuf, vgpanecmd, (ClientData)NULL, NULL);
+    Tcl_CreateCommand(interp, vbuf, vgpanecmd, NULL, NULL);
     Tcl_AppendResult(interp, vbuf, NULL);
     free(vbuf);
     return TCL_OK;
@@ -848,7 +848,7 @@ int Tclpathplan_Init(Tcl_Interp * interp)
 	return TCL_ERROR;
     }
 
-    Tcl_CreateCommand(interp, "vgpane", vgpane, (ClientData)NULL, NULL);
+    Tcl_CreateCommand(interp, "vgpane", vgpane, NULL, NULL);
 
     vgpaneTable = tclhandleInit(sizeof(vgpane_t), 10);
 
