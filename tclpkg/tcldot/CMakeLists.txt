@@ -18,7 +18,6 @@ add_library(tcldot SHARED ${SOURCES} no_builtins.c)
 target_compile_definitions(tcldot PRIVATE -DDEMAND_LOADING=1)
 
 target_link_libraries(tcldot PRIVATE
-  tclhandle
   tclstubs
   cdt
   cgraph
@@ -85,7 +84,6 @@ add_library(tcldot_builtin SHARED ${SOURCES} tcldot_builtins.cpp)
 target_compile_definitions(tcldot_builtin PRIVATE -DDEMAND_LOADING=1)
 
 target_link_libraries(tcldot_builtin PRIVATE
-  tclhandle
   gvplugin_dot_layout
   gvplugin_neato_layout
   gvplugin_core

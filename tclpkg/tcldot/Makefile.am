@@ -2,9 +2,6 @@
 
 SUBDIRS = demo
 
-# tclhandle still needed for gd
-TCLHANDLE_INCLUDES = -I$(top_srcdir)/tclpkg/tclhandle
-TCLHANDLE_LIBS = $(top_builddir)/tclpkg/tclhandle/libtclhandle_C.la
 if WITH_LIBGD
 GDTCLFT_LIBS = $(top_builddir)/tclpkg/gdtclft/libgdtclft_C.la
 endif
@@ -17,7 +14,7 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/common \
 	-I$(top_srcdir)/lib/cgraph \
 	-I$(top_srcdir)/lib/cdt \
-	-I$(top_srcdir)/lib/pathplan $(TCLHANDLE_INCLUDES) $(GDLIB_CFLAGS) $(TCL_INCLUDES)
+	-I$(top_srcdir)/lib/pathplan $(GDLIB_CFLAGS) $(TCL_INCLUDES)
 
 LIBS = -lc $(TCL_STUB_LIB_SPEC)
 
@@ -48,7 +45,7 @@ libtcldot_la_SOURCES = \
 libtcldot_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 libtcldot_la_LDFLAGS = -no-undefined -module -avoid-version
 
-libtcldot_la_LIBADD = $(TCLHANDLE_LIBS) $(GDTCLFT_LIBS) \
+libtcldot_la_LIBADD = $(GDTCLFT_LIBS) \
 	$(top_builddir)/tclpkg/tclstubs/libtclstubs_C.la \
 	$(top_builddir)/lib/gvc/libgvc.la \
 	$(top_builddir)/lib/pathplan/libpathplan_C.la \
@@ -74,7 +71,7 @@ libtcldot_builtin_la_SOURCES = \
 libtcldot_builtin_la_CPPFLAGS = $(AM_CPPFLAGS) -DDEMAND_LOADING=1
 libtcldot_builtin_la_LDFLAGS = -no-undefined -module -avoid-version
 
-libtcldot_builtin_la_LIBADD = $(TCLHANDLE_LIBS) $(GDTCLFT_LIBS) \
+libtcldot_builtin_la_LIBADD = $(GDTCLFT_LIBS) \
 	$(top_builddir)/plugin/dot_layout/libgvplugin_dot_layout_C.la \
 	$(top_builddir)/plugin/neato_layout/libgvplugin_neato_layout_C.la \
 	$(top_builddir)/plugin/core/libgvplugin_core_C.la \
