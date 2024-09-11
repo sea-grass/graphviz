@@ -2215,7 +2215,7 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 	}
 	else if (ED_gui_state(e) & GUI_STATE_SELECTED) {
 	    pencolor = default_pencolor(&buf, pencolor, DEFAULT_SELECTEDPENCOLOR);
-	    fillcolor = late_nnstring(e, E_selectedfillcolor, DEFAULT_SELECTEDFILLCOLOR);
+	    fillcolor = DEFAULT_SELECTEDFILLCOLOR;
 	}
 	else if (ED_gui_state(e) & GUI_STATE_DELETED) {
 	    pencolor = late_nnstring(e, E_deletedpencolor,
