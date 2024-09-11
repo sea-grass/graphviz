@@ -3510,12 +3510,12 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	fillcolor = pencolor = 0;
 
 	if (GD_gui_state(sg) & GUI_STATE_ACTIVE) {
-	    pencolor = late_nnstring(sg, G_activepencolor, DEFAULT_ACTIVEPENCOLOR);
+	    pencolor = DEFAULT_ACTIVEPENCOLOR;
 	    fillcolor = late_nnstring(sg, G_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
 	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_SELECTED) {
-	    pencolor = late_nnstring(sg, G_activepencolor, DEFAULT_SELECTEDPENCOLOR);
+	    pencolor = DEFAULT_SELECTEDPENCOLOR;
 	    fillcolor = late_nnstring(sg, G_activefillcolor, DEFAULT_SELECTEDFILLCOLOR);
 	    filled = FILL;
 	}
