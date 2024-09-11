@@ -72,7 +72,6 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 	*G_gradientangle, *G_margin;
     GLOBALS_API EXTERN Agsym_t
 	*N_height, *N_width, *N_shape, *N_color, *N_fillcolor,
-	*N_activefillcolor,
 	*N_selectedpencolor, *N_selectedfillcolor,
 	*N_visitedpencolor, *N_visitedfillcolor,
 	*N_deletedpencolor, *N_deletedfillcolor,

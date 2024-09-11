@@ -2948,8 +2948,7 @@ static void poly_gencode(GVJ_t * job, node_t * n)
     if (ND_gui_state(n) & GUI_STATE_ACTIVE) {
 	pencolor = DEFAULT_ACTIVEPENCOLOR;
 	gvrender_set_pencolor(job, pencolor);
-	color =
-	    late_nnstring(n, N_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
+	color = DEFAULT_ACTIVEFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else if (ND_gui_state(n) & GUI_STATE_SELECTED) {
@@ -3288,8 +3287,7 @@ static void point_gencode(GVJ_t * job, node_t * n)
     if (ND_gui_state(n) & GUI_STATE_ACTIVE) {
 	color = DEFAULT_ACTIVEPENCOLOR;
 	gvrender_set_pencolor(job, color);
-	color =
-	    late_nnstring(n, N_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
+	color = DEFAULT_ACTIVEFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
     } else if (ND_gui_state(n) & GUI_STATE_SELECTED) {
 	color =
