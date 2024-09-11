@@ -737,7 +737,6 @@ void graph_init(graph_t * g, bool use_rankdir)
     N_showboxes = agfindnodeattr(g, "showboxes");
     N_penwidth = agfindnodeattr(g, "penwidth");
     N_ordering = agfindnodeattr(g, "ordering");
-    N_margin = agfindnodeattr(g, "margin");
     /* attribs for polygon shapes */
     N_sides = agfindnodeattr(g, "sides");
     N_peripheries = agfindnodeattr(g, "peripheries");
