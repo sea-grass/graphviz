@@ -582,6 +582,7 @@ freeBlocks (parse_block* ip)
 	free (ip->begg_stmt);
 	freeCaseList (ip->node_stmts);
 	freeCaseList (ip->edge_stmts);
+	free(ip);
 	ip = nxt;
     }
 }
