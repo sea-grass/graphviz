@@ -2470,10 +2470,8 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);
 	    if (getErrorErrors())
 		goto finish;
-	    else {
-		ibp = ibp->next;
-		p->n_blocks++;
-	    }
+	    ibp = ibp->next;
+	    p->n_blocks++;
 	}
     }
     p->flags = useflags;
