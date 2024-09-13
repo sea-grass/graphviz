@@ -18,6 +18,9 @@
     <ClInclude Include="alloc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="bitarray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="exit.h">
       <Filter>Header Files</Filter>
     </ClInclude>

@@ -1,5 +1,4 @@
 #include <assert.h>
-#include <cgraph/bitarray.h>
 #include <limits.h>
 #include <neatogen/neato.h>
 #include <neatogen/sgd.h>
@@ -9,6 +8,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <util/alloc.h>
+#include <util/bitarray.h>
 
 static float calculate_stress(float *pos, term_sgd *terms, int n_terms) {
     float stress = 0;

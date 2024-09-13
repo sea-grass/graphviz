@@ -10,7 +10,6 @@
 
 #include "config.h"
 #include <cgraph/agxbuf.h>
-#include <cgraph/bitarray.h>
 #include <cgraph/list.h>
 #include <sparse/SparseMatrix.h>
 #include <sfdpgen/spring_electrical.h>
@@ -27,6 +26,7 @@
 #include <string.h>
 #include <time.h>
 #include <util/alloc.h>
+#include <util/bitarray.h>
 
 /// another parameter
 /// fₐ(i, j) = C × dist(i , j)² ÷ K × dᵢⱼ, fᵣ(i, j) = K³⁻ᵖ ÷ dist(i, j)⁻ᵖ

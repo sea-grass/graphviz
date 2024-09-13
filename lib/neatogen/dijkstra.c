@@ -18,7 +18,6 @@
 ******************************************/
 
 #include <assert.h>
-#include <cgraph/bitarray.h>
 #include <float.h>
 #include <neatogen/bfs.h>
 #include <neatogen/dijkstra.h>
@@ -26,6 +25,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <util/alloc.h>
+#include <util/bitarray.h>
 
 typedef DistType Word;
 
