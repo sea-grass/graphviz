@@ -4,6 +4,28 @@
 
 [[_TOC_]]
 
+## Directory overview
+
+The main things of interest to you in the Graphviz repository are most likely:
+
+* cmd/ – the command line binaries and gvedit
+  * cmd/dot/ – the main `dot` binary, though most of its functionality actually
+    lives in libraries
+* lib/ – the Graphviz libraries
+  * lib/cgraph, lib/gvc – the main user-facing Graphviz libraries
+* plugin/ – the plugins, several of which implement core functionality
+
+Once you have familiarized yourself with the above and want to go deeper or
+validate changes you have made, you will likely want to look at:
+
+* .gitlab-ci.yml, ci/ – continuous integration testing infrastructure
+* tclpkg/ – despite its name, this contains Graphviz bindings for both TCL and
+  many other languages
+* tests/ – test cases
+
+This is enough to get you started, but viewing `git log` and seeing what files
+recent commits touch will also help to orient you.
+
 ## Building
 
 Instructions for building Graphviz from source are available
