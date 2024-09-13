@@ -14,7 +14,6 @@ target_include_directories(tclplan PRIVATE
 
 target_link_libraries(tclplan PRIVATE
   pathplan
-  tclhandle
   tclstubs
 )
 

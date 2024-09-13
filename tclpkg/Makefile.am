@@ -18,7 +18,7 @@ if WITH_TCL
 pkgindex_DATA = pkgIndex.tcl
 endif
 
-SUBDIRS = tclstubs tclhandle gdtclft tcldot tclpathplan gv
+SUBDIRS = tclstubs gdtclft tcldot tclpathplan gv
 
 pkgIndex.tcl: $(TCL_PKGINDEX) $(TCL_PKGINDEX_GD) $(TCL_PKGINDEX_SWIG)
 	cat $(TCL_PKGINDEX) $(TCL_PKGINDEX_GD) $(TCL_PKGINDEX_SWIG) >$@

@@ -17,7 +17,6 @@
 #include <common/render.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
-#include "tclhandle.h"
 #include "../../plugin/core/tcl_context.h"
 
 /*

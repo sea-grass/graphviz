@@ -2179,7 +2179,6 @@ AC_CONFIG_FILES(Makefile
 	cmd/gvedit/images/Makefile
 	tclpkg/Makefile
 	tclpkg/tclstubs/Makefile
-	tclpkg/tclhandle/Makefile
 	tclpkg/gdtclft/Makefile
 	tclpkg/gdtclft/demo/Makefile
 	tclpkg/tcldot/Makefile

@@ -92,7 +92,7 @@ static void myiddisc_idregister(void *state, int objtype, void *obj) {
         case AGOUTEDGE: proc=edgecmd; break;
         default: UNREACHABLE();
     }
-    Tcl_CreateCommand(interp, obj2cmd(obj), proc, (ClientData) gctx, (Tcl_CmdDeleteProc *) NULL);
+    Tcl_CreateCommand(interp, obj2cmd(obj), proc, (ClientData) gctx, NULL);
 }
 Agiddisc_t myiddisc = {
     myiddisc_open,
