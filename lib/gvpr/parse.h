@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cgraph/list.h>
 #include <stddef.h>
 
 #ifdef __cplusplus
@@ -27,22 +28,22 @@ extern "C" {
 	struct _case_info *next;
     } case_info;
 
-    typedef struct _parse_block {
+    typedef struct {
 	int l_beging;
 	char *begg_stmt;
 	size_t n_nstmts;
 	size_t n_estmts;
 	case_info *node_stmts;
 	case_info *edge_stmts;
-	struct _parse_block *next;
     } parse_block; 
+
+DEFINE_LIST(parse_blocks, parse_block)
 
     typedef struct {
 	char *source;
 	int l_begin, l_end, l_endg;
 	char *begin_stmt;
-	size_t n_blocks;
-	parse_block *blocks;
+	parse_blocks_t blocks;
 	char *endg_stmt;
 	char *end_stmt;
     } parse_prog;

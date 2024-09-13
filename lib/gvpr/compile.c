@@ -2460,20 +2460,17 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 	    goto finish;
     }
 
-    if (inp->blocks) {
+    if (!parse_blocks_is_empty(&inp->blocks)) {
 	comp_block* bp;
-	parse_block* ibp = inp->blocks;
 
-	p->blocks = bp = gv_calloc(inp->n_blocks, sizeof(comp_block));
+	p->blocks = bp = gv_calloc(parse_blocks_size(&inp->blocks), sizeof(comp_block));
 
-	for (size_t i = 0; i < inp->n_blocks; bp++, i++) {
+	for (size_t i = 0; i < parse_blocks_size(&inp->blocks); bp++, i++) {
+	    parse_block *ibp = parse_blocks_at(&inp->blocks, i);
 	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);
 	    if (getErrorErrors())
 		goto finish;
-	    else {
-		ibp = ibp->next;
-		p->n_blocks++;
-	    }
+	    p->n_blocks++;
 	}
     }
     p->flags = useflags;
