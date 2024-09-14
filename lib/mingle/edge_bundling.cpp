@@ -8,8 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include "config.h"
-
 #include <algorithm>
 #include <common/types.h>
 #include <common/globals.h>
@@ -589,15 +587,9 @@ std::vector<pedge> edge_bundling(SparseMatrix A0, int dim,
     modularity_ink_bundling(dim, ne, B, edges, angle_param, angle);
 
   } else if (method == METHOD_INK_AGGLOMERATE){
-#ifdef HAVE_ANN
     /* plan: merge a node with its neighbors if doing so improve. Form coarsening graph, repeat until no more ink saving */
     agglomerative_ink_bundling(dim, A, edges, nneighbor, max_recursion,
                                angle_param, angle);
-#else
-    (void)max_recursion;
-    (void)nneighbor;
-    agerrorf("Graphviz built without approximate nearest neighbor library ANN; agglomerative inking not available\n");
-#endif
   } else if (method == METHOD_FD){/* FD method */
     
     /* go through the links and make sure edges are compatible */

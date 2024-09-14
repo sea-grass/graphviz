@@ -8,8 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include "config.h"
-
 #include <sparse/general.h>
 #include <sparse/SparseMatrix.h>
 #include <mingle/nearest_neighbor_graph_ann.h>
@@ -27,9 +25,6 @@ SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors,
     x: nPts*dim vector. The i-th point is x[i*dim : i*dim + dim - 1]
 
   */
-  SparseMatrix A = NULL;
-
-#ifdef HAVE_ANN
   int nz;
   int k = num_neighbors;
 
@@ -40,14 +35,7 @@ SparseMatrix nearest_neighbor_graph(int nPts, int num_neighbors,
 
   nearest_neighbor_graph_ann(nPts, num_neighbors, x, nz, irn, jcn, val);
 
-  A = SparseMatrix_from_coordinate_arrays(nz, nPts, nPts, irn.data(),
-                                          jcn.data(), val.data(),
-                                          MATRIX_TYPE_REAL, sizeof(double));
-#else
-  (void)nPts;
-  (void)num_neighbors;
-  (void)x;
-#endif
-
-  return A;
+  return SparseMatrix_from_coordinate_arrays(nz, nPts, nPts, irn.data(),
+                                             jcn.data(), val.data(),
+                                             MATRIX_TYPE_REAL, sizeof(double));
 }

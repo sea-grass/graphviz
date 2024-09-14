@@ -27,9 +27,6 @@
 /* Define if you want on-demand plugin loading */
 #define ENABLE_LTDL 1
 
-/* Define if you have the ann library */
-#define HAVE_ANN 1
-
 /* Define if you have the DevIL library */
 /* #undef HAVE_DEVIL */
 

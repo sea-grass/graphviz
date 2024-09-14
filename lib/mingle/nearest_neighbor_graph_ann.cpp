@@ -8,10 +8,6 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include "config.h"
-
-#ifdef HAVE_ANN
-
 #include <ANN/ANN.h>					// ANN declarations
 #include <mingle/nearest_neighbor_graph_ann.h>
 #include <utility>
@@ -123,5 +119,3 @@ void nearest_neighbor_graph_ann(int nPts, int k, const std::vector<double> &x,
 
 
 }
- 
-#endif  /* HAVE_ANN */

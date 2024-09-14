@@ -1598,8 +1598,6 @@ if test "$with_ann" != "yes"; then
 else
   PKG_CHECK_MODULES(ANN, [ann],[
     use_ann="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_ANN,1,
-      [Define if you have the ann library])
     AC_SUBST([ANN_CFLAGS])
     AC_SUBST([ANN_LIBS])
   ],[

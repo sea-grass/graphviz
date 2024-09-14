@@ -367,7 +367,6 @@ static int bundle(Agraph_t *g, const opts_t &opts) {
 	double *x = nullptr;
 	int dim = 2;
     int i;
-	int rv = 0;
 
 	if (checkG(g)) {
 		agerrorf("Graph %s (%s) contains loops or multiedges\n", agnameof(g), fname);
@@ -454,7 +453,7 @@ static int bundle(Agraph_t *g, const opts_t &opts) {
 	else {
 		pedge_export_gv(outfile, A->m, edges);
 	}
-	return rv;
+	return 0;
 }
 
 int main(int argc, char *argv[])

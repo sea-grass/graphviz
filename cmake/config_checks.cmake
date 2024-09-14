@@ -24,7 +24,6 @@ check_function_exists( srand48          HAVE_SRAND48         )
 check_function_exists( strcasestr       HAVE_STRCASESTR      )
 
 # Library checks
-set( HAVE_ANN       ${ANN_FOUND}        )
 set( HAVE_DEVIL     ${DevIL_FOUND}      )
 if(WITH_EXPAT)
   set(HAVE_EXPAT 1)
