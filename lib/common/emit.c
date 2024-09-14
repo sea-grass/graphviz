@@ -1951,7 +1951,7 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
     gvrender_polyline(job, AF, 3);
 }
 
-/* edges colors can be multiple colors separated by ":"
+/* edges’ colors can be multiple colors separated by ":"
  * so we commpute a default pencolor with the same number of colors. */
 static char* default_pencolor(agxbuf *buf, char *pencolor, char *deflt)
 {
