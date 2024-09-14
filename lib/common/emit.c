@@ -1955,9 +1955,8 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
  * so we compute a default pencolor with the same number of colors. */
 static char* default_pencolor(agxbuf *buf, char *pencolor, char *deflt)
 {
-    char *p;
     agxbput(buf, deflt);
-    for (p = pencolor; *p; p++) {
+    for (const char *p = pencolor; *p; p++) {
 	if (*p == ':')
 	    agxbprint(buf, ":%s", deflt);
     }
