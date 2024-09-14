@@ -115,8 +115,7 @@ int agmapnametoid(Agraph_t *g, int objtype, char *str, IDTYPE *result,
 int agallocid(Agraph_t * g, int objtype, IDTYPE request);
 void agfreeid(Agraph_t * g, int objtype, IDTYPE id);
 char *agprintid(Agobj_t * obj);
-int aginternalmaplookup(Agraph_t * g, int objtype, char *str,
-            IDTYPE *result);
+bool aginternalmaplookup(Agraph_t *g, int objtype, char *str, IDTYPE *result);
 void aginternalmapinsert(Agraph_t * g, int objtype, char *str,
              IDTYPE result);
 char *aginternalmapprint(Agraph_t * g, int objtype, IDTYPE id);

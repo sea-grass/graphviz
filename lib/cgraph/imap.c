@@ -78,9 +78,7 @@ static Dtdisc_t LookupById = {
     idcmpf,
 };
 
-int aginternalmaplookup(Agraph_t * g, int objtype, char *str,
-            IDTYPE *result)
-{
+bool aginternalmaplookup(Agraph_t *g, int objtype, char *str, IDTYPE *result) {
     Dict_t *d;
     IMapEntry_t *sym, template;
     char *search_str;
