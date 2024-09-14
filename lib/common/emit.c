@@ -1953,8 +1953,8 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
 
 /* edges’ colors can be multiple colors separated by ":"
  * so we compute a default pencolor with the same number of colors. */
-static char* default_pencolor(agxbuf *buf, char *pencolor, char *deflt)
-{
+static char *default_pencolor(agxbuf *buf, const char *pencolor,
+                              const char *deflt) {
     agxbput(buf, deflt);
     for (const char *p = pencolor; *p; p++) {
 	if (*p == ':')
