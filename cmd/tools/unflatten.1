@@ -18,25 +18,25 @@ is a preprocessor to
 that is
 used to improve the aspect ratio of graphs having many leaves 
 or disconnected nodes.
-The usual layout for such a graph is generally very wide or tall.  
+The usual layout for such a graph is very wide or tall.
 .B unflatten
-inserts invisible edges or adjusts the \fBminlen\fP on edges
+creates chains with invisible edges or adjusts the \fBminlen\fP on edges
 to improve layout compaction.
 .SH OPTIONS
 The following options are supported:
 .TP
 .BI \-l " len"
-The minimum length of leaf edges is staggered
+The \fBminlen\fP of leaf edges is staggered
 between 1 and \fIlen\fP (a small integer).  
 .TP
 .B \-f
-Enables the staggering of the \fB\-l\fP option to fanout nodes whose
+Applies the \fB\-l\fP option to fanout nodes whose
 indegree and outdegree are both 1. This helps with structures such
 as \fIa -> {w x y z} -> b\fP.
 This option only works if the \fB\-l\fP flag is set. 
 .TP
 .BI \-c " len"
-Form disconnected nodes into chains of up to \fIlen\fP nodes.
+Form disconnected nodes into chains of up to \fIlen\fP edges.
 .TP
 .BI \-o " outfile"
 causes the output to be written to the specified file; by default,

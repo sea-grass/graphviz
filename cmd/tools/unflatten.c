@@ -36,12 +36,12 @@ static FILE *outFile;
 static char *cmd;
 
 static char *useString =
-    "Usage: %s [-f?] [-l l] [-c l] [-o outfile] <files>\n\
-  -o <file> - put output in <file>\n\
-  -f        - adjust immediate fanout chains\n\
-  -l <len>  - stagger length of leaf edges between [1,l]\n\
-  -c <len>  - put disconnected nodes in chains of length l\n\
-  -?        - print usage\n";
+    "Usage: %s [-f?] [-l <M>] [-c <N>] [-o <outfile>] <files>\n\
+  -o <outfile> - put output in <outfile>\n\
+  -f           - adjust immediate fanout chains\n\
+  -l <M>       - stagger length of leaf edges between [1,<M>]\n\
+  -c <N>       - put disconnected nodes in chains of length <N>\n\
+  -?           - print usage\n";
 
 static void usage(int v)
 {
