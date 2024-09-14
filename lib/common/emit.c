@@ -1956,14 +1956,10 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
 static char* default_pencolor(agxbuf *buf, char *pencolor, char *deflt)
 {
     char *p;
-    size_t ncol = 1;
+    agxbput(buf, deflt);
     for (p = pencolor; *p; p++) {
 	if (*p == ':')
-	    ncol++;
-    }
-    agxbput(buf, deflt);
-    while(--ncol) {
-	agxbprint(buf, ":%s", deflt);
+	    agxbprint(buf, ":%s", deflt);
     }
     return agxbuse(buf);
 }
