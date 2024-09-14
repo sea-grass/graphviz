@@ -2946,35 +2946,27 @@ static void poly_gencode(GVJ_t * job, node_t * n)
 
     char *clrs[2] = {0};
     if (ND_gui_state(n) & GUI_STATE_ACTIVE) {
-	pencolor = late_nnstring(n, N_activepencolor, DEFAULT_ACTIVEPENCOLOR);
+	pencolor = DEFAULT_ACTIVEPENCOLOR;
 	gvrender_set_pencolor(job, pencolor);
-	color =
-	    late_nnstring(n, N_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
+	color = DEFAULT_ACTIVEFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else if (ND_gui_state(n) & GUI_STATE_SELECTED) {
-	pencolor =
-	    late_nnstring(n, N_selectedpencolor, DEFAULT_SELECTEDPENCOLOR);
+	pencolor = DEFAULT_SELECTEDPENCOLOR;
 	gvrender_set_pencolor(job, pencolor);
-	color =
-	    late_nnstring(n, N_selectedfillcolor,
-			  DEFAULT_SELECTEDFILLCOLOR);
+	color = DEFAULT_SELECTEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else if (ND_gui_state(n) & GUI_STATE_DELETED) {
-	pencolor =
-	    late_nnstring(n, N_deletedpencolor, DEFAULT_DELETEDPENCOLOR);
+	pencolor = DEFAULT_DELETEDPENCOLOR;
 	gvrender_set_pencolor(job, pencolor);
-	color =
-	    late_nnstring(n, N_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
+	color = DEFAULT_DELETEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else if (ND_gui_state(n) & GUI_STATE_VISITED) {
-	pencolor =
-	    late_nnstring(n, N_visitedpencolor, DEFAULT_VISITEDPENCOLOR);
+	pencolor = DEFAULT_VISITEDPENCOLOR;
 	gvrender_set_pencolor(job, pencolor);
-	color =
-	    late_nnstring(n, N_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	color = DEFAULT_VISITEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
 	filled = FILL;
     } else {
@@ -3286,32 +3278,24 @@ static void point_gencode(GVJ_t * job, node_t * n)
 	gvrender_set_penwidth(job, late_double(n, N_penwidth, 1.0, 0.0));
 
     if (ND_gui_state(n) & GUI_STATE_ACTIVE) {
-	color = late_nnstring(n, N_activepencolor, DEFAULT_ACTIVEPENCOLOR);
+	color = DEFAULT_ACTIVEPENCOLOR;
 	gvrender_set_pencolor(job, color);
-	color =
-	    late_nnstring(n, N_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
+	color = DEFAULT_ACTIVEFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
     } else if (ND_gui_state(n) & GUI_STATE_SELECTED) {
-	color =
-	    late_nnstring(n, N_selectedpencolor, DEFAULT_SELECTEDPENCOLOR);
+	color = DEFAULT_SELECTEDPENCOLOR;
 	gvrender_set_pencolor(job, color);
-	color =
-	    late_nnstring(n, N_selectedfillcolor,
-			  DEFAULT_SELECTEDFILLCOLOR);
+	color = DEFAULT_SELECTEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
     } else if (ND_gui_state(n) & GUI_STATE_DELETED) {
-	color =
-	    late_nnstring(n, N_deletedpencolor, DEFAULT_DELETEDPENCOLOR);
+	color = DEFAULT_DELETEDPENCOLOR;
 	gvrender_set_pencolor(job, color);
-	color =
-	    late_nnstring(n, N_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
+	color = DEFAULT_DELETEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
     } else if (ND_gui_state(n) & GUI_STATE_VISITED) {
-	color =
-	    late_nnstring(n, N_visitedpencolor, DEFAULT_VISITEDPENCOLOR);
+	color = DEFAULT_VISITEDPENCOLOR;
 	gvrender_set_pencolor(job, color);
-	color =
-	    late_nnstring(n, N_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	color = DEFAULT_VISITEDFILLCOLOR;
 	gvrender_set_fillcolor(job, color);
     } else {
 	color = findFillDflt(n, "black");

@@ -737,7 +737,6 @@ void graph_init(graph_t * g, bool use_rankdir)
     N_showboxes = agfindnodeattr(g, "showboxes");
     N_penwidth = agfindnodeattr(g, "penwidth");
     N_ordering = agfindnodeattr(g, "ordering");
-    N_margin = agfindnodeattr(g, "margin");
     /* attribs for polygon shapes */
     N_sides = agfindnodeattr(g, "sides");
     N_peripheries = agfindnodeattr(g, "peripheries");
@@ -766,8 +765,6 @@ void graph_init(graph_t * g, bool use_rankdir)
     E_xlabel = agfindedgeattr(g, "xlabel");
     E_label_float = agfindedgeattr(g, "labelfloat");
     E_dir = agfindedgeattr(g, "dir");
-    E_arrowhead = agfindedgeattr(g, "arrowhead");
-    E_arrowtail = agfindedgeattr(g, "arrowtail");
     E_headlabel = agfindedgeattr(g, "headlabel");
     E_taillabel = agfindedgeattr(g, "taillabel");
     E_labelfontsize = agfindedgeattr(g, "labelfontsize");

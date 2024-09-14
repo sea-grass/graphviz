@@ -68,18 +68,11 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
     GLOBALS_API EXTERN int GvExitOnUsage;   /* gvParseArgs() should exit on usage or error */
 
     GLOBALS_API EXTERN Agsym_t
-	*G_activepencolor, *G_activefillcolor,
-	*G_visitedpencolor, *G_visitedfillcolor,
-	*G_deletedpencolor, *G_deletedfillcolor,
 	*G_ordering, *G_peripheries, *G_penwidth,
 	*G_gradientangle, *G_margin;
     GLOBALS_API EXTERN Agsym_t
 	*N_height, *N_width, *N_shape, *N_color, *N_fillcolor,
-	*N_activepencolor, *N_activefillcolor,
-	*N_selectedpencolor, *N_selectedfillcolor,
-	*N_visitedpencolor, *N_visitedfillcolor,
-	*N_deletedpencolor, *N_deletedfillcolor,
-	*N_fontsize, *N_fontname, *N_fontcolor, *N_margin,
+	*N_fontsize, *N_fontname, *N_fontcolor,
 	*N_label, *N_xlabel, *N_nojustify, *N_style, *N_showboxes,
 	*N_sides, *N_peripheries, *N_ordering, *N_orientation,
 	*N_skew, *N_distortion, *N_fixed, *N_imagescale, *N_imagepos, *N_layer,
@@ -87,16 +80,11 @@ DEFINE_LIST_WITH_DTOR(show_boxes, char*, free)
 	*N_penwidth, *N_gradientangle;
     GLOBALS_API EXTERN Agsym_t
 	*E_weight, *E_minlen, *E_color, *E_fillcolor,
-	*E_activepencolor, *E_activefillcolor,
-	*E_selectedpencolor, *E_selectedfillcolor,
-	*E_visitedpencolor, *E_visitedfillcolor,
-	*E_deletedpencolor, *E_deletedfillcolor,
 	*E_fontsize, *E_fontname, *E_fontcolor,
 	*E_label, *E_xlabel, *E_dir, *E_style, *E_decorate,
 	*E_showboxes, *E_arrowsz, *E_constr, *E_layer,
 	*E_comment, *E_label_float,
 	*E_samehead, *E_sametail,
-	*E_arrowhead, *E_arrowtail,
 	*E_headlabel, *E_taillabel,
 	*E_labelfontsize, *E_labelfontname, *E_labelfontcolor,
 	*E_labeldistance, *E_labelangle,

@@ -2210,24 +2210,20 @@ static void emit_edge_graphics(GVJ_t * job, edge_t * e, char** styles)
 
 	fillcolor = pencolor = color;
 	if (ED_gui_state(e) & GUI_STATE_ACTIVE) {
-	    pencolor = late_nnstring(e, E_activepencolor,
-			default_pencolor(&buf, pencolor, DEFAULT_ACTIVEPENCOLOR));
-	    fillcolor = late_nnstring(e, E_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
+	    pencolor = default_pencolor(&buf, pencolor, DEFAULT_ACTIVEPENCOLOR);
+	    fillcolor = DEFAULT_ACTIVEFILLCOLOR;
 	}
 	else if (ED_gui_state(e) & GUI_STATE_SELECTED) {
-	    pencolor = late_nnstring(e, E_selectedpencolor,
-			default_pencolor(&buf, pencolor, DEFAULT_SELECTEDPENCOLOR));
-	    fillcolor = late_nnstring(e, E_selectedfillcolor, DEFAULT_SELECTEDFILLCOLOR);
+	    pencolor = default_pencolor(&buf, pencolor, DEFAULT_SELECTEDPENCOLOR);
+	    fillcolor = DEFAULT_SELECTEDFILLCOLOR;
 	}
 	else if (ED_gui_state(e) & GUI_STATE_DELETED) {
-	    pencolor = late_nnstring(e, E_deletedpencolor,
-			default_pencolor(&buf, pencolor, DEFAULT_DELETEDPENCOLOR));
-	    fillcolor = late_nnstring(e, E_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
+	    pencolor = default_pencolor(&buf, pencolor, DEFAULT_DELETEDPENCOLOR);
+	    fillcolor = DEFAULT_DELETEDFILLCOLOR;
 	}
 	else if (ED_gui_state(e) & GUI_STATE_VISITED) {
-	    pencolor = late_nnstring(e, E_visitedpencolor,
-			default_pencolor(&buf, pencolor, DEFAULT_VISITEDPENCOLOR));
-	    fillcolor = late_nnstring(e, E_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	    pencolor = default_pencolor(&buf, pencolor, DEFAULT_VISITEDPENCOLOR);
+	    fillcolor = DEFAULT_VISITEDFILLCOLOR;
 	}
 	else
 	    fillcolor = late_nnstring(e, E_fillcolor, color);
@@ -3510,23 +3506,23 @@ void emit_clusters(GVJ_t * job, Agraph_t * g, int flags)
 	fillcolor = pencolor = 0;
 
 	if (GD_gui_state(sg) & GUI_STATE_ACTIVE) {
-	    pencolor = late_nnstring(sg, G_activepencolor, DEFAULT_ACTIVEPENCOLOR);
-	    fillcolor = late_nnstring(sg, G_activefillcolor, DEFAULT_ACTIVEFILLCOLOR);
+	    pencolor = DEFAULT_ACTIVEPENCOLOR;
+	    fillcolor = DEFAULT_ACTIVEFILLCOLOR;
 	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_SELECTED) {
-	    pencolor = late_nnstring(sg, G_activepencolor, DEFAULT_SELECTEDPENCOLOR);
-	    fillcolor = late_nnstring(sg, G_activefillcolor, DEFAULT_SELECTEDFILLCOLOR);
+	    pencolor = DEFAULT_SELECTEDPENCOLOR;
+	    fillcolor = DEFAULT_SELECTEDFILLCOLOR;
 	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_DELETED) {
-	    pencolor = late_nnstring(sg, G_deletedpencolor, DEFAULT_DELETEDPENCOLOR);
-	    fillcolor = late_nnstring(sg, G_deletedfillcolor, DEFAULT_DELETEDFILLCOLOR);
+	    pencolor = DEFAULT_DELETEDPENCOLOR;
+	    fillcolor = DEFAULT_DELETEDFILLCOLOR;
 	    filled = FILL;
 	}
 	else if (GD_gui_state(sg) & GUI_STATE_VISITED) {
-	    pencolor = late_nnstring(sg, G_visitedpencolor, DEFAULT_VISITEDPENCOLOR);
-	    fillcolor = late_nnstring(sg, G_visitedfillcolor, DEFAULT_VISITEDFILLCOLOR);
+	    pencolor = DEFAULT_VISITEDPENCOLOR;
+	    fillcolor = DEFAULT_VISITEDFILLCOLOR;
 	    filled = FILL;
 	}
 	else {
