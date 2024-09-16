@@ -4291,6 +4291,11 @@ def test_2591():
     "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
 )
 @pytest.mark.xfail(
+    is_cmake() and is_macos(),
+    reason="FIXME: 'vgpane' command is unrecognized for unknown reasons",
+    strict=True,
+)
+@pytest.mark.xfail(
     is_autotools() and is_macos(),
     reason="Autotools on macOS does not detect TCL",
     strict=True,
@@ -4300,7 +4305,6 @@ def test_2591():
     reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
     strict=True,
 )
-@pytest.mark.xfail(reason="https://gitlab.com/graphviz/graphviz/-/issues/2596")
 def test_2596():
     """
     running Tclpathplan `triangulate` with a malformed callback script should not read
