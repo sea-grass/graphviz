@@ -1,6 +1,6 @@
-/// \file
-/// \ingroup cgraph_utils
-/// \brief API for compacted arrays of booleans
+/// @file
+/// @ingroup cgraph_utils
+/// @brief API for compacted arrays of booleans
 ///
 /// The straightforward way to construct a dynamic array of booleans is to
 /// `calloc` an array of `bool` values. However, this wastes a lot of memory.

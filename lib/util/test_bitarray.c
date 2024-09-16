@@ -5,11 +5,11 @@
 #endif
 
 #include <assert.h>
-#include <cgraph/bitarray.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <util/bitarray.h>
 
 // helper for basic construction and destruction, with nothing in-between
 static void create_reset(size_t size) {

@@ -10,7 +10,6 @@
 
 #include "config.h"
 #include <common/boxes.h>
-#include <cgraph/bitarray.h>
 #include <ortho/partition.h>
 #include <ortho/trap.h>
 #include <math.h>
@@ -18,6 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/alloc.h>
+#include <util/bitarray.h>
 #include <util/prisize_t.h>
 
 #ifndef DEBUG

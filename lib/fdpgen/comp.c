@@ -21,7 +21,6 @@
 #define FDP_PRIVATE 1
 
 #include <cgraph/agxbuf.h>
-#include <cgraph/bitarray.h>
 #include <cgraph/cgraph.h>
 #include <fdpgen/fdp.h>
 #include <fdpgen/comp.h>
@@ -30,6 +29,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <util/alloc.h>
+#include <util/bitarray.h>
 #include <util/prisize_t.h>
 
 static void dfs(Agraph_t *g, Agnode_t *n, Agraph_t *out, bitarray_t *marks) {

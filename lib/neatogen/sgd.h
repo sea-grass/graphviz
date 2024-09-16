@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cgraph/bitarray.h>
 #include <stddef.h>
+#include <util/bitarray.h>
 
 #ifdef __cplusplus
 extern "C" {

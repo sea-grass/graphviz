@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="alloc.h" />
+    <ClInclude Include="bitarray.h" />
     <ClInclude Include="exit.h" />
     <ClInclude Include="gv_fopen.h" />
     <ClInclude Include="overflow.h" />

@@ -2,6 +2,7 @@ AM_CPPFLAGS = -I$(top_srcdir)/lib
 
 noinst_HEADERS = \
   alloc.h \
+  bitarray.h \
   exit.h \
   gv_fopen.h \
   overflow.h \
