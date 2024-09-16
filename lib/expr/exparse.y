@@ -201,19 +201,16 @@ action_list	:	/* empty */
 		;
 
 action		:	LABEL ':' {
-				Dtdisc_t*	disc;
-
 				if (expr.procedure)
 					exerror("no nested function definitions");
 				$1->lex = PROCEDURE;
 				expr.procedure = $1->value = exnewnode(expr.program, PROCEDURE, true, $1->type, NULL, NULL);
 				expr.procedure->type = INTEGER;
-				if (!(disc = calloc(1, sizeof(Dtdisc_t))))
-					exnospace();
-				disc->key = offsetof(Exid_t, name);
+				static Dtdisc_t disc = {.key = offsetof(Exid_t, name)};
 				if (expr.assigned && !streq($1->name, "begin"))
 				{
-					if (!(expr.procedure->data.procedure.frame = dtopen(disc, Dtset)) || !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
+					if (!(expr.procedure->data.procedure.frame = dtopen(&disc, Dtset)) ||
+					    !dtview(expr.procedure->data.procedure.frame, expr.program->symbols))
 						exnospace();
 					expr.program->symbols = expr.program->frame = expr.procedure->data.procedure.frame;
 				}
