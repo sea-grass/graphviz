@@ -41,6 +41,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   module (e.g. `vgpane0 triangulate` instead of `vgpane0 triangulate 42`) no
   longer goes unnoticed and reads invalid memory. This bug seems to have existed
   since the first revision of Graphviz.
+- When using the Tclpathplan module, defining a malformed &lt;3-point polygon
+  and then attempting to triangulate this polygon no longer reads invalid
+  memory. This case is now rejected with an error during triangulation. Like the
+  previous entry, this bug seems to have existed since the first revision of
+  Graphviz.
 
 ## [12.1.2] – 2024-09-28
 
