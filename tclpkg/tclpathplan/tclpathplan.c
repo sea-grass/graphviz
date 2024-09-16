@@ -768,7 +768,13 @@ vgpanecmd(ClientData clientData, Tcl_Interp * interp, int argc,
 
 	for (size_t i = 0; i < polys_size(&vgp->poly); i++) {
 	    if (polys_get(&vgp->poly, i).id == polyid) {
-		Ptriangulate(&polys_at(&vgp->poly, i)->boundary, triangle_callback, vgp);
+		Ppoly_t *polygon = &polys_at(&vgp->poly, i)->boundary;
+		if (polygon->pn < 3) {
+		    Tcl_AppendResult(interp, "polygon ", argv[2], " has fewer than 3 points "
+		                     "and thus cannot be triangulated", NULL);
+		    return TCL_ERROR;
+		}
+		Ptriangulate(polygon, triangle_callback, vgp);
 		return TCL_OK;
 	    }
 	}
