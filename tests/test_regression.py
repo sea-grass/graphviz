@@ -4346,6 +4346,65 @@ def test_import_tcl_package(package: str):
     assert "can't find package" not in response, f"{package} cannot be loaded by TCL"
 
 
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(
+    is_autotools() and is_macos(),
+    reason="Autotools on macOS does not detect TCL",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_cmake() and is_ubuntu_2004(),
+    reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
+    strict=True,
+)
+@pytest.mark.xfail(strict=True)
+def test_vgpane_delete():
+    """
+    it should be possible to delete an existing `vgpane`
+    """
+
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1, env=env)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    # `pexpect.expect` returns an index of which given expectation was matched. We
+    # expect this to return no output (not the invalid handle message) and therefore
+    # timeout.
+    is_valid = proc.expect(['Invalid handle: "vgpane0"', pexpect.TIMEOUT]) == 1
+    assert is_valid, "created vgpane was considered an invalid handle"
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
