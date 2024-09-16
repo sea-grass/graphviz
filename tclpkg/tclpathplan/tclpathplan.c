@@ -158,6 +158,9 @@ static void expandPercentsEval(Tcl_Interp *interp, char *before,
 	    agxbputc(&scripts, before[1]);
 	    break;
 	}
+	if (before[1] == '\0') {
+	    break;
+	}
 	before += 2;
     }
     const char *script_value = agxbuse(&scripts);
