@@ -4403,6 +4403,48 @@ def test_2591():
     reason="pexpect.spawn is not available on Windows "
     "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
 )
+@pytest.mark.xfail(strict=True)
+def test_triangulation_overflow():
+    """
+    running Tclpathplan `triangulate` with a malformed polygon should be rejected
+    """
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # add a “polygon” with only a single point
+    proc.sendline("vgpane0 insert 4 5")
+    proc.expect("1")
+    proc.expect("% ")
+
+    # attempt triangulation on this polygon
+    proc.sendline("vgpane0 triangulate 1")
+    proc.expect("% ")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    proc.expect("% ")
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
 def test_vgpane_bad_triangulation():
     """
     running Tclpathplan `triangulate` with incorrect arguments should be rejected
