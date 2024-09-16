@@ -1951,19 +1951,14 @@ static void emit_attachment(GVJ_t * job, textlabel_t * lp, splines * spl)
     gvrender_polyline(job, AF, 3);
 }
 
-/* edges colors can be multiple colors separated by ":"
- * so we commpute a default pencolor with the same number of colors. */
-static char* default_pencolor(agxbuf *buf, char *pencolor, char *deflt)
-{
-    char *p;
-    size_t ncol = 1;
-    for (p = pencolor; *p; p++) {
-	if (*p == ':')
-	    ncol++;
-    }
+/* edges’ colors can be multiple colors separated by ":"
+ * so we compute a default pencolor with the same number of colors. */
+static char *default_pencolor(agxbuf *buf, const char *pencolor,
+                              const char *deflt) {
     agxbput(buf, deflt);
-    while(--ncol) {
-	agxbprint(buf, ":%s", deflt);
+    for (const char *p = pencolor; *p; p++) {
+	if (*p == ':')
+	    agxbprint(buf, ":%s", deflt);
     }
     return agxbuse(buf);
 }
