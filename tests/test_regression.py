@@ -4403,7 +4403,6 @@ def test_2591():
     reason="pexpect.spawn is not available on Windows "
     "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
 )
-@pytest.mark.xfail(strict=True)
 def test_vgpane_delete():
     """
     it should be possible to delete an existing `vgpane`
