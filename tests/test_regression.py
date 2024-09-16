@@ -4397,6 +4397,40 @@ def test_2591():
     assert gray_svg != rgb_svg, "edgepaint --color_scheme had no effect"
 
 
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(strict=True)
+def test_vgpane_delete():
+    """
+    it should be possible to delete an existing `vgpane`
+    """
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    is_valid = proc.expect(['Invalid handle: "vgpane0"', pexpect.TIMEOUT])
+    assert is_valid, "created vgpane was considered an invalid handle"
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
