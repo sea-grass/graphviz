@@ -16,7 +16,6 @@
 
 #include    <assert.h>
 #include    <cgraph/list.h>
-#include    <cgraph/startswith.h>
 #include    <limits.h>
 #include    <osage/osage.h>
 #include    <neatogen/neatoprocs.h>
@@ -24,6 +23,7 @@
 #include    <stdbool.h>
 #include    <stddef.h>
 #include    <util/alloc.h>
+#include    <util/startswith.h>
 
 #define DFLT_SZ  18
 #define PARENT(n) ((Agraph_t*)ND_alg(n))

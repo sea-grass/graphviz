@@ -8,6 +8,7 @@ noinst_HEADERS = \
   overflow.h \
   prisize_t.h \
   sort.h \
+  startswith.h \
   strcasecmp.h \
   streq.h \
   unreachable.h \

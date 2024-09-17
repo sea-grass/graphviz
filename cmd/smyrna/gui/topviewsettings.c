@@ -11,9 +11,9 @@
 #include "topviewfuncs.h"
 #include "topviewsettings.h"
 #include "gui.h"
-#include <cgraph/startswith.h>
 #include <common/colorprocs.h>
 #include <stdint.h>
+#include <util/startswith.h>
 #include "viewport.h"
 
 void size_change_request(GtkWidget *widget, void *user_data) {

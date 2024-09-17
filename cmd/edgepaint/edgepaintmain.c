@@ -17,11 +17,11 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/startswith.h>
 #include <common/pointset.h>
 #include <getopt.h>
 #include <util/alloc.h>
 #include <util/exit.h>
+#include <util/startswith.h>
 #include <util/unreachable.h>
 
 #include <sparse/general.h>

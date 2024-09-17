@@ -21,7 +21,6 @@
 #include <assert.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/cgraph.h>
-#include <cgraph/startswith.h>
 #include <ast/error.h>
 #include <gvpr/actions.h>
 #include <inttypes.h>
@@ -34,6 +33,7 @@
 #include <util/alloc.h>
 #include <util/exit.h>
 #include <util/prisize_t.h>
+#include <util/startswith.h>
 #include <util/unreachable.h>
 
 static int isedge(Agobj_t *obj) {

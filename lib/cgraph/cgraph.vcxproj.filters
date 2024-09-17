@@ -42,9 +42,6 @@
     <ClInclude Include="rdr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="startswith.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="strview.h">
       <Filter>Header Files</Filter>
     </ClInclude>

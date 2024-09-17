@@ -32,10 +32,10 @@
 #include <cgraph/cghdr.h>
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
-#include <cgraph/startswith.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
+#include <util/startswith.h>
 // #define YY_BUF_SIZE 128000
 #define GRAPH_EOF_TOKEN		'@'		/* lex class must be defined below */
 	/* this is a workaround for linux flex */
