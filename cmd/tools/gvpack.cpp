@@ -27,7 +27,6 @@
 #include <cassert>
 #include <gvc/gvc.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/startswith.h>
 #include <common/render.h>
 #include <common/utils.h>
 #include <neatogen/neatoprocs.h>
