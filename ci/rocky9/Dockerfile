@@ -71,5 +71,8 @@ gmp-devel \
 && python3 -m venv /opt/virtualenv \
 # install Python dependencies within the virtual environment
 && env PATH="/opt/virtualenv/bin:$PATH" python3 -m pip install --requirement requirements.txt \
+# Remove possible old version of Graphviz so that we can detect if
+# individual Graphviz tools are missing in the current release
+&& dnf remove -y graphviz \
 # Clean up
 && dnf clean all && rm -rf /var/cache/dnf
