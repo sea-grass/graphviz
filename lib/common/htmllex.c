@@ -41,7 +41,7 @@
 #define XML_STATUS_ERROR 0
 #endif
 
-static htmllexstate_t state;
+static unsigned long htmllineno_ctx(htmllexstate_t *ctx);
 
 /* error_context:
  * Print the last 2 "token"s seen.
@@ -55,14 +55,14 @@ static void error_context(htmllexstate_t *ctx)
 /* htmlerror:
  * yyerror - called by yacc output
  */
-void htmlerror(const char *msg)
+void htmlerror(htmlscan_t *scanner, const char *msg)
 {
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
     if (ctx->error)
 	return;
     ctx->error = 1;
-    agerrorf("%s in line %lu \n", msg, htmllineno());
-    error_context(&state);
+    agerrorf("%s in line %lu \n", msg, htmllineno(scanner));
+    error_context(&scanner->lexer);
 }
 
 #ifdef HAVE_EXPAT
@@ -73,7 +73,7 @@ static void lexerror(htmllexstate_t *ctx, const char *name)
 {
     ctx->tok = T_error;
     ctx->error = 1;
-    agerrorf("Unknown HTML element <%s> on line %lu \n", name, htmllineno());
+    agerrorf("Unknown HTML element <%s> on line %lu \n", name, htmllineno_ctx(ctx));
 }
 
 typedef int (*attrFn) (void *, char *);
@@ -742,10 +742,10 @@ static void characterData(void *user, const char *s, int length)
 }
 #endif
 
-int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
+int initHTMLlexer(htmlscan_t *scanner, char *src, agxbuf * xb, htmlenv_t *env)
 {
 #ifdef HAVE_EXPAT
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
 
     ctx->xb = xb;
     ctx->lb = (agxbuf){0};
@@ -775,10 +775,10 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
 #endif
 }
 
-int clearHTMLlexer(void)
+int clearHTMLlexer(htmlscan_t *scanner)
 {
 #ifdef HAVE_EXPAT
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
     int rv = ctx->error ? 3 : ctx->warn;
     XML_ParserFree(ctx->parser);
     agxbfree (&ctx->lb);
@@ -903,9 +903,13 @@ static void protect_rsqb(agxbuf *xb) {
 }
 #endif
 
-unsigned long htmllineno(void) {
+
+unsigned long htmllineno(htmlscan_t *scanner) {
+    return htmllineno_ctx(&scanner->lexer);
+}
+
+static unsigned long htmllineno_ctx(htmllexstate_t *ctx) {
 #ifdef HAVE_EXPAT
-    htmllexstate_t *ctx = &state;
     return XML_GetCurrentLineNumber(ctx->parser);
 #else
     return 0;
@@ -1045,7 +1049,7 @@ static void printTok(htmllexstate_t *ctx, int tok)
 
 #endif
 
-int htmllex(void)
+int htmllex(union HTMLSTYPE *htmllval, htmlscan_t *scanner)
 {
 #ifdef HAVE_EXPAT
     static char *begin_html = "<HTML>";
@@ -1055,9 +1059,9 @@ int htmllex(void)
     char *endp = 0;
     size_t len, llen;
     int rv;
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
 
-    ctx->htmllval = &htmllval;
+    ctx->htmllval = htmllval;
     ctx->tok = 0;
     do {
 	if (ctx->mode == 2)
@@ -1093,7 +1097,7 @@ int htmllex(void)
 	if (rv == XML_STATUS_ERROR) {
 	    if (!ctx->error) {
 		agerrorf("%s in line %lu \n",
-		      XML_ErrorString(XML_GetErrorCode(ctx->parser)), htmllineno());
+		      XML_ErrorString(XML_GetErrorCode(ctx->parser)), htmllineno(scanner));
 		error_context(ctx);
 		ctx->error = 1;
 		ctx->tok = T_error;

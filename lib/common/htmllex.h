@@ -18,14 +18,15 @@ extern "C" {
 
 #include <agxbuf.h>
 
+    union HTMLSTYPE;
     typedef struct htmlparserstate_s htmlparserstate_t;
     typedef struct htmlscan_s htmlscan_t;
 
-    extern int initHTMLlexer(char *, agxbuf *, htmlenv_t *);
-    extern int htmllex(void);
-    extern unsigned long htmllineno(void);
-    extern int clearHTMLlexer(void);
-    void htmlerror(const char *);
+    extern int initHTMLlexer(htmlscan_t *, char *, agxbuf *, htmlenv_t *);
+    extern int htmllex(union HTMLSTYPE *, htmlscan_t *);
+    extern unsigned long htmllineno(htmlscan_t *);
+    extern int clearHTMLlexer(htmlscan_t *);
+    void htmlerror(htmlscan_t *, const char *);
 
 #ifdef __cplusplus
 }

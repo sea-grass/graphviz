@@ -18,6 +18,11 @@
    */
 %define api.prefix {html}
 
+  /* Generate a reentrant parser with no global state */
+%define api.pure full
+%param { htmlscan_t *scanner }
+
+
 %code requires {
 #include <cgraph/agxbuf.h>
 #include <cgraph/list.h>
@@ -85,9 +90,6 @@ struct htmlscan_s {
   htmllexstate_t lexer;
   htmlparserstate_t parser;
 };
-
-extern htmlscan_t *scanner;
-
 }
 
 %{
@@ -97,8 +99,6 @@ extern htmlscan_t *scanner;
 #include <common/htmllex.h>
 #include <stdbool.h>
 #include <util/alloc.h>
-
-extern int htmlparse(void);
 
 /// Clean up cell if error in parsing.
 static void cleanCell(htmlcell_t *cp);
@@ -296,7 +296,7 @@ string : T_string
 
 table : opt_space T_table {
           if (nonSpace(agxbuse(scanner->parser.str))) {
-            htmlerror ("Syntax error: non-space string used before <TABLE>");
+            htmlerror (scanner,"Syntax error: non-space string used before <TABLE>");
             cleanup(&scanner->parser); YYABORT;
           }
           $2->u.p.prev = scanner->parser.tblstack;
@@ -307,7 +307,7 @@ table : opt_space T_table {
         }
         rows T_end_table opt_space {
           if (nonSpace(agxbuse(scanner->parser.str))) {
-            htmlerror ("Syntax error: non-space string used after </TABLE>");
+            htmlerror (scanner,"Syntax error: non-space string used after </TABLE>");
             cleanup(&scanner->parser); YYABORT;
           }
           $$ = scanner->parser.tblstack;
@@ -506,8 +506,6 @@ popFont (htmlparserstate_t *html_state)
     (void)sfont_pop_back(&html_state->fontstack);
 }
 
-#define HTMLstate scanner->parser
-
 /* Return parsed label or NULL if failure.
  * Set warn to 0 on success; 1 for warning message; 2 if no expat; 3 for error
  * message.
@@ -516,36 +514,28 @@ htmllabel_t*
 parseHTML (char* txt, int* warn, htmlenv_t *env)
 {
   agxbuf        str = {0};
-  htmllabel_t*  l;
+  htmllabel_t*  l = NULL;
+  htmlscan_t    scanner = {0};
 
-  sfont_push_back(&HTMLstate.fontstack, NULL);
-  HTMLstate.tblstack = 0;
-  HTMLstate.lbl = 0;
-  HTMLstate.gvc = GD_gvc(env->g);
-  HTMLstate.fitemList = (textspans_t){0};
-  HTMLstate.fspanList = (htextspans_t){0};
+  sfont_push_back(&scanner.parser.fontstack, NULL);
+  scanner.parser.gvc = GD_gvc(env->g);
+  scanner.parser.str = &str;
 
-  HTMLstate.str = &str;
-
-  if (initHTMLlexer (txt, &str, env)) {/* failed: no libexpat - give up */
+  if (initHTMLlexer (&scanner, txt, &str, env)) {/* failed: no libexpat - give up */
     *warn = 2;
-    l = NULL;
   }
   else {
-    htmlparse();
-    *warn = clearHTMLlexer ();
-    l = HTMLstate.lbl;
+    htmlparse(&scanner);
+    *warn = clearHTMLlexer (&scanner);
+    l = scanner.parser.lbl;
   }
 
-  textspans_free(&HTMLstate.fitemList);
-  htextspans_free(&HTMLstate.fspanList);
+  textspans_free(&scanner.parser.fitemList);
+  htextspans_free(&scanner.parser.fspanList);
 
-  sfont_free(&HTMLstate.fontstack);
+  sfont_free(&scanner.parser.fontstack);
 
   agxbfree (&str);
 
   return l;
 }
-
-static htmlscan_t global_scanner;
-htmlscan_t *scanner = &global_scanner;
