@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
@@ -26,7 +27,7 @@ static size_t file_data_provider_get_bytes(void *info, void *buffer, size_t coun
 
 static void file_data_provider_rewind(void *info)
 {
-	fseek((FILE*)info, 0, SEEK_SET);
+  rewind(info);
 }
 
 #if __MAC_OS_X_VERSION_MIN_REQUIRED >= 1050 || __IPHONE_OS_VERSION_MIN_REQUIRED >= 20000
