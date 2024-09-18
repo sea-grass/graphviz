@@ -11,6 +11,7 @@
 #include "config.h"
 #include <cgraph/agxbuf.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #include <gvc/gvplugin_loadimage.h>
@@ -49,7 +50,7 @@ static void gdk_set_mimedata_from_file (cairo_surface_t *image, const char *mime
         return;
     fseek (fp, 0, SEEK_END);
     len = ftell(fp);
-    fseek (fp, 0, SEEK_SET);
+    rewind(fp);
     if (len > 0)
         data = malloc ((size_t)len);
     if (data) {
