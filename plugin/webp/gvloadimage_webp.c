@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <stdbool.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <util/prisize_t.h>
@@ -59,7 +60,7 @@ static cairo_surface_t* webp_really_loadimage(const char *in_file, FILE* const i
 	return NULL;
     }
     size_t data_size = (size_t)size;
-    fseek(in, 0, SEEK_SET);
+    rewind(in);
     data = malloc(data_size);
     ok = data_size == 0 || (data != NULL && fread(data, data_size, 1, in) == 1);
     if (!ok) {
