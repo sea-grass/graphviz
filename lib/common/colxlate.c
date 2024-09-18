@@ -214,9 +214,9 @@ int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
     /* test for rgb value such as: "#ff0000"
        or rgba value such as "#ff000080" */
     unsigned a = 255; // default alpha channel value=opaque in case not supplied
-    bool is_rgb = *p == '#' && sscanf(p, "#%2x%2x%2x%2x", &r, &g, &b, &a) >= 3;
+    bool is_rgb = sscanf(p, "#%2x%2x%2x%2x", &r, &g, &b, &a) >= 3;
     if (!is_rgb) { // try 3 letter form
-	is_rgb = *p == '#' && strlen(p) == 4 && sscanf(p, "#%1x%1x%1x", &r, &g, &b) == 3;
+	is_rgb = strlen(p) == 4 && sscanf(p, "#%1x%1x%1x", &r, &g, &b) == 3;
 	if (is_rgb) {
 	    r |= r << 4;
 	    g |= g << 4;
