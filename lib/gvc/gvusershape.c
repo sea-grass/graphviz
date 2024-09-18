@@ -235,7 +235,7 @@ static void svg_size (usershape_t *us)
     bool eof = false;
     bool wFlag = false, hFlag = false;
 
-    fseek(us->f, 0, SEEK_SET);
+    rewind(us->f);
     while (!eof && (!wFlag || !hFlag)) {
 	// read next line
 	while (true) {
