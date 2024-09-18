@@ -58,6 +58,14 @@ unsure if your changes need an entry. An API-breaking change (e.g. a functional
 change to a C header mentioned in `pkginclude_HEADERS` in a Makefile.am file)
 will probably require discussion of the relative cost and benefit.
 
+When addressing MR feedback, rebase your branch and edit the commits in your
+series to apply reviewers’ suggestions. If you have not used `git rebase`
+before, it is recommended to work through some tutorials on it first. It is not
+complex to learn but requires some practice to become adept. When rebasing your
+MR, if possible avoid pulling in new unrelated changes that have landed in the
+main branch. When rebasing interactively, you can achieve this with
+`git rebase --interactive $(git merge-base origin/main HEAD)`.
+
 ### C and C++ style
 
 Graphviz is written predominantly in C and C++. C code is compiled under
