@@ -581,7 +581,7 @@ static void pdf_size (usershape_t *us)
     boxf bb;
 
     us->dpi = 0;
-    fseek(us->f, 0, SEEK_SET);
+    rewind(us->f);
     if ( ! bboxPDF (us->f, &bb)) {
 	us->x = bb.LL.x;
 	us->y = bb.LL.y;
