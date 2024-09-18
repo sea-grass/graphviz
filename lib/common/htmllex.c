@@ -41,23 +41,7 @@
 #define XML_STATUS_ERROR 0
 #endif
 
-typedef struct {
-#ifdef HAVE_EXPAT
-    XML_Parser parser;
-#endif
-    char* ptr;         // input source
-    int tok;           // token type
-    agxbuf* xb;        // buffer to gather T_string data
-    agxbuf lb;         // buffer for translating lexical data
-    int warn;          // set if warning given
-    int error;         // set if error given
-    char inCell;       // set if in TD to allow T_string
-    char mode;         // for handling artificial <HTML>..</HTML>
-    strview_t currtok; // for error reporting
-    strview_t prevtok; // for error reporting
-    GVC_t *gvc;        // current GraphViz context
-} htmllexstate_t;
-static htmllexstate_t state;
+static unsigned long htmllineno_ctx(htmllexstate_t *ctx);
 
 /* error_context:
  * Print the last 2 "token"s seen.
@@ -71,14 +55,14 @@ static void error_context(htmllexstate_t *ctx)
 /* htmlerror:
  * yyerror - called by yacc output
  */
-void htmlerror(const char *msg)
+void htmlerror(htmlscan_t *scanner, const char *msg)
 {
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
     if (ctx->error)
 	return;
     ctx->error = 1;
-    agerrorf("%s in line %lu \n", msg, htmllineno());
-    error_context(&state);
+    agerrorf("%s in line %lu \n", msg, htmllineno(scanner));
+    error_context(&scanner->lexer);
 }
 
 #ifdef HAVE_EXPAT
@@ -89,7 +73,7 @@ static void lexerror(htmllexstate_t *ctx, const char *name)
 {
     ctx->tok = T_error;
     ctx->error = 1;
-    agerrorf("Unknown HTML element <%s> on line %lu \n", name, htmllineno());
+    agerrorf("Unknown HTML element <%s> on line %lu \n", name, htmllineno_ctx(ctx));
 }
 
 typedef int (*attrFn) (void *, char *);
@@ -572,8 +556,8 @@ static void doAttrs(htmllexstate_t *ctx, void *tp, attr_item *items, size_t nel,
 
 static void mkBR(htmllexstate_t *ctx, char **atts)
 {
-    htmllval.i = UNSET_ALIGN;
-    doAttrs(ctx, &htmllval.i, br_items, sizeof(br_items) / ISIZE, atts, "<BR>");
+    ctx->htmllval->i = UNSET_ALIGN;
+    doAttrs(ctx, &ctx->htmllval->i, br_items, sizeof(br_items) / ISIZE, atts, "<BR>");
 }
 
 static htmlimg_t *mkImg(htmllexstate_t *ctx, char **atts)
@@ -625,7 +609,7 @@ static void startElement(void *user, const char *name, char **atts)
     htmllexstate_t *ctx = user;
 
     if (strcasecmp(name, "TABLE") == 0) {
-	htmllval.tbl = mkTbl(ctx, atts);
+	ctx->htmllval->tbl = mkTbl(ctx, atts);
 	ctx->inCell = 0;
 	ctx->tok = T_table;
     } else if (strcasecmp(name, "TR") == 0 || strcasecmp(name, "TH") == 0) {
@@ -633,31 +617,31 @@ static void startElement(void *user, const char *name, char **atts)
 	ctx->tok = T_row;
     } else if (strcasecmp(name, "TD") == 0) {
 	ctx->inCell = 1;
-	htmllval.cell = mkCell(ctx, atts);
+	ctx->htmllval->cell = mkCell(ctx, atts);
 	ctx->tok = T_cell;
     } else if (strcasecmp(name, "FONT") == 0) {
-	htmllval.font = mkFont(ctx, atts, 0);
+	ctx->htmllval->font = mkFont(ctx, atts, 0);
 	ctx->tok = T_font;
     } else if (strcasecmp(name, "B") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_BF);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_BF);
 	ctx->tok = T_bold;
     } else if (strcasecmp(name, "S") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_S);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_S);
 	ctx->tok = T_s;
     } else if (strcasecmp(name, "U") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_UL);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_UL);
 	ctx->tok = T_underline;
     } else if (strcasecmp(name, "O") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_OL);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_OL);
 	ctx->tok = T_overline;
     } else if (strcasecmp(name, "I") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_IF);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_IF);
 	ctx->tok = T_italic;
     } else if (strcasecmp(name, "SUP") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_SUP);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_SUP);
 	ctx->tok = T_sup;
     } else if (strcasecmp(name, "SUB") == 0) {
-	htmllval.font = mkFont(ctx, 0, HTML_SUB);
+	ctx->htmllval->font = mkFont(ctx, 0, HTML_SUB);
 	ctx->tok = T_sub;
     } else if (strcasecmp(name, "BR") == 0) {
 	mkBR(ctx, atts);
@@ -667,7 +651,7 @@ static void startElement(void *user, const char *name, char **atts)
     } else if (strcasecmp(name, "VR") == 0) {
 	ctx->tok = T_vr;
     } else if (strcasecmp(name, "IMG") == 0) {
-	htmllval.img = mkImg(ctx, atts);
+	ctx->htmllval->img = mkImg(ctx, atts);
 	ctx->tok = T_img;
     } else if (strcasecmp(name, "HTML") == 0) {
 	ctx->tok = T_html;
@@ -758,10 +742,10 @@ static void characterData(void *user, const char *s, int length)
 }
 #endif
 
-int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
+int initHTMLlexer(htmlscan_t *scanner, char *src, agxbuf * xb, htmlenv_t *env)
 {
 #ifdef HAVE_EXPAT
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
 
     ctx->xb = xb;
     ctx->lb = (agxbuf){0};
@@ -791,10 +775,10 @@ int initHTMLlexer(char *src, agxbuf * xb, htmlenv_t *env)
 #endif
 }
 
-int clearHTMLlexer(void)
+int clearHTMLlexer(htmlscan_t *scanner)
 {
 #ifdef HAVE_EXPAT
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
     int rv = ctx->error ? 3 : ctx->warn;
     XML_ParserFree(ctx->parser);
     agxbfree (&ctx->lb);
@@ -919,9 +903,13 @@ static void protect_rsqb(agxbuf *xb) {
 }
 #endif
 
-unsigned long htmllineno(void) {
+
+unsigned long htmllineno(htmlscan_t *scanner) {
+    return htmllineno_ctx(&scanner->lexer);
+}
+
+static unsigned long htmllineno_ctx(htmllexstate_t *ctx) {
 #ifdef HAVE_EXPAT
-    htmllexstate_t *ctx = &state;
     return XML_GetCurrentLineNumber(ctx->parser);
 #else
     return 0;
@@ -1061,7 +1049,7 @@ static void printTok(htmllexstate_t *ctx, int tok)
 
 #endif
 
-int htmllex(void)
+int htmllex(union HTMLSTYPE *htmllval, htmlscan_t *scanner)
 {
 #ifdef HAVE_EXPAT
     static char *begin_html = "<HTML>";
@@ -1071,8 +1059,9 @@ int htmllex(void)
     char *endp = 0;
     size_t len, llen;
     int rv;
-    htmllexstate_t *ctx = &state;
+    htmllexstate_t *ctx = &scanner->lexer;
 
+    ctx->htmllval = htmllval;
     ctx->tok = 0;
     do {
 	if (ctx->mode == 2)
@@ -1108,7 +1097,7 @@ int htmllex(void)
 	if (rv == XML_STATUS_ERROR) {
 	    if (!ctx->error) {
 		agerrorf("%s in line %lu \n",
-		      XML_ErrorString(XML_GetErrorCode(ctx->parser)), htmllineno());
+		      XML_ErrorString(XML_GetErrorCode(ctx->parser)), htmllineno(scanner));
 		error_context(ctx);
 		ctx->error = 1;
 		ctx->tok = T_error;
