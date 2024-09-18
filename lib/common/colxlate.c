@@ -201,7 +201,6 @@ static char *resolveColor(const char *str) {
 }
 
 int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
-    static hsvrgbacolor_t *last;
     char c;
     double H, S, V, A, R, G, B;
     unsigned int r, g, b, a;
@@ -325,36 +324,35 @@ int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
     char *name = resolveColor(str);
     if (!name)
 	return COLOR_MALLOC_FAIL;
-    if (last == NULL || strcasecmp(last->name, name)) {
-	last = bsearch(name, color_lib, sizeof(color_lib) / sizeof(hsvrgbacolor_t),
-	               sizeof(color_lib[0]), colorcmpf);
-    }
+    hsvrgbacolor_t *known = bsearch(name, color_lib,
+                                    sizeof(color_lib) / sizeof(hsvrgbacolor_t),
+                                    sizeof(color_lib[0]), colorcmpf);
     free(name);
-    if (last != NULL) {
+    if (known != NULL) {
 	switch (target_type) {
 	case HSVA_DOUBLE:
-	    color->u.HSVA[0] = ((double) last->h) / 255.0;
-	    color->u.HSVA[1] = ((double) last->s) / 255.0;
-	    color->u.HSVA[2] = ((double) last->v) / 255.0;
-	    color->u.HSVA[3] = ((double) last->a) / 255.0;
+	    color->u.HSVA[0] = (double)known->h / 255.0;
+	    color->u.HSVA[1] = (double)known->s / 255.0;
+	    color->u.HSVA[2] = (double)known->v / 255.0;
+	    color->u.HSVA[3] = (double)known->a / 255.0;
 	    break;
 	case RGBA_BYTE:
-	    color->u.rgba[0] = last->r;
-	    color->u.rgba[1] = last->g;
-	    color->u.rgba[2] = last->b;
-	    color->u.rgba[3] = last->a;
+	    color->u.rgba[0] = known->r;
+	    color->u.rgba[1] = known->g;
+	    color->u.rgba[2] = known->b;
+	    color->u.rgba[3] = known->a;
 	    break;
 	case RGBA_WORD:
-	    color->u.rrggbbaa[0] = last->r * 65535 / 255;
-	    color->u.rrggbbaa[1] = last->g * 65535 / 255;
-	    color->u.rrggbbaa[2] = last->b * 65535 / 255;
-	    color->u.rrggbbaa[3] = last->a * 65535 / 255;
+	    color->u.rrggbbaa[0] = known->r * 65535 / 255;
+	    color->u.rrggbbaa[1] = known->g * 65535 / 255;
+	    color->u.rrggbbaa[2] = known->b * 65535 / 255;
+	    color->u.rrggbbaa[3] = known->a * 65535 / 255;
 	    break;
 	case RGBA_DOUBLE:
-	    color->u.RGBA[0] = last->r / 255.0;
-	    color->u.RGBA[1] = last->g / 255.0;
-	    color->u.RGBA[2] = last->b / 255.0;
-	    color->u.RGBA[3] = last->a / 255.0;
+	    color->u.RGBA[0] = known->r / 255.0;
+	    color->u.RGBA[1] = known->g / 255.0;
+	    color->u.RGBA[2] = known->b / 255.0;
+	    color->u.RGBA[3] = known->a / 255.0;
 	    break;
 	case COLOR_STRING:
 	    break;
