@@ -457,7 +457,7 @@ static void ps_size (usershape_t *us)
     char* linep;
 
     us->dpi = 72;
-    fseek(us->f, 0, SEEK_SET);
+    rewind(us->f);
     bool saw_bb = false;
     while (fgets(line, sizeof(line), us->f)) {
 	/* PostScript accepts \r as EOL, so using fgets () and looking for a
