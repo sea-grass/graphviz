@@ -62,7 +62,7 @@ will probably require discussion of the relative cost and benefit.
 
 Graphviz is written predominantly in C and C++. C code is compiled under
 [C99](https://en.wikipedia.org/wiki/C99) and C++ code is compiled under
-[C++11](https://en.cppreference.com/w/cpp/11). It is generally possible to rely
+[C++17](https://en.cppreference.com/w/cpp/17). It is generally possible to rely
 on a standards-conformant compiler with the following exceptions:
 
 * The `printf` format specifier `"%zu"` cannot be used. See
