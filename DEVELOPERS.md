@@ -263,6 +263,54 @@ perf report -g --children
 The reporting interface relies on a series of terse keyboard shortcuts. So hit
 `?` if you are stuck.
 
+## Processing contributors’ Merge Requests
+
+The expected process contributors should follow is described in CONTRIBUTING.md.
+Assuming a contributor has followed this, maintainers are expected to review
+incoming MRs and leave feedback through Gitlab. Do your best to be open and
+accepting in your language. It is OK to admit you do not know/understand the
+code a contributor is modifying – many parts of the code base have only ever
+been well understood by ex-maintainers who have since retired.
+
+If you view recent Git history, you will note it is a series of diamonds. This
+gives a greater chance of catching problems pre-merge in CI:
+
+```
+* A  ◄──── CI ran on this commit post-merge
+|\
+| * B  ◄── CI ran on this commit pre-merge
+| |
+| * C      `git diff B A` is empty
+|/         I.e. pre-merge CI tested what was about to land in main
+* D
+|\
+| * E
+…
+```
+
+The alternative is riskier:
+
+```
+* A
+|\
+| * B  ◄── pre-merge CI on this commit did not include changes C, D
+|\|
+| |\       `git diff B A` is not empty
+| | * C    It shows the changes of C and D that were never tested in combination
+| | |      with B’s changes until post-merge CI on A
+| | * D
+…
+```
+
+To achieve the former diamond pattern, merge a contributor’s MR as follows:
+
+1. Checking out their branch
+2. Rebasing the current main, `git pull --rebase origin main`
+3. Force-updating the MR,
+   `git push --force-with-lease <their fork> HEAD:<their branch>`
+4. Setting the MR to merge when CI passes
+5. (do not merge anything else until this MR merges)
+
 ## How to make a release
 
 ### Downstream packagers/consumers
