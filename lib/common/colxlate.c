@@ -203,18 +203,17 @@ static char *resolveColor(const char *str) {
 int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
     char c;
     double H, S, V, A, R, G, B;
-    unsigned int r, g, b, a;
-    int rc;
+    unsigned int r, g, b;
 
     color->type = target_type;
 
-    rc = COLOR_OK;
+    int rc = COLOR_OK;
     for (; *str == ' '; str++);	/* skip over any leading whitespace */
     const char *p = str;
 
     /* test for rgb value such as: "#ff0000"
        or rgba value such as "#ff000080" */
-    a = 255;			/* default alpha channel value=opaque in case not supplied */
+    unsigned a = 255; // default alpha channel value=opaque in case not supplied
     bool is_rgb = *p == '#' && sscanf(p, "#%2x%2x%2x%2x", &r, &g, &b, &a) >= 3;
     if (!is_rgb) { // try 3 letter form
 	is_rgb = *p == '#' && strlen(p) == 4 && sscanf(p, "#%1x%1x%1x", &r, &g, &b) == 3;
