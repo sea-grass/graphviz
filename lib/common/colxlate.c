@@ -324,9 +324,9 @@ int colorxlate(const char *str, gvcolor_t *color, color_type_t target_type) {
     char *name = resolveColor(str);
     if (!name)
 	return COLOR_MALLOC_FAIL;
-    hsvrgbacolor_t *known = bsearch(name, color_lib,
-                                    sizeof(color_lib) / sizeof(hsvrgbacolor_t),
-                                    sizeof(color_lib[0]), colorcmpf);
+    const hsvrgbacolor_t *known = bsearch(name, color_lib,
+                                          sizeof(color_lib) / sizeof(hsvrgbacolor_t),
+                                          sizeof(color_lib[0]), colorcmpf);
     free(name);
     if (known != NULL) {
 	switch (target_type) {
