@@ -163,10 +163,8 @@ static int doRep(node_t *p, node_t *q, double xdelta, double ydelta,
  * Return 1 if nodes overlap
  */
 static int applyRep(Agnode_t *p, Agnode_t *q, double X_ov, double X_nonov) {
-    double xdelta, ydelta;
-
-    xdelta = ND_pos(q)[0] - ND_pos(p)[0];
-    ydelta = ND_pos(q)[1] - ND_pos(p)[1];
+    const double xdelta = ND_pos(q)[0] - ND_pos(p)[0];
+    const double ydelta = ND_pos(q)[1] - ND_pos(p)[1];
     return doRep(p, q, xdelta, ydelta, xdelta * xdelta + ydelta * ydelta, X_ov,
                  X_nonov);
 }
