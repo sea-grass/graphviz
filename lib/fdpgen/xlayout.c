@@ -261,28 +261,21 @@ static int adjust(Agraph_t *g, double temp, double X_ov, double X_nonov) {
  */
 static int x_layout(graph_t * g, xparams * pxpms, int tries)
 {
-    int i;
-    int try;
-    int ov;
-    double temp;
     int nnodes = agnnodes(g);
     int nedges = agnedges(g);
-    double K;
-    xparams xpms;
 
     X_marg = sepFactor (g);
     if (X_marg.doAdd) {
 	X_marg.x = PS2INCH(X_marg.x); /* sepFactor is in points */
 	X_marg.y = PS2INCH(X_marg.y);
     }
-    ov = cntOverlaps(g);
+    int ov = cntOverlaps(g);
     if (ov == 0)
 	return 0;
 
-    try = 0;
-    xpms = *pxpms;
-    K = xpms.K;
-    while (ov && try < tries) {
+    xparams xpms = *pxpms;
+    const double K = xpms.K;
+    for (int try = 0; ov && try < tries; ++try) {
 	const double K2 = xinit_params(g, nnodes, &xpms);
 	const double X_ov = X_C * K2;
 	const double X_nonov = nedges * X_ov * 2.0 / (nnodes * (nnodes - 1));
@@ -295,15 +288,14 @@ static int x_layout(graph_t * g, xparams * pxpms, int tries)
 	}
 #endif
 
-	for (i = 0; i < X_loopcnt; i++) {
-	    temp = cool(i);
+	for (int i = 0; i < X_loopcnt; i++) {
+	    const double temp = cool(i);
 	    if (temp <= 0.0)
 		break;
 	    ov = adjust(g, temp, X_ov, X_nonov);
 	    if (ov == 0)
 		break;
 	}
-	try++;
 	xpms.K += K;		/* increase distance */
     }
 #ifdef DEBUG
