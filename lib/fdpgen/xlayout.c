@@ -29,8 +29,6 @@ Increase less between tries
 #include <fdpgen/dbg.h>
 #include <math.h>
 
-/* Use alternate force function */
-/* #define ALT      */
 /* Add repulsive force even if nodes don't overlap */
 /* #define ORIG      */
 #define BOX	/* Use bbox to determine overlap, else use circles */
@@ -156,7 +154,7 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
 {
     int ov;
     double force;
-#if defined(DEBUG) || defined(ALT)
+#if defined(DEBUG)
     double dist;
 #endif
 
@@ -165,21 +163,7 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
 	ydelta = 5 - rand() % 10;
 	dist2 = xdelta * xdelta + ydelta * ydelta;
     }
-#if defined(ALT)
-    force = K2 / dist2;
-    dist = sqrt(dist2);
-    din = RAD(p) + RAD(q);
-    if (ov = overlap(p, q)) {
-	factor = X_C;
-    } else {
-	ov = 0;
-	if (dist <= din + X_K)
-	    factor = X_C * (X_K - (dist - din)) / X_K;
-	else
-	    factor = 0.0;
-    }
-    force *= factor;
-#elif defined(ORIG)
+#ifdef ORIG
     force = K2 / dist2;
     if ((ov = overlap(p, q)))
 	force *= X_C;
@@ -224,16 +208,6 @@ static void applyAttr(Agnode_t * p, Agnode_t * q)
     double dout;
     double din;
 
-#if defined(ALT)
-    xdelta = ND_pos(q)[0] - ND_pos(p)[0];
-    ydelta = ND_pos(q)[1] - ND_pos(p)[1];
-    dist = hypot(xdelta, ydelta);
-    din = RAD(p) + RAD(q);
-    if (dist < X_K + din)
-	return;
-    dout = dist - din;
-    force = dout * dout / ((X_K + din) * dist);
-#else
     if (overlap(p, q)) {
 #ifdef DEBUG
 	if (Verbose == 4) {
@@ -249,7 +223,6 @@ static void applyAttr(Agnode_t * p, Agnode_t * q)
     din = RAD(p) + RAD(q);
     dout = dist - din;
     force = dout * dout / ((X_K + din) * dist);
-#endif
 #ifdef DEBUG
     if (Verbose == 4) {
 	prIndent();
