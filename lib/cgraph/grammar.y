@@ -38,6 +38,8 @@ struct aagextra_s {
 	void *Ifile;
 	/* Parser */
 	int SubgraphDepth;
+	Agraph_t *G;		/* top level graph */
+	struct gstack_s *S;
 	/* Lexer */
 	int line_num; // = 1;
 	int html_nest;  /* nesting level for html strings */
@@ -114,10 +116,7 @@ static char* concatPort(Agraph_t *G, char*, char*);
 
 static void opensubg(aagscan_t scanner, char *name);
 static void closesubg(aagscan_t scanner);
-
-/* global */
-static Agraph_t *G;				/* top level graph */
-static gstack_t *S;
+static void graph_error(aagscan_t scanner);
 
 %}
 
@@ -139,7 +138,7 @@ static gstack_t *S;
 %%
 
 graph		:  hdr body {freestack(scanner); endgraph(scanner);}
-			|  error	{if (G) {freestack(scanner); endgraph(scanner); agclose(G); G = Ag_G_global = NULL;}}
+			|  error	{graph_error(scanner);}
 			|  /* empty */
 			;
 
@@ -249,7 +248,7 @@ static item *cons_list(Agraph_t *G, item *list)
 static item *cons_subg(Agraph_t *G, Agraph_t *subg)
 	{ return newitem(G,T_subgraph,subg,NULL); }
 
-static gstack_t *push(gstack_t *s, Agraph_t *subg) {
+static gstack_t *push(Agraph_t *G, gstack_t *s, Agraph_t *subg) {
 	gstack_t *rv;
 	rv = agalloc(G,sizeof(gstack_t));
 	rv->down = s;
@@ -257,7 +256,7 @@ static gstack_t *push(gstack_t *s, Agraph_t *subg) {
 	return rv;
 }
 
-static gstack_t *pop(gstack_t *s)
+static gstack_t *pop(Agraph_t *G, gstack_t *s)
 {
 	gstack_t *rv;
 	rv = s->down;
@@ -265,21 +264,21 @@ static gstack_t *pop(gstack_t *s)
 	return rv;
 }
 
-static void delete_items(item *ilist)
+static void delete_items(Agraph_t *G, item *ilist)
 {
 	item	*p,*pn;
 
 	for (p = ilist; p; p = pn) {
 		pn = p->next;
-		if (p->tag == T_list) delete_items(p->u.list);
+		if (p->tag == T_list) delete_items(G,p->u.list);
 		if (p->tag == T_atom) agstrfree(G,p->str);
 		agfree(G,p);
 	}
 }
 
-static void deletelist(list_t *list)
+static void deletelist(Agraph_t *G, list_t *list)
 {
-	delete_items(list->first);
+	delete_items(G,list->first);
 	list->first = list->last = NULL;
 }
 
@@ -294,38 +293,36 @@ static void listapp(list_t *list, item *v)
 /* attrs */
 static void appendattr(aagscan_t scanner, char *name, char *value)
 {
-	(void)scanner;
 	item		*v;
+	aagextra_t 	*ctx = aagget_extra(scanner);
 
 	assert(value != NULL);
-	v = cons_attr(G,name,value);
-	listapp(&(S->attrlist),v);
+	v = cons_attr(ctx->G,name,value);
+	listapp(&(ctx->S->attrlist),v);
 }
 
 static void bindattrs(aagextra_t *ctx, int kind)
 {
-	(void)ctx;
 	item		*aptr;
 	char		*name;
 
-	for (aptr = S->attrlist.first; aptr; aptr = aptr->next) {
+	for (aptr = ctx->S->attrlist.first; aptr; aptr = aptr->next) {
 		assert(aptr->tag == T_atom);	/* signifies unbound attr */
 		name = aptr->u.name;
 		if (kind == AGEDGE && streq(name,Key)) continue;
-		if ((aptr->u.asym = agattr(S->g,kind,name,NULL)) == NULL)
-			aptr->u.asym = agattr(S->g,kind,name,"");
+		if ((aptr->u.asym = agattr(ctx->S->g,kind,name,NULL)) == NULL)
+			aptr->u.asym = agattr(ctx->S->g,kind,name,"");
 		aptr->tag = T_attr;				/* signifies bound attr */
-		agstrfree(G,name);
+		agstrfree(ctx->G,name);
 	}
 }
 
 /* attach node/edge specific attributes */
 static void applyattrs(aagextra_t *ctx, void *obj)
 {
-	(void)ctx;
 	item		*aptr;
 
-	for (aptr = S->attrlist.first; aptr; aptr = aptr->next) {
+	for (aptr = ctx->S->attrlist.first; aptr; aptr = aptr->next) {
 		if (aptr->tag == T_attr) {
 			if (aptr->u.asym) {
 				agxset(obj,aptr->u.asym,aptr->str);
@@ -353,7 +350,9 @@ static void attrstmt(aagscan_t scanner, int tkind, char *macroname)
 	item			*aptr;
 	int				kind = 0;
 	aagextra_t 		*ctx = aagget_extra(scanner);
-	Agsym_t*  sym;
+	Agsym_t			*sym;
+	Agraph_t 		*G = ctx->G;
+	gstack_t 		*S = ctx->S;
 
 		/* creating a macro def */
 	if (macroname) nomacros();
@@ -378,15 +377,17 @@ static void attrstmt(aagscan_t scanner, int tkind, char *macroname)
 		if (S->g == G)
 			sym->print = true;
 	}
-	deletelist(&(S->attrlist));
+	deletelist(G, &(S->attrlist));
 }
 
 /* nodes */
 
 static void appendnode(aagscan_t scanner, char *name, char *port, char *sport)
 {
-	(void)scanner;
 	item		*elt;
+	aagextra_t 	*ctx = aagget_extra(scanner);
+	Agraph_t 	*G = ctx->G;
+	gstack_t	*S = ctx->S;
 
 	if (sport) {
 		port = concatPort (G, port, sport);
@@ -405,13 +406,15 @@ static void endnode(aagscan_t scanner)
 {
 	item	*ptr;
 	aagextra_t 	*ctx = aagget_extra(scanner);
+	Agraph_t 	*G = ctx->G;
+	gstack_t	*S = ctx->S;
 
 	bindattrs(ctx, AGNODE);
 	for (ptr = S->nodelist.first; ptr; ptr = ptr->next)
 		applyattrs(ctx, ptr->u.n);
-	deletelist(&(S->nodelist));
-	deletelist(&(S->attrlist));
-	deletelist(&(S->edgelist));
+	deletelist(G, &(S->nodelist));
+	deletelist(G, &(S->attrlist));
+	deletelist(G, &(S->edgelist));
 	S->subg = 0;  /* notice a pattern here? :-( */
 }
 
@@ -419,8 +422,10 @@ static void endnode(aagscan_t scanner)
 
 static void getedgeitems(aagscan_t scanner)
 {
-	(void)scanner;
-	item	*v = 0;
+	aagextra_t 	*ctx = aagget_extra(scanner);;
+	item		*v = 0;
+	gstack_t	*S = ctx->S;
+	Agraph_t 	*G = ctx->G;
 
 	if (S->nodelist.first) {
 		v = cons_list(G, S->nodelist.first);
@@ -439,32 +444,33 @@ static void endedge(aagscan_t scanner)
 	Agnode_t		*t;
 	Agraph_t		*subg;
 	aagextra_t 		*ctx = aagget_extra(scanner);
+	Agraph_t 		*G = ctx->G;
 
 	bindattrs(ctx, AGEDGE);
 
 	/* look for "key" pseudo-attribute */
 	key = NULL;
-	for (aptr = S->attrlist.first; aptr; aptr = aptr->next) {
+	for (aptr = ctx->S->attrlist.first; aptr; aptr = aptr->next) {
 		if ((aptr->tag == T_atom) && streq(aptr->u.name,Key))
 			key = aptr->str;
 	}
 
 	/* can make edges with node lists or subgraphs */
-	for (p = S->edgelist.first; p->next; p = p->next) {
+	for (p = ctx->S->edgelist.first; p->next; p = p->next) {
 		if (p->tag == T_subgraph) {
 			subg = p->u.subg;
 			for (t = agfstnode(subg); t; t = agnxtnode(subg,t))
-				edgerhs(scanner,agsubnode(S->g, t, 0), NULL, p->next, key);
+				edgerhs(scanner,agsubnode(ctx->S->g, t, 0), NULL, p->next, key);
 		}
 		else {
 			for (tptr = p->u.list; tptr; tptr = tptr->next)
 				edgerhs(scanner,tptr->u.n,tptr->str,p->next,key);
 		}
 	}
-	deletelist(&(S->nodelist));
-	deletelist(&(S->edgelist));
-	deletelist(&(S->attrlist));
-	S->subg = 0;
+	deletelist(G,&(ctx->S->nodelist));
+	deletelist(G,&(ctx->S->edgelist));
+	deletelist(G,&(ctx->S->attrlist));
+	ctx->S->subg = 0;
 }
 
 /* concat:
@@ -472,10 +478,10 @@ static void endedge(aagscan_t scanner)
 static char*
 concat (aagscan_t scanner, char* s1, char* s2)
 {
-	(void)scanner;
   char*  s;
   char   buf[BUFSIZ];
   char*  sym;
+  Agraph_t *G = aagget_extra(scanner)->G;
   size_t len = strlen(s1) + strlen(s2) + 1;
 
   if (len <= BUFSIZ) sym = buf;
@@ -508,25 +514,27 @@ static void edgerhs(aagscan_t scanner, Agnode_t *tail, char *tport, item *hlist,
 	Agnode_t		*head;
 	Agraph_t		*subg;
 	item			*hptr;
+	aagextra_t 		*ctx = aagget_extra(scanner);
 
 	if (hlist->tag == T_subgraph) {
 		subg = hlist->u.subg;
 		for (head = agfstnode(subg); head; head = agnxtnode(subg,head))
-			newedge(scanner, tail, tport, agsubnode(S->g, head, 0), NULL, key);
+			newedge(scanner, tail, tport, agsubnode(ctx->S->g, head, 0), NULL, key);
 	}
 	else {
 		for (hptr = hlist->u.list; hptr; hptr = hptr->next)
-			newedge(scanner, tail, tport, agsubnode(S->g, hptr->u.n, 0), hptr->str, key);
+			newedge(scanner, tail, tport, agsubnode(ctx->S->g, hptr->u.n, 0), hptr->str, key);
 	}
 }
 
 static void mkport(aagscan_t scanner, Agedge_t *e, char *name, char *val)
 {
-	(void)scanner;
 	Agsym_t *attr;
+	aagextra_t *ctx = aagget_extra(scanner);
+
 	if (val) {
-		if ((attr = agattr(S->g,AGEDGE,name,NULL)) == NULL)
-			attr = agattr(S->g,AGEDGE,name,"");
+		if ((attr = agattr(ctx->S->g,AGEDGE,name,NULL)) == NULL)
+			attr = agattr(ctx->S->g,AGEDGE,name,"");
 		agxset(e,attr,val);
 	}
 }
@@ -536,7 +544,7 @@ static void newedge(aagscan_t scanner, Agnode_t *t, char *tport, Agnode_t *h, ch
 	Agedge_t 	*e;
 	aagextra_t 	*ctx = aagget_extra(scanner);
 
-	e = agedge(S->g, t, h, key, 1);
+	e = agedge(ctx->S->g, t, h, key, 1);
 	if (e) {		/* can fail if graph is strict and t==h */
 		char    *tp = tport;
 		char    *hp = hport;
@@ -557,22 +565,22 @@ static void newedge(aagscan_t scanner, Agnode_t *t, char *tport, Agnode_t *h, ch
 static void startgraph(aagscan_t scanner, char *name, bool directed, bool strict)
 {
 	aagextra_t *ctx = aagget_extra(scanner);
-	if (G == NULL) {
+	if (ctx->G == NULL) {
 		ctx->SubgraphDepth = 0;
 		Agdesc_t req = {.directed = directed, .strict = strict, .maingraph = true};
-		Ag_G_global = G = agopen(name,req,ctx->Disc);
+		Ag_G_global = ctx->G = agopen(name,req,ctx->Disc);
 	}
 	else {
-		Ag_G_global = G;
+		Ag_G_global = ctx->G;
 	}
-	S = push(S,G);
+	ctx->S = push(ctx->G,ctx->S,ctx->G);
 	agstrfree(NULL,name);
 }
 
 static void endgraph(aagscan_t scanner)
 {
 	aglexeof(scanner);
-	aginternalmapclearlocalnames(G);
+	aginternalmapclearlocalnames(aagget_extra(scanner)->G);
 }
 
 static void opensubg(aagscan_t scanner, char *name)
@@ -582,30 +590,44 @@ static void opensubg(aagscan_t scanner, char *name)
   if (++ctx->SubgraphDepth >= YYMAXDEPTH/2) {
     agerrorf("subgraphs nested more than %d deep", YYMAXDEPTH);
   }
-	S = push(S, agsubg(S->g, name, 1));
-	agstrfree(G,name);
+	ctx->S = push(ctx->G, ctx->S, agsubg(ctx->S->g, name, 1));
+	agstrfree(ctx->G,name);
 }
 
 static void closesubg(aagscan_t scanner)
 {
 	aagextra_t *ctx = aagget_extra(scanner);
-	Agraph_t *subg = S->g;
+	Agraph_t *subg = ctx->S->g;
+
 	--ctx->SubgraphDepth;
-	S = pop(S);
-	S->subg = subg;
+	ctx->S = pop(ctx->G, ctx->S);
+	ctx->S->subg = subg;
 	assert(subg);
 }
 
 static void freestack(aagscan_t scanner)
 {
-	(void)scanner;
-	while (S) {
-		deletelist(&(S->nodelist));
-		deletelist(&(S->attrlist));
-		deletelist(&(S->edgelist));
-		S = pop(S);
+
+	aagextra_t *ctx = aagget_extra(scanner);
+	while (ctx->S) {
+		deletelist(ctx->G,&(ctx->S->nodelist));
+		deletelist(ctx->G,&(ctx->S->attrlist));
+		deletelist(ctx->G,&(ctx->S->edgelist));
+		ctx->S = pop(ctx->G, ctx->S);
 	}
 }
+
+static void graph_error(aagscan_t scanner)
+{
+	aagextra_t *ctx = aagget_extra(scanner);
+	if (ctx->G) {
+		freestack(scanner);
+		endgraph(scanner);
+		agclose(ctx->G);
+		ctx->G = Ag_G_global = NULL;
+	}
+}
+
 static const char *InputFile;
 
   /* (Re)set file:
@@ -618,6 +640,7 @@ Agraph_t *agconcat(Agraph_t *g, void *chan, Agdisc_t *disc)
 	aagextra_t extra = {
 		.Disc = disc ? disc : &AgDefaultDisc,
 		.Ifile = chan,
+		.G = g,
 		.line_num = 1,
 	};
 	if (InputFile)
@@ -626,7 +649,6 @@ Agraph_t *agconcat(Agraph_t *g, void *chan, Agdisc_t *disc)
 		return NULL;
 	}
 	aagset_in(chan, scanner);
-	G = g;
 	Ag_G_global = NULL;
 	aagparse(scanner);
 	if (Ag_G_global == NULL) aglexbad(scanner);
