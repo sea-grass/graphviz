@@ -171,12 +171,6 @@ static int applyRep(Agnode_t *p, Agnode_t *q, double X_ov, double X_nonov) {
 
 static void applyAttr(Agnode_t * p, Agnode_t * q)
 {
-    double xdelta, ydelta;
-    double force;
-    double dist;
-    double dout;
-    double din;
-
     if (overlap(p, q)) {
 #ifdef DEBUG
 	if (Verbose == 4) {
@@ -186,12 +180,12 @@ static void applyAttr(Agnode_t * p, Agnode_t * q)
 #endif
 	return;
     }
-    xdelta = ND_pos(q)[0] - ND_pos(p)[0];
-    ydelta = ND_pos(q)[1] - ND_pos(p)[1];
-    dist = hypot(xdelta, ydelta);
-    din = RAD(p) + RAD(q);
-    dout = dist - din;
-    force = dout * dout / ((X_K + din) * dist);
+    const double xdelta = ND_pos(q)[0] - ND_pos(p)[0];
+    const double ydelta = ND_pos(q)[1] - ND_pos(p)[1];
+    const double dist = hypot(xdelta, ydelta);
+    const double din = RAD(p) + RAD(q);
+    const double dout = dist - din;
+    const double force = dout * dout / ((X_K + din) * dist);
 #ifdef DEBUG
     if (Verbose == 4) {
 	prIndent();
