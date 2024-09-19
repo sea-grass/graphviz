@@ -134,9 +134,6 @@ static int doRep(node_t *p, node_t *q, double xdelta, double ydelta,
                  double dist2, double X_ov, double X_nonov) {
     int ov;
     double force;
-#if defined(DEBUG)
-    double dist;
-#endif
 
     while (dist2 == 0.0) {
 	xdelta = 5 - rand() % 10;
@@ -150,7 +147,7 @@ static int doRep(node_t *p, node_t *q, double xdelta, double ydelta,
 #ifdef DEBUG
     if (Verbose == 4) {
 	prIndent();
-	dist = sqrt(dist2);
+	const double dist = sqrt(dist2);
 	fprintf(stderr, " ov Fr %f dist %f\n", force * dist, dist);
     }
 #endif
