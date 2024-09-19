@@ -1346,8 +1346,6 @@ if test "$with_rsvg" != "yes"; then
 else
   PKG_CHECK_MODULES(RSVG, [librsvg-2.0],[
     use_rsvg="Yes"
-    AC_DEFINE_UNQUOTED(HAVE_RSVG,1,
-      [Define if you have the rsvg library])
     AC_SUBST([RSVG_CFLAGS])
     AC_SUBST([RSVG_LIBS])
   ],[
