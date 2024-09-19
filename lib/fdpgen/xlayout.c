@@ -107,13 +107,9 @@ static double cool(int t)
  */
 static int overlap(node_t * p, node_t * q)
 {
-    double xdelta, ydelta;
-    int    ret;
-
-    xdelta = fabs(ND_pos(q)[0] - ND_pos(p)[0]);
-    ydelta = fabs(ND_pos(q)[1] - ND_pos(p)[1]);
-    ret = xdelta <= WD2(p) + WD2(q) && ydelta <= HT2(p) + HT2(q);
-    return ret;
+    const double xdelta = fabs(ND_pos(q)[0] - ND_pos(p)[0]);
+    const double ydelta = fabs(ND_pos(q)[1] - ND_pos(p)[1]);
+    return xdelta <= WD2(p) + WD2(q) && ydelta <= HT2(p) + HT2(q);
 }
 
 /* cntOverlaps:
