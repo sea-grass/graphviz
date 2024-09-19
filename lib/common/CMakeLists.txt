@@ -105,6 +105,11 @@ add_library(common_obj OBJECT
   ${BISON_HTMLparse_OUTPUTS}
 )
 
+if(HAVE_C_WUNUSED_BUT_SET_VARIABLE)
+  set_source_files_properties(${BISON_HTMLparse_OUTPUTS}
+    PROPERTIES COMPILE_FLAGS -Wno-unused-but-set-variable)
+endif()
+
 target_include_directories(common_obj PRIVATE
   ..
   ${CMAKE_CURRENT_SOURCE_DIR}
