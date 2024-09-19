@@ -8,15 +8,12 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
-#include "config.h"
-
 #include <stdbool.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 
 #include <gvc/gvplugin_loadimage.h>
 
-#ifdef HAVE_PANGOCAIRO
 #include <librsvg/rsvg.h>
 #ifndef RSVG_CAIRO_H
 #include <librsvg/rsvg-cairo.h>
@@ -145,11 +142,8 @@ static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool fi
 static gvloadimage_engine_t engine_cairo = {
     gvloadimage_rsvg_cairo
 };
-#endif
 
 gvplugin_installed_t gvloadimage_rsvg_types[] = {
-#ifdef HAVE_PANGOCAIRO
     {FORMAT_SVG_CAIRO, "svg:cairo", 1, &engine_cairo, NULL},
-#endif
     {0, NULL, 0, NULL, NULL}
 };
