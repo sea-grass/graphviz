@@ -117,12 +117,10 @@ static int overlap(node_t * p, node_t * q)
  */
 static int cntOverlaps(graph_t * g)
 {
-    node_t *p;
-    node_t *q;
     int cnt = 0;
 
-    for (p = agfstnode(g); p; p = agnxtnode(g, p)) {
-	for (q = agnxtnode(g, p); q; q = agnxtnode(g, q)) {
+    for (node_t *p = agfstnode(g); p; p = agnxtnode(g, p)) {
+	for (node_t *q = agnxtnode(g, p); q; q = agnxtnode(g, q)) {
 	    cnt += overlap(p, q);
 	}
     }
