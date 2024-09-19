@@ -43,7 +43,6 @@ static xparams xParams = {
 };
 static double K2;
 static expand_t X_marg;
-static double X_nonov;
 static double X_ov;
 
 #ifdef DEBUG
@@ -134,9 +133,8 @@ static int cntOverlaps(graph_t * g)
 /* doRep:
  * Return 1 if nodes overlap
  */
-static int
-doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
-{
+static int doRep(node_t *p, node_t *q, double xdelta, double ydelta,
+                 double dist2, double X_nonov) {
     int ov;
     double force;
 #if defined(DEBUG)
@@ -170,13 +168,13 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
  * Repulsive force = (K*K)/d
  * Return 1 if nodes overlap
  */
-static int applyRep(Agnode_t * p, Agnode_t * q)
-{
+static int applyRep(Agnode_t *p, Agnode_t *q, double X_nonov) {
     double xdelta, ydelta;
 
     xdelta = ND_pos(q)[0] - ND_pos(p)[0];
     ydelta = ND_pos(q)[1] - ND_pos(p)[1];
-    return doRep(p, q, xdelta, ydelta, xdelta * xdelta + ydelta * ydelta);
+    return doRep(p, q, xdelta, ydelta, xdelta * xdelta + ydelta * ydelta,
+                 X_nonov);
 }
 
 static void applyAttr(Agnode_t * p, Agnode_t * q)
@@ -218,8 +216,7 @@ static void applyAttr(Agnode_t * p, Agnode_t * q)
  * Return 0 if definitely no overlaps.
  * Return non-zero if we had overlaps before most recent move.
  */
-static int adjust(Agraph_t * g, double temp)
-{
+static int adjust(Agraph_t *g, double temp, double X_nonov) {
     Agnode_t *n;
     Agnode_t *n1;
     Agedge_t *e;
@@ -241,7 +238,7 @@ static int adjust(Agraph_t * g, double temp)
     for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	int ov;
 	for (n1 = agnxtnode(g, n); n1; n1 = agnxtnode(g, n1)) {
-	    ov = applyRep(n, n1);
+	    ov = applyRep(n, n1, X_nonov);
 	    overlaps += ov;
 	}
 	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
@@ -310,7 +307,7 @@ static int x_layout(graph_t * g, xparams * pxpms, int tries)
     while (ov && try < tries) {
 	xinit_params(g, nnodes, &xpms);
 	X_ov = X_C * K2;
-	X_nonov = nedges*X_ov*2.0/(nnodes*(nnodes-1));
+	const double X_nonov = nedges * X_ov * 2.0 / (nnodes * (nnodes - 1));
 #ifdef DEBUG
 	if (Verbose) {
 	    prIndent();
@@ -324,7 +321,7 @@ static int x_layout(graph_t * g, xparams * pxpms, int tries)
 	    temp = cool(i);
 	    if (temp <= 0.0)
 		break;
-	    ov = adjust(g, temp);
+	    ov = adjust(g, temp, X_nonov);
 	    if (ov == 0)
 		break;
 	}
