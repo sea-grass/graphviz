@@ -203,13 +203,6 @@ static void applyAttr(Agnode_t * p, Agnode_t * q)
  * Return non-zero if we had overlaps before most recent move.
  */
 static int adjust(Agraph_t *g, double temp, double X_ov, double X_nonov) {
-    Agnode_t *n;
-    Agnode_t *n1;
-    Agedge_t *e;
-    double temp2;
-    double len;
-    double len2;
-    double disp[NDIM];		/* incremental displacement */
     int overlaps = 0;
 
 #ifdef DEBUG
@@ -217,37 +210,36 @@ static int adjust(Agraph_t *g, double temp, double X_ov, double X_nonov) {
 	fprintf(stderr, "=================\n");
 #endif
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	DISP(n)[0] = DISP(n)[1] = 0;
     }
 
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	int ov;
-	for (n1 = agnxtnode(g, n); n1; n1 = agnxtnode(g, n1)) {
+	for (Agnode_t *n1 = agnxtnode(g, n); n1; n1 = agnxtnode(g, n1)) {
 	    ov = applyRep(n, n1, X_ov, X_nonov);
 	    overlaps += ov;
 	}
-	for (e = agfstout(g, n); e; e = agnxtout(g, e)) {
+	for (Agedge_t *e = agfstout(g, n); e; e = agnxtout(g, e)) {
 	    applyAttr(n,aghead(e));
 	}
     }
     if (overlaps == 0)
 	return 0;
 
-    temp2 = temp * temp;
-    for (n = agfstnode(g); n; n = agnxtnode(g, n)) {
+    const double temp2 = temp * temp;
+    for (Agnode_t *n = agfstnode(g); n; n = agnxtnode(g, n)) {
 	if (ND_pinned(n) == P_PIN)
 	    continue;
-	disp[0] = DISP(n)[0];
-	disp[1] = DISP(n)[1];
-	len2 = disp[0] * disp[0] + disp[1] * disp[1];
+	const double disp[] = {DISP(n)[0], DISP(n)[1]}; // incremental displacement
+	const double len2 = disp[0] * disp[0] + disp[1] * disp[1];
 
 	if (len2 < temp2) {
 	    ND_pos(n)[0] += disp[0];
 	    ND_pos(n)[1] += disp[1];
 	} else {
 	    /* to avoid sqrt, consider abs(x) + abs(y) */
-	    len = sqrt(len2);
+	    const double len = sqrt(len2);
 	    ND_pos(n)[0] += disp[0] * temp / len;
 	    ND_pos(n)[1] += disp[1] * temp / len;
 	}
