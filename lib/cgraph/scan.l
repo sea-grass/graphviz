@@ -67,7 +67,7 @@ static void beginstr(aagscan_t yyscanner);
 static void addstr(aagscan_t yyscanner, char *src);
 static void endstr(aagscan_t yyscanner);
 static void endstr_html(aagscan_t yyscanner);
-static void storeFileName(char* fname, size_t len);
+static void storeFileName(aagscan_t yyscanner, char* fname, size_t len);
 
 /* ppDirective:
  * Process a possible preprocessor line directive.
@@ -235,9 +235,10 @@ static void endstr_html(aagscan_t yyscanner) {
   aagget_lval(yyscanner)->str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
 }
 
-static void storeFileName(char* fname, size_t len) {
+static void storeFileName(aagscan_t yyscanner, char* fname, size_t len) {
     static size_t cnt;
     static char* buf;
+    (void)yyscanner;
 
     if (len > cnt) {
 	buf = gv_realloc(buf, cnt + 1, len + 1);
@@ -256,7 +257,6 @@ static void ppDirective (aagscan_t yyscanner)
     int r, cnt, lineno;
     char buf[2];
     char* s = aagget_text() + 1;  /* skip initial # */
-    (void)yyscanner;
 
     if (startswith(s, "line")) s += strlen("line");
     r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
@@ -272,7 +272,7 @@ static void ppDirective (aagscan_t yyscanner)
 	    while (*e && *e != '"') e++;
 	    if (e != p && *e == '"') {
  		*e = '\0';
-		storeFileName(p, (size_t)(e - p));
+		storeFileName(yyscanner, p, (size_t)(e - p));
 	    }
 	}
     }
