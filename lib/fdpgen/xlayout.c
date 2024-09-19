@@ -41,7 +41,6 @@ static xparams xParams = {
     1.5,			/* C */
     0				/* loopcnt */
 };
-static double K2;
 static expand_t X_marg;
 
 #ifdef DEBUG
@@ -61,8 +60,7 @@ static double RAD(Agnode_t * n)
 /* xinit_params:
  * Initialize local parameters
  */
-static void xinit_params(graph_t* g, int n, xparams * xpms)
-{
+static double xinit_params(graph_t *g, int n, xparams *xpms) {
     (void)g;
 
     xParams.K = xpms->K;
@@ -71,7 +69,7 @@ static void xinit_params(graph_t* g, int n, xparams * xpms)
     xParams.loopcnt = xpms->loopcnt;
     if (xpms->C > 0.0)
 	xParams.C = xpms->C;
-    K2 = xParams.K * xParams.K;
+    const double K2 = xParams.K * xParams.K;
     if (xParams.T0 == 0.0)
 	xParams.T0 = xParams.K * sqrt(n) / 5;
 #ifdef DEBUG
@@ -84,6 +82,7 @@ static void xinit_params(graph_t* g, int n, xparams * xpms)
 		xParams.C);
     }
 #endif
+    return K2;
 }
 
 #define X_T0         xParams.T0
@@ -304,7 +303,7 @@ static int x_layout(graph_t * g, xparams * pxpms, int tries)
     xpms = *pxpms;
     K = xpms.K;
     while (ov && try < tries) {
-	xinit_params(g, nnodes, &xpms);
+	const double K2 = xinit_params(g, nnodes, &xpms);
 	const double X_ov = X_C * K2;
 	const double X_nonov = nedges * X_ov * 2.0 / (nnodes * (nnodes - 1));
 #ifdef DEBUG
