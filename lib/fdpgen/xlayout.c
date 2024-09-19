@@ -29,8 +29,6 @@ Increase less between tries
 #include <fdpgen/dbg.h>
 #include <math.h>
 
-/* Use bbox based force function */
-/* #define MS */
 /* Use alternate force function */
 /* #define ALT      */
 /* Add repulsive force even if nodes don't overlap */
@@ -108,102 +106,6 @@ static double cool(int t)
     return X_T0 * (X_numIters - t) / X_numIters;
 }
 
-#define EPSILON 0.01
-
-#ifdef MS
-/* dist:
- * Distance between two points
- */
-static double dist(pointf p, pointf q)
-{
-    double dx, dy;
-
-    dx = p.x - q.x;
-    dy = p.y - q.y;
-    return hypot(dx, dy);
-}
-
-/* bBox:
- * Compute bounding box of point
- */
-static void bBox(node_t * p, pointf * ll, pointf * ur)
-{
-    double w2 = WD2(p);
-    double h2 = HT2(p);
-
-    ur->x = ND_pos(p)[0] + w2;
-    ur->y = ND_pos(p)[1] + h2;
-    ll->x = ND_pos(p)[0] - w2;
-    ll->y = ND_pos(p)[1] - h2;
-}
-
-/* boxDist:
- * Return the distance between two boxes; 0 if they overlap
- */
-static double boxDist(node_t * p, node_t * q)
-{
-    pointf p_ll, p_ur;
-    pointf q_ll, q_ur;
-
-    bBox(p, &p_ll, &p_ur);
-    bBox(q, &q_ll, &q_ur);
-
-    if (q_ll.x > p_ur.x) {
-	if (q_ll.y > p_ur.y) {
-	    return dist(p_ur, q_ll);
-	} else if (q_ll.y >= p_ll.y) {
-	    return q_ll.x - p_ur.x;
-	} else {
-	    if (q_ur.y >= p_ll.y)
-		return q_ll.x - p_ur.x;
-	    else {
-		p_ur.y = p_ll.y;	/* p_ur is now lower right */
-		q_ll.y = q_ur.y;	/* q_ll is now upper left */
-		return dist(p_ur, q_ll);
-	    }
-	}
-    } else if (q_ll.x >= p_ll.x) {
-	if (q_ll.y > p_ur.y) {
-	    return q_ll.y - p_ur.x;
-	} else if (q_ll.y >= p_ll.y) {
-	    return 0.0;
-	} else {
-	    if (q_ur.y >= p_ll.y)
-		return 0.0;
-	    else
-		return p_ll.y - q_ur.y;
-	}
-    } else {
-	if (q_ll.y > p_ur.y) {
-	    if (q_ur.x >= p_ll.x)
-		return q_ll.y - p_ur.y;
-	    else {
-		p_ur.x = p_ll.x;	/* p_ur is now upper left */
-		q_ll.x = q_ur.x;	/* q_ll is now lower right */
-		return dist(p_ur, q_ll);
-	    }
-	} else if (q_ll.y >= p_ll.y) {
-	    if (q_ur.x >= p_ll.x)
-		return 0.0;
-	    else
-		return p_ll.x - q_ur.x;
-	} else {
-	    if (q_ur.x >= p_ll.x) {
-		if (q_ur.y >= p_ll.y)
-		    return 0.0;
-		else
-		    return p_ll.y - q_ur.y;
-	    } else {
-		if (q_ur.y >= p_ll.y)
-		    return p_ll.x - q_ur.x;
-		else
-		    return dist(p_ll, q_ur);
-	    }
-	}
-    }
-}
-#endif				/* MS */
-
 /* overlap:
  * Return true if nodes overlap
  */
@@ -254,7 +156,7 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
 {
     int ov;
     double force;
-#if defined(DEBUG) || defined(MS) || defined(ALT)
+#if defined(DEBUG) || defined(ALT)
     double dist;
 #endif
 
@@ -263,11 +165,7 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
 	ydelta = 5 - rand() % 10;
 	dist2 = xdelta * xdelta + ydelta * ydelta;
     }
-#if defined(MS)
-    dout = fmax(boxDist(p, q), EPSILON);
-    dist = sqrt(dist2);
-    force = K2 / (dout * dist);
-#elif defined(ALT)
+#if defined(ALT)
     force = K2 / dist2;
     dist = sqrt(dist2);
     din = RAD(p) + RAD(q);
@@ -326,15 +224,7 @@ static void applyAttr(Agnode_t * p, Agnode_t * q)
     double dout;
     double din;
 
-#if defined(MS)
-    dout = boxDist(p, q);
-    if (dout == 0.0)
-	return;
-    xdelta = ND_pos(q)[0] - ND_pos(p)[0];
-    ydelta = ND_pos(q)[1] - ND_pos(p)[1];
-    dist = hypot(xdelta, ydelta);
-    force = dout * dout / (X_K * dist);
-#elif defined(ALT)
+#if defined(ALT)
     xdelta = ND_pos(q)[0] - ND_pos(p)[0];
     ydelta = ND_pos(q)[1] - ND_pos(p)[1];
     dist = hypot(xdelta, ydelta);
