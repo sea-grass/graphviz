@@ -127,7 +127,7 @@ ID		({NAME}|{NUMBER})
 "->"				if (graphType == T_digraph) return(T_edgeop); else return('-');
 "--"				if (graphType == T_graph) return(T_edgeop); else return('-');
 {NAME}					{ aaglval.str = agstrdup(Ag_G_global,aagget_text()); return(T_atom); }
-{NUMBER}				{ if (chkNum()) yyless(aagleng-1); aaglval.str = agstrdup(Ag_G_global,aagget_text()); return(T_atom); }
+{NUMBER}				{ if (chkNum()) yyless(aagget_leng()-1); aaglval.str = agstrdup(Ag_G_global,aagget_text()); return(T_atom); }
 ["]						BEGIN(qstring); beginstr();
 <qstring>["]			BEGIN(INITIAL); endstr(); return (T_qatom);
 <qstring>[\\]["]		addstr ("\"");
@@ -277,7 +277,7 @@ static void ppDirective (void)
 static bool twoDots(void) {
   const char *dot = strchr(aagget_text(), '.');
   // was there a dot and was it not the last character?
-  return dot != NULL && dot != &aagget_text()[aagleng - 1];
+  return dot != NULL && dot != &aagget_text()[aagget_leng() - 1];
 }
 
 /* chkNum:
@@ -286,7 +286,7 @@ static bool twoDots(void) {
  * or something like 123.456.78, and report this to the user.
  */
 static int chkNum(void) {
-    char c = aagget_text()[aagleng - 1]; // last character
+    char c = aagget_text()[aagget_leng() - 1]; // last character
     if ((!gv_isdigit(c) && c != '.') || (c == '.' && twoDots())) { // c is letter
 	const char* fname;
 
