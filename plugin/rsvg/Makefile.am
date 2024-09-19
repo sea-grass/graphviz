@@ -9,12 +9,14 @@ AM_CPPFLAGS = \
 	-I$(top_srcdir)/lib/cdt \
 	$(RSVG_CFLAGS) $(PANGOCAIRO_CFLAGS)
 
+if WITH_PANGOCAIRO
 if WITH_RSVG
 noinst_LTLIBRARIES = libgvplugin_rsvg_C.la
 if WITH_WIN32
 lib_LTLIBRARIES = libgvplugin_rsvg.la
 else
 pkglib_LTLIBRARIES = libgvplugin_rsvg.la
+endif
 endif
 endif
 

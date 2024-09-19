@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased (12.1.2)]
 
+### Changed
+
+- In the Autotools build system, the rsvg plugin is no longer built when
+  pangocairo is missing. Previously, when librsvg was found but pangocairo was
+  not, this plugin would be enabled and built but offer no functionality.
+
 ### Fixed
 
 - In the Autotools build system, fallback discovery of libANN when `pkg-config`
