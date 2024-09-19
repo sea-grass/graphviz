@@ -33,10 +33,10 @@
 struct gstack_s;
 
 struct aagextra_s {
-	int dummy; /* struct must not be empty */
 	/* Common */
 	/* Parser */
 	/* Lexer */
+	int line_num; // = 1;
 };
 
 }
@@ -589,6 +589,7 @@ Agraph_t *agconcat(Agraph_t *g, void *chan, Agdisc_t *disc)
 {
 	aagscan_t scanner = NULL;
 	aagextra_t extra = {
+		.line_num = 1,
 	};
 	if (aaglex_init_extra(&extra, &scanner)) {
 		return NULL;
