@@ -169,7 +169,7 @@ static void core_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled)
 		fstat(fd, &statbuf);
 		us->datasize = (size_t)statbuf.st_size;
 #ifdef HAVE_SYS_MMAN_H
-		us->data = mmap(0, us->datasize, PROT_READ, MAP_SHARED, fd, 0);
+		us->data = mmap(0, us->datasize, PROT_READ, MAP_PRIVATE, fd, 0);
 		if (us->data == MAP_FAILED)
 			us->data = NULL;
 #else
