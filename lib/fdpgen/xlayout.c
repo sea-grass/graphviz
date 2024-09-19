@@ -29,8 +29,6 @@ Increase less between tries
 #include <fdpgen/dbg.h>
 #include <math.h>
 
-/* Add repulsive force even if nodes don't overlap */
-/* #define ORIG      */
 #define BOX	/* Use bbox to determine overlap, else use circles */
 
 #define DFLT_overlap   "9:prism"    /* default overlap value */
@@ -163,16 +161,10 @@ doRep(node_t * p, node_t * q, double xdelta, double ydelta, double dist2)
 	ydelta = 5 - rand() % 10;
 	dist2 = xdelta * xdelta + ydelta * ydelta;
     }
-#ifdef ORIG
-    force = K2 / dist2;
-    if ((ov = overlap(p, q)))
-	force *= X_C;
-#else
     if ((ov = overlap(p, q)))
 	force = X_ov / dist2;
     else
 	force = X_nonov / dist2;
-#endif
 #ifdef DEBUG
     if (Verbose == 4) {
 	prIndent();
