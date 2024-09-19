@@ -230,24 +230,24 @@ qatom	:  T_qatom {$$ = $1;}
 			;
 %%
 
-static item *newitem(int tag, void *p0, char *p1)
+static item *newitem(Agraph_t *G, int tag, void *p0, char *p1)
 {
 	item	*rv = agalloc(G,sizeof(item));
 	rv->tag = tag; rv->u.name = (char*)p0; rv->str = p1;
 	return rv;
 }
 
-static item *cons_node(Agnode_t *n, char *port)
-	{ return newitem(T_node,n,port); }
+static item *cons_node(Agraph_t *G, Agnode_t *n, char *port)
+	{ return newitem(G,T_node,n,port); }
 
-static item *cons_attr(char *name, char *value)
-	{ return newitem(T_atom,name,value); }
+static item *cons_attr(Agraph_t *G, char *name, char *value)
+	{ return newitem(G,T_atom,name,value); }
 
-static item *cons_list(item *list)
-	{ return newitem(T_list,list,NULL); }
+static item *cons_list(Agraph_t *G, item *list)
+	{ return newitem(G,T_list,list,NULL); }
 
-static item *cons_subg(Agraph_t *subg)
-	{ return newitem(T_subgraph,subg,NULL); }
+static item *cons_subg(Agraph_t *G, Agraph_t *subg)
+	{ return newitem(G,T_subgraph,subg,NULL); }
 
 static gstack_t *push(gstack_t *s, Agraph_t *subg) {
 	gstack_t *rv;
@@ -298,7 +298,7 @@ static void appendattr(aagscan_t scanner, char *name, char *value)
 	item		*v;
 
 	assert(value != NULL);
-	v = cons_attr(name,value);
+	v = cons_attr(G,name,value);
 	listapp(&(S->attrlist),v);
 }
 
@@ -391,7 +391,7 @@ static void appendnode(aagscan_t scanner, char *name, char *port, char *sport)
 	if (sport) {
 		port = concatPort (G, port, sport);
 	}
-	elt = cons_node(agnode(S->g, name, 1), port);
+	elt = cons_node(G, agnode(S->g, name, 1), port);
 	listapp(&(S->nodelist),elt);
 	agstrfree(G,name);
 }
@@ -423,10 +423,10 @@ static void getedgeitems(aagscan_t scanner)
 	item	*v = 0;
 
 	if (S->nodelist.first) {
-		v = cons_list(S->nodelist.first);
+		v = cons_list(G, S->nodelist.first);
 		S->nodelist.first = S->nodelist.last = NULL;
 	}
-	else {if (S->subg) v = cons_subg(S->subg); S->subg = 0;}
+	else {if (S->subg) v = cons_subg(G, S->subg); S->subg = 0;}
 	/* else nil append */
 	if (v) listapp(&(S->edgelist),v);
 }
