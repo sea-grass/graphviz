@@ -31,7 +31,6 @@ Increase less between tries
 
 #define DFLT_overlap   "9:prism"    /* default overlap value */
 
-#define WD2(n) (X_marg.doAdd ? (ND_width(n)/2.0 + X_marg.x): ND_width(n)*X_marg.x/2.0)
 #define HT2(n) (X_marg.doAdd ? (ND_height(n)/2.0 + X_marg.y): ND_height(n)*X_marg.y/2.0)
 
 static xparams xParams = {
@@ -42,6 +41,10 @@ static xparams xParams = {
     0				/* loopcnt */
 };
 static expand_t X_marg;
+
+static double WD2(Agnode_t *n) {
+  return X_marg.doAdd ? (ND_width(n) / 2.0 + X_marg.x) : (ND_width(n) * X_marg.x / 2.0);
+}
 
 #ifdef DEBUG
 static void pr2graphs(Agraph_t *g0, Agraph_t *g1) {
