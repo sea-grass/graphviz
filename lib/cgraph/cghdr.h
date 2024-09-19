@@ -102,7 +102,15 @@ void agedgeattr_init(Agraph_t *g, Agedge_t * e);
 void agedgeattr_delete(Agedge_t * e);
 /// @}
 
-	/* parsing and lexing graph files */
+	/* parsing and lexing graph files
+	 *
+	 * aagscan_t is opaque, because it is generated
+	 * by flex based on scan.l.
+	 * See https://westes.github.io/flex/manual/About-yyscan_005ft.html
+	 */
+typedef void *aagscan_t;
+typedef struct aagextra_s aagextra_t;
+
 int aagparse(void);
 void aglexinit(Agdisc_t * disc, void *ifile);
 int aaglex(void);

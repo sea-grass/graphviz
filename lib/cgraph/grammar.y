@@ -19,6 +19,20 @@
    * symbol clashes.
    */
 %define api.prefix {aag}
+%code requires {
+#include <agxbuf.h>
+#include <cghdr.h>
+
+struct gstack_s;
+
+struct aagextra_s {
+	int dummy; /* struct must not be empty */
+	/* Common */
+	/* Parser */
+	/* Lexer */
+};
+
+}
 
 %{
 
