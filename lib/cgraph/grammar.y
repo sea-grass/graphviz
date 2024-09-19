@@ -19,6 +19,13 @@
    * symbol clashes.
    */
 %define api.prefix {aag}
+
+  /* Generate a reentrant parser with no global state. */
+%define api.pure full
+  /* aagparse() gets an argument defined by flex. */
+%param { aagscan_t scanner }
+
+
 %code requires {
 #include <agxbuf.h>
 #include <cghdr.h>
@@ -34,6 +41,11 @@ struct aagextra_s {
 
 }
 
+%code {
+	extern void aagerror(aagscan_t, const char*);
+	extern int aaglex(AAGSTYPE *, aagscan_t);
+}
+
 %{
 
 #include <stdbool.h>
@@ -44,8 +56,6 @@ struct aagextra_s {
 #include <util/alloc.h>
 #include <util/streq.h>
 #include <util/unreachable.h>
-
-extern void aagerror(const char*);
 
 static const char Key[] = "key";
 static int SubgraphDepth = 0;
@@ -88,7 +98,7 @@ static void edgerhs(Agnode_t *n, char *tport, item *hlist, char *key);
 static void appendattr(char *name, char *value);
 static void bindattrs(int kind);
 static void applyattrs(void *obj);
-static void endgraph(void);
+static void endgraph(aagscan_t scanner);
 static void endnode(void);
 static void endedge(void);
 static void freestack(void);
@@ -122,8 +132,8 @@ static gstack_t *S;
 
 %%
 
-graph		:  hdr body {freestack(); endgraph();}
-			|  error	{if (G) {freestack(); endgraph(); agclose(G); G = Ag_G_global = NULL;}}
+graph		:  hdr body {freestack(); endgraph(scanner);}
+			|  error	{if (G) {freestack(); endgraph(scanner); agclose(G); G = Ag_G_global = NULL;}}
 			|  /* empty */
 			;
 
@@ -541,9 +551,9 @@ static void startgraph(char *name, bool directed, bool strict)
 	agstrfree(NULL,name);
 }
 
-static void endgraph(void)
+static void endgraph(aagscan_t scanner)
 {
-	aglexeof();
+	aglexeof(scanner);
 	aginternalmapclearlocalnames(G);
 }
 
@@ -575,16 +585,22 @@ static void freestack(void)
 	}
 }
 
-extern FILE *aagin;
 Agraph_t *agconcat(Agraph_t *g, void *chan, Agdisc_t *disc)
 {
-	aagin = chan;
+	aagscan_t scanner = NULL;
+	aagextra_t extra = {
+	};
+	if (aaglex_init_extra(&extra, &scanner)) {
+		return NULL;
+	}
+	aagset_in(chan, scanner);
 	G = g;
 	Ag_G_global = NULL;
 	Disc = (disc? disc :  &AgDefaultDisc);
 	aglexinit(Disc, chan);
-	aagparse();
-	if (Ag_G_global == NULL) aglexbad();
+	aagparse(scanner);
+	if (Ag_G_global == NULL) aglexbad(scanner);
+	aaglex_destroy(scanner);
 	return Ag_G_global;
 }
 
