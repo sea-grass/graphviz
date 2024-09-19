@@ -515,8 +515,9 @@ static void edgerhs(aagscan_t scanner, Agnode_t *tail, char *tport, item *hlist,
 	}
 }
 
-static void mkport(Agedge_t *e, char *name, char *val)
+static void mkport(aagscan_t scanner, Agedge_t *e, char *name, char *val)
 {
+	(void)scanner;
 	Agsym_t *attr;
 	if (val) {
 		if ((attr = agattr(S->g,AGEDGE,name,NULL)) == NULL)
@@ -527,7 +528,6 @@ static void mkport(Agedge_t *e, char *name, char *val)
 
 static void newedge(aagscan_t scanner, Agnode_t *t, char *tport, Agnode_t *h, char *hport, char *key)
 {
-	(void)scanner;
 	Agedge_t 	*e;
 
 	e = agedge(S->g, t, h, key, 1);
@@ -539,8 +539,8 @@ static void newedge(aagscan_t scanner, Agnode_t *t, char *tport, Agnode_t *h, ch
 			char    *temp;
 			temp = tp; tp = hp; hp = temp;
 		}
-		mkport(e,TAILPORT_ID,tp);
-		mkport(e,HEADPORT_ID,hp);
+		mkport(scanner, e,TAILPORT_ID,tp);
+		mkport(scanner, e,HEADPORT_ID,hp);
 		applyattrs(e);
 	}
 }
