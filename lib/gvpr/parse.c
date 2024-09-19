@@ -530,21 +530,12 @@ parse_prog *parseProg(char *input, int isFile)
     return prog;
 }
 
-static void freeCaseList(case_infos_t *list) {
-    for (size_t i = 0; i < case_infos_size(list); ++i) {
-	case_info *ip = case_infos_at(list, i);
-	free (ip->guard);
-	free (ip->action);
-    }
-    case_infos_free(list);
-}
-
 static void freeBlocks(parse_blocks_t *ip) {
     for (size_t i = 0; i < parse_blocks_size(ip); ++i) {
 	parse_block p = parse_blocks_get(ip, i);
 	free(p.begg_stmt);
-	freeCaseList(&p.node_stmts);
-	freeCaseList(&p.edge_stmts);
+	case_infos_free(&p.node_stmts);
+	case_infos_free(&p.edge_stmts);
     }
     parse_blocks_free(ip);
 }

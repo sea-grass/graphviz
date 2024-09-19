@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cgraph/list.h>
-#include <stddef.h>
+#include <stdlib.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,7 +27,12 @@ extern "C" {
 	char *action;
     } case_info;
 
-DEFINE_LIST(case_infos, case_info)
+static inline void free_case_info(case_info c) {
+  free(c.guard);
+  free(c.action);
+}
+
+DEFINE_LIST_WITH_DTOR(case_infos, case_info, free_case_info)
 
     typedef struct {
 	int l_beging;
