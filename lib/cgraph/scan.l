@@ -126,21 +126,21 @@ ID		({NAME}|{NUMBER})
 "subgraph"				return(T_subgraph);
 "->"				if (graphType == T_digraph) return(T_edgeop); else return('-');
 "--"				if (graphType == T_graph) return(T_edgeop); else return('-');
-{NAME}					{ aaglval.str = agstrdup(Ag_G_global,aagtext); return(T_atom); }
-{NUMBER}				{ if (chkNum()) yyless(aagleng-1); aaglval.str = agstrdup(Ag_G_global,aagtext); return(T_atom); }
+{NAME}					{ aaglval.str = agstrdup(Ag_G_global,aagget_text()); return(T_atom); }
+{NUMBER}				{ if (chkNum()) yyless(aagleng-1); aaglval.str = agstrdup(Ag_G_global,aagget_text()); return(T_atom); }
 ["]						BEGIN(qstring); beginstr();
 <qstring>["]			BEGIN(INITIAL); endstr(); return (T_qatom);
 <qstring>[\\]["]		addstr ("\"");
 <qstring>[\\][\\]		addstr ("\\\\");
 <qstring>[\\][\n]		line_num++; /* ignore escaped newlines */
 <qstring>[\n]			addstr ("\n"); line_num++;
-<qstring>([^"\\\n]*|[\\])		addstr(aagtext);
+<qstring>([^"\\\n]*|[\\])		addstr(aagget_text());
 [<]						BEGIN(hstring); html_nest = 1; beginstr();
-<hstring>[>]			html_nest--; if (html_nest) addstr(aagtext); else {BEGIN(INITIAL); endstr_html(); return (T_qatom);}
-<hstring>[<]			html_nest++; addstr(aagtext);
-<hstring>[\n]			addstr(aagtext); line_num++; /* add newlines */
-<hstring>([^><\n]*)		addstr(aagtext);
-.						return aagtext[0];
+<hstring>[>]			html_nest--; if (html_nest) addstr(aagget_text()); else {BEGIN(INITIAL); endstr_html(); return (T_qatom);}
+<hstring>[<]			html_nest++; addstr(aagget_text());
+<hstring>[\n]			addstr(aagget_text()); line_num++; /* add newlines */
+<hstring>([^><\n]*)		addstr(aagget_text());
+.						return aagget_text()[0];
 %%
 
 void aagerror(const char *str);
@@ -151,8 +151,8 @@ void aagerror(const char *str)
 		agxbprint (&xb, "%s: ", InputFile);
 	}
 	agxbprint (&xb, "%s in line %d", str, line_num);
-	if (*aagtext) {
-		agxbprint(&xb, " near '%s'", aagtext);
+	if (*aagget_text()) {
+		agxbprint(&xb, " near '%s'", aagget_text());
 	}
 	else switch (YYSTATE) {
 	case qstring: {
@@ -248,7 +248,7 @@ static void ppDirective (void)
 {
     int r, cnt, lineno;
     char buf[2];
-    char* s = aagtext + 1;  /* skip initial # */
+    char* s = aagget_text() + 1;  /* skip initial # */
 
     if (startswith(s, "line")) s += strlen("line");
     r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
@@ -275,9 +275,9 @@ static void ppDirective (void)
  * we know the last character is a '.'.
  */
 static bool twoDots(void) {
-  const char *dot = strchr(aagtext, '.');
+  const char *dot = strchr(aagget_text(), '.');
   // was there a dot and was it not the last character?
-  return dot != NULL && dot != &aagtext[aagleng - 1];
+  return dot != NULL && dot != &aagget_text()[aagleng - 1];
 }
 
 /* chkNum:
@@ -286,7 +286,7 @@ static bool twoDots(void) {
  * or something like 123.456.78, and report this to the user.
  */
 static int chkNum(void) {
-    char c = aagtext[aagleng - 1]; // last character
+    char c = aagget_text()[aagleng - 1]; // last character
     if ((!gv_isdigit(c) && c != '.') || (c == '.' && twoDots())) { // c is letter
 	const char* fname;
 
@@ -296,7 +296,7 @@ static int chkNum(void) {
 	    fname = "input";
 
 	agwarningf("syntax ambiguity - badly delimited number '%s' in line %d of "
-	  "%s splits into two tokens\n", aagtext, line_num, fname);
+	  "%s splits into two tokens\n", aagget_text(), line_num, fname);
 
 	return 1;
     }
