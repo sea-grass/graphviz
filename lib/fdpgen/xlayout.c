@@ -29,8 +29,6 @@ Increase less between tries
 #include <fdpgen/dbg.h>
 #include <math.h>
 
-#define BOX	/* Use bbox to determine overlap, else use circles */
-
 #define DFLT_overlap   "9:prism"    /* default overlap value */
 
 #define WD2(n) (X_marg.doAdd ? (ND_width(n)/2.0 + X_marg.x): ND_width(n)*X_marg.x/2.0)
@@ -107,7 +105,6 @@ static double cool(int t)
  */
 static int overlap(node_t * p, node_t * q)
 {
-#if defined(BOX)
     double xdelta, ydelta;
     int    ret;
 
@@ -115,16 +112,6 @@ static int overlap(node_t * p, node_t * q)
     ydelta = fabs(ND_pos(q)[1] - ND_pos(p)[1]);
     ret = xdelta <= WD2(p) + WD2(q) && ydelta <= HT2(p) + HT2(q);
     return ret;
-#else
-    double dist2, xdelta, ydelta;
-    double din;
-
-    din = RAD(p) + RAD(q);
-    xdelta = ND_pos(q)[0] - ND_pos(p)[0];
-    ydelta = ND_pos(q)[1] - ND_pos(p)[1];
-    dist2 = xdelta * xdelta + ydelta * ydelta;
-    return dist2 <= din * din;
-#endif
 }
 
 /* cntOverlaps:
