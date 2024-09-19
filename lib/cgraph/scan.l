@@ -48,7 +48,6 @@
 // #define YY_BUF_SIZE 128000
 #define GRAPH_EOF_TOKEN		'@'		/* lex class must be defined below */
 	/* this is a workaround for linux flex */
-static const char* InputFile;
 static Agdisc_t	*Disc;
 static void 	*Ifile;
 
@@ -74,7 +73,7 @@ static void beginstr(aagscan_t yyscanner);
 static void addstr(aagscan_t yyscanner, char *src);
 static void endstr(aagscan_t yyscanner);
 static void endstr_html(aagscan_t yyscanner);
-static void storeFileName(aagscan_t yyscanner, char* fname, size_t len);
+static void storeFileName(aagscan_t yyscanner, const char* fname, size_t len);
 
 /* ppDirective:
  * Process a possible preprocessor line directive.
@@ -156,8 +155,8 @@ void aagerror(aagscan_t yyscanner, const char *str)
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
 
 	agxbuf xb = {0};
-	if (InputFile) {
-		agxbprint (&xb, "%s: ", InputFile);
+	if (agxblen(&yyextra->InputFile)) {
+		agxbprint (&xb, "%s: ", agxbuse(&yyextra->InputFile));
 	}
 	agxbprint (&xb, "%s in line %d", str, yyextra->line_num);
 	if (*aagget_text(yyscanner)) {
@@ -210,10 +209,6 @@ int aagwrap(YY_CALL_ONLY_ARG)
 	return 1;
 }
 
-  /* (Re)set file:
-   */
-void agsetfile(const char* f) { InputFile = f; }
-
 /* There is a hole here, because switching channels
  * requires pushing back whatever was previously read.
  * There probably is a right way of doing this.
@@ -246,17 +241,10 @@ static void endstr_html(aagscan_t yyscanner) {
   aagget_lval(yyscanner)->str = agstrdup_html(Ag_G_global, agxbuse(&ctx->Sbuf));
 }
 
-static void storeFileName(aagscan_t yyscanner, char* fname, size_t len) {
-    static size_t cnt;
-    static char* buf;
-    (void)yyscanner;
-
-    if (len > cnt) {
-	buf = gv_realloc(buf, cnt + 1, len + 1);
-	cnt = len;
-    }
-    strcpy (buf, fname);
-    InputFile = buf;
+static void storeFileName(aagscan_t yyscanner, const char* fname, size_t len) {
+	agxbuf *buffer = &aagget_extra(yyscanner)->InputFile;
+	agxbput_n(buffer, fname, len);
+	agxbuse(buffer);
 }
 
 /* ppDirective:
@@ -310,8 +298,8 @@ static int chkNum(aagscan_t yyscanner) {
 	const char* fname;
 	aagextra_t *ctx = aagget_extra(yyscanner);
 
-	if (InputFile)
-	    fname = InputFile;
+	if (agxblen(&ctx->InputFile))
+	    fname = agxbuse(&ctx->InputFile);
 	else
 	    fname = "input";
 
