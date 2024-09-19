@@ -20,21 +20,20 @@ extern "C" {
     typedef enum { Begin =
 	    0, End, BeginG, EndG, Node, Edge, Eof, Error } case_t;
 
-    typedef struct _case_info {
+    typedef struct {
 	int gstart;
 	char *guard;
 	int astart;
 	char *action;
-	struct _case_info *next;
     } case_info;
+
+DEFINE_LIST(case_infos, case_info)
 
     typedef struct {
 	int l_beging;
 	char *begg_stmt;
-	size_t n_nstmts;
-	size_t n_estmts;
-	case_info *node_stmts;
-	case_info *edge_stmts;
+	case_infos_t node_stmts;
+	case_infos_t edge_stmts;
     } parse_block; 
 
 DEFINE_LIST(parse_blocks, parse_block)
