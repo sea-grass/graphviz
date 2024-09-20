@@ -78,5 +78,8 @@ mono-core \
 && mv cmake-3.28.1-linux-x86_64/bin/* /usr/bin/ \
 && mv cmake-3.28.1-linux-x86_64/share/cmake-3.28 /usr/share/ \
 && rm -rf cmake-3.28.1-linux-x86_64.tar.gz cmake-3.28.1-linux-x86_64 \
+# Remove possible old version of Graphviz so that we can detect if
+# individual Graphviz tools are missing in the current release
+&& dnf remove -y graphviz \
 # Clean up
 && dnf clean all && rm -rf /var/cache/dnf

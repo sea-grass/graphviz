@@ -16,21 +16,6 @@ GV_VERSION=$( cat GRAPHVIZ_VERSION )
 DIR=Packages/${ID}/${VERSION_ID}
 ARCH=$( uname -m )
 
-# Remove possible old version of Graphviz so that we can detect if
-# individual Graphviz tools are missing in the current release
-if [ "${ID}" = "fedora" ]; then
-    # Both doxgen and asciidoc depend on graphviz and needs to be
-    # removed to allow Graphviz to be removed
-    if rpm -q doxygen; then
-        rpm --erase doxygen
-    fi
-    if rpm -q asciidoc; then
-        rpm --erase asciidoc
-    fi
-    if rpm -q graphviz; then
-        rpm --erase graphviz
-    fi
-fi
 if [ "${build_system}" = "cmake" ]; then
     if [ "${ID_LIKE:-}" = "debian" ]; then
         apt install ./${DIR}/graphviz-${GV_VERSION}-cmake.deb
