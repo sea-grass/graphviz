@@ -220,7 +220,7 @@ typedef struct
 #define GUI_FULLSCREEN    1
 
     typedef struct _selection {
-	glCompPoly selPoly;
+	glCompPoly_t selPoly;
 	bool selectNodes;
 	bool selectEdges;
     } selection;

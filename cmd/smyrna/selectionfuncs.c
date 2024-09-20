@@ -230,28 +230,18 @@ void deselect_all(Agraph_t* g)
     cacheSelectedEdges(g,view->Topview);
 }
 
-void clear_selpoly(glCompPoly* sp)
-{
-    free(sp->pts);
-    sp->pts = NULL;
-    sp->cnt=0;
-}
-static int close_poly(glCompPoly* selPoly,glCompPoint pt)
-{
+static int close_poly(glCompPoly_t *selPoly, glCompPoint pt) {
     /* int i=0; */
     const float EPS = GetOGLDistance(3.0f);
-    if (selPoly->cnt < 2)
+    if (glCompPoly_size(selPoly) < 2)
 	return 0;
-    if(
-	( (selPoly->pts[0].x-pt.x) < EPS) &&
-	( (selPoly->pts[0].y-pt.y) < EPS))
+    if (glCompPoly_front(selPoly)->x - pt.x < EPS &&
+        glCompPoly_front(selPoly)->y - pt.y < EPS)
 	return 1;
     return 0;
 }
 
-
-static void select_polygon (Agraph_t* g,glCompPoly* selPoly)
-{
+static void select_polygon(Agraph_t *g, glCompPoly_t *selPoly) {
     Agnode_t *v;
     glCompPoint posN;
      
@@ -264,22 +254,15 @@ static void select_polygon (Agraph_t* g,glCompPoly* selPoly)
     cacheSelectedNodes(g,view->Topview);
 }
 
-
-void add_selpoly(Agraph_t* g,glCompPoly* selPoly,glCompPoint pt)
-{
+void add_selpoly(Agraph_t *g, glCompPoly_t *selPoly, glCompPoint pt) {
     if(!close_poly(selPoly,pt))
     {
-	selPoly->pts = gv_recalloc(selPoly->pts, selPoly->cnt, selPoly->cnt + 1,
-	                           sizeof(glCompPoint));
-	selPoly->cnt ++;
-	selPoly->pts[selPoly->cnt-1].x=pt.x;
-	selPoly->pts[selPoly->cnt-1].y=pt.y;
-	selPoly->pts[selPoly->cnt-1].z=0;
+	glCompPoly_append(selPoly, (glCompPoint){.x = pt.x, .y = pt.y});
     }
     else
     {
 	select_polygon (g,selPoly);
-	clear_selpoly(selPoly);	
+	glCompPoly_free(selPoly);	
     }
 }
 

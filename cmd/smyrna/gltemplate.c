@@ -311,7 +311,7 @@ static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event,
 	appmouse_middle_drag(view,(int)event->x,(int)event->y);
 	redraw = true;
     }
-    if(view->Topview->sel.selPoly.cnt > 0)
+    if (!glCompPoly_is_empty(&view->Topview->sel.selPoly))
 	redraw = true;
 
     begin_x = x;

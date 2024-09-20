@@ -8,9 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 #include "smyrna_utils.h"
+#include <assert.h>
 #include <common/types.h>
 #include <common/utils.h>
 #include <limits.h>
+#include <stddef.h>
 #include <stdio.h>
 
 int l_int(void *obj, Agsym_t * attr, int def)
@@ -59,16 +61,17 @@ glCompPoint getPointFromStr(const char *str) {
     return p;
 }
 
-int point_in_polygon(glCompPoly* selPoly,glCompPoint p)
-{
-    int npol=selPoly->cnt;
+int point_in_polygon(glCompPoly_t *selPoly, glCompPoint p) {
+    const size_t npol = glCompPoly_size(selPoly);
+    assert(npol > 0);
 
-    int i, j, c = 0;
-      for (i = 0, j = npol-1; i < npol; j = i++) 
-      {
-        if ((((selPoly->pts[i].y <= p.y) && (p.y < selPoly->pts[j].y)) ||
-             ((selPoly->pts[j].y <= p.y) && (p.y < selPoly->pts[i].y))) &&
-            (p.x < (selPoly->pts[j].x - selPoly->pts[i].x) * (p.y - selPoly->pts[i].y) / (selPoly->pts[j].y - selPoly->pts[i].y) + selPoly->pts[i].x))
+    int c = 0;
+      for (size_t i = 0, j = npol - 1; i < npol; j = i++) {
+        const glCompPoint pt_i = glCompPoly_get(selPoly, i);
+        const glCompPoint pt_j = glCompPoly_get(selPoly, j);
+        if (((pt_i.y <= p.y && p.y < pt_j.y) ||
+             (pt_j.y <= p.y && p.y < pt_i.y)) &&
+            p.x < (pt_j.x - pt_i.x) * (p.y - pt_i.y) / (pt_j.y - pt_i.y) + pt_i.x)
           c = !c;
       }
       return c;

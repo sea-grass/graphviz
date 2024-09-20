@@ -15,5 +15,4 @@
 
 extern void pick_objects_rect(Agraph_t* g) ;
 extern void deselect_all(Agraph_t* g);
-extern void add_selpoly(Agraph_t* g,glCompPoly* selPoly,glCompPoint pt);
-extern void clear_selpoly(glCompPoly* sp);
+extern void add_selpoly(Agraph_t *g, glCompPoly_t *selPoly, glCompPoint pt);

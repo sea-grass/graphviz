@@ -166,7 +166,7 @@ void appmouse_key_release(ViewInfo* v)
 {
     if(lastAction==MM_POLYGON_SELECT)
     {
-	clear_selpoly(&view->Topview->sel.selPoly);	
+	glCompPoly_free(&view->Topview->sel.selPoly);
 	glexpose();
     }
     v->keymap.down=0;

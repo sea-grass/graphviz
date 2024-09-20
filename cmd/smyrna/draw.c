@@ -411,20 +411,18 @@ drawfunc_t OpFns[] = {
     (drawfunc_t)InsertImage,
 };
 
-void draw_selpoly(glCompPoly* selPoly)
-{
-    int i;
+void draw_selpoly(glCompPoly_t *selPoly) {
     glColor4f(1,0,0,1);
     glBegin(GL_LINE_STRIP);
-    for (i = 0;i <  selPoly->cnt ; i++)
-    {
-	glVertex3f(selPoly->pts[i].x,selPoly->pts[i].y,selPoly->pts[i].z);
+    for (size_t i = 0; i < glCompPoly_size(selPoly); ++i) {
+	const glCompPoint pt = glCompPoly_get(selPoly, i);
+	glVertex3f(pt.x, pt.y, pt.z);
     }
     glEnd();
-    if(selPoly->cnt >0)
-    {
+    if (!glCompPoly_is_empty(selPoly)) {
+        const glCompPoint last = *glCompPoly_back(selPoly);
         glBegin(GL_LINE_STRIP);
-	glVertex3f(selPoly->pts[selPoly->cnt-1].x,selPoly->pts[selPoly->cnt-1].y,selPoly->pts[selPoly->cnt-1].z);
+	glVertex3f(last.x, last.y, last.z);
 	glVertex3f(view->mouse.GLpos.x,view->mouse.GLpos.y,0);
 	glEnd();
     }

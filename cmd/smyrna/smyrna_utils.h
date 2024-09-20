@@ -21,4 +21,4 @@ extern float getAttrFloat(Agraph_t* g,void* obj,char* attr_name,float def);
 extern char* getAttrStr(Agraph_t* g,void* obj,char* attr_name,char* def);
 extern void getcolorfromschema(colorschemaset * sc, float l, float maxl,glCompColor * c);
 extern glCompPoint getPointFromStr(const char *str);
-extern int point_in_polygon(glCompPoly* selPoly,glCompPoint p);
+extern int point_in_polygon(glCompPoly_t *selPoly, glCompPoint p);
