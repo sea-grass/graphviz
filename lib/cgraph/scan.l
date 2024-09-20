@@ -46,19 +46,6 @@ static Agdisc_t	*Disc;
 static void 	*Ifile;
 static int graphType;
 
-  /* Reset line number */
-void agreadline(int n) { line_num = n; }
-
-  /* (Re)set file:
-   */
-void agsetfile(const char* f) { InputFile = f; line_num = 1; }
-
-/* There is a hole here, because switching channels
- * requires pushing back whatever was previously read.
- * There probably is a right way of doing this.
- */
-void aglexinit(Agdisc_t *disc, void *ifile) { Disc = disc; Ifile = ifile; graphType = 0;}
-
 /* By default, Flex calls isatty() to determine whether the input it is
  * scanning is coming from the user typing or from a file. However, our input
  * is being provided by Graphviz' I/O channel mechanism, which does not have a
@@ -76,99 +63,31 @@ int gv_isatty_suppression;
 /* buffer for arbitrary length strings (longer than BUFSIZ) */
 static agxbuf Sbuf;
 
-static void beginstr(void) {
-  // nothing required, but we should not have pending string data
-  assert(agxblen(&Sbuf) == 0 &&
-         "pending string data that was not consumed (missing "
-         "endstr()/endhtmlstr()?)");
-}
-
-static void addstr(char *src) {
-  agxbput(&Sbuf, src);
-}
-
-static void endstr(void) {
-  aaglval.str = agstrdup(Ag_G_global, agxbuse(&Sbuf));
-}
-
-static void endstr_html(void) {
-  aaglval.str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
-}
-
-static void storeFileName(char* fname, size_t len) {
-    static size_t cnt;
-    static char* buf;
-
-    if (len > cnt) {
-	buf = gv_realloc(buf, cnt + 1, len + 1);
-	cnt = len;
-    }
-    strcpy (buf, fname);
-    InputFile = buf;
-}
+static void beginstr(void);
+static void addstr(char *src);
+static void endstr(void);
+static void endstr_html(void);
+static void storeFileName(char* fname, size_t len);
 
 /* ppDirective:
  * Process a possible preprocessor line directive.
  * aagtext = #.*
  */
-static void ppDirective (void)
-{
-    int r, cnt, lineno;
-    char buf[2];
-    char* s = aagtext + 1;  /* skip initial # */
-
-    if (startswith(s, "line")) s += strlen("line");
-    r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
-    if (r > 0) { /* got line number */
-	// ignore if line number was out of range
-	if (lineno <= 0) {
-	    return;
-	}
-	line_num = lineno - 1;
-	if (r > 1) { /* saw quote */
-	    char* p = s + cnt;
-	    char* e = p;
-	    while (*e && *e != '"') e++;
-	    if (e != p && *e == '"') {
- 		*e = '\0';
-		storeFileName(p, (size_t)(e - p));
-	    }
-	}
-    }
-}
+static void ppDirective (void);
 
 /* twoDots:
  * Return true if token has more than one '.';
  * we know the last character is a '.'.
  */
-static bool twoDots(void) {
-  const char *dot = strchr(aagtext, '.');
-  // was there a dot and was it not the last character?
-  return dot != NULL && dot != &aagtext[aagleng - 1];
-}
+static bool twoDots(void);
 
 /* chkNum:
  * The regexp for NUMBER allows a terminating letter or '.'.
  * This way we can catch a number immediately followed by a name
  * or something like 123.456.78, and report this to the user.
  */
-static int chkNum(void) {
-    char c = aagtext[aagleng - 1]; // last character
-    if ((!gv_isdigit(c) && c != '.') || (c == '.' && twoDots())) { // c is letter
-	const char* fname;
+static int chkNum(void);
 
-	if (InputFile)
-	    fname = InputFile;
-	else
-	    fname = "input";
-
-	agwarningf("syntax ambiguity - badly delimited number '%s' in line %d of "
-	  "%s splits into two tokens\n", aagtext, line_num, fname);
-
-	return 1;
-    }
-    else return 0;
-}
 
 /* The LETTER class below consists of ascii letters, underscore, all non-ascii
  * characters. This allows identifiers to have characters from any
@@ -275,3 +194,111 @@ int aagwrap(YY_CALL_ONLY_ARG)
 	return 1;
 }
 
+
+  /* Reset line number */
+void agreadline(int n) { line_num = n; }
+
+  /* (Re)set file:
+   */
+void agsetfile(const char* f) { InputFile = f; line_num = 1; }
+
+/* There is a hole here, because switching channels
+ * requires pushing back whatever was previously read.
+ * There probably is a right way of doing this.
+ */
+void aglexinit(Agdisc_t *disc, void *ifile) { Disc = disc; Ifile = ifile; graphType = 0;}
+
+
+static void beginstr(void) {
+  // nothing required, but we should not have pending string data
+  assert(agxblen(&Sbuf) == 0 &&
+         "pending string data that was not consumed (missing "
+         "endstr()/endhtmlstr()?)");
+}
+
+static void addstr(char *src) {
+  agxbput(&Sbuf, src);
+}
+
+static void endstr(void) {
+  aaglval.str = agstrdup(Ag_G_global, agxbuse(&Sbuf));
+}
+
+static void endstr_html(void) {
+  aaglval.str = agstrdup_html(Ag_G_global, agxbuse(&Sbuf));
+}
+
+static void storeFileName(char* fname, size_t len) {
+    static size_t cnt;
+    static char* buf;
+
+    if (len > cnt) {
+	buf = gv_realloc(buf, cnt + 1, len + 1);
+	cnt = len;
+    }
+    strcpy (buf, fname);
+    InputFile = buf;
+}
+
+/* ppDirective:
+ * Process a possible preprocessor line directive.
+ * aagtext = #.*
+ */
+static void ppDirective (void)
+{
+    int r, cnt, lineno;
+    char buf[2];
+    char* s = aagtext + 1;  /* skip initial # */
+
+    if (startswith(s, "line")) s += strlen("line");
+    r = sscanf(s, "%d %1[\"]%n", &lineno, buf, &cnt);
+    if (r > 0) { /* got line number */
+	// ignore if line number was out of range
+	if (lineno <= 0) {
+	    return;
+	}
+	line_num = lineno - 1;
+	if (r > 1) { /* saw quote */
+	    char* p = s + cnt;
+	    char* e = p;
+	    while (*e && *e != '"') e++;
+	    if (e != p && *e == '"') {
+ 		*e = '\0';
+		storeFileName(p, (size_t)(e - p));
+	    }
+	}
+    }
+}
+
+/* twoDots:
+ * Return true if token has more than one '.';
+ * we know the last character is a '.'.
+ */
+static bool twoDots(void) {
+  const char *dot = strchr(aagtext, '.');
+  // was there a dot and was it not the last character?
+  return dot != NULL && dot != &aagtext[aagleng - 1];
+}
+
+/* chkNum:
+ * The regexp for NUMBER allows a terminating letter or '.'.
+ * This way we can catch a number immediately followed by a name
+ * or something like 123.456.78, and report this to the user.
+ */
+static int chkNum(void) {
+    char c = aagtext[aagleng - 1]; // last character
+    if ((!gv_isdigit(c) && c != '.') || (c == '.' && twoDots())) { // c is letter
+	const char* fname;
+
+	if (InputFile)
+	    fname = InputFile;
+	else
+	    fname = "input";
+
+	agwarningf("syntax ambiguity - badly delimited number '%s' in line %d of "
+	  "%s splits into two tokens\n", aagtext, line_num, fname);
+
+	return 1;
+    }
+    else return 0;
+}
