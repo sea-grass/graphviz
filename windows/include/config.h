@@ -108,9 +108,6 @@
 /* Define to 1 if you have the `pango_fc_font_lock_face' function. */
 /* #undef HAVE_PANGO_FC_FONT_LOCK_FACE */
 
-/* Define if you have the rsvg library */
-#define HAVE_RSVG 1
-
 /* Define to 1 if you have the <search.h> header file. */
 #define HAVE_SEARCH_H 1
 
