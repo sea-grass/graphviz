@@ -135,31 +135,29 @@ void glCompDrawText(glCompFont f, float x, float y) {
 }
 
 /*text rendering functions, depends on a globject to retrieve stats*/
-void glCompRenderText(glCompFont * f, glCompObj * parentObj)
-{
-    if (!f->tex)
+void glCompRenderText(glCompFont f, glCompObj *parentObj) {
+    if (!f.tex)
 	return;
     float x = 0;
     float y = 0;
     glCompCommon ref = parentObj->common;
-    switch (f->justify.HJustify) 
-    {
+    switch (f.justify.HJustify) {
     case glFontHJustifyNone:
 	x = ref.refPos.x;
 	break;
     case glFontHJustifyCenter:
-	x = ref.refPos.x + (ref.width - (float)f->tex->width) / 2.0f;
+	x = ref.refPos.x + (ref.width - (float)f.tex->width) / 2.0f;
 	break;
     }
-    switch (f->justify.VJustify) {
+    switch (f.justify.VJustify) {
     case glFontVJustifyNone:
 	y = ref.pos.y;
 	break;
     case glFontVJustifyCenter:
-	y = ref.refPos.y + (ref.height - (float)f->tex->height) / 2.0f;
+	y = ref.refPos.y + (ref.height - (float)f.tex->height) / 2.0f;
 	break;
     }
 
-    glCompSetColor(f->color);
-    glCompDrawText(*f, x, y);
+    glCompSetColor(f.color);
+    glCompDrawText(f, x, y);
 }
