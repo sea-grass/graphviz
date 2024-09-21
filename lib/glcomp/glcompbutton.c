@@ -51,6 +51,7 @@ glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
     p->base.common.functions.mouseup = glCompButtonMouseUp;
 
     /*caption */
+    glDeleteFont(&p->base.common.font);
     p->base.common.font = glNewFontFromParent(&p->base, NULL);
     p->label = glCompLabelNew(p, caption);
     p->label->base.common.font.justify.VJustify = glFontVJustifyCenter;
