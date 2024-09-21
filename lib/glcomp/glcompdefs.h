@@ -192,7 +192,7 @@ typedef struct glCompSet_ glCompSet;
 	glCompSet *compset; ///< compset
 	void *parent;		/*parent widget */
 	int data;
-	glCompFont *font;	//pointer to font to use
+	glCompFont font; ///< font to use
 	glCompAlignment align;
 	glCompAnchor anchor;
 	int layer;		/*keep track of object order, what to draw on top */

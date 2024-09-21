@@ -29,7 +29,7 @@ static void glCompLabelDraw(void *label) {
     glVertex3d(ref.refPos.x, ref.refPos.y + ref.height, ref.refPos.z);
     glEnd();
   }
-  glCompRenderText(*p->base.common.font, &p->base);
+  glCompRenderText(p->base.common.font, &p->base);
 }
 
 glCompLabel *glCompLabelNew(void *par, char *text) {

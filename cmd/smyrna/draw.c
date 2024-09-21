@@ -341,8 +341,7 @@ static void EmbedText(sdot_op* o, int param)
 			UNREACHABLE();
 	}
 	y=o->op.u.text.y;
-	if (!o->font)
-	{
+	if (o->font.fontdesc == NULL) {
 		// allocate a buffer large enough to hold the maximum escaped version of the
 		// text
 		char *escaped = calloc(sizeof(char), strlen(o->op.u.text.text) *
@@ -361,7 +360,7 @@ static void EmbedText(sdot_op* o, int param)
 
 		free(escaped);
 	}
-	glCompDrawText3D(*o->font, x, y, view->Topview->global_z, o->op.u.text.width,
+	glCompDrawText3D(o->font, x, y, view->Topview->global_z, o->op.u.text.width,
 	                 font_op->op.u.font.size);
 }
 

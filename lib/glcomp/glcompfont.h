@@ -26,9 +26,9 @@ extern "C" {
 
     void glprintfglut(void *font, float xpos, float ypos, float zpos, char *bf);
 
-    glCompFont *glNewFont(glCompSet * s, char *text, glCompColor * c,
-                          char *fontdesc, int fs, bool is2D);
-    glCompFont *glNewFontFromParent(glCompObj * o, char *text);
+glCompFont glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
+                     int fs, bool is2D);
+glCompFont glNewFontFromParent(glCompObj *o, char *text);
     void glDeleteFont(glCompFont * f);
 void glCompDrawText(glCompFont f, float x, float y);
 void glCompRenderText(glCompFont f, glCompObj *parentObj);

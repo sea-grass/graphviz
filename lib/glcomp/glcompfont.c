@@ -40,61 +40,57 @@ void glDeleteFont(glCompFont * f)
     free(f->fontdesc);
     if (f->tex)
 	glCompDeleteTexture(f->tex);
-    free(f);
-
+    *f = (glCompFont){0};
 }
 
-glCompFont *glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
-                      int fs, bool is2D) {
-    glCompFont *font = gv_alloc(sizeof(glCompFont));
-    font->color.R = c->R;
-    font->color.G = c->G;
-    font->color.B = c->B;
-    font->color.A = c->A;
-    font->justify.VJustify = glFontVJustifyNone;
-    font->justify.HJustify = glFontHJustifyNone;
-    font->is2D=is2D;
+glCompFont glNewFont(glCompSet *s, char *text, glCompColor *c, char *fontdesc,
+                     int fs, bool is2D) {
+    glCompFont font = {0};
+    font.color.R = c->R;
+    font.color.G = c->G;
+    font.color.B = c->B;
+    font.color.A = c->A;
+    font.justify.VJustify = glFontVJustifyNone;
+    font.justify.HJustify = glFontHJustifyNone;
+    font.is2D = is2D;
 
-    font->glutfont = NULL;
+    font.glutfont = NULL;
 
-    font->fontdesc = gv_strdup(fontdesc);
-    font->size = fs;
-    font->transparent = 1;
+    font.fontdesc = gv_strdup(fontdesc);
+    font.size = fs;
+    font.transparent = 1;
     if (text)
-	font->tex =
-	    glCompSetAddNewTexLabel(s, font->fontdesc, font->size, text,
+	font.tex =
+	    glCompSetAddNewTexLabel(s, font.fontdesc, font.size, text,
 				    is2D);
     return font;
 
 }
 
-
-
-glCompFont *glNewFontFromParent(glCompObj * o, char *text)
-{
+glCompFont glNewFontFromParent(glCompObj *o, char *text) {
     glCompCommon *parent;
-    glCompFont *font = gv_alloc(sizeof(glCompFont));
+    glCompFont font = {0};
     parent = o->common.parent;
     if (parent) {
 	parent = o->common.parent;
-	font->color.R = parent->font->color.R;
-	font->color.G = parent->font->color.G;
-	font->color.B = parent->font->color.B;
-	font->color.A = parent->font->color.A;
+	font.color.R = parent->font.color.R;
+	font.color.G = parent->font.color.G;
+	font.color.B = parent->font.color.B;
+	font.color.A = parent->font.color.A;
 
-	font->glutfont = parent->font->glutfont;
-	font->fontdesc = gv_strdup(parent->font->fontdesc);
-	font->size = parent->font->size;
-	font->transparent = parent->font->transparent;
-	font->justify.VJustify = parent->font->justify.VJustify;
-	font->justify.HJustify = parent->font->justify.HJustify;
-	font->is2D=parent->font->is2D;
+	font.glutfont = parent->font.glutfont;
+	font.fontdesc = gv_strdup(parent->font.fontdesc);
+	font.size = parent->font.size;
+	font.transparent = parent->font.transparent;
+	font.justify.VJustify = parent->font.justify.VJustify;
+	font.justify.HJustify = parent->font.justify.HJustify;
+	font.is2D = parent->font.is2D;
 	if (text) {
 	    if (strlen(text))
-		font->tex =
+		font.tex =
 		    glCompSetAddNewTexLabel(parent->compset,
-					    font->fontdesc, font->size,
-					    text, parent->font->is2D);
+					    font.fontdesc, font.size,
+					    text, parent->font.is2D);
 	}
     } else {			/*no parent */
 
