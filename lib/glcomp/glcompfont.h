@@ -30,7 +30,7 @@ extern "C" {
                           char *fontdesc, int fs, bool is2D);
     glCompFont *glNewFontFromParent(glCompObj * o, char *text);
     void glDeleteFont(glCompFont * f);
-    void glCompDrawText(glCompFont * f,float x,float y);
+void glCompDrawText(glCompFont f, float x, float y);
     void glCompRenderText(glCompFont * f, glCompObj * parentObj);
     void glCompDrawText3D(glCompFont *f, float x, float y, double z,
                           float w, float h);

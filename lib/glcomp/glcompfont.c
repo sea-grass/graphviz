@@ -129,9 +129,9 @@ void glCompDrawText3D(glCompFont *f, float x, float y, double z, float w,
 
 }
 
-void glCompDrawText(glCompFont *f, float x, float y) {
+void glCompDrawText(glCompFont f, float x, float y) {
     glRasterPos2f(x, y);
-    glDrawPixels(f->tex->width, f->tex->height, GL_RGBA, GL_UNSIGNED_BYTE,  f->tex->data);
+    glDrawPixels(f.tex->width, f.tex->height, GL_RGBA, GL_UNSIGNED_BYTE,  f.tex->data);
 }
 
 /*text rendering functions, depends on a globject to retrieve stats*/
@@ -161,6 +161,5 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
     }
 
     glCompSetColor(f->color);
-		glCompDrawText(f,x,y);
-
+    glCompDrawText(*f, x, y);
 }
