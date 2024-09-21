@@ -158,7 +158,6 @@ DEFINE_LIST(glCompPoly, glCompPoint)
 	int transparent;
 	glCompTex *tex;		/* texture, if type is pangotext */
 	int size;
-	int reference;		/*if font has references to parent */
 	glCompJustify justify;
 	bool is2D;
     } glCompFont;
