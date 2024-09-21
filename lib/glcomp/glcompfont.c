@@ -160,7 +160,7 @@ void glCompRenderText(glCompFont * f, glCompObj * parentObj)
 	break;
     }
 
-    glCompSetColor(&f->color);
+    glCompSetColor(f->color);
 		glCompDrawText(f,x,y);
 
 }
