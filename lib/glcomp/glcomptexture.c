@@ -93,11 +93,10 @@ glCompTex *glCompSetAddNewTexImage(glCompSet *s, int width, int height,
 
 glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
                                    bool is2D) {
-    int Er, width, height;
+    int width, height;
     glCompTex *t;
     cairo_surface_t *surface = NULL;
     unsigned char *data = NULL;
-    Er = 0;
     if (!def)
 	return NULL;
     /*first check if the same label with same font def created before
@@ -120,11 +119,8 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
     if (!data)			/*pango error , */
 	return NULL;
     t = glCompSetAddNewTexture(s, width, height, data, is2D);
-    if (!t)
-	Er = 1;
     cairo_surface_destroy(surface);
-
-    if (Er) {
+    if (!t) {
 	free(data);
 	free(t);
 	return NULL;
