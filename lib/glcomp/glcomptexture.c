@@ -14,6 +14,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <util/alloc.h>
+#include <util/streq.h>
 
 static glCompTex *glCompSetAddNewTexture(glCompSet *s, int width, int height,
                                          const unsigned char *data, bool is2D) {
@@ -104,9 +105,9 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
      */
     for (size_t ind = 0; ind < s->textureCount; ind++) {
 	if (s->textures[ind]->type == glTexLabel) {
-	    if (strcmp(def, s->textures[ind]->def) == 0
+	    if (streq(def, s->textures[ind]->def)
 		&& s->textures[ind]->type == glTexLabel
-		&& strcmp(text, s->textures[ind]->text) == 0
+		&& streq(text, s->textures[ind]->text)
 		&& s->textures[ind]->fontSize==fs) {
 		s->textures[ind]->userCount++;
 		return s->textures[ind];
