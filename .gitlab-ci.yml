@@ -542,7 +542,7 @@ ubuntu-20.04-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
@@ -564,7 +564,7 @@ ubuntu-22.04-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
@@ -585,7 +585,7 @@ ubuntu-24.04-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
     tags:
         - saas-linux-small-amd64
@@ -601,7 +601,7 @@ ubuntu-22.04-cmake-minimal-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS=""
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=OFF"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=OFF"
@@ -669,7 +669,7 @@ rocky8-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=missing-braces"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
+        - export CXXFLAGS="-Werror -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
@@ -688,7 +688,7 @@ rocky9-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=missing-braces"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
+        - export CXXFLAGS="-Werror -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_GVEDIT=ON"
@@ -707,7 +707,7 @@ fedora39-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
@@ -727,7 +727,7 @@ fedora40-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
@@ -744,7 +744,7 @@ macos-cmake-build:
         - export build_system="cmake"
         # fail on any compiler warnings
         - export CFLAGS="-Werror -Wno-error=implicit-fallthrough"
-        - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CXXFLAGS="-Werror"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
@@ -819,7 +819,7 @@ windows-mingw32-cmake-build:
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
-        - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror"
         - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -842,7 +842,7 @@ windows-mingw64-cmake-build:
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
-        - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror"
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
         when: always
@@ -865,7 +865,7 @@ windows-mingw64-cmake-release-build:
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror"
-        - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror"
         - $Env:CMAKE_OPTIONS = "-DCMAKE_BUILD_TYPE=Release"
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     tags:
@@ -885,7 +885,7 @@ windows-cygwin-cmake-build:
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
         - $Env:CFLAGS = "-Werror -Wno-error=implicit-fallthrough"
-        - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CXXFLAGS = "-Werror"
         # change line endings from crlf to lf
         - C:\cygwin64\bin\sed -i 's/\r//g' ci/*.sh lib/common/color_names lib/common/brewer_colors lib/common/svgcolor_names
         - C:\cygwin64\bin\bash -l -c 'cd $CI_PROJECT_DIR && ci/cygwin-build.sh'
