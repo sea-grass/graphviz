@@ -8,9 +8,11 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
+#include <common/render.h>
+#include <common/utils.h>
 #include <stdbool.h>
-#include <stdlib.h>
-#include <sys/stat.h>
+#include <stddef.h>
 
 #include <gvc/gvplugin_loadimage.h>
 
@@ -27,18 +29,13 @@ typedef enum {
 
 static void gvloadimage_rsvg_free(usershape_t *us)
 {
-    rsvg_handle_close(us->data, NULL);
+  g_object_unref(us->data);
 }
 
 static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 {
     RsvgHandle* rsvgh = NULL;
-    unsigned char *fileBuf = NULL;
     GError *err = NULL;
-    size_t fileSize;
-
-    int fd;
-    struct stat stbuf;
 
     assert(job);
     assert(us);
@@ -58,46 +55,22 @@ static RsvgHandle* gvloadimage_rsvg_load(GVJ_t * job, usershape_t *us)
 	if (!gvusershape_file_access(us))
 	    return NULL;
         switch (us->type) {
-            case FT_SVG:
-      		rsvgh = rsvg_handle_new();
+            case FT_SVG: {
+      		const char *const safe_path = safefile(us->name);
+      		assert(safe_path != NULL &&
+      		       "gvusershape_file_access did not validate file path");
+      		rsvgh = rsvg_handle_new_from_file(safe_path, &err);
 		
 		if (rsvgh == NULL) {
 			fprintf(stderr, "rsvg_handle_new_from_file returned an error: %s\n", err->message);
+			g_error_free(err);
 			return NULL;
 		} 
 
-	 	fd = fileno(us->f);
-		fstat(fd, &stbuf);
-  		fileSize = (size_t)stbuf.st_size;	
-
-		fileBuf = calloc(fileSize + 1, sizeof(unsigned char));
-
-		if (fileBuf == NULL) {
-			g_object_unref(rsvgh);
-			return NULL;
-		}
-	
-		rewind(us->f);
-
-		if (fread(fileBuf, 1, fileSize, us->f) < fileSize) {
-			free(fileBuf);
-			g_object_unref(rsvgh);
-			return NULL;
-		}
-
-		if (!rsvg_handle_write(rsvgh, fileBuf, (gsize)fileSize, &err)) {
-			fprintf(stderr, "rsvg_handle_write returned an error: %s\n", err->message);
-			free(fileBuf);
-			g_object_unref(rsvgh);
-			return NULL;
-		} 
-
-		free(fileBuf);
-
-		rsvg_handle_close(rsvgh, &err);
 		rsvg_handle_set_dpi(rsvgh, POINTS_PER_INCH);
 
                 break;
+            }
             default:
                 rsvgh = NULL;
         }

@@ -73,7 +73,7 @@ static usershape_t *user_init(const char *str)
 	us->macro_id = N_EPSF_files++;
 	fstat(fileno(fp), &statbuf);
 	char *contents = us->data = gv_calloc((size_t)statbuf.st_size + 1, sizeof(char));
-	fseek(fp, 0, SEEK_SET);
+	rewind(fp);
 	size_t rc = fread(contents, (size_t)statbuf.st_size, 1, fp);
 	if (rc == 1) {
             contents[statbuf.st_size] = '\0';

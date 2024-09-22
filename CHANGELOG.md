@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - In the Autotools build system, the rsvg plugin is no longer built when
   pangocairo is missing. Previously, when librsvg was found but pangocairo was
   not, this plugin would be enabled and built but offer no functionality.
+- The RSVG plugin now requires librsvg ≥ 2.42.7.
 
 ### Fixed
 
@@ -18,6 +19,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   support is unavailable has been corrected to properly enable use of libANN.
   This primarily affects `mingle` users on Debian-based operating systems or
   macOS.
+- The RSVG plugin no longer dereferences a null pointer when failing to create
+  new RSVG handles.
 
 ## [12.1.1] – 2024-09-09
 

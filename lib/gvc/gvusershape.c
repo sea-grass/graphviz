@@ -235,7 +235,7 @@ static void svg_size (usershape_t *us)
     bool eof = false;
     bool wFlag = false, hFlag = false;
 
-    fseek(us->f, 0, SEEK_SET);
+    rewind(us->f);
     while (!eof && (!wFlag || !hFlag)) {
 	// read next line
 	while (true) {
@@ -457,7 +457,7 @@ static void ps_size (usershape_t *us)
     char* linep;
 
     us->dpi = 72;
-    fseek(us->f, 0, SEEK_SET);
+    rewind(us->f);
     bool saw_bb = false;
     while (fgets(line, sizeof(line), us->f)) {
 	/* PostScript accepts \r as EOL, so using fgets () and looking for a
@@ -581,7 +581,7 @@ static void pdf_size (usershape_t *us)
     boxf bb;
 
     us->dpi = 0;
-    fseek(us->f, 0, SEEK_SET);
+    rewind(us->f);
     if ( ! bboxPDF (us->f, &bb)) {
 	us->x = bb.LL.x;
 	us->y = bb.LL.y;
@@ -631,7 +631,7 @@ bool gvusershape_file_access(usershape_t *us)
     assert(us->name[0]);
 
     if (us->f)
-	fseek(us->f, 0, SEEK_SET);
+	rewind(us->f);
     else {
         if (! (fn = safefile(us->name))) {
 	    agwarningf("Filename \"%s\" is unsafe\n", us->name);
