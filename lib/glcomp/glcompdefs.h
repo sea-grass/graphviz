@@ -140,8 +140,8 @@ DEFINE_LIST(glCompPoly, glCompPoint)
 	uint32_t id;
 	char *def;
 	char *text;
-	float width;
-	float height;
+	int width;
+	int height;
 	glCompTexType type;
 	int userCount;
 	int fontSize;
