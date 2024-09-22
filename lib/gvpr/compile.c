@@ -2308,14 +2308,14 @@ static void checkGuard(Exnode_t * gp, char *src, int line)
 
 /* mkStmts:
  */
-static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
-                          size_t cnt, const char *lbl)
-{
+static case_stmt *mkStmts(Expr_t *prog, char *src, case_infos_t cases,
+                          const char *lbl) {
     agxbuf tmp = {0};
 
-    case_stmt *cs = gv_calloc(cnt, sizeof(case_stmt));
+    case_stmt *cs = gv_calloc(case_infos_size(&cases), sizeof(case_stmt));
 
-    for (size_t i = 0; i < cnt; i++) {
+    for (size_t i = 0; i < case_infos_size(&cases); i++) {
+	case_info *sp = case_infos_at(&cases, i);
 	if (sp->guard) {
 	    agxbprint(&tmp, "%s_g%" PRISIZE_T, lbl, i);
 	    cs[i].guard = compile(prog, src, sp->guard, sp->gstart, agxbuse(&tmp), 0,
@@ -2339,7 +2339,6 @@ static case_stmt *mkStmts(Expr_t * prog, char *src, case_info * sp,
 		                       INTEGER);
 	    }
 	}
-	sp = sp->next;
     }
     agxbfree(&tmp);
     return cs;
@@ -2365,15 +2364,14 @@ static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
     }
 
     codePhase = 2;
-    if (inp->node_stmts) {
+    if (!case_infos_is_empty(&inp->node_stmts)) {
 	static const char PREFIX[] = "_nd";
 	agxbuf label = {0};
 	symbols[0].type = T_node;
 	tchk[V_this][1] = Y(V);
-	bp->n_nstmts = inp->n_nstmts;
+	bp->n_nstmts = case_infos_size(&inp->node_stmts);
 	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
-	bp->node_stmts = mkStmts(prog, src, inp->node_stmts, inp->n_nstmts,
-	                         agxbuse(&label));
+	bp->node_stmts = mkStmts(prog, src, inp->node_stmts, agxbuse(&label));
 	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
@@ -2381,15 +2379,14 @@ static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
     }
 
     codePhase = 3;
-    if (inp->edge_stmts) {
+    if (!case_infos_is_empty(&inp->edge_stmts)) {
 	static const char PREFIX[] = "_eg";
 	agxbuf label = {0};
 	symbols[0].type = T_edge;
 	tchk[V_this][1] = Y(E);
-	bp->n_estmts = inp->n_estmts;
+	bp->n_estmts = case_infos_size(&inp->edge_stmts);
 	agxbprint(&label, "%s%" PRISIZE_T, PREFIX, i);
-	bp->edge_stmts = mkStmts(prog, src, inp->edge_stmts, inp->n_estmts,
-	                         agxbuse(&label));
+	bp->edge_stmts = mkStmts(prog, src, inp->edge_stmts, agxbuse(&label));
 	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;

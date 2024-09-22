@@ -376,14 +376,11 @@ static case_t parseCase(FILE *str, char **guard, int *gline, char **action,
  * return new item as tail
  */
 static void addBlock(parse_blocks_t *list, char *stmt, int line,
-                     size_t n_nstmts, case_info *nodelist, size_t n_estmts,
-                     case_info *edgelist) {
+                     case_infos_t nodelist, case_infos_t edgelist) {
     parse_block item = {0};
 
     item.l_beging = line;
     item.begg_stmt = stmt;
-    item.n_nstmts = n_nstmts;
-    item.n_estmts = n_estmts;
     item.node_stmts = nodelist;
     item.edge_stmts = edgelist;
 
@@ -392,30 +389,22 @@ static void addBlock(parse_blocks_t *list, char *stmt, int line,
 
 /* addCase:
  * create new case_info and append to list;
- * return new item as tail
  */
-static case_info *addCase(case_info * last, char *guard, int gline,
-                          char *action, int line, size_t *cnt) {
+static void addCase(case_infos_t *list, char *guard, int gline, char *action,
+                    int line) {
     if (!guard && !action) {
 	error(ERROR_WARNING,
 	      "Case with neither guard nor action, line %d - ignored", kwLine);
-	return last;
+	return;
     }
 
-    ++(*cnt);
-    case_info *item = gv_alloc(sizeof(case_info));
-    item->guard = guard;
-    item->action = action;
-    item->next = NULL;
+    case_info item = {.guard = guard, .action = action};
     if (guard)
-	item->gstart = gline;
+	item.gstart = gline;
     if (action)
-	item->astart = line;
+	item.astart = line;
 
-    if (last)
-	last->next = item;
-
-    return item;
+    case_infos_append(list, item);
 }
 
 /* bindAction:
@@ -446,12 +435,8 @@ parse_prog *parseProg(char *input, int isFile)
     char *action = NULL;
     bool more;
     parse_blocks_t blocklist = {0};
-    case_info *edgelist = NULL;
-    case_info *nodelist = NULL;
-    case_info *edgel = NULL;
-    case_info *nodel = NULL;
-    size_t n_nstmts = 0;
-    size_t n_estmts = 0;
+    case_infos_t edgelist = {0};
+    case_infos_t nodelist = {0};
     int line = 0, gline = 0;
     int l_beging = 0;
     char *begg_stmt;
@@ -494,13 +479,13 @@ parse_prog *parseProg(char *input, int isFile)
 	    bindAction(Begin, action, line, &prog->begin_stmt, &prog->l_begin);
 	    break;
 	case BeginG:
-	    if (action && (begg_stmt || nodelist || edgelist)) { /* non-empty block */
-		addBlock(&blocklist, begg_stmt, l_beging, n_nstmts, nodelist, n_estmts,
-		         edgelist);
+	    if (action && (begg_stmt || !case_infos_is_empty(&nodelist) ||
+	        !case_infos_is_empty(&edgelist))) { // non-empty block
+		addBlock(&blocklist, begg_stmt, l_beging, nodelist, edgelist);
 
 		/* reset values */
-		n_nstmts = n_estmts = 0;
-		edgel = nodel = edgelist = nodelist = NULL;
+		edgelist = (case_infos_t){0};
+		nodelist = (case_infos_t){0};
 		begg_stmt = NULL;
 	    }
 	    bindAction(BeginG, action, line, &begg_stmt, &l_beging);
@@ -515,14 +500,10 @@ parse_prog *parseProg(char *input, int isFile)
 	    more = false;
 	    break;
 	case Node:
-	    nodel = addCase(nodel, guard, gline, action, line, &n_nstmts);
-	    if (!nodelist)
-		nodelist = nodel;
+	    addCase(&nodelist, guard, gline, action, line);
 	    break;
 	case Edge:
-	    edgel = addCase(edgel, guard, gline, action, line, &n_estmts);
-	    if (!edgelist)
-		edgelist = edgel;
+	    addCase(&edgelist, guard, gline, action, line);
 	    break;
 	case Error:		/* to silence warnings */
 	    more = false;
@@ -532,9 +513,9 @@ parse_prog *parseProg(char *input, int isFile)
 	}
     }
 
-    if (begg_stmt || nodelist || edgelist) { /* non-empty block */
-	addBlock(&blocklist, begg_stmt, l_beging, n_nstmts, nodelist, n_estmts,
-	         edgelist);
+    if (begg_stmt || !case_infos_is_empty(&nodelist) ||
+        !case_infos_is_empty(&edgelist)) { // non-empty block
+	addBlock(&blocklist, begg_stmt, l_beging, nodelist, edgelist);
     }
 
     prog->blocks = blocklist;
@@ -549,25 +530,12 @@ parse_prog *parseProg(char *input, int isFile)
     return prog;
 }
 
-static void
-freeCaseList (case_info* ip)
-{
-    case_info* nxt;
-    while (ip) {
-	nxt = ip->next;
-	free (ip->guard);
-	free (ip->action);
-	free (ip);
-	ip = nxt;
-    }
-}
-
 static void freeBlocks(parse_blocks_t *ip) {
     for (size_t i = 0; i < parse_blocks_size(ip); ++i) {
 	parse_block p = parse_blocks_get(ip, i);
 	free(p.begg_stmt);
-	freeCaseList(p.node_stmts);
-	freeCaseList(p.edge_stmts);
+	case_infos_free(&p.node_stmts);
+	case_infos_free(&p.edge_stmts);
     }
     parse_blocks_free(ip);
 }
