@@ -76,7 +76,7 @@ def main(args: List[str]) -> int:
     )
     options = parser.parse_args(args[1:])
 
-    options.output.write("static hsvrgbacolor_t color_lib[] = {\n")
+    options.output.write("static const hsvrgbacolor_t color_lib[] = {\n")
 
     # collect all color entries
     entries = (
