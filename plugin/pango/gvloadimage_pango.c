@@ -109,7 +109,7 @@ static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled
     cairo_surface_t *surface; 	/* source surface */
     cairo_format_t format;
     int X, Y, x, y, stride;
-    unsigned char *data, *ix;
+    unsigned char *data;
 
     // suppress unused parameter warning
     (void)filled;
@@ -133,7 +133,7 @@ static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled
         gvputs(job, "/myarray [\n");
         for (y = 0; y < Y; y++) {
 	    gvputs(job, "<");
-	    ix = data + y * stride;
+	    const unsigned char *ix = data + y * stride;
             for (x = 0; x < X; x++) {
 		uint32_t rgba;
 		memcpy(&rgba, ix, sizeof(rgba));
