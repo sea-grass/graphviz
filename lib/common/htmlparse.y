@@ -31,11 +31,6 @@
 #include <common/htmltable.h>
 #include <common/textspan.h>
 #include <gvc/gvcext.h>
-
-
-#ifdef HAVE_EXPAT
-struct XML_ParserStruct;
-#endif
 }
 
 %code provides {
