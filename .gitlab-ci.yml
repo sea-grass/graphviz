@@ -541,7 +541,7 @@ ubuntu-20.04-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
@@ -563,7 +563,7 @@ ubuntu-22.04-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
@@ -584,7 +584,7 @@ ubuntu-24.04-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
     tags:
@@ -600,7 +600,7 @@ ubuntu-22.04-cmake-minimal-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS=""
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=OFF"
@@ -626,9 +626,9 @@ ubuntu-24.04-cmake-ASan-build-and-test-including-ctest:
         - source /opt/virtualenv/bin/activate
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
         - export CXXFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -DBOOST_ALLOW_DEPRECATED_HEADERS"
-        - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror -Wno-error=deprecated-declarations"
+        - export LDFLAGS="-fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=address,undefined -g -Werror"
         - export UBSAN_OPTIONS=print_stacktrace=1
         - export CMAKE_OPTIONS="-Duse_coverage=ON -Dwith_cxx_tests=ON -Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_SMYRNA=ON"
@@ -668,7 +668,7 @@ rocky8-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
+        - export CFLAGS="-Werror -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
@@ -687,7 +687,7 @@ rocky9-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
+        - export CFLAGS="-Werror -Wno-error=missing-braces"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=missing-braces"
         - export CMAKE_OPTIONS="-DENABLE_LTDL=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DWITH_EXPAT=ON"
@@ -706,7 +706,7 @@ fedora39-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
@@ -726,7 +726,7 @@ fedora40-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations"
+        - export CFLAGS="-Werror"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-DWITH_SMYRNA=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
@@ -743,7 +743,7 @@ macos-cmake-build:
     before_script:
         - export build_system="cmake"
         # fail on any compiler warnings
-        - export CFLAGS="-Werror -Wno-error=deprecated-declarations -Wno-error=implicit-fallthrough"
+        - export CFLAGS="-Werror -Wno-error=implicit-fallthrough"
         - export CXXFLAGS="-Werror -Wno-error=deprecated-declarations"
         - export CMAKE_OPTIONS="-Dwith_cxx_api=ON"
         - export CMAKE_OPTIONS="$CMAKE_OPTIONS -DENABLE_LTDL=ON"
@@ -818,7 +818,7 @@ windows-mingw32-cmake-build:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
         - C:\msys64\msys2_shell.cmd -defterm -mingw32 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
@@ -841,7 +841,7 @@ windows-mingw64-cmake-build:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
     artifacts:
@@ -864,7 +864,7 @@ windows-mingw64-cmake-release-build:
         - powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command ci\mingw-prepare.ps1
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror -Wno-error=deprecated-declarations"
+        - $Env:CFLAGS = "-Werror"
         - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
         - $Env:CMAKE_OPTIONS = "-DCMAKE_BUILD_TYPE=Release"
         - C:\msys64\msys2_shell.cmd -defterm -mingw64 -here -no-start -l -c 'cd $CI_PROJECT_DIR && ci/mingw-build.sh'
@@ -884,7 +884,7 @@ windows-cygwin-cmake-build:
         - $Env:Path = "C:\cygwin64\bin;" + $Env:Path
         - $Env:build_system = "cmake"
         # fail on any compiler warnings
-        - $Env:CFLAGS = "-Werror -Wno-error=deprecated-declarations -Wno-error=implicit-fallthrough"
+        - $Env:CFLAGS = "-Werror -Wno-error=implicit-fallthrough"
         - $Env:CXXFLAGS = "-Werror -Wno-error=deprecated-declarations"
         # change line endings from crlf to lf
         - C:\cygwin64\bin\sed -i 's/\r//g' ci/*.sh lib/common/color_names lib/common/brewer_colors lib/common/svgcolor_names

@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   pangocairo is missing. Previously, when librsvg was found but pangocairo was
   not, this plugin would be enabled and built but offer no functionality.
 - The RSVG plugin now requires librsvg ≥ 2.42.7.
+- The RSVG plugin uses newer librsvg APIs where available. #2206
 
 ### Fixed
 

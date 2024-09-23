@@ -105,7 +105,13 @@ static void gvloadimage_rsvg_cairo(GVJ_t * job, usershape_t *us, boxf b, bool fi
         cairo_set_source_surface(cr, surface, 0, 0);
 	cairo_translate(cr, b.LL.x, -b.UR.y);
 	cairo_scale(cr, (b.UR.x - b.LL.x) / us->w, (b.UR.y - b.LL.y) / us->h);
+#if LIBRSVG_MAJOR_VERSION > 2 || (LIBRSVG_MAJOR_VERSION == 2 && LIBRSVG_MINOR_VERSION >= 46)
+	const RsvgRectangle viewport = {.width = b.UR.x - b.LL.x,
+	                                .height = b.UR.y - b.LL.y};
+	rsvg_handle_render_document(rsvgh, cr, &viewport, NULL);
+#else
 	rsvg_handle_render_cairo(rsvgh, cr);
+#endif
 
         cairo_paint (cr);
         cairo_restore(cr);
