@@ -35,7 +35,6 @@
 #include <inttypes.h>
 #include <assert.h>
 #include <cgraph/list.h>
-#include <cgraph/startswith.h>
 #include <common/render.h>
 #include <common/utils.h>
 #include <fdpgen/tlayout.h>

@@ -21,13 +21,13 @@
 #include <limits.h>
 #include <math.h>
 #include <gvc/gvc.h>
-#include <cgraph/startswith.h>
 #include <cgraph/strview.h>
 #include <stddef.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <unistd.h>
 #include <util/alloc.h>
+#include <util/startswith.h>
 #include <util/strcasecmp.h>
 #include <util/streq.h>
 

@@ -31,9 +31,9 @@
 
 #include	<common/const.h>
 #include <cgraph/list.h>
-#include <cgraph/startswith.h>
 #include <cgraph/strview.h>
 #include <util/alloc.h>
+#include <util/startswith.h>
 #include <util/strcasecmp.h>
 
 /*

@@ -9,11 +9,11 @@
 #pragma once
 
 #include <assert.h>
-#include <cgraph/startswith.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 #include <util/alloc.h>
+#include <util/startswith.h>
 #include <util/strcasecmp.h>
 
 /// a non-owning string reference

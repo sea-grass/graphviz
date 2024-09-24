@@ -14,7 +14,6 @@
 #include <cgraph/cgraph.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/list.h>
-#include <cgraph/startswith.h>
 #include <common/render.h>
 #include <common/utils.h>
 #include <pack/pack.h>

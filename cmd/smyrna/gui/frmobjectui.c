@@ -21,12 +21,12 @@
 #include <assert.h>
 #include "gvprpipe.h"
 #include <cgraph/agxbuf.h>
-#include <cgraph/startswith.h>
 #include <cgraph/strview.h>
 #include <stdint.h>
 #include <string.h>
 #include <util/alloc.h>
 #include <util/strcasecmp.h>
+#include <util/startswith.h>
 #include <util/unreachable.h>
 
 static int sel_node;

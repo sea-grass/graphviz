@@ -17,7 +17,6 @@
 #include <cgraph/gv_ctype.h>
 #include <neatogen/neato.h>
 #include <cgraph/agxbuf.h>
-#include <cgraph/startswith.h>
 #include <common/utils.h>
 #include <float.h>
 #include <math.h>
@@ -37,6 +36,7 @@
 #endif
 #include <stddef.h>
 #include <util/alloc.h>
+#include <util/startswith.h>
 #include <util/strcasecmp.h>
 
 #define SEPFACT         0.8 // default esep/sep

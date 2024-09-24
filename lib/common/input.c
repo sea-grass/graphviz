@@ -18,7 +18,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/gv_math.h>
-#include <cgraph/startswith.h>
 #include <limits.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -26,6 +25,7 @@
 #include <util/alloc.h>
 #include <util/exit.h>
 #include <util/gv_fopen.h>
+#include <util/startswith.h>
 #include <util/strcasecmp.h>
 #include <util/streq.h>
 

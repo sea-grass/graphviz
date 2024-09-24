@@ -18,7 +18,6 @@
 #include <cgraph/agxbuf.h>
 #include <cgraph/gv_ctype.h>
 #include <cgraph/list.h>
-#include <cgraph/startswith.h>
 #include <gvc/gvconfig.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -28,6 +27,7 @@
 #include <util/alloc.h>
 #include <util/exit.h>
 #include <util/gv_fopen.h>
+#include <util/startswith.h>
 
 #ifdef ENABLE_LTDL
 #ifdef HAVE_DL_ITERATE_PHDR

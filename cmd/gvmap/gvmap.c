@@ -31,10 +31,10 @@
 #include <neatogen/overlap.h>
 #include <sparse/clustering.h>
 #include <cgraph/ingraphs.h>
-#include <cgraph/startswith.h>
 #include <sparse/DotIO.h>
 #include <sparse/colorutil.h>
 #include <sparse/color_palette.h>
+#include <util/startswith.h>
 #include <util/unreachable.h>
 
 typedef struct {

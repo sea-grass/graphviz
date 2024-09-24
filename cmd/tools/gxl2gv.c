@@ -18,11 +18,11 @@
 #include    <cgraph/agxbuf.h>
 #include    <cgraph/gv_ctype.h>
 #include    <cgraph/list.h>
-#include    <cgraph/startswith.h>
 #include    <stdbool.h>
 #include    <stdio.h>
 #include    <util/alloc.h>
 #include    <util/exit.h>
+#include    <util/startswith.h>
 #include    <util/unreachable.h>
 #ifdef HAVE_EXPAT
 #include    <expat.h>

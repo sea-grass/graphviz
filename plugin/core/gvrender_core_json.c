@@ -22,12 +22,12 @@
 
 #include <gvc/gvplugin_render.h>
 #include <gvc/gvplugin_device.h>
-#include <cgraph/startswith.h>
 #include <common/utils.h>
 #include <gvc/gvc.h>
 #include <gvc/gvio.h>
 #include <gvc/gvcint.h>
 #include <util/alloc.h>
+#include <util/startswith.h>
 #include <util/streq.h>
 #include <util/unreachable.h>
 
