@@ -205,11 +205,8 @@ static void quartzgen_begin_page(GVJ_t * job)
 			if (temp_file_descriptor >= 0
 			    && ftruncate(temp_file_descriptor,
 					 buffer_size) == 0) {
-			    buffer =
-				mmap(NULL, buffer_size,
-				     PROT_READ | PROT_WRITE,
-				     MAP_FILE | MAP_SHARED,
-				     temp_file_descriptor, 0);
+			    buffer = mmap(NULL, buffer_size, PROT_READ | PROT_WRITE,
+			                  MAP_FILE | MAP_PRIVATE, temp_file_descriptor, 0);
 			    if (buffer == MAP_FAILED)
 				buffer = NULL;
 			}
@@ -217,10 +214,8 @@ static void quartzgen_begin_page(GVJ_t * job)
 		    }
 		}
 		if (buffer == NULL) {
-		    buffer = mmap(NULL,
-				  buffer_size,
-				  PROT_READ | PROT_WRITE,
-				  MAP_ANON | MAP_SHARED, -1, 0);
+		    buffer = mmap(NULL, buffer_size, PROT_READ | PROT_WRITE,
+				  MAP_ANON | MAP_PRIVATE, -1, 0);
 		    if (buffer == MAP_FAILED) {
 			buffer = NULL;
 		    }
