@@ -821,8 +821,7 @@ void updateSmGraph(Agraph_t * g,topview* t)
     t->minedgelen=-1;
 
     t->global_z=0;
-    t->sel.selPoly.cnt=0;
-    t->sel.selPoly.pts=NULL;
+    t->sel.selPoly = (glCompPoly_t){0};
 
     if(!t)
 	return ;

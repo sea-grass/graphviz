@@ -10,6 +10,7 @@
 
 #pragma once
 
+#include <cgraph/list.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdint.h>
@@ -120,10 +121,7 @@ extern "C" {
 	float x, y, z;
     } glCompPoint;
 
-    typedef struct {
-	int cnt;
-	glCompPoint* pts;
-    }glCompPoly;
+DEFINE_LIST(glCompPoly, glCompPoint)
 
     typedef struct {
 	float R;

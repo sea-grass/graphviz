@@ -25,4 +25,4 @@
 extern drawfunc_t OpFns[];
 extern void drawCircle(float x, float y, float radius, float zdepth);
 extern void drawBorders(ViewInfo * view);
-extern void draw_selpoly(glCompPoly* selPoly);
+extern void draw_selpoly(glCompPoly_t *selPoly);
