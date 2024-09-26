@@ -219,7 +219,6 @@ struct glCompObj_ {
     typedef struct {
 	glCompObj base;
 	char *text;
-	int transparent;
     } glCompLabel;
 
 /*buttons*/
