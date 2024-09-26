@@ -123,7 +123,6 @@ glCompTex *glCompSetAddNewTexLabel(glCompSet *s, char *def, int fs, char *text,
     cairo_surface_destroy(surface);
     if (!t) {
 	free(data);
-	free(t);
 	return NULL;
     }
 
