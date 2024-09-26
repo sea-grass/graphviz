@@ -212,7 +212,6 @@ struct glCompObj_ {
 	glCompObj base;
 	glCompTex *texture;
 	float width, height;  /* width and height in world coords */
-	/* char *pngFile; */
 	int stretch;
     } glCompImage;
 
