@@ -11,7 +11,9 @@
 #include "config.h"
 
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <gvc/gvplugin_loadimage.h>
 #include <gvc/gvio.h>
@@ -107,7 +109,6 @@ static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled
     cairo_surface_t *surface; 	/* source surface */
     cairo_format_t format;
     int X, Y, x, y, stride;
-    unsigned char *data, *ix, alpha, red, green, blue;
 
     // suppress unused parameter warning
     (void)filled;
@@ -121,7 +122,7 @@ static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled
 	X = cairo_image_surface_get_width(surface);
 	Y = cairo_image_surface_get_height(surface);
 	stride = cairo_image_surface_get_stride(surface);
-	data = cairo_image_surface_get_data(surface);
+	const unsigned char *data = cairo_image_surface_get_data(surface);
 
         gvputs(job, "save\n");
 
@@ -131,13 +132,15 @@ static void pango_loadimage_ps(GVJ_t * job, usershape_t *us, boxf b, bool filled
         gvputs(job, "/myarray [\n");
         for (y = 0; y < Y; y++) {
 	    gvputs(job, "<");
-	    ix = data + y * stride;
+	    const unsigned char *ix = data + y * stride;
             for (x = 0; x < X; x++) {
-		/* FIXME - this code may have endian problems */
-		blue = *ix++;
-		green = *ix++;
-		red = *ix++;
-		alpha = *ix++;
+		uint32_t rgba;
+		memcpy(&rgba, ix, sizeof(rgba));
+		ix += sizeof(rgba);
+		const unsigned blue = rgba & 0xff;
+		const unsigned green = (rgba >> 8) & 0xff;
+		const unsigned red = (rgba >> 16) & 0xff;
+		const unsigned alpha = (rgba >> 24) & 0xff;
 		if (alpha < 0x7f)
 		    gvputs(job, "ffffff");
 		else

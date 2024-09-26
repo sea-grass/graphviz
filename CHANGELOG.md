@@ -22,6 +22,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   macOS.
 - The RSVG plugin no longer dereferences a null pointer when failing to create
   new RSVG handles.
+- The Pango plugin no longer assumes a little endian environment when loading PS
+  images.
 
 ## [12.1.1] – 2024-09-09
 
