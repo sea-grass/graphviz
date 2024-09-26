@@ -20,7 +20,6 @@
 glCompImage *glCompImageNew(void *par, float x, float y) {
     glCompImage *p = gv_alloc(sizeof(glCompImage));
     glCompInitCommon(&p->base, par, x, y);
-    p->base.objType = glImageObj;
     p->texture = NULL;
     p->base.common.functions.draw = glCompImageDraw;
     return p;

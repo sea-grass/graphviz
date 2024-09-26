@@ -24,7 +24,6 @@ glCompButton *glCompButtonNew(void *par, float x, float y, float w, float h,
                               char *caption) {
     glCompButton *p = gv_alloc(sizeof(glCompButton));
     glCompInitCommon(&p->base, par, x, y);
-    p->base.objType = glButtonObj;
     /*customize button color */
     p->base.common.color.R = GLCOMPSET_BUTTON_COLOR_R;
     p->base.common.color.G = GLCOMPSET_BUTTON_COLOR_G;

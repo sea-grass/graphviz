@@ -68,8 +68,6 @@ extern "C" {
 	    glMouseMiddleButton } glMouseButtonType;
 
     typedef enum { glTexImage, glTexLabel } glCompTexType;
-    typedef enum { glPanelObj, glButtonObj, glLabelObj,
-	    glImageObj } glObjType;
 
     typedef struct glCompObj_ glCompObj;
 
@@ -199,7 +197,6 @@ typedef struct glCompSet_ glCompSet;
 
 /// object prototype
 struct glCompObj_ {
-  glObjType objType;
   glCompCommon common;
 };
 

@@ -35,7 +35,6 @@ static void glCompLabelDraw(void *label) {
 glCompLabel *glCompLabelNew(void *par, char *text) {
     glCompLabel *p = gv_alloc(sizeof(glCompLabel));
     glCompInitCommon(&p->base, par, 0, 0);
-    p->base.objType = glLabelObj;
     p->transparent=1;
 
     p->text = gv_strdup(text);
