@@ -784,8 +784,7 @@ void update_bb_bz(boxf *bb, pointf *cp)
 
 DEFINE_LIST(points, pointf)
 
-#if defined(DEBUG) && DEBUG == 2
-static void psmapOutput(const points_t *ps, size_t start, size_t n) {
+static UNUSED void psmapOutput(const points_t *ps, size_t start, size_t n) {
    const pointf first = points_get(ps, start);
    fprintf(stdout, "newpath %f %f moveto\n", first.x, first.y);
    for (size_t i = start + 1; i < start + n; ++i) {
@@ -794,7 +793,6 @@ static void psmapOutput(const points_t *ps, size_t start, size_t n) {
    }
    fprintf (stdout, "closepath stroke\n");
 }
-#endif
 
 typedef struct segitem_s {
     pointf p;
