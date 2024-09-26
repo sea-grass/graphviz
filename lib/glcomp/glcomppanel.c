@@ -26,8 +26,11 @@ static void glCompPanelDraw(void *o) {
   if (!p->base.common.visible)
     return;
   /*draw shadow */
-  glColor4f(p->shadowcolor.R, p->shadowcolor.G, p->shadowcolor.B,
-            p->shadowcolor.A);
+  const float SHADOW_COLOR_R = 0.0f;
+  const float SHADOW_COLOR_G = 0.0f;
+  const float SHADOW_COLOR_B = 0.0f;
+  const float SHADOW_COLOR_A = 0.3f;
+  glColor4f(SHADOW_COLOR_R, SHADOW_COLOR_G, SHADOW_COLOR_B, SHADOW_COLOR_A);
   r.h = p->shadowwidth;
   r.w = ref.width;
   r.pos.x = ref.pos.x + p->shadowwidth;
@@ -54,10 +57,6 @@ glCompPanel *glCompPanelNew(void *parentObj, float x, float y, float w,
     glCompPanel *p = gv_alloc(sizeof(glCompPanel));
     glCompInitCommon(&p->base, parentObj, x, y);
 
-    p->shadowcolor.R = GLCOMPSET_PANEL_SHADOW_COLOR_R;
-    p->shadowcolor.G = GLCOMPSET_PANEL_SHADOW_COLOR_G;
-    p->shadowcolor.B = GLCOMPSET_PANEL_SHADOW_COLOR_B;
-    p->shadowcolor.A = GLCOMPSET_PANEL_SHADOW_COLOR_A;
     p->shadowwidth = GLCOMPSET_PANEL_SHADOW_WIDTH;
     p->base.common.borderWidth = GLCOMPSET_PANEL_BORDERWIDTH;
 

@@ -34,10 +34,6 @@ extern "C" {
 #define	GLCOMPSET_PANEL_COLOR_G		0.44f
 #define	GLCOMPSET_PANEL_COLOR_B		0.87f
 #define	GLCOMPSET_PANEL_COLOR_ALPHA	0.5f
-#define	GLCOMPSET_PANEL_SHADOW_COLOR_R		0.0f
-#define	GLCOMPSET_PANEL_SHADOW_COLOR_G		0.0f
-#define	GLCOMPSET_PANEL_SHADOW_COLOR_B		0.0f
-#define	GLCOMPSET_PANEL_SHADOW_COLOR_A		0.3f
 #define GLCOMPSET_PANEL_SHADOW_WIDTH		4.0f
 
 #define	GLCOMPSET_BUTTON_COLOR_R		0.0f
@@ -218,7 +214,6 @@ struct glCompObj_ {
     typedef struct {
 	glCompObj base;
 	float shadowwidth;
-	glCompColor shadowcolor;
 	char *text;
 	glCompImage *image;
     } glCompPanel;
