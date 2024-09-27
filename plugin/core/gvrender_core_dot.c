@@ -11,6 +11,7 @@
 #include "config.h"
 
 #include <assert.h>
+#include <math.h>
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -148,7 +149,7 @@ static void xdot_style (GVJ_t *job)
     char* p, **s;
 
     /* First, check if penwidth state is correct */
-    if (job->obj->penwidth != penwidth[job->obj->emit_state]) {
+    if (fabs(job->obj->penwidth - penwidth[job->obj->emit_state]) >= 0.0005) {
 	penwidth[job->obj->emit_state] = job->obj->penwidth;
 	agxbput (&xb, "setlinewidth(");
 	agxbprint(&xb, "%.3f", job->obj->penwidth);
