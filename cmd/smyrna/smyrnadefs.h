@@ -347,7 +347,7 @@ typedef struct
 	char *initFileName;	//file name from command line
 	int initFile;
 	int drawSplines;
-	colorschemaset *colschms;
+	colorschemaset colschms;
 	char *template_file;
 	GtkComboBox *graphComboBox;	/*pointer to graph combo box at top right */
 	ArcBall_t *arcball;

@@ -32,7 +32,7 @@
 #include <util/exit.h>
 #include <util/strcasecmp.h>
 
-static colorschemaset *create_color_theme(int themeid);
+static colorschemaset create_color_theme(int themeid);
 
 ViewInfo *view;
 /* these two global variables should be wrapped in something else */
@@ -187,7 +187,7 @@ static void get_data_dir(void)
 
 static void clear_color_theme(colorschemaset *cs) {
   free(cs->s);
-  free(cs);
+  *cs = (colorschemaset){0};
 }
 
 void init_viewport(ViewInfo *vi) {
@@ -314,8 +314,7 @@ void init_viewport(ViewInfo *vi) {
     vi->active_camera = SIZE_MAX;
     set_viewport_settings_from_template(vi, vi->systemGraphs.def_attrs);
     vi->Topview->Graphdata.GraphFileName = NULL;
-    clear_color_theme(vi->colschms);
-    vi->colschms = NULL;
+    clear_color_theme(&vi->colschms);
     vi->arcball = gv_alloc(sizeof(ArcBall_t));
     vi->keymap.down=0;
     load_mouse_actions(vi);
@@ -552,36 +551,32 @@ static float interpol(float minv, float maxv, float minc, float maxc, float x)
     return (x - minv) * (maxc - minc) / (maxv - minv) + minc;
 }
 
-void getcolorfromschema(colorschemaset * sc, float l, float maxl,
-			glCompColor * c)
-{
+void getcolorfromschema(const colorschemaset sc, float l, float maxl,
+                        glCompColor *c) {
     size_t ind;
     float percl = l / maxl;
 
-    if (sc->smooth) {
+    if (sc.smooth) {
 	/* For smooth schemas, s[0].perc = 0, so we start with ind=1 */
-	for (ind = 1; ind + 1 < sc->schemacount; ind++) {
-	    if (percl < sc->s[ind].perc)
+	for (ind = 1; ind + 1 < sc.schemacount; ind++) {
+	    if (percl < sc.s[ind].perc)
 		break;
 	}
-	c->R =
-	    interpol(sc->s[ind - 1].perc, sc->s[ind].perc,
-		     sc->s[ind - 1].c.R, sc->s[ind].c.R, percl);
-	c->G =
-	    interpol(sc->s[ind - 1].perc, sc->s[ind].perc,
-		     sc->s[ind - 1].c.G, sc->s[ind].c.G, percl);
-	c->B =
-	    interpol(sc->s[ind - 1].perc, sc->s[ind].perc,
-		     sc->s[ind - 1].c.B, sc->s[ind].c.B, percl);
+	c->R = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.R,
+	                sc.s[ind].c.R, percl);
+	c->G = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.G,
+	                sc.s[ind].c.G, percl);
+	c->B = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.B,
+	                sc.s[ind].c.B, percl);
     }
     else {
-	for (ind = 0; ind + 1 < sc->schemacount; ind++) {
-	    if (percl < sc->s[ind].perc)
+	for (ind = 0; ind + 1 < sc.schemacount; ind++) {
+	    if (percl < sc.s[ind].perc)
 		break;
 	}
-	c->R = sc->s[ind].c.R;
-	c->G = sc->s[ind].c.G;
-	c->B = sc->s[ind].c.B;
+	c->R = sc.s[ind].c.R;
+	c->G = sc.s[ind].c.G;
+	c->B = sc.s[ind].c.B;
     }
 
     c->A = 1;
@@ -633,20 +628,18 @@ static colordata palette[] = {
 };
 #define NUM_SCHEMES (sizeof(palette)/sizeof(colordata))
 
-static colorschemaset *create_color_theme(int themeid)
-{
+static colorschemaset create_color_theme(int themeid) {
     if (themeid < 0 || (int)NUM_SCHEMES <= themeid) {
 	fprintf (stderr, "colorschemaset: illegal themeid %d\n", themeid);
 	return view->colschms;
     }
 
-    colorschemaset *s = gv_alloc(sizeof(colorschemaset));
-    if (view->colschms)
-	clear_color_theme(view->colschms);
+    colorschemaset s = {0};
+    clear_color_theme(&view->colschms);
 
-    s->schemacount = palette[themeid].cnt;
-    s->s = gv_calloc(s->schemacount, sizeof(colorschema));
-    set_color_theme_color(s, palette[themeid].colors);
+    s.schemacount = palette[themeid].cnt;
+    s.s = gv_calloc(s.schemacount, sizeof(colorschema));
+    set_color_theme_color(&s, palette[themeid].colors);
 
     return s;
 }
