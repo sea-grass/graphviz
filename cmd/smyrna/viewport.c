@@ -556,28 +556,17 @@ void getcolorfromschema(const colorschemaset sc, float l, float maxl,
     size_t ind;
     float percl = l / maxl;
 
-    if (sc.smooth) {
-	/* For smooth schemas, s[0].perc = 0, so we start with ind=1 */
-	for (ind = 1; ind + 1 < sc.schemacount; ind++) {
-	    if (percl < sc.s[ind].perc)
-		break;
-	}
-	c->R = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.R,
-	                sc.s[ind].c.R, percl);
-	c->G = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.G,
-	                sc.s[ind].c.G, percl);
-	c->B = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.B,
-	                sc.s[ind].c.B, percl);
+    // For smooth schemas, s[0].perc = 0, so we start with ind=1
+    for (ind = 1; ind + 1 < sc.schemacount; ind++) {
+	if (percl < sc.s[ind].perc)
+	    break;
     }
-    else {
-	for (ind = 0; ind + 1 < sc.schemacount; ind++) {
-	    if (percl < sc.s[ind].perc)
-		break;
-	}
-	c->R = sc.s[ind].c.R;
-	c->G = sc.s[ind].c.G;
-	c->B = sc.s[ind].c.B;
-    }
+    c->R = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.R,
+                    sc.s[ind].c.R, percl);
+    c->G = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.G,
+                    sc.s[ind].c.G, percl);
+    c->B = interpol(sc.s[ind - 1].perc, sc.s[ind].perc, sc.s[ind - 1].c.B,
+                    sc.s[ind].c.B, percl);
 
     c->A = 1;
 }
@@ -591,7 +580,6 @@ static void set_color_theme_color(colorschemaset * sc, char **colorstr)
     gvcolor_t cl;
     float av_perc;
 
-    sc->smooth = 1;
     av_perc = 1.0 / (float) (colorcnt-1);
     for (size_t ind = 0; ind < colorcnt; ind++) {
         colorxlate(colorstr[ind], &cl, RGBA_DOUBLE);
