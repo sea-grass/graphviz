@@ -185,6 +185,11 @@ static void get_data_dir(void)
     view->template_file = smyrnaPath("template.dot");
 }
 
+static void clear_color_theme(colorschemaset *cs) {
+  free(cs->s);
+  free(cs);
+}
+
 void init_viewport(ViewInfo *vi) {
     FILE *input_file = NULL;
     FILE *input_file2 = NULL;
@@ -309,6 +314,7 @@ void init_viewport(ViewInfo *vi) {
     vi->active_camera = SIZE_MAX;
     set_viewport_settings_from_template(vi, vi->systemGraphs.def_attrs);
     vi->Topview->Graphdata.GraphFileName = NULL;
+    clear_color_theme(vi->colschms);
     vi->colschms = NULL;
     vi->arcball = gv_alloc(sizeof(ArcBall_t));
     vi->keymap.down=0;
@@ -600,12 +606,6 @@ static void set_color_theme_color(colorschemaset * sc, char **colorstr)
         sc->s[ind].c.A = cl.u.RGBA[3];
         sc->s[ind].perc = (float)ind * av_perc;
     }
-}
-
-static void clear_color_theme(colorschemaset * cs)
-{
-    free(cs->s);
-    free(cs);
 }
 
 static char *deep_blue[] = {
