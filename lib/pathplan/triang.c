@@ -8,6 +8,7 @@
  * Contributors: Details at https://graphviz.org
  *************************************************************************/
 
+#include <assert.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <math.h>
@@ -43,6 +44,7 @@ int Ptriangulate(Ppoly_t *polygon, void (*fn)(void *, const Ppoint_t *),
     for (size_t i = 0; i < pointn; i++)
 	pointp[i] = &(polygon->ps[i]);
 
+    assert(pointn >= 3);
     if (triangulate(pointp, pointn, fn, vc) != 0) {
 	free(pointp);
 	return 1;
@@ -58,6 +60,7 @@ int Ptriangulate(Ppoly_t *polygon, void (*fn)(void *, const Ppoint_t *),
  */
 static int triangulate(Ppoint_t **pointp, size_t pointn,
                        void (*fn)(void *, const Ppoint_t *), void *vc) {
+    assert(pointn >= 3);
     Ppoint_t A[3];
     if (pointn > 3) {
 	for (size_t i = 0; i < pointn; i++) {
