@@ -20,7 +20,6 @@
 #include <util/alloc.h>
 
 GladeXML *xml;			//global libglade vars
-GtkWidget *gladewidget;
 
 void Color_Widget_bg(char *colorstring, GtkWidget * widget)
 {
