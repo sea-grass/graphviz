@@ -730,7 +730,6 @@ static int genroute(tripoly_t *trip, int t, edge_t *e, int doPolyline) {
     Ppoly_t poly;
     Ppolyline_t pl, spl;
     Ppolyline_t mmpl;
-    Pedge_t *medges = NULL;
     int mult = ED_count(e);
     node_t* head = aghead(e);
     int rv = 0;
@@ -755,7 +754,7 @@ static int genroute(tripoly_t *trip, int t, edge_t *e, int doPolyline) {
 
     if (mult == 1 || Concentrate) {
 	poly = trip->poly;
-	medges = gv_calloc(poly.pn, sizeof(Pedge_t));
+	Pedge_t *medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	for (size_t j = 0; j < poly.pn; j++) {
 	    medges[j].a = poly.ps[j];
 	    medges[j].b = poly.ps[(j + 1) % poly.pn];
@@ -808,7 +807,7 @@ static int genroute(tripoly_t *trip, int t, edge_t *e, int doPolyline) {
 	    make_polyline (mmpl, &spl);
 	}
 	else {
-	    medges = gv_calloc(poly.pn, sizeof(Pedge_t));
+	    Pedge_t *medges = gv_calloc(poly.pn, sizeof(Pedge_t));
 	    for (size_t j = 0; j < poly.pn; j++) {
 		medges[j].a = poly.ps[j];
 		medges[j].b = poly.ps[(j + 1) % poly.pn];
