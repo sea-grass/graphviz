@@ -814,7 +814,9 @@ static int genroute(tripoly_t *trip, int t, edge_t *e, int doPolyline) {
 		medges[j].b = poly.ps[(j + 1) % poly.pn];
 	    }
 	    tweakPath(poly, pl.pn - 1, mmpl);
-	    if (Proutespline(medges, poly.pn, mmpl, evs, &spl) < 0) {
+	    const bool failed_routing = Proutespline(medges, poly.pn, mmpl, evs, &spl) < 0;
+	    free(medges);
+	    if (failed_routing) {
 		agwarningf("Could not create control points for multiple spline for edge (%s,%s)\n", 
 		    agnameof(agtail(e)), agnameof(aghead(e)));
 		rv = 1;
@@ -832,7 +834,6 @@ finish :
 	    free(cpts[i]);
 	free(cpts);
     }
-    free(medges);
     free(poly.ps);
     return rv;
 }
