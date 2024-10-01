@@ -887,7 +887,7 @@ static void gverrorf(Expr_t *handle, Exdisc_t *discipline, int level,
     va_end(ap);
 
     if (level >= ERROR_ERROR) {
-	Gpr_t *state = (Gpr_t*)(discipline->user);
+	Gpr_t *state = discipline->user;
 	if (state->flags & GV_USE_EXIT)
             graphviz_exit(1);
 	else if (state->flags & GV_USE_JUMP)
