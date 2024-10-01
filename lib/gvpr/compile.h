@@ -59,8 +59,6 @@ typedef struct {
 } compflags_t;
 
 #define WALKSG    0x1
-#define BEGG      0x2
-#define ENDG      0x4
 
     typedef struct {
 	Exnode_t *begg_stmt;
@@ -72,7 +70,7 @@ typedef struct {
     } comp_block; 
 
     typedef struct {
-	int flags;
+	bool uses_graph; ///< does this program use the input graph?
 	Expr_t *prog;
 	Exnode_t *begin_stmt;
 	size_t n_blocks;

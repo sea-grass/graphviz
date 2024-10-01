@@ -2344,9 +2344,10 @@ static case_stmt *mkStmts(Expr_t *prog, char *src, case_infos_t cases,
     return cs;
 }
 
-static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
-                   size_t i) {
-    int rv = 0;
+/// @return True if the block uses the input graph
+static bool mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
+                    size_t i) {
+    bool has_begin_g = false; // does this block use a `BEG_G` statement?
 
     codePhase = 1;
     if (inp->begg_stmt) {
@@ -2360,7 +2361,7 @@ static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
 	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
-	rv |= BEGG;
+	has_begin_g = true;
     }
 
     codePhase = 2;
@@ -2401,7 +2402,7 @@ static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
 	bp->edge_stmts = 0;
     }
 
-    return (rv | bp->walks);
+    return has_begin_g || bp->walks != 0;
 }
 
 /* doFlags:
@@ -2425,7 +2426,7 @@ static const char *doFlags(compflags_t flags) {
  */
 comp_prog *compileProg(parse_prog *inp, Gpr_t *state, compflags_t flags) {
     const char *endg_sfx = NULL;
-    int useflags = 0;
+    bool uses_graph = false;
 
     /* Make sure we have enough bits for types */
     assert(BITS_PER_BYTE * sizeof(tctype) >= (1 << TBITS));
@@ -2463,13 +2464,13 @@ comp_prog *compileProg(parse_prog *inp, Gpr_t *state, compflags_t flags) {
 
 	for (size_t i = 0; i < parse_blocks_size(&inp->blocks); bp++, i++) {
 	    parse_block *ibp = parse_blocks_at(&inp->blocks, i);
-	    useflags |= mkBlock(bp, p->prog, inp->source, ibp, i);
+	    uses_graph |= mkBlock(bp, p->prog, inp->source, ibp, i);
 	    if (getErrorErrors())
 		goto finish;
 	    p->n_blocks++;
 	}
     }
-    p->flags = useflags;
+    p->uses_graph = uses_graph;
 
     codePhase = 4;
     if (inp->endg_stmt || endg_sfx) {
@@ -2492,7 +2493,7 @@ comp_prog *compileProg(parse_prog *inp, Gpr_t *state, compflags_t flags) {
     setErrorLine (0); /* execution errors have no line numbers */
 
     if (p->end_stmt)
-	p->flags |= ENDG;
+	p->uses_graph = true;
 
     finish:
     if (getErrorErrors()) {
@@ -2534,7 +2535,7 @@ int walksGraph(comp_block * p)
  */
 int usesGraph(comp_prog * p)
 {
-    return p->flags;
+  return p->uses_graph;
 }
 
 /* readG:
