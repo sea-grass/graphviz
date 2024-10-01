@@ -2376,7 +2376,7 @@ static bool mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
 	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
-	bp->walks |= WALKSG;
+	bp->does_walk_graph = true;
     }
 
     codePhase = 3;
@@ -2391,7 +2391,7 @@ static bool mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
 	agxbfree(&label);
 	if (getErrorErrors())
 	    goto finishBlk;
-	bp->walks |= WALKSG;
+	bp->does_walk_graph = true;
     }
 
     finishBlk:
@@ -2402,7 +2402,7 @@ static bool mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
 	bp->edge_stmts = 0;
     }
 
-    return has_begin_g || bp->walks != 0;
+    return has_begin_g || bp->does_walk_graph;
 }
 
 /* doFlags:
@@ -2526,7 +2526,7 @@ freeCompileProg (comp_prog *p)
  */
 int walksGraph(comp_block * p)
 {
-    return p->walks;
+    return p->does_walk_graph;
 }
 
 /* usesGraph;

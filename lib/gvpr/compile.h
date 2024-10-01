@@ -58,11 +58,9 @@ typedef struct {
   bool clone: 1;
 } compflags_t;
 
-#define WALKSG    0x1
-
     typedef struct {
 	Exnode_t *begg_stmt;
-	int walks;
+	bool does_walk_graph; ///< does this block have a node or edge statement?
 	size_t n_nstmts;
 	size_t n_estmts;
 	case_stmt *node_stmts;
