@@ -35,9 +35,14 @@ extern "C" {
 	Agedge_t* ine;
     } nval_t;
 
+typedef struct {
+  bool locked: 1; ///< is the lock currently taken?
+  bool zombie: 1; ///< was a deletion request recorded while locked?
+} lock_t;
+
     typedef struct {
 	Agrec_t h;
-	char lock;
+	lock_t lock;
     } gval_t;
 
     typedef struct {
