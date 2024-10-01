@@ -26,6 +26,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - The osage layout engine now understands a cluster to be indicated by the
   common rules, including the “cluster” prefix being case insensitive and the
   `cluster=true` attribute as an alternative. #2187
+- `acyclic` once again produces its output on stdout. This was a regression in
+  Graphviz 10.0.1. #2600
 
 ## [12.1.2] – 2024-09-28
 

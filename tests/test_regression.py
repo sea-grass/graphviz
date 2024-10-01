@@ -4260,9 +4260,6 @@ def test_2591():
 
 
 @pytest.mark.skipif(which("acyclic") is None, reason="acyclic not available")
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2600", strict=True
-)
 def test_2600():
     """
     acyclic should produce output

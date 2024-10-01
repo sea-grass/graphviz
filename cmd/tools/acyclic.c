@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
 {
     Agraph_t *g;
     int rv = 0;
-    opts_t opts = {0};
+    opts_t opts = {.doWrite = true};
     size_t num_rev = 0;
 
     init(&opts, argc, argv);
