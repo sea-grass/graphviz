@@ -42,12 +42,11 @@ extern "C" {
 
     typedef struct {
 	Agrec_t h;
-    } uval_t;
+    } edata;
 
 #define OBJ(p) ((Agobj_t*)p)
 
     typedef nval_t ndata;
-    typedef uval_t edata;
     typedef gval_t gdata;
 
 #define nData(n)    ((ndata*)(aggetrec(n,UDATA,0)))
