@@ -871,8 +871,7 @@ typedef struct {
  * Only used if GV_USE_EXIT not set during exeval.
  * This implies setjmp/longjmp set up.
  */
-static void gvexitf(Expr_t *handle, void *env, int v) {
-    (void)handle;
+static void gvexitf(void *env, int v) {
     gvpr_state_t *st = env;
 
     longjmp(st->state->jbuf, v);
