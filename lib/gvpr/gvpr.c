@@ -974,7 +974,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	exeval(gs->xprog->prog, gs->xprog->begin_stmt, gs->state);
 
     /* if program is not null */
-    if (usesGraph(gs->xprog)) {
+    if (gs->xprog->uses_graph) {
 	if (uopts && uopts->ingraphs)
 	    gs->ing = newIngGraphs(0, uopts->ingraphs, ing_read);
 	else

@@ -2529,15 +2529,6 @@ int walksGraph(comp_block * p)
     return p->does_walk_graph;
 }
 
-/* usesGraph;
- * Returns true if program uses the graph, i.e., has
- * N/E/BEG_G/END_G statments
- */
-int usesGraph(comp_prog * p)
-{
-  return p->uses_graph;
-}
-
 /* readG:
  * Read graph from file and initialize
  * dynamic data.
