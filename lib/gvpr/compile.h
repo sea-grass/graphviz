@@ -18,6 +18,7 @@ extern "C" {
 #include <parse.h>
 #include <gprstate.h>
 #include <expr/expr.h>
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 
@@ -52,9 +53,11 @@ extern "C" {
 #define nData(n)    ((ndata*)(aggetrec(n,UDATA,0)))
 #define gData(g)    ((gdata*)(aggetrec(g,UDATA,0)))
 
-#define SRCOUT    0x1
-#define INDUCE    0x2
-#define CLONE     0x4
+typedef struct {
+  bool srcout: 1;
+  bool induce: 1;
+  bool clone: 1;
+} compflags_t;
 
 #define WALKSG    0x1
 #define BEGG      0x2
@@ -79,7 +82,7 @@ extern "C" {
 	Exnode_t *end_stmt;
     } comp_prog;
 
-    extern comp_prog *compileProg(parse_prog *, Gpr_t *, int);
+comp_prog *compileProg(parse_prog *, Gpr_t *, compflags_t);
     extern void freeCompileProg (comp_prog *p);
     extern int usesGraph(comp_prog *);
     extern int walksGraph(comp_block *);

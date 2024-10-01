@@ -67,7 +67,7 @@ typedef struct {
     FILE *outFile;		/* output stream; stdout default */
     char *program;              /* program source */
     int useFile;		/* true if program comes from a file */
-    int compflags;
+    compflags_t compflags;
     int readAhead;
     char **inFiles;
     int argc;
@@ -299,10 +299,11 @@ doFlags(char* arg, int argi, int argc, char** argv, options* opts)
     while ((c = *arg++)) {
 	switch (c) {
 	case 'c':
-	    opts->compflags |= SRCOUT;
+	    opts->compflags.srcout = true;
 	    break;
 	case 'C':
-	    opts->compflags |= (SRCOUT|CLONE);
+	    opts->compflags.srcout = true;
+	    opts->compflags.clone = true;
 	    break;
 	case 'f':
 	    if ((optarg = getOptarg(c, &arg, &argi, argc, argv)) && (opts->program = resolve(optarg, opts->verbose))) {
@@ -311,7 +312,7 @@ doFlags(char* arg, int argi, int argc, char** argv, options* opts)
 	    else return -1;
 	    break;
 	case 'i':
-	    opts->compflags |= INDUCE;
+	    opts->compflags.induce = true;
 	    break;
 	case 'n':
 	    opts->readAhead = 0;
@@ -993,7 +994,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 		comp_block* bp = gs->xprog->blocks + i;
 
 		/* begin graph */
-		if (incoreGraphs && (gs->opts.compflags & CLONE))
+		if (incoreGraphs && gs->opts.compflags.clone)
 		    gs->state->curgraph = (Agraph_t*)cloneO(0, (Agobj_t*)gs->state->curgraph);
 		gs->state->curobj = (Agobj_t*)gs->state->curgraph;
 		gs->state->tvroot = 0;
@@ -1022,7 +1023,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 	     * be non-empty or the -c option was used.
 	     */
 	    if (gs->state->outgraph != NULL && (agnnodes(gs->state->outgraph)
-				    || (gs->opts.compflags & SRCOUT))) {
+				    || gs->opts.compflags.srcout)) {
 		if (uopts && (uopts->flags & GV_USE_OUTGRAPH))
 		    addOutputGraph(gs->state, uopts);
 		else

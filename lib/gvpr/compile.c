@@ -2407,14 +2407,14 @@ static int mkBlock(comp_block *bp, Expr_t *prog, char *src, parse_block *inp,
 /* doFlags:
  * Convert command line flags to actions in END_G.
  */
-static const char *doFlags(int flags) {
-  if (flags & SRCOUT) {
-    if (flags & INDUCE) {
+static const char *doFlags(compflags_t flags) {
+  if (flags.srcout) {
+    if (flags.induce) {
       return "\n$O = $G;\ninduce($O);\n";
     }
     return "\n$O = $G;\n";
   }
-  if (flags & INDUCE) {
+  if (flags.induce) {
     return "\ninduce($O);\n";
   }
   return "\n";
@@ -2423,8 +2423,7 @@ static const char *doFlags(int flags) {
 /* compileProg:
  * Convert gpr sections in libexpr program.
  */
-comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
-{
+comp_prog *compileProg(parse_prog *inp, Gpr_t *state, compflags_t flags) {
     const char *endg_sfx = NULL;
     int useflags = 0;
 
@@ -2438,7 +2437,7 @@ comp_prog *compileProg(parse_prog * inp, Gpr_t * state, int flags)
 	goto finish;
     }
 
-    if (flags) {
+    if (flags.srcout || flags.induce || flags.clone) {
 	endg_sfx = doFlags(flags);
     }
 
