@@ -2521,14 +2521,6 @@ freeCompileProg (comp_prog *p)
     free (p);
 }
 
-/* walksGraph;
- * Returns true if block actually has node or edge statements.
- */
-int walksGraph(comp_block * p)
-{
-    return p->does_walk_graph;
-}
-
 /* readG:
  * Read graph from file and initialize
  * dynamic data.

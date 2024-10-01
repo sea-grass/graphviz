@@ -79,7 +79,6 @@ typedef struct {
 
 comp_prog *compileProg(parse_prog *, Gpr_t *, compflags_t);
     extern void freeCompileProg (comp_prog *p);
-    extern int walksGraph(comp_block *);
     extern Agraph_t *readG(FILE *fp);
     extern Agraph_t *openG(char *name, Agdesc_t);
     extern Agraph_t *openSubg(Agraph_t * g, char *name);

@@ -1002,7 +1002,7 @@ static int gvpr_core(int argc, char *argv[], gvpropts *uopts,
 		    exeval(gs->xprog->prog, bp->begg_stmt, gs->state);
 
 		/* walk graph */
-		if (walksGraph(bp)) {
+		if (bp->does_walk_graph) {
 		    cleanup = traverse(gs->state, gs->xprog->prog, bp, cleanup);
 		}
 	    }
