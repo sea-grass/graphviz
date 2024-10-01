@@ -864,11 +864,9 @@ static jmp_buf jbuf;
  * Only used if GV_USE_EXIT not set during exeval.
  * This implies setjmp/longjmp set up.
  */
-static void 
-gvexitf (Expr_t *handle, Exdisc_t *discipline, int v)
-{
+static void gvexitf(Expr_t *handle, void *env, int v) {
     (void)handle;
-    (void)discipline;
+    (void)env;
 
     longjmp (jbuf, v);
 }
