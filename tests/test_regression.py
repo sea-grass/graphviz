@@ -4259,6 +4259,27 @@ def test_2591():
     assert gray_svg != rgb_svg, "edgepaint --color_scheme had no effect"
 
 
+@pytest.mark.skipif(which("acyclic") is None, reason="acyclic not available")
+def test_2600():
+    """
+    acyclic should produce output
+    https://gitlab.com/graphviz/graphviz/-/issues/2600
+    """
+
+    # run acyclic on a simple cyclic graph
+    acyclic = which("acyclic")
+    ret = subprocess.run(
+        [acyclic],
+        input="digraph { A -> B -> C -> D -> E; E -> A }",
+        stdout=subprocess.PIPE,
+        check=False,
+        universal_newlines=True,
+    )
+
+    assert ret.returncode == 1, "acyclic did not detect a cyclic graph"
+    assert ret.stdout.strip() != "", "acyclic produced no output"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
