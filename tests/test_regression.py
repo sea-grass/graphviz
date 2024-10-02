@@ -33,6 +33,8 @@ sys.path.append(os.path.dirname(__file__))
 from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     gvpr,
+    is_cmake,
+    is_fedora,
     is_macos,
     is_mingw,
     is_rocky,
@@ -4257,6 +4259,27 @@ def test_2591():
     )
 
     assert gray_svg != rgb_svg, "edgepaint --color_scheme had no effect"
+
+
+@pytest.mark.parametrize("package", ("Tcldot", "Tclpathplan"))
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.xfail(
+    is_cmake() or not (is_fedora() or is_rocky()), reason="FIXME", strict=True
+)
+def test_import_tcl_package(package: str):
+    """
+    The given TCL package should be loadable
+    """
+
+    # ask TCL to import the given package
+    response = subprocess.check_output(
+        ["tclsh"],
+        stderr=subprocess.STDOUT,
+        input=f"package require {package};",
+        universal_newlines=True,
+    )
+
+    assert "can't find package" not in response, f"{package} cannot be loaded by TCL"
 
 
 def test_changelog_dates():
