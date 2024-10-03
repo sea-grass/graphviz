@@ -4277,6 +4277,24 @@ def test_2600():
     assert ret.stdout.strip() != "", "acyclic produced no output"
 
 
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.xfail()
+def test_import_tclpathplan():
+    """
+    tclpathplan should be loadable
+    """
+
+    # ask TCL to import Tclpathplan
+    response = subprocess.check_output(
+        ["tclsh"],
+        stderr=subprocess.STDOUT,
+        input="package require Tclpathplan;",
+        universal_newlines=True,
+    )
+
+    assert "can't find package" not in response, "tclpathplan cannot be loaded by TCL"
+
+
 def test_changelog_dates():
     """
     Check the dates of releases in the changelog are correctly formatted
