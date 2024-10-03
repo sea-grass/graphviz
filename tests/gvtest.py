@@ -170,6 +170,13 @@ def build_system() -> str:
     return os.getenv("build_system")
 
 
+def is_autotools() -> bool:
+    """was the Grapviz under test built with Autotools?"""
+    if platform.system() == "Windows":
+        return False
+    return not is_cmake()
+
+
 def is_cmake() -> bool:
     """was the Graphviz under test built with CMake?"""
     return build_system() == "cmake"
