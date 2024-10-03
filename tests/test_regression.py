@@ -39,6 +39,7 @@ from gvtest import (  # pylint: disable=wrong-import-position
     is_rocky,
     is_rocky_8,
     is_static_build,
+    is_ubuntu,
     remove_xtype_warnings,
     run_c,
     which,
@@ -4281,8 +4282,8 @@ def test_2600():
 @pytest.mark.parametrize("package", ("Tcldot", "Tclpathplan"))
 @pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
 @pytest.mark.xfail(
-    platform.system() == "Linux",
-    reason="TCL packages are unavailable on some Linux platforms in CI",
+    is_ubuntu(),
+    reason="TCL packages are unavailable on Ubuntu in CI",
 )
 @pytest.mark.xfail(
     is_autotools() and is_macos(),
