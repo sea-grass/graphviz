@@ -32,6 +32,7 @@
 #include <common/render.h>
 #include <common/htmltable.h>
 #include <cgraph/agxbuf.h>
+#include <cgraph/gv_math.h>
 #include <common/pointset.h>
 #include <cdt/cdt.h>
 #include <float.h>
@@ -1225,220 +1226,151 @@ static int processTbl(graph_t * g, htmltbl_t * tbl, htmlenv_t * env)
     return rv;
 }
 
-/// split size `x` over `n` pieces with spacing `s`
-static double split(double x, double n, double s) {
-  assert(x >= 1);
-  return (x - (s - 1) * (n - 1)) / n;
+/// set the widths of HTML table cells
+///
+/// Graphviz HTML tables were implemented prior to HTML standardization, but
+/// the subsequent RFC 1942¹ provides some guidance on “Recommended Layout
+/// Algorithms.” Following this, the W3C gave a slightly clearer articulation of
+/// essentially the same guidance when specifying CSS.² Many features discussed
+/// in this algorithm are not present in Graphviz’ variant of HTML (e.g. widths
+/// as percentages) or are not relevant (e.g. the derivation of _maximum_ column
+/// widths seems only relevant if you are laying out a table within another
+/// elastically sized container like a browser window), but the algorithm is
+/// useful nonetheless. This function implements an adapted version of the CSS
+/// specification algorithm. Comments that include quotes are quoting the CSS
+/// specification.
+///
+/// ¹ https://www.ietf.org/rfc/rfc1942.txt
+/// ² https://www.w3.org/TR/CSS2/tables.html#width-layout
+///
+/// @param table Table to update
+static void set_cell_widths(htmltbl_t *table) {
+
+  // `processTbl` has already done step 1, “1. Calculate the minimum content
+  // width (MCW) of each cell”, and stored it in `.data.box.UR.x`.
+
+  // Allocate space for minimum column widths. Note that we add an extra entry
+  // to allow later code to make references like `table->widths[col + colspan]`.
+  assert(table->widths == NULL && "table widths computed twice");
+  table->widths = gv_calloc(table->column_count + 1, sizeof(double));
+
+  // “2. For each column, determine a … minimum column width from the cells that
+  // span only that column. The minimum is that required by the cell with the
+  // largest minimum cell width …”. Note that this loop and the following one
+  // could be fused, but this would make the implementation harder to relate
+  // back to the specification.
+  for (htmlcell_t **i = table->u.n.cells; *i != NULL; ++i) {
+    const htmlcell_t cell = **i;
+    if (cell.colspan > 1) {
+      continue;
+    }
+    assert(cell.col < table->column_count && "out of range cell");
+    table->widths[cell.col] = fmax(table->widths[cell.col], cell.data.box.UR.x);
+  }
+
+  // “3. For each cell that spans more than one column, increase the minimum
+  // widths of the columns it spans so that together, they are at least as wide
+  // as the cell. … If possible, widen all spanned columns by approximately the
+  // same amount.”
+  for (htmlcell_t **i = table->u.n.cells; *i != NULL; ++i) {
+    const htmlcell_t cell = **i;
+    if (cell.colspan == 1) {
+      continue;
+    }
+
+    // what is the current width of this cell’s column(s)’ span?
+    double span_width = 0;
+    assert(cell.col + cell.colspan <= table->column_count &&
+           "cell spans wider than containing table");
+    for (size_t j = 0; j < cell.colspan; ++j) {
+      span_width += table->widths[cell.col + j];
+    }
+
+    // if it is wider than its span (including cell spacing), widen the span
+    const double spacing = (cell.colspan - 1) * table->data.space;
+    if (span_width + spacing < cell.data.box.UR.x) {
+      const double widen_by =
+          (cell.data.box.UR.x - spacing - span_width) / cell.colspan;
+      for (size_t j = 0; j < cell.colspan; ++j) {
+        table->widths[cell.col + j] += widen_by;
+      }
+    }
+  }
+
+  // take the minimum width for each column and apply it to its contained cells
+  for (htmlcell_t **i = table->u.n.cells; *i != NULL; ++i) {
+    htmlcell_t *cell = *i;
+
+    // what is the current width of this cell’s column(s)’ span?
+    double min_width = 0;
+    assert(cell->col + cell->colspan <= table->column_count &&
+           "cell spans wider than containing table");
+    for (size_t j = 0; j < cell->colspan; ++j) {
+      min_width += table->widths[cell->col + j];
+    }
+
+    // widen the cell if necessary
+    const double spacing = (cell->colspan - 1) * table->data.space;
+    cell->data.box.UR.x = fmax(cell->data.box.UR.x, min_width + spacing);
+  }
 }
 
-/* Determine sizes of rows and columns. The size of a column is the
- * maximum width of any cell in it. Similarly for rows.
- * A cell spanning columns contributes proportionately to each column
- * it is in.
- */
-static void sizeLinearArray(htmltbl_t * tbl)
-{
-    htmlcell_t *cp;
-    htmlcell_t **cells;
-    int i;
+/// set the heights of HTML table cells
+///
+/// This recapitulates the logic of `set_cell_widths` on rows.
+///
+/// @param table Table to update
+static void set_cell_heights(htmltbl_t *table) {
 
-    tbl->heights = gv_calloc(tbl->row_count + 1, sizeof(double));
-    tbl->widths = gv_calloc(tbl->column_count + 1, sizeof(double));
+  assert(table->heights == NULL && "table heights computed twice");
+  table->heights = gv_calloc(table->row_count + 1, sizeof(double));
 
-    for (cells = tbl->u.n.cells; *cells; cells++) {
-	cp = *cells;
-	double ht = split(cp->data.box.UR.y, cp->rowspan, tbl->data.space);
-	ht = fmax(ht, 1);
-	double wd = split(cp->data.box.UR.x, cp->colspan, tbl->data.space);
-	wd = fmax(wd, 1);
-	for (i = cp->row; i < cp->row + cp->rowspan; i++) {
-	    tbl->heights[i] = fmax(tbl->heights[i], ht);
-	}
-	for (i = cp->col; i < cp->col + cp->colspan; i++) {
-	    tbl->widths[i] = fmax(tbl->widths[i], wd);
-	}
+  for (htmlcell_t **i = table->u.n.cells; *i != NULL; ++i) {
+    const htmlcell_t cell = **i;
+    if (cell.rowspan > 1) {
+      continue;
     }
-}
+    assert(cell.row < table->row_count && "out of range cell");
+    table->heights[cell.row] =
+        fmax(table->heights[cell.row], cell.data.box.UR.y);
+  }
 
-/// Clean up graphs made for setting column and row widths.
-static void closeGraphs(graph_t * rowg, graph_t * colg)
-{
-    node_t *n;
-    for (n = GD_nlist(colg); n; n = ND_next(n)) {
-	free_list(ND_in(n));
-	free_list(ND_out(n));
+  for (htmlcell_t **i = table->u.n.cells; *i != NULL; ++i) {
+    const htmlcell_t cell = **i;
+    if (cell.rowspan == 1) {
+      continue;
     }
 
-    agclose(rowg);
-    agclose(colg);
-}
-
-/* For each pair of nodes in the node list, add an edge if none exists.
- * Assumes node list has nodes ordered correctly.
- */
-static void checkChain(graph_t * g)
-{
-    node_t *t;
-    node_t *h;
-    edge_t *e;
-    t = GD_nlist(g);
-    for (h = ND_next(t); h; h = ND_next(h)) {
-	if (!agfindedge(g, t, h)) {
-	    e = agedge(g, t, h, NULL, 1);
-	    agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
-	    ED_minlen(e) = 0;
-	    elist_append(e, ND_out(t));
-	    elist_append(e, ND_in(h));
-	}
-	t = h;
-    }
-}
-
-/* Check for edge in g. If it exists, set its minlen to max of sz and
- * current minlen. Else, create it and set minlen to sz.
- */
-static void checkEdge(graph_t *g, node_t *t, node_t *h, double sz) {
-    edge_t* e;
-
-    const int sz_as_int = sz > INT_MAX ? INT_MAX :
-                          sz < INT_MIN ? INT_MIN : (int)sz;
-
-    e = agfindedge (g, t, h);
-    if (e)
-	ED_minlen(e) = MAX(ED_minlen(e), sz_as_int);
-    else {
-	e = agedge(g, t, h, NULL, 1);
-	agbindrec(e, "Agedgeinfo_t", sizeof(Agedgeinfo_t), true);
-	ED_minlen(e) = sz_as_int;
-	elist_append(e, ND_out(t));
-	elist_append(e, ND_in(h));
-    }
-}
-
-/* Generate dags modeling the row and column constraints.
- * If the table has column_count columns, we create the graph
- *  0 -> 1 -> 2 -> ... -> column_count
- * and if a cell starts in column c with span colspan, with
- * width w, we add the edge c -> c+colspan [minlen = w].
- * Ditto for rows.
- *
- */
-static void makeGraphs(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
-{
-    htmlcell_t *cp;
-    htmlcell_t **cells;
-    node_t *t;
-    node_t *lastn;
-    node_t *h;
-    agxbuf value_buffer = {0};
-
-    lastn = NULL;
-    for (size_t i = 0; i <= tbl->column_count; i++) {
-	agxbprint(&value_buffer, "%" PRISIZE_T, i);
-	t = agnode(colg, agxbuse(&value_buffer), 1);
-	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
-	alloc_elist(tbl->row_count, ND_in(t));
-	alloc_elist(tbl->row_count, ND_out(t));
-	if (lastn) {
-	    ND_next(lastn) = t;
-	    lastn = t;
-	} else {
-	    lastn = GD_nlist(colg) = t;
-	}
-    }
-    lastn = NULL;
-    for (size_t i = 0; i <= tbl->row_count; i++) {
-	agxbprint(&value_buffer, "%" PRISIZE_T, i);
-	t = agnode(rowg, agxbuse(&value_buffer), 1);
-	agbindrec(t, "Agnodeinfo_t", sizeof(Agnodeinfo_t), true);
-	alloc_elist(tbl->column_count, ND_in(t));
-	alloc_elist(tbl->column_count, ND_out(t));
-	if (lastn) {
-	    ND_next(lastn) = t;
-	    lastn = t;
-	} else {
-	    lastn = GD_nlist(rowg) = t;
-	}
+    double span_height = 0;
+    assert(cell.row + cell.rowspan <= table->row_count &&
+           "cell spans higher than containing table");
+    for (size_t j = 0; j < cell.rowspan; ++j) {
+      span_height += table->heights[cell.row + j];
     }
 
-    for (cells = tbl->u.n.cells; *cells; cells++) {
-	cp = *cells;
-	agxbprint(&value_buffer, "%" PRIu16, cp->col);
-	t = agfindnode(colg, agxbuse(&value_buffer));
-	agxbprint(&value_buffer, "%d", cp->col + cp->colspan);
-	h = agfindnode(colg, agxbuse(&value_buffer));
-	checkEdge (colg, t, h, cp->data.box.UR.x);
+    const double spacing = (cell.rowspan - 1) * table->data.space;
+    if (span_height + spacing < cell.data.box.UR.y) {
+      const double heighten_by =
+          (cell.data.box.UR.y - spacing - span_height) / cell.rowspan;
+      for (size_t j = 0; j < cell.rowspan; ++j) {
+        table->heights[cell.row + j] += heighten_by;
+      }
+    }
+  }
 
-	agxbprint(&value_buffer, "%" PRIu16, cp->row);
-	t = agfindnode(rowg, agxbuse(&value_buffer));
-	agxbprint(&value_buffer, "%d", cp->row + cp->rowspan);
-	h = agfindnode(rowg, agxbuse(&value_buffer));
-	checkEdge (rowg, t, h, cp->data.box.UR.y);
+  for (htmlcell_t **i = table->u.n.cells; *i != NULL; ++i) {
+    htmlcell_t *cell = *i;
+
+    double min_height = 0;
+    assert(cell->row + cell->rowspan <= table->row_count &&
+           "cell spans higher than containing table");
+    for (size_t j = 0; j < cell->rowspan; ++j) {
+      min_height += table->heights[cell->row + j];
     }
 
-    agxbfree(&value_buffer);
-
-    /* Make sure that 0 <= 1 <= 2 ...k. This implies graph connected. */
-    checkChain(colg);
-    checkChain(rowg);
-}
-
-/* Use rankings to determine cell dimensions. The rank values
- * give the coordinate, so to get the width/height, we have
- * to subtract the previous value.
- */
-static void setSizes(htmltbl_t * tbl, graph_t * rowg, graph_t * colg)
-{
-    int i;
-    node_t *n;
-    int prev;
-
-    prev = 0;
-    n = GD_nlist(rowg);
-    for (i = 0, n = ND_next(n); n; i++, n = ND_next(n)) {
-	tbl->heights[i] = ND_rank(n) - prev;
-	prev = ND_rank(n);
-    }
-    prev = 0;
-    n = GD_nlist(colg);
-    for (i = 0, n = ND_next(n); n; i++, n = ND_next(n)) {
-	tbl->widths[i] = ND_rank(n) - prev;
-	prev = ND_rank(n);
-    }
-
-}
-
-/* Set column and row sizes. Optimize for minimum width and
- * height. Where there is slack, try to distribute evenly.
- * We do this by encoding cells as edges with min length is
- * a dag on a chain. We then run network simplex, using
- * LR_balance.
- */
-static void sizeArray(htmltbl_t * tbl)
-{
-    graph_t *rowg;
-    graph_t *colg;
-    Agdesc_t dir = Agstrictdirected;
-
-    /* Do the 1D cases by hand */
-    if (tbl->row_count == 1 || tbl->column_count == 1) {
-	sizeLinearArray(tbl);
-	return;
-    }
-
-    tbl->heights = gv_calloc(tbl->row_count + 1, sizeof(double));
-    tbl->widths = gv_calloc(tbl->column_count + 1, sizeof(double));
-
-    rowg = agopen("rowg", dir, NULL);
-    colg = agopen("colg", dir, NULL);
-    /* Only need GD_nlist */
-    agbindrec(rowg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	// graph custom data
-    agbindrec(colg, "Agraphinfo_t", sizeof(Agraphinfo_t), true);	// graph custom data
-    makeGraphs(tbl, rowg, colg);
-    rank(rowg, 2, INT_MAX);
-    rank(colg, 2, INT_MAX);
-    setSizes(tbl, rowg, colg);
-    closeGraphs(rowg, colg);
+    const double spacing = (cell->rowspan - 1) * table->data.space;
+    cell->data.box.UR.y = fmax(cell->data.box.UR.y, min_height + spacing);
+  }
 }
 
 static void pos_html_tbl(htmltbl_t *, boxf, unsigned char);
@@ -1727,7 +1659,8 @@ size_html_tbl(graph_t * g, htmltbl_t * tbl, htmlcell_t * parent,
 	tbl->data.border = DEFAULT_BORDER;
     }
 
-    sizeArray(tbl);
+    set_cell_widths(tbl);
+    set_cell_heights(tbl);
 
     assert(tbl->column_count <= DBL_MAX);
     double wd = ((double)tbl->column_count + 1) * tbl->data.space + 2 * tbl->data.border;

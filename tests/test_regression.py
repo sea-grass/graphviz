@@ -2065,9 +2065,6 @@ def test_2138(examine: str):
         ), "token 012 not found or has trailing garbage"
 
 
-@pytest.mark.xfail(
-    reason="https://gitlab.com/graphviz/graphviz/-/issues/2159", strict=True
-)
 def test_2159():
     """
     space for HTML TDs should be allocated equally when expanding to fill a TR

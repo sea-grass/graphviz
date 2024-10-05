@@ -17,6 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   integrated into the CMake build system. This is controllable by the
   `-DENABLE_PHP={AUTO|ON|OFF}` option.
 
+### Changed
+
+- An algorithm closer to that described in RFC 1942 and/or the CSS 2.1
+  specification is now used for sizing table cells within HTML-like labels. This
+  is less scalable than the network simplex algorithm it replaces, but in
+  general produces more intuitive results. #2159
+
 ### Fixed
 
 - In the Autotools build system, the core plugin links against libm, fixing some
