@@ -229,13 +229,13 @@ static void gdiplusgen_path(GVJ_t *job, const GraphicsPath *pathname,
 static void gdiplusgen_ellipse(GVJ_t *job, pointf *A, int filled)
 {
 	/* convert ellipse into path */
-	GraphicsPath path;
+	GraphicsPath pathname;
 	double dx = A[1].x - A[0].x;
 	double dy = A[1].y - A[0].y;
-	path.AddEllipse(RectF(A[0].x - dx, -A[0].y - dy, dx * 2.0, dy * 2.0));
+	pathname.AddEllipse(RectF(A[0].x - dx, -A[0].y - dy, dx * 2.0, dy * 2.0));
 
 	/* draw the path */
-	gdiplusgen_path(job, &path, filled);
+	gdiplusgen_path(job, &pathname, filled);
 }
 
 static void gdiplusgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
