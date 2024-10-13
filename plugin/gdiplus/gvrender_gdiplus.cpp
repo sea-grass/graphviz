@@ -192,14 +192,14 @@ static vector<PointF> points(pointf *A, int n)
 	return newPoints;
 }
 
-static void gdiplusgen_path(GVJ_t *job, const GraphicsPath *pathname,
+static void gdiplusgen_path(GVJ_t *job, const GraphicsPath &pathname,
                             int filled) {
 	auto context = reinterpret_cast<Graphics *>(job->context);
 
 	/* fill the given path with job fill color */
 	if (filled) {
 		SolidBrush fill_brush(Color(job->obj->fillcolor.u.rgba [3], job->obj->fillcolor.u.rgba [0], job->obj->fillcolor.u.rgba [1], job->obj->fillcolor.u.rgba [2]));
-		context->FillPath(&fill_brush, pathname);
+		context->FillPath(&fill_brush, &pathname);
 	}
 
 	/* draw the given path from job pen color and pen width */
@@ -223,7 +223,7 @@ static void gdiplusgen_path(GVJ_t *job, const GraphicsPath *pathname,
 		break;
 	}
 
-	context->DrawPath(&draw_pen, pathname);
+	context->DrawPath(&draw_pen, &pathname);
 }
 
 static void gdiplusgen_ellipse(GVJ_t *job, pointf *A, int filled)
@@ -235,7 +235,7 @@ static void gdiplusgen_ellipse(GVJ_t *job, pointf *A, int filled)
 	pathname.AddEllipse(RectF(A[0].x - dx, -A[0].y - dy, dx * 2.0, dy * 2.0));
 
 	/* draw the path */
-	gdiplusgen_path(job, &pathname, filled);
+	gdiplusgen_path(job, pathname, filled);
 }
 
 static void gdiplusgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
@@ -245,7 +245,7 @@ static void gdiplusgen_polygon(GVJ_t *job, pointf *A, size_t n, int filled) {
 	pathname.AddPolygon(&points(A, n).front(), (int)n);
 
 	/* draw the path */
-	gdiplusgen_path(job, &pathname, filled);
+	gdiplusgen_path(job, pathname, filled);
 }
 
 static void gdiplusgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
@@ -255,7 +255,7 @@ static void gdiplusgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 	pathname.AddBeziers(&points(A, n).front(), (int)n);
 
 	/* draw the path */
-	gdiplusgen_path(job, &pathname, filled);
+	gdiplusgen_path(job, pathname, filled);
 }
 
 static void gdiplusgen_polyline(GVJ_t *job, pointf *A, size_t n) {
@@ -265,7 +265,7 @@ static void gdiplusgen_polyline(GVJ_t *job, pointf *A, size_t n) {
 	pathname.AddLines(&points(A,n).front(), (int)n);
 
 	/* draw the path */
-	gdiplusgen_path(job, &pathname, 0);
+	gdiplusgen_path(job, pathname, 0);
 }
 
 static gvrender_engine_t gdiplusgen_engine = {
