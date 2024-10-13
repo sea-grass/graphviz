@@ -170,6 +170,13 @@ def build_system() -> str:
     return os.getenv("build_system")
 
 
+def is_autotools() -> bool:
+    """was the Grapviz under test built with Autotools?"""
+    if platform.system() == "Windows":
+        return False
+    return not is_cmake()
+
+
 def is_cmake() -> bool:
     """was the Graphviz under test built with CMake?"""
     return build_system() == "cmake"
@@ -194,6 +201,18 @@ def is_static_build() -> bool:
     # answer “no” to other scenarios, even when some of them are statically
     # linked, because the test suite is unaffected
     return False
+
+
+def is_ubuntu() -> bool:
+    """is the current environment Ubuntu?"""
+    return freedesktop_os_release().get("ID") == "ubuntu"
+
+
+def is_ubuntu_2004() -> bool:
+    """is the current environment Ubuntu 20.04?"""
+    if not is_ubuntu():
+        return False
+    return freedesktop_os_release().get("VERSION_ID") == "20.04"
 
 
 def remove_xtype_warnings(s: str) -> str:
