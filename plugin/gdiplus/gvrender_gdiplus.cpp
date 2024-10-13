@@ -192,14 +192,14 @@ static vector<PointF> points(pointf *A, int n)
 	return newPoints;
 }
 
-static void gdiplusgen_path(GVJ_t *job, const GraphicsPath *path, int filled)
-{
+static void gdiplusgen_path(GVJ_t *job, const GraphicsPath *pathname,
+                            int filled) {
 	auto context = reinterpret_cast<Graphics *>(job->context);
 
 	/* fill the given path with job fill color */
 	if (filled) {
 		SolidBrush fill_brush(Color(job->obj->fillcolor.u.rgba [3], job->obj->fillcolor.u.rgba [0], job->obj->fillcolor.u.rgba [1], job->obj->fillcolor.u.rgba [2]));
-		context->FillPath(&fill_brush, path);
+		context->FillPath(&fill_brush, pathname);
 	}
 
 	/* draw the given path from job pen color and pen width */
@@ -223,7 +223,7 @@ static void gdiplusgen_path(GVJ_t *job, const GraphicsPath *path, int filled)
 		break;
 	}
 
-	context->DrawPath(&draw_pen, path);
+	context->DrawPath(&draw_pen, pathname);
 }
 
 static void gdiplusgen_ellipse(GVJ_t *job, pointf *A, int filled)
