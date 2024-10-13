@@ -33,11 +33,14 @@ sys.path.append(os.path.dirname(__file__))
 from gvtest import (  # pylint: disable=wrong-import-position
     dot,
     gvpr,
+    is_autotools,
+    is_cmake,
     is_macos,
     is_mingw,
     is_rocky,
     is_rocky_8,
     is_static_build,
+    is_ubuntu_2004,
     remove_xtype_warnings,
     run_c,
     which,
@@ -3233,12 +3236,25 @@ def test_2370():
     https://gitlab.com/graphviz/graphviz/-/issues/2370
     """
 
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
     # ask TCL to import the Graphviz package
     response = subprocess.check_output(
         ["tclsh"],
         stderr=subprocess.STDOUT,
         input="package require Tcldot;",
         universal_newlines=True,
+        env=env,
     )
 
     assert (
@@ -4063,8 +4079,20 @@ def test_2568():
     prelude = Path(__file__).parent / "2568.tcl"
     assert prelude.exists(), "unexpectedly missing test collateral"
 
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
     # startup TCL and load our graph setup code
-    proc = pexpect.spawn("tclsh", timeout=1)
+    proc = pexpect.spawn("tclsh", timeout=1, env=env)
     proc.expect("% ")
     proc.sendline(f'source "{shlex.quote(str(prelude))}"')
 
@@ -4256,6 +4284,80 @@ def test_2591():
     assert gray_svg != rgb_svg, "edgepaint --color_scheme had no effect"
 
 
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(
+    is_cmake() and is_macos(),
+    reason="FIXME: 'vgpane' command is unrecognized for unknown reasons",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_autotools() and is_macos(),
+    reason="Autotools on macOS does not detect TCL",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_cmake() and is_ubuntu_2004(),
+    reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
+    strict=True,
+)
+def test_2596():
+    """
+    running Tclpathplan `triangulate` with a malformed callback script should not read
+    out-of-bounds
+    https://gitlab.com/graphviz/graphviz/-/issues/2596
+    """
+
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1, env=env)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # bind the triangulation callback to something ending in a trailing '%'
+    proc.sendline("vgpane0 bind triangle %")
+    proc.expect("% ")
+
+    # add a triangular polygon
+    proc.sendline("vgpane0 insert 1 1 2 2 1 2")
+    proc.expect("1")
+    proc.expect("% ")
+
+    # attempt triangulation on this polygon
+    proc.sendline("vgpane0 triangulate 1")
+    proc.expect("% ")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    proc.expect("% ")
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
+
+
 @pytest.mark.skipif(which("acyclic") is None, reason="acyclic not available")
 def test_2600():
     """
@@ -4275,6 +4377,246 @@ def test_2600():
 
     assert ret.returncode == 1, "acyclic did not detect a cyclic graph"
     assert ret.stdout.strip() != "", "acyclic produced no output"
+
+
+@pytest.mark.parametrize("package", ("Tcldot", "Tclpathplan"))
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.xfail(
+    is_autotools() and is_macos(),
+    reason="Autotools on macOS does not detect TCL",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_cmake() and is_ubuntu_2004(),
+    reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
+    strict=True,
+)
+def test_import_tcl_package(package: str):
+    """
+    The given TCL package should be loadable
+    """
+
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
+    # ask TCL to import the given package
+    response = subprocess.check_output(
+        ["tclsh"],
+        stderr=subprocess.STDOUT,
+        input=f"package require {package};",
+        universal_newlines=True,
+        env=env,
+    )
+
+    assert "can't find package" not in response, f"{package} cannot be loaded by TCL"
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(
+    is_cmake() and is_macos(),
+    reason="FIXME: 'vgpane' command is unrecognized for unknown reasons",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_autotools() and is_macos(),
+    reason="Autotools on macOS does not detect TCL",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_cmake() and is_ubuntu_2004(),
+    reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
+    strict=True,
+)
+def test_triangulation_overflow():
+    """
+    running Tclpathplan `triangulate` with a malformed polygon should be rejected
+    """
+
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1, env=env)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # add a “polygon” with only a single point
+    proc.sendline("vgpane0 insert 4 5")
+    proc.expect("1")
+    proc.expect("% ")
+
+    # attempt triangulation on this polygon
+    proc.sendline("vgpane0 triangulate 1")
+    proc.expect("cannot be triangulated")
+    proc.expect("% ")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    proc.expect("% ")
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(
+    is_cmake() and is_macos(),
+    reason="FIXME: 'vgpane' command is unrecognized for unknown reasons",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_autotools() and is_macos(),
+    reason="Autotools on macOS does not detect TCL",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_cmake() and is_ubuntu_2004(),
+    reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
+    strict=True,
+)
+def test_vgpane_bad_triangulation():
+    """
+    running Tclpathplan `triangulate` with incorrect arguments should be rejected
+    """
+
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1, env=env)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # bind the triangulation callback to something ending in a trailing '%'
+    proc.sendline("vgpane0 bind triangle %")
+    proc.expect("% ")
+
+    # run triangulation with no polygon ID, which should be rejected
+    proc.sendline("vgpane0 triangulate")
+    proc.expect("wrong # args")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    proc.expect("% ")
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
+
+
+@pytest.mark.skipif(shutil.which("tclsh") is None, reason="tclsh not available")
+@pytest.mark.skipif(
+    platform.system() == "Windows",
+    reason="pexpect.spawn is not available on Windows "
+    "(https://pexpect.readthedocs.io/en/stable/overview.html#pexpect-on-windows)",
+)
+@pytest.mark.xfail(
+    is_cmake() and is_macos(),
+    reason="FIXME: 'vgpane' command is unrecognized for unknown reasons",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_autotools() and is_macos(),
+    reason="Autotools on macOS does not detect TCL",
+    strict=True,
+)
+@pytest.mark.xfail(
+    is_cmake() and is_ubuntu_2004(),
+    reason="TCL packages are not built on Ubuntu 20.04 with CMake < 3.18",
+    strict=True,
+)
+def test_vgpane_delete():
+    """
+    it should be possible to delete an existing `vgpane`
+    """
+
+    # if this appears to be an ASan-enabled CI job, teach `tclsh` to load ASan’s
+    # supporting library because it is otherwise unaware that Tcldot depends on this
+    # being loaded first
+    env = os.environ.copy()
+    if re.search(r"\basan\b", os.environ.get("CI_JOB_NAME", "").lower()):
+        cc = os.environ.get("CC", "gcc")
+        libasan = subprocess.check_output(
+            [cc, "-print-file-name=libasan.so"], universal_newlines=True
+        ).strip()
+        print(f"setting LD_PRELOAD={libasan}")
+        env["LD_PRELOAD"] = libasan
+
+    # startup TCL and load the pathplan module
+    proc = pexpect.spawn("tclsh", timeout=1, env=env)
+    proc.expect("% ")
+    proc.sendline("package require Tclpathplan")
+    proc.expect("% ")
+
+    # Create a pane. We assume the first created pane will be index 0, though
+    # this is not technically required.
+    proc.sendline("vgpane")
+    proc.expect("vgpane0")
+    proc.expect("% ")
+
+    # delete the pane to clean up
+    proc.sendline("vgpane0 delete")
+    # `pexpect.expect` returns an index of which given expectation was matched. We
+    # expect this to return no output (not the invalid handle message) and therefore
+    # timeout.
+    is_valid = proc.expect(['Invalid handle: "vgpane0"', pexpect.TIMEOUT]) == 1
+    assert is_valid, "created vgpane was considered an invalid handle"
+
+    # tell TCL to exit
+    proc.sendeof()
+    proc.wait()
 
 
 def test_changelog_dates():

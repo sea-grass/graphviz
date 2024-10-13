@@ -35,6 +35,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `cluster=true` attribute as an alternative. #2187
 - `acyclic` once again produces its output on stdout. This was a regression in
   Graphviz 10.0.1. #2600
+- When using the Tclpathplan module, created vgpanes can once again be named and
+  addressed. This was a regression in Graphviz 12.1.2.
+- Omitting a polygon identifier when running triangulation using the Tclpathplan
+  module (e.g. `vgpane0 triangulate` instead of `vgpane0 triangulate 42`) no
+  longer goes unnoticed and reads invalid memory. This bug seems to have existed
+  since the first revision of Graphviz.
+- When using the Tclpathplan module, defining a malformed &lt;3-point polygon
+  and then attempting to triangulate this polygon no longer reads invalid
+  memory. This case is now rejected with an error during triangulation. Like the
+  previous entry, this bug seems to have existed since the first revision of
+  Graphviz.
+- When using the Tclpathplan module, binding a pane’s triangulation callback to
+  a string ending in a trailing `%` (e.g. `vgpane0 bind triangle %`) no longer
+  causes later out-of-bounds reads during triangulation. Like the previous
+  entries, this bug seems to have existed since the first revision of Graphviz.
+  #2596
 
 ## [12.1.2] – 2024-09-28
 
