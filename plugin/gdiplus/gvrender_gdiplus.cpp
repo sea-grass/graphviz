@@ -260,12 +260,12 @@ static void gdiplusgen_bezier(GVJ_t *job, pointf *A, size_t n, int filled) {
 
 static void gdiplusgen_polyline(GVJ_t *job, pointf *A, size_t n) {
 	/* convert the lines into path */
-	GraphicsPath path;
+	GraphicsPath pathname;
 	assert(n <= INT_MAX);
-	path.AddLines(&points(A,n).front(), (int)n);
+	pathname.AddLines(&points(A,n).front(), (int)n);
 
 	/* draw the path */
-	gdiplusgen_path(job, &path, 0);
+	gdiplusgen_path(job, &pathname, 0);
 }
 
 static gvrender_engine_t gdiplusgen_engine = {
