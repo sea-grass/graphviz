@@ -45,8 +45,10 @@ IncVPSC::IncVPSC(const unsigned n, Variable *vs[], const unsigned m_,
 		c->active=false;
 	}
 }
-VPSC::VPSC(const unsigned n, Variable *vs[], const unsigned m, Constraint *cs[])
-  : bs(n, vs), cs(cs), m(m) {
+
+VPSC::VPSC(const unsigned n, Variable *vs[], const unsigned m_,
+           Constraint *cs_[])
+  : bs(n, vs), cs(cs_), m(m_) {
 	if (RECTANGLE_OVERLAP_LOGGING) {
 		printBlocks();
 		assert(!constraintGraphIsCyclic(n,vs));
