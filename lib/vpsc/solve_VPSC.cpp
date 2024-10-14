@@ -37,9 +37,10 @@ using std::set;
 	#define RECTANGLE_OVERLAP_LOGGING 0
 #endif
 
-IncVPSC::IncVPSC(const unsigned n, Variable *vs[], const unsigned m, Constraint *cs[]) 
-	: VPSC(n,vs,m,cs) {
-	inactive.assign(cs,cs+m);
+IncVPSC::IncVPSC(const unsigned n, Variable *vs[], const unsigned m_,
+                 Constraint *cs_[])
+    : VPSC(n, vs, m_, cs_) {
+	inactive.assign(cs_, cs_ + m_);
 	for(Constraint *c : inactive) {
 		c->active=false;
 	}
