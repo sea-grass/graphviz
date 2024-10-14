@@ -50,7 +50,7 @@ struct Node {
 	double pos;
 	Node *firstAbove, *firstBelow;
 	NodeSet leftNeighbours, rightNeighbours;
-	Node(Variable *v, const Rectangle &r, double p) : v(v),r(r),pos(p) {
+	Node(Variable *v_, const Rectangle &r_, double p_) : v(v_), r(r_), pos(p_) {
 		firstAbove=firstBelow=nullptr;
 		assert(r.width()<1e40);
 	}
