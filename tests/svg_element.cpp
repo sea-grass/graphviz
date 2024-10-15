@@ -287,8 +287,8 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
                     :
                     // the SVG spec assumes clockwise so we swap the points
               SVGElement::miter_shape(next_point, point, prev_point);
-      for (const auto &point : miter_shape) {
-        m_bbox->extend(point);
+      for (const auto &p : miter_shape) {
+        m_bbox->extend(p);
       }
     }
     break;
@@ -533,8 +533,8 @@ SVG::SVGRect SVG::SVGElement::outline_bbox(bool throw_if_bbox_not_defined) {
             clockwise ? SVGElement::miter_shape(prev_point, point, next_point) :
                       // `miter_point` assumes clockwise so we swap the points
                 SVGElement::miter_shape(next_point, point, prev_point);
-        for (const auto &point : miter_shape) {
-          m_bbox->extend(point);
+        for (const auto &p : miter_shape) {
+          m_bbox->extend(p);
         }
       }
     }
