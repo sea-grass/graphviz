@@ -94,8 +94,8 @@ static void appmouse_up(ViewInfo* v,int x,int y)
 
 
 }
-static void appmouse_drag(ViewInfo* v,int x,int y)
-{
+
+void appmouse_drag(ViewInfo *v, int x, int y) {
     v->mouse.x = x;
     v->mouse.y = y;
     to3D( x,y, &v->mouse.GLpos.x,&v->mouse.GLpos.y,&v->mouse.GLpos.z);
@@ -113,13 +113,7 @@ void appmouse_left_click_up(ViewInfo* v,int x,int y)
 {
     appmouse_up(v,x,y);
 }
-void appmouse_left_drag(ViewInfo* v,int x,int y)
-{
-    appmouse_drag(v,x,y);
 
-
-
-}
 void appmouse_right_click_down(ViewInfo* v,int x,int y)
 {
     v->mouse.t=glMouseRightButton;
@@ -132,13 +126,6 @@ void appmouse_right_click_up(ViewInfo* v,int x,int y)
     appmouse_up(v,x,y);
  
 }
-void appmouse_right_drag(ViewInfo* v,int x,int y)
-{
-        
-    appmouse_drag(v,x,y);
-
-}
-
 
 void appmouse_middle_click_down(ViewInfo* v,int x,int y)
 {
@@ -152,12 +139,7 @@ void appmouse_middle_click_up(ViewInfo* v,int x,int y)
     appmouse_up(v,x,y);
  
 }
-void appmouse_middle_drag(ViewInfo* v,int x,int y)
-{
-        
-    appmouse_drag(v,x,y);
 
-}
 void appmouse_move(ViewInfo* v,int x,int y)
 {
     to3D( x,y, &v->mouse.GLpos.x,&v->mouse.GLpos.y,&v->mouse.GLpos.z);

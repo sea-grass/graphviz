@@ -289,20 +289,8 @@ static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event,
     view->mouse.dragY = y - begin_y;
     appmouse_move(view,(int)event->x,(int)event->y);
 
-    if((view->mouse.t==glMouseLeftButton) && (view->mouse.down)  )
-    {
-	appmouse_left_drag(view,(int)event->x,(int)event->y);
-	redraw = true;
-
-    }
-    if((view->mouse.t==glMouseRightButton) && (view->mouse.down))
-    {
-	appmouse_right_drag(view,(int)event->x,(int)event->y);
-	redraw = true;
-    }
-    if((view->mouse.t==glMouseMiddleButton) && (view->mouse.down))
-    {
-	appmouse_middle_drag(view,(int)event->x,(int)event->y);
+    if (view->mouse.down) {
+	appmouse_drag(view,(int)event->x,(int)event->y);
 	redraw = true;
     }
     if (!glCompPoly_is_empty(&view->Topview->sel.selPoly))

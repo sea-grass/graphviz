@@ -140,12 +140,8 @@ static void cb_drag(int X, int Y)
     view->mouse.dragY = dy;
     appmouse_move(view,x,y);
 
-    if((view->mouse.t==glMouseLeftButton) && (view->mouse.down)  )
-	appmouse_left_drag(view,x,y);
-    if((view->mouse.t==glMouseRightButton) && (view->mouse.down))
-	appmouse_right_drag(view,x,y);
-    if((view->mouse.t==glMouseMiddleButton) && (view->mouse.down))
-	appmouse_middle_drag(view,x,y);
+    if (view->mouse.down)
+	appmouse_drag(view, x, y);
     begin_x = x;
     begin_y = y;
     cb_display();
