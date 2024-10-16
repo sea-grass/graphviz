@@ -137,11 +137,11 @@ void appmouse_key_release(ViewInfo* v)
 	glCompPoly_free(&view->Topview->sel.selPoly);
 	glexpose();
     }
-    v->keymap.keyVal=0;
+    v->keyVal = 0;
 }
 void appmouse_key_press(ViewInfo* v,int key)
 {
-    v->keymap.keyVal=key;
+    v->keyVal = key;
 }
 
 
