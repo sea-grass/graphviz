@@ -63,7 +63,6 @@ typedef enum {smyrna_all,smyrna_2D,smyrna_3D,smyrna_fisheye,smyrna_all_but_fishe
 
 typedef struct{
     int keyVal;
-    int down;
 }keymap_t;
 
 

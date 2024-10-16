@@ -314,7 +314,6 @@ void init_viewport(ViewInfo *vi) {
     vi->Topview->Graphdata.GraphFileName = NULL;
     clear_color_theme(&vi->colschms);
     vi->arcball = gv_alloc(sizeof(ArcBall_t));
-    vi->keymap.down=0;
     load_mouse_actions(vi);
     if(vi->guiMode!=GUI_FULLSCREEN)
 	vi->guiMode=GUI_WINDOWED;
