@@ -113,7 +113,7 @@ static void cb_mouseclick(int button, int state, int x, int y)
 
 	if (button ==  GLUT_LEFT_BUTTON)
 	    appmouse_left_click_up(view,x,y);
-	if (button ==  GLUT_LEFT_BUTTON)
+	if (button == GLUT_RIGHT_BUTTON)
 	    appmouse_right_click_up(view,x,y);
 	if (button ==  GLUT_MIDDLE_BUTTON)
 	    appmouse_middle_click_up(view,x,y);
