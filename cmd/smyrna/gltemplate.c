@@ -216,12 +216,9 @@ static gboolean button_release_event(GtkWidget *widget, GdkEventButton *event,
                                                  (float)event->y,
                                                  getGlCompMouseType(event->button));
 
-    if (event->button == 1)	//left click release
-	appmouse_left_click_up(view,(int) event->x,(int) event->y);
-    if (event->button == 3)	//right click
-	appmouse_right_click_up(view,(int) event->x,(int) event->y);
-    if (event->button == 2)	// middle click release
-	appmouse_middle_click_up(view,(int) event->x,(int) event->y);
+    // left/middle/right click release
+    if (event->button == 1 || event->button == 2 || event->button == 3)
+	appmouse_up(view, (int)event->x, (int)event->y);
 
     expose_event(view->drawing_area, NULL, NULL);
 
