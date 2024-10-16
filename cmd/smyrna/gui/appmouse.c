@@ -48,7 +48,6 @@ static void apply_actions(ViewInfo* v,int x,int y)
 	glmotion_pan(v);
 	break;
     case MM_MOVE :
-        /* move_TVnodes(); */
 	break;
     case MM_RECTANGULAR_SELECT :
 	if (!view->mouse.down) {
