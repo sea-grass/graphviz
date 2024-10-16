@@ -329,7 +329,6 @@ typedef struct
 	void *glutfont;
 	glCompColor nodelabelcolor;
 	glCompColor edgelabelcolor;
-	int labelwithdegree;
 	int labelnumberofnodes;
 	int labelshownodes;
 	int labelshowedges;
