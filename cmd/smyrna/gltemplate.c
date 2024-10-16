@@ -26,7 +26,6 @@
 #include "appmouse.h"
 static float begin_x = 0.0;
 static float begin_y = 0.0;
-static float dy = 0.0;
 
 /*mouse mode mapping funvtion from gtk to glcomp*/
 static glMouseButtonType getGlCompMouseType(int n)
@@ -225,7 +224,6 @@ static gboolean button_release_event(GtkWidget *widget, GdkEventButton *event,
 	appmouse_middle_click_up(view,(int) event->x,(int) event->y);
 
     expose_event(view->drawing_area, NULL, NULL);
-    dy = 0.0;
 
     return FALSE;
 }
@@ -287,9 +285,8 @@ static gboolean motion_notify_event(GtkWidget *widget, GdkEventMotion *event,
     if (view->widgets)
 	view->widgets->base.common.functions.mouseover(&view->widgets->base, x, y);
 
-    dy = y - begin_y;
     view->mouse.dragX = x - begin_x;
-    view->mouse.dragY = dy;
+    view->mouse.dragY = y - begin_y;
     appmouse_move(view,(int)event->x,(int)event->y);
 
     if((view->mouse.t==glMouseLeftButton) && (view->mouse.down)  )
